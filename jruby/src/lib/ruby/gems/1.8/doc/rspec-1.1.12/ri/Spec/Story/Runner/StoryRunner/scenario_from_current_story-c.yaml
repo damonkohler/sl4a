@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (scenario_name)
+is_singleton: true
+block_params: 
+name: scenario_from_current_story
+comment: 
+full_name: Spec::Story::Runner::StoryRunner::scenario_from_current_story
+visibility: public
+aliases: []
+

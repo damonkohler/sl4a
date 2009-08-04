@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="**/.svn*|doc" kind="src" path="src"/>
+	<classpathentry excluding="**/.svn*|doc" kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="lib/locale_platform.jar"/>
+	<classpathentry kind="var" path="BEANSHELL_LIB/bsh-2.0b4.jar" sourcepath="/BEANSHELL_LIB/src"/>
+	<classpathentry kind="lib" path="lib/TTS_library_stub_1.4_market.jar"/>
+	<classpathentry kind="var" path="JRUBY_LIB/jruby-complete-1.2.0RC1.jar" sourcepath="/JRUBY_LIB/src/src"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

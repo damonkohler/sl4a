@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::XMLScanListener#on_entityref
+is_singleton: false
+name: on_entityref
+params: (ref)
+visibility: public

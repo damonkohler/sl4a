@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: def [](index)
+- !ruby/struct:SM::Flow::VERB 
+  body: "  @lines[index]\n"
+- !ruby/struct:SM::Flow::P 
+  body: end
+full_name: SM::Lines#rewind
+is_singleton: false
+name: rewind
+params: ()
+visibility: public

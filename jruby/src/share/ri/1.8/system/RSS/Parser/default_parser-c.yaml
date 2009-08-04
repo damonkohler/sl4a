@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Parser::default_parser
+is_singleton: true
+name: default_parser
+params: ()
+visibility: public

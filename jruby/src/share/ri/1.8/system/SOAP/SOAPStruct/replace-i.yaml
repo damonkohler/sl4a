@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: (self[member])
+comment: 
+full_name: SOAP::SOAPStruct#replace
+is_singleton: false
+name: replace
+params: () {|self[member]| ...}
+visibility: public

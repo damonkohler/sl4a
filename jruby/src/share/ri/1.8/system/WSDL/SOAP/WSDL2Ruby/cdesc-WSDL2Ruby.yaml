@@ -1,0 +1,56 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: basedir
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: location
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: logger
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: opt
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::SOAP::WSDL2Ruby
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: check_file
+- !ruby/object:RI::MethodSummary 
+  name: create_cgi_stub
+- !ruby/object:RI::MethodSummary 
+  name: create_classdef
+- !ruby/object:RI::MethodSummary 
+  name: create_client_skelton
+- !ruby/object:RI::MethodSummary 
+  name: create_driver
+- !ruby/object:RI::MethodSummary 
+  name: create_file
+- !ruby/object:RI::MethodSummary 
+  name: create_name
+- !ruby/object:RI::MethodSummary 
+  name: create_servant_skelton
+- !ruby/object:RI::MethodSummary 
+  name: create_standalone_server_stub
+- !ruby/object:RI::MethodSummary 
+  name: import
+- !ruby/object:RI::MethodSummary 
+  name: run
+- !ruby/object:RI::MethodSummary 
+  name: shbang
+- !ruby/object:RI::MethodSummary 
+  name: write_file
+name: WSDL2Ruby
+superclass: Object

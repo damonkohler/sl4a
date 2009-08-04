@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: If the list of matching methods contains exactly one entry, or if it contains an entry that exactly matches the requested method, then display that entry, otherwise display the list of matching method names
+full_name: RiDriver#report_method_stuff
+is_singleton: false
+name: report_method_stuff
+params: (requested_method_name, methods)
+visibility: public

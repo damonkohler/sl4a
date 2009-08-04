@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::TrackBackModel10::TrackBackAbout#maker_target
+is_singleton: false
+name: maker_target
+params: (abouts)
+visibility: private

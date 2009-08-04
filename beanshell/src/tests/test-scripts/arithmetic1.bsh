@@ -1,0 +1,39 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+a=2;
+a++;
+assert(a==3);
+
+a=2;
+++a;
+assert(a==3);
+
+a=1;
+// Post increment 
+assert( a++ == 1);
+a++;
+assert( a==3 );
+// pre
+assert( ++a == 4);
+
+q=5;
+q+=2;
+assert(q==7);
+
+// Assignment with postfix must behave as Java (strange as it is)
+
+i=1;
+i=i++;
+assert(i==1); // In Java this is 1
+
+i=1;
+i+=i++;
+assert(i==2); // In Java this is 2
+
+i=1;
+i+=i++ + i++;
+assert(i==4); // In Java this is 4
+
+complete();

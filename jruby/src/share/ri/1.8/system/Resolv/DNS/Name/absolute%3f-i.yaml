@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::DNS::Name#absolute?
+is_singleton: false
+name: absolute?
+params: ()
+visibility: public

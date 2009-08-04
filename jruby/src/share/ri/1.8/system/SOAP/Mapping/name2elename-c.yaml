@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Allow only (Letter | '_') (Letter | Digit | '-' | '_')* here. Caution: '.' is not allowed here. To follow XML spec., it should be NCName."
+- !ruby/struct:SM::Flow::VERB 
+  body: "  (denied chars) =&gt; .[0-F][0-F]\n  ex. a.b =&gt; a.2eb\n"
+full_name: SOAP::Mapping::name2elename
+is_singleton: true
+name: name2elename
+params: (name)
+visibility: public

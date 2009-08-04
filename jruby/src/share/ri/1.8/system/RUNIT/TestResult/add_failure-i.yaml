@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RUNIT::TestResult#add_failure
+is_singleton: false
+name: add_failure
+params: (failure)
+visibility: public

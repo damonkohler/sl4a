@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::CodeGen::MethodDef#dump_method_def_end
+is_singleton: false
+name: dump_method_def_end
+params: ()
+visibility: private

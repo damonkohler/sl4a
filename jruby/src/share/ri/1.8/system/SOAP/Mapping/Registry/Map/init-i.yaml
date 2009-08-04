@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Give priority to former entry.
+full_name: SOAP::Mapping::Registry::Map#init
+is_singleton: false
+name: init
+params: (init_map = [])
+visibility: public

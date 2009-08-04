@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::SOAPGenerator#prologue
+is_singleton: false
+name: prologue
+params: ()
+visibility: private

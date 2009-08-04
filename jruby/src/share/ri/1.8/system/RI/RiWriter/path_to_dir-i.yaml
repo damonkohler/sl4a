@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RI::RiWriter#path_to_dir
+is_singleton: false
+name: path_to_dir
+params: (class_name)
+visibility: private

@@ -1,0 +1,22 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "indent:"
+    body: Ignored. There must be no whitespace before an XML declaration
+  - !ruby/struct:SM::Flow::LI 
+    label: "transitive:"
+    body: Ignored
+  - !ruby/struct:SM::Flow::LI 
+    label: "ie_hack:"
+    body: Ignored
+  type: :NOTE
+full_name: REXML::XMLDecl#write
+is_singleton: false
+name: write
+params: (writer, indent=-1, transitive=false, ie_hack=false)
+visibility: public

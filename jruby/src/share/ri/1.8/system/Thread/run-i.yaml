@@ -1,0 +1,20 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Wakes up <em>thr</em>, making it eligible for scheduling. If not in a critical section, then invokes the scheduler.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   a = Thread.new { puts &quot;a&quot;; Thread.stop; puts &quot;c&quot; }\n   Thread.pass\n   puts &quot;Got here&quot;\n   a.run\n   a.join\n"
+- !ruby/struct:SM::Flow::P 
+  body: <em>produces:</em>
+- !ruby/struct:SM::Flow::VERB 
+  body: "   a\n   Got here\n   c\n"
+full_name: Thread#run
+is_singleton: false
+name: run
+params: |
+  thr.run   => thr
+
+visibility: public

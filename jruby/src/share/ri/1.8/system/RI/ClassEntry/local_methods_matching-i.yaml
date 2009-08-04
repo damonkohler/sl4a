@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Return a list of all our methods matching a given string. Is <tt>is_class_methods</tt> if 'nil', we don't care if the method is a class method or not, otherwise we only return those methods that match
+full_name: RI::ClassEntry#local_methods_matching
+is_singleton: false
+name: local_methods_matching
+params: (name, is_class_method)
+visibility: private

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::Importer#parse
+is_singleton: false
+name: parse
+params: (content, location, originalroot)
+visibility: private

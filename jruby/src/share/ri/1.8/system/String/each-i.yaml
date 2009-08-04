@@ -1,0 +1,21 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Splits <em>str</em> using the supplied parameter as the record separator (<tt>$/</tt> by default), passing each substring in turn to the supplied block. If a zero-length record separator is supplied, the string is split on <tt>\n</tt> characters, except that multiple successive newlines are appended together.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   print &quot;Example one\\n&quot;\n   &quot;hello\\nworld&quot;.each {|s| p s}\n   print &quot;Example two\\n&quot;\n   &quot;hello\\nworld&quot;.each('l') {|s| p s}\n   print &quot;Example three\\n&quot;\n   &quot;hello\\n\\n\\nworld&quot;.each('') {|s| p s}\n"
+- !ruby/struct:SM::Flow::P 
+  body: <em>produces:</em>
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Example one\n   &quot;hello\\n&quot;\n   &quot;world&quot;\n   Example two\n   &quot;hel&quot;\n   &quot;l&quot;\n   &quot;o\\nworl&quot;\n   &quot;d&quot;\n   Example three\n   &quot;hello\\n\\n\\n&quot;\n   &quot;world&quot;\n"
+full_name: String#each
+is_singleton: false
+name: each
+params: |
+  str.each(separator=$/) {|substr| block }        => str
+  str.each_line(separator=$/) {|substr| block }   => str
+
+visibility: public

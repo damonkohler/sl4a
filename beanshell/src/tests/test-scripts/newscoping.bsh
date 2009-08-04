@@ -1,0 +1,133 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// everything in here is for testing the new scoping rules
+if ( Interpreter.LOCALSCOPING )
+{
+	complete();
+	return; // note: return from source() doesn't exit caller
+}
+
+/*
+	New BeanShell 1.3 scoping rules:
+*/
+
+// method assignment sees global x
+x=0;
+incrementX() {
+	x=x+1;
+}
+incrementX();
+assert( x == 1 );
+
+
+boolean goobaflag = false;
+// new untyped assignment defaults to global
+setFlag() {
+	goobaflag=true;
+	secret = 1;
+}
+setFlag();
+assert( goobaflag == true );
+assert( secret == void );
+
+var p;
+foo() {
+	p=1;
+	this.p=2; // explicit this reference is a local assignment
+	foolocal=2;
+	int x = 99;
+	int y=1;
+	super.y=2;
+	return this;
+}
+x=1;
+foo=foo();
+
+g=1; // global
+assert( foo.g == 1 ); // can see through closure
+assert( p==1 );
+assert( foo.p==2 ); // locally scoped assignment in foo is different
+assert( x == 1 ); // still one, typed x in foo was local scope
+assert( foo.x == 99 ); // typed x in foo is different
+assert( y == 2 ); // super.y in foo reached global
+assert( foo.y == 1 ); //
+
+// check behavior of deeply nested and 'super'
+ameth() {
+	int x; // declared here
+	int y1;
+	int z1;
+	bmeth() {
+		cmeth() {
+			x=42; // x assigned in ameth
+			// This demonstrates 'super' recursive behavior
+			super.y1=43; // should reach y1 in ameth
+			super.super.z1=44;  // should reach z1 in ameth
+		}
+		return this;
+	}
+	return this;
+}
+x=1;
+a=ameth();
+a.bmeth().cmeth();
+assert( x == 1 );
+assert( a.x==42 );
+assert( a.y1==43 );
+assert( y1==void );
+assert( a.z1==44 );
+assert( z1==void );
+
+// more explicit 'this' behavior
+obj=object();
+obj.pat=42;
+assert( obj.pat == 42 );
+assert( pat == void );
+
+// blocks work
+for(ii=0; ii<3; ii++)
+{
+	if ( ii == 0 ) flag();
+	if ( ii == 1 ) flag();
+	if ( ii == 2 ) flag();
+	this.ix=1;
+}
+assert( flag() == 3 );
+assert(ii==3);
+assert(ix==1);
+
+globThis=this;
+{
+	assert( this == globThis );
+	blockThis = this;
+	this.foo=5;
+}
+assert( foo == 5 );
+assert( blockThis == this );
+
+// local assignment is equivalent to declaration
+bar() {
+	this.q=1;
+	q=2;
+	return this;
+}
+bar=bar();
+assert( q==void );
+assert( bar.q==2 );
+
+// 'var' type
+var foo;
+assert( foo == null );
+var bar = 1;
+assert( bar == 1 );
+
+goo() {
+	var gooi = 1 ;
+	assert( gooi == 1 );
+}
+assert( gooi == void );
+
+complete();
+

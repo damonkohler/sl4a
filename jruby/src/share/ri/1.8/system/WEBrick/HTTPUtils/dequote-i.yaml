@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: []
+
+full_name: WEBrick::HTTPUtils#dequote
+is_singleton: false
+name: dequote
+params: (str)
+visibility: public

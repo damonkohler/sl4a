@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Place heading level indicators inline with heading.
+full_name: RI::SimpleFormatter#display_heading
+is_singleton: false
+name: display_heading
+params: (text, level, indent)
+visibility: public

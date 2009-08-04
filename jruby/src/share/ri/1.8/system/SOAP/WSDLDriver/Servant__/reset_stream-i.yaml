@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::WSDLDriver::Servant__#reset_stream
+is_singleton: false
+name: reset_stream
+params: ()
+visibility: public

@@ -1,0 +1,31 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: Step
+constants: 
+- !ruby/object:RI::Constant 
+  name: PARAM_PATTERN
+  value: /([^\\]|^)(\$(?!\$)\w*)/
+  comment: 
+- !ruby/object:RI::Constant 
+  name: PARAM_OR_GROUP_PATTERN
+  value: /(\$(?!\$)\w*)|\(.*?\)/
+  comment: 
+comment: 
+attributes: 
+- !ruby/object:RI::Attribute 
+  name: name
+  comment: 
+  rw: R
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: matches?
+- !ruby/object:RI::MethodSummary 
+  name: parse_args
+- !ruby/object:RI::MethodSummary 
+  name: perform
+full_name: Spec::Story::Step
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

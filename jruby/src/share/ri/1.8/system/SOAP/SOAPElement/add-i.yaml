@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Element interfaces.
+full_name: SOAP::SOAPElement#add
+is_singleton: false
+name: add
+params: (value)
+visibility: public

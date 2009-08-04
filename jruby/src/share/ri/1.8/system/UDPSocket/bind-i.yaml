@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: UDPSocket#bind
+is_singleton: false
+name: bind
+params: (host, port)
+visibility: public

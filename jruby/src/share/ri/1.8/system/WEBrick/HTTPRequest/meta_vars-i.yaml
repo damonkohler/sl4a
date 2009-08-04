@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: orig_meta_vars
+block_params: 
+comment: 
+full_name: WEBrick::HTTPRequest#meta_vars
+is_singleton: false
+name: meta_vars
+params: ()
+visibility: public

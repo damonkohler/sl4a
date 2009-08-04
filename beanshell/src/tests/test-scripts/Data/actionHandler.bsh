@@ -1,0 +1,7 @@
+import java.awt.event.ActionListener;
+
+actionPerformed( e ) {
+	print("Action!");
+}
+
+return (ActionListener)this;

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><head><title>Executable scripts under Unix</title></head><body bgcolor="ffffff"><table cellspacing="10"><tr><td align="center"><a href="http://www.beanshell.org/"><img src="../images/homebutton.gif"/><br/>Home</a></td><td><a href="reflectivestyle.html#Reflective_Style_Access_to_Scripted_Methods"><img src="../images/backbutton.gif"/><br/>Back
+			</a></td><td align="center"><a href="contents.html"><img src="../images/upbutton.gif"/><br/>Contents</a></td><td align="center"><a href="bsf.html#BSF_Bean_Scripting_Framework"><img src="../images/forwardbutton.gif"/><br/>Next
+			</a></td></tr></table><h1>Executable scripts under Unix</h1>
+
+
+You can use BeanShell for writing scripts as you would any other shell 
+under many Unixs:
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+#!/usr/java/bin/java bsh.Interpreter 
+
+print("foo");
+</pre></td></tr></table></center><p/>
+
+However some flavors of Unix are more picky about what they will allow
+as a shell program.  For those you can use the following hack to make
+your BeanShell scripts executable.
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+#!/bin/sh
+# The following hack allows java to reside anywhere in the PATH.
+//bin/true; exec java bsh.Interpreter "$0" "$@"
+
+print("foo");
+</pre></td></tr></table></center><p/>
+
+The above trick presumes that /bin/true exists on your system and that //bin is
+the same as /bin.  The // causes BeanShell to ignore the line.
+<p CLEAR="ALL"/>
+
+The above has been tested on Solaris.  It does not seem to work under Cygwin.
+
+<h3>OSX</h3>
+
+For OSX the path is a bit different:
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+#!/Library/Java/home/bin/java bsh.Interpreter
+
+print("foo");
+</pre></td></tr></table></center><p/>
+
+On OSX /usr/bin/java is itself a shell script, which unfortunately won't
+work out-of-the-box.
+
+<table cellspacing="10"><tr><td align="center"><a href="http://www.beanshell.org/"><img src="../images/homebutton.gif"/><br/>Home</a></td><td><a href="reflectivestyle.html#Reflective_Style_Access_to_Scripted_Methods"><img src="../images/backbutton.gif"/><br/>Back
+			</a></td><td align="center"><a href="contents.html"><img src="../images/upbutton.gif"/><br/>Contents</a></td><td align="center"><a href="bsf.html#BSF_Bean_Scripting_Framework"><img src="../images/forwardbutton.gif"/><br/>Next
+			</a></td></tr></table></body></html>

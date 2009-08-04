@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RI::AnsiFormatter#update_attributes
+is_singleton: false
+name: update_attributes
+params: (attr)
+visibility: private

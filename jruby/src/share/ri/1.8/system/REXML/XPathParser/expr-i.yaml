@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::XPathParser#expr
+is_singleton: false
+name: expr
+params: ( path_stack, nodeset, context=nil )
+visibility: private

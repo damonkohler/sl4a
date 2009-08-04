@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: ()
+is_singleton: false
+block_params: 
+name: predicate_matchers
+comment: 
+full_name: Spec::Runner::Options#predicate_matchers
+visibility: public
+aliases: []
+

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::Generic#user
+is_singleton: false
+name: user
+params: ()
+visibility: public

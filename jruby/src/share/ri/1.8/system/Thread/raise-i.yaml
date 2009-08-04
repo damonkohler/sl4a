@@ -1,0 +1,20 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Raises an exception (see <tt>Kernel::raise</tt>) from <em>thr</em>. The caller does not have to be <em>thr</em>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Thread.abort_on_exception = true\n   a = Thread.new { sleep(200) }\n   a.raise(&quot;Gotcha&quot;)\n"
+- !ruby/struct:SM::Flow::P 
+  body: <em>produces:</em>
+- !ruby/struct:SM::Flow::VERB 
+  body: "   prog.rb:3: Gotcha (RuntimeError)\n    from prog.rb:2:in `initialize'\n    from prog.rb:2:in `new'\n    from prog.rb:2\n"
+full_name: Thread#raise
+is_singleton: false
+name: raise
+params: |
+  thr.raise(exception)
+
+visibility: public

@@ -1,0 +1,201 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: accept
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: accept_charset
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: accept_encoding
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: accept_language
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: addr
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: attributes
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: cipher
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: client_cert
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Header and entity body
+  name: cookies
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Header and entity body
+  name: header
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Request-URI
+  name: host
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: http_version
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: keep_alive
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Request-URI
+  name: path
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: path_info
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: peeraddr
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Request-URI
+  name: port
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: query_string
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Header and entity body
+  name: raw_header
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Request line
+  name: request_line
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: request_method
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: request_time
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Request-URI
+  name: request_uri
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: script_name
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: server_cert
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: unparsed_uri
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Misc
+  name: user
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: BODY_CONTAINABLE_METHODS
+  value: "[ \"POST\", \"PUT\" ]"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: BUFSIZE
+  value: 1024*4
+full_name: WEBrick::HTTPRequest
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "[]"
+- !ruby/object:RI::MethodSummary 
+  name: _read_data
+- !ruby/object:RI::MethodSummary 
+  name: body
+- !ruby/object:RI::MethodSummary 
+  name: content_length
+- !ruby/object:RI::MethodSummary 
+  name: content_type
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: fixup
+- !ruby/object:RI::MethodSummary 
+  name: keep_alive?
+- !ruby/object:RI::MethodSummary 
+  name: meta_vars
+- !ruby/object:RI::MethodSummary 
+  name: meta_vars
+- !ruby/object:RI::MethodSummary 
+  name: orig_meta_vars
+- !ruby/object:RI::MethodSummary 
+  name: orig_parse
+- !ruby/object:RI::MethodSummary 
+  name: orig_parse_uri
+- !ruby/object:RI::MethodSummary 
+  name: parse
+- !ruby/object:RI::MethodSummary 
+  name: parse
+- !ruby/object:RI::MethodSummary 
+  name: parse_query
+- !ruby/object:RI::MethodSummary 
+  name: parse_uri
+- !ruby/object:RI::MethodSummary 
+  name: parse_uri
+- !ruby/object:RI::MethodSummary 
+  name: query
+- !ruby/object:RI::MethodSummary 
+  name: read_body
+- !ruby/object:RI::MethodSummary 
+  name: read_chunk_size
+- !ruby/object:RI::MethodSummary 
+  name: read_chunked
+- !ruby/object:RI::MethodSummary 
+  name: read_data
+- !ruby/object:RI::MethodSummary 
+  name: read_header
+- !ruby/object:RI::MethodSummary 
+  name: read_line
+- !ruby/object:RI::MethodSummary 
+  name: read_request_line
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+name: HTTPRequest
+superclass: Object

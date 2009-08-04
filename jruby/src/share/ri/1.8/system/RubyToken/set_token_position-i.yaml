@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RubyToken#set_token_position
+is_singleton: false
+name: set_token_position
+params: (line, char)
+visibility: public

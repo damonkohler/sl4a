@@ -1,0 +1,17 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: SOAP elements
+constants: []
+
+full_name: SOAP::SOAPEnvelopeElement
+includes: []
+
+instance_methods: []
+
+name: SOAPEnvelopeElement
+superclass: 

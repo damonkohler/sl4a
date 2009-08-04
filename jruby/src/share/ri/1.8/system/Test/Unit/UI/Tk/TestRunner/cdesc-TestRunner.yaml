@@ -1,0 +1,53 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Runs a Test::Unit::TestSuite in a Tk UI. Obviously, this one requires you to have Tk and the Ruby Tk extension installed.
+constants: []
+
+full_name: Test::Unit::UI::Tk::TestRunner
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_fault
+- !ruby/object:RI::MethodSummary 
+  name: attach_to_mediator
+- !ruby/object:RI::MethodSummary 
+  name: clear_fault
+- !ruby/object:RI::MethodSummary 
+  name: create_count_label
+- !ruby/object:RI::MethodSummary 
+  name: finished
+- !ruby/object:RI::MethodSummary 
+  name: output_status
+- !ruby/object:RI::MethodSummary 
+  name: raw_show_fault
+- !ruby/object:RI::MethodSummary 
+  name: reset_ui
+- !ruby/object:RI::MethodSummary 
+  name: result_changed
+- !ruby/object:RI::MethodSummary 
+  name: run_test
+- !ruby/object:RI::MethodSummary 
+  name: setup_mediator
+- !ruby/object:RI::MethodSummary 
+  name: setup_ui
+- !ruby/object:RI::MethodSummary 
+  name: show_fault
+- !ruby/object:RI::MethodSummary 
+  name: start
+- !ruby/object:RI::MethodSummary 
+  name: start_ui
+- !ruby/object:RI::MethodSummary 
+  name: started
+- !ruby/object:RI::MethodSummary 
+  name: stop
+- !ruby/object:RI::MethodSummary 
+  name: test_started
+name: TestRunner
+superclass: Object

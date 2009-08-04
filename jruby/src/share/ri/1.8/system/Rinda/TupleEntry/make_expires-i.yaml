@@ -1,0 +1,24 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Returns an expiry Time based on <tt>sec</tt> which can be one of:"
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "Numeric:"
+    body: <tt>sec</tt> seconds into the future
+  - !ruby/struct:SM::Flow::LI 
+    label: "+true+:"
+    body: the expiry time is the start of 1970 (i.e. expired)
+  - !ruby/struct:SM::Flow::LI 
+    label: "+nil+:"
+    body: it is Tue Jan 19 03:14:07 GMT Standard Time 2038 (i.e. when UNIX clocks will die)
+  type: :NOTE
+full_name: Rinda::TupleEntry#make_expires
+is_singleton: false
+name: make_expires
+params: (sec=nil)
+visibility: public

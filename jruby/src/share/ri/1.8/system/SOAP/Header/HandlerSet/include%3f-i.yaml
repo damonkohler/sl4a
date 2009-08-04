@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Header::HandlerSet#include?
+is_singleton: false
+name: include?
+params: (handler)
+visibility: public

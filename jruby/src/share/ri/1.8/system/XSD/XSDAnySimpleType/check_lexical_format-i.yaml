@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: true or raise
+full_name: XSD::XSDAnySimpleType#check_lexical_format
+is_singleton: false
+name: check_lexical_format
+params: (value)
+visibility: public

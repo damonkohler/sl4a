@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPServer#access_log
+is_singleton: false
+name: access_log
+params: (config, req, res)
+visibility: public

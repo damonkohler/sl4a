@@ -1,0 +1,30 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TEXT_ELEMENTS
+  value: "{       \"title\" => nil,       \"description\" => nil,       \"creator\" => nil,       \"subject\" => nil,       \"publisher\" => nil,       \"contributor\" => nil,       \"type\" => nil,       \"format\" => nil,       \"identifier\" => nil,       \"source\" => nil,       \"language\" => nil,       \"relation\" => nil,       \"coverage\" => nil,       \"rights\" => \"rightses\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DATE_ELEMENTS
+  value: "{       \"date\" => \"w3cdtf\",     }"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ELEMENT_NAME_INFOS
+  value: DublinCoreModel::TEXT_ELEMENTS.to_a
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ELEMENTS
+  value: TEXT_ELEMENTS.keys + DATE_ELEMENTS.keys
+full_name: RSS::DublinCoreModel
+includes: []
+
+instance_methods: []
+
+name: DublinCoreModel
+superclass: 

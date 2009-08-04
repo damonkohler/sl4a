@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Router::ApplicationScopeOperation#receiver
+is_singleton: false
+name: receiver
+params: ()
+visibility: private

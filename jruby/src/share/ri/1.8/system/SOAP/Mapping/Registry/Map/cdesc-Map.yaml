@@ -1,0 +1,29 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: SOAP::Mapping::Registry::Map
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add
+- !ruby/object:RI::MethodSummary 
+  name: clear
+- !ruby/object:RI::MethodSummary 
+  name: find_mapped_obj_class
+- !ruby/object:RI::MethodSummary 
+  name: find_mapped_soap_class
+- !ruby/object:RI::MethodSummary 
+  name: init
+- !ruby/object:RI::MethodSummary 
+  name: obj2soap
+- !ruby/object:RI::MethodSummary 
+  name: soap2obj
+name: Map
+superclass: Object

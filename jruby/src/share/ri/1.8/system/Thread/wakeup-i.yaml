@@ -1,0 +1,20 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Marks <em>thr</em> as eligible for scheduling (it may still remain blocked on I/O, however). Does not invoke the scheduler (see <tt>Thread#run</tt>).
+- !ruby/struct:SM::Flow::VERB 
+  body: "   c = Thread.new { Thread.stop; puts &quot;hey!&quot; }\n   c.wakeup\n"
+- !ruby/struct:SM::Flow::P 
+  body: <em>produces:</em>
+- !ruby/struct:SM::Flow::VERB 
+  body: "   hey!\n"
+full_name: Thread#wakeup
+is_singleton: false
+name: wakeup
+params: |
+  thr.wakeup   => thr
+
+visibility: public

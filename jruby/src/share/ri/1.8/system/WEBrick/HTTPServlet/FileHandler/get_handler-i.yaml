@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPServlet::FileHandler#get_handler
+is_singleton: false
+name: get_handler
+params: (req)
+visibility: private

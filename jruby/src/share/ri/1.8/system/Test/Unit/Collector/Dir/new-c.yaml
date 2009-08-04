@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::Collector::Dir::new
+is_singleton: true
+name: new
+params: (dir=::Dir, file=::File, object_space=::ObjectSpace, req=nil)
+visibility: public

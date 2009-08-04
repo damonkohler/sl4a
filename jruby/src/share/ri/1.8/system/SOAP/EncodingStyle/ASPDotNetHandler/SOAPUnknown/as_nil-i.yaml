@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::EncodingStyle::ASPDotNetHandler::SOAPUnknown#as_nil
+is_singleton: false
+name: as_nil
+params: ()
+visibility: public

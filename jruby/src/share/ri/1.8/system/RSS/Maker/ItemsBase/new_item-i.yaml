@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: item
+comment: 
+full_name: RSS::Maker::ItemsBase#new_item
+is_singleton: false
+name: new_item
+params: () {|item| ...}
+visibility: public

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Equivalent to #peek. This method is obsolete; use #peek instead."
+full_name: StringScanner#peep
+is_singleton: false
+name: peep
+params: (p1)
+visibility: public

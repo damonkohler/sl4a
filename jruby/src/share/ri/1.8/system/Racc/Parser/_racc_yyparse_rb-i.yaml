@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Racc::Parser#_racc_yyparse_rb
+is_singleton: false
+name: _racc_yyparse_rb
+params: (recv, mid, arg, c_debug)
+visibility: private

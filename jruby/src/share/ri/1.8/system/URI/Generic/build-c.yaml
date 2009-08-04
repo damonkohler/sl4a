@@ -1,0 +1,20 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Synopsis
+- !ruby/struct:SM::Flow::P 
+  body: "See #new"
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Description
+- !ruby/struct:SM::Flow::P 
+  body: "Creates a new URI::Generic instance from components of URI::Generic with check. Components are: scheme, userinfo, host, port, registry, path, opaque, query and fragment. You can provide arguments either by an Array or a Hash. See #new for hash keys to use or for order of array items."
+full_name: URI::Generic::build
+is_singleton: true
+name: build
+params: (args)
+visibility: public

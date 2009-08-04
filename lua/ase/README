@@ -1,0 +1,4 @@
+This directory contains Lua code written for the Android Scripting Engine.
+
+android/ Lua module for accessing the AndroidProxy.
+scripts/ example Lua scripts.

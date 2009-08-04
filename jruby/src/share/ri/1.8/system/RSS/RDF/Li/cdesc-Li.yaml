@@ -1,0 +1,20 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: required_uri
+comment: 
+constants: []
+
+full_name: RSS::RDF::Li
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: RSS10
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: full_name
+name: Li
+superclass: Element

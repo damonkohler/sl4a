@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::Fox::TestRunner#create_suite_panel
+is_singleton: false
+name: create_suite_panel
+params: (parent)
+visibility: public

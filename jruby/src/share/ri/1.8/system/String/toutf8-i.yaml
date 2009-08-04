@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Convert <tt>self</tt> to UTF-8
+- !ruby/struct:SM::Flow::P 
+  body: <b>Note</b> This method decode MIME encoded string and convert halfwidth katakana to fullwidth katakana. If you don't want it, use NKF.nkf('-wxm0', str).
+full_name: String#toutf8
+is_singleton: false
+name: toutf8
+params: |
+  String#toutf8   -> string
+
+visibility: public

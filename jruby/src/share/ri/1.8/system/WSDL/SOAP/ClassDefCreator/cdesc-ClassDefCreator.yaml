@@ -1,0 +1,47 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DEFAULT_ITEM_NAME
+  value: XSD::QName.new(nil, 'item')
+full_name: WSDL::SOAP::ClassDefCreator
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: ClassDefCreatorSupport
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: attribute_basetype
+- !ruby/object:RI::MethodSummary 
+  name: basetype_class
+- !ruby/object:RI::MethodSummary 
+  name: define_attribute
+- !ruby/object:RI::MethodSummary 
+  name: dump
+- !ruby/object:RI::MethodSummary 
+  name: dump_arraydef
+- !ruby/object:RI::MethodSummary 
+  name: dump_classdef
+- !ruby/object:RI::MethodSummary 
+  name: dump_complextype
+- !ruby/object:RI::MethodSummary 
+  name: dump_element
+- !ruby/object:RI::MethodSummary 
+  name: dump_simpleclassdef
+- !ruby/object:RI::MethodSummary 
+  name: dump_simpletype
+- !ruby/object:RI::MethodSummary 
+  name: dump_simpletypedef
+- !ruby/object:RI::MethodSummary 
+  name: element_basetype
+- !ruby/object:RI::MethodSummary 
+  name: name_attribute
+- !ruby/object:RI::MethodSummary 
+  name: name_element
+name: ClassDefCreator
+superclass: Object

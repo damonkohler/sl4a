@@ -1,0 +1,116 @@
+<section>
+<name filename="parser">The BeanShell Parser</name>
+
+This BeanShell parser class bsh.Parser is used internally by the BeanShell
+Interpreter.  It is responsible for the lexical parsing of the input text,
+the application of the grammar structure, and the building of an internal
+representation of the BeanShell script file called an "abstract syntax tree" 
+(AST).
+<p/>
+
+The Parser just analyzes the language syntax.  It knows only how to parse the 
+structure of the language - it does not interpret names, or execute methods 
+or commands.  You can use the Parser directly if you have a need to 
+analyze the structure of BeanShell scripts or Java methods and statements
+in general.
+<p/>
+
+<h2>Validating Scripts With bsh.Parser</h2>
+
+You can use the Parser class from the command line to do basic structural 
+validation of BeanShell files without actually executing them. e.g.
+
+<example>
+java bsh.Parser [ -p ] file [ file ] [ ... ]
+</example>
+
+The -p option causes some of the abstract syntax to be printed.
+<p/>
+
+The parser will detect any syntax errors in the script and print an error.
+Note again that names, imports, and string evaluations are analyzed only for
+syntax - not content or meaning.
+<p/>
+
+<h2>Parsing and Performance</h2>
+
+It is useful to have a high level understanding how BeanShell works
+with scripts to understand performance issues.
+<p/>
+
+The first time a script is read or sourced into an interpreter, 
+BeanShell uses the parser to parse the script internally to an AST.
+The AST consists of Java object representations of all of the language
+structures and objects.  The AST consists of Java classes, but is 
+<em>not</em> the same as compiled Java code.  When the script is "executed"
+BeanShell steps through each element of the AST and tells it to perform
+whatever it does (e.g. a variable assignment, for-loop, etc.).  
+This execution of the ASTs is generally much faster than the original parsing 
+of the text of the method.  It is really only limited by the speed of the
+application calls that it is making, the speed of the Java reflection API,
+and the efficiency of the implementation of the structures in BeanShell.
+<p/>
+
+When parsing "line by line" through a BeanShell script the ASTs are routinely
+executed and then thrown away.  However the case of a BeanShell method
+declaration is different.  A BeanShell method is parsed only once: when it
+is declared in the script.  It is then stored in the namespace like any
+variable.  Successive invocations of the method execute the ASTs again, but
+do not re-parse the original text.
+<p/>
+
+This means that successive calls to the same scripted method are as fast
+as possible - much faster than re-parsing the script each time.  
+You can use this to your advantage when
+running the same script many times simply by wrapping your code in the form
+of a BeanShell scripted method and executing the method repeatedly, rather
+than sourcing the script repeatedly.  For example:
+
+<example>
+// From Java
+import bsh.Interpreter;
+i=new Interpreter();
+
+// Declare method or source from file
+i.eval("foo( args ) { ... }");
+
+i.eval("foo(args)"); // repeatedly invoke the method
+i.eval("foo(args)");
+...
+</example>
+
+In the above example we defined a method called foo() which holds our 
+script.  Then we executed the method repeatedly.  The foo() method was
+parsed only once: when its declaration was evaluated.  Subsequent invocations
+simply execute the AST.
+
+<h2>Parsing Scripts Procedurally</h2>
+
+If you are willing to learn about the BeanShell abstract syntax tree classes
+you can use the Parser to parse a BeanShell script into its ASTs like this:
+
+<example>
+in=new FileReader("somefile.bsh");
+Parser parser = new Parser(in);
+while( !(eof=parser.Line()) ) {
+    SimpleNode node = parser.popNode();
+    // Use the node, etc. (See the bsh.BSH* classes)
+    ...
+}
+</example>
+
+To learn more about the abstract syntax tree please download the source
+distribution and consult the source documentation.
+<p/>
+
+<tip>
+The BshDoc bshdoc.bsh script uses the parser to extract method signatures
+and comments from a BeanShell file.  Check it out for a more realistic
+example.
+</tip>
+
+<em>Note: Many components of the AST classes are not public at this time.
+Use setAccessibility(true) to access them.</em>
+
+</section>
+

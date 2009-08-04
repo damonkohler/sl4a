@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (tag, line)
+is_singleton: false
+block_params: 
+name: remove_tag_from
+comment: 
+full_name: Spec::Story::Runner::StoryParser::State#remove_tag_from
+visibility: public
+aliases: []
+

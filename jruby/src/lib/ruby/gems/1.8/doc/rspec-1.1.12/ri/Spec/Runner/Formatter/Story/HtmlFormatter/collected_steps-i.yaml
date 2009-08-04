@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (steps)
+is_singleton: false
+block_params: 
+name: collected_steps
+comment: 
+full_name: Spec::Runner::Formatter::Story::HtmlFormatter#collected_steps
+visibility: public
+aliases: []
+

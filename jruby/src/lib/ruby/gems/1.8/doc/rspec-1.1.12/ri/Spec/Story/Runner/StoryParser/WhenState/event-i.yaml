@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (line)
+is_singleton: false
+block_params: 
+name: event
+comment: 
+full_name: Spec::Story::Runner::StoryParser::WhenState#event
+visibility: public
+aliases: []
+

@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Decompresses <tt>string</tt>. Raises a Zlib::NeedDict exception if a preset dictionary is needed for decompression.
+- !ruby/struct:SM::Flow::P 
+  body: "This method is almost equivalent to the following code:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  def inflate(string)\n    zstream = Zlib::Inflate.new\n    buf = zstream.inflate(string)\n    zstream.finish\n    zstream.close\n    buf\n  end\n"
+full_name: Zlib::Inflate::inflate
+is_singleton: true
+name: inflate
+params: " Zlib::Inflate.inflate(string)\n"
+visibility: public

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>step_pending (Spec::Runner::Formatter::Story::PlainTextFormatter)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/spec/runner/formatter/story/plain_text_formatter.rb, line 141</span>
+          <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">step_pending</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">description</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+            <span class="ruby-identifier">found_step</span>(<span class="ruby-identifier">type</span>, <span class="ruby-identifier">description</span>, <span class="ruby-keyword kw">false</span>, <span class="ruby-keyword kw">true</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+            <span class="ruby-ivar">@pending_steps</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-ivar">@current_story_title</span>, <span class="ruby-ivar">@current_scenario_name</span>, <span class="ruby-identifier">description</span>]
+            <span class="ruby-ivar">@scenario_body_text</span> <span class="ruby-operator">+=</span>  <span class="ruby-identifier">yellow</span>(<span class="ruby-value str">&quot; (PENDING)&quot;</span>)
+            <span class="ruby-ivar">@scenario_pending</span> = <span class="ruby-keyword kw">true</span>
+            <span class="ruby-ivar">@scenario_ok</span> = <span class="ruby-keyword kw">false</span>
+          <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

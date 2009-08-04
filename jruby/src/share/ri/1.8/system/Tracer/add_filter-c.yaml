@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Tracer::add_filter
+is_singleton: true
+name: add_filter
+params: (p = proc)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::WSDLDriver::Servant__#rpc_call
+is_singleton: false
+name: rpc_call
+params: (name, *values)
+visibility: public

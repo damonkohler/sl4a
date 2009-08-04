@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPUtils::FormData#append_data
+is_singleton: false
+name: append_data
+params: (data)
+visibility: public

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: For internal use.
+full_name: Vector#init_elements
+is_singleton: false
+name: init_elements
+params: (array, copy)
+visibility: public

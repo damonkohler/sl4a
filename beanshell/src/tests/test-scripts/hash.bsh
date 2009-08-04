@@ -1,0 +1,17 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+h = new java.util.Hashtable();
+h.put("foo", "bar");
+assert( h.get("foo").equals("bar") );
+
+h{"foo"}="gee";
+assert( h{"foo"}.equals("gee") );
+
+// Maps work when CollectionManager is present
+Map map = new HashMap();
+map{"foo"}="bar";
+assert( map{"foo"}.equals("bar") );
+
+complete();

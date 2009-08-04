@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::SOAP::ClassDefCreatorSupport#ndq
+is_singleton: false
+name: ndq
+params: (ele)
+visibility: public

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: No extra blank lines
+full_name: RI::SimpleFormatter#blankline
+is_singleton: false
+name: blankline
+params: ()
+visibility: public

@@ -1,0 +1,82 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+try {
+	int foo1=5;
+	bar1=5;
+} catch ( Exception e1 ) {
+	b1=5;
+}
+assert( foo1 == void );
+assert( bar1 == 5 );
+assert( b1 == void );
+assert( e1 == void );
+
+try {
+	int foo2=5;
+	bar2=5;
+	a=1/0;
+} catch ( Exception e2) {
+	b2=5;
+}
+
+assert( foo2 == void );
+assert( bar2 == 5 );
+assert( b2 == 5);
+assert( e2 ==  void );
+
+try {
+	int foo2=5;
+} catch ( e3 ) {
+}
+assert( e3 == void );
+
+try {
+	a=1/0;
+} catch ( e3 ) {
+}
+assert( e3 == void );
+
+try {
+	a=1/0;
+} catch ( e3 ) {
+} finally {
+	fin1=5;
+	int fin2=5;
+}
+assert( fin1 == 5 );
+assert( fin2 == void );
+
+try {
+} catch ( e3 ) {
+} finally {
+	fin1=5;
+	int fin2=5;
+}
+assert( fin1 == 5 );
+assert( fin2 == void );
+
+try {
+	a=1/0;
+} catch ( Exception e5 ) {
+} catch ( e6 ) { }
+assert( e5 == void );
+assert( e6 == void );
+
+a=4;
+try { 
+	throw new Exception("foo");
+} catch ( Exception e ) { 
+	a=5;
+}
+
+print(a);
+assert(a==5);
+assert(skdlfjl==void);
+// catch clause exception param shouldn't leak out
+assert(e==void);
+
+
+complete();
+

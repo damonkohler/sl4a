@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::SOAP::ClientSkeltonCreator#dump_operation
+is_singleton: false
+name: dump_operation
+params: (operation)
+visibility: private

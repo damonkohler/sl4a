@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::schema_attribute_definition
+is_singleton: true
+name: schema_attribute_definition
+params: (klass)
+visibility: public

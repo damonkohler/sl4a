@@ -1,0 +1,11 @@
+#!/bin/java bsh.Interpreter
+
+/*
+	This test is intended to be run *after* import_test1.bsh
+	to see if imports leak.
+
+	We haven't imported mypackage.* so we should not see MyClass
+*/
+
+myClassVisible = ( this.namespace.getClass("MyClass") != null );
+

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Light::Node#namesplit
+is_singleton: false
+name: namesplit
+params: ()
+visibility: private

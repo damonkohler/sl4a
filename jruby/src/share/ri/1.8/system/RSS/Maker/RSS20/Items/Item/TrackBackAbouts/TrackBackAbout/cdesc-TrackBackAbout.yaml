@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: RSS::Maker::RSS20::Items::Item::TrackBackAbouts::TrackBackAbout
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: to_rss
+name: TrackBackAbout
+superclass: TrackBackAboutBase

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (obj)
+is_singleton: false
+block_params: 
+name: run_in
+comment: 
+full_name: Spec::Story::Story#run_in
+visibility: public
+aliases: []
+

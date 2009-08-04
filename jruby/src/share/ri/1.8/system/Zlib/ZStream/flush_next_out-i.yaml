@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Flushes output buffer and returns all data in that buffer.
+full_name: Zlib::ZStream#flush_next_out
+is_singleton: false
+name: flush_next_out
+params: ()
+visibility: public

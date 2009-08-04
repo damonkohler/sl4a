@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::XMLStyleSheetMixin#xml_stylesheet_pi
+is_singleton: false
+name: xml_stylesheet_pi
+params: ()
+visibility: private

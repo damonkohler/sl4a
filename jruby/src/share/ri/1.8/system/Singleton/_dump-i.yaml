@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: default marshalling strategy
+full_name: Singleton#_dump
+is_singleton: false
+name: _dump
+params: (depth=-1)
+visibility: private

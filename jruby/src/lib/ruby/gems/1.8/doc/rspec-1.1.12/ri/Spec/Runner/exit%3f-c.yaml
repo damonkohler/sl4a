@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: ()
+is_singleton: true
+block_params: 
+name: exit?
+comment: 
+full_name: Spec::Runner::exit?
+visibility: public
+aliases: []
+

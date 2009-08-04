@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: xss
+comment: 
+full_name: RSS::Maker::XMLStyleSheets#new_xml_stylesheet
+is_singleton: false
+name: new_xml_stylesheet
+params: () {|xss| ...}
+visibility: public

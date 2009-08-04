@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Maker::RSS09::Items::Item#have_required_values?
+is_singleton: false
+name: have_required_values?
+params: ()
+visibility: private

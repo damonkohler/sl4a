@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Dump <em>time</em> for marshaling.
+full_name: Time#_dump
+is_singleton: false
+name: _dump
+params: |
+  time._dump   => string
+
+visibility: public

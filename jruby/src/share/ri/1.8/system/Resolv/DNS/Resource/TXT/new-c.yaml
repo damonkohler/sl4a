@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::DNS::Resource::TXT::new
+is_singleton: true
+name: new
+params: (first_string, *rest_strings)
+visibility: public

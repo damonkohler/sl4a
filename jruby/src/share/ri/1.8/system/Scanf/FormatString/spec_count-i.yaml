@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Scanf::FormatString#spec_count
+is_singleton: false
+name: spec_count
+params: ()
+visibility: public

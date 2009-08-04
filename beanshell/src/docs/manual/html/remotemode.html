@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><head><title>Remote Server Mode</title></head><body bgcolor="ffffff"><table cellspacing="10"><tr><td align="center"><a href="http://www.beanshell.org/"><img src="../images/homebutton.gif"/><br/>Home</a></td><td><a href="embeddedmode.html#Embedding_BeanShell_in_Your_Application"><img src="../images/backbutton.gif"/><br/>Back
+			</a></td><td align="center"><a href="contents.html"><img src="../images/upbutton.gif"/><br/>Contents</a></td><td align="center"><a href="servletmode.html#BshServlet_and_Servlet_Mode_Scripting"><img src="../images/forwardbutton.gif"/><br/>Next
+			</a></td></tr></table><h1>Remote Server Mode</h1>
+
+
+<img src="../images/remotemode.gif"/>
+<br CLEAR="ALL"/>
+
+Remote server mode lets you access a BeanShell Interpreter inside of a 
+remote VM.
+With remote server mode activated you can literally telnet into the running
+application and type commands at the BeanShell shell prompt.  Or, even better, 
+you can use any web browser to bring up a remote GUI console.
+<p CLEAR="ALL"/>
+
+
+<p CLEAR="ALL"/>
+<center>
+<table width="90%" border="1" cellpadding="5">
+<tr><td>
+<strong>Warning:</strong>
+<br CLEAR="ALL"/>
+<b>When activated remote server mode can provide unrestricted access
+to all parts of your application and the host server.  This mode should
+not be used in production environments or anywhere that server security
+is an issue.
+</b>
+</td></tr>
+</table>
+</center>
+<p CLEAR="ALL"/>
+
+To enable remote access simply issue the BeanShell server() command, specifying
+a base port number:
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+server(1234);
+// Httpd started on port: 1234
+// Sessiond started on port: 1235
+</pre></td></tr></table></center><p/>
+
+At this point BeanShell will run two services: a tiny HTTP server on the
+port you specified and the BeanShell telnet session server on the next port
+(the port you specified + 1).
+<p CLEAR="ALL"/>
+
+<h2><a name="Web_Browser_Access">Web Browser Access</a></h2>
+
+After starting the server you can connect your web browser to the port
+you specified.   BeanShell will respond by sending an HTML page offering
+you a choice of the Swing based JConsole or the older AWTConsole.  You
+may choose whichever is appropriate for your web browser.
+<p CLEAR="ALL"/>
+
+You can skip this decision page by hitting one of the following URLs directly:
+
+<table border="1" cellpadding="5">
+
+<tr><td>http://&lt;yourserver&gt;:&lt;port&gt;/remote/jconsole.html</td><td>
+Swing based JConsole page
+</td></tr>
+
+<tr><td>http://&lt;yourserver&gt;:&lt;port&gt;/remote/awtconsole.html</td><td>
+Minmal (old) AWT based Console page
+</td></tr>
+
+</table>
+
+The httpd server then serves the remote console applet.
+When it starts you will have a BeanShell session that looks like the 
+regular console, but is connected to the remote BeanShell VM.
+<p CLEAR="ALL"/>
+
+<img src="../images/remoteconsole.gif"/>
+<p CLEAR="ALL"/>
+
+You can open as many sessions into that VM as you like in this way, but 
+note that unlike the BeanShell desktop environment -
+<strong>
+All remote sessions share the same global scope.
+</strong>
+You are effectively working in the same interpreter instance for all 
+connections.  This is intended as a feature, as the primary usefulness of
+this mode is for debugging.  You can set variables and access components
+across many sessions.
+<p CLEAR="ALL"/>
+
+<h2><a name="Example">Example</a></h2>
+
+Let's look at a quick example of how you might start a remote session from
+within your application:
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+// Java code
+import bsh.Interpreter;
+i = new Interpreter();
+
+i.set( "myapp", this );  // Provide a reference to your app
+i.set( "portnum", 1234 );  
+i.eval("setAccessibility(true)"); // turn off access restrictions
+
+i.eval("server(portnum)"); 
+</pre></td></tr></table></center><p/>
+
+Here we have set up the interpreter instance just as we would to do any
+other kind of scripting - passing in Java objects using set().  In this case
+we passed a general reference to our application using 'this', as well.
+We have turned on accessibility so that we can access private and protected
+members of our classes (useful for debugging).  Finally we start the server
+on the desired port.
+
+<h2><a name="Telnet_Access">Telnet Access</a></h2>
+
+We mentioned earlier that BeanShell starts its telnet session server on
+the port next to the HTTP port.  You can use any telnet client to access
+a BeanShell command line directly, in text only-mode, without the use of
+a web browser.
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+telnet &lt;myhost&gt; &lt;port+1&gt;
+</pre></td></tr></table></center><p/>
+
+Note that this command line is not very friendly.  In particular it does not
+respond to gratuitous newlines with a new prompt (as the text only 
+Interpreter command line does).
+<p CLEAR="ALL"/>
+
+<em>
+At the time of this writing there is no explicit way to close a session.
+BeanShell will simply detect the end of streams.
+</em>
+
+<table cellspacing="10"><tr><td align="center"><a href="http://www.beanshell.org/"><img src="../images/homebutton.gif"/><br/>Home</a></td><td><a href="embeddedmode.html#Embedding_BeanShell_in_Your_Application"><img src="../images/backbutton.gif"/><br/>Back
+			</a></td><td align="center"><a href="contents.html"><img src="../images/upbutton.gif"/><br/>Contents</a></td><td align="center"><a href="servletmode.html#BshServlet_and_Servlet_Mode_Scripting"><img src="../images/forwardbutton.gif"/><br/>Next
+			</a></td></tr></table></body></html>

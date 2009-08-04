@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (story_title, scenario_name, err)
+is_singleton: false
+block_params: 
+name: scenario_failed
+comment: 
+full_name: Spec::Runner::Formatter::Story::HtmlFormatter#scenario_failed
+visibility: public
+aliases: []
+

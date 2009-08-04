@@ -1,0 +1,43 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: The name of the object, valid if set
+  name: expanded_name
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: The name of the object, valid if set
+  name: name
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: The expanded name of the object, valid if name is set
+  name: prefix
+  rw: RW
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Adds named attributes to an object.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NAMESPLIT
+  value: /^(?:(#{NCNAME_STR}):)?(#{NCNAME_STR})/u
+full_name: REXML::Namespace
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: XMLTokens
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: fully_expanded_name
+- !ruby/object:RI::MethodSummary 
+  name: has_name?
+- !ruby/object:RI::MethodSummary 
+  name: name=
+name: Namespace
+superclass: 

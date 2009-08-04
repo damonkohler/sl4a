@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::TestCase#add_failure
+is_singleton: false
+name: add_failure
+params: (message, all_locations=caller())
+visibility: private

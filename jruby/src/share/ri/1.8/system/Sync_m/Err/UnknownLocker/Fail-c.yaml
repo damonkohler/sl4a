@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Sync_m::Err::UnknownLocker::Fail
+is_singleton: true
+name: Fail
+params: (th)
+visibility: public

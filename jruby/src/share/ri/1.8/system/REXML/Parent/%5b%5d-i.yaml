@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Fetches a child at a given index @param index the Integer index of the child to fetch
+full_name: REXML::Parent#[]
+is_singleton: false
+name: "[]"
+params: ( index )
+visibility: public

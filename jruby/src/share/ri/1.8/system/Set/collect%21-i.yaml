@@ -1,0 +1,13 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: map!
+block_params: (o)
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Do collect() destructively.
+full_name: Set#collect!
+is_singleton: false
+name: collect!
+params: () {|o| ...}
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: YAML::DomainType::tag_subclasses?
+is_singleton: true
+name: tag_subclasses?
+params: ()
+visibility: public

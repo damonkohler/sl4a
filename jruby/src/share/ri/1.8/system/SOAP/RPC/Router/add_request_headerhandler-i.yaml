@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: header handler interface
+full_name: SOAP::RPC::Router#add_request_headerhandler
+is_singleton: false
+name: add_request_headerhandler
+params: (factory)
+visibility: public

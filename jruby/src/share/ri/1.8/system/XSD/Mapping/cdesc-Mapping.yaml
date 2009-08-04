@@ -1,0 +1,25 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: obj2xml
+- !ruby/object:RI::MethodSummary 
+  name: xml2obj
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MappingRegistry
+  value: SOAP::Mapping::WSDLLiteralRegistry.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MappingOpt
+  value: "{:default_encodingstyle => SOAP::LiteralNamespace}"
+full_name: XSD::Mapping
+includes: []
+
+instance_methods: []
+
+name: Mapping
+superclass: 

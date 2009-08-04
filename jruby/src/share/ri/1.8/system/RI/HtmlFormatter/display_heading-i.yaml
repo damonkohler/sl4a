@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RI::HtmlFormatter#display_heading
+is_singleton: false
+name: display_heading
+params: (text, level, indent)
+visibility: public

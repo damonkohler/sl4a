@@ -1,0 +1,19 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: Heckler
+constants: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Supports Heckle 1.2 and prior (earlier versions used Heckle::Base)
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: tests_pass?
+full_name: Spec::Runner::Heckler
+superclass: '(Heckle.const_defined?(:Base) ? Heckle::Base : Heckle)'
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

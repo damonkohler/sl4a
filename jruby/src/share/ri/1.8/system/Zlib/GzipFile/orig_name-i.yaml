@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns original filename recorded in the gzip file header, or <tt>nil</tt> if original filename is not present.
+full_name: Zlib::GzipFile#orig_name
+is_singleton: false
+name: orig_name
+params: ()
+visibility: public

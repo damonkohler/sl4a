@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Driver#add_rpc_operation
+is_singleton: false
+name: add_rpc_operation
+params: (qname, soapaction, name, param_def, opt = {})
+visibility: public

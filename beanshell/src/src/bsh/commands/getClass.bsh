@@ -1,0 +1,18 @@
+/**
+	Get a class through the current namespace utilizing the current imports,
+	extended classloader, etc.
+	<p>
+
+	This is equivalent to the standard Class.forName() method for class loading,
+	however it takes advantage of the BeanShell class manager so that added 
+	classpath will be taken into account.  You can also use Class.forName(), 
+	however if you have modified the classpath or reloaded classes from within 
+	your script the modifications will only appear if you use the getClass() 
+	command.
+*/
+bsh.help.getClass= "usage: getClass( String name )";
+
+Class getClass( String name ) {
+	return this.caller.namespace.getClass( name );
+}
+

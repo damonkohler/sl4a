@@ -1,0 +1,10 @@
+/**
+	Bind a bsh object into a particular namespace and interpreter
+*/
+import bsh.This;
+import bsh.NameSpace;
+
+bind( bsh.This ths, bsh.NameSpace namespace ) {
+	This.bind( ths, namespace, this.interpreter );
+}
+

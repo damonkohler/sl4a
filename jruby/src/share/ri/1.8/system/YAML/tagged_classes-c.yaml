@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the complete dictionary of taguris, paired with classes. The key for the dictionary is the full taguri. The value for each key is the class constant associated to that taguri.
+- !ruby/struct:SM::Flow::VERB 
+  body: " YAML.tagged_classes[&quot;tag:yaml.org,2002:int&quot;] =&gt; Integer\n"
+full_name: YAML::tagged_classes
+is_singleton: true
+name: tagged_classes
+params: ()
+visibility: public

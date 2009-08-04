@@ -1,0 +1,37 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WEBrick::HTTPServer
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: access_log
+- !ruby/object:RI::MethodSummary 
+  name: do_OPTIONS
+- !ruby/object:RI::MethodSummary 
+  name: lookup_server
+- !ruby/object:RI::MethodSummary 
+  name: mount
+- !ruby/object:RI::MethodSummary 
+  name: mount_proc
+- !ruby/object:RI::MethodSummary 
+  name: run
+- !ruby/object:RI::MethodSummary 
+  name: search_servlet
+- !ruby/object:RI::MethodSummary 
+  name: service
+- !ruby/object:RI::MethodSummary 
+  name: umount
+- !ruby/object:RI::MethodSummary 
+  name: unmount
+- !ruby/object:RI::MethodSummary 
+  name: virtual_host
+name: HTTPServer
+superclass: "::WEBrick::GenericServer"

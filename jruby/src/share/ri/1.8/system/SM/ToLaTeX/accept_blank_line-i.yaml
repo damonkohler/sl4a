@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::ToLaTeX#accept_blank_line
+is_singleton: false
+name: accept_blank_line
+params: (am, fragment)
+visibility: public

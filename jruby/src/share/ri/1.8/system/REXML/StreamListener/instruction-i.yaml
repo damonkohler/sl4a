@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Called when an instruction is encountered. EG: &lt;?xsl sheet='foo'?&gt; @p name the instruction name; in the example, &quot;xsl&quot; @p instruction the rest of the instruction. In the example, &quot;sheet='foo'&quot;"
+full_name: REXML::StreamListener#instruction
+is_singleton: false
+name: instruction
+params: (name, instruction)
+visibility: public

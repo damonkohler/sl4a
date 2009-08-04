@@ -1,0 +1,15 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// BeanShell commands
+assert( isEvalError("testCommand(1)") );
+importCommands("/mypackage");
+assert( testCommand(1) == 1 );
+
+assert( isEvalError("addedCommand(1)") );
+addClassPath("Data/addedCommand.jar");
+importCommands("/");
+assert( addedCommand(1) == 1 );
+
+complete();

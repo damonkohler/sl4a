@@ -1,0 +1,23 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WEBrick::HTTPServlet::DefaultFileHandler
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: do_GET
+- !ruby/object:RI::MethodSummary 
+  name: make_partial_content
+- !ruby/object:RI::MethodSummary 
+  name: not_modified?
+- !ruby/object:RI::MethodSummary 
+  name: prepare_range
+name: DefaultFileHandler
+superclass: AbstractServlet

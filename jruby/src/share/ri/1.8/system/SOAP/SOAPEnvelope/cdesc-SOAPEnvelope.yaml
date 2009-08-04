@@ -1,0 +1,37 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: body
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: external_content
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: header
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: SOAP::SOAPEnvelope
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: SOAPEnvelopeElement
+- !ruby/object:RI::IncludedModule 
+  name: SOAPCompoundtype
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: body=
+- !ruby/object:RI::MethodSummary 
+  name: encode
+- !ruby/object:RI::MethodSummary 
+  name: header=
+- !ruby/object:RI::MethodSummary 
+  name: to_ary
+name: SOAPEnvelope
+superclass: XSD::NSDBase

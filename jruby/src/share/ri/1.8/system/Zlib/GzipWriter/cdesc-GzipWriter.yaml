@@ -1,0 +1,49 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: open
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Zlib::GzipWriter is a class for writing gzipped files. GzipWriter should be used with an instance of IO, or IO-like, object.
+- !ruby/struct:SM::Flow::P 
+  body: "For example:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  Zlib::GzipWriter.open('hoge.gz') do |gz|\n    gz.write 'jugemu jugemu gokou no surikire...'\n  end\n\n  File.open('hoge.gz', 'w') do |f|\n    gz = Zlib::GzipWriter.new(f)\n    gz.write 'jugemu jugemu gokou no surikire...'\n    gz.close\n  end\n\n  # TODO: test these.  Are they equivalent?  Can GzipWriter.new take a\n  # block?\n"
+- !ruby/struct:SM::Flow::P 
+  body: "NOTE: Due to the limitation of Ruby's finalizer, you must explicitly close GzipWriter objects by Zlib::GzipWriter#close etc. Otherwise, GzipWriter will be not able to write the gzip footer and will generate a broken gzip file."
+constants: []
+
+full_name: Zlib::GzipWriter
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "<<"
+- !ruby/object:RI::MethodSummary 
+  name: comment=
+- !ruby/object:RI::MethodSummary 
+  name: flush
+- !ruby/object:RI::MethodSummary 
+  name: mtime=
+- !ruby/object:RI::MethodSummary 
+  name: orig_name=
+- !ruby/object:RI::MethodSummary 
+  name: pos
+- !ruby/object:RI::MethodSummary 
+  name: print
+- !ruby/object:RI::MethodSummary 
+  name: printf
+- !ruby/object:RI::MethodSummary 
+  name: putc
+- !ruby/object:RI::MethodSummary 
+  name: puts
+- !ruby/object:RI::MethodSummary 
+  name: tell
+- !ruby/object:RI::MethodSummary 
+  name: write
+name: GzipWriter
+superclass: Zlib::GzipFile

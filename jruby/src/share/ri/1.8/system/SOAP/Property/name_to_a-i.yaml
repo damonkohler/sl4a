@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Property#name_to_a
+is_singleton: false
+name: name_to_a
+params: (name)
+visibility: private

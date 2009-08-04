@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Maker::TaxonomyTopicModel::TaxonomyTopicsBase#to_rss
+is_singleton: false
+name: to_rss
+params: (rss, current)
+visibility: public

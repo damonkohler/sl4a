@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RI::TextFormatter::list
+is_singleton: true
+name: list
+params: ()
+visibility: public

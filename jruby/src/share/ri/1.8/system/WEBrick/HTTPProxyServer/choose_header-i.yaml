@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPProxyServer#choose_header
+is_singleton: false
+name: choose_header
+params: (src, dst)
+visibility: public

@@ -1,0 +1,61 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: the directory we search for original documentation
+  name: doc_dir
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: the formatting we apply to the output
+  name: formatter
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: should we just display a class list and exit
+  name: list_classes
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: should we display a list of all names
+  name: list_names
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: No not use a pager. Writable, because ri sets it if it can't find a pager
+  name: use_stdout
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: The width of the output line
+  name: width
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: RI::Options
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Singleton
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: displayer
+- !ruby/object:RI::MethodSummary 
+  name: parse
+- !ruby/object:RI::MethodSummary 
+  name: path
+- !ruby/object:RI::MethodSummary 
+  name: raw_path
+- !ruby/object:RI::MethodSummary 
+  name: show_version
+name: Options
+superclass: Object

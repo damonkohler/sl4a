@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "headers: SOAPHeaderItem enumerable object"
+full_name: SOAP::Header::HandlerSet#on_inbound
+is_singleton: false
+name: on_inbound
+params: (headers)
+visibility: public

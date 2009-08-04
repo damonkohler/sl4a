@@ -1,0 +1,62 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: HeaderFaultName
+  value: XSD::QName.new(SOAPBindingNamespace, 'headerfault')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: LocationAttrName
+  value: XSD::QName.new(nil, 'location')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: StyleAttrName
+  value: XSD::QName.new(nil, 'style')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TransportAttrName
+  value: XSD::QName.new(nil, 'transport')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: UseAttrName
+  value: XSD::QName.new(nil, 'use')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PartsAttrName
+  value: XSD::QName.new(nil, 'parts')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PartAttrName
+  value: XSD::QName.new(nil, 'part')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NameAttrName
+  value: XSD::QName.new(nil, 'name')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MessageAttrName
+  value: XSD::QName.new(nil, 'message')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EncodingStyleAttrName
+  value: XSD::QName.new(nil, 'encodingStyle')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NamespaceAttrName
+  value: XSD::QName.new(nil, 'namespace')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SOAPActionAttrName
+  value: XSD::QName.new(nil, 'soapAction')
+full_name: WSDL::SOAP
+includes: []
+
+instance_methods: []
+
+name: SOAP
+superclass: 

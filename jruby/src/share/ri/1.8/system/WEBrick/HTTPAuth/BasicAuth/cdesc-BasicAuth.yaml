@@ -1,0 +1,36 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: logger
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: realm
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: userdb
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: make_passwd
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AuthScheme
+  value: "\"Basic\""
+full_name: WEBrick::HTTPAuth::BasicAuth
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Authenticator
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: authenticate
+- !ruby/object:RI::MethodSummary 
+  name: challenge
+name: BasicAuth
+superclass: Object

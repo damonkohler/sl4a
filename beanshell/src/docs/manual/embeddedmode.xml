@@ -1,0 +1,450 @@
+<section>
+<name filename="embeddedmode">Embedding BeanShell in Your Application</name>
+
+<img src="embeddedmode.gif"/>
+<br CLEAR="ALL"/>
+
+BeanShell was designed not only as a standalone scripting language - to run
+scripts from files or on the command line -  but to be easily embeddable in 
+and extensible by your applications.  When we talk about
+embedding BeanShell in your application we mean simply that you can use the
+BeanShell Interpreter in your own classes, to evaluate scripts and work with
+objects dynamically.  
+<p/>
+
+There are a number of reasons you might use BeanShell in this way.  Here
+are a few:
+<p/>
+
+<h3>Highly Customizable Applications</h3>
+
+You can use BeanShell to make your applications highly customizable by users 
+without requiring them to compile Java classes or even to know all of the 
+Java syntax.  
+
+During development you can use BeanShell to "factor out" volatile or 
+environmentally dependent algorithms from your application and leave them 
+in the scripting domain while they are under the most intense change.
+Later it is easy to move them back into compiled Java if you wish because
+BeanShell syntax is Java syntax.
+<p/>
+
+<h3>Macros and Evaluation</h3>
+
+BeanShell can be used as a generic language for "macros" or other complex
+tasks that must be described by a user of your application.
+For example, the popular JEdit Java editor uses 
+BeanShell to allow users to implement macros for key bindings.  This gives
+user power to customize the behavior of the editor, using as much (or
+as little) of the full power of Java as desired.
+<p/>
+
+Java with loose variables is a very simple and appealing language; especially
+because there is already so much Java out there.  Even a non-programmer
+will be familiar with the name "Java" and more inclined to want to work
+with it than an arbitrary new language.
+<p/>
+
+BeanShell can also be used to perform dynamic evaluation of complex expressions
+such as mathematics or computations entered by the user.   Why write an
+arithmetic expression parser when you can let your user enter equations using
+intermediate variables, operators, and other constructs.  If strict control
+is desired, you can generate the script yourself using your own rules, and
+still leave the evaluation to BeanShell.
+
+<h3>Simplify Complex Configuration Files</h3>
+
+Many applications use simple Java properties files or XML for the majority
+of their runtime configuration.
+It is very common in the development of a large applications for configuration
+files like this to become increasingly complex.  It can begin in a number
+of seemingly harmless ways - with the desire to make "cross references"
+inside the config files (XML supports this nicely).  Then comes the desire
+to do something like variable substitution - which introduces some new syntax
+such as "${variable}" and usually a second pass in the parsing stage.
+Usually, at some point, integration with Java forces the introduction of 
+class names into the mix.  The configuration files soon want to start
+assigning parameters for object construction.  Ultimately what you'll 
+discover is that you are creating your own scripting language - and one that
+is probably not as easy to read as plain old Java.
+<p/>
+
+BeanShell solves the problem of complex configuration files by allowing
+users to work not only with simple properties style values 
+(loose variable assignment)
+but also to have the full power of Java to construct objects, arrays,
+perform loops and conditionals, etc.  And as we'll see, BeanShell scripts
+can work seamlessly with objects from the application, <b>without</b>
+the need to turn them into strings to cross the script boundary.
+<p/>
+
+
+<h2>The BeanShell Core Distribution</h2>
+
+Beanshell is fairly small, even in its most general distribution.  The
+full JAR with all utilities weighs in at about 250K.  But BeanShell is
+also distributed in a componentized fashion, allowing you to choose to add
+only the utilities and other pieces that you need.  The core distribution
+includes only the BeanShell interpreter and is currently about 130K.  <em>We
+expect this size to drop in the future with improvements in the parser
+generator.</em>  Any significant new features will always be provided in
+the form of add-on modules, so that the core language can remain small.
+<p/>
+
+More and more people are using BeanShell for embedded applications in small
+devices.  We have reports of BeanShell running everywhere from palm-tops
+to autonomous buoys in the Pacific ocean!
+
+
+<h2>Calling BeanShell From Java</h2>
+
+Invoking BeanShell from Java is easy.   The first step is to create in
+instance of the bsh.Interpreter class.  Then you can use it to evaluate
+strings of code, source external scripts.  You can pass your data in to
+the Interpreter as ordinary BeanShell variables, using the Interpreter
+set() and get() methods.
+<p/>
+
+In "QuickStart" we showed a few examples:
+
+<example>
+import bsh.Interpreter;
+
+Interpreter i = new Interpreter();  // Construct an interpreter
+i.set("foo", 5);                    // Set variables
+i.set("date", new Date() ); 
+
+Date date = (Date)i.get("date");    // retrieve a variable
+
+// Eval a statement and get the result
+i.eval("bar = foo*10");             
+System.out.println( i.get("bar") );
+
+// Source an external script file
+i.source("somefile.bsh");
+</example>
+
+The default constructor for the Interpreter assumes that it is going to be
+used for simple evaluation.  Other constructors allow you to
+set up the Interpreter to work with interactive sources including streams
+and the GUI console.
+<p/>
+
+<h2>eval()</h2>
+
+The Interprete eval() method accepts a script as a string and interprets it,
+optionally returning a result.
+The string can contain any normal BeanShell script text with any number of 
+Java statements.
+The Interpreter maintains state over any number of eval() calls, so you can
+interpret statements individually or all together.
+
+<note>
+It is not necessary to add a trailing ";" semi-colon at the end of the 
+evaluated string.  BeanShell always adds one at the end of the string.
+</note>
+
+The result of the evaluation of the last statement or expression in the 
+evaluated string is returned as the value of the eval().  Primitive types
+(e.g int, char, boolean) are returned wrapped in their primitive wrappers
+(e.g. Integer, Character, Boolean).
+If an evaluation of a statement or expression yields a "void" value; such
+as would be the case for something like a for-loop or a void type method
+invocation, eval() returns null.
+<p/>
+
+<example>
+Object result = i.eval( "long time = 42; new Date( time )" ); // Date
+Object result = i.eval("2*2");  // Integer
+</example>
+
+You can also evaluate text from a java.io.Reader stream using eval():
+
+<example>
+reader = new FileReader("myscript.bsh");
+i.eval( reader );
+</example>
+
+<h2>EvalError</h2>
+
+The bsh.EvalError exception is the general exception type for an error in 
+evaluating a BeanShell script.  Subclasses of EvalError - ParseException
+and TargetError - indicate the specific conditions where a textual 
+parsing error was encountered or where the script itself caused an exception 
+to be generated.
+<p/>
+
+<example>
+try {
+    i.eval( script );
+} catch ( EvalError e ) {
+    // Error evaluating script
+}
+</example>
+
+You can get the error message, line number and source file of the error
+from the EvalError with the following methods:
+<p/>
+
+<table border="1" cellpadding="5">
+<tr><td>
+String getErrorText() { 
+</td></tr>
+<tr><td>
+int getErrorLineNumber() { 
+</td></tr>
+<tr><td>
+String getErrorSourceFile() {
+</td></tr>
+</table>
+<p/>
+
+<h3>ParseException</h3>
+
+ParseException extends EvalError and indicates that the exception was 
+caused by a syntactic error in reading the script.  The error message will
+indicate the cause.
+
+<h3>TargetError</h3>
+
+TargetError extends EvalError and indicates that the exception was 
+not related to the evaluation of the script, but caused the by script itself.
+For example, the script may have explicitly thrown an exception
+or it may have caused an application level exception such as a NullPointer
+exception or an ArithmeticException.
+<p/>
+
+The TargetError contains the "cause" exception.  You can retrieve it 
+with the getTarget() method.
+
+<example>
+try {
+    i.eval( script );
+} catch ( TargetError e ) {
+    // The script threw an exception
+    Throwable t = e.getTarget();
+    print( "Script threw exception: " + t );
+} catch ( ParseException e ) {
+    // Parsing error
+} catch ( EvalError e ) {
+    // General Error evaluating script
+}
+</example>
+
+<h2>source()</h2>
+
+The Interpreter source() method can be used to read a script from an external
+file:
+
+<example>
+i.source("myfile.bsh");
+</example>
+
+The Interpreter source() method may throw FileNotFoundException and 
+IOException in addition to EvalError.  Aside from that source() is simply
+and eval() from a file.
+
+<h3>set(), get(), and unset()</h3>
+
+As we've seen in the examples thus far, set() and get() can be used to
+pass objects into the BeanShell interpreter as variables and retrieve the
+value of variables, respectively.
+<p/>
+
+It should be noted that get() and set() are capable of evaluation of
+arbitrarily complex or compound variable and field expression.  
+For example:
+
+<example>
+import bsh.Interpreter;
+i=new Interpreter();
+
+i.eval("myobject=object()" );
+i.set("myobject.bar", 5);
+
+i.eval("ar=new int[5]");
+i.set("ar[0]", 5);
+
+i.get("ar[0]");
+</example>
+
+The get() and set() methods have all of the evaluation capabilities of
+eval() except that they will resolve only one variable target or value
+and they will expect the expression to be of the appropriate resulting type.
+<p/>
+
+<em>The deprecated setVariable() and getVariable() methods are no longer
+used because the did not allow for complex evaluation of variable names</em>
+<p/>
+
+You can use the unset() method to return a variable to the undefined state.
+
+
+<h3>Getting Interfaces from Interpreter</h3>
+
+We've talked about the usefulness of writing scripts that implement
+Java interfaces.  By wrapping a script in an interface you can make it
+transparent to the rest of your Java code.
+
+As we described in the "Interfaces" section earlier, within the BeanShell 
+interpreter scripted objects automatically implement any interface necessary 
+when they are passed as arguments to methods requiring them.  
+However if you are going to pass a reference outside of BeanShell you may 
+have to perform an explicit cast inside the script, to get it to manufacture 
+the correct type.
+<p/>
+
+The following example scripts a global actionPerformed() method and returns a
+reference to itself as an ActionListener type:
+
+<example>
+// script the method globally
+i.eval( "actionPerformed( e ) { print( e ); }");
+
+// Get a reference to the script object (implementing the interface)
+ActionListener scriptedHandler = 
+    (ActionListener)i.eval("return (ActionListener)this");
+
+// Use the scripted event handler normally...
+new JButton.addActionListener( scriptedHandler );
+</example>
+
+Here we have performed the explicit cast in the script as we returned the
+reference.  (And of course we could have used the standard Java anonymous
+inner class style syntax as well.)
+<p/>
+
+An alternative would have been to have used the Interpreter getInterface()
+method, which asks explicitly for the global scope to be cast to a specific
+type and returned.
+The following example fetches a reference to the interpreter global namespace 
+and cast it to the specified type of interface type.  
+
+<pre>
+Interpreter interpreter = new Interpreter();
+// define a method called run()
+interpreter.eval("run() { ... }");
+
+// Fetch a reference to the interpreter as a Runnable
+Runnable runnable =
+    (Runnable)interpreter.getInterface( Runnable.class );
+</pre>
+<p/>
+
+The interface generated is an adapter (as are all interpreted interfaces).  
+It does not interfere with other uses of the global scope or other 
+references to it.
+We should note also that the interpreter does *not* require that any or all 
+of the methods of the interface be defined at the time the interface is
+generated.  However if you attempt to invoke one that is not defined
+you will get a runtime exception.
+<p/>
+
+<h2>Multiple Interpreters vs. Multi-threading</h2>
+
+A common design question is whether to use a single BeanShell
+interpreter or multiple interpreter instances in your application.  
+<p/>
+
+The Interpreter class is, in general, thread safe and allows you to 
+work with threads, within the normal bounds of the Java language.  BeanShell
+does not change the normal application level threading issues of multiple 
+threads from accessing the same variables: you still have to synchronize
+access using some mechanism if necessary. 
+However it is legal to perform multiple simultaneous evaluations. 
+You can also write multi-threaded scripts within the language, as we discussed
+briefly in "Scripting Interfaces".
+<p/>
+
+Since working with multiple threads introduces issues of synchronization
+and application structure, you may wish to simply create multiple Interpreter
+instances.  BeanShell Interpreter instances were designed to be very light
+weight.  Construction time is usually negligible and in simple tests, we have 
+found that it is possible to maintain hundreds (or even thousands) of 
+instances.
+<p/>
+
+There are other options in-between options as well.  It is possible to 
+retrieve BeanShell scripted objects from the interpreter and "re-bind" them
+again to the interpreter.  We'll talk about that in the next section.
+You can also get and set the root level bsh.NameSpace object for the
+entire Interpreter.  The NameSpace is roughly equivalent to a BeanShell method
+context.   Each method context has an associated NameSpace object.
+
+<tip>
+You can clear all variables, methods, and imports from a scope using
+the clear() command.
+</tip>
+
+
+<em>Note: at the time of this writing the synchronized language keyword
+is not implemented.  This will be corrected in an upcoming release.</em>
+<p/>
+
+See also "The BeanShell Parser" for more about performance issues.
+
+<h2>Serializing Interpreters and Scripted Objects</h2>
+
+The BeanShell Interpreter is serializable, assuming of course that all
+objects referenced by variables in the global scope are also serializable.
+So you can save the entire static state of the interpreter by serializing
+it and storing it.  Note that serializing the Intepreter does not "freeze"
+execution of BeanShell scripts in any sense other than saving the current
+state of the variables.  In general if you serialize an Interpreter while 
+it is executing code the results will be undetermined.  De-serializing an
+interpreter does not automatically restart method executions; it simply
+restores state.
+<p/>
+
+<note>
+There is serious Java bug that affects BeanShell serializability in Java
+versions prior to 1.3.  When using these versions of Java the primitive type 
+class identifiers cannot be de-serialized.  See the FAQ for a workaround.
+</note>
+
+It is also possible to serialize individual BeanShell scripted objects
+('this' type references and interfaces to scripts).  The same rules apply.
+One thing to note is that by default serializing a scripted object context
+will also serialize all of that object's parent contexts up to the global
+scope - effectively serializing the whole interpreter.
+<p/>
+
+To detach a scripted object from its parent namespace you can use the
+namespace prune() method:
+
+<example>
+// From BeanShell
+object.namespace.prune();
+
+// From Java
+object.getNameSpace().prune();
+</example>
+
+To bind a BeanShell scripted object back into a particular method scope
+you can use the bind() command:
+
+<example>
+// From BeanShell
+bind( object, this.namespace );
+
+// From Java
+bsh.This.bind( object, namespace, interpreter );
+</example>
+
+The bind() operation requires not only the namespace (method scope) into which 
+to bind the object, but an interpreter reference as well.  The interpreter
+reference is the "declaring interpreter" of the object and is used for cases
+where there is no active interpreter - e.g. where an external method call
+from compiled Java enters the object.
+<p/>
+
+The BeanShell save() command which serializes objects recognize when you are 
+trying to save a BeanShell scripted object (a bsh.This reference) type and 
+automatically prune()s it from the parent namespace, so that saving the object 
+doesn't drag along the whole interpreter along for the ride.  Similarly, 
+load() binds the object to the current scope.
+<p/>
+
+
+</section>
+

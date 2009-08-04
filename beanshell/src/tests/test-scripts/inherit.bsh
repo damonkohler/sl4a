@@ -1,0 +1,147 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// File: inherit.bsh
+// Author: Roger Bolsius
+// Time-stamp: <1999-Sep-25 5:40:50am EST - rogerb>
+//
+// Tests method inheritance from Classes and Interfaces with different access
+// scopes.
+// Beware of the commented y.w(); below.  It should work, but with the current
+// state of the Reflection API it is impossible.
+// 
+// The testharness doesn't really work for this because once we see the problem,
+// the interpreter stops reading further statments.
+//
+
+import InheritanceTest.*;
+
+print("Testing class/method scope and inheritance rules...");
+
+void call(obj,meth) {
+	meth.invoke(obj, noarg);
+}
+
+try {
+A w;
+X x;
+Y y;
+A z;
+
+// these should use something like this.namespace.getClass() instead...
+ca = getClass("InheritanceTest.A");
+cb = getClass("InheritanceTest.B");
+cc = getClass("InheritanceTest.C");
+cw = getClass("InheritanceTest.W");
+cx = getClass("InheritanceTest.X");
+cy = getClass("InheritanceTest.Y");
+cz = getClass("InheritanceTest.Z");
+
+sa = ca.getSuperclass();
+sb = cb.getSuperclass();
+sc = cc.getSuperclass();
+sw = cw.getSuperclass();
+sx = cx.getSuperclass();
+sy = cy.getSuperclass();
+sz = cz.getSuperclass();
+
+ia = ca.getInterfaces();
+ib = cb.getInterfaces();
+ic = cc.getInterfaces();
+iw = cw.getInterfaces();
+ix = cx.getInterfaces();
+iy = cy.getInterfaces();
+iz = cz.getInterfaces();
+
+nopar = new Class[0];
+noarg = new Object[0];
+
+maa  = ca.getDeclaredMethod("a", nopar);
+mbb  = cb.getDeclaredMethod("b", nopar);
+mcc  = cc.getDeclaredMethod("c", nopar);
+
+mwa  = cw.getDeclaredMethod("a", nopar);
+mwb  = cw.getDeclaredMethod("b", nopar);
+mww  = cw.getDeclaredMethod("w", nopar);
+
+mxa  = cx.getDeclaredMethod("a", nopar);
+mxx  = cx.getDeclaredMethod("x", nopar);
+
+myc  = cy.getDeclaredMethod("c", nopar);
+myy  = cy.getDeclaredMethod("y", nopar);
+
+mzc  = cz.getDeclaredMethod("c", nopar);
+mzz  = cz.getDeclaredMethod("z", nopar);
+
+print(maa);
+print(mbb);
+print(mcc);
+
+print(mwa);
+print(mwb);
+print(mww);
+
+print(mxa);
+print(mxx);
+
+print(myc);
+print(myy);
+
+print(mzc);
+print(mzz);
+
+
+mc = cc.getInterfaces();
+mw = cw.getInterfaces();
+mx = cx.getInterfaces();
+my = cy.getInterfaces();
+mz = cz.getInterfaces();
+
+w  = Accessor.getWbyA();
+x  = Accessor.getX();
+y  = Accessor.getY();
+z  = Accessor.getZbyC();
+
+w.a();
+w.b();
+
+// This shouldn't work.  Though if y.w() (see below) would work, then this
+// probably would too.
+//w.w();
+
+x.a();
+x.b();
+x.x();
+		
+y.a();
+y.b();
+y.c();
+
+// Works in bytecode land.  Cannot get java.lang.Reflect to mimic this.
+// Apparently the reflection guys, interpreted the Java lang spec
+//   as dictating that this is illegal.
+// The Java compiler crew have the opposite understanding.
+//   This throws a java.lang.reflect.InvocationTargetException (can't figure
+//   out the problem since the Invoke method is native.)
+//y.w();
+
+y.x();
+y.y();
+
+z.a();
+z.b();
+z.c();
+z.x();
+
+// Same as w.w(), above.
+//z.z();
+
+assert("If we made it this far, then we're OK.".length() == 38);
+
+} catch ( Exception e) {
+	error("Caught exception: "+e);
+	assert(false);
+}
+
+complete();

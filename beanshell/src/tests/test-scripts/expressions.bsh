@@ -1,0 +1,59 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+java.sql.Date date;
+assert( isEvalError("date=5;") ); // can't assign int to Date
+
+import java.sql.Date;
+Date date2;
+assert( isEvalError("date2=5;") ); // can't assign int to Date
+
+java.sql.Date date3;
+assert( isEvalError("date3=5;") ); // can't assign int to Date
+
+bsh.system.shutdownOnExit;
+
+if ( bsh.system.shutdownOnExit == true )
+	System.out.println("foo");
+
+// accept expressions as well as block statements
+2;
+2+2;
+(2*2);
+(2)*2;
+(3*2)+5;
+bsh.system.shutdownOnExit == true;
+
+s1="foo";
+s2="bar";
+
+s1.equals(s2);
+!true;
+a=!s1.equals(s2);
+(!s1.equals(s2));
+
+// important - expressions with method invocations in them
+// used to trigger bug
+Math.sin(0.5)*2;
+!s1.equals(s2);
+
+
+// This set of stuff used to trigger nasty bug in PrimaryPrefix lookahead
+
+value="foo";
+
+(value != null) && (value.trim().length() > 0);
+(value.trim()!=null) && true;
+
+true && (value.trim().length()!=0);
+
+"foo".trim().trim().trim() != null;
+
+true && (value.trim().length() > 0);
+
+// end - This set of stuff 
+
+
+complete();
+

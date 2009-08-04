@@ -1,0 +1,68 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: attributeformdefault
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: attributes
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: complextypes
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: elementformdefault
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: elements
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: importedschema
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: imports
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: simpletypes
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: targetnamespace
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+comment: 
+constants: []
+
+full_name: WSDL::XMLSchema::Schema
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: collect_attributes
+- !ruby/object:RI::MethodSummary 
+  name: collect_complextypes
+- !ruby/object:RI::MethodSummary 
+  name: collect_elements
+- !ruby/object:RI::MethodSummary 
+  name: collect_simpletypes
+- !ruby/object:RI::MethodSummary 
+  name: location
+- !ruby/object:RI::MethodSummary 
+  name: location=
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+name: Schema
+superclass: Info

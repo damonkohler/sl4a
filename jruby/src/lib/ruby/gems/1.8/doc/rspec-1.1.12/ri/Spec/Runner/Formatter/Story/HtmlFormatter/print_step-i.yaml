@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (klass, type, description, *args)
+is_singleton: false
+block_params: 
+name: print_step
+comment: 
+full_name: Spec::Runner::Formatter::Story::HtmlFormatter#print_step
+visibility: public
+aliases: []
+

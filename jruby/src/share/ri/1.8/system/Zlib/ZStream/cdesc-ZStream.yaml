@@ -1,0 +1,99 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Zlib::ZStream is the abstract class for the stream which handles the compressed data. The operations are defined in the subclasses: Zlib::Deflate for compression, and Zlib::Inflate for decompression."
+- !ruby/struct:SM::Flow::P 
+  body: An instance of Zlib::ZStream has one stream (struct zstream in the source) and two variable-length buffers which associated to the input (next_in) of the stream and the output (next_out) of the stream. In this document, &quot;input buffer&quot; means the buffer for input, and &quot;output buffer&quot; means the buffer for output.
+- !ruby/struct:SM::Flow::P 
+  body: Data input into an instance of Zlib::ZStream are temporally stored into the end of input buffer, and then data in input buffer are processed from the beginning of the buffer until no more output from the stream is produced (i.e. until avail_out &gt; 0 after processing). During processing, output buffer is allocated and expanded automatically to hold all output data.
+- !ruby/struct:SM::Flow::P 
+  body: Some particular instance methods consume the data in output buffer and return them as a String.
+- !ruby/struct:SM::Flow::P 
+  body: "Here is an ascii art for describing above:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "   +================ an instance of Zlib::ZStream ================+\n   ||                                                            ||\n   ||     +--------+          +-------+          +--------+      ||\n   ||  +--| output |&lt;---------|zstream|&lt;---------| input  |&lt;--+  ||\n   ||  |  | buffer |  next_out+-------+next_in   | buffer |   |  ||\n   ||  |  +--------+                             +--------+   |  ||\n   ||  |                                                      |  ||\n   +===|======================================================|===+\n       |                                                      |\n       v                                                      |\n   &quot;output data&quot;                                         &quot;input data&quot;\n"
+- !ruby/struct:SM::Flow::P 
+  body: If an error occurs during processing input buffer, an exception which is a subclass of Zlib::Error is raised. At that time, both input and output buffer keep their conditions at the time when the error occurs.
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Method Catalogue
+- !ruby/struct:SM::Flow::P 
+  body: Many of the methods in this class are fairly low-level and unlikely to be of interest to users. In fact, users are unlikely to use this class directly; rather they will be interested in Zlib::Inflate and Zlib::Deflate.
+- !ruby/struct:SM::Flow::P 
+  body: The higher level methods are listed below.
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "-"
+    body: "#total_in"
+  - !ruby/struct:SM::Flow::LI 
+    label: "-"
+    body: "#total_out"
+  - !ruby/struct:SM::Flow::LI 
+    label: "-"
+    body: "#data_type"
+  - !ruby/struct:SM::Flow::LI 
+    label: "-"
+    body: "#adler"
+  - !ruby/struct:SM::Flow::LI 
+    label: "-"
+    body: "#reset"
+  - !ruby/struct:SM::Flow::LI 
+    label: "-"
+    body: "#finish"
+  - !ruby/struct:SM::Flow::LI 
+    label: "-"
+    body: "#finished?"
+  - !ruby/struct:SM::Flow::LI 
+    label: "-"
+    body: "#close"
+  - !ruby/struct:SM::Flow::LI 
+    label: "-"
+    body: "#closed?"
+  type: :BULLET
+constants: []
+
+full_name: Zlib::ZStream
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: adler
+- !ruby/object:RI::MethodSummary 
+  name: avail_in
+- !ruby/object:RI::MethodSummary 
+  name: avail_out
+- !ruby/object:RI::MethodSummary 
+  name: avail_out=
+- !ruby/object:RI::MethodSummary 
+  name: close
+- !ruby/object:RI::MethodSummary 
+  name: closed?
+- !ruby/object:RI::MethodSummary 
+  name: data_type
+- !ruby/object:RI::MethodSummary 
+  name: end
+- !ruby/object:RI::MethodSummary 
+  name: ended?
+- !ruby/object:RI::MethodSummary 
+  name: finish
+- !ruby/object:RI::MethodSummary 
+  name: finished?
+- !ruby/object:RI::MethodSummary 
+  name: flush_next_in
+- !ruby/object:RI::MethodSummary 
+  name: flush_next_out
+- !ruby/object:RI::MethodSummary 
+  name: reset
+- !ruby/object:RI::MethodSummary 
+  name: stream_end?
+- !ruby/object:RI::MethodSummary 
+  name: total_in
+- !ruby/object:RI::MethodSummary 
+  name: total_out
+name: ZStream
+superclass: Object

@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+params: (example, error)
+is_singleton: false
+block_params: 
+name: failure
+comment: 
+full_name: Spec::Runner::Reporter#failure
+visibility: public
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: example_failed

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (name, *args, &block)
+is_singleton: false
+block_params: 
+name: Given
+comment: 
+full_name: Spec::Story::World#Given
+visibility: public
+aliases: []
+

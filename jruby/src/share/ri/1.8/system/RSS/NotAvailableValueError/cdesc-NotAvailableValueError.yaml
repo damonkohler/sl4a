@@ -1,0 +1,27 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: attribute
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: tag
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: value
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: RSS::NotAvailableValueError
+includes: []
+
+instance_methods: []
+
+name: NotAvailableValueError
+superclass: InvalidRSSError

@@ -1,0 +1,38 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Namespace
+  value: SOAP::LiteralNamespace
+full_name: SOAP::EncodingStyle::LiteralHandler
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: decode_attrs
+- !ruby/object:RI::MethodSummary 
+  name: decode_epilogue
+- !ruby/object:RI::MethodSummary 
+  name: decode_parent
+- !ruby/object:RI::MethodSummary 
+  name: decode_prologue
+- !ruby/object:RI::MethodSummary 
+  name: decode_tag
+- !ruby/object:RI::MethodSummary 
+  name: decode_tag_end
+- !ruby/object:RI::MethodSummary 
+  name: decode_text
+- !ruby/object:RI::MethodSummary 
+  name: decode_textbuf
+- !ruby/object:RI::MethodSummary 
+  name: encode_data
+- !ruby/object:RI::MethodSummary 
+  name: encode_data_end
+name: LiteralHandler
+superclass: Handler

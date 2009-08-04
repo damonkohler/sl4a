@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: def sort(*filenames)
+- !ruby/struct:SM::Flow::VERB 
+  body: "  Sort.new(self, *filenames)\n"
+- !ruby/struct:SM::Flow::P 
+  body: end
+full_name: Shell::CommandProcessor#glob
+is_singleton: false
+name: glob
+params: (pattern)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: ( k, fetch( k ) )
+comment: 
+full_name: YAML::DBM#delete_if
+is_singleton: false
+name: delete_if
+params: () {|k, fetch( k  )| ...}
+visibility: public

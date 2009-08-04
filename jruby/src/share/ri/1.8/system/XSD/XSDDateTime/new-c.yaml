@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::XSDDateTime::new
+is_singleton: true
+name: new
+params: (value = nil)
+visibility: public

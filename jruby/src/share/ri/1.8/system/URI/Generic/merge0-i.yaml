@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: return base and rel. you can modify `base', but can not `rel'.
+full_name: URI::Generic#merge0
+is_singleton: false
+name: merge0
+params: (oth)
+visibility: private

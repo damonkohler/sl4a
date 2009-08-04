@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: if block_given?
+comment: 
+full_name: XSD::CodeGen::ModuleDef#def_protectedmethod
+is_singleton: false
+name: def_protectedmethod
+params: (name, *params) {|if block_given?| ...}
+visibility: public

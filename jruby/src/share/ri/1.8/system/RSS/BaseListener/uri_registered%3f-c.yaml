@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: test if this uri is registered against this name
+full_name: RSS::BaseListener::uri_registered?
+is_singleton: true
+name: uri_registered?
+params: (uri, name)
+visibility: public

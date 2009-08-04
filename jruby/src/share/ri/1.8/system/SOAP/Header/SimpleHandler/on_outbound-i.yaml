@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Header::SimpleHandler#on_outbound
+is_singleton: false
+name: on_outbound
+params: ()
+visibility: public

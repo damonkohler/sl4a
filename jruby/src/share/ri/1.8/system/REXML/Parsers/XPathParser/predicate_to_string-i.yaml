@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: ( path )
+comment: 
+full_name: REXML::Parsers::XPathParser#predicate_to_string
+is_singleton: false
+name: predicate_to_string
+params: ( path, &block ) {|path| ...}
+visibility: public

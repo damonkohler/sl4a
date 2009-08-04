@@ -1,0 +1,17 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Equality---Two regexps are equal if their patterns are identical, they have the same character set code, and their <tt>casefold?</tt> values are the same.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   /abc/  == /abc/x   #=&gt; false\n   /abc/  == /abc/i   #=&gt; false\n   /abc/u == /abc/n   #=&gt; false\n"
+full_name: Regexp#eql?
+is_singleton: false
+name: eql?
+params: |
+  rxp == other_rxp      => true or false
+  rxp.eql?(other_rxp)   => true or false
+
+visibility: public

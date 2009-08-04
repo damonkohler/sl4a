@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Maker::RSS20::new
+is_singleton: true
+name: new
+params: (rss_version="2.0")
+visibility: public

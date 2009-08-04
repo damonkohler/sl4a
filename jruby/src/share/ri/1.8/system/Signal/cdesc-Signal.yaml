@@ -1,0 +1,28 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: list
+- !ruby/object:RI::MethodSummary 
+  name: trap
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Many operating systems allow signals to be sent to running processes. Some signals have a defined effect on the process, while others may be trapped at the code level and acted upon. For example, your process may trap the USR1 signal and use it to toggle debugging, and may use TERM to initiate a controlled shutdown.
+- !ruby/struct:SM::Flow::VERB 
+  body: "    pid = fork do\n      Signal.trap(&quot;USR1&quot;) do\n        $debug = !$debug\n        puts &quot;Debug now: #$debug&quot;\n      end\n      Signal.trap(&quot;TERM&quot;) do\n        puts &quot;Terminating...&quot;\n        shutdown()\n      end\n      # . . . do some work . . .\n    end\n\n    Process.detach(pid)\n\n    # Controlling program:\n    Process.kill(&quot;USR1&quot;, pid)\n    # ...\n    Process.kill(&quot;USR1&quot;, pid)\n    # ...\n    Process.kill(&quot;TERM&quot;, pid)\n"
+- !ruby/struct:SM::Flow::P 
+  body: "produces:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "    Debug now: true\n    Debug now: false\n   Terminating...\n"
+- !ruby/struct:SM::Flow::P 
+  body: The list of available signal names and their interpretation is system dependent. Signal delivery semantics may also vary between systems; in particular signal delivery may not always be reliable.
+constants: []
+
+full_name: Signal
+includes: []
+
+instance_methods: []
+
+name: Signal
+superclass: 

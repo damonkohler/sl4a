@@ -1,0 +1,266 @@
+<FAQ>
+<head>
+	<subject name="BeanShell"/>
+	<authors>
+		<author name="Pat Niemeyer" email="pat@pat.net"/>
+		<author name="Daniel Leuck" email="dan@econtix.com"/>
+	</authors>
+	<last-modified date="2002.05.08" gmt-time="02:59"/>
+</head>
+<body>
+<category name="general">
+	<entry>
+		<question>
+		Why is it called "BeanShell"?
+		</question>
+		<answer>
+		It's partially a pun on "bash" (the GNU "Bourne again" shell)
+		"bash"->"bsh" and then there's the obvious beans reference.
+		<br/>
+		In the future I want to add more functionality for working with
+		JavaBeans (editors, etc.) and make BeanShell more accessible for use
+		*as* a JavaBean. 
+		</answer>
+	</entry>
+	<entry>
+		<question>
+		How does BeanShell relate to other Java scripting languages like
+		JavaScript, Jacl, and JPython.
+		</question>
+		<answer>
+		JavaScript is evolving, but fragile and gross - not unlike, I'd imagine,
+		the first slimy creatures to crawl out of the oceans billions of years
+		ago. JavaScript's history has had little to do with Java and I am
+		therefore highly skeptical about it. 
+		<br/>
+		I was, on the other hand, very excited about Sun's announcement that
+		they intended to port Tcl to Java (Jacl) and provide greater Tcl/Java
+		integration. Tcl is cool and my desire for an embeddable / extensible
+		scripting language for Java drove me to start this project. However I
+		have not seen much progress on this project since John Ousterhout left
+		Sun. 
+		<br/>
+		JPython is a port of the Python language to Java. I like Python as a
+		more object oriented and structured / regular alternative to Perl. 
+		(Although the use of formatting for code blocking offends my C
+		sensibilities ;) ). Python may be the best choice for a full blown
+		scripting language. However it is signifigantly heavier than BeanShell
+		for use as a scripting extension language and it does require that
+		programmers learn yet another language (albeit a good one). 
+		<br/>
+		It is entirely possible that one or more of these languages will
+		eventually supercede the role of BeanShell. However their full
+		implementations will undoubtedly be quite large (many megs) and there
+		will probably always be a role for a light weight, "obvious" and simple
+		scripting extension language. The goal then is to keep the core of bsh
+		as small as possible. The core of BeanShell is currently about 135K and
+		may actually get smaller in the future.
+		</answer>
+	</entry>
+	<entry>
+		<question>
+		What is BeanShell's size?
+		</question>
+		<answer>
+		Right now the core beanshell interpreter (without the misc shell tools)
+		is approximately 135K in the compressed JAR file (Bsh is about 175K with
+		all of its utilities). About 75-80% of that is the parser, which is
+		generated using Sun's JavaCC tool. It is possible that a more advanced
+		parser generator could reduce this size in the future. 
+		</answer>
+	</entry>
+	<entry>
+		<question>
+		What tools were used to create BeanShell?
+		</question>
+		<answer>
+		Beanshell is based on the Sun Java 1.1 grammar and the parser is
+		generated using <a href="http://www.metamata.com">JavaCC</a> (Sun's YACC
+		for Java). There are some bsh extensions to the Java grammar and some
+		subtractions of course. The bsh grammar and supporting code are supplied
+		in the source release. You may marvel at its beauty or retreat in horror
+		at its ugliness depending on where you look ;)
+		<br/>
+		I took some liberties with the Java grammar and
+		"unrolled" some constructs to make it easier to deal with early on.
+		Some of these decisions were probably mistakes but some may actually
+		make bsh slightly more efficient. A future rewrite may clean up the
+		grammar. 
+		</answer>
+	</entry>		
+	<entry>
+		<question>
+		Does BeanShell reparse scripted methods on each invocation?
+		</question>
+		<answer>
+		No.  Scripted methods are parsed once and stored in a parse tree.
+		Reparsing can be forced by calling the source command.  
+		</answer>
+	</entry>
+	<entry>
+		<question>
+		Why does BeanShell encounter problems during deserialization of
+		primitive type (class) identifiers? / Why do I get a
+		java.lang.ClassNotFoundException during deserialization?
+		</question>
+		<answer>
+		This problem is due to a known bug occurring in JDK/JRE 1.3.1 and below.
+		The numeric primitive types class identifiers (e.g. Integer.TYPE) aren't
+		properly deserialized by ObjectInputStream.  Attempting to do so will
+		cause a java.lang.ClassNotFoundException When using JDK 1.3.1 or lower
+		you can employ a workaround by subclassing ObjectInputStream.  The
+		workaround is described in detail
+		<a href="http://developer.java.sun.com/developer/bugParade/bugs/4171142.html">
+		here.</a>
+		</answer>
+	</entry>
+</category>
+<category name="performance">
+	<entry>
+		<question>
+		Why is bsh slower executing the first few commands?
+		</question>
+		<answer>
+		The BeanShell parser uses a lot of small classes to build the parse
+		tree. Java may not load (and verify) a given classes until you happen to
+		exercise the corresponding part of the Java grammar. (For example, it
+		may not load the class bsh.ASTForStatement until you use a "for" loop.)
+		You may notice this as a slight slow down on the first couple of
+		commands you execute. 
+		<br/>
+		To ameliorate the situation, as its first action, bsh prints its banner
+		message using its own bsh "eval" command... This gets things moving a
+		bit. 
+		</answer>
+	</entry>
+	<entry>
+		<question>
+		Why is BeanShell so slow when executing certain operations such as for
+		loops?
+		</question>
+		<answer>
+		As with any scripting language, BeanShell trades performance for
+		flexibility.  Certain operations are slower than others.  For loops, for
+		example, are noticeably slower than Java because the primitives involved
+		are being coerced to objects.  Object creation is computationally
+		expensive.  BeanShell will continue to be optimized but will always
+		remain slower than Java.
+		</answer>
+	</entry>	
+</category>
+<category name="console / command line">
+	<entry>
+		<question>
+		How can I use JConsole as an output terminal in my application?
+		</question>
+		<answer>
+		JConsole is a Swing component.  You can use it as you would any other
+		swing component.  For example:
+		<br/>
+		<code>
+		JConsole console = new JConsole();
+		myPanel.add(console);
+		</code>
+		<br/>
+		If you want to connect it to an interpreter simply add
+		<br/>
+		<code>
+		Interpreter interpreter = new Interpreter( console );
+  		interpreter.run();
+		</code>
+		<br/>
+		JConsole can also be connected to the interpreter directly with
+		Interpreter setConsole().  JConsole can supply a PrintWriter through
+		getOut() and has a full suite of direct print() methods.  When
+		interacting with the console from outside the event handling thread
+		employ the normal Swing-related thread safety facilities such as
+		SwingUtilities.invokeNow() and invokeLater().		
+		<p/>
+		Consult the user manual for complete details.
+		</answer>
+	</entry>
+	<entry>
+		<question>
+		What's wrong with running the interpreter on the command line under
+		Solaris?
+		</question>
+		<answer>
+		Very old versions of Java for Solaris that use "green threads"
+		(non native threads) have a problem. Reading input from stdin
+		(System.in) blocks all other threads. <em>Note: this does *not* affect
+		the graphical bsh console window under Solaris or any OS.</em> This is a
+		well known problem relating to the implementation of user level threads.
+		You should be fine under Solaris using any native threads
+		implementation. 
+		<br/>
+		The problem is documented in a
+		<a href="http://metadigest.xcf.berkeley.edu/archive/advanced-java/9701/0811.html">
+		mail thread</a> from some time ago.
+		<br/>
+		Here's <a href="faqblockingio.html">a local copy</a> of one note in case
+		that disappears.
+		</answer>
+	</entry>	
+	<entry>
+		<question>
+		What happened to the AWT based version of the GUI Console.
+		</question>
+		<answer>
+		The AWT based Console was never very good. Since Swing is pure Java and
+		is available for jdk1.1.x there should be no reason to use AWT any
+		longer. However the old Console is still packaged for use in the Applet
+		based remote server mode and BeanShell still looks for it if nothing
+		else is available.  
+		</answer>
+	</entry>
+	<entry>
+		<question>
+		How does bsh deal with multi-line statements on the command line?
+		</question>
+		<answer>
+		BeanShell is not very friendly as a shell. (Although the bsh console
+		window implements a simple history for you. The raw parser does not
+		provide any feedback on a statement by statement basis. The happy little
+		"bsh" prompt is generated in the main interpreter loop and a little more
+		happens before your characters ever get to the interpreter. 
+		<br/>
+		Normally, the parser would insist on detecting a trailing ";" before it
+		would complete a line. In order to provide the shell-like ability to
+		simple hit 'return' on an empty line, we have a hack. The console window
+		detects empty lines and automatically appends a ";". This "feels better"
+		but is a little weird. For example, you can type "a=5" and hit return
+		twice to complete the line (the first is just trailing whitespace, the
+		second triggers the auto ";"). 
+		<br/>
+		When you run the bsh.Interpeter on the command line (in interactive
+		mode), a simple stream filter takes the place of the console and
+		preforms the ";" hack. I rationalize this by thinking that in the future
+		this stream filter will do "real" line editing and history. 	
+		<br/>
+		In the future, I'd like to fix all of this in a clean way and also
+		implement some parser feedback so that we can do a proper multi-line
+		statement prompt as in other shells. 
+		</answer>
+	</entry>	
+</category>
+<category name="feature related (does/will beanshell do this...)">
+	<entry>
+		<question>
+		Can I compile my beanshell scripts?
+		</question>
+		<answer>
+		Not currently but this is planned for a future release.  
+		See "The BeanShell Parser" in the user manual for related information.
+		</answer>
+	</entry>
+	<entry>
+		<question>
+		Can I subclass java classes using a scripted class?
+		</question>
+		<answer>
+		Not currently but this is planned for a future release.  
+		</answer>
+	</entry>
+</category>
+</body>
+</FAQ>

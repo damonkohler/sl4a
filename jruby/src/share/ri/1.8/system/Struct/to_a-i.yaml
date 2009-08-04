@@ -1,0 +1,17 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the values for this instance as an array.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Customer = Struct.new(:name, :address, :zip)\n   joe = Customer.new(&quot;Joe Smith&quot;, &quot;123 Maple, Anytown NC&quot;, 12345)\n   joe.to_a[1]   #=&gt; &quot;123 Maple, Anytown NC&quot;\n"
+full_name: Struct#to_a
+is_singleton: false
+name: to_a
+params: |
+  struct.to_a     => array
+  struct.values   => array
+
+visibility: public

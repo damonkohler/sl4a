@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (type, name)
+is_singleton: false
+block_params: 
+name: find
+comment: 
+full_name: Spec::Story::StepGroup#find
+visibility: public
+aliases: []
+

@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Modifies <em>str</em> in place as described for <tt>String#chomp</tt>, returning <em>str</em>, or <tt>nil</tt> if no modifications were made.
+full_name: String#chomp!
+is_singleton: false
+name: chomp!
+params: |
+  str.chomp!(separator=$/)   => str or nil
+
+visibility: public

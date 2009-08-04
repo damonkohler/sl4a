@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: content
+comment: 
+full_name: WSDL::XMLSchema::Content#each
+is_singleton: false
+name: each
+params: () {|content| ...}
+visibility: public

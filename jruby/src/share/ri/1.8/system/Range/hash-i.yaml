@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Generate a hash value such that two ranges with the same start and end points, and the same value for the &quot;exclude end&quot; flag, generate the same hash value.
+full_name: Range#hash
+is_singleton: false
+name: hash
+params: |
+  rng.hash    => fixnum
+
+visibility: public

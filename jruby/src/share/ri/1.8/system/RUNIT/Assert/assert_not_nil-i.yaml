@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RUNIT::Assert#assert_not_nil
+is_singleton: false
+name: assert_not_nil
+params: (actual, message="")
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: (worker)
+comment: 
+full_name: SOAP#start
+is_singleton: false
+name: start
+params: (url) {|worker| ...}
+visibility: private

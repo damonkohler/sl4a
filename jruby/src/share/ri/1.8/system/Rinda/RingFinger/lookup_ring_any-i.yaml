@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the first found remote TupleSpace. Any further recovered TupleSpaces can be found by calling <tt>to_a</tt>.
+full_name: Rinda::RingFinger#lookup_ring_any
+is_singleton: false
+name: lookup_ring_any
+params: (timeout=5)
+visibility: public

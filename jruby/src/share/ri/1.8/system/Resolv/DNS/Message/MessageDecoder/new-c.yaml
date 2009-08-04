@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: self
+comment: 
+full_name: Resolv::DNS::Message::MessageDecoder::new
+is_singleton: true
+name: new
+params: (data) {|self| ...}
+visibility: public

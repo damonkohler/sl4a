@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::Cookie::parse_set_cookie
+is_singleton: true
+name: parse_set_cookie
+params: (str)
+visibility: public

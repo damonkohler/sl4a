@@ -1,0 +1,15 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: +
+- !ruby/object:RI::AliasName 
+  name: union
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a new set built by merging the set and the elements of the given enumerable object.
+full_name: Set#|
+is_singleton: false
+name: "|"
+params: (enum)
+visibility: public

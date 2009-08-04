@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::WSDLLiteralRegistry#soapele2plainobj
+is_singleton: false
+name: soapele2plainobj
+params: (node)
+visibility: private

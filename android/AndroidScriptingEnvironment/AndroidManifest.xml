@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.google.ase" android:versionName="0.10-2 alpha" android:versionCode="11">
+	<application android:label="@string/application_title" android:icon="@drawable/ase_logo_48"
+	    android:debuggable="true">
+	    <meta-data android:name="com.a0soft.gphone.aTrackDog.webURL"
+           android:value="http://code.google.com/p/android-scripting" />
+        <meta-data android:name="com.a0soft.gphone.aTrackDog.dlURL"
+           android:value="http://code.google.com/p/android-scripting/downloads/list" />
+        <meta-data android:name="com.a0soft.gphone.aTrackDog.noMarket"
+           android:value="true" />
+		<activity android:name="ScriptManager">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.CREATE_SHORTCUT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.PICK" />
+				<data android:scheme="content" android:path="ase/scripts" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+	    </activity>
+		<activity android:name=".locale.LocalePlugin" android:label="@string/application_title"
+		    android:icon="@drawable/ase_logo_32">
+			<intent-filter>
+				<action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<receiver android:name=".locale.LocaleReceiver">
+			<intent-filter>
+				<action android:name="com.google.ase.locale.action.LAUNCH_SCRIPT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</receiver>
+		<activity android:name=".terminal.TerminalPreferences" />
+		<activity android:name=".terminal.Terminal"
+		    android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<action android:name="com.google.ase.action.LAUNCH_SCRIPT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity android:name="ScriptEditor">
+			<intent-filter>
+				<action android:name="com.google.ase.action.EDIT_SCRIPT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".interpreter.InterpreterInstaller" />
+		<activity android:name=".interpreter.UrlDownloader" />
+		<activity android:name=".interpreter.ZipExtractor" />
+		<activity android:name="ScriptKiller" />
+		<service  android:name="ScriptService" android:process=":remote" />
+	</application>
+
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+	<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+	<uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
+	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+	<uses-sdk android:minSdkVersion="3"></uses-sdk>
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+
+<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+</manifest>

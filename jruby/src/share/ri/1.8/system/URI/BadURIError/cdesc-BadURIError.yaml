@@ -1,0 +1,17 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: URI is valid, bad usage is not.
+constants: []
+
+full_name: URI::BadURIError
+includes: []
+
+instance_methods: []
+
+name: BadURIError
+superclass: Error

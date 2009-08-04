@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: advanced.html,v 1.2 2004/12/26 08:12:41 snakeru Exp $ -->
+<html xml:lang="ru-RU" lang="ru-RU" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta content="text/html; charset=koi8-r" http-equiv="content-type" />
+        <title>Xmpppy usage - advanced.</title>
+    </head>
+<!--
+Historical notes
+Intro
+simplexml
+Dispatcher
+-->
+    <body>
+        <h1>Introduction</h1>
+        <p>To write a programs using XMPP technology you must understand the basic
+           principles of it. Xmpppy uses it's own implementation of XML handling
+           procedures - so you should get used to it. Though it is simple enough I hope.</p>
+        <dl>
+            <dn>Node class</dn>
+            <dt>
+              <dl>
+                <dn>prototype</dn>
+                  <dt>Node.__init__(name='', attrs={}, payload=[], parent=None, node=None)</dt>
+                <dn>Note that 'name' argument really consists of namespace and node name, space separated. Example:</dn>
+                  <dt>node=Node('jabber:client message', attrs={'to':'target@jid.com'},payload=[Node('body',payload=['Hello target!'])])<br />
+                      or<br />
+                      node=Node('jabber:client message')<br />
+                      node['to']='target@jid.com'<br />
+                      node.NT.body='Hello target!'
+                  </dt>
+              </dl>
+              NT stands for 'New Tag' and explicitly adds new child to the current node.
+              Also the T can be used. That means "find Tag" but if tag exists it acts just like NT otherwise.
+            </dt>
+
+            <dn>Protocol class</dn>
+            <dt>
+              Uses similar syntax. We will use 'node' attribute now:
+              <dl>
+                <dn>prototype</dn>
+                  <dt>Protocol.__init__(name=None, to=None, typ=None, frm=None, attrs={}, payload=[], timestamp=None, xmlns='jabber:client', node=None)</dt>
+                <dn>example</dn>
+                  <dt>p=Protocol(node=node)<br />
+                      or<br />
+                      proto=Protocol('message',to='target@jid.com',payload=[Node('body',payload=['Hello target!'])])<br />
+                      or<br />
+                      proto=Protocol('message',to='target@jid.com')<br />
+                      proto.NT.body='Hello target!'
+                  </dt>
+              </dl>
+            </dt>
+
+            <dn>Message class</dn>
+            <dt>
+              Similar syntax:
+              <dl>
+                <dn>prototype</dn>
+                  <dt>Message.__init__(to=None, body=None, typ=None, subject=None, attrs={}, frm=None, payload=[], timestamp=None, xmlns='jabber:client', node=None)</dt>
+                <dn>example</dn>
+                  <dt>m=Message(node=proto)<br />
+                      or<br />
+                      m=Message('target@jid.com','Hello target!')<br />
+                  </dt>
+              </dl>
+            </dt>
+
+            <dn>Iq class</dn>
+            <dt>
+              Similar syntax:
+              <dl>
+                <dn>prototype</dn>
+                  <dt>Iq.__init__(typ=None, queryNS=None, attrs={}, to=None, frm=None, payload=[], xmlns='jabber:client', node=None)</dt>
+                <dn>example</dn>
+                  <dt>iq=Iq('set',NS_AUTH,payload=[Node('username',payload=['user']),Node('password',payload=['secret'])])<br />
+                      or<br />
+                      iq=Iq('set',NS_AUTH)<br />
+                      iq.T.query.NT.username='user'<br />
+                      iq.T.query.NT.password='secret'<br />
+                      or<br />
+                      iq=Iq('set',NS_AUTH)<br />
+                      iq.T.query.T.username='user'<br />
+                      iq.T.query.T.password='secret'<br />
+                      As I already noted - 'T' acts just like 'NT' if tag doesn't exists.
+                  </dt>
+              </dl>
+            </dt>
+
+            <dn>Presence class</dn>
+            <dt>
+              Similar syntax:
+              <dl>
+                <dn>prototype</dn>
+                  <dt>Presence.__init__(to=None, typ=None, priority=None, show=None, status=None, attrs={}, frm=None, timestamp=None, payload=[], xmlns='jabber:client', node=None)</dt>
+                <dn>example</dn>
+                  <dt>pres=Presence(priority=5, show='xa',status="I'm away from my computer")<br />
+                      or<br />
+                      pres=Presence()<br />
+                      pres.setPriority(5)
+                      pres.setShow('xa')
+                      pres.setStatus("I'm away from my computer")
+                      pres.setTimestamp()
+                      or<br />
+                      pres=Presence()<br />
+                      pres.T.priority=5
+                      pres.T.show='xa'
+                      pres.T.status="I'm away from my computer"
+                      pres.setTimestamp()
+                  </dt>
+              </dl>
+            </dt>
+
+        </dl>
+    </body>
+</html>

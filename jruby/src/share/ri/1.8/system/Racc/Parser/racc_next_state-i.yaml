@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Racc::Parser#racc_next_state
+is_singleton: false
+name: racc_next_state
+params: (curstate, state)
+visibility: private

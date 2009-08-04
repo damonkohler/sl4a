@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC 
+  "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>xmpppy: the jabber python project</title>
+    <link rel="stylesheet" type="text/css" href="xmpppy.css" />
+  </head>
+  <body>
+    <table class="head">
+      <tbody>
+        <tr>
+          <td class="head">
+            <img src="xmpppy_title.png" alt="xmpppy" title="the xmpppy project" height="69" width="300" />
+          </td>
+          <td class="sflogo">
+            <a href="http://sourceforge.net/">
+              <img src="http://sourceforge.net/sflogo.php?group_id=97081&amp;type=4" alt="SourceForge Logo" title="SourceForge Logo" border="0" height="37" hspace="30" width="125" />
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="content">
+      <tbody>
+        <tr>
+          <td class="leftside">
+            <h3>about</h3>
+            <p><a href="http://xmpppy.sourceforge.net/">xmpppy</a> is a 
+              <a href="http://www.python.org">Python</a> library 
+              that is targeted to provide easy scripting with <a href="http://www.jabber.org">Jabber</a>.
+              Similar projects are <a href="http://twistedmatrix.com/projects/words/">Twisted Words</a>
+              and <a href="http://jabberpy.sourceforge.net/">jabber.py.</a></p>
+            <p>This library was not designed from scratch. It inherits some code from 
+              jabberpy and have very similar API in many places. Though it is separate 
+              project since it have almost completely different architecture and primarily 
+              aims to work with jabberd2 - the new Open Source Jabber Server.</p>
+            <p>xmpppy is distributed under the terms of 
+              <a href="http://www.gnu.org/licenses/gpl.txt">GNU General Public License</a>
+              and can be freely redistributed without any charge.</p>
+            <h3>documentation</h3>
+            <p>Documentation is now in the process of heavy development and not yet 
+              finished but most critical docs exist - please feel free to ask any questions if 
+              you will find the docs incomplete (see support section below).</p>
+            <div>
+              <ul>
+                <li><a href="basic.html">Basic documentation</a> - a simple script.</li>
+                <li><a href="advanced.html">Advanced documentation</a> - architecture of library and guidelines.</li>
+                <li><a href="apidocs/index.html">Expert documentation</a> - API docs.</li>
+              </ul>
+            </div>
+            <h3>examples</h3>
+            <p>For these who prefer reading samples of code than digging through [incomplete] docs -
+              here they are. Simple (but working) examples of xmpppy usage.</p>
+            <div>
+              <ul>
+                <li><a href="examples/README.py">README.py</a><br />
+                  Self-explanatory library usage example</li>
+                <li><a href="examples/xsend.py">xsend.py</a><br />
+                  Command-line utility for sending jabber messages</li>
+                <li><a href="examples/xtalk.py">xtalk.py</a><br />
+                  Command-line utility for chatting with a single user</li>
+                <li><a href="examples/bot.py">bot.py</a><br />
+                  Xmpppy bot framework, handles messages</li>
+                <li><a href="examples/commandsbot.py">commandsbot.py</a><br />
+                  Xmpppy bot framework, handles ad hoc commands</li>
+                <li><a href="examples/logger.py">logger.py</a><br />
+                  Simple conference logger bot</li>
+              </ul>
+            </div>
+            <p>You can also look to at the <a href="http://xmpppy.sourceforge.net/irc/">IRC transport</a>, 
+              <a href="http://xmpppy.sourceforge.net/mail/">Mail transport</a>,
+              <a href="http://xmpppy.sourceforge.net/yahoo/">Yahoo transport</a> or
+              <a href="http://sourceforge.net/project/showfiles.php?group_id=97081&amp;package_id=130713">xmppd</a>
+              project code if you wish to see the serious library usage.</p> 
+            <h3>download</h3>
+            <div>You can look for released versions on 
+              <a href="http://sourceforge.net/project/showfiles.php?group_id=97081">downloads page</a>
+              or alternatively you can grab the latest version directly from CVS tree
+              by typing the following commands:
+              <blockquote>
+                cvs -d:pserver:anonymous@xmpppy.cvs.sourceforge.net:/cvsroot/xmpppy login
+              </blockquote>
+              (hit "enter" when you will be prompted for password)
+              <blockquote>
+                cvs -z3 -d:pserver:anonymous@xmpppy.cvs.sourceforge.net:/cvsroot/xmpppy co xmpppy
+              </blockquote>
+            </div>
+            <p>You can also browse xmpppy (and several xmpppy-based 
+              projects) CVS online <a href="http://xmpppy.cvs.sourceforge.net/xmpppy/xmpppy/">here</a>.</p>
+            <p>If you have an RSS feed reader, there is 
+              an RSS feed of CVS commits <a href="http://xmpppy.sourceforge.net/cvs-xmpppy.xml">here</a>.</p>
+            <h3>support</h3>
+            <p>If you have any questions about using xmpppy you can join 
+              <a href="http://lists.sourceforge.net/lists/listinfo/xmpppy-devel">xmpppy-devel maillist</a>.
+              Here you can always find the best support, as you can find the developers here.</p>
+            <h3>donations</h3>
+            <p>If you are willing to help you can consult 
+              <a href="http://software.newsforge.com/article.pl?sid=05/01/06/1557225">this article</a>
+              for how to do it. Thanks!</p>
+            <p>If you want to donate some money to encourage me to continue work on 
+              library (it helps, really!) you can do it via e-gold system (account 1552795) or via 
+              bank transfer (contact me via jabber or email to get the details).</p>
+            <a name="author"></a>
+            <h3>author</h3>
+            <p>Alexey Nezhdanov<br />
+              Russian, born 18 Nov 1976.<br />
+              My timezone is GMT+3<br />
+              e-mail &amp; Jabber: snake at penza-gsm.ru<br />
+              ICQ: 19515046</p>
+            <div>I'm seeking for a job over Internet. It may be jabber-related work or 
+              any other.<br />
+              Possible directions of work:
+              <ul>
+                <li>Python projects (preferred)</li>
+                <li>C++ projects</li>
+                <li>Remote systems administering</li>
+              </ul>
+              My skills:
+              <ul>
+                <li>16 years of programming. Basic -> Pascal -> C++ -> Python</li>
+                <li>9 years of system administrator work. DOS -> Win 3.1 -> Win95 -> Win98 -> linux2.2 -> linux2.4 -> linux2.6</li>
+                <li>Automation tasks</li>
+                <li>Automated instant messenging (state change/failures reporting)</li>
+                <li>Some research work:
+                  <ul>
+                    <li>wavelet audio analysis</li>
+                    <li>speech recognising</li>
+                    <li>realtime texture [de]compression (for 3D systems).</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </td>
+         <td class="rightside">
+           <h3>downloads</h3>
+            <p>
+              <a href="http://sourceforge.net/project/showfiles.php?group_id=97081&amp;package_id=103821">xmpppy</a><br />
+              <a href="http://sourceforge.net/project/showfiles.php?group_id=97081&amp;package_id=130713">xmppd.py</a><br />
+              <a href="http://sourceforge.net/project/showfiles.php?group_id=97081&amp;package_id=118831">xmpppy-irc</a><br />
+              <a href="http://sourceforge.net/project/showfiles.php?group_id=97081&amp;package_id=182511">xmpppy-yahoo</a><br />
+              <a href="http://sourceforge.net/project/showfiles.php?group_id=97081&amp;package_id=168390">pyGAIM-t</a>
+            </p>
+            <p><a href="http://sourceforge.net/project/showfiles.php?group_id=97081">List all files</a></p>
+            <h3>sourceforge</h3>
+            <p>
+              <a href="http://sourceforge.net/projects/xmpppy/">Project Summary</a><br />
+              <a href="http://sourceforge.net/tracker/?atid=616918&amp;group_id=97081">Feature Requests</a><br />
+              <a href="http://sourceforge.net/tracker/?atid=616915&amp;group_id=97081">Bugs</a><br />
+              <a href="http://sourceforge.net/tracker/?atid=616917&amp;group_id=97081">Patches</a><br />
+            </p>
+            <h3>exits</h3>
+            <p>
+              <a href="http://www.jabber.org/">jabber.org</a><br />
+              <a href="http://xmpppy.sourceforge.net/irc/">IRC transport</a><br />
+              <a href="http://xmpppy.sourceforge.net/mail/">Mail transport</a><br />
+              <a href="http://xmpppy.sourceforge.net/yahoo/">Yahoo transport</a><br />
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>the <a href="http://sourceforge.net/projects/xmpppy/">xmpppy project</a></p>
+  </body>
+</html>

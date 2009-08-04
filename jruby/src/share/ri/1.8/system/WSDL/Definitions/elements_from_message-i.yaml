@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::Definitions#elements_from_message
+is_singleton: false
+name: elements_from_message
+params: (message)
+visibility: private

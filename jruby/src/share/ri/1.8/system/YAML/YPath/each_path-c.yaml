@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: YPath.new( path )
+comment: 
+full_name: YAML::YPath::each_path
+is_singleton: true
+name: each_path
+params: ( str ) {|YPath.new( path )| ...}
+visibility: public

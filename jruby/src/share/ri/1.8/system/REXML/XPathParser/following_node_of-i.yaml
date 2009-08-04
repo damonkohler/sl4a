@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::XPathParser#following_node_of
+is_singleton: false
+name: following_node_of
+params: ( node )
+visibility: private

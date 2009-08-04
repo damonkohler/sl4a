@@ -1,0 +1,33 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: output_encoding
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: RSS::RootElementMixin
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: XMLStyleSheetMixin
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: ns_declarations
+- !ruby/object:RI::MethodSummary 
+  name: output_encoding=
+- !ruby/object:RI::MethodSummary 
+  name: setup_maker
+- !ruby/object:RI::MethodSummary 
+  name: setup_maker_elements
+- !ruby/object:RI::MethodSummary 
+  name: tag
+- !ruby/object:RI::MethodSummary 
+  name: to_xml
+- !ruby/object:RI::MethodSummary 
+  name: xmldecl
+name: RootElementMixin
+superclass: 

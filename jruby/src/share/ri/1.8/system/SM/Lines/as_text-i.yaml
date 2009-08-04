@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::Lines#as_text
+is_singleton: false
+name: as_text
+params: ()
+visibility: public

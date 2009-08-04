@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Take equal portions of Mike Stok and Sean Russell; mix vigorously, and pour into a tall, chilled glass. Serves 10,000.
+full_name: REXML::Functions::substring
+is_singleton: true
+name: substring
+params: ( string, start, length=nil )
+visibility: public

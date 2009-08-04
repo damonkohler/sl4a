@@ -1,0 +1,17 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the value of <em>time</em> as an integer number of seconds since epoch.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   t = Time.now\n   &quot;%10.5f&quot; % t.to_f   #=&gt; &quot;1049896564.17839&quot;\n   t.to_i              #=&gt; 1049896564\n"
+full_name: Time#to_i
+is_singleton: false
+name: to_i
+params: |
+  time.to_i   => int
+  time.tv_sec => int
+
+visibility: public

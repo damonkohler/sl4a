@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Racc::Parser#_racc_init_sysvars
+is_singleton: false
+name: _racc_init_sysvars
+params: ()
+visibility: private

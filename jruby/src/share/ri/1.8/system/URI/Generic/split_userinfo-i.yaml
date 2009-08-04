@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::Generic#split_userinfo
+is_singleton: false
+name: split_userinfo
+params: (ui)
+visibility: private

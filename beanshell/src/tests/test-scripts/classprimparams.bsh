@@ -1,0 +1,53 @@
+source("TestHarness.bsh");
+/*
+	Test case submitted:
+	Date: 2004-11-19 15:38
+	Sender: d-esterkin
+	SF user_id=1162666
+*/
+
+class PrimitiveParameters {
+    boolean booleanMethod(boolean x) { return !x; }
+    char charMethod(char x) { return x; }
+    int byteMethod(byte x) { return 2 * x; }
+    int shortMethod(short x) { return 2 * x; }
+    int intMethod(int x) { return 2 * x; }
+    long longMethod(long x) { return 2 * x; }
+    float floatMethod(float x) { return 2 * x; }
+    double doubleMethod(double x) { return 2 * x; }
+
+    /* Single word primitive parameter, followed by an
+Object parameter */
+    String prim1Object (int i, String s) { return
+s.substring(0, i); }
+
+    /* Double word primitive param, followed by an Object
+param */
+    long prim2Object(long l1, Long l2) { return l1 +
+l2.longValue(); }
+
+    /* Object param followed by a single word primitive param */
+    char objectPrim1(String s, int i) { return s.charAt(i); }
+
+    /* Object param followed by a double word primitive param */
+    double objectPrim2(Double d1, double d2) { return
+d1.doubleValue() + d2; }
+}
+
+p = new PrimitiveParameters();
+assert(!p.booleanMethod(true));
+assert('z' == p.charMethod('z'));
+assert(12 == p.byteMethod((byte) 6));
+assert(200 == p.shortMethod((short) 100));
+assert(64000 == p.intMethod(32000));
+assert(8000000L == p.longMethod(4000000L));
+assert(6.283F == p.floatMethod(3.1415F));
+assert(2.2222222222 == p.doubleMethod(1.1111111111));
+
+assert("foo".equals(p.prim1Object(3, "foobar")));
+assert(10000000L == p.prim2Object(3000000L, new
+Long(7000000L)));
+assert('X' == p.objectPrim1("abXcd", 2));
+assert(8.0808080808 == p.objectPrim2(new
+Double(3.0303030303), 5.0505050505));
+complete();

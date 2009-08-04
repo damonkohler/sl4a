@@ -1,0 +1,190 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: This program is copyrighted free software by NAKAMURA, Hiroshi. You can redistribute it and/or modify it under the same terms of Ruby's license; either the dual license version in 2003, or any later version.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Namespace
+  value: "'http://www.w3.org/2001/XMLSchema'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: InstanceNamespace
+  value: "'http://www.w3.org/2001/XMLSchema-instance'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrType
+  value: "'type'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NilValue
+  value: "'true'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AnyTypeLiteral
+  value: "'anyType'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AnySimpleTypeLiteral
+  value: "'anySimpleType'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NilLiteral
+  value: "'nil'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: StringLiteral
+  value: "'string'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: BooleanLiteral
+  value: "'boolean'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DecimalLiteral
+  value: "'decimal'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: FloatLiteral
+  value: "'float'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DoubleLiteral
+  value: "'double'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DurationLiteral
+  value: "'duration'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DateTimeLiteral
+  value: "'dateTime'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TimeLiteral
+  value: "'time'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DateLiteral
+  value: "'date'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: GYearMonthLiteral
+  value: "'gYearMonth'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: GYearLiteral
+  value: "'gYear'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: GMonthDayLiteral
+  value: "'gMonthDay'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: GDayLiteral
+  value: "'gDay'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: GMonthLiteral
+  value: "'gMonth'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: HexBinaryLiteral
+  value: "'hexBinary'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Base64BinaryLiteral
+  value: "'base64Binary'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AnyURILiteral
+  value: "'anyURI'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: QNameLiteral
+  value: "'QName'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NormalizedStringLiteral
+  value: "'normalizedString'"
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: 3.3.2 token 3.3.3 language 3.3.4 NMTOKEN 3.3.5 NMTOKENS 3.3.6 Name 3.3.7 NCName 3.3.8 ID 3.3.9 IDREF 3.3.10 IDREFS 3.3.11 ENTITY 3.3.12 ENTITIES
+  name: IntegerLiteral
+  value: "'integer'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NonPositiveIntegerLiteral
+  value: "'nonPositiveInteger'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NegativeIntegerLiteral
+  value: "'negativeInteger'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: LongLiteral
+  value: "'long'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: IntLiteral
+  value: "'int'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ShortLiteral
+  value: "'short'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ByteLiteral
+  value: "'byte'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NonNegativeIntegerLiteral
+  value: "'nonNegativeInteger'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: UnsignedLongLiteral
+  value: "'unsignedLong'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: UnsignedIntLiteral
+  value: "'unsignedInt'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: UnsignedShortLiteral
+  value: "'unsignedShort'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: UnsignedByteLiteral
+  value: "'unsignedByte'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PositiveIntegerLiteral
+  value: "'positiveInteger'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrTypeName
+  value: QName.new(InstanceNamespace, AttrType)
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrNilName
+  value: QName.new(InstanceNamespace, NilLiteral)
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AnyTypeName
+  value: QName.new(Namespace, AnyTypeLiteral)
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AnySimpleTypeName
+  value: QName.new(Namespace, AnySimpleTypeLiteral)
+full_name: XSD
+includes: []
+
+instance_methods: []
+
+name: XSD
+superclass: 

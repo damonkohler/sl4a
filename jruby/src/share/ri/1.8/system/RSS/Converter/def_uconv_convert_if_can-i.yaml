@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Converter#def_uconv_convert_if_can
+is_singleton: false
+name: def_uconv_convert_if_can
+params: (meth, to_enc, from_enc, nkf_arg)
+visibility: public

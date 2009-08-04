@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::Collector::Dir#find_test_cases
+is_singleton: false
+name: find_test_cases
+params: (ignore=[])
+visibility: public

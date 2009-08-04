@@ -1,0 +1,25 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: required_uri
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Li
+  value: "::RSS::RDF::Li"
+full_name: RSS::RDF::Seq
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: RSS10
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: full_name
+- !ruby/object:RI::MethodSummary 
+  name: setup_maker
+name: Seq
+superclass: Element

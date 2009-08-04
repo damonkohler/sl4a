@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Inherited from Encoding Overridden to support optimized en/decoding
+full_name: REXML::Source#encoding=
+is_singleton: false
+name: encoding=
+params: (enc)
+visibility: public

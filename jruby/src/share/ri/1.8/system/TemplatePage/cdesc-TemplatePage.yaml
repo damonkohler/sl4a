@@ -1,0 +1,46 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Cheap-n-cheerful HTML page template system. You create a template containing:"
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: variable names between percent signs (<tt>%fred%</tt>)
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: "blocks of repeating stuff:"
+  - !ruby/struct:SM::Flow::VERB 
+    body: "  START:key\n    ... stuff\n  END:key\n"
+  type: :BULLET
+- !ruby/struct:SM::Flow::P 
+  body: You feed the code a hash. For simple variables, the values are resolved directly from the hash. For blocks, the hash entry corresponding to <tt>key</tt> will be an array of hashes. The block will be generated once for each entry. Blocks can be nested arbitrarily deeply.
+- !ruby/struct:SM::Flow::P 
+  body: The template may also contain
+- !ruby/struct:SM::Flow::VERB 
+  body: "  IF:key\n    ... stuff\n  ENDIF:key\n"
+- !ruby/struct:SM::Flow::P 
+  body: <em>stuff</em> will only be included in the output if the corresponding key is set in the value hash.
+- !ruby/struct:SM::Flow::P 
+  body: "Usage: Given a set of templates <tt>T1, T2,</tt> etc"
+- !ruby/struct:SM::Flow::VERB 
+  body: "           values = { &quot;name&quot; =&gt; &quot;Dave&quot;, state =&gt; &quot;TX&quot; }\n\n           t = TemplatePage.new(T1, T2, T3)\n           File.open(name, &quot;w&quot;) {|f| t.write_html_on(f, values)}\n        or\n           res = ''\n           t.write_html_on(res, values)\n"
+constants: []
+
+full_name: TemplatePage
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: expand_line
+- !ruby/object:RI::MethodSummary 
+  name: substitute_into
+- !ruby/object:RI::MethodSummary 
+  name: write_html_on
+name: TemplatePage
+superclass: Object

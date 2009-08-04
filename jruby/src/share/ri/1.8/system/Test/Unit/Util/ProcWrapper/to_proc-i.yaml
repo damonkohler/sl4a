@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::Util::ProcWrapper#to_proc
+is_singleton: false
+name: to_proc
+params: ()
+visibility: public

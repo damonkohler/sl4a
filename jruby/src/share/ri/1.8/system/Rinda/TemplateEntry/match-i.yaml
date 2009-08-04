@@ -1,0 +1,13 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: ===
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Matches this TemplateEntry against <tt>tuple</tt>. See Template#match for details on how a Template matches a Tuple.
+full_name: Rinda::TemplateEntry#match
+is_singleton: false
+name: match
+params: (tuple)
+visibility: public

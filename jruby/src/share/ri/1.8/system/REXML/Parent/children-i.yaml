@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Alias for #to_a"
+full_name: REXML::Parent#children
+is_singleton: false
+name: children
+params: ()
+visibility: public

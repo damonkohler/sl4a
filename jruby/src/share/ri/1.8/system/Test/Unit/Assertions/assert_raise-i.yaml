@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: ""
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Passes if the block raises one of the given exceptions.
+- !ruby/struct:SM::Flow::P 
+  body: "Example:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  assert_raise RuntimeError, LoadError do\n    raise 'Boom!!!'\n  end\n"
+full_name: Test::Unit::Assertions#assert_raise
+is_singleton: false
+name: assert_raise
+params: (*args) {|| ...}
+visibility: public

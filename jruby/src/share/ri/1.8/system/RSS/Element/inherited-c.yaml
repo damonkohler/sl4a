@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Element::inherited
+is_singleton: true
+name: inherited
+params: (klass)
+visibility: public

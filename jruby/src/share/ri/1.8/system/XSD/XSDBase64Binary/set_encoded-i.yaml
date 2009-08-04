@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::XSDBase64Binary#set_encoded
+is_singleton: false
+name: set_encoded
+params: (value)
+visibility: public

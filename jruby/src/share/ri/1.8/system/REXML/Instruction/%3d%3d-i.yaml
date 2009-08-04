@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "@return true if other is an Instruction, and the content and target of the other matches the target and content of this object."
+full_name: REXML::Instruction#==
+is_singleton: false
+name: ==
+params: ( other )
+visibility: public

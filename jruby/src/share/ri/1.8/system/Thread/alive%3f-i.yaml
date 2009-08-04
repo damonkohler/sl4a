@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns <tt>true</tt> if <em>thr</em> is running or sleeping.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   thr = Thread.new { }\n   thr.join                #=&gt; #&lt;Thread:0x401b3fb0 dead&gt;\n   Thread.current.alive?   #=&gt; true\n   thr.alive?              #=&gt; false\n"
+full_name: Thread#alive?
+is_singleton: false
+name: alive?
+params: |
+  thr.alive?   => true or false
+
+visibility: public

@@ -1,0 +1,37 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: $&
+comment: 
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Synopsis
+- !ruby/struct:SM::Flow::VERB 
+  body: "  URI::extract(str[, schemes][,&amp;blk])\n"
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Args
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "+str+:"
+    body: String to extract URIs from.
+  - !ruby/struct:SM::Flow::LI 
+    label: "+schemes+:"
+    body: Limit URI matching to a specific schemes.
+  type: :NOTE
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Description
+- !ruby/struct:SM::Flow::P 
+  body: Extracts URIs from a string. If block given, iterates through all matched URIs. Returns nil if block given or array with matches.
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Usage
+- !ruby/struct:SM::Flow::VERB 
+  body: "  require &quot;uri&quot;\n\n  URI.extract(&quot;text here http://foo.example.org/bla and here mailto:test@example.com and here also.&quot;)\n  # =&gt; [&quot;http://foo.example.com/bla&quot;, &quot;mailto:test@example.com&quot;]\n"
+full_name: URI::extract
+is_singleton: true
+name: extract
+params: (str, schemes = nil, &block) {|$&| ...}
+visibility: public

@@ -1,0 +1,198 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module gdata.test_config_template</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gdata.html"><font color="#ffffff">gdata</font></a>.test_config_template</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/gdata/test_config_template.py">/usr/local/svn/gdata-python-client/src/gdata/test_config_template.py</a></font></td></tr></table>
+    <p><tt>Fill&nbsp;in&nbsp;this&nbsp;module&nbsp;with&nbsp;configuration&nbsp;data&nbsp;to&nbsp;use&nbsp;in&nbsp;tests.<br>
+&nbsp;<br>
+See&nbsp;comments&nbsp;in&nbsp;the&nbsp;source&nbsp;code&nbsp;for&nbsp;explanations&nbsp;of&nbsp;the&nbsp;settings.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.test_config_template.html#NoAuthConfig">NoAuthConfig</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.test_config_template.html#TestConfig">TestConfig</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.test_config_template.html#BloggerConfig">BloggerConfig</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.test_config_template.html#ContactsConfig">ContactsConfig</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BloggerConfig">class <strong>BloggerConfig</strong></a>(<a href="gdata.test_config_template.html#TestConfig">TestConfig</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.test_config_template.html#BloggerConfig">BloggerConfig</a></dd>
+<dd><a href="gdata.test_config_template.html#TestConfig">TestConfig</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>blog_id</strong> = "&lt;your test blog's id&gt;"</dl>
+
+<dl><dt><strong>content</strong> = 'This is a &lt;b&gt;test&lt;/b&gt;.'</dl>
+
+<dl><dt><strong>service</strong> = 'blogger'</dl>
+
+<dl><dt><strong>title</strong> = 'A Test Post'</dl>
+
+<hr>
+Class methods inherited from <a href="gdata.test_config_template.html#TestConfig">TestConfig</a>:<br>
+<dl><dt><a name="BloggerConfig-email"><strong>email</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Provides&nbsp;email&nbsp;to&nbsp;log&nbsp;into&nbsp;the&nbsp;test&nbsp;account&nbsp;for&nbsp;this&nbsp;service.<br>
+&nbsp;<br>
+By&nbsp;default&nbsp;uses&nbsp;GOOGLE_ACCOUNT_EMAIL,&nbsp;so&nbsp;overwrite&nbsp;this&nbsp;function&nbsp;if&nbsp;you<br>
+have&nbsp;a&nbsp;service-specific&nbsp;test&nbsp;account.</tt></dd></dl>
+
+<dl><dt><a name="BloggerConfig-password"><strong>password</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Provides&nbsp;password&nbsp;to&nbsp;log&nbsp;into&nbsp;the&nbsp;test&nbsp;account&nbsp;for&nbsp;this&nbsp;service.<br>
+&nbsp;<br>
+By&nbsp;default&nbsp;uses&nbsp;GOOGLE_ACCOUNT_PASSWORD,&nbsp;so&nbsp;overwrite&nbsp;this&nbsp;function&nbsp;if<br>
+you&nbsp;have&nbsp;a&nbsp;service-specific&nbsp;test&nbsp;account.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="gdata.test_config_template.html#TestConfig">TestConfig</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="gdata.test_config_template.html#TestConfig">TestConfig</a>:<br>
+<dl><dt><strong>auth_token</strong> = None</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ContactsConfig">class <strong>ContactsConfig</strong></a>(<a href="gdata.test_config_template.html#TestConfig">TestConfig</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.test_config_template.html#ContactsConfig">ContactsConfig</a></dd>
+<dd><a href="gdata.test_config_template.html#TestConfig">TestConfig</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Class methods defined here:<br>
+<dl><dt><a name="ContactsConfig-get_image_location"><strong>get_image_location</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>service</strong> = 'cp'</dl>
+
+<hr>
+Class methods inherited from <a href="gdata.test_config_template.html#TestConfig">TestConfig</a>:<br>
+<dl><dt><a name="ContactsConfig-email"><strong>email</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Provides&nbsp;email&nbsp;to&nbsp;log&nbsp;into&nbsp;the&nbsp;test&nbsp;account&nbsp;for&nbsp;this&nbsp;service.<br>
+&nbsp;<br>
+By&nbsp;default&nbsp;uses&nbsp;GOOGLE_ACCOUNT_EMAIL,&nbsp;so&nbsp;overwrite&nbsp;this&nbsp;function&nbsp;if&nbsp;you<br>
+have&nbsp;a&nbsp;service-specific&nbsp;test&nbsp;account.</tt></dd></dl>
+
+<dl><dt><a name="ContactsConfig-password"><strong>password</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Provides&nbsp;password&nbsp;to&nbsp;log&nbsp;into&nbsp;the&nbsp;test&nbsp;account&nbsp;for&nbsp;this&nbsp;service.<br>
+&nbsp;<br>
+By&nbsp;default&nbsp;uses&nbsp;GOOGLE_ACCOUNT_PASSWORD,&nbsp;so&nbsp;overwrite&nbsp;this&nbsp;function&nbsp;if<br>
+you&nbsp;have&nbsp;a&nbsp;service-specific&nbsp;test&nbsp;account.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="gdata.test_config_template.html#TestConfig">TestConfig</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="gdata.test_config_template.html#TestConfig">TestConfig</a>:<br>
+<dl><dt><strong>auth_token</strong> = None</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NoAuthConfig">class <strong>NoAuthConfig</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>auth_token</strong> = False</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TestConfig">class <strong>TestConfig</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Class methods defined here:<br>
+<dl><dt><a name="TestConfig-email"><strong>email</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Provides&nbsp;email&nbsp;to&nbsp;log&nbsp;into&nbsp;the&nbsp;test&nbsp;account&nbsp;for&nbsp;this&nbsp;service.<br>
+&nbsp;<br>
+By&nbsp;default&nbsp;uses&nbsp;GOOGLE_ACCOUNT_EMAIL,&nbsp;so&nbsp;overwrite&nbsp;this&nbsp;function&nbsp;if&nbsp;you<br>
+have&nbsp;a&nbsp;service-specific&nbsp;test&nbsp;account.</tt></dd></dl>
+
+<dl><dt><a name="TestConfig-password"><strong>password</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Provides&nbsp;password&nbsp;to&nbsp;log&nbsp;into&nbsp;the&nbsp;test&nbsp;account&nbsp;for&nbsp;this&nbsp;service.<br>
+&nbsp;<br>
+By&nbsp;default&nbsp;uses&nbsp;GOOGLE_ACCOUNT_PASSWORD,&nbsp;so&nbsp;overwrite&nbsp;this&nbsp;function&nbsp;if<br>
+you&nbsp;have&nbsp;a&nbsp;service-specific&nbsp;test&nbsp;account.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>auth_token</strong> = None</dl>
+
+<dl><dt><strong>service</strong> = None</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>CACHE_RESPONSES</strong> = True<br>
+<strong>CLEAR_CACHE</strong> = True<br>
+<strong>GOOGLE_ACCOUNT_EMAIL</strong> = '&lt;your email&gt;'<br>
+<strong>GOOGLE_ACCOUNT_PASSWORD</strong> = '&lt;your password&gt;'<br>
+<strong>RUN_LIVE_TESTS</strong> = False<br>
+<strong>TEST_FILES_DIR</strong> = '&lt;location of the tests directory&gt;'</td></tr></table>
+</body></html>

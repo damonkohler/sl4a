@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Applies a one-way cryptographic hash to <em>str</em> by invoking the standard library function <tt>crypt</tt>. The argument is the salt string, which should be two characters long, each character drawn from <tt>[a-zA-Z0-9./]</tt>.
+full_name: String#crypt
+is_singleton: false
+name: crypt
+params: |
+  str.crypt(other_str)   => new_str
+
+visibility: public

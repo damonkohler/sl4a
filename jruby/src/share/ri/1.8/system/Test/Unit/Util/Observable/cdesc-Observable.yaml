@@ -1,0 +1,29 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: This is a utility class that allows anything mixing it in to notify a set of listeners about interesting events.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: We use this for defaults since nil might mean something
+  name: NOTHING
+  value: "\"NOTHING/#{__id__}\""
+full_name: Test::Unit::Util::Observable
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_listener
+- !ruby/object:RI::MethodSummary 
+  name: channels
+- !ruby/object:RI::MethodSummary 
+  name: notify_listeners
+- !ruby/object:RI::MethodSummary 
+  name: remove_listener
+name: Observable
+superclass: 

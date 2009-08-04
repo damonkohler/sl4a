@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Processor::default_parser_option
+is_singleton: true
+name: default_parser_option
+params: ()
+visibility: public

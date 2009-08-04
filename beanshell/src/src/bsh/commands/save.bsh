@@ -1,0 +1,34 @@
+/**
+	Save a serializable Java object to filename. 
+*/
+
+bsh.help.save = "usage: save( object, filename )";
+
+void save( Object obj, String filename ) 
+{
+	File file = pathToFile( filename );
+
+	if ( !(obj instanceof Serializable) ) {
+		print("Type "+obj.getClass()+" is not serializable");
+		return;
+	}
+
+	// Detach bsh objects from the caller's namespace during serialization
+	// NOTE: THIS IS NOT THREAD SAFE
+	if ( obj instanceof bsh.This ) {
+		super.parent = obj.namespace.getParent();
+		obj.namespace.prune();
+	}
+	
+	OutputStream out = new FileOutputStream( file );
+	ObjectOutputStream oout = new ObjectOutputStream(out);
+	oout.writeObject( obj );
+	oout.close();
+
+	// Reattach bsh objects to the caller's namespace after serialization
+	// NOTE: THIS IS NOT THREAD SAFE
+	if ( obj instanceof bsh.This ) 
+		obj.namespace.setParent( super.parent );
+}
+
+

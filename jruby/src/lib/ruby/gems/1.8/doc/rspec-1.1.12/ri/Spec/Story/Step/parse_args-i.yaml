@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (name)
+is_singleton: false
+block_params: 
+name: parse_args
+comment: 
+full_name: Spec::Story::Step#parse_args
+visibility: public
+aliases: []
+

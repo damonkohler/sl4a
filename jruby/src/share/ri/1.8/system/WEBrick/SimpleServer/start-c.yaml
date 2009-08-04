@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: ""
+comment: 
+full_name: WEBrick::SimpleServer::start
+is_singleton: true
+name: start
+params: () {|| ...}
+visibility: public

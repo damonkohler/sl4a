@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Changes the parameters of the deflate stream. See zlib.h for details. The output from the stream by changing the params is preserved in output buffer.
+- !ruby/struct:SM::Flow::P 
+  body: "TODO: document better!"
+full_name: Zlib::Deflate#params
+is_singleton: false
+name: params
+params: " params(level, strategy)\n"
+visibility: public

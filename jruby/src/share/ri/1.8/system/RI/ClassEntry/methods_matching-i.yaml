@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: return the list of local methods matching name We're split into two because we need distinct behavior when called from the <em>toplevel</em>
+full_name: RI::ClassEntry#methods_matching
+is_singleton: false
+name: methods_matching
+params: (name, is_class_method)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::SOAPGenerator#encode_child
+is_singleton: false
+name: encode_child
+params: (ns, child, parent)
+visibility: public

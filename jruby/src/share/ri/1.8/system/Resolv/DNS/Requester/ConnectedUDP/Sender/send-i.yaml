@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::DNS::Requester::ConnectedUDP::Sender#send
+is_singleton: false
+name: send
+params: ()
+visibility: public

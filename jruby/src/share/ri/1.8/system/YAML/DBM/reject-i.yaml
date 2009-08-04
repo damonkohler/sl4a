@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: k, v
+comment: 
+full_name: YAML::DBM#reject
+is_singleton: false
+name: reject
+params: () {|k, v| ...}
+visibility: public

@@ -1,0 +1,117 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: _obj2soap
+- !ruby/object:RI::MethodSummary 
+  name: _soap2obj
+- !ruby/object:RI::MethodSummary 
+  name: add_md_ary
+- !ruby/object:RI::MethodSummary 
+  name: ary2md
+- !ruby/object:RI::MethodSummary 
+  name: ary2soap
+- !ruby/object:RI::MethodSummary 
+  name: class2element
+- !ruby/object:RI::MethodSummary 
+  name: class2qname
+- !ruby/object:RI::MethodSummary 
+  name: class_from_name
+- !ruby/object:RI::MethodSummary 
+  name: class_schema_variable
+- !ruby/object:RI::MethodSummary 
+  name: const_from_name
+- !ruby/object:RI::MethodSummary 
+  name: create_empty_object
+- !ruby/object:RI::MethodSummary 
+  name: create_empty_object
+- !ruby/object:RI::MethodSummary 
+  name: define_attr_accessor
+- !ruby/object:RI::MethodSummary 
+  name: define_singleton_method
+- !ruby/object:RI::MethodSummary 
+  name: elename2name
+- !ruby/object:RI::MethodSummary 
+  name: fault2exception
+- !ruby/object:RI::MethodSummary 
+  name: get_attribute
+- !ruby/object:RI::MethodSummary 
+  name: module_from_name
+- !ruby/object:RI::MethodSummary 
+  name: name2elename
+- !ruby/object:RI::MethodSummary 
+  name: obj2element
+- !ruby/object:RI::MethodSummary 
+  name: obj2soap
+- !ruby/object:RI::MethodSummary 
+  name: protect_threadvars
+- !ruby/object:RI::MethodSummary 
+  name: schema_attribute_definition
+- !ruby/object:RI::MethodSummary 
+  name: schema_element_definition
+- !ruby/object:RI::MethodSummary 
+  name: schema_ns_definition
+- !ruby/object:RI::MethodSummary 
+  name: schema_type_definition
+- !ruby/object:RI::MethodSummary 
+  name: set_attributes
+- !ruby/object:RI::MethodSummary 
+  name: soap2obj
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MapQName
+  value: XSD::QName.new(ApacheSOAPTypeNamespace, 'Map')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RubyTypeNamespace
+  value: "'http://www.ruby-lang.org/xmlns/ruby/type/1.6'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RubyTypeInstanceNamespace
+  value: "'http://www.ruby-lang.org/xmlns/ruby/type-instance'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RubyCustomTypeNamespace
+  value: "'http://www.ruby-lang.org/xmlns/ruby/type/custom'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ApacheSOAPTypeNamespace
+  value: "'http://xml.apache.org/xml-soap'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EMPTY_OPT
+  value: "{}"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MARSHAL_TAG
+  value: "{       String => ['\"', 1],       Regexp => ['/', 2],       Array => ['[', 1],       Hash => ['{', 1]"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RubyTypeName
+  value: XSD::QName.new(RubyTypeInstanceNamespace, 'rubyType')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RubyExtendName
+  value: XSD::QName.new(RubyTypeInstanceNamespace, 'extends')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RubyIVarName
+  value: XSD::QName.new(RubyTypeInstanceNamespace, 'ivars')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DefaultRegistry
+  value: Registry.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RubyOriginalRegistry
+  value: Registry.new(:allow_original_mapping => true)
+full_name: SOAP::Mapping
+includes: []
+
+instance_methods: []
+
+name: Mapping
+superclass: 

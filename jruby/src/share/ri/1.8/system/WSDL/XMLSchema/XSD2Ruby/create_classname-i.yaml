@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::XMLSchema::XSD2Ruby#create_classname
+is_singleton: false
+name: create_classname
+params: (xsd)
+visibility: private

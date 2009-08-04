@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: CommandProcessor.install_system_commands(pre)
+- !ruby/struct:SM::Flow::VERB 
+  body: "      pre: String - command name prefix\n"
+- !ruby/struct:SM::Flow::P 
+  body: defines every command which belongs in default_system_path via CommandProcessor.command(). It doesn't define already defined methods twice. By default, &quot;pre_&quot; is prefixes to each method name. Characters that may not be used in a method name are all converted to '_'. Definition errors are just ignored.
+full_name: Shell::CommandProcessor::install_system_commands
+is_singleton: true
+name: install_system_commands
+params: (pre = "sys_")
+visibility: public

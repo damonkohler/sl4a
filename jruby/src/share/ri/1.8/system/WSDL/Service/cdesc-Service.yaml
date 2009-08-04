@@ -1,0 +1,32 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: name
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: ports
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: soap_address
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::Service
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+- !ruby/object:RI::MethodSummary 
+  name: targetnamespace
+name: Service
+superclass: Info

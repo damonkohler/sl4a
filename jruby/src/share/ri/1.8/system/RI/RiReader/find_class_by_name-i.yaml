@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RI::RiReader#find_class_by_name
+is_singleton: false
+name: find_class_by_name
+params: (full_name)
+visibility: public

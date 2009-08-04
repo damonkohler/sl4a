@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><head><title>Introduction</title></head><body bgcolor="ffffff"><table cellspacing="10"><tr><td align="center"><a href="http://www.beanshell.org/"><img src="../images/homebutton.gif"/><br/>Home</a></td><td><a href="contents.html#Table_of_Contents"><img src="../images/backbutton.gif"/><br/>Back
+			</a></td><td align="center"><a href="contents.html"><img src="../images/upbutton.gif"/><br/>Contents</a></td><td align="center"><a href="quickstart.html#Quick_Start"><img src="../images/forwardbutton.gif"/><br/>Next
+			</a></td></tr></table><h1>Introduction</h1>
+
+
+This document is about BeanShell. 
+BeanShell is a small, free, embeddable Java source interpreter with 
+object scripting language features, written in Java.  BeanShell executes 
+standard Java statements and expressions but also extends Java into the 
+scripting domain with common scripting language conventions and syntax.
+BeanShell is a <em>natural</em> scripting language for Java.
+<p CLEAR="ALL"/>
+
+<h2><a name="Scripting_vs._Application_Languages">Scripting vs. Application Languages</a></h2>
+
+Traditionally, the primary difference between a scripting language and 
+a compiled language has been in its type system: the way in which you define 
+and use data elements.  You might be thinking that there is a more obvious 
+difference here - that of "interpreted" code vs. compiled code.  But 
+the compiler in and of itself does not fundamentally change the way you work 
+with a language.  Nor does interpreting a language necessarily make 
+it more useful for what we think of as "scripting".
+It is the type system of a language that makes it possible for a compiler 
+to analyze the structure of an application for correctness.
+Without types, compilation is reduced to just a grammar check and an 
+optimization for speed.
+From the developer's perspective, it is also the type system that 
+characterizes the way in which we interact with the code.
+<p CLEAR="ALL"/>
+
+Types are good.  Without strongly type languages it would be very hard to
+write large scale systems and make any assertions about their correctness
+before they are run.  But working with types imposes a burden on the developer.
+Types are labels and labeling things can be tedious.  It can be especially 
+tedious during certain kinds of development or special applications where 
+it is flexibility and not program structure that is paramount.  
+There are times where simplicity and ease of use is a more important 
+criterion.  
+<p CLEAR="ALL"/>
+
+This is not just rationalization to cover some underlying laziness.  
+Productivity affects
+what people do and more importantly do *not* do in the real world, much more
+than you might think.  There is a lot of important software that exists in 
+the world today only because the cost/benefit ratio in some developer's mind 
+reached a certain threshold.  
+<p CLEAR="ALL"/>
+
+Unit testing - one of the foundations of 
+writing good code - is a prime example.  Unit tests for well written code are, 
+in general, vitally important as a collective but almost insignificant 
+individually.  It's a "tragedy of the commons" that leads individual
+developers to repeatedly weigh the importance of writing another unit test
+with working on "real code".
+Give developers have a tool that makes it easy to perform a test with a line or
+two of code they will probably use it.  If, moreover, it is also a tool that
+they enjoy using during their development process - that saves the time, they
+will be even more inclined to use it.   
+<p CLEAR="ALL"/>
+
+Customizability through scripting also opens the door to applications that 
+are more powerful than the sum of their parts.  When users can extend, enhance,
+and add to their applications they use them in new and unexpected ways.
+<p CLEAR="ALL"/>
+
+Scripting is powerful.
+<p CLEAR="ALL"/>
+
+
+<h2><a name="Tearing_Down_the_Barriers">Tearing Down the Barriers</a></h2>
+
+Traditionally scripting languages have traded
+in the power of types for simplicity.  Most scripting languages distill the 
+type system to just one or a handful of types such as strings, numbers, or 
+simple lists.  This is sufficient for many kinds of scripting.  
+<p CLEAR="ALL"/>
+
+Many scripting languages operate in a loose, unstructured land - a place 
+dominated by text and course-grained tools.  
+As such these scripting languages have evolved
+sophisticated mechanisms for working with these simple types (regular
+expressions, pipes, etc.). 
+As a result there has developed a casm between the scripting languages 
+and the application languages created by the collapse of the type system 
+in-between.
+The scripting languages have remained a separate species, isolated and 
+speaking a different dialect from their brothers the application languages.  
+<p CLEAR="ALL"/>
+
+BeanShell is a new kind of scripting language.  BeanShell begins with 
+the standard Java language and bridges it into the scripting domain in a 
+natural way, but allowing the developer to relaxing types where appropriate.
+It is possible to write BeanShell scripts that look exactly like Java 
+method code.  But it's also possible to write scripts that look more like
+a traditional scripting language, while still maintaining the framework
+of the Java syntax.
+<p CLEAR="ALL"/>
+
+BeanShell emulates typed variables and parameters when they are used.  This 
+allows you to "seed" your code with strong types where appropriate.  You can 
+"shore up" repeatedly used methods as you work on them, migrating them 
+closer to Java.  Eventually you may find that you want to compile
+these methods and maintain them in standard Java.  With BeanShell this is
+easy.  BeanShell does not impose a syntactic boundary between your 
+scripts and Java.
+<p CLEAR="ALL"/>
+
+But the bridge to Java extends much deeper than simple code similarity.  
+BeanShell is one of a new breed of scripting languages made possible by
+Java's advanced reflection capabilities.  Since BeanShell can run in the same
+Java virtual machine as your application, you can freely work with real,
+live, Java objects - passing them into and out of your scripts.  Combined
+with BeanShell's ability to implement Java interfaces, you can achieve 
+seamless and simple integration of scripting into your Java applications.
+BeanShell does not impose a type boundary between your scripts and Java.
+<p CLEAR="ALL"/>
+
+<h2><a name="History">History</a></h2>
+
+What seems like an eternity ago, back in the summer of 1993, I was working at
+Southwestern Bell Technology Resources and I was infatuated with the Tcl/Tk 
+scripting language. 
+On the advice of someone at Sun I also began playing around a bit with the 
+Oak language written by James Gosling.
+Little did I know that within just a few years Oak, which would become Java,
+would not only spark a revolution, but that I would be writing one of the 
+first books on the new Java language (Exploring Java, 
+O'Reilly &amp; Associates) and creating 
+Java's first scripting language, BeanShell, drawing inspiration from Tcl.
+<p CLEAR="ALL"/>
+
+BeanShell's first public release was not until 1997, but I had been
+poking at it in one form or another for some time before that. BeanShell 
+as a language became practical when Sun added reflection to the Java language 
+in version 1.1.  After that, and after having seen its value in helping me 
+create examples and snippets for the second edition of my book, I decided to
+try to polish it up and release it.
+<p CLEAR="ALL"/>
+
+BeanShell has slowly, but steadily gained popularity since then.  It has
+grown in fits and spurts as its contributor's time has allowed.  But recently
+BeanShell has achieved a sort of critical mass.  BeanShell is distributed with
+Emacs as part of the JDE and with Sun Microsystem's NetBeans / Forte for Java
+IDEs.  BeanShell is also bundled by BEA with their Weblogic application 
+server.  We've had reports of BeanShell being used everywhere from 
+the high energy physics laboratory CERN, to classrooms teaching programming
+to nine year olds.  BeanShell is being used in everything from large 
+financial applications all the way down to embedded systems floating in Buoys 
+in the pacific ocean.   I attribute this success to the power of the open 
+source development model and owe many thanks to everyone who has contributed.
+<p CLEAR="ALL"/>
+
+<h2><a name="Conclusion">Conclusion</a></h2>
+
+I believe that BeanShell is the simplest and most natural scripting language 
+for Java because it is, foremost, Java.  BeanShell draws on a 
+rich history of scripting languages for its scripting syntax and uses it to
+very conservatively extend the Java language into this new domain.
+I hope that you have half as much fun using BeanShell as I have had working
+on it and I welcome all comments and suggestions.
+<p CLEAR="ALL"/>
+
+
+<table cellspacing="10"><tr><td align="center"><a href="http://www.beanshell.org/"><img src="../images/homebutton.gif"/><br/>Home</a></td><td><a href="contents.html#Table_of_Contents"><img src="../images/backbutton.gif"/><br/>Back
+			</a></td><td align="center"><a href="contents.html"><img src="../images/upbutton.gif"/><br/>Contents</a></td><td align="center"><a href="quickstart.html#Quick_Start"><img src="../images/forwardbutton.gif"/><br/>Next
+			</a></td></tr></table></body></html>

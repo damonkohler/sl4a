@@ -1,0 +1,145 @@
+<section>
+<name filename="specialvarsvalues">Special Variables and Values</name>
+
+In addition to the scope modifiers: 'this', 'super', 'global', BeanShell
+supports a number of pre-defined system variables, "magic" values, and methods.
+<p/>
+
+<em>Special Values</em>
+<p/>
+<ul>
+<li><strong>$_</strong> - In interactive mode only, the value of the last
+expression evaluated.  The strange construct for this is drawn from Perl,
+ but the idea exists in many scripting languages.  It is useful for getting
+ back  the last result when you are working on the command line.
+</li>
+
+<li><strong>$_e</strong> - In interactive mode only, the last uncaught
+exception object thrown.  
+This is useful in interactive use for retrieving the last exception to inspect
+it for details.
+</li>
+
+<li><strong>bsh</strong> - The BeanShell root system object, containing 
+system information and variables.</li>
+
+<li><strong>bsh.args</strong> - An array of Strings passed as command 
+line arguments to the BeanShell interpreter.</li>
+
+<li><strong>bsh.shared</strong> - A special static space which is 
+shared across all interpreter instances.  Normally each bsh.Interpreter 
+instance is entirely independent; having its own unique global namespace
+and settings.  bsh.shared is implemented as a static namespace in the 
+bsh.Interpreter class.  It was added primarily to support communication
+among instances for the GUI desktop.
+</li>
+
+<li><strong>bsh.console</strong> - If BeanShell is running in 
+its GUI desktop mode, this variable holds a reference to the current 
+interpreter's console, if it has one.</li>
+
+<li><strong>bsh.appletcontext</strong> - If BeanShell
+is running inside an Applet, the current applet context, if one exists.</li>
+
+<li><strong>bsh.cwd</strong> - A String representing the current working
+directory of the BeanShell interpreter.  This is used or manipulated by the 
+cd(), dir(), pwd(), and pathToFile() commands.</li>
+
+<li><strong>bsh.show</strong> - A boolean value used by the show() command.
+It indicates whether results are always printed, for interactive use.
+</li>
+
+<li><strong>bsh.interactive</strong> - A boolean indicating whether this 
+interpreter running in an interactive mode</li> 
+
+<li><strong>bsh.evalOnly</strong> - A boolean indicating whether this 
+interpreter has an input stream or whether is it only serving as an engine 
+for eval() operations (e.g. for embedded use).</li>
+</ul>
+<p/>
+
+<note>
+The choice of "bsh" for the root system object name was somewhat unfortunate
+because it conflicts with the current package name for BeanShell (also bsh).
+This means that if you wish to work with BeanShell classes explicitly from
+BeanShell scripts (e.g. bsh.Interpreter) you must first import them, e.g.:
+<pre>
+    import bsh.Interpreter;
+    i=new Interpreter();
+</pre>
+</note>
+
+<h2>Special Members of 'this' type References</h2>
+<p/>
+
+'this' type references have several "magic" members:  
+
+<ul>
+
+<li><strong>this.variables</strong> - An array of Strings listing the 
+variables defined in the current method context (namespace).</li>
+
+<li><strong>this.methods</strong> - An array of Strings listing the methods 
+defined the current method context (namespace).</li>
+
+<li><strong>this.interpreter</strong> - A bsh.Interpreter reference to the 
+currently executing BeanShell Interpreter object.</li>
+
+<li><strong>this.namespace</strong> - A bsh.NameSpace reference to the BeanShell
+NameSpace object of the current method context. See "Advanced Topics".</li>
+
+<li><strong>this.caller</strong> - A bsh.This reference to the calling
+BeanShell method context. See "Variables and Scope Modifiers".</li>
+
+<li><strong>this.callstack</strong> - An array of bsh.NameSpace references 
+representing the "call stack" up to the current method context. 
+See "Advanced Topics".</li>
+
+</ul>
+<p/>
+
+These magic references are primarily used by BeanShell commands. 
+<p/>
+
+<h2>Undefined Variables</h2>
+<p/>
+You can test to see if a variable is defined using the special value 
+<b>void</b>.  For example:
+
+<example>
+if ( foobar == void )
+    // undefined
+</example>
+
+You can return a variable to the undefined state using the unset() command:
+
+<example>
+a == void;  // true
+a=5;
+unset("a"); // note the quotes
+a == void;  // true
+</example>
+
+<h2>Setting the Command Prompt</h2>
+
+Users may set the command line prompt string for use in interactive mode 
+by setting the value of the variable bsh.prompt or by defining the scripted
+method (or command) getBshPrompt().  
+<p/>
+
+If the command or method getBshPrompt() is defined it will be called to
+get a string to display as the user prompt.  For example, one could
+define the following method to place the current working directory into
+their command prompt:
+
+<example>
+	getBshPrompt() { return bsh.cwd + " % "; }
+</example>
+
+The default getBshPrompt() command returns the value of the variable
+bsh.prompt if it is defined or the string "bsh % " if not.  If the
+getBshPrompt() method or command does not exist, throws an exception, or does
+not return a String, a default prompt of "bsh % " will be used.
+<p/>
+
+</section>

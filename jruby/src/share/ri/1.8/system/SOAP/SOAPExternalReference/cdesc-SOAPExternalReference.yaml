@@ -1,0 +1,22 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: SOAP::SOAPExternalReference
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: SOAPBasetype
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: external_contentid
+- !ruby/object:RI::MethodSummary 
+  name: referred
+- !ruby/object:RI::MethodSummary 
+  name: refidstr
+name: SOAPExternalReference
+superclass: XSD::NSDBase

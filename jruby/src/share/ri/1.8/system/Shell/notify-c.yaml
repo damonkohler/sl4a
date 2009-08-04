@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: mes if iterator?
+comment: 
+full_name: Shell::notify
+is_singleton: true
+name: notify
+params: (*opts, &block) {|mes if iterator?| ...}
+visibility: public

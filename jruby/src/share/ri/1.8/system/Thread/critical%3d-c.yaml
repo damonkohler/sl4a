@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Sets the status of the global ``thread critical'' condition and returns it. When set to <tt>true</tt>, prohibits scheduling of any existing thread. Does not block new threads from being created and run. Certain thread operations (such as stopping or killing a thread, sleeping in the current thread, and raising an exception) may cause a thread to be scheduled even when in a critical section. <tt>Thread::critical</tt> is not intended for daily use: it is primarily there to support folks writing threading libraries."
+full_name: Thread::critical=
+is_singleton: true
+name: critical=
+params: |
+  Thread.critical= boolean   => true or false
+
+visibility: public

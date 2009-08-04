@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Search for YPath entry and return qualified nodes.
+full_name: YAML::BaseNode#select
+is_singleton: false
+name: select
+params: ( ypath_str )
+visibility: public

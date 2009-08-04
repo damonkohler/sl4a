@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the result of interpreting leading characters in <em>str</em> as a floating point number. Extraneous characters past the end of a valid number are ignored. If there is not a valid number at the start of <em>str</em>, <tt>0.0</tt> is returned. This method never raises an exception.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;123.45e1&quot;.to_f        #=&gt; 1234.5\n   &quot;45.67 degrees&quot;.to_f   #=&gt; 45.67\n   &quot;thx1138&quot;.to_f         #=&gt; 0.0\n"
+full_name: String#to_f
+is_singleton: false
+name: to_f
+params: |
+  str.to_f   => float
+
+visibility: public

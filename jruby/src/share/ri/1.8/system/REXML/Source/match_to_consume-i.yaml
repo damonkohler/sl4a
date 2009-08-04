@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Source#match_to_consume
+is_singleton: false
+name: match_to_consume
+params: ( char, pattern )
+visibility: public

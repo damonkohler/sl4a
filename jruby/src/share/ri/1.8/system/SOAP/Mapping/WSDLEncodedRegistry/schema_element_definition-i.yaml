@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: it caches @@schema_element. this means that @@schema_element must not be changed while a lifetime of a WSDLLiteralRegistry.
+full_name: SOAP::Mapping::WSDLEncodedRegistry#schema_element_definition
+is_singleton: false
+name: schema_element_definition
+params: (klass)
+visibility: private

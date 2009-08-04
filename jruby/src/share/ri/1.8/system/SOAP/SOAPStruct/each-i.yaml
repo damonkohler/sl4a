@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: (@array[idx], @data[idx])
+comment: 
+full_name: SOAP::SOAPStruct#each
+is_singleton: false
+name: each
+params: () {|@array[idx], @data[idx]| ...}
+visibility: public

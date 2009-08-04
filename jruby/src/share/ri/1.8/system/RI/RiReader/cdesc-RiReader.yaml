@@ -1,0 +1,35 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: RI::RiReader
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: all_names
+- !ruby/object:RI::MethodSummary 
+  name: find_class_by_name
+- !ruby/object:RI::MethodSummary 
+  name: find_classes_in
+- !ruby/object:RI::MethodSummary 
+  name: find_methods
+- !ruby/object:RI::MethodSummary 
+  name: find_names_in
+- !ruby/object:RI::MethodSummary 
+  name: full_class_names
+- !ruby/object:RI::MethodSummary 
+  name: get_class
+- !ruby/object:RI::MethodSummary 
+  name: get_method
+- !ruby/object:RI::MethodSummary 
+  name: lookup_namespace_in
+- !ruby/object:RI::MethodSummary 
+  name: top_level_namespace
+name: RiReader
+superclass: Object

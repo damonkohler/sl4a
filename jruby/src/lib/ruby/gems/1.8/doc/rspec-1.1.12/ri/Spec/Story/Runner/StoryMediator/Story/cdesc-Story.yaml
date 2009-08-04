@@ -1,0 +1,21 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: Story
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_scenario
+- !ruby/object:RI::MethodSummary 
+  name: current_scenario
+- !ruby/object:RI::MethodSummary 
+  name: to_proc
+full_name: Spec::Story::Runner::StoryMediator::Story
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

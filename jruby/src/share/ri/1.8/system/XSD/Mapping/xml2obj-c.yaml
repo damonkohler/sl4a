@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::Mapping::xml2obj
+is_singleton: true
+name: xml2obj
+params: (stream)
+visibility: public

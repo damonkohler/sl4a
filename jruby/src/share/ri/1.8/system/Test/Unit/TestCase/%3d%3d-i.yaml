@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: It's handy to be able to compare TestCase instances.
+full_name: Test::Unit::TestCase#==
+is_singleton: false
+name: ==
+params: (other)
+visibility: public

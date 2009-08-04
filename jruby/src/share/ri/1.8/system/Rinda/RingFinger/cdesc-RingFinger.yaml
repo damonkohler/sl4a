@@ -1,0 +1,48 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: The list of addresses where RingFinger will send query packets.
+  name: broadcast_list
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: The port that RingFinger will send query packets to.
+  name: port
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Contain the first advertised TupleSpace after lookup_ring_any is called.
+  name: primary
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: finger
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: primary
+- !ruby/object:RI::MethodSummary 
+  name: to_a
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: RingFinger is used by RingServer clients to discover the RingServer's TupleSpace. Typically, all a client needs to do is call RingFinger.primary to retrieve the remote TupleSpace, which it can then begin using.
+constants: []
+
+full_name: Rinda::RingFinger
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: lookup_ring
+- !ruby/object:RI::MethodSummary 
+  name: lookup_ring_any
+- !ruby/object:RI::MethodSummary 
+  name: to_a
+name: RingFinger
+superclass: Object

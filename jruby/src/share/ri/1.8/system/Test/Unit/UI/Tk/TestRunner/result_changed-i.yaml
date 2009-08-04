@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::Tk::TestRunner#result_changed
+is_singleton: false
+name: result_changed
+params: (result)
+visibility: private

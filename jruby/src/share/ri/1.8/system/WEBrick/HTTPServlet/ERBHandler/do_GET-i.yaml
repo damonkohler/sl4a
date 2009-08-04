@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: do_POST
+block_params: 
+comment: 
+full_name: WEBrick::HTTPServlet::ERBHandler#do_GET
+is_singleton: false
+name: do_GET
+params: (req, res)
+visibility: public

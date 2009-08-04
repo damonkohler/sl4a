@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: String#_regex_quote
+is_singleton: false
+name: _regex_quote
+params: (str)
+visibility: private

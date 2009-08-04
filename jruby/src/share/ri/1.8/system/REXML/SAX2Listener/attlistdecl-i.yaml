@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "If a doctype includes an ATTLIST declaration, it will cause this method to be called. The content is the declaration itself, unparsed. EG, &lt;!ATTLIST el attr CDATA #REQUIRED&gt; will come to this method as &quot;el attr CDATA #REQUIRED&quot;. This is the same for all of the .*decl methods."
+full_name: REXML::SAX2Listener#attlistdecl
+is_singleton: false
+name: attlistdecl
+params: (element, pairs, contents)
+visibility: public

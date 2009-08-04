@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Calls <em>block</em> with a tree of +YAML::BaseNodes+, one tree for each consecutive document in the YAML stream contained in <em>io</em>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "  File.open( 'many-docs.yaml' ) do |yf|\n    YAML.each_node( yf ) do |ydoc|\n      ## ydoc contains a tree of nodes\n      ## from the YAML document\n    end\n  end\n"
+full_name: YAML::each_node
+is_singleton: true
+name: each_node
+params: ( io, &doc_proc )
+visibility: public

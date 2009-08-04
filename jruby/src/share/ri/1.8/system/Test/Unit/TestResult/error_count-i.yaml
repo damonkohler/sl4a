@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the number of errors this TestResult has recorded.
+full_name: Test::Unit::TestResult#error_count
+is_singleton: false
+name: error_count
+params: ()
+visibility: public

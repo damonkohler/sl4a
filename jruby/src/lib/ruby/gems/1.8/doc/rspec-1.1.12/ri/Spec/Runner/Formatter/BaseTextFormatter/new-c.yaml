@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+params: (options, where)
+is_singleton: true
+block_params: 
+name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: 'Creates a new instance that will write to <tt>where</tt>. If <tt>where</tt>
+    is a String, output will be written to the File with that name, otherwise <tt>where</tt>
+    is exected to be an IO (or an object that responds to #puts and #write).'
+full_name: Spec::Runner::Formatter::BaseTextFormatter::new
+visibility: public
+aliases: []
+

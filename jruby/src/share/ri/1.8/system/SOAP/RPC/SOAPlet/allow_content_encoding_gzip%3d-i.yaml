@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::SOAPlet#allow_content_encoding_gzip=
+is_singleton: false
+name: allow_content_encoding_gzip=
+params: (allow)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::WSDLDriverFactory#filter_parts
+is_singleton: false
+name: filter_parts
+params: (partsdef, partssource)
+visibility: private

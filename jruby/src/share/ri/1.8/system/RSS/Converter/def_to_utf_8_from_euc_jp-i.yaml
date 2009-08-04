@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Converter#def_to_utf_8_from_euc_jp
+is_singleton: false
+name: def_to_utf_8_from_euc_jp
+params: ()
+visibility: public

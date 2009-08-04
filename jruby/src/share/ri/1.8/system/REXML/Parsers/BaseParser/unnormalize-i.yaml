@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Unescapes all possible entities
+full_name: REXML::Parsers::BaseParser#unnormalize
+is_singleton: false
+name: unnormalize
+params: ( string, entities=nil, filter=nil )
+visibility: public

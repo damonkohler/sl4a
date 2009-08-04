@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Functions::context=
+is_singleton: true
+name: context=
+params: (value)
+visibility: public

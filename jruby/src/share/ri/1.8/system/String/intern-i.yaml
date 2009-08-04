@@ -1,0 +1,21 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the <tt>Symbol</tt> corresponding to <em>str</em>, creating the symbol if it did not previously exist. See <tt>Symbol#id2name</tt>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;Koala&quot;.intern         #=&gt; :Koala\n   s = 'cat'.to_sym       #=&gt; :cat\n   s == :cat              #=&gt; true\n   s = '@cat'.to_sym      #=&gt; :@cat\n   s == :@cat             #=&gt; true\n"
+- !ruby/struct:SM::Flow::P 
+  body: This can also be used to create symbols that cannot be represented using the <tt>:xxx</tt> notation.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   'cat and dog'.to_sym   #=&gt; :&quot;cat and dog&quot;\n"
+full_name: String#intern
+is_singleton: false
+name: intern
+params: |
+  str.intern   => symbol
+  str.to_sym   => symbol
+
+visibility: public

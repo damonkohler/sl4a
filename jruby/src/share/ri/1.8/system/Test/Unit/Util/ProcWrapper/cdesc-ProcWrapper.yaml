@@ -1,0 +1,27 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Allows the storage of a Proc passed through '&amp;' in a hash.
+- !ruby/struct:SM::Flow::P 
+  body: "Note: this may be inefficient, since the hash being used is not necessarily very good. In Observable, efficiency is not too important, since the hash is only accessed when adding and removing listeners, not when notifying."
+constants: []
+
+full_name: Test::Unit::Util::ProcWrapper
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: ==
+- !ruby/object:RI::MethodSummary 
+  name: eql?
+- !ruby/object:RI::MethodSummary 
+  name: hash
+- !ruby/object:RI::MethodSummary 
+  name: to_proc
+name: ProcWrapper
+superclass: Object

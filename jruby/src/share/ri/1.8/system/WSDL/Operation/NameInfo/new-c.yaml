@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::Operation::NameInfo::new
+is_singleton: true
+name: new
+params: (op_name, optype_name, parts)
+visibility: public

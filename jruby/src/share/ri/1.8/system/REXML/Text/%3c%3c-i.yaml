@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Appends text to this text node. The text is appended in the <tt>raw</tt> mode of this text node.
+full_name: REXML::Text#<<
+is_singleton: false
+name: "<<"
+params: ( to_append )
+visibility: public

@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Match---If <em>obj</em> is a <tt>Regexp</tt>, use it as a pattern to match against <em>str</em>,and returns the position the match starts, or <tt>nil</tt> if there is no match. Otherwise, invokes <em>obj.=~</em>, passing <em>str</em> as an argument. The default <tt>=~</tt> in <tt>Object</tt> returns <tt>false</tt>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;cat o' 9 tails&quot; =~ /\\d/   #=&gt; 7\n   &quot;cat o' 9 tails&quot; =~ 9      #=&gt; false\n"
+full_name: String#=~
+is_singleton: false
+name: =~
+params: |
+  str =~ obj   => fixnum or nil
+
+visibility: public

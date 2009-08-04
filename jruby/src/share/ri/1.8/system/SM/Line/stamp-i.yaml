@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: stamp a line with a type, a level, a prefix, and a flag
+full_name: SM::Line#stamp
+is_singleton: false
+name: stamp
+params: (type, level, param="", flag=nil)
+visibility: public

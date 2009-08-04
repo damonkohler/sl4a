@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: RakeFileUtils</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">RakeFileUtils</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../files/lib/rake_rb.html">
+                lib/rake.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+###########################################################################
+<a href="RakeFileUtils.html">RakeFileUtils</a> provides a custom version of
+the <a href="FileUtils.html">FileUtils</a> methods that respond to the
+<tt><a href="RakeFileUtils.html#M000905">verbose</a></tt> and <tt><a
+href="RakeFileUtils.html#M000906">nowrite</a></tt> commands.
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000906">nowrite</a>&nbsp;&nbsp;
+      <a href="#M000905">verbose</a>&nbsp;&nbsp;
+      <a href="#M000907">when_writing</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+    <div id="includes">
+      <h3 class="section-bar">Included Modules</h3>
+
+      <div id="includes-list">
+        <span class="include-name"><a href="FileUtils.html">FileUtils</a></span>
+      </div>
+    </div>
+
+    <div id="section">
+
+
+
+
+
+    <div id="attribute-list">
+      <h3 class="section-bar">Attributes</h3>
+
+      <div class="name-list">
+        <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">nowrite_flag</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">verbose_flag</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        </table>
+      </div>
+    </div>
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000906" class="method-detail">
+        <a name="M000906"></a>
+
+        <div class="method-heading">
+          <a href="#M000906" class="method-signature">
+          <span class="method-name">nowrite</span><span class="method-args">(value=nil) {|| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Get/set the <a href="RakeFileUtils.html#M000906">nowrite</a> flag
+controlling output from the <a href="FileUtils.html">FileUtils</a>
+utilities. If <a href="RakeFileUtils.html#M000905">verbose</a> is true,
+then the utility method is echoed to standard output.
+</p>
+<p>
+Examples:
+</p>
+<pre>
+   nowrite              # return the current value of the nowrite flag
+   nowrite(v)           # set the nowrite flag to _v_.
+   nowrite(v) { code }  # Execute code with the nowrite flag set temporarily to _v_.
+                        # Return to the original value when code is done.
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000906-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000906-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/rake.rb, line 1107</span>
+1107:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">nowrite</span>(<span class="ruby-identifier">value</span>=<span class="ruby-keyword kw">nil</span>)
+1108:     <span class="ruby-identifier">oldvalue</span> = <span class="ruby-constant">RakeFileUtils</span>.<span class="ruby-identifier">nowrite_flag</span>
+1109:     <span class="ruby-constant">RakeFileUtils</span>.<span class="ruby-identifier">nowrite_flag</span> = <span class="ruby-identifier">value</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">nil?</span>
+1110:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+1111:       <span class="ruby-keyword kw">begin</span>
+1112:         <span class="ruby-keyword kw">yield</span>
+1113:       <span class="ruby-keyword kw">ensure</span>
+1114:         <span class="ruby-constant">RakeFileUtils</span>.<span class="ruby-identifier">nowrite_flag</span> = <span class="ruby-identifier">oldvalue</span>
+1115:       <span class="ruby-keyword kw">end</span>
+1116:     <span class="ruby-keyword kw">end</span>
+1117:     <span class="ruby-identifier">oldvalue</span>
+1118:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000905" class="method-detail">
+        <a name="M000905"></a>
+
+        <div class="method-heading">
+          <a href="#M000905" class="method-signature">
+          <span class="method-name">verbose</span><span class="method-args">(value=nil) {|| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Get/set the <a href="RakeFileUtils.html#M000905">verbose</a> flag
+controlling output from the <a href="FileUtils.html">FileUtils</a>
+utilities. If <a href="RakeFileUtils.html#M000905">verbose</a> is true,
+then the utility method is echoed to standard output.
+</p>
+<p>
+Examples:
+</p>
+<pre>
+   verbose              # return the current value of the verbose flag
+   verbose(v)           # set the verbose flag to _v_.
+   verbose(v) { code }  # Execute code with the verbose flag set temporarily to _v_.
+                        # Return to the original value when code is done.
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000905-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000905-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/rake.rb, line 1086</span>
+1086:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">verbose</span>(<span class="ruby-identifier">value</span>=<span class="ruby-keyword kw">nil</span>)
+1087:     <span class="ruby-identifier">oldvalue</span> = <span class="ruby-constant">RakeFileUtils</span>.<span class="ruby-identifier">verbose_flag</span>
+1088:     <span class="ruby-constant">RakeFileUtils</span>.<span class="ruby-identifier">verbose_flag</span> = <span class="ruby-identifier">value</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">nil?</span>
+1089:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+1090:       <span class="ruby-keyword kw">begin</span>
+1091:         <span class="ruby-keyword kw">yield</span>
+1092:       <span class="ruby-keyword kw">ensure</span>
+1093:         <span class="ruby-constant">RakeFileUtils</span>.<span class="ruby-identifier">verbose_flag</span> = <span class="ruby-identifier">oldvalue</span>
+1094:       <span class="ruby-keyword kw">end</span>
+1095:     <span class="ruby-keyword kw">end</span>
+1096:     <span class="ruby-constant">RakeFileUtils</span>.<span class="ruby-identifier">verbose_flag</span>
+1097:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000907" class="method-detail">
+        <a name="M000907"></a>
+
+        <div class="method-heading">
+          <a href="#M000907" class="method-signature">
+          <span class="method-name">when_writing</span><span class="method-args">(msg=nil) {|| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Use this function to prevent protentially destructive ruby code from
+running when the :<a href="RakeFileUtils.html#M000906">nowrite</a> flag is
+set.
+</p>
+<p>
+Example:
+</p>
+<pre>
+  when_writing(&quot;Building Project&quot;) do
+    project.build
+  end
+</pre>
+<p>
+The following code will build the project under normal conditions. If the
+<a href="RakeFileUtils.html#M000906">nowrite</a>(true) flag is set, then
+the example will print:
+</p>
+<pre>
+     DRYRUN: Building Project
+</pre>
+<p>
+instead of actually building the project.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000907-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000907-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/rake.rb, line 1134</span>
+1134:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">when_writing</span>(<span class="ruby-identifier">msg</span>=<span class="ruby-keyword kw">nil</span>)
+1135:     <span class="ruby-keyword kw">if</span> <span class="ruby-constant">RakeFileUtils</span>.<span class="ruby-identifier">nowrite_flag</span>
+1136:       <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;DRYRUN: #{msg}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">msg</span>
+1137:     <span class="ruby-keyword kw">else</span>
+1138:       <span class="ruby-keyword kw">yield</span>
+1139:     <span class="ruby-keyword kw">end</span>
+1140:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: nodes
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Iterates over strongly connected component in the subgraph reachable from <em>node</em>.
+- !ruby/struct:SM::Flow::P 
+  body: Return value is unspecified.
+- !ruby/struct:SM::Flow::P 
+  body: "#each_strongly_connected_component_from doesn't call #tsort_each_node."
+full_name: TSort#each_strongly_connected_component_from
+is_singleton: false
+name: each_strongly_connected_component_from
+params: (node, id_map={}, stack=[]) {|nodes| ...}
+visibility: public

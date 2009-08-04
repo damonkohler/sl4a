@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a copy of <em>str</em> with uppercase alphabetic characters converted to lowercase and lowercase characters converted to uppercase.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;Hello&quot;.swapcase          #=&gt; &quot;hELLO&quot;\n   &quot;cYbEr_PuNk11&quot;.swapcase   #=&gt; &quot;CyBeR_pUnK11&quot;\n"
+full_name: String#swapcase
+is_singleton: false
+name: swapcase
+params: |
+  str.swapcase   => new_str
+
+visibility: public

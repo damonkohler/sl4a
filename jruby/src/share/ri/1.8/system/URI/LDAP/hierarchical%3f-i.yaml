@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::LDAP#hierarchical?
+is_singleton: false
+name: hierarchical?
+params: ()
+visibility: public

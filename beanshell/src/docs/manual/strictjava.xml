@@ -1,0 +1,30 @@
+<section>
+<name filename="strictjava">Strict Java Mode</name>
+
+<em>Note: Strict Java Mode is new and currently breaks some BeanShell tools
+and APIs when activated.  The GUI desktop and most BeanShell commands 
+will not work with strict Java mode enabled.  
+Please see notes at the end of this page</em>
+<p/>
+
+If you are a Java teacher or a student learning the Java language and
+you would like to avoid any potential confusion relating to BeanShell's
+use of loose variable types, you can turn on Strict Java Mode.  Strict
+Java Mode is enabled with the the setStrictJava() command.
+
+When strict Java mode is enabled BeanShell will require typed variable
+declarations, method arguments and return types.
+
+For example:
+<example>
+setStrictJava(true);
+
+int a = 5;
+
+foo=42; // Error! Undeclared variable 'foo'.
+
+bar() { .. } // Error! No declared return type.
+</example>
+
+
+</section>

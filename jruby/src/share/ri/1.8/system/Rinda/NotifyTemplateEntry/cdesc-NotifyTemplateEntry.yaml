@@ -1,0 +1,34 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: A NotifyTemplateEntry is returned by TupleSpace#notify and is notified of TupleSpace changes. You may receive either your subscribed event or the 'close' event when iterating over notifications.
+- !ruby/struct:SM::Flow::P 
+  body: See TupleSpace#notify_event for valid notification types.
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Example
+- !ruby/struct:SM::Flow::VERB 
+  body: "  ts = Rinda::TupleSpace.new\n  observer = ts.notify 'write', [nil]\n\n  Thread.start do\n    observer.each { |t| p t }\n  end\n\n  3.times { |i| ts.write [i] }\n"
+- !ruby/struct:SM::Flow::P 
+  body: "Outputs:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  ['write', [0]]\n  ['write', [1]]\n  ['write', [2]]\n"
+constants: []
+
+full_name: Rinda::NotifyTemplateEntry
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: notify
+- !ruby/object:RI::MethodSummary 
+  name: pop
+name: NotifyTemplateEntry
+superclass: TemplateEntry

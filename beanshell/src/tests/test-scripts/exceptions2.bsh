@@ -1,0 +1,12 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// Match untyped exception param
+try { throw new Exception(); } 
+catch ( ArithmeticException e ) { assert(false); } 
+catch ( e ) { flag(); }
+
+assert( flag() == 1 );
+
+complete();

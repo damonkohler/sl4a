@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::XMLSchema::SimpleType#base
+is_singleton: false
+name: base
+params: ()
+visibility: public

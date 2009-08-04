@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: NegativeExpectationMatcherHandler
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: []
+
+full_name: Spec::Expectations::NegativeExpectationMatcherHandler
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: handle_matcher

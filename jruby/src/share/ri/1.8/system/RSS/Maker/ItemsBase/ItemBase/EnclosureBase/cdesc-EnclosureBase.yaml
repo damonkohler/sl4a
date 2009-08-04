@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: RSS::Maker::ItemsBase::ItemBase::EnclosureBase
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Base
+instance_methods: []
+
+name: EnclosureBase
+superclass: Object

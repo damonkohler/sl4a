@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Parser#find_handler
+is_singleton: false
+name: find_handler
+params: (encodingstyle)
+visibility: private

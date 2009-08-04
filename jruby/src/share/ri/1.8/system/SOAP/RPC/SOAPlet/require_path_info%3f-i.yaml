@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::SOAPlet#require_path_info?
+is_singleton: false
+name: require_path_info?
+params: ()
+visibility: public

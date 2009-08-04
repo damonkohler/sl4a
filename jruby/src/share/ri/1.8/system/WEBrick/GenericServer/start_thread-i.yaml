@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::GenericServer#start_thread
+is_singleton: false
+name: start_thread
+params: (sock, &block)
+visibility: private

@@ -1,0 +1,42 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: YAML::BaseEmitter
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: binary_base64
+- !ruby/object:RI::MethodSummary 
+  name: double
+- !ruby/object:RI::MethodSummary 
+  name: fold
+- !ruby/object:RI::MethodSummary 
+  name: indent
+- !ruby/object:RI::MethodSummary 
+  name: indent!
+- !ruby/object:RI::MethodSummary 
+  name: indent_text
+- !ruby/object:RI::MethodSummary 
+  name: map
+- !ruby/object:RI::MethodSummary 
+  name: node_text
+- !ruby/object:RI::MethodSummary 
+  name: options
+- !ruby/object:RI::MethodSummary 
+  name: options=
+- !ruby/object:RI::MethodSummary 
+  name: seq
+- !ruby/object:RI::MethodSummary 
+  name: seq_map_shortcut
+- !ruby/object:RI::MethodSummary 
+  name: simple
+- !ruby/object:RI::MethodSummary 
+  name: single
+name: BaseEmitter
+superclass: 

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Convert to single-precision 32-bit floating point value.
+full_name: XSD::XSDFloat#narrow32bit
+is_singleton: false
+name: narrow32bit
+params: (f)
+visibility: private

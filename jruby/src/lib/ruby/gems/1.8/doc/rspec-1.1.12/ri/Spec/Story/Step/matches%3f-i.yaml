@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (name)
+is_singleton: false
+block_params: 
+name: matches?
+comment: 
+full_name: Spec::Story::Step#matches?
+visibility: public
+aliases: []
+

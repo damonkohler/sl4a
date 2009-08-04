@@ -1,0 +1,47 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Receives up to <em>maxlen</em> bytes from <tt>udpsocket</tt> using recvfrom(2) after O_NONBLOCK is set for the underlying file descriptor. <em>flags</em> is zero or more of the <tt>MSG_</tt> options. The first element of the results, <em>mesg</em>, is the data received. The second element, <em>sender_inet_addr</em>, is an array to represent the sender address.
+- !ruby/struct:SM::Flow::P 
+  body: When recvfrom(2) returns 0, Socket#recvfrom_nonblock returns an empty string as data. It means an empty packet.
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Parameters
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: <tt>maxlen</tt> - the number of bytes to receive from the socket
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: <tt>flags</tt> - zero or more of the <tt>MSG_</tt> options
+  type: :BULLET
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Example
+- !ruby/struct:SM::Flow::VERB 
+  body: "     require 'socket'\n     s1 = UDPSocket.new\n     s1.bind(&quot;127.0.0.1&quot;, 0)\n     s2 = UDPSocket.new\n     s2.bind(&quot;127.0.0.1&quot;, 0)\n     s2.connect(*s1.addr.values_at(3,1))\n     s1.connect(*s2.addr.values_at(3,1))\n     s1.send &quot;aaa&quot;, 0\n     IO.select([s2])\n     p s2.recvfrom_nonblock(10)  #=&gt; [&quot;aaa&quot;, [&quot;AF_INET&quot;, 33302, &quot;localhost.localdomain&quot;, &quot;127.0.0.1&quot;]]\n"
+- !ruby/struct:SM::Flow::P 
+  body: Refer to Socket#recvfrom for the exceptions that may be thrown if the call to <em>recvfrom_nonblock</em> fails.
+- !ruby/struct:SM::Flow::P 
+  body: UDPSocket#recvfrom_nonblock may raise any error corresponding to recvfrom(2) failure, including Errno::EAGAIN.
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: See
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Socket#recvfrom
+  type: :BULLET
+full_name: UDPSocket#recvfrom_nonblock
+is_singleton: false
+name: recvfrom_nonblock
+params: |
+  udpsocket.recvfrom_nonblock(maxlen) => [mesg, sender_inet_addr]
+  udpsocket.recvfrom_nonblock(maxlen, flags) => [mesg, sender_inet_addr]
+
+visibility: public

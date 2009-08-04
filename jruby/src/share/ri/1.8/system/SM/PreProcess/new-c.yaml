@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::PreProcess::new
+is_singleton: true
+name: new
+params: (input_file_name, include_path)
+visibility: public

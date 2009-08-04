@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPUtils#escape_form
+is_singleton: false
+name: escape_form
+params: (str)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP#get_content
+is_singleton: false
+name: get_content
+params: (url, header = {})
+visibility: public

@@ -1,0 +1,13 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: add_servant
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: servant entry interface
+full_name: SOAP::RPC::CGIStub#add_rpc_servant
+is_singleton: false
+name: add_rpc_servant
+params: (obj, namespace = @default_namespace)
+visibility: public

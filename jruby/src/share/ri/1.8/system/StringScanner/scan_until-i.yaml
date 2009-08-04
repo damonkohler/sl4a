@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Scans the string <em>until</em> the <tt>pattern</tt> is matched. Returns the substring up to and including the end of the match, advancing the scan pointer to that location. If there is no match, <tt>nil</tt> is returned.
+- !ruby/struct:SM::Flow::VERB 
+  body: "  s = StringScanner.new(&quot;Fri Dec 12 1975 14:39&quot;)\n  s.scan_until(/1/)        # -&gt; &quot;Fri Dec 1&quot;\n  s.pre_match              # -&gt; &quot;Fri Dec &quot;\n  s.scan_until(/XYZ/)      # -&gt; nil\n"
+full_name: StringScanner#scan_until
+is_singleton: false
+name: scan_until
+params: " scan_until(pattern)\n"
+visibility: public

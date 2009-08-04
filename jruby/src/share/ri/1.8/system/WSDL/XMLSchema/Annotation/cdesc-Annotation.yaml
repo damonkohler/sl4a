@@ -1,0 +1,19 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::XMLSchema::Annotation
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+name: Annotation
+superclass: Info

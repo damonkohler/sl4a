@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::XMLDecl::new
+is_singleton: true
+name: new
+params: (version=DEFAULT_VERSION, encoding=nil, standalone=nil)
+visibility: public

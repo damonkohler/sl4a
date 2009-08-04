@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (scope, args)
+is_singleton: false
+block_params: 
+name: assign_scope
+comment: 
+full_name: Spec::Example::ExampleGroupFactory::ClassMethods#assign_scope
+visibility: public
+aliases: []
+

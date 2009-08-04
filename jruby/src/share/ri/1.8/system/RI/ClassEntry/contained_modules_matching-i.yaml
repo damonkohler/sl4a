@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Return a list of any classes or modules that we contain that match a given string
+full_name: RI::ClassEntry#contained_modules_matching
+is_singleton: false
+name: contained_modules_matching
+params: (name)
+visibility: public

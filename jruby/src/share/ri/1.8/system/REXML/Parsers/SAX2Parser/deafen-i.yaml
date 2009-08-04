@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Parsers::SAX2Parser#deafen
+is_singleton: false
+name: deafen
+params: ( listener=nil, &blok )
+visibility: public

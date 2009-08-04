@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPUtils#mime_type
+is_singleton: false
+name: mime_type
+params: (filename, mime_tab)
+visibility: public

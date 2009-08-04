@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::LDAP::build
+is_singleton: true
+name: build
+params: (args)
+visibility: public

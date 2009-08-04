@@ -1,0 +1,42 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: XSD::CodeGen::GenSupport
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: capitalize
+- !ruby/object:RI::MethodSummary 
+  name: dump_emptyline
+- !ruby/object:RI::MethodSummary 
+  name: format
+- !ruby/object:RI::MethodSummary 
+  name: keyword?
+- !ruby/object:RI::MethodSummary 
+  name: safeconstname
+- !ruby/object:RI::MethodSummary 
+  name: safeconstname?
+- !ruby/object:RI::MethodSummary 
+  name: safemethodname
+- !ruby/object:RI::MethodSummary 
+  name: safemethodname?
+- !ruby/object:RI::MethodSummary 
+  name: safevarname
+- !ruby/object:RI::MethodSummary 
+  name: safevarname?
+- !ruby/object:RI::MethodSummary 
+  name: trim_eol
+- !ruby/object:RI::MethodSummary 
+  name: trim_indent
+- !ruby/object:RI::MethodSummary 
+  name: uncapitalize
+- !ruby/object:RI::MethodSummary 
+  name: untab
+name: GenSupport
+superclass: 

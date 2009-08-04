@@ -1,0 +1,43 @@
+/**
+	Set the namespace (context) of the current scope.
+	<p/>
+
+	The following example illustrates swapping the current namespace.
+	<p/>
+
+	<pre>
+    fooState = object(); 
+    barState = object(); 
+    
+    print(this.namespace);
+    setNameSpace(fooState.namespace);
+    print(this.namespace);
+    a=5;
+    setNameSpace(barState.namespace);
+    print(this.namespace);
+    a=6;
+    
+    setNameSpace(fooState.namespace);
+    print(this.namespace);
+    print(a);  // 5
+    
+    setNameSpace(barState.namespace);
+    print(this.namespace);
+    print(a); // 6
+    </pre>
+	<p/>
+
+	You could use this to creates the effect of a static namespace for a
+	method by explicitly setting the namespace upon entry.
+	<p/>
+*/
+
+bsh.help.setNameSpace =
+	"usage: setNameSpace( bsh.NameSpace )";
+
+setNameSpace( ns ) 
+{
+	// Set the namespace at depth one (our caller) to the specified namespace.
+	this.callstack.set( 1, ns );
+}
+

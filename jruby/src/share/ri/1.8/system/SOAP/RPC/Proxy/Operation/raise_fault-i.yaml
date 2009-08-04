@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Proxy::Operation#raise_fault
+is_singleton: false
+name: raise_fault
+params: (e, mapping_registry, literal_mapping_registry)
+visibility: public

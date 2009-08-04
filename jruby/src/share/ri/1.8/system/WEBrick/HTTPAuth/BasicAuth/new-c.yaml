@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPAuth::BasicAuth::new
+is_singleton: true
+name: new
+params: (config, default=Config::BasicAuth)
+visibility: public

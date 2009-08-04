@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RubyLex#char_no
+is_singleton: false
+name: char_no
+params: ()
+visibility: public

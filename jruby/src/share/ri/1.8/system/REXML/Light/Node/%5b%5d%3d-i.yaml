@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Doesn't handle namespaces yet
+full_name: REXML::Light::Node#[]=
+is_singleton: false
+name: "[]="
+params: ( reference, ns, value=nil )
+visibility: public

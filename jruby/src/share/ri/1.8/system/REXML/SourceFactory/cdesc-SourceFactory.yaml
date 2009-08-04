@@ -1,0 +1,18 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: create_from
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Generates Source-s. USE THIS CLASS.
+constants: []
+
+full_name: REXML::SourceFactory
+includes: []
+
+instance_methods: []
+
+name: SourceFactory
+superclass: Object

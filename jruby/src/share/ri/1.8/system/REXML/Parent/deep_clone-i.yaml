@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Deeply clones this object. This creates a complete duplicate of this Parent, including all descendants.
+full_name: REXML::Parent#deep_clone
+is_singleton: false
+name: deep_clone
+params: ()
+visibility: public

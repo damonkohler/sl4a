@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::NS::Assigner#assign
+is_singleton: false
+name: assign
+params: (ns)
+visibility: public

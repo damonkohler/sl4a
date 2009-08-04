@@ -1,0 +1,79 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: TSort implements topological sorting using Tarjan's algorithm for strongly connected components.
+- !ruby/struct:SM::Flow::P 
+  body: TSort is designed to be able to be used with any object which can be interpreted as a directed graph.
+- !ruby/struct:SM::Flow::P 
+  body: TSort requires two methods to interpret an object as a graph, tsort_each_node and tsort_each_child.
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: tsort_each_node is used to iterate for all nodes over a graph.
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: tsort_each_child is used to iterate for child nodes of a given node.
+  type: :BULLET
+- !ruby/struct:SM::Flow::P 
+  body: The equality of nodes are defined by eql? and hash since TSort uses Hash internally.
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: A Simple Example
+- !ruby/struct:SM::Flow::P 
+  body: "The following example demonstrates how to mix the TSort module into an existing class (in this case, Hash). Here, we're treating each key in the hash as a node in the graph, and so we simply alias the required #tsort_each_node method to Hash's #each_key method. For each key in the hash, the associated value is an array of the node's child nodes. This choice in turn leads to our implementation of the required #tsort_each_child method, which fetches the array of child nodes and then iterates over that array using the user-supplied block."
+- !ruby/struct:SM::Flow::VERB 
+  body: "  require 'tsort'\n\n  class Hash\n    include TSort\n    alias tsort_each_node each_key\n    def tsort_each_child(node, &amp;block)\n      fetch(node).each(&amp;block)\n    end\n  end\n\n  {1=&gt;[2, 3], 2=&gt;[3], 3=&gt;[], 4=&gt;[]}.tsort\n  #=&gt; [3, 2, 1, 4]\n\n  {1=&gt;[2], 2=&gt;[3, 4], 3=&gt;[2], 4=&gt;[]}.strongly_connected_components\n  #=&gt; [[4], [2, 3], [1]]\n"
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: A More Realistic Example
+- !ruby/struct:SM::Flow::P 
+  body: "A very simple `make' like tool can be implemented as follows:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  require 'tsort'\n\n  class Make\n    def initialize\n      @dep = {}\n      @dep.default = []\n    end\n\n    def rule(outputs, inputs=[], &amp;block)\n      triple = [outputs, inputs, block]\n      outputs.each {|f| @dep[f] = [triple]}\n      @dep[triple] = inputs\n    end\n\n    def build(target)\n      each_strongly_connected_component_from(target) {|ns|\n        if ns.length != 1\n          fs = ns.delete_if {|n| Array === n}\n          raise TSort::Cyclic.new(&quot;cyclic dependencies: #{fs.join ', '}&quot;)\n        end\n        n = ns.first\n        if Array === n\n          outputs, inputs, block = n\n          inputs_time = inputs.map {|f| File.mtime f}.max\n          begin\n            outputs_time = outputs.map {|f| File.mtime f}.min\n          rescue Errno::ENOENT\n            outputs_time = nil\n          end\n          if outputs_time == nil ||\n             inputs_time != nil &amp;&amp; outputs_time &lt;= inputs_time\n            sleep 1 if inputs_time != nil &amp;&amp; inputs_time.to_i == Time.now.to_i\n            block.call\n          end\n        end\n      }\n    end\n\n    def tsort_each_child(node, &amp;block)\n      @dep[node].each(&amp;block)\n    end\n    include TSort\n  end\n\n  def command(arg)\n    print arg, &quot;\\n&quot;\n    system arg\n  end\n\n  m = Make.new\n  m.rule(%w[t1]) { command 'date &gt; t1' }\n  m.rule(%w[t2]) { command 'date &gt; t2' }\n  m.rule(%w[t3]) { command 'date &gt; t3' }\n  m.rule(%w[t4], %w[t1 t3]) { command 'cat t1 t3 &gt; t4' }\n  m.rule(%w[t5], %w[t4 t2]) { command 'cat t4 t2 &gt; t5' }\n  m.build('t5')\n"
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Bugs
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: "'tsort.rb' is wrong name because this library uses Tarjan's algorithm for strongly connected components. Although 'strongly_connected_components.rb' is correct but too long."
+  type: :BULLET
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: References
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: R.
+    body: E. Tarjan, &quot;Depth First Search and Linear Graph Algorithms&quot;,
+  type: :UPPERALPHA
+- !ruby/struct:SM::Flow::P 
+  body: <em>SIAM Journal on Computing</em>, Vol. 1, No. 2, pp. 146-160, June 1972.
+constants: []
+
+full_name: TSort
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: each_strongly_connected_component
+- !ruby/object:RI::MethodSummary 
+  name: each_strongly_connected_component_from
+- !ruby/object:RI::MethodSummary 
+  name: strongly_connected_components
+- !ruby/object:RI::MethodSummary 
+  name: tsort
+- !ruby/object:RI::MethodSummary 
+  name: tsort_each
+- !ruby/object:RI::MethodSummary 
+  name: tsort_each_child
+- !ruby/object:RI::MethodSummary 
+  name: tsort_each_node
+name: TSort
+superclass: 

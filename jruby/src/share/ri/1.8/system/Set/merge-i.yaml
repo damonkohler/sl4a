@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Merges the elements of the given enumerable object to the set and returns self.
+full_name: Set#merge
+is_singleton: false
+name: merge
+params: (enum)
+visibility: public

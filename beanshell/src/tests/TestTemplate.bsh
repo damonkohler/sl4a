@@ -1,0 +1,10 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// Insert tests here, calling
+// assert(), isEvalError(), fail(), warning(), flag()
+// TODO: add examples of these calls here...
+
+complete();
+

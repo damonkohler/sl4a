@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Parent#each_index
+is_singleton: false
+name: each_index
+params: ( &block )
+visibility: public

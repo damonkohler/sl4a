@@ -1,0 +1,23 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Type
+  value: QName.new(Namespace, NilLiteral)
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Value
+  value: "'true'"
+full_name: XSD::XSDNil
+includes: []
+
+instance_methods: []
+
+name: XSDNil
+superclass: XSDAnySimpleType

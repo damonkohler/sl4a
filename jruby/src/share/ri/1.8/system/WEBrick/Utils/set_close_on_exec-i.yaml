@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::Utils#set_close_on_exec
+is_singleton: false
+name: set_close_on_exec
+params: (io)
+visibility: public

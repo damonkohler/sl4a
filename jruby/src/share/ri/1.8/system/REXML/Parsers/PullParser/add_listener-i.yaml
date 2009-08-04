@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Parsers::PullParser#add_listener
+is_singleton: false
+name: add_listener
+params: ( listener )
+visibility: public

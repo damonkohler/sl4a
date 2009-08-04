@@ -1,0 +1,41 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+fin=false;
+try { 
+	print("foo");
+	throw new Exception("foo");
+} catch ( IOException e ) {
+	print("caught exception 1: "+e);
+	assert(false);
+} catch ( Exception e ) {
+	print("caught exception 2: "+e);
+	assert(true);
+} finally {
+	print("executed finally");
+	fin=true;
+}
+
+assert(fin == true);
+
+fin=false;
+try {
+	try { 
+		print("foo");
+		throw new ArithmeticException();
+	} catch ( IOException e ) {
+		print("caught exception 1: "+e);
+		assert(false);
+	} finally {
+		print("executed finally");
+		fin=true;
+	}
+} catch ( Exception e ) {
+	print("caught exception at outer level: "+e);
+	assert( e instanceof ArithmeticException );
+}
+
+assert(fin == true);
+
+complete();

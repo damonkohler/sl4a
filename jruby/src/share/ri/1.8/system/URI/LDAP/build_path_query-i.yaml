@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::LDAP#build_path_query
+is_singleton: false
+name: build_path_query
+params: ()
+visibility: private

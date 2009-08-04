@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Router::Operation#check_use
+is_singleton: false
+name: check_use
+params: (use)
+visibility: private

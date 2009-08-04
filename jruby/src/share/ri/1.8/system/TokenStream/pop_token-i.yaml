@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: TokenStream#pop_token
+is_singleton: false
+name: pop_token
+params: ()
+visibility: public

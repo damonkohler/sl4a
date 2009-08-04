@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::RootElementMixin#xmldecl
+is_singleton: false
+name: xmldecl
+params: ()
+visibility: private

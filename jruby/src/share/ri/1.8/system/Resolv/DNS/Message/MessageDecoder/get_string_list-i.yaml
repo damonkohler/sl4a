@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::DNS::Message::MessageDecoder#get_string_list
+is_singleton: false
+name: get_string_list
+params: ()
+visibility: public

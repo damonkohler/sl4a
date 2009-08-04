@@ -1,0 +1,15 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+do {
+	flag();
+} while( false );
+
+assert( flag() == 1 );
+
+while( false ) {
+	fail();
+}
+
+complete();

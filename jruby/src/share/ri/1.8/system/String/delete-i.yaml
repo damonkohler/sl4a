@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a copy of <em>str</em> with all characters in the intersection of its arguments deleted. Uses the same rules for building the set of characters as <tt>String#count</tt>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;hello&quot;.delete &quot;l&quot;,&quot;lo&quot;        #=&gt; &quot;heo&quot;\n   &quot;hello&quot;.delete &quot;lo&quot;            #=&gt; &quot;he&quot;\n   &quot;hello&quot;.delete &quot;aeiou&quot;, &quot;^e&quot;   #=&gt; &quot;hell&quot;\n   &quot;hello&quot;.delete &quot;ej-m&quot;          #=&gt; &quot;ho&quot;\n"
+full_name: String#delete
+is_singleton: false
+name: delete
+params: |
+  str.delete([other_str]+)   => new_str
+
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::SOAPArray#position
+is_singleton: false
+name: position
+params: ()
+visibility: public

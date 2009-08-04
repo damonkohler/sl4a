@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Apply a transfer method to a Ruby object
+full_name: YAML::transfer
+is_singleton: true
+name: transfer
+params: ( type_id, obj )
+visibility: public

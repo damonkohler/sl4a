@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::AttributeManager#add_special
+is_singleton: false
+name: add_special
+params: (pattern, name)
+visibility: public

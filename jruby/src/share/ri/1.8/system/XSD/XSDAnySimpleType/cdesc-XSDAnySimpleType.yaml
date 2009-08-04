@@ -1,0 +1,46 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: "@data represents canonical space (ex. Integer: 123)."
+  name: data
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: "@is_nil represents this data is nil or not."
+  name: is_nil
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: The base class of XSD datatypes.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Type
+  value: QName.new(Namespace, AnySimpleTypeLiteral)
+full_name: XSD::XSDAnySimpleType
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: XSD
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: _set
+- !ruby/object:RI::MethodSummary 
+  name: _to_s
+- !ruby/object:RI::MethodSummary 
+  name: check_lexical_format
+- !ruby/object:RI::MethodSummary 
+  name: init
+- !ruby/object:RI::MethodSummary 
+  name: screen_data
+- !ruby/object:RI::MethodSummary 
+  name: set
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+name: XSDAnySimpleType
+superclass: NSDBase

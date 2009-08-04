@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (listener)
+is_singleton: false
+block_params: 
+name: add_listener
+comment: 
+full_name: Spec::Story::Runner::StoryRunner#add_listener
+visibility: public
+aliases: []
+

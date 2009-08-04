@@ -1,0 +1,29 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: A module to implement the Linda distributed computing paradigm in Ruby.
+- !ruby/struct:SM::Flow::P 
+  body: Rinda is part of DRb (dRuby).
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Example(s)
+- !ruby/struct:SM::Flow::P 
+  body: See the sample/drb/ directory in the Ruby distribution, from 1.8.2 onwards.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: The default port Ring discovery will use.
+  name: Ring_PORT
+  value: "7647"
+full_name: Rinda
+includes: []
+
+instance_methods: []
+
+name: Rinda
+superclass: 

@@ -1,0 +1,42 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+check(a, val, java.lang.Class cl) { 
+	// we're looking at the Primitive here
+	assert( a.getValue().getClass().equals( cl ) );
+	assert( a.getValue() == val );
+}
+
+// Promotion tests
+
+// Should be integer
+check(5, 5, Integer.class);
+check(5+5, 10, Integer.class);
+check(5/2, 2, Integer.class);
+
+// Should be double
+check(4.0, 4.0, Double.class);
+check(5.0+5.0, 10.0, Double.class);
+check(1+1.0, 2.0, Double.class);
+
+check((byte)5, 5, Byte.class);
+check((short)5, 5, Short.class);
+check((long)5, 5, Long.class);
+check('5', '5', Character.class);
+check((float)5.0, 5.0, Float.class );
+
+// boxing numbers to Object type
+v = new Vector();
+v.add(1);
+v.add(2);
+v.add(3);
+
+// test boxing/unboxing in array initializer
+// this works in java 5
+Byte [] bwa = { 1, 2 };
+byte [] ba1 = { new Byte((byte)1), new Byte((byte)2) };
+byte [] ba2 = { 1, 2 };
+byte [] ba2 = { 1L, 2L };
+
+complete();

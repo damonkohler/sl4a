@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::Operation#inputparts
+is_singleton: false
+name: inputparts
+params: ()
+visibility: public

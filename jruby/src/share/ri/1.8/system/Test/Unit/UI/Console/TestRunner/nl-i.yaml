@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::Console::TestRunner#nl
+is_singleton: false
+name: nl
+params: (level=NORMAL)
+visibility: private

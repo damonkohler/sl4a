@@ -1,0 +1,27 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: Scenario
+constants: []
+
+comment: 
+attributes: 
+- !ruby/object:RI::Attribute 
+  name: body
+  comment: 
+  rw: RW
+- !ruby/object:RI::Attribute 
+  name: name
+  comment: 
+  rw: RW
+- !ruby/object:RI::Attribute 
+  name: story
+  comment: 
+  rw: RW
+instance_methods: []
+
+full_name: Spec::Story::Scenario
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

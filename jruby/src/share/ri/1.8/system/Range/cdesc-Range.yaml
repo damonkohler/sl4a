@@ -1,0 +1,62 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: yaml_new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: A <tt>Range</tt> represents an interval---a set of values with a start and an end. Ranges may be constructed using the <em>s</em><tt>..</tt><em>e</em> and <em>s</em><tt>...</tt><em>e</em> literals, or with <tt>Range::new</tt>. Ranges constructed using <tt>..</tt> run from the start to the end inclusively. Those created using <tt>...</tt> exclude the end value. When used as an iterator, ranges return each value in the sequence.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   (-1..-5).to_a      #=&gt; []\n   (-5..-1).to_a      #=&gt; [-5, -4, -3, -2, -1]\n   ('a'..'e').to_a    #=&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;]\n   ('a'...'e').to_a   #=&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;]\n"
+- !ruby/struct:SM::Flow::P 
+  body: Ranges can be constructed using objects of any type, as long as the objects can be compared using their <tt>&lt;=&gt;</tt> operator and they support the <tt>succ</tt> method to return the next object in sequence.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   class Xs                # represent a string of 'x's\n     include Comparable\n     attr :length\n     def initialize(n)\n       @length = n\n     end\n     def succ\n       Xs.new(@length + 1)\n     end\n     def &lt;=&gt;(other)\n       @length &lt;=&gt; other.length\n     end\n     def to_s\n       sprintf &quot;%2d #{inspect}&quot;, @length\n     end\n     def inspect\n       'x' * @length\n     end\n   end\n\n   r = Xs.new(3)..Xs.new(6)   #=&gt; xxx..xxxxxx\n   r.to_a                     #=&gt; [xxx, xxxx, xxxxx, xxxxxx]\n   r.member?(Xs.new(5))       #=&gt; true\n"
+- !ruby/struct:SM::Flow::P 
+  body: In the previous code example, class <tt>Xs</tt> includes the <tt>Comparable</tt> module. This is because <tt>Enumerable#member?</tt> checks for equality using <tt>==</tt>. Including <tt>Comparable</tt> ensures that the <tt>==</tt> method is defined in terms of the <tt>&lt;=&gt;</tt> method implemented in <tt>Xs</tt>.
+constants: []
+
+full_name: Range
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Enumerable
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: ==
+- !ruby/object:RI::MethodSummary 
+  name: ===
+- !ruby/object:RI::MethodSummary 
+  name: begin
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: end
+- !ruby/object:RI::MethodSummary 
+  name: eql?
+- !ruby/object:RI::MethodSummary 
+  name: exclude_end?
+- !ruby/object:RI::MethodSummary 
+  name: first
+- !ruby/object:RI::MethodSummary 
+  name: hash
+- !ruby/object:RI::MethodSummary 
+  name: include?
+- !ruby/object:RI::MethodSummary 
+  name: inspect
+- !ruby/object:RI::MethodSummary 
+  name: last
+- !ruby/object:RI::MethodSummary 
+  name: member?
+- !ruby/object:RI::MethodSummary 
+  name: pretty_print
+- !ruby/object:RI::MethodSummary 
+  name: step
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+- !ruby/object:RI::MethodSummary 
+  name: to_yaml
+name: Range
+superclass: Object

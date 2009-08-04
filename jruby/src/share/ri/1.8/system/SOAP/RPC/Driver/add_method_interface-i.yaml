@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Driver#add_method_interface
+is_singleton: false
+name: add_method_interface
+params: (name, param_count)
+visibility: private

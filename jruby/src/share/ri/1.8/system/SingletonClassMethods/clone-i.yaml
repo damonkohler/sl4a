@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: properly clone the Singleton pattern - did you know that duping doesn't copy class methods?
+full_name: SingletonClassMethods#clone
+is_singleton: false
+name: clone
+params: ()
+visibility: public

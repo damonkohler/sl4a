@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::URIFactory_#obj2soap
+is_singleton: false
+name: obj2soap
+params: (soap_class, obj, info, map)
+visibility: public

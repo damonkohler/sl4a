@@ -1,0 +1,30 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: Story
+constants: []
+
+comment: 
+attributes: 
+- !ruby/object:RI::Attribute 
+  name: narrative
+  comment: 
+  rw: R
+- !ruby/object:RI::Attribute 
+  name: title
+  comment: 
+  rw: R
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: '[]'
+- !ruby/object:RI::MethodSummary 
+  name: assign_steps_to
+- !ruby/object:RI::MethodSummary 
+  name: run_in
+- !ruby/object:RI::MethodSummary 
+  name: steps_for
+full_name: Spec::Story::Story
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

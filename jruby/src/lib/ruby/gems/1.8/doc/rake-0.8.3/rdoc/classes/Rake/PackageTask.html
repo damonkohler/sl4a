@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: Rake::PackageTask</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Rake::PackageTask</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/lib/rake/packagetask_rb.html">
+                lib/rake/packagetask.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                <a href="TaskLib.html">
+                TaskLib
+               </a>
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+Create a packaging task that will package the project into distributable
+files (e.g zip archive or tar files).
+</p>
+<p>
+The <a href="PackageTask.html">PackageTask</a> will create the following
+targets:
+</p>
+<dl>
+<dt><b>:package</b></dt><dd>Create all the requested package files.
+
+</dd>
+<dt><b>:clobber_package</b></dt><dd>Delete all the package files. This target is automatically added to the
+main clobber target.
+
+</dd>
+<dt><b>:repackage</b></dt><dd>Rebuild the package files from scratch, even if they are not out of date.
+
+</dd>
+<dt><b>&quot;<em>package_dir</em>/<em>name</em>-<em>version</em>.tgz&quot;</b></dt><dd>Create a gzipped tar package (if <em>need_tar</em> is true).
+
+</dd>
+<dt><b>&quot;<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.gz&quot;</b></dt><dd>Create a gzipped tar package (if <em>need_tar_gz</em> is true).
+
+</dd>
+<dt><b>&quot;<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.bz2&quot;</b></dt><dd>Create a bzip2&#8216;d tar package (if <em>need_tar_bz2</em> is true).
+
+</dd>
+<dt><b>&quot;<em>package_dir</em>/<em>name</em>-<em>version</em>.zip&quot;</b></dt><dd>Create a zip package archive (if <em>need_zip</em> is true).
+
+</dd>
+</dl>
+<p>
+Example:
+</p>
+<pre>
+  Rake::PackageTask.new(&quot;rake&quot;, &quot;1.2.3&quot;) do |p|
+    p.need_tar = true
+    p.package_files.include(&quot;lib/**/*.rb&quot;)
+  end
+</pre>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000749">define</a>&nbsp;&nbsp;
+      <a href="#M000748">init</a>&nbsp;&nbsp;
+      <a href="#M000747">new</a>&nbsp;&nbsp;
+      <a href="#M000751">package_dir_path</a>&nbsp;&nbsp;
+      <a href="#M000750">package_name</a>&nbsp;&nbsp;
+      <a href="#M000754">tar_bz2_file</a>&nbsp;&nbsp;
+      <a href="#M000753">tar_gz_file</a>&nbsp;&nbsp;
+      <a href="#M000752">tgz_file</a>&nbsp;&nbsp;
+      <a href="#M000755">zip_file</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+    <div id="attribute-list">
+      <h3 class="section-bar">Attributes</h3>
+
+      <div class="name-list">
+        <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">name</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+Name of the package (from the GEM Spec).
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">need_tar</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+True if a gzipped tar file (tgz) should be produced (default is false).
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">need_tar_bz2</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+True if a bzip2&#8216;d tar file (tar.bz2) should be produced (default is
+false).
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">need_tar_gz</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+True if a gzipped tar file (tar.gz) should be produced (default is false).
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">need_zip</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+True if a zip file should be produced (default is false)
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">package_dir</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+Directory used to store the package files (default is &#8216;pkg&#8217;).
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">package_files</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+List of files to be included in the package.
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">tar_command</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+Tar command for gzipped or bzip2ed archives. The default is
+&#8216;tar&#8217;.
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">version</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+Version of the package (e.g. &#8216;1.3.2&#8217;).
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">zip_command</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+Zip command for zipped archives. The default is &#8216;zip&#8217;.
+
+</td>
+        </tr>
+        </table>
+      </div>
+    </div>
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000747" class="method-detail">
+        <a name="M000747"></a>
+
+        <div class="method-heading">
+          <a href="#M000747" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(name=nil, version=nil) {|self if block_given?| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Create a Package <a href="Task.html">Task</a> with the given name and
+version.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000747-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000747-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rake/packagetask.rb, line 78</span>
+78:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">version</span>=<span class="ruby-keyword kw">nil</span>)
+79:       <span class="ruby-identifier">init</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">version</span>)
+80:       <span class="ruby-keyword kw">yield</span> <span class="ruby-keyword kw">self</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+81:       <span class="ruby-identifier">define</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">name</span>.<span class="ruby-identifier">nil?</span>
+82:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000749" class="method-detail">
+        <a name="M000749"></a>
+
+        <div class="method-heading">
+          <a href="#M000749" class="method-signature">
+          <span class="method-name">define</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Create the tasks defined by this task library.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000749-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000749-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake/packagetask.rb, line 99</span>
+ 99:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">define</span>
+100:       <span class="ruby-identifier">fail</span> <span class="ruby-value str">&quot;Version required (or :noversion)&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@version</span>.<span class="ruby-identifier">nil?</span>
+101:       <span class="ruby-ivar">@version</span> = <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">:noversion</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@version</span>
+102: 
+103:       <span class="ruby-identifier">desc</span> <span class="ruby-value str">&quot;Build all the packages&quot;</span>
+104:       <span class="ruby-identifier">task</span> <span class="ruby-identifier">:package</span>
+105:       
+106:       <span class="ruby-identifier">desc</span> <span class="ruby-value str">&quot;Force a rebuild of the package files&quot;</span>
+107:       <span class="ruby-identifier">task</span> <span class="ruby-identifier">:repackage</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">:clobber_package</span>, <span class="ruby-identifier">:package</span>]
+108:       
+109:       <span class="ruby-identifier">desc</span> <span class="ruby-value str">&quot;Remove package products&quot;</span> 
+110:       <span class="ruby-identifier">task</span> <span class="ruby-identifier">:clobber_package</span> <span class="ruby-keyword kw">do</span>
+111:         <span class="ruby-identifier">rm_r</span> <span class="ruby-identifier">package_dir</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+112:       <span class="ruby-keyword kw">end</span>
+113: 
+114:       <span class="ruby-identifier">task</span> <span class="ruby-identifier">:clobber</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">:clobber_package</span>]
+115: 
+116:       [
+117:         [<span class="ruby-identifier">need_tar</span>, <span class="ruby-identifier">tgz_file</span>, <span class="ruby-value str">&quot;z&quot;</span>],
+118:         [<span class="ruby-identifier">need_tar_gz</span>, <span class="ruby-identifier">tar_gz_file</span>, <span class="ruby-value str">&quot;z&quot;</span>],
+119:         [<span class="ruby-identifier">need_tar_bz2</span>, <span class="ruby-identifier">tar_bz2_file</span>, <span class="ruby-value str">&quot;j&quot;</span>]
+120:       ].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span>(<span class="ruby-identifier">need</span>, <span class="ruby-identifier">file</span>, <span class="ruby-identifier">flag</span>)<span class="ruby-operator">|</span>
+121:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">need</span>
+122:           <span class="ruby-identifier">task</span> <span class="ruby-identifier">:package</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-node">&quot;#{package_dir}/#{file}&quot;</span>]
+123:           <span class="ruby-identifier">file</span> <span class="ruby-node">&quot;#{package_dir}/#{file}&quot;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">package_dir_path</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">package_files</span> <span class="ruby-keyword kw">do</span>
+124:             <span class="ruby-identifier">chdir</span>(<span class="ruby-identifier">package_dir</span>) <span class="ruby-keyword kw">do</span>
+125:               <span class="ruby-identifier">sh</span> <span class="ruby-value str">%{env}</span>
+126:               <span class="ruby-identifier">sh</span> <span class="ruby-node">%{#{@tar_command} #{flag}cvf #{file} #{package_name}}</span>
+127:             <span class="ruby-keyword kw">end</span>
+128:           <span class="ruby-keyword kw">end</span>
+129:         <span class="ruby-keyword kw">end</span>
+130:       <span class="ruby-keyword kw">end</span>
+131:       
+132:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">need_zip</span>
+133:         <span class="ruby-identifier">task</span> <span class="ruby-identifier">:package</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-node">&quot;#{package_dir}/#{zip_file}&quot;</span>]
+134:         <span class="ruby-identifier">file</span> <span class="ruby-node">&quot;#{package_dir}/#{zip_file}&quot;</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">package_dir_path</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">package_files</span> <span class="ruby-keyword kw">do</span>
+135:           <span class="ruby-identifier">chdir</span>(<span class="ruby-identifier">package_dir</span>) <span class="ruby-keyword kw">do</span>
+136:             <span class="ruby-identifier">sh</span> <span class="ruby-node">%{#{@zip_command} -r #{zip_file} #{package_name}}</span>
+137:           <span class="ruby-keyword kw">end</span>
+138:         <span class="ruby-keyword kw">end</span>
+139:       <span class="ruby-keyword kw">end</span>
+140: 
+141:       <span class="ruby-identifier">directory</span> <span class="ruby-identifier">package_dir</span>
+142: 
+143:       <span class="ruby-identifier">file</span> <span class="ruby-identifier">package_dir_path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@package_files</span> <span class="ruby-keyword kw">do</span>
+144:         <span class="ruby-identifier">mkdir_p</span> <span class="ruby-identifier">package_dir</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+145:         <span class="ruby-ivar">@package_files</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
+146:           <span class="ruby-identifier">f</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">package_dir_path</span>, <span class="ruby-identifier">fn</span>)
+147:           <span class="ruby-identifier">fdir</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">f</span>)
+148:           <span class="ruby-identifier">mkdir_p</span>(<span class="ruby-identifier">fdir</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">fdir</span>)
+149:           <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span>(<span class="ruby-identifier">fn</span>)
+150:             <span class="ruby-identifier">mkdir_p</span>(<span class="ruby-identifier">f</span>)
+151:           <span class="ruby-keyword kw">else</span>
+152:             <span class="ruby-identifier">rm_f</span> <span class="ruby-identifier">f</span>
+153:             <span class="ruby-identifier">safe_ln</span>(<span class="ruby-identifier">fn</span>, <span class="ruby-identifier">f</span>)
+154:           <span class="ruby-keyword kw">end</span>
+155:         <span class="ruby-keyword kw">end</span>
+156:       <span class="ruby-keyword kw">end</span>
+157:       <span class="ruby-keyword kw">self</span>
+158:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000748" class="method-detail">
+        <a name="M000748"></a>
+
+        <div class="method-heading">
+          <a href="#M000748" class="method-signature">
+          <span class="method-name">init</span><span class="method-args">(name, version)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Initialization that bypasses the &quot;yield self&quot; and &quot;<a
+href="PackageTask.html#M000749">define</a>&quot; step.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000748-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000748-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rake/packagetask.rb, line 85</span>
+85:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">version</span>)
+86:       <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+87:       <span class="ruby-ivar">@version</span> = <span class="ruby-identifier">version</span>
+88:       <span class="ruby-ivar">@package_files</span> = <span class="ruby-constant">Rake</span><span class="ruby-operator">::</span><span class="ruby-constant">FileList</span>.<span class="ruby-identifier">new</span>
+89:       <span class="ruby-ivar">@package_dir</span> = <span class="ruby-value str">'pkg'</span>
+90:       <span class="ruby-ivar">@need_tar</span> = <span class="ruby-keyword kw">false</span>
+91:       <span class="ruby-ivar">@need_tar_gz</span> = <span class="ruby-keyword kw">false</span>
+92:       <span class="ruby-ivar">@need_tar_bz2</span> = <span class="ruby-keyword kw">false</span>
+93:       <span class="ruby-ivar">@need_zip</span> = <span class="ruby-keyword kw">false</span>
+94:       <span class="ruby-ivar">@tar_command</span> = <span class="ruby-value str">'tar'</span>
+95:       <span class="ruby-ivar">@zip_command</span> = <span class="ruby-value str">'zip'</span>
+96:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000751" class="method-detail">
+        <a name="M000751"></a>
+
+        <div class="method-heading">
+          <a href="#M000751" class="method-signature">
+          <span class="method-name">package_dir_path</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000751-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000751-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake/packagetask.rb, line 164</span>
+164:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">package_dir_path</span>
+165:       <span class="ruby-node">&quot;#{package_dir}/#{package_name}&quot;</span>
+166:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000750" class="method-detail">
+        <a name="M000750"></a>
+
+        <div class="method-heading">
+          <a href="#M000750" class="method-signature">
+          <span class="method-name">package_name</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000750-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000750-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake/packagetask.rb, line 160</span>
+160:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">package_name</span>
+161:       <span class="ruby-ivar">@version</span> <span class="ruby-operator">?</span> <span class="ruby-node">&quot;#{@name}-#{@version}&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-ivar">@name</span>
+162:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000754" class="method-detail">
+        <a name="M000754"></a>
+
+        <div class="method-heading">
+          <a href="#M000754" class="method-signature">
+          <span class="method-name">tar_bz2_file</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000754-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000754-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake/packagetask.rb, line 176</span>
+176:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">tar_bz2_file</span>
+177:       <span class="ruby-node">&quot;#{package_name}.tar.bz2&quot;</span>
+178:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000753" class="method-detail">
+        <a name="M000753"></a>
+
+        <div class="method-heading">
+          <a href="#M000753" class="method-signature">
+          <span class="method-name">tar_gz_file</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000753-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000753-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake/packagetask.rb, line 172</span>
+172:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">tar_gz_file</span>
+173:       <span class="ruby-node">&quot;#{package_name}.tar.gz&quot;</span>
+174:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000752" class="method-detail">
+        <a name="M000752"></a>
+
+        <div class="method-heading">
+          <a href="#M000752" class="method-signature">
+          <span class="method-name">tgz_file</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000752-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000752-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake/packagetask.rb, line 168</span>
+168:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">tgz_file</span>
+169:       <span class="ruby-node">&quot;#{package_name}.tgz&quot;</span>
+170:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000755" class="method-detail">
+        <a name="M000755"></a>
+
+        <div class="method-heading">
+          <a href="#M000755" class="method-signature">
+          <span class="method-name">zip_file</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000755-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000755-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake/packagetask.rb, line 180</span>
+180:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">zip_file</span>
+181:       <span class="ruby-node">&quot;#{package_name}.zip&quot;</span>
+182:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

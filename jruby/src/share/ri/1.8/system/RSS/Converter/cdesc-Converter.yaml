@@ -1,0 +1,48 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: RSS::Converter
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Utils
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: convert
+- !ruby/object:RI::MethodSummary 
+  name: def_convert
+- !ruby/object:RI::MethodSummary 
+  name: def_else_enc
+- !ruby/object:RI::MethodSummary 
+  name: def_iconv_convert
+- !ruby/object:RI::MethodSummary 
+  name: def_same_enc
+- !ruby/object:RI::MethodSummary 
+  name: def_to_euc_jp_from_iso_2022_jp
+- !ruby/object:RI::MethodSummary 
+  name: def_to_euc_jp_from_shift_jis
+- !ruby/object:RI::MethodSummary 
+  name: def_to_euc_jp_from_utf_8
+- !ruby/object:RI::MethodSummary 
+  name: def_to_iso_2022_jp_from_euc_jp
+- !ruby/object:RI::MethodSummary 
+  name: def_to_iso_8859_1_from_utf_8
+- !ruby/object:RI::MethodSummary 
+  name: def_to_shift_jis_from_euc_jp
+- !ruby/object:RI::MethodSummary 
+  name: def_to_shift_jis_from_utf_8
+- !ruby/object:RI::MethodSummary 
+  name: def_to_utf_8_from_euc_jp
+- !ruby/object:RI::MethodSummary 
+  name: def_to_utf_8_from_iso_8859_1
+- !ruby/object:RI::MethodSummary 
+  name: def_to_utf_8_from_shift_jis
+- !ruby/object:RI::MethodSummary 
+  name: def_uconv_convert_if_can
+name: Converter
+superclass: Object

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::GTK2::TestRunner#finished
+is_singleton: false
+name: finished
+params: (elapsed_time)
+visibility: private

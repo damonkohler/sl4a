@@ -1,0 +1,17 @@
+
+source("TestHarness.bsh");
+class Foo66 
+{ 
+	global.initFoo66=true;
+}
+
+class Bar66 extends Foo66 
+{
+	global.initBar66=true;
+}
+
+new Bar66();
+assert( initFoo66 == true );
+assert( initBar66 == true );
+
+complete();

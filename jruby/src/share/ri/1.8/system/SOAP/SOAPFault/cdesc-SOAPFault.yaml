@@ -1,0 +1,36 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: SOAP::SOAPFault
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: SOAPEnvelopeElement
+- !ruby/object:RI::IncludedModule 
+  name: SOAPCompoundtype
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: detail
+- !ruby/object:RI::MethodSummary 
+  name: detail=
+- !ruby/object:RI::MethodSummary 
+  name: encode
+- !ruby/object:RI::MethodSummary 
+  name: faultactor
+- !ruby/object:RI::MethodSummary 
+  name: faultactor=
+- !ruby/object:RI::MethodSummary 
+  name: faultcode
+- !ruby/object:RI::MethodSummary 
+  name: faultcode=
+- !ruby/object:RI::MethodSummary 
+  name: faultstring
+- !ruby/object:RI::MethodSummary 
+  name: faultstring=
+name: SOAPFault
+superclass: SOAPStruct

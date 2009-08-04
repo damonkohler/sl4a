@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::HTTPStreamHandler#send_accept_encoding_gzip?
+is_singleton: false
+name: send_accept_encoding_gzip?
+params: ()
+visibility: private

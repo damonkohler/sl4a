@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Delete tuples which dead tuples from the TupleBag, returning the deleted tuples.
+full_name: Rinda::TupleBag#delete_unless_alive
+is_singleton: false
+name: delete_unless_alive
+params: ()
+visibility: public

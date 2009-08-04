@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Proxy::Operation#response_default_encodingstyle
+is_singleton: false
+name: response_default_encodingstyle
+params: ()
+visibility: public

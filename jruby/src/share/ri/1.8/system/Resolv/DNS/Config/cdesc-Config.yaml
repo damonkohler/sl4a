@@ -1,0 +1,32 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: default_config_hash
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: parse_resolv_conf
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: InitialTimeout
+  value: "5"
+full_name: Resolv::DNS::Config
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: generate_candidates
+- !ruby/object:RI::MethodSummary 
+  name: generate_timeouts
+- !ruby/object:RI::MethodSummary 
+  name: lazy_initialize
+- !ruby/object:RI::MethodSummary 
+  name: resolv
+- !ruby/object:RI::MethodSummary 
+  name: single?
+name: Config
+superclass: Object

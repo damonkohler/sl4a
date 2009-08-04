@@ -1,0 +1,18 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the offset in seconds between the timezone of <em>time</em> and UTC.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   t = Time.gm(2000,1,1,20,15,1)   #=&gt; Sat Jan 01 20:15:01 UTC 2000\n   t.gmt_offset                    #=&gt; 0\n   l = t.getlocal                  #=&gt; Sat Jan 01 14:15:01 CST 2000\n   l.gmt_offset                    #=&gt; -21600\n"
+full_name: Time#utc_offset
+is_singleton: false
+name: utc_offset
+params: |
+  time.gmt_offset => fixnum
+  time.gmtoff     => fixnum
+  time.utc_offset => fixnum
+
+visibility: public

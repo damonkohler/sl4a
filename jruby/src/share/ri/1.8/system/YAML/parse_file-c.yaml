@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Parse a document from the file located at <em>filepath</em>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "  YAML.parse_file( 'animals.yaml' )\n     #=&gt; #&lt;YAML::Syck::Node:0x82ccce0\n          @kind=:seq,\n          @value=\n           [#&lt;YAML::Syck::Node:0x82ccd94\n             @kind=:scalar,\n             @type_id=&quot;str&quot;,\n             @value=&quot;badger&quot;&gt;,\n            #&lt;YAML::Syck::Node:0x82ccd58\n             @kind=:scalar,\n             @type_id=&quot;str&quot;,\n             @value=&quot;elephant&quot;&gt;,\n            #&lt;YAML::Syck::Node:0x82ccd1c\n             @kind=:scalar,\n             @type_id=&quot;str&quot;,\n             @value=&quot;tiger&quot;&gt;]&gt;\n"
+full_name: YAML::parse_file
+is_singleton: true
+name: parse_file
+params: ( filepath )
+visibility: public

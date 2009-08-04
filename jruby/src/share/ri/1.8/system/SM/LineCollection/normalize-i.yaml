@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: tidy up at the end
+full_name: SM::LineCollection#normalize
+is_singleton: false
+name: normalize
+params: ()
+visibility: public

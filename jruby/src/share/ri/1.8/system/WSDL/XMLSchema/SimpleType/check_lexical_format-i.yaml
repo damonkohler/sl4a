@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::XMLSchema::SimpleType#check_lexical_format
+is_singleton: false
+name: check_lexical_format
+params: (value)
+visibility: public

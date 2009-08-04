@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a new RingFinger that will look for RingServers at <tt>port</tt> on the addresses in <tt>broadcast_list</tt>.
+full_name: Rinda::RingFinger::new
+is_singleton: true
+name: new
+params: (broadcast_list=@@broadcast_list, port=Ring_PORT)
+visibility: public

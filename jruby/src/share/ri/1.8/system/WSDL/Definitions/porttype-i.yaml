@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::Definitions#porttype
+is_singleton: false
+name: porttype
+params: (name)
+visibility: public

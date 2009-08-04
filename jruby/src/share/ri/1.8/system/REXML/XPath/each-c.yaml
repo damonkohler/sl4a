@@ -1,0 +1,26 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Itterates over nodes that match the given path, calling the supplied block with the match.
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "element:"
+    body: The context element
+  - !ruby/struct:SM::Flow::LI 
+    label: "path:"
+    body: The xpath to search for. If not supplied or nil, defaults to '*'
+  - !ruby/struct:SM::Flow::LI 
+    label: "namespaces:"
+    body: If supplied, a Hash which defines a namespace mapping
+  type: :NOTE
+- !ruby/struct:SM::Flow::VERB 
+  body: " XPath.each( node ) { |el| ... }\n XPath.each( node, '/*[@attr='v']' ) { |el| ... }\n XPath.each( node, 'ancestor::x' ) { |el| ... }\n"
+full_name: REXML::XPath::each
+is_singleton: true
+name: each
+params: (element, path=nil, namespaces=nil, variables={})
+visibility: public

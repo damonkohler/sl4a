@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a new Tuple from <tt>ary_or_hash</tt> which must be an Array or Hash.
+full_name: Rinda::Tuple::new
+is_singleton: true
+name: new
+params: (ary_or_hash)
+visibility: public

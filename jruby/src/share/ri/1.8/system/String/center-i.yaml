@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: If <em>integer</em> is greater than the length of <em>str</em>, returns a new <tt>String</tt> of length <em>integer</em> with <em>str</em> centered and padded with <em>padstr</em>; otherwise, returns <em>str</em>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;hello&quot;.center(4)         #=&gt; &quot;hello&quot;\n   &quot;hello&quot;.center(20)        #=&gt; &quot;       hello        &quot;\n   &quot;hello&quot;.center(20, '123') #=&gt; &quot;1231231hello12312312&quot;\n"
+full_name: String#center
+is_singleton: false
+name: center
+params: |
+  str.center(integer, padstr)   => new_str
+
+visibility: public

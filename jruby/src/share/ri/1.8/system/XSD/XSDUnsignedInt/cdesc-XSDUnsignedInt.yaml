@@ -1,0 +1,22 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Type
+  value: QName.new(Namespace, UnsignedIntLiteral)
+full_name: XSD::XSDUnsignedInt
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: maxinclusive
+- !ruby/object:RI::MethodSummary 
+  name: mininclusive
+name: XSDUnsignedInt
+superclass: XSDUnsignedLong

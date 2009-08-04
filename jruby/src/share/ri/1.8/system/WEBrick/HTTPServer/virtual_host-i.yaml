@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPServer#virtual_host
+is_singleton: false
+name: virtual_host
+params: (server)
+visibility: public

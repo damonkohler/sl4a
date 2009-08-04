@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Element::have_children_elements
+is_singleton: true
+name: have_children_elements
+params: ()
+visibility: public

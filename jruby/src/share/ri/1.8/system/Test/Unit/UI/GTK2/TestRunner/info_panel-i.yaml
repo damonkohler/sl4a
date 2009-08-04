@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::GTK2::TestRunner#info_panel
+is_singleton: false
+name: info_panel
+params: ()
+visibility: private

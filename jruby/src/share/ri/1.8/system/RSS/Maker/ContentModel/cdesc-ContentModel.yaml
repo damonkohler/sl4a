@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: append_features
+comment: 
+constants: []
+
+full_name: RSS::Maker::ContentModel
+includes: []
+
+instance_methods: []
+
+name: ContentModel
+superclass: 

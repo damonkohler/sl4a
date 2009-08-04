@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::GTK2::TestRunner#test_progress_bar
+is_singleton: false
+name: test_progress_bar
+params: ()
+visibility: private

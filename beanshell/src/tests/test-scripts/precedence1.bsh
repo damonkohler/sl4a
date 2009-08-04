@@ -1,0 +1,32 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+/**
+	The following works in Java
+*/
+
+// simple names
+Integer i = new Integer(5);
+String Integer = "foo";
+assert( Integer.equals("foo") );
+// var
+assert( Integer.length() == 3 );
+// select the static method through var, not class
+assert( Integer.valueOf("5") instanceof String );
+
+
+// complex names
+java.lang.Integer;
+assert( java.lang.Integer.MAX_VALUE > 1 );
+
+// allowed to hide it for resolution of static content
+int java = 5; 
+assert( isEvalError("java.lang.Integer.valueOf(\"5\") ") );
+assert( isEvalError("java.lang.Integer.MAX_VALUE > 1") );
+
+// but not for .class case
+assert( java.lang.Integer.class == Integer.class );
+
+complete();
+

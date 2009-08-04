@@ -1,0 +1,26 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: []
+
+constants: []
+
+full_name: RiDriver
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: get_info_for
+- !ruby/object:RI::MethodSummary 
+  name: process_args
+- !ruby/object:RI::MethodSummary 
+  name: report_class_stuff
+- !ruby/object:RI::MethodSummary 
+  name: report_method_stuff
+- !ruby/object:RI::MethodSummary 
+  name: report_missing_documentation
+name: RiDriver
+superclass: Object

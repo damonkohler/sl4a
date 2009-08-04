@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "name: a Symbol, String or an Array; nil means hook to the root cascade: true/false; for cascading hook of sub key hook: block which will be called with 2 args, name and value"
+full_name: SOAP::Property#add_hook
+is_singleton: false
+name: add_hook
+params: (name = nil, cascade = false, &hook)
+visibility: public

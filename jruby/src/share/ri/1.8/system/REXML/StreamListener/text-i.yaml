@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Called when text is encountered in the document @p text the text content.
+full_name: REXML::StreamListener#text
+is_singleton: false
+name: text
+params: (text)
+visibility: public

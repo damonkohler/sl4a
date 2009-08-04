@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+params: (example)
+is_singleton: false
+block_params: 
+name: example_passed
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: This method is invoked when an <tt>example</tt> passes.
+full_name: Spec::Runner::Formatter::BaseFormatter#example_passed
+visibility: public
+aliases: []
+

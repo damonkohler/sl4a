@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Content: [ String text ]"
+full_name: REXML::Parsers::PullEvent#notationdecl?
+is_singleton: false
+name: notationdecl?
+params: ()
+visibility: public

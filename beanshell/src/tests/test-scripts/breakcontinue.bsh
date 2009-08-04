@@ -1,0 +1,45 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+print("while break 0-4");
+int i=0;
+while( i<10 ) {
+	if ( i==5 )
+		break;
+	print("i="+i);
+	i++;
+}
+assert(i==5);
+
+print("for break 0-4");
+val=0;
+for(int i=0; i<10; i++) {
+	val=i;
+	if ( i==5 )
+		break;
+	print("i="+i);
+}
+assert(val==5);
+
+print("continue while, skip 5");
+int i=0;
+while( i<10 ) {
+	if ( i==5 ) {
+		i++;
+		continue;
+	}
+	assert( i!=5 );
+	print("i="+i);
+	i++;
+}
+
+print("continue for, skip 5");
+for(int i=0; i<10; i++) {
+	if ( i==5 )
+		continue;
+	assert(i!=5);
+	print("i="+i);
+}
+
+complete();

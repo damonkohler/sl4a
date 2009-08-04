@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Reduces the given numerator and denominator to their lowest terms. Use Rational() instead.
+full_name: Rational::reduce
+is_singleton: true
+name: reduce
+params: (num, den = 1)
+visibility: public

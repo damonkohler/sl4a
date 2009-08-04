@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "indent:"
+    body: <b>DEPRECATED</b> This parameter is now ignored. See the formatters in the REXML::Formatters package for changing the output style.
+  type: :NOTE
+full_name: REXML::Node#to_s
+is_singleton: false
+name: to_s
+params: (indent=nil)
+visibility: public

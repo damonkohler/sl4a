@@ -1,0 +1,19 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: SOAP::Mapping::BasetypeFactory_
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: obj2soap
+- !ruby/object:RI::MethodSummary 
+  name: soap2obj
+name: BasetypeFactory_
+superclass: Factory

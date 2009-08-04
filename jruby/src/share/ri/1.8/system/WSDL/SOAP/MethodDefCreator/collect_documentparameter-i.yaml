@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::SOAP::MethodDefCreator#collect_documentparameter
+is_singleton: false
+name: collect_documentparameter
+params: (operation)
+visibility: public

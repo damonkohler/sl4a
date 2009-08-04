@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns true if there are no more events
+full_name: REXML::Parsers::BaseParser#empty?
+is_singleton: false
+name: empty?
+params: ()
+visibility: public

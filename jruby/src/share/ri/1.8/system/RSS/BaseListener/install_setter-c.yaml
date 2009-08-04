@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: set the setter for the uri, tag_name pair
+full_name: RSS::BaseListener::install_setter
+is_singleton: true
+name: install_setter
+params: (uri, tag_name, setter)
+visibility: private

@@ -1,0 +1,998 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: Rake::Task</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Rake::Task</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/lib/rake_rb.html">
+                lib/rake.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                Object
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+######################################################################### A
+<a href="Task.html">Task</a> is the basic unit of work in a Rakefile. Tasks
+have associated actions (possibly more than one) and a list of
+prerequisites. When invoked, a task will first ensure that all of its
+prerequisites have an opportunity to run and then it will <a
+href="Task.html#M000798">execute</a> its own actions.
+</p>
+<p>
+Tasks are not usually created directly using the <a
+href="Task.html#M000789">new</a> method, but rather use the <tt>file</tt>
+and <tt>task</tt> convenience methods.
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000807">[]</a>&nbsp;&nbsp;
+      <a href="#M000801">add_description</a>&nbsp;&nbsp;
+      <a href="#M000792">arg_names</a>&nbsp;&nbsp;
+      <a href="#M000805">clear</a>&nbsp;&nbsp;
+      <a href="#M000794">clear</a>&nbsp;&nbsp;
+      <a href="#M000796">clear_actions</a>&nbsp;&nbsp;
+      <a href="#M000795">clear_prerequisites</a>&nbsp;&nbsp;
+      <a href="#M000802">comment=</a>&nbsp;&nbsp;
+      <a href="#M000810">create_rule</a>&nbsp;&nbsp;
+      <a href="#M000809">define_task</a>&nbsp;&nbsp;
+      <a href="#M000790">enhance</a>&nbsp;&nbsp;
+      <a href="#M000798">execute</a>&nbsp;&nbsp;
+      <a href="#M000786">inspect</a>&nbsp;&nbsp;
+      <a href="#M000804">investigation</a>&nbsp;&nbsp;
+      <a href="#M000797">invoke</a>&nbsp;&nbsp;
+      <a href="#M000791">name</a>&nbsp;&nbsp;
+      <a href="#M000799">needed?</a>&nbsp;&nbsp;
+      <a href="#M000789">new</a>&nbsp;&nbsp;
+      <a href="#M000793">reenable</a>&nbsp;&nbsp;
+      <a href="#M000811">scope_name</a>&nbsp;&nbsp;
+      <a href="#M000803">set_arg_names</a>&nbsp;&nbsp;
+      <a href="#M000788">source</a>&nbsp;&nbsp;
+      <a href="#M000787">sources</a>&nbsp;&nbsp;
+      <a href="#M000808">task_defined?</a>&nbsp;&nbsp;
+      <a href="#M000806">tasks</a>&nbsp;&nbsp;
+      <a href="#M000800">timestamp</a>&nbsp;&nbsp;
+      <a href="#M000785">to_s</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+    <div id="attribute-list">
+      <h3 class="section-bar">Attributes</h3>
+
+      <div class="name-list">
+        <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">actions</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc">
+List of actions attached to a task.
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">application</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc">
+<a href="Application.html">Application</a> owning this task.
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">comment</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc">
+Comment for this task. Restricted to a single line of no more than 50
+characters.
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">full_comment</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc">
+Full text of the (possibly multi-line) comment.
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">prerequisites</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc">
+List of prerequisites for a task.
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">scope</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc">
+Array of nested namespaces names used for task lookup by this task.
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">sources</td>
+          <td class="context-item-value">&nbsp;[W]&nbsp;</td>
+          <td class="context-item-desc">
+List of <a href="Task.html#M000787">sources</a> for task.
+
+</td>
+        </tr>
+        </table>
+      </div>
+    </div>
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000807" class="method-detail">
+        <a name="M000807"></a>
+
+        <div class="method-heading">
+          <a href="#M000807" class="method-signature">
+          <span class="method-name">[]</span><span class="method-args">(task_name)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Return a task with the given <a href="Task.html#M000791">name</a>. If the
+task is not currently known, try to synthesize one from the defined rules.
+If no rules are found, but an existing file matches the task <a
+href="Task.html#M000791">name</a>, assume it is a file task with no
+dependencies or actions.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000807-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000807-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 709</span>
+709:       <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">task_name</span>)
+710:         <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>[<span class="ruby-identifier">task_name</span>]
+711:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000805" class="method-detail">
+        <a name="M000805"></a>
+
+        <div class="method-heading">
+          <a href="#M000805" class="method-signature">
+          <span class="method-name">clear</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Clear the task list. This cause rake to immediately forget all the <a
+href="Task.html#M000806">tasks</a> that have been assigned. (Normally used
+in the unit tests.)
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000805-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000805-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 696</span>
+696:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear</span>
+697:         <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">clear</span>
+698:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000810" class="method-detail">
+        <a name="M000810"></a>
+
+        <div class="method-heading">
+          <a href="#M000810" class="method-signature">
+          <span class="method-name">create_rule</span><span class="method-args">(*args, &amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Define a rule for synthesizing <a href="Task.html#M000806">tasks</a>.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000810-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000810-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 726</span>
+726:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_rule</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+727:         <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">create_rule</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+728:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000809" class="method-detail">
+        <a name="M000809"></a>
+
+        <div class="method-heading">
+          <a href="#M000809" class="method-signature">
+          <span class="method-name">define_task</span><span class="method-args">(*args, &amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Define a task given <tt>args</tt> and an option block. If a rule with the
+given <a href="Task.html#M000791">name</a> already exists, the
+prerequisites and actions are added to the existing task. Returns the
+defined task.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000809-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000809-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 721</span>
+721:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">define_task</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+722:         <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">define_task</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+723:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000789" class="method-detail">
+        <a name="M000789"></a>
+
+        <div class="method-heading">
+          <a href="#M000789" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(task_name, app)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Create a task named <tt>task_name</tt> with no actions or prerequisites.
+Use <tt><a href="Task.html#M000790">enhance</a></tt> to add actions and
+prerequisites.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000789-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000789-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 492</span>
+492:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">task_name</span>, <span class="ruby-identifier">app</span>)
+493:       <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">task_name</span>.<span class="ruby-identifier">to_s</span>
+494:       <span class="ruby-ivar">@prerequisites</span> = []
+495:       <span class="ruby-ivar">@actions</span> = []
+496:       <span class="ruby-ivar">@already_invoked</span> = <span class="ruby-keyword kw">false</span>
+497:       <span class="ruby-ivar">@full_comment</span> = <span class="ruby-keyword kw">nil</span>
+498:       <span class="ruby-ivar">@comment</span> = <span class="ruby-keyword kw">nil</span>
+499:       <span class="ruby-ivar">@lock</span> = <span class="ruby-constant">Monitor</span>.<span class="ruby-identifier">new</span>
+500:       <span class="ruby-ivar">@application</span> = <span class="ruby-identifier">app</span>
+501:       <span class="ruby-ivar">@scope</span> = <span class="ruby-identifier">app</span>.<span class="ruby-identifier">current_scope</span>
+502:       <span class="ruby-ivar">@arg_names</span> = <span class="ruby-keyword kw">nil</span>
+503:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000811" class="method-detail">
+        <a name="M000811"></a>
+
+        <div class="method-heading">
+          <a href="#M000811" class="method-signature">
+          <span class="method-name">scope_name</span><span class="method-args">(scope, task_name)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Apply the scope to the task <a href="Task.html#M000791">name</a> according
+to the rules for this kind of task. Generic <a
+href="Task.html#M000806">tasks</a> will accept the scope as part of the <a
+href="Task.html#M000791">name</a>.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000811-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000811-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 733</span>
+733:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">scope_name</span>(<span class="ruby-identifier">scope</span>, <span class="ruby-identifier">task_name</span>)
+734:         (<span class="ruby-identifier">scope</span> <span class="ruby-operator">+</span> [<span class="ruby-identifier">task_name</span>]).<span class="ruby-identifier">join</span>(<span class="ruby-value str">':'</span>)
+735:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000808" class="method-detail">
+        <a name="M000808"></a>
+
+        <div class="method-heading">
+          <a href="#M000808" class="method-signature">
+          <span class="method-name">task_defined?</span><span class="method-args">(task_name)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+TRUE if the task <a href="Task.html#M000791">name</a> is already defined.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000808-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000808-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 714</span>
+714:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">task_defined?</span>(<span class="ruby-identifier">task_name</span>)
+715:         <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">lookup</span>(<span class="ruby-identifier">task_name</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>
+716:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000806" class="method-detail">
+        <a name="M000806"></a>
+
+        <div class="method-heading">
+          <a href="#M000806" class="method-signature">
+          <span class="method-name">tasks</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+List of all defined <a href="Task.html#M000806">tasks</a>.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000806-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000806-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 701</span>
+701:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">tasks</span>
+702:         <span class="ruby-constant">Rake</span>.<span class="ruby-identifier">application</span>.<span class="ruby-identifier">tasks</span>
+703:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000801" class="method-detail">
+        <a name="M000801"></a>
+
+        <div class="method-heading">
+          <a href="#M000801" class="method-signature">
+          <span class="method-name">add_description</span><span class="method-args">(description)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Add a description to the task. The description can consist of an option
+argument list (enclosed brackets) and an optional comment.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000801-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000801-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 635</span>
+635:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_description</span>(<span class="ruby-identifier">description</span>)
+636:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">description</span>
+637:       <span class="ruby-identifier">comment</span> = <span class="ruby-identifier">description</span>.<span class="ruby-identifier">strip</span>
+638:       <span class="ruby-identifier">add_comment</span>(<span class="ruby-identifier">comment</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">comment</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">empty?</span>
+639:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000792" class="method-detail">
+        <a name="M000792"></a>
+
+        <div class="method-heading">
+          <a href="#M000792" class="method-signature">
+          <span class="method-name">arg_names</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Name of arguments for this task.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000792-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000792-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 532</span>
+532:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">arg_names</span>
+533:       <span class="ruby-ivar">@arg_names</span> <span class="ruby-operator">||</span> []
+534:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000794" class="method-detail">
+        <a name="M000794"></a>
+
+        <div class="method-heading">
+          <a href="#M000794" class="method-signature">
+          <span class="method-name">clear</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Clear the existing prerequisites and actions of a rake task.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000794-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000794-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 543</span>
+543:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear</span>
+544:       <span class="ruby-identifier">clear_prerequisites</span>
+545:       <span class="ruby-identifier">clear_actions</span>
+546:       <span class="ruby-keyword kw">self</span>
+547:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000796" class="method-detail">
+        <a name="M000796"></a>
+
+        <div class="method-heading">
+          <a href="#M000796" class="method-signature">
+          <span class="method-name">clear_actions</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Clear the existing actions on a rake task.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000796-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000796-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 556</span>
+556:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear_actions</span>
+557:       <span class="ruby-identifier">actions</span>.<span class="ruby-identifier">clear</span>
+558:       <span class="ruby-keyword kw">self</span>
+559:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000795" class="method-detail">
+        <a name="M000795"></a>
+
+        <div class="method-heading">
+          <a href="#M000795" class="method-signature">
+          <span class="method-name">clear_prerequisites</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Clear the existing prerequisites of a rake task.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000795-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000795-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 550</span>
+550:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear_prerequisites</span>
+551:       <span class="ruby-identifier">prerequisites</span>.<span class="ruby-identifier">clear</span>
+552:       <span class="ruby-keyword kw">self</span>
+553:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000802" class="method-detail">
+        <a name="M000802"></a>
+
+        <div class="method-heading">
+          <a href="#M000802" class="method-signature">
+          <span class="method-name">comment=</span><span class="method-args">(description)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Writing to the comment attribute is the same as adding a description.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000802-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000802-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 642</span>
+642:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">comment=</span>(<span class="ruby-identifier">description</span>)
+643:       <span class="ruby-identifier">add_description</span>(<span class="ruby-identifier">description</span>)
+644:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000790" class="method-detail">
+        <a name="M000790"></a>
+
+        <div class="method-heading">
+          <a href="#M000790" class="method-signature">
+          <span class="method-name">enhance</span><span class="method-args">(deps=nil, &amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Enhance a task with prerequisites or actions. Returns self.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000790-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000790-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 506</span>
+506:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">enhance</span>(<span class="ruby-identifier">deps</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+507:       <span class="ruby-ivar">@prerequisites</span> <span class="ruby-operator">|=</span> <span class="ruby-identifier">deps</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">deps</span>
+508:       <span class="ruby-ivar">@actions</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+509:       <span class="ruby-keyword kw">self</span>
+510:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000798" class="method-detail">
+        <a name="M000798"></a>
+
+        <div class="method-heading">
+          <a href="#M000798" class="method-signature">
+          <span class="method-name">execute</span><span class="method-args">(args=nil)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Execute the actions associated with this task.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000798-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000798-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 602</span>
+602:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute</span>(<span class="ruby-identifier">args</span>=<span class="ruby-keyword kw">nil</span>)
+603:       <span class="ruby-identifier">args</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">EMPTY_TASK_ARGS</span>
+604:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">dryrun</span>
+605:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;** Execute (dry run) #{name}&quot;</span>
+606:         <span class="ruby-keyword kw">return</span>
+607:       <span class="ruby-keyword kw">end</span>
+608:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">application</span>.<span class="ruby-identifier">options</span>.<span class="ruby-identifier">trace</span>
+609:         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;** Execute #{name}&quot;</span>
+610:       <span class="ruby-keyword kw">end</span>
+611:       <span class="ruby-identifier">application</span>.<span class="ruby-identifier">enhance_with_matching_rule</span>(<span class="ruby-identifier">name</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@actions</span>.<span class="ruby-identifier">empty?</span>
+612:       <span class="ruby-ivar">@actions</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">act</span><span class="ruby-operator">|</span>
+613:         <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">act</span>.<span class="ruby-identifier">arity</span>
+614:         <span class="ruby-keyword kw">when</span> <span class="ruby-value">1</span>
+615:           <span class="ruby-identifier">act</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>)
+616:         <span class="ruby-keyword kw">else</span>
+617:           <span class="ruby-identifier">act</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">args</span>)
+618:         <span class="ruby-keyword kw">end</span>
+619:       <span class="ruby-keyword kw">end</span>
+620:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000786" class="method-detail">
+        <a name="M000786"></a>
+
+        <div class="method-heading">
+          <a href="#M000786" class="method-signature">
+          <span class="method-name">inspect</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000786-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000786-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 475</span>
+475:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inspect</span>
+476:       <span class="ruby-node">&quot;&lt;#{self.class} #{name} =&gt; [#{prerequisites.join(', ')}]&gt;&quot;</span>
+477:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000804" class="method-detail">
+        <a name="M000804"></a>
+
+        <div class="method-heading">
+          <a href="#M000804" class="method-signature">
+          <span class="method-name">investigation</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Return a string describing the internal state of a task. Useful for
+debugging.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000804-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000804-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 671</span>
+671:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">investigation</span>
+672:       <span class="ruby-identifier">result</span> = <span class="ruby-value str">&quot;------------------------------\n&quot;</span>
+673:       <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;Investigating #{name}\n&quot;</span>
+674:       <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;class: #{self.class}\n&quot;</span>
+675:       <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span>  <span class="ruby-node">&quot;task needed: #{needed?}\n&quot;</span>
+676:       <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span>  <span class="ruby-node">&quot;timestamp: #{timestamp}\n&quot;</span>
+677:       <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;pre-requisites: \n&quot;</span>
+678:       <span class="ruby-identifier">prereqs</span> = <span class="ruby-ivar">@prerequisites</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span> <span class="ruby-identifier">application</span>[<span class="ruby-identifier">name</span>]}
+679:       <span class="ruby-identifier">prereqs</span>.<span class="ruby-identifier">sort!</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">timestamp</span> <span class="ruby-operator">&lt;=&gt;</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">timestamp</span>}
+680:       <span class="ruby-identifier">prereqs</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span>
+681:         <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;--#{p.name} (#{p.timestamp})\n&quot;</span>
+682:       <span class="ruby-keyword kw">end</span>
+683:       <span class="ruby-identifier">latest_prereq</span> = <span class="ruby-ivar">@prerequisites</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-identifier">application</span>[<span class="ruby-identifier">n</span>].<span class="ruby-identifier">timestamp</span>}.<span class="ruby-identifier">max</span>
+684:       <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span>  <span class="ruby-node">&quot;latest-prerequisite time: #{latest_prereq}\n&quot;</span>
+685:       <span class="ruby-identifier">result</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;................................\n\n&quot;</span>
+686:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">result</span>
+687:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000797" class="method-detail">
+        <a name="M000797"></a>
+
+        <div class="method-heading">
+          <a href="#M000797" class="method-signature">
+          <span class="method-name">invoke</span><span class="method-args">(*args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Invoke the task if it is needed. Prerequites are invoked first.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000797-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000797-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 562</span>
+562:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">invoke</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+563:       <span class="ruby-identifier">task_args</span> = <span class="ruby-constant">TaskArguments</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">arg_names</span>, <span class="ruby-identifier">args</span>)
+564:       <span class="ruby-identifier">invoke_with_call_chain</span>(<span class="ruby-identifier">task_args</span>, <span class="ruby-constant">InvocationChain</span><span class="ruby-operator">::</span><span class="ruby-constant">EMPTY</span>)
+565:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000791" class="method-detail">
+        <a name="M000791"></a>
+
+        <div class="method-heading">
+          <a href="#M000791" class="method-signature">
+          <span class="method-name">name</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Name of the task, including any namespace qualifiers.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000791-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000791-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 513</span>
+513:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name</span>
+514:       <span class="ruby-ivar">@name</span>.<span class="ruby-identifier">to_s</span>
+515:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000799" class="method-detail">
+        <a name="M000799"></a>
+
+        <div class="method-heading">
+          <a href="#M000799" class="method-signature">
+          <span class="method-name">needed?</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Is this task <a href="Task.html#M000799">needed?</a>
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000799-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000799-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 623</span>
+623:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">needed?</span>
+624:       <span class="ruby-keyword kw">true</span>
+625:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000793" class="method-detail">
+        <a name="M000793"></a>
+
+        <div class="method-heading">
+          <a href="#M000793" class="method-signature">
+          <span class="method-name">reenable</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Reenable the task, allowing its <a href="Task.html#M000806">tasks</a> to be
+executed if the task is invoked again.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000793-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000793-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 538</span>
+538:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reenable</span>
+539:       <span class="ruby-ivar">@already_invoked</span> = <span class="ruby-keyword kw">false</span>
+540:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000803" class="method-detail">
+        <a name="M000803"></a>
+
+        <div class="method-heading">
+          <a href="#M000803" class="method-signature">
+          <span class="method-name">set_arg_names</span><span class="method-args">(args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Set the names of the arguments for this task. <tt>args</tt> should be an
+array of symbols, one for each argument <a
+href="Task.html#M000791">name</a>.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000803-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000803-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 665</span>
+665:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">set_arg_names</span>(<span class="ruby-identifier">args</span>)
+666:       <span class="ruby-ivar">@arg_names</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">to_sym</span> }
+667:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000788" class="method-detail">
+        <a name="M000788"></a>
+
+        <div class="method-heading">
+          <a href="#M000788" class="method-signature">
+          <span class="method-name">source</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+First <a href="Task.html#M000788">source</a> from a rule (nil if no <a
+href="Task.html#M000787">sources</a>)
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000788-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000788-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 486</span>
+486:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">source</span>
+487:       <span class="ruby-ivar">@sources</span>.<span class="ruby-identifier">first</span> <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">defined?</span>(<span class="ruby-ivar">@sources</span>)
+488:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000787" class="method-detail">
+        <a name="M000787"></a>
+
+        <div class="method-heading">
+          <a href="#M000787" class="method-signature">
+          <span class="method-name">sources</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000787-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000787-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 481</span>
+481:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sources</span>
+482:       <span class="ruby-ivar">@sources</span> <span class="ruby-operator">||=</span> []
+483:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000800" class="method-detail">
+        <a name="M000800"></a>
+
+        <div class="method-heading">
+          <a href="#M000800" class="method-signature">
+          <span class="method-name">timestamp</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Timestamp for this task. Basic <a href="Task.html#M000806">tasks</a> return
+the current time for their time stamp. Other <a
+href="Task.html#M000806">tasks</a> can be more sophisticated.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000800-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000800-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 629</span>
+629:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">timestamp</span>
+630:       <span class="ruby-ivar">@prerequisites</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">application</span>[<span class="ruby-identifier">p</span>].<span class="ruby-identifier">timestamp</span> }.<span class="ruby-identifier">max</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+631:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000785" class="method-detail">
+        <a name="M000785"></a>
+
+        <div class="method-heading">
+          <a href="#M000785" class="method-signature">
+          <span class="method-name">to_s</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Return task <a href="Task.html#M000791">name</a>
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000785-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000785-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rake.rb, line 471</span>
+471:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>
+472:       <span class="ruby-identifier">name</span>
+473:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

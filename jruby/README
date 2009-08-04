@@ -1,0 +1,45 @@
+This directory contains resources related to JRuby.
+
+ase/ contains Ruby code written for the Android Scripting Environment.
+json/ contains the JSON implementation for Ruby http://json.rubyforge.org/
+jruby-complete-1.2.0RC1.jar, patched jruby-complete.jar (+json +android.rb)
+
+
+Build instructions:
+===================
+* Downloaded JRuby sources (jruby-1.2.0RC1) from http://www.jruby.org/download.
+
+* Patched the build.xml to not include doc/index.html otherwise dx will complain about an HTML page in the ruby-complete.jar.
+
+$ diff -r jruby-1.2.0RC1 jruby-1.2.0RC1.patched/
+Only in jruby-1.2.0RC1.patched/: build
+diff -r jruby-1.2.0RC1/build.xml jruby-1.2.0RC1.patched/build.xml
+42c42
+<
+---
+>
+238c238,240
+<         <zipfileset src="${build.lib.dir}/dynalang-0.3.jar"/>
+---
+>         <zipfileset src="${build.lib.dir}/dynalang-0.3.jar">
+>           <exclude name="**/doc/index.html"/>
+>         </zipfileset>
+268c270,272
+<         <zipfileset src="${build.lib.dir}/dynalang-0.3.jar"/>
+---
+>         <zipfileset src="${build.lib.dir}/dynalang-0.3.jar">
+>           <exclude name="**/doc/index.html"/>
+>         </zipfileset>
+387c391,393
+<         <zipfileset src="${build.lib.dir}/dynalang-0.3.jar"/>
+---
+>         <zipfileset src="${build.lib.dir}/dynalang-0.3.jar">
+>           <exclude name="**/doc/index.html"/>
+>         </zipfileset>
+
+* Downloaded the json sources from http://rubyforge.org/frs/?group_id=953 and put them in lib/ruby/1.8/json/.
+
+* Copy android.rb to lib/ruby/1.8/.
+
+* Build jar-complete and added jruby-complete.jar to eclipse project.
+

@@ -1,0 +1,28 @@
+--- !ruby/object:RI::MethodDescription 
+params: (*tags, &block)
+is_singleton: false
+block_params: 
+name: with_steps_for
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a context for running a Plain Text Story with specific groups of Steps.
+    Also supports adding arbitrary steps that will only be accessible to the Story
+    being run.
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Examples
+- !ruby/struct:SM::Flow::VERB 
+  body: "  # Run a Story with one group of steps\n  with_steps_for :checking_accounts \
+    do\n    run File.dirname(<em>FILE</em>) + &quot;/withdraw_cash&quot;\n  end\n\n\
+    \  # Run a Story, adding steps that are only available for this Story\n  with_steps_for \
+    :accounts do\n    Given &quot;user is logged in as account administrator&quot;\n\
+    \    run File.dirname(<em>FILE</em>) + &quot;/reconcile_accounts&quot;\n  end\n\
+    \n  # Run a Story with steps from two groups\n  with_steps_for :checking_accounts, \
+    :savings_accounts do\n    run File.dirname(<em>FILE</em>) + &quot;/transfer_money&quot;\n\
+    \  end\n\n  # Run a Story with a specific Story extension\n  with_steps_for :login, \
+    :navigation do\n    run File.dirname(<em>FILE</em>) + &quot;/user_changes_password&quot;, \
+    :type =&gt; RailsStory\n  end\n"
+full_name: Spec::Story::Extensions::Main#with_steps_for
+visibility: public
+aliases: []
+

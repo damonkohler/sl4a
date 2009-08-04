@@ -1,0 +1,71 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: SYNOPSIS
+- !ruby/struct:SM::Flow::VERB 
+  body: "  CGIStub.new\n"
+- !ruby/struct:SM::Flow::P 
+  body: DESCRIPTION
+- !ruby/struct:SM::Flow::VERB 
+  body: "  To be written...\n"
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: HTTPVersion
+  value: WEBrick::HTTPVersion.new('1.0')
+full_name: SOAP::RPC::CGIStub
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: SOAP
+- !ruby/object:RI::IncludedModule 
+  name: WEBrick
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_document_operation
+- !ruby/object:RI::MethodSummary 
+  name: add_headerhandler
+- !ruby/object:RI::MethodSummary 
+  name: add_method
+- !ruby/object:RI::MethodSummary 
+  name: add_method_as
+- !ruby/object:RI::MethodSummary 
+  name: add_method_with_namespace
+- !ruby/object:RI::MethodSummary 
+  name: add_method_with_namespace_as
+- !ruby/object:RI::MethodSummary 
+  name: add_rpc_headerhandler
+- !ruby/object:RI::MethodSummary 
+  name: add_rpc_method
+- !ruby/object:RI::MethodSummary 
+  name: add_rpc_method_as
+- !ruby/object:RI::MethodSummary 
+  name: add_rpc_method_with_namespace
+- !ruby/object:RI::MethodSummary 
+  name: add_rpc_method_with_namespace_as
+- !ruby/object:RI::MethodSummary 
+  name: add_rpc_operation
+- !ruby/object:RI::MethodSummary 
+  name: add_rpc_servant
+- !ruby/object:RI::MethodSummary 
+  name: add_servant
+- !ruby/object:RI::MethodSummary 
+  name: generate_explicit_type
+- !ruby/object:RI::MethodSummary 
+  name: generate_explicit_type=
+- !ruby/object:RI::MethodSummary 
+  name: mapping_registry
+- !ruby/object:RI::MethodSummary 
+  name: mapping_registry=
+- !ruby/object:RI::MethodSummary 
+  name: on_init
+- !ruby/object:RI::MethodSummary 
+  name: run
+- !ruby/object:RI::MethodSummary 
+  name: set_fcgi_request
+name: CGIStub
+superclass: Logger::Application

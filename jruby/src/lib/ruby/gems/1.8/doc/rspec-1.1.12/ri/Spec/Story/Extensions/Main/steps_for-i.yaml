@@ -1,0 +1,20 @@
+--- !ruby/object:RI::MethodDescription 
+params: (tag, &block)
+is_singleton: false
+block_params: 
+name: steps_for
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates (or appends to an existing) a namespaced group of steps for use in
+    Stories
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Examples
+- !ruby/struct:SM::Flow::VERB 
+  body: "  # Creating a new group\n  steps_for :forms do\n    When(&quot;user enters \
+    $value in the $field field&quot;) do ... end\n    When(&quot;user submits the \
+    $form form&quot;) do ... end\n  end\n"
+full_name: Spec::Story::Extensions::Main#steps_for
+visibility: public
+aliases: []
+

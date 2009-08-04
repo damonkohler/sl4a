@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Shell::ProcessController#active_job?
+is_singleton: false
+name: active_job?
+params: (job)
+visibility: public

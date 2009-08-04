@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Terminates the currently running thread and schedules another thread to be run. If this thread is already marked to be killed, <tt>exit</tt> returns the <tt>Thread</tt>. If this is the main thread, or the last thread, exit the process.
+full_name: Thread::exit
+is_singleton: true
+name: exit
+params: |
+  Thread.exit   => thread
+
+visibility: public

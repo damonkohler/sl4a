@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: Spec</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">Spec</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../files/lib/adapters/mock_frameworks/flexmock_rb.html">
+                lib/adapters/mock_frameworks/flexmock.rb
+                </a>
+        <br />
+                <a href="../files/lib/adapters/mock_frameworks/mocha_rb.html">
+                lib/adapters/mock_frameworks/mocha.rb
+                </a>
+        <br />
+                <a href="../files/lib/adapters/mock_frameworks/rr_rb.html">
+                lib/adapters/mock_frameworks/rr.rb
+                </a>
+        <br />
+                <a href="../files/lib/adapters/mock_frameworks/rspec_rb.html">
+                lib/adapters/mock_frameworks/rspec.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/dsl/main_rb.html">
+                lib/spec/dsl/main.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example/before_and_after_hooks_rb.html">
+                lib/spec/example/before_and_after_hooks.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example/errors_rb.html">
+                lib/spec/example/errors.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example/example_group_rb.html">
+                lib/spec/example/example_group.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example/example_group_factory_rb.html">
+                lib/spec/example/example_group_factory.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example/example_group_methods_rb.html">
+                lib/spec/example/example_group_methods.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example/example_matcher_rb.html">
+                lib/spec/example/example_matcher.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example/example_methods_rb.html">
+                lib/spec/example/example_methods.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example/module_reopening_fix_rb.html">
+                lib/spec/example/module_reopening_fix.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example/pending_rb.html">
+                lib/spec/example/pending.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example/shared_example_group_rb.html">
+                lib/spec/example/shared_example_group.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/example_rb.html">
+                lib/spec/example.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/expectations/differs/default_rb.html">
+                lib/spec/expectations/differs/default.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/expectations/errors_rb.html">
+                lib/spec/expectations/errors.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/expectations/extensions/object_rb.html">
+                lib/spec/expectations/extensions/object.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/expectations/extensions/string_and_symbol_rb.html">
+                lib/spec/expectations/extensions/string_and_symbol.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/expectations/handler_rb.html">
+                lib/spec/expectations/handler.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/expectations_rb.html">
+                lib/spec/expectations.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/be_rb.html">
+                lib/spec/matchers/be.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/be_close_rb.html">
+                lib/spec/matchers/be_close.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/change_rb.html">
+                lib/spec/matchers/change.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/eql_rb.html">
+                lib/spec/matchers/eql.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/equal_rb.html">
+                lib/spec/matchers/equal.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/errors_rb.html">
+                lib/spec/matchers/errors.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/exist_rb.html">
+                lib/spec/matchers/exist.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/generated_descriptions_rb.html">
+                lib/spec/matchers/generated_descriptions.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/has_rb.html">
+                lib/spec/matchers/has.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/have_rb.html">
+                lib/spec/matchers/have.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/include_rb.html">
+                lib/spec/matchers/include.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/match_rb.html">
+                lib/spec/matchers/match.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/match_array_rb.html">
+                lib/spec/matchers/match_array.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/method_missing_rb.html">
+                lib/spec/matchers/method_missing.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/operator_matcher_rb.html">
+                lib/spec/matchers/operator_matcher.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/raise_error_rb.html">
+                lib/spec/matchers/raise_error.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/respond_to_rb.html">
+                lib/spec/matchers/respond_to.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/satisfy_rb.html">
+                lib/spec/matchers/satisfy.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/simple_matcher_rb.html">
+                lib/spec/matchers/simple_matcher.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/throw_symbol_rb.html">
+                lib/spec/matchers/throw_symbol.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers/wrap_expectation_rb.html">
+                lib/spec/matchers/wrap_expectation.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/matchers_rb.html">
+                lib/spec/matchers.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/argument_constraints_rb.html">
+                lib/spec/mocks/argument_constraints.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/argument_expectation_rb.html">
+                lib/spec/mocks/argument_expectation.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/error_generator_rb.html">
+                lib/spec/mocks/error_generator.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/errors_rb.html">
+                lib/spec/mocks/errors.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/message_expectation_rb.html">
+                lib/spec/mocks/message_expectation.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/methods_rb.html">
+                lib/spec/mocks/methods.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/mock_rb.html">
+                lib/spec/mocks/mock.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/order_group_rb.html">
+                lib/spec/mocks/order_group.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/proxy_rb.html">
+                lib/spec/mocks/proxy.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/space_rb.html">
+                lib/spec/mocks/space.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks/spec_methods_rb.html">
+                lib/spec/mocks/spec_methods.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/mocks_rb.html">
+                lib/spec/mocks.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/rake/spectask_rb.html">
+                lib/spec/rake/spectask.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/ruby_rb.html">
+                lib/spec/ruby.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/backtrace_tweaker_rb.html">
+                lib/spec/runner/backtrace_tweaker.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/class_and_arguments_parser_rb.html">
+                lib/spec/runner/class_and_arguments_parser.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/command_line_rb.html">
+                lib/spec/runner/command_line.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/configuration_rb.html">
+                lib/spec/runner/configuration.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/drb_command_line_rb.html">
+                lib/spec/runner/drb_command_line.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/example_group_runner_rb.html">
+                lib/spec/runner/example_group_runner.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/base_formatter_rb.html">
+                lib/spec/runner/formatter/base_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/base_text_formatter_rb.html">
+                lib/spec/runner/formatter/base_text_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/failing_example_groups_formatter_rb.html">
+                lib/spec/runner/formatter/failing_example_groups_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/failing_examples_formatter_rb.html">
+                lib/spec/runner/formatter/failing_examples_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/html_formatter_rb.html">
+                lib/spec/runner/formatter/html_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/nested_text_formatter_rb.html">
+                lib/spec/runner/formatter/nested_text_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/profile_formatter_rb.html">
+                lib/spec/runner/formatter/profile_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/progress_bar_formatter_rb.html">
+                lib/spec/runner/formatter/progress_bar_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/snippet_extractor_rb.html">
+                lib/spec/runner/formatter/snippet_extractor.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/specdoc_formatter_rb.html">
+                lib/spec/runner/formatter/specdoc_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/story/html_formatter_rb.html">
+                lib/spec/runner/formatter/story/html_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/story/plain_text_formatter_rb.html">
+                lib/spec/runner/formatter/story/plain_text_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/story/progress_bar_formatter_rb.html">
+                lib/spec/runner/formatter/story/progress_bar_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/formatter/text_mate_formatter_rb.html">
+                lib/spec/runner/formatter/text_mate_formatter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/heckle_runner_rb.html">
+                lib/spec/runner/heckle_runner.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/heckle_runner_unsupported_rb.html">
+                lib/spec/runner/heckle_runner_unsupported.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/option_parser_rb.html">
+                lib/spec/runner/option_parser.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/options_rb.html">
+                lib/spec/runner/options.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/reporter_rb.html">
+                lib/spec/runner/reporter.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner/spec_parser_rb.html">
+                lib/spec/runner/spec_parser.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/runner_rb.html">
+                lib/spec/runner.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/extensions/main_rb.html">
+                lib/spec/story/extensions/main.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/given_scenario_rb.html">
+                lib/spec/story/given_scenario.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/runner/plain_text_story_runner_rb.html">
+                lib/spec/story/runner/plain_text_story_runner.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/runner/scenario_collector_rb.html">
+                lib/spec/story/runner/scenario_collector.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/runner/scenario_runner_rb.html">
+                lib/spec/story/runner/scenario_runner.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/runner/story_mediator_rb.html">
+                lib/spec/story/runner/story_mediator.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/runner/story_parser_rb.html">
+                lib/spec/story/runner/story_parser.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/runner/story_runner_rb.html">
+                lib/spec/story/runner/story_runner.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/runner_rb.html">
+                lib/spec/story/runner.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/scenario_rb.html">
+                lib/spec/story/scenario.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/step_rb.html">
+                lib/spec/story/step.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/step_group_rb.html">
+                lib/spec/story/step_group.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/step_mother_rb.html">
+                lib/spec/story/step_mother.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/story_rb.html">
+                lib/spec/story/story.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/story/world_rb.html">
+                lib/spec/story/world.rb
+                </a>
+        <br />
+                <a href="../files/lib/spec/version_rb.html">
+                lib/spec/version.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+    <div id="class-list">
+      <h3 class="section-bar">Classes and Modules</h3>
+
+      Module <a href="Spec/Adapters.html" class="link">Spec::Adapters</a><br />
+Module <a href="Spec/DSL.html" class="link">Spec::DSL</a><br />
+Module <a href="Spec/Example.html" class="link">Spec::Example</a><br />
+Module <a href="Spec/Expectations.html" class="link">Spec::Expectations</a><br />
+Module <a href="Spec/Matchers.html" class="link">Spec::Matchers</a><br />
+Module <a href="Spec/Mocks.html" class="link">Spec::Mocks</a><br />
+Module <a href="Spec/Rake.html" class="link">Spec::Rake</a><br />
+Module <a href="Spec/Ruby.html" class="link">Spec::Ruby</a><br />
+Module <a href="Spec/Runner.html" class="link">Spec::Runner</a><br />
+Module <a href="Spec/Story.html" class="link">Spec::Story</a><br />
+Module <a href="Spec/VERSION.html" class="link">Spec::VERSION</a><br />
+
+    </div>
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

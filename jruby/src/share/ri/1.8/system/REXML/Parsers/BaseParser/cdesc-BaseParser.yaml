@@ -1,0 +1,294 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: source
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::H 
+  level: 1
+  text: Using the Pull Parser
+- !ruby/struct:SM::Flow::P 
+  body: <em>This API is experimental, and subject to change.</em>
+- !ruby/struct:SM::Flow::VERB 
+  body: " parser = PullParser.new( &quot;&lt;a&gt;text&lt;b att='val'/&gt;txet&lt;/a&gt;&quot; )\n while parser.has_next?\n   res = parser.next\n   puts res[1]['att'] if res.start_tag? and res[0] == 'b'\n end\n"
+- !ruby/struct:SM::Flow::P 
+  body: See the PullEvent class for information on the content of the results. The data is identical to the arguments passed for the various events to the StreamListener API.
+- !ruby/struct:SM::Flow::P 
+  body: "Notice that:"
+- !ruby/struct:SM::Flow::VERB 
+  body: " parser = PullParser.new( &quot;&lt;a&gt;BAD DOCUMENT&quot; )\n while parser.has_next?\n   res = parser.next\n   raise res[1] if res.error?\n end\n"
+- !ruby/struct:SM::Flow::P 
+  body: Nat Price gave me some good ideas for the API.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NCNAME_STR
+  value: "'[\\w:][\\-\\w\\d.]*'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NAME_STR
+  value: "\"(?:#{NCNAME_STR}:)?#{NCNAME_STR}\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NAMECHAR
+  value: "'[\\-\\w\\d\\.:]'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NAME
+  value: "\"([\\\\w:]#{NAMECHAR}*)\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NMTOKEN
+  value: "\"(?:#{NAMECHAR})+\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NMTOKENS
+  value: "\"#{NMTOKEN}(\\\\s+#{NMTOKEN})*\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: REFERENCE
+  value: "\"(?:&#{NAME};|&#\\\\d+;|&#x[0-9a-fA-F]+;)\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: REFERENCE_RE
+  value: /#{REFERENCE}/
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DOCTYPE_START
+  value: /\A\s*<!DOCTYPE\s/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DOCTYPE_PATTERN
+  value: /\s*<!DOCTYPE\s+(.*?)(\[|>)/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ATTRIBUTE_PATTERN
+  value: /\s*(#{NAME_STR})\s*=\s*(["'])(.*?)\2/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: COMMENT_START
+  value: /\A<!--/u
+- !ruby/object:RI::Constant 
+  comment: 
+  name: COMMENT_PATTERN
+  value: /<!--(.*?)-->/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CDATA_START
+  value: /\A<!\[CDATA\[/u
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CDATA_END
+  value: /^\s*\]\s*>/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CDATA_PATTERN
+  value: /<!\[CDATA\[(.*?)\]\]>/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: XMLDECL_START
+  value: /\A<\?xml\s/u;
+- !ruby/object:RI::Constant 
+  comment: 
+  name: XMLDECL_PATTERN
+  value: /<\?xml\s+(.*?)\?>/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: INSTRUCTION_START
+  value: /\A<\?/u
+- !ruby/object:RI::Constant 
+  comment: 
+  name: INSTRUCTION_PATTERN
+  value: /<\?(.*?)(\s+.*?)?\?>/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TAG_MATCH
+  value: /^<((?>#{NAME_STR}))\s*((?>\s+#{NAME_STR}\s*=\s*(["']).*?\3)*)\s*(\/)?>/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CLOSE_MATCH
+  value: /^\s*<\/(#{NAME_STR})\s*>/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: VERSION
+  value: /\bversion\s*=\s*["'](.*?)['"]/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ENCODING
+  value: /\bencoding\s*=\s*["'](.*?)['"]/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: STANDALONE
+  value: /\bstandalone\s*=\s["'](.*?)['"]/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ENTITY_START
+  value: /^\s*<!ENTITY/
+- !ruby/object:RI::Constant 
+  comment: 
+  name: IDENTITY
+  value: /^([!\*\w\-]+)(\s+#{NCNAME_STR})?(\s+["'](.*?)['"])?(\s+['"](.*?)["'])?/u
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ELEMENTDECL_START
+  value: /^\s*<!ELEMENT/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ELEMENTDECL_PATTERN
+  value: /^\s*(<!ELEMENT.*?)>/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SYSTEMENTITY
+  value: /^\s*(%.*?;)\s*$/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ENUMERATION
+  value: "\"\\\\(\\\\s*#{NMTOKEN}(?:\\\\s*\\\\|\\\\s*#{NMTOKEN})*\\\\s*\\\\)\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NOTATIONTYPE
+  value: "\"NOTATION\\\\s+\\\\(\\\\s*#{NAME}(?:\\\\s*\\\\|\\\\s*#{NAME})*\\\\s*\\\\)\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ENUMERATEDTYPE
+  value: "\"(?:(?:#{NOTATIONTYPE})|(?:#{ENUMERATION}))\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ATTTYPE
+  value: "\"(CDATA|ID|IDREF|IDREFS|ENTITY|ENTITIES|NMTOKEN|NMTOKENS|#{ENUMERATEDTYPE})\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ATTVALUE
+  value: "\"(?:\\\"((?:[^<&\\\"]|#{REFERENCE})*)\\\")|(?:'((?:[^<&']|#{REFERENCE})*)')\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DEFAULTDECL
+  value: "\"(#REQUIRED|#IMPLIED|(?:(#FIXED\\\\s+)?#{ATTVALUE}))\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ATTDEF
+  value: "\"\\\\s+#{NAME}\\\\s+#{ATTTYPE}\\\\s+#{DEFAULTDECL}\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ATTDEF_RE
+  value: /#{ATTDEF}/
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ATTLISTDECL_START
+  value: /^\s*<!ATTLIST/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ATTLISTDECL_PATTERN
+  value: /^\s*<!ATTLIST\s+#{NAME}(?:#{ATTDEF})*\s*>/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NOTATIONDECL_START
+  value: /^\s*<!NOTATION/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PUBLIC
+  value: /^\s*<!NOTATION\s+(\w[\-\w]*)\s+(PUBLIC)\s+(["'])(.*?)\3(?:\s+(["'])(.*?)\5)?\s*>/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SYSTEM
+  value: /^\s*<!NOTATION\s+(\w[\-\w]*)\s+(SYSTEM)\s+(["'])(.*?)\3\s*>/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TEXT_PATTERN
+  value: /\A([^<]*)/um
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Entity constants
+  name: PUBIDCHAR
+  value: "\"\\x20\\x0D\\x0Aa-zA-Z0-9\\\\-()+,./:=?;!*@$_%#\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SYSTEMLITERAL
+  value: "%Q{((?:\"[^\"]*\")|(?:'[^']*'))}"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PUBIDLITERAL
+  value: "%Q{(\"[#{PUBIDCHAR}']*\"|'[#{PUBIDCHAR}]*')}"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EXTERNALID
+  value: "\"(?:(?:(SYSTEM)\\\\s+#{SYSTEMLITERAL})|(?:(PUBLIC)\\\\s+#{PUBIDLITERAL}\\\\s+#{SYSTEMLITERAL}))\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NDATADECL
+  value: "\"\\\\s+NDATA\\\\s+#{NAME}\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PEREFERENCE
+  value: "\"%#{NAME};\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ENTITYVALUE
+  value: "%Q{((?:\"(?:[^%&\"]|#{PEREFERENCE}|#{REFERENCE})*\")|(?:'([^%&']|#{PEREFERENCE}|#{REFERENCE})*'))}"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PEDEF
+  value: "\"(?:#{ENTITYVALUE}|#{EXTERNALID})\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ENTITYDEF
+  value: "\"(?:#{ENTITYVALUE}|(?:#{EXTERNALID}(#{NDATADECL})?))\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PEDECL
+  value: "\"<!ENTITY\\\\s+(%)\\\\s+#{NAME}\\\\s+#{PEDEF}\\\\s*>\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: GEDECL
+  value: "\"<!ENTITY\\\\s+#{NAME}\\\\s+#{ENTITYDEF}\\\\s*>\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ENTITYDECL
+  value: /\s*(?:#{GEDECL})|(?:#{PEDECL})/um
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EREFERENCE
+  value: /&(?!#{NAME};)/
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DEFAULT_ENTITIES
+  value: "{          'gt' => [/&gt;/, '&gt;', '>', />/],          'lt' => [/&lt;/, '&lt;', '<', /</],          'quot' => [/&quot;/, '&quot;', '\"', /\"/],          \"apos\" => [/&apos;/, \"&apos;\", \"'\", /'/]"
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: These are patterns to identify common markup errors, to make the error messages more informative.
+  name: MISSING_ATTRIBUTE_QUOTES
+  value: /^<#{NAME_STR}\s+#{NAME_STR}\s*=\s*[^"']/um
+full_name: REXML::Parsers::BaseParser
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_listener
+- !ruby/object:RI::MethodSummary 
+  name: empty?
+- !ruby/object:RI::MethodSummary 
+  name: entity
+- !ruby/object:RI::MethodSummary 
+  name: has_next?
+- !ruby/object:RI::MethodSummary 
+  name: normalize
+- !ruby/object:RI::MethodSummary 
+  name: peek
+- !ruby/object:RI::MethodSummary 
+  name: position
+- !ruby/object:RI::MethodSummary 
+  name: pull
+- !ruby/object:RI::MethodSummary 
+  name: stream=
+- !ruby/object:RI::MethodSummary 
+  name: unnormalize
+- !ruby/object:RI::MethodSummary 
+  name: unshift
+name: BaseParser
+superclass: Object

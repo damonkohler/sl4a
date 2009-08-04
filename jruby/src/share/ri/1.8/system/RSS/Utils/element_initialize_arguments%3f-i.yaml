@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Utils#element_initialize_arguments?
+is_singleton: false
+name: element_initialize_arguments?
+params: (args)
+visibility: public

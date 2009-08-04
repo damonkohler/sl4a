@@ -1,0 +1,17 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: RefError is raised if an object cannot be referenced by a WeakRef.
+constants: []
+
+full_name: WeakRef::RefError
+includes: []
+
+instance_methods: []
+
+name: RefError
+superclass: StandardError

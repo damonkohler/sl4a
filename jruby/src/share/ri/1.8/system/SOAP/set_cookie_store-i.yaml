@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP#set_cookie_store
+is_singleton: false
+name: set_cookie_store
+params: (filename)
+visibility: public

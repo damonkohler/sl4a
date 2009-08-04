@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::Registry::Map#find_mapped_obj_class
+is_singleton: false
+name: find_mapped_obj_class
+params: (target_soap_class)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::EncodingStyle::Handler#encode_data_end
+is_singleton: false
+name: encode_data_end
+params: (generator, ns, data, parent)
+visibility: public

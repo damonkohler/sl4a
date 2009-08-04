@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPAuth#basic_auth
+is_singleton: false
+name: basic_auth
+params: (req, res, realm, &block)
+visibility: public

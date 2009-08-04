@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::Generic#route_from_path
+is_singleton: false
+name: route_from_path
+params: (src, dst)
+visibility: private

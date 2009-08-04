@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Peek at the <tt>depth</tt> event in the stack. The first element on the stack is at depth 0. If <tt>depth</tt> is -1, will parse to the end of the input stream and return the last event, which is always :end_document. Be aware that this causes the stream to be parsed up to the <tt>depth</tt> event, so you can effectively pre-parse the entire document (pull the entire thing into memory) using this method.
+full_name: REXML::Parsers::BaseParser#peek
+is_singleton: false
+name: peek
+params: (depth=0)
+visibility: public

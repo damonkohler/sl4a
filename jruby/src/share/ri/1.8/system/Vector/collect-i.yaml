@@ -1,0 +1,13 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: map
+block_params: e
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Like Array#collect.
+full_name: Vector#collect
+is_singleton: false
+name: collect
+params: ( {|e| ...}
+visibility: public

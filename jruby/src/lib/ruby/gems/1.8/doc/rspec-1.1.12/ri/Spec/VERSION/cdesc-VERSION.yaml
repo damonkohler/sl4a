@@ -1,0 +1,38 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: VERSION
+constants: 
+- !ruby/object:RI::Constant 
+  name: MAJOR
+  value: "1"
+  comment: 
+- !ruby/object:RI::Constant 
+  name: MINOR
+  value: "1"
+  comment: 
+- !ruby/object:RI::Constant 
+  name: TINY
+  value: "12"
+  comment: 
+- !ruby/object:RI::Constant 
+  name: MINESCULE
+  value: nil
+  comment: 
+- !ruby/object:RI::Constant 
+  name: STRING
+  value: '[MAJOR, MINOR, TINY, MINESCULE].compact.join(''.'')'
+  comment: 
+- !ruby/object:RI::Constant 
+  name: SUMMARY
+  value: '"rspec #{STRING}"'
+  comment: 
+comment: 
+attributes: []
+
+instance_methods: []
+
+full_name: Spec::VERSION
+superclass: 
+class_methods: []
+

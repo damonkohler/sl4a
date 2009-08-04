@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RI::RiWriter#remove_class
+is_singleton: false
+name: remove_class
+params: (class_desc)
+visibility: public

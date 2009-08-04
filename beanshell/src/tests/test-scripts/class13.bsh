@@ -1,0 +1,38 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+class TestInner1
+{
+	static class StaticInner1 {
+		void go() {
+			assert( this instanceof StaticInner1 );
+			//print("static parent of go(): "+this.namespace.getParent());
+			//print("static parent2 of go(): "
+				//+this.namespace.getParent().getParent());
+		}
+	}
+	class InstanceInner1 {
+		void go() {
+			assert( this instanceof InstanceInner1 );
+			//print("instance parent of go(): "+this.namespace.getParent());
+			//print("instance parent2 of go(): "
+				//+this.namespace.getParent().getParent() );
+		}
+	}
+
+	void go() {
+		new StaticInner1().go();
+		new InstanceInner1().go();
+	}
+}
+
+new TestInner1().go();
+new TestInner1.StaticInner1().go();
+
+// This should really not work... but it's actually ok unless we try to 
+// access instance stuff
+assert( isEvalError("new TestInner1.InstanceInner1().go()") );
+
+complete();
+

@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: StartingState
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: []
+
+full_name: Spec::Story::Runner::StoryParser::StartingState
+superclass: State
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::GTK2::TestRunner#fault_list
+is_singleton: false
+name: fault_list
+params: ()
+visibility: private

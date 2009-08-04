@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: ([user, realm, hash[user]])
+comment: 
+full_name: WEBrick::HTTPAuth::Htdigest#each
+is_singleton: false
+name: each
+params: () {|[user, realm, hash[user]]| ...}
+visibility: public

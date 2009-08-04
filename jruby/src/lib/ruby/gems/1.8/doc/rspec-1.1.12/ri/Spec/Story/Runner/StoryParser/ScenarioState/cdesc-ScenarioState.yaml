@@ -1,0 +1,18 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: ScenarioState
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: one_more_of_the_same
+- !ruby/object:RI::MethodSummary 
+  name: scenario
+full_name: Spec::Story::Runner::StoryParser::ScenarioState
+superclass: State
+class_methods: []
+

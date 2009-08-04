@@ -1,0 +1,18 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+import bsh.Interpreter;
+
+i=new Interpreter();
+i.set("foo", "bar");
+i.eval("foo(a) { return a; }");
+assert( i.eval("foo(foo);").equals("bar") );
+
+save( i, "i.ser" );
+i2=load("i.ser");
+assert( i2.eval("foo(foo);").equals("bar") );
+
+rm("i.ser");
+
+complete();

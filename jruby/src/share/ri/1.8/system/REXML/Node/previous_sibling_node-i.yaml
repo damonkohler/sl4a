@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "@return the previous sibling (nil if unset)"
+full_name: REXML::Node#previous_sibling_node
+is_singleton: false
+name: previous_sibling_node
+params: ()
+visibility: public

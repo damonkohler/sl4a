@@ -1,0 +1,55 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// foo can never be reached because foo( Object ) is more specific
+// primitives are boxed for it.
+foo( a ) { 
+	return 1;
+}
+foo( a, b ) { 
+	return 2;
+}
+foo( String a ) { 
+	return 3;
+}
+foo( Object o ) {
+	return 4;
+}
+foo( Object o, String o2 ) {
+	return 5;
+}
+foo( String o, String o2 ) {
+	return 6;
+}
+foo() {
+	return 7;
+}
+
+assert( foo("qbert") == 3 );
+assert( foo( new Object() ) == 4 );
+assert( foo( "foo", "bar" ) == 6 );
+assert( foo()==7 );
+
+print (foo(99));
+assert( foo(99) == 4 ); // int boxed to Object
+
+assert( foo(99, 99) == 2 );
+
+bar( a ) { return 1; }
+bar( Date d ) { return 2; }
+
+assert( bar("qbert") == 1 );
+assert( bar( new Object() ) == 1 );
+assert( bar(99) == 1 );
+
+bar( float f ) { return 2; }
+
+assert( bar(99) == 2 );
+
+bar( int i ) { return 3; }
+
+assert( bar(99) == 3 );
+assert( bar(99.0f) == 2 );
+
+complete();

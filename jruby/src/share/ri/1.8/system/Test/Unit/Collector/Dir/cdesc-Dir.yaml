@@ -1,0 +1,37 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: base
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: exclude
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: pattern
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: Test::Unit::Collector::Dir
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Collector
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: collect
+- !ruby/object:RI::MethodSummary 
+  name: collect_file
+- !ruby/object:RI::MethodSummary 
+  name: find_test_cases
+- !ruby/object:RI::MethodSummary 
+  name: realdir
+- !ruby/object:RI::MethodSummary 
+  name: recursive_collect
+name: Dir
+superclass: Object

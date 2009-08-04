@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Parsers::XPathParser#parse_args
+is_singleton: false
+name: parse_args
+params: ( string )
+visibility: private

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::HTTPStreamHandler#send
+is_singleton: false
+name: send
+params: (endpoint_url, conn_data, soapaction = nil, charset = @charset)
+visibility: public

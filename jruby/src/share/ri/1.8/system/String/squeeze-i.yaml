@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Builds a set of characters from the <em>other_str</em> parameter(s) using the procedure described for <tt>String#count</tt>. Returns a new string where runs of the same character that occur in this set are replaced by a single character. If no arguments are given, all runs of identical characters are replaced by a single character.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;yellow moon&quot;.squeeze                  #=&gt; &quot;yelow mon&quot;\n   &quot;  now   is  the&quot;.squeeze(&quot; &quot;)         #=&gt; &quot; now is the&quot;\n   &quot;putters shoot balls&quot;.squeeze(&quot;m-z&quot;)   #=&gt; &quot;puters shot balls&quot;\n"
+full_name: String#squeeze
+is_singleton: false
+name: squeeze
+params: |
+  str.squeeze([other_str]*)    => new_str
+
+visibility: public

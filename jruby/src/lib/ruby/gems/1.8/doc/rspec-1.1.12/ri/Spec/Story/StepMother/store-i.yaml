@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (type, step)
+is_singleton: false
+block_params: 
+name: store
+comment: 
+full_name: Spec::Story::StepMother#store
+visibility: public
+aliases: []
+

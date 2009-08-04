@@ -1,0 +1,19 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Constructs a new regular expression from <em>pattern</em>, which can be either a <tt>String</tt> or a <tt>Regexp</tt> (in which case that regexp's options are propagated, and new options may not be specified (a change as of Ruby 1.8). If <em>options</em> is a <tt>Fixnum</tt>, it should be one or more of the constants <tt>Regexp::EXTENDED</tt>, <tt>Regexp::IGNORECASE</tt>, and <tt>Regexp::MULTILINE</tt>, <em>or</em>-ed together. Otherwise, if <em>options</em> is not <tt>nil</tt>, the regexp will be case insensitive. The <em>lang</em> parameter enables multibyte support for the regexp: `n', `N' = none, `e', `E' = EUC, `s', `S' = SJIS, `u', `U' = UTF-8."
+- !ruby/struct:SM::Flow::VERB 
+  body: "   r1 = Regexp.new('^a-z+:\\s+\\w+')           #=&gt; /^a-z+:\\s+\\w+/\n   r2 = Regexp.new('cat', true)               #=&gt; /cat/i\n   r3 = Regexp.new('dog', Regexp::EXTENDED)   #=&gt; /dog/x\n   r4 = Regexp.new(r2)                        #=&gt; /cat/i\n"
+full_name: Regexp::new
+is_singleton: true
+name: new
+params: |
+  Regexp.new(string [, options [, lang]])       => regexp
+  Regexp.new(regexp)                            => regexp
+  Regexp.compile(string [, options [, lang]])   => regexp
+  Regexp.compile(regexp)                        => regexp
+
+visibility: public

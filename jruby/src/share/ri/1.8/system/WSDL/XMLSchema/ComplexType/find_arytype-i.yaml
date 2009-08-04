@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::XMLSchema::ComplexType#find_arytype
+is_singleton: false
+name: find_arytype
+params: ()
+visibility: public

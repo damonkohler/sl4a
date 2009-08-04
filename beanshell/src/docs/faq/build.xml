@@ -1,0 +1,34 @@
+<project default="faq">
+	<property name="faq" value="faq"/>
+	<!-- 
+		I am currently using the GPL 'htmldoc' to build a PDF from the HTML:
+			http://www.easysw.com/htmldoc/ 
+		I tried many xhtml->fo stylesheets, but none seemed to work well.	
+
+	<property name="htmldoc" value="/home/niemeyp/pkg/htmldoc/bin/htmldoc"/>
+	-->
+	<property name="htmldoc" value="/pkg/htmldoc/bin/htmldoc"/>
+
+	<target name="faq">     
+		<!-- build it every time... later we can add an updtodate check -->
+		<touch file="faq.xml"/>
+		<style style="faq.xsl" in="faq.xml" out="${faq}.html"/>
+	</target>   
+
+	<target name="pdf" depends="faq">
+		<apply executable="${htmldoc}">
+			<arg value="--webpage"/>
+			<arg value="--jpeg=0"/>
+			<arg value="--header"/><arg value="..."/>
+			<arg value="--linkstyle"/><arg value="plain"/>
+			<arg value="-f"/><arg value="${faq}.pdf"/>
+			<fileset dir="." includes="${faq}.html"/>
+		</apply>
+	</target>
+
+	<target name="clean">     
+		<delete quiet="true" file="${faq}.html"/>
+		<delete quiet="true" file="${faq}.pdf"/>
+	</target>   
+
+</project>

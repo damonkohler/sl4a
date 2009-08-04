@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Time::make_time
+is_singleton: true
+name: make_time
+params: (year, mon, day, hour, min, sec, sec_fraction, zone, now)
+visibility: private

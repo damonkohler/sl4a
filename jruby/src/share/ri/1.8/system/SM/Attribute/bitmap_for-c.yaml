@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::Attribute::bitmap_for
+is_singleton: true
+name: bitmap_for
+params: (name)
+visibility: public

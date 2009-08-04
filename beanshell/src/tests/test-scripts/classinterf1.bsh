@@ -1,0 +1,28 @@
+
+source("TestHarness.bsh");
+
+interface TestInt1
+{
+	static int a = 5;
+	static int b = 6;
+	void go() { }
+}
+
+assert( TestInt1.a == 5 );
+assert( TestInt1.b == 6 );
+
+class TestImpl1 implements TestInt1 {
+	void go() { }
+}
+
+ti1 = new TestImpl1();
+assert( ti1 instanceof TestImpl1 );
+
+/*
+class TestImpl implements TestInt1 {
+	void go() { 
+	}
+}
+*/
+
+complete();

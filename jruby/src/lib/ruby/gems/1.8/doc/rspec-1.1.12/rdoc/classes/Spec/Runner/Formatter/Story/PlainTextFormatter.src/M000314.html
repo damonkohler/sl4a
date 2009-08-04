@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>run_ended (Spec::Runner::Formatter::Story::PlainTextFormatter)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/spec/runner/formatter/story/plain_text_formatter.rb, line 106</span>
+          <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">run_ended</span>
+            <span class="ruby-identifier">summary_text</span> = <span class="ruby-node">&quot;#@count scenarios: #@successful_scenario_count succeeded, #{@failed_scenarios.size} failed, #@pending_scenario_count pending&quot;</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@failed_scenarios</span>.<span class="ruby-identifier">empty?</span>
+              <span class="ruby-ivar">@output</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">red</span>(<span class="ruby-identifier">summary_text</span>)
+            <span class="ruby-keyword kw">elsif</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@pending_steps</span>.<span class="ruby-identifier">empty?</span>
+              <span class="ruby-ivar">@output</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">yellow</span>(<span class="ruby-identifier">summary_text</span>)
+            <span class="ruby-keyword kw">else</span>
+              <span class="ruby-ivar">@output</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">green</span>(<span class="ruby-identifier">summary_text</span>)
+            <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@pending_steps</span>.<span class="ruby-identifier">empty?</span>
+              <span class="ruby-ivar">@output</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;\nPending Steps:&quot;</span>
+              <span class="ruby-ivar">@pending_steps</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pending</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+                <span class="ruby-identifier">story_name</span>, <span class="ruby-identifier">scenario_name</span>, <span class="ruby-identifier">msg</span> = <span class="ruby-identifier">pending</span>
+                <span class="ruby-ivar">@output</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{i+1}) #{story_name} (#{scenario_name}): #{msg}&quot;</span>
+              <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@failed_scenarios</span>.<span class="ruby-identifier">empty?</span>
+              <span class="ruby-ivar">@output</span>.<span class="ruby-identifier">print</span> <span class="ruby-value str">&quot;\nFAILURES:&quot;</span>
+              <span class="ruby-ivar">@failed_scenarios</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">failure</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+                <span class="ruby-identifier">title</span>, <span class="ruby-identifier">scenario_name</span>, <span class="ruby-identifier">err</span> = <span class="ruby-identifier">failure</span>
+                <span class="ruby-ivar">@output</span>.<span class="ruby-identifier">print</span> <span class="ruby-node">&quot;\n    #{i+1}) &quot;</span>
+                <span class="ruby-ivar">@output</span>.<span class="ruby-identifier">print</span> <span class="ruby-identifier">red</span>(<span class="ruby-node">&quot;#{title} (#{scenario_name}) FAILED&quot;</span>)
+                <span class="ruby-ivar">@output</span>.<span class="ruby-identifier">print</span> <span class="ruby-identifier">red</span>(<span class="ruby-node">&quot;\n    #{err.class}: #{err.message}&quot;</span>)
+                <span class="ruby-ivar">@output</span>.<span class="ruby-identifier">print</span> <span class="ruby-node">&quot;\n    #{err.backtrace.join(&quot;\n&quot;)}\n&quot;</span>
+              <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">end</span>            
+          <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,20 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates and runs a new thread to execute the instructions given in <em>block</em>. Any arguments passed to <tt>Thread::new</tt> are passed into the block.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   x = Thread.new { sleep 0.1; print &quot;x&quot;; print &quot;y&quot;; print &quot;z&quot; }\n   a = Thread.new { print &quot;a&quot;; print &quot;b&quot;; sleep 0.2; print &quot;c&quot; }\n   x.join # Let the threads finish before\n   a.join # main thread exits...\n"
+- !ruby/struct:SM::Flow::P 
+  body: <em>produces:</em>
+- !ruby/struct:SM::Flow::VERB 
+  body: "   abxyzc\n"
+full_name: Thread::new
+is_singleton: true
+name: new
+params: |
+  Thread.new([arg]*) {|args| block }   => thread
+
+visibility: public

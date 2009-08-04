@@ -1,0 +1,27 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Description
+- !ruby/struct:SM::Flow::P 
+  body: Create a new URI::HTTP object from components, with syntax checking.
+- !ruby/struct:SM::Flow::P 
+  body: The components accepted are userinfo, host, port, path, query and fragment.
+- !ruby/struct:SM::Flow::P 
+  body: The components should be provided either as an Array, or as a Hash with keys formed by preceding the component names with a colon.
+- !ruby/struct:SM::Flow::P 
+  body: If an Array is used, the components must be passed in the order [userinfo, host, port, path, query, fragment].
+- !ruby/struct:SM::Flow::P 
+  body: "Example:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "    newuri = URI::HTTP.build({:host =&gt; 'www.example.com',\n      :path&gt; =&gt; '/foo/bar'})\n\n    newuri = URI::HTTP.build([nil, &quot;www.example.com&quot;, nil, &quot;/path&quot;,\n      &quot;query&quot;, 'fragment'])\n"
+- !ruby/struct:SM::Flow::P 
+  body: Currently, if passed userinfo components this method generates invalid HTTP URIs as per RFC 1738.
+full_name: URI::HTTP::build
+is_singleton: true
+name: build
+params: (args)
+visibility: public

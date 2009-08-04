@@ -1,0 +1,25 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: error
+- !ruby/object:RI::MethodSummary 
+  name: options
+- !ruby/object:RI::MethodSummary 
+  name: strip_output
+- !ruby/object:RI::MethodSummary 
+  name: usage
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: OPTION_LIST
+  value: "[         [ \"--help\",          \"-h\",   nil,           \"you're looking at it\" ],          [ \"--classes\",      \"-c\",   nil,           \"Display the names of classes and modules we\\n\" +           \"know about\"],          [ \"--doc-dir\",      \"-d\",   \"<dirname>\",           \"A directory to search for documentation. If not\\n\" +           \"specified, we search the standard rdoc/ri directories.\\n\" +           \"May be repeated.\"],          [ \"--system\",       nil,    nil,           \"Include documentation from Ruby's standard library:\\n  \" +           RI::Paths::SYSDIR ],          [ \"--site\",         nil,    nil,           \"Include documentation from libraries installed in site_lib:\\n  \" +           RI::Paths::SITEDIR ],          [ \"--home\",         nil,    nil,           \"Include documentation stored in ~/.rdoc:\\n  \" +           (RI::Paths::HOMEDIR || \"No ~/.rdoc found\") ],          [ \"--gems\",         nil,    nil,           \"Include documentation from Rubygems:\\n  \" +           (RI::Paths::GEMDIRS ? \"#{Gem.path}/doc/*/ri\" :                                 \"No Rubygems ri found.\") ],                                                                     [ \"--format\",       \"-f\",   \"<name>\",           \"Format to use when displaying output:\\n\" +           \"   \" + RI::TextFormatter.list + \"\\n\" +           \"Use 'bs' (backspace) with most pager programs.\\n\" +           \"To use ANSI, either also use the -T option, or\\n\" +           \"tell your pager to allow control characters\\n\" +           \"(for example using the -R option to less)\"],          [ \"--list-names\",    \"-l\",   nil,           \"List all the names known to RDoc, one per line\""
+full_name: RI::Options::OptionList
+includes: []
+
+instance_methods: []
+
+name: OptionList
+superclass: 

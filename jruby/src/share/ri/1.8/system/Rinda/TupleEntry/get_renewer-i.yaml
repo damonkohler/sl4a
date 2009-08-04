@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a valid argument to make_expires and the renewer or nil.
+- !ruby/struct:SM::Flow::P 
+  body: Given <tt>true</tt>, <tt>nil</tt>, or Numeric, returns that value and <tt>nil</tt> (no actual renewer). Otherwise it returns an expiry value from calling +it.renew+ and the renewer.
+full_name: Rinda::TupleEntry#get_renewer
+is_singleton: false
+name: get_renewer
+params: (it)
+visibility: private

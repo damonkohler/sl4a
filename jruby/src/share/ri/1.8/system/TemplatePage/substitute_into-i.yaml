@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Substitute a set of key/value pairs into the given template. Keys with scalar values have them substituted directly into the page. Those with array values invoke <tt>substitute_array</tt> (below), which examples a block of the template once for each row in the array.
+- !ruby/struct:SM::Flow::P 
+  body: "This routine also copes with the <tt>IF:</tt><em>key</em> directive, removing chunks of the template if the corresponding key does not appear in the hash, and the START: directive, which loops its contents for each value in an array"
+full_name: TemplatePage#substitute_into
+is_singleton: false
+name: substitute_into
+params: (lines, values)
+visibility: public

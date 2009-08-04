@@ -1,0 +1,82 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: attributeformdefault
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: elementformdefault
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: request_style
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: request_use
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: response_style
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: response_use
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: soapaction
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: SOAP::RPC::Proxy::Operation
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: check_style
+- !ruby/object:RI::MethodSummary 
+  name: check_use
+- !ruby/object:RI::MethodSummary 
+  name: create_request_obj
+- !ruby/object:RI::MethodSummary 
+  name: raise_fault
+- !ruby/object:RI::MethodSummary 
+  name: request_body
+- !ruby/object:RI::MethodSummary 
+  name: request_default_encodingstyle
+- !ruby/object:RI::MethodSummary 
+  name: request_doc
+- !ruby/object:RI::MethodSummary 
+  name: request_doc_enc
+- !ruby/object:RI::MethodSummary 
+  name: request_doc_lit
+- !ruby/object:RI::MethodSummary 
+  name: request_rpc
+- !ruby/object:RI::MethodSummary 
+  name: request_rpc_enc
+- !ruby/object:RI::MethodSummary 
+  name: request_rpc_lit
+- !ruby/object:RI::MethodSummary 
+  name: response_default_encodingstyle
+- !ruby/object:RI::MethodSummary 
+  name: response_doc
+- !ruby/object:RI::MethodSummary 
+  name: response_doc_enc
+- !ruby/object:RI::MethodSummary 
+  name: response_doc_lit
+- !ruby/object:RI::MethodSummary 
+  name: response_obj
+- !ruby/object:RI::MethodSummary 
+  name: response_rpc
+- !ruby/object:RI::MethodSummary 
+  name: response_rpc_enc
+- !ruby/object:RI::MethodSummary 
+  name: response_rpc_lit
+name: Operation
+superclass: Object

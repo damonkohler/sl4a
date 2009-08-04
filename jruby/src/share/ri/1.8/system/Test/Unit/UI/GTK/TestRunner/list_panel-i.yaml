@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::GTK::TestRunner#list_panel
+is_singleton: false
+name: list_panel
+params: ()
+visibility: private

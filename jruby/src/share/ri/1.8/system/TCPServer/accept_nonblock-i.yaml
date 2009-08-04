@@ -1,0 +1,35 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Accepts an incoming connection using accept(2) after O_NONBLOCK is set for the underlying file descriptor. It returns an accepted TCPSocket for the incoming connection.
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Example
+- !ruby/struct:SM::Flow::VERB 
+  body: "     require 'socket'\n     serv = TCPServer.new(2202)\n     begin\n       sock = serv.accept_nonblock\n     rescue Errno::EAGAIN, Errno::ECONNABORTED, Errno::EPROTO, Errno::EINTR\n       IO.select([serv])\n       retry\n     end\n     # sock is an accepted socket.\n"
+- !ruby/struct:SM::Flow::P 
+  body: Refer to Socket#accept for the exceptions that may be thrown if the call to TCPServer#accept_nonblock fails.
+- !ruby/struct:SM::Flow::P 
+  body: TCPServer#accept_nonblock may raise any error corresponding to accept(2) failure, including Errno::EAGAIN.
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: See
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: TCPServer#accept
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Socket#accept
+  type: :BULLET
+full_name: TCPServer#accept_nonblock
+is_singleton: false
+name: accept_nonblock
+params: |
+  tcpserver.accept_nonblock => tcpsocket
+
+visibility: public

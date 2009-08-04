@@ -1,0 +1,88 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: use_pp=
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Test::Unit::Assertions contains the standard Test::Unit assertions. Assertions is included in Test::Unit::TestCase.
+- !ruby/struct:SM::Flow::P 
+  body: To include it in your own code and use its functionality, you simply need to rescue Test::Unit::AssertionFailedError. Additionally you may override add_assertion to get notified whenever an assertion is made.
+- !ruby/struct:SM::Flow::P 
+  body: "Notes:"
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: The message to each assertion, if given, will be propagated with the failure.
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: It is easy to add your own assertions based on assert_block().
+  type: :BULLET
+- !ruby/struct:SM::Flow::H 
+  level: 1
+  text: Example Custom Assertion
+- !ruby/struct:SM::Flow::VERB 
+  body: "  def deny(boolean, message = nil)\n    message = build_message message, '&lt;?&gt; is not false or nil.', boolean\n    assert_block message do\n      not boolean\n    end\n  end\n"
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: UncaughtThrow
+  value: "{NameError => /^uncaught throw \\`(.+)\\'$/,                        ThreadError => /^uncaught throw \\`(.+)\\' in thread /}"
+full_name: Test::Unit::Assertions
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: _wrap_assertion
+- !ruby/object:RI::MethodSummary 
+  name: add_assertion
+- !ruby/object:RI::MethodSummary 
+  name: assert
+- !ruby/object:RI::MethodSummary 
+  name: assert_block
+- !ruby/object:RI::MethodSummary 
+  name: assert_equal
+- !ruby/object:RI::MethodSummary 
+  name: assert_in_delta
+- !ruby/object:RI::MethodSummary 
+  name: assert_instance_of
+- !ruby/object:RI::MethodSummary 
+  name: assert_kind_of
+- !ruby/object:RI::MethodSummary 
+  name: assert_match
+- !ruby/object:RI::MethodSummary 
+  name: assert_nil
+- !ruby/object:RI::MethodSummary 
+  name: assert_no_match
+- !ruby/object:RI::MethodSummary 
+  name: assert_not_equal
+- !ruby/object:RI::MethodSummary 
+  name: assert_not_nil
+- !ruby/object:RI::MethodSummary 
+  name: assert_not_same
+- !ruby/object:RI::MethodSummary 
+  name: assert_nothing_raised
+- !ruby/object:RI::MethodSummary 
+  name: assert_nothing_thrown
+- !ruby/object:RI::MethodSummary 
+  name: assert_operator
+- !ruby/object:RI::MethodSummary 
+  name: assert_raise
+- !ruby/object:RI::MethodSummary 
+  name: assert_raises
+- !ruby/object:RI::MethodSummary 
+  name: assert_respond_to
+- !ruby/object:RI::MethodSummary 
+  name: assert_same
+- !ruby/object:RI::MethodSummary 
+  name: assert_send
+- !ruby/object:RI::MethodSummary 
+  name: assert_throws
+- !ruby/object:RI::MethodSummary 
+  name: build_message
+- !ruby/object:RI::MethodSummary 
+  name: flunk
+name: Assertions
+superclass: 

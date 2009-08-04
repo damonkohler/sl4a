@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::SOAPMethod#have_outparam?
+is_singleton: false
+name: have_outparam?
+params: ()
+visibility: public

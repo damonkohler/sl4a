@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPAuth::Authenticator#error
+is_singleton: false
+name: error
+params: (fmt, *args)
+visibility: private

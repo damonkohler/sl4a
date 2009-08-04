@@ -1,0 +1,38 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: exception
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: test_name
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Encapsulates an error in a test. Created by Test::Unit::TestCase when it rescues an exception thrown during the processing of a test.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SINGLE_CHARACTER
+  value: "'E'"
+full_name: Test::Unit::Error
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Util::BacktraceFilter
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: long_display
+- !ruby/object:RI::MethodSummary 
+  name: message
+- !ruby/object:RI::MethodSummary 
+  name: short_display
+- !ruby/object:RI::MethodSummary 
+  name: single_character_display
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+name: Error
+superclass: Object

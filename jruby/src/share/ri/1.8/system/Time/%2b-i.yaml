@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Addition---Adds some number of seconds (possibly fractional) to <em>time</em> and returns that value as a new time.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   t = Time.now         #=&gt; Wed Apr 09 08:56:03 CDT 2003\n   t + (60 * 60 * 24)   #=&gt; Thu Apr 10 08:56:03 CDT 2003\n"
+full_name: Time#+
+is_singleton: false
+name: +
+params: |
+  time + numeric => time
+
+visibility: public

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: return the tag_names for setters associated with uri
+full_name: RSS::BaseListener::available_tags
+is_singleton: true
+name: available_tags
+params: (uri)
+visibility: public

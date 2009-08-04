@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: YAML::DBM#store
+is_singleton: false
+name: store
+params: ( key, val )
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPAuth::DigestAuth#check_nonce
+is_singleton: false
+name: check_nonce
+params: (req, auth_req)
+visibility: private

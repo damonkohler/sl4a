@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Called when a comment is encountered. @p comment The content of the comment
+full_name: REXML::StreamListener#comment
+is_singleton: false
+name: comment
+params: (comment)
+visibility: public

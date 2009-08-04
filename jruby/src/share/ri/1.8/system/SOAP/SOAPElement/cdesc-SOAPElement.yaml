@@ -1,0 +1,89 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: elename
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: encodingstyle
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: extraattr
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: id
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: parent
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: position
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: precedents
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: qualified
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: root
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Text interface.
+  name: text
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: decode
+- !ruby/object:RI::MethodSummary 
+  name: from_obj
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: to_elename
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: SOAPElement is not typed so it is not derived from NSDBase.
+constants: []
+
+full_name: SOAP::SOAPElement
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Enumerable
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "[]"
+- !ruby/object:RI::MethodSummary 
+  name: "[]="
+- !ruby/object:RI::MethodSummary 
+  name: add
+- !ruby/object:RI::MethodSummary 
+  name: add_accessor
+- !ruby/object:RI::MethodSummary 
+  name: add_accessor
+- !ruby/object:RI::MethodSummary 
+  name: add_member
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: inspect
+- !ruby/object:RI::MethodSummary 
+  name: key?
+- !ruby/object:RI::MethodSummary 
+  name: members
+- !ruby/object:RI::MethodSummary 
+  name: safe_accessor_name
+- !ruby/object:RI::MethodSummary 
+  name: to_obj
+name: SOAPElement
+superclass: Object

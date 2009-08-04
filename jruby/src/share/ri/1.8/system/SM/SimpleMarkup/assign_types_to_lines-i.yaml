@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Look through the text at line indentation. We flag each line as being Blank, a paragraph, a list element, or verbatim text
+full_name: SM::SimpleMarkup#assign_types_to_lines
+is_singleton: false
+name: assign_types_to_lines
+params: (margin = 0, level = 0)
+visibility: private

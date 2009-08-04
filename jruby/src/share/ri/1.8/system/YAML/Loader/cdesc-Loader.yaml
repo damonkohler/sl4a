@@ -1,0 +1,26 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TRANSFER_DOMAINS
+  value: "{             'yaml.org,2002' => {},             'ruby.yaml.org,2002' => {}"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PRIVATE_TYPES
+  value: "{}"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: IMPLICIT_TYPES
+  value: "[ 'null', 'bool', 'time', 'int', 'float' ]"
+full_name: YAML::Loader
+includes: []
+
+instance_methods: []
+
+name: Loader
+superclass: Object

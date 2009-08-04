@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (story_mediator)
+is_singleton: true
+block_params: 
+name: new
+comment: 
+full_name: Spec::Story::Runner::StoryParser::new
+visibility: public
+aliases: []
+

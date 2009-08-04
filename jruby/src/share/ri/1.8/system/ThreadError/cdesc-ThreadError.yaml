@@ -1,0 +1,19 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: <tt>Thread</tt> encapsulates the behavior of a thread of execution, including the main thread of the Ruby script.
+- !ruby/struct:SM::Flow::P 
+  body: In the descriptions of the methods in this class, the parameter <em>sym</em> refers to a symbol, which is either a quoted string or a <tt>Symbol</tt> (such as <tt>:name</tt>).
+constants: []
+
+full_name: ThreadError
+includes: []
+
+instance_methods: []
+
+name: ThreadError
+superclass: StandardError

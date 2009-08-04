@@ -1,0 +1,22 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: TraverseSupport breaks following thread variables.
+- !ruby/struct:SM::Flow::VERB 
+  body: "  Thread.current[:SOAPMarshalDataKey]\n"
+constants: []
+
+full_name: SOAP::Mapping::TraverseSupport
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: mark_marshalled_obj
+- !ruby/object:RI::MethodSummary 
+  name: mark_unmarshalled_obj
+name: TraverseSupport
+superclass: 

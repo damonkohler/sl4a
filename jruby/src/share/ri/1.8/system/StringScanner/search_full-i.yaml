@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Scans the string <em>until</em> the <tt>pattern</tt> is matched. Returns the matched string if <tt>return_string_p</tt> is true, otherwise returns the number of bytes advanced. Advances the scan pointer if <tt>advance_pointer_p</tt>, otherwise not. This method does affect the match register.
+full_name: StringScanner#search_full
+is_singleton: false
+name: search_full
+params: " search_full(pattern, return_string_p, advance_pointer_p)\n"
+visibility: public

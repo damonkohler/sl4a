@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: merge in another class desscription into this one
+full_name: RI::ModuleDescription#merge_in
+is_singleton: false
+name: merge_in
+params: (old)
+visibility: public

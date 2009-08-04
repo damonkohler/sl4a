@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: ()
+is_singleton: false
+block_params: 
+name: step_name
+comment: 
+full_name: Regexp#step_name
+visibility: public
+aliases: []
+

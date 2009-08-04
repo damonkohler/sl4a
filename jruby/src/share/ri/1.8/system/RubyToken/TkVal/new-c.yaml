@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RubyToken::TkVal::new
+is_singleton: true
+name: new
+params: (line_no, char_no, value = nil)
+visibility: public

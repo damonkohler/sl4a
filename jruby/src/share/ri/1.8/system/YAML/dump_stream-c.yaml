@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a YAML stream containing each of the items in <tt>objs</tt>, each having their own document.
+- !ruby/struct:SM::Flow::VERB 
+  body: "  YAML.dump_stream( 0, [], {} )\n    #=&gt; --- 0\n        --- []\n        --- {}\n"
+full_name: YAML::dump_stream
+is_singleton: true
+name: dump_stream
+params: ( *objs )
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Maker::TaxonomyTopicsModel::install_taxo_topics
+is_singleton: true
+name: install_taxo_topics
+params: (klass)
+visibility: public

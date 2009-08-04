@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::GTK::TestRunner#attach_to_mediator
+is_singleton: false
+name: attach_to_mediator
+params: ()
+visibility: private

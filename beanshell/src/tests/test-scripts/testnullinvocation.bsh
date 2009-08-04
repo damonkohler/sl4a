@@ -1,0 +1,48 @@
+
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// null var
+n=null;
+try {
+	n.foo();
+} catch ( NullPointerException e ) {
+	print(e);
+	flag();
+}
+
+// null scripted method return
+returnNull() {
+	return null;
+}
+
+try {
+	returnNull().foo();
+} catch ( NullPointerException e ) {
+	print(e);
+	flag();
+}
+
+// null java method return
+map=new HashMap();
+try {
+	map.get("foo").length();
+} catch ( NullPointerException e ) {
+	print(e);
+	flag();
+}
+
+String [] strings = { null, null };
+s=strings[0];
+assert( s == null );
+try {
+	s.foo();
+} catch ( NullPointerException e ) {
+	print(e);
+	flag();
+}
+
+assert( flag() == 4 );
+
+complete();

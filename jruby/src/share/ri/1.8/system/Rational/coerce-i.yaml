@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Rational#coerce
+is_singleton: false
+name: coerce
+params: (other)
+visibility: public

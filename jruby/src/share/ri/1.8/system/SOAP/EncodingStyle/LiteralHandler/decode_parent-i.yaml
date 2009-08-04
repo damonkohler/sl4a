@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::EncodingStyle::LiteralHandler#decode_parent
+is_singleton: false
+name: decode_parent
+params: (parent, node)
+visibility: public

@@ -1,0 +1,18 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: NoArgsConstraint
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: ==
+- !ruby/object:RI::MethodSummary 
+  name: description
+full_name: Spec::Mocks::ArgumentConstraints::NoArgsConstraint
+superclass: Object
+class_methods: []
+

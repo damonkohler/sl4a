@@ -1,0 +1,15 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: See IO#each.
+full_name: StringIO#each
+is_singleton: false
+name: each
+params: |
+  strio.each(sep_string=$/)      {|line| block }  -> strio
+  strio.each_line(sep_string=$/) {|line| block }  -> strio
+
+visibility: public

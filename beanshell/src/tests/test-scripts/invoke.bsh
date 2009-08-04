@@ -1,0 +1,39 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+ignore() {
+	invoke( method, args ) { 
+		return 5;
+	}
+
+	// Special case: direct invocation in scope is not handled
+	// now we do allow it...
+	//assert( isEvalError("nomethod()") );
+	assert( !isEvalError("nomethod()") );
+
+	return this;
+}
+
+donotignore() {
+	return this;
+}
+
+assert( ignore().nomethod() == 5 );
+assert( isEvalError("donotignore().nomethod()") );
+
+// Ignore globally
+invoke( method, args ) {
+	return 42;
+}
+
+// inherited, this should work now
+assert( !isEvalError("donotignore().nomethod()") );
+
+// Special case: direct invocation in scope is not handled
+// now we do allow it
+//assert( isEvalError("nomethod()") );
+// Special case: direct invocation in scope is not handled
+assert( !isEvalError("nomethod()") );
+
+complete();

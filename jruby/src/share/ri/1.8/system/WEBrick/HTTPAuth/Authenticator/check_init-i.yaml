@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPAuth::Authenticator#check_init
+is_singleton: false
+name: check_init
+params: (config)
+visibility: private

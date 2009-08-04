@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP#no_proxy?
+is_singleton: false
+name: no_proxy?
+params: (uri)
+visibility: private

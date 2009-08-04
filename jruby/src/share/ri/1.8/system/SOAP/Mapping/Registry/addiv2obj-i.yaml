@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::Registry#addiv2obj
+is_singleton: false
+name: addiv2obj
+params: (obj, attr)
+visibility: private

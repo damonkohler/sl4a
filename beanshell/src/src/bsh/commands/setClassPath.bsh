@@ -1,0 +1,14 @@
+/**
+	Change the classpath to the specified array of directories and/or archives.
+	<p>
+	See "Class Path Management" for details.
+
+	@method void setClassPath( URL [] )
+*/
+
+bsh.help.setClassPath= "usage: setClassPath( URL [] )";
+
+void setClassPath( urls ) {
+	this.caller.namespace.getClassManager().setClassPath( urls );
+}
+

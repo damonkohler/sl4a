@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Time::apply_offset
+is_singleton: true
+name: apply_offset
+params: (year, mon, day, hour, min, sec, off)
+visibility: private

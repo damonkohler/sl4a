@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: See IO#puts.
+full_name: StringIO#puts
+is_singleton: false
+name: puts
+params: |
+  strio.puts(obj, ...)    -> nil
+
+visibility: public

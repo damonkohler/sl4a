@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Quoted verbatim from original documentation:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  What is this?\n"
+- !ruby/struct:SM::Flow::P 
+  body: <tt>:)</tt>
+full_name: Zlib::Inflate#sync_point?
+is_singleton: false
+name: sync_point?
+params: ()
+visibility: public

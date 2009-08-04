@@ -1,0 +1,18 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+try { eval("bad syntax."); } catch ( bsh.EvalError e ) { flag(); }
+try { eval("bad syntax("); } catch ( bsh.EvalError e ) { flag(); }
+try { eval(")syntax"); } catch ( bsh.EvalError e ) { flag(); }
+try { eval("--)syntax"); } catch ( bsh.EvalError e ) { flag(); }
+
+try { run("Data/syntaxerrors.bsh"); } catch ( bsh.EvalError e ) { 
+	print(e);
+	flag(); 
+}
+
+assert( flag() == 5 );
+
+complete();
+

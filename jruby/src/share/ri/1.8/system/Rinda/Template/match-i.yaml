@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Matches this template against <tt>tuple</tt>. The <tt>tuple</tt> must be the same size as the template. An element with a <tt>nil</tt> value in a template acts as a wildcard, matching any value in the corresponding position in the tuple. Elements of the template match the <tt>tuple</tt> if the are #== or #===."
+- !ruby/struct:SM::Flow::VERB 
+  body: "  Template.new([:foo, 5]).match   Tuple.new([:foo, 5]) # =&gt; true\n  Template.new([:foo, nil]).match Tuple.new([:foo, 5]) # =&gt; true\n  Template.new([String]).match    Tuple.new(['hello']) # =&gt; true\n\n  Template.new([:foo]).match      Tuple.new([:foo, 5]) # =&gt; false\n  Template.new([:foo, 6]).match   Tuple.new([:foo, 5]) # =&gt; false\n  Template.new([:foo, nil]).match Tuple.new([:foo])    # =&gt; false\n  Template.new([:foo, 6]).match   Tuple.new([:foo])    # =&gt; false\n"
+full_name: Rinda::Template#match
+is_singleton: false
+name: match
+params: (tuple)
+visibility: public

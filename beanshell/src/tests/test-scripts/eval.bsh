@@ -1,0 +1,57 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+eval("b=2");
+assert(b==2);
+
+foo() {
+	return 42;
+}
+
+a=eval("foo()");
+assert(a==42);
+
+try {
+	b=eval("bogus()");
+} catch ( bsh.EvalError e ) {
+	flag();
+}
+
+assert( flag() == 1 );
+
+/**
+	Make sure eval's side effects happen in the correct namespace
+*/
+if ( Interpreter.LOCALSCOPING )
+{
+a=6;
+b=6; // sanity check
+scope() {
+	eval("a=5");
+	b=5; // sanity check
+	return this;
+}
+s=scope();
+assert(s.b==5); // sanity check
+assert(b==6); // sanity check
+assert(s.a==5);
+assert(a==6);
+}
+else
+{
+a=6;
+b=6; // sanity check
+scope() {
+	eval("this.a=5");
+	this.b=5; // sanity check
+	return this;
+}
+s=scope();
+assert(s.b==5); // sanity check
+assert(b==6); // sanity check
+assert(s.a==5);
+assert(a==6);
+}
+
+complete();

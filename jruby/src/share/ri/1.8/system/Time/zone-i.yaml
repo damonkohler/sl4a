@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the name of the time zone used for <em>time</em>. As of Ruby 1.8, returns ``UTC'' rather than ``GMT'' for UTC times.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   t = Time.gm(2000, &quot;jan&quot;, 1, 20, 15, 1)\n   t.zone   #=&gt; &quot;UTC&quot;\n   t = Time.local(2000, &quot;jan&quot;, 1, 20, 15, 1)\n   t.zone   #=&gt; &quot;CST&quot;\n"
+full_name: Time#zone
+is_singleton: false
+name: zone
+params: |
+  time.zone => string
+
+visibility: public

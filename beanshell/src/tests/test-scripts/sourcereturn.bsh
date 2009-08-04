@@ -1,0 +1,19 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// Note: no import needed here because the source() handled it.
+assert( source("Data/actionHandler.bsh") instanceof ActionListener );
+
+// check source scope
+a=0;
+foo() {
+	source("Data/run_aux.bsh");
+	assert( a==5 );
+}
+assert(a==0);
+foo();
+assert(a==0);
+
+complete();
+

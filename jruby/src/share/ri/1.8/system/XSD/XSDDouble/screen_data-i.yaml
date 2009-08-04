@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::XSDDouble#screen_data
+is_singleton: false
+name: screen_data
+params: (value)
+visibility: private

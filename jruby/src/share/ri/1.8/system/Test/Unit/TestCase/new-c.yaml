@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a new instance of the fixture for running the test represented by test_method_name.
+full_name: Test::Unit::TestCase::new
+is_singleton: true
+name: new
+params: (test_method_name)
+visibility: public

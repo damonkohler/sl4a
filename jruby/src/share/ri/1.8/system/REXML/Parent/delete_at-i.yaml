@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Parent#delete_at
+is_singleton: false
+name: delete_at
+params: ( index )
+visibility: public

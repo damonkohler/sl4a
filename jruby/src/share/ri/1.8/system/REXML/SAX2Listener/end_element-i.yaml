@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::SAX2Listener#end_element
+is_singleton: false
+name: end_element
+params: (uri, localname, qname)
+visibility: public

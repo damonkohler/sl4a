@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Sets the priority of <em>thr</em> to <em>integer</em>. Higher-priority threads will run before lower-priority threads.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   count1 = count2 = 0\n   a = Thread.new do\n         loop { count1 += 1 }\n       end\n   a.priority = -1\n\n   b = Thread.new do\n         loop { count2 += 1 }\n       end\n   b.priority = -2\n   sleep 1   #=&gt; 1\n   Thread.critical = 1\n   count1    #=&gt; 622504\n   count2    #=&gt; 5832\n"
+full_name: Thread#priority=
+is_singleton: false
+name: priority=
+params: |
+  thr.priority= integer   => thr
+
+visibility: public

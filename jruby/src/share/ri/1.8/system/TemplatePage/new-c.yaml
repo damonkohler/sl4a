@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: <tt>templates</tt> is an array of strings containing the templates. We start at the first, and substitute in subsequent ones where the string <tt>!INCLUDE!</tt> occurs. For example, we could have the overall page template containing
+- !ruby/struct:SM::Flow::VERB 
+  body: "  &lt;html&gt;&lt;body&gt;\n    &lt;h1&gt;Master&lt;/h1&gt;\n    !INCLUDE!\n  &lt;/bost&gt;&lt;/html&gt;\n"
+- !ruby/struct:SM::Flow::P 
+  body: and substitute subpages in to it by passing [master, sub_page]. This gives us a cheap way of framing pages
+full_name: TemplatePage::new
+is_singleton: true
+name: new
+params: (*templates)
+visibility: public

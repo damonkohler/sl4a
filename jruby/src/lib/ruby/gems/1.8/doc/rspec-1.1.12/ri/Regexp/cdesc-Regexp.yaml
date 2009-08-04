@@ -1,0 +1,18 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: Regexp
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: arg_regexp
+- !ruby/object:RI::MethodSummary 
+  name: step_name
+full_name: Regexp
+superclass: Object
+class_methods: []
+

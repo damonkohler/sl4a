@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::ListenerMixin#_ns
+is_singleton: false
+name: _ns
+params: (ns, prefix)
+visibility: private

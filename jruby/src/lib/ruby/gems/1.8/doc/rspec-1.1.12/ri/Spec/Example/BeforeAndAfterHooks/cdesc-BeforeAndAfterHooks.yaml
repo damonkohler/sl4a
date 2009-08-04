@@ -1,0 +1,37 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: BeforeAndAfterHooks
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: after
+- !ruby/object:RI::MethodSummary 
+  name: after_suite_parts
+- !ruby/object:RI::MethodSummary 
+  name: append_after
+- !ruby/object:RI::MethodSummary 
+  name: append_before
+- !ruby/object:RI::MethodSummary 
+  name: before
+- !ruby/object:RI::MethodSummary 
+  name: before_suite_parts
+- !ruby/object:RI::MethodSummary 
+  name: prepend_after
+- !ruby/object:RI::MethodSummary 
+  name: prepend_before
+- !ruby/object:RI::MethodSummary 
+  name: setup
+- !ruby/object:RI::MethodSummary 
+  name: teardown
+full_name: Spec::Example::BeforeAndAfterHooks
+superclass: 
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: after_suite_parts
+- !ruby/object:RI::MethodSummary 
+  name: before_suite_parts

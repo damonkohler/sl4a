@@ -1,0 +1,518 @@
+=== 2.0.1 ===
+July 23, 2009 (revision 805)
+
+- Added support for Secure AuthSub, OAuth with HMAC and with RSA to the
+    v2 auth code.
+- Added v2 data model classes for all XML elements in the gd namespace.
+- Usability improvements in the gdata.docs.service module, thanks Eric!
+- Made the dependency on elementtree only required if you are using
+    Python 2.4 and lower. Thanks brosner!
+- Setting the ssl member in atom.service.AtomService will now override a URL
+    which starts with http:. Many thanks to Michael Ballbach for the patch. 
+- Added a proxy HTTP client which will use proxy environment variables to
+    send all requests through the desired proxy server if present.
+- Added user agent string indicating that this is from the gdata python v2
+    library.
+- Removed unneeded title parameter from the Blogger client's add_comment
+    method.
+- Added an all_tests_local script which runs all tests except those which
+    would make HTTP requests to remote servers.
+- Added the birthday element to contacts entry, the reminder element to
+    calendar events, and the method attribute to calendar's reminder class.
+    All with great thanks to Marc!
+- The analytics GetData method no longer requires the dimenrions argument.
+    Thanks Jim!
+
+=== 2.0.0 ===
+June 29, 2009 (revision 777)
+
+- Released support for version 2 of the Google Data APIs protocol. To use the
+    new version-aware code, use the gdata.client, atom.data, gdata.data
+    modules and classes that derive from them. For example, use 
+    gdata.blogger.client.BloggerClient instead of 
+    gdata.blogger.service.BloggerService. High level, service specific classes
+    are not available yet for other services, so feel free to migrate as they
+    become available. The v1 service classes are still included so your
+    existing code should be unaffected.
+- Included new Blogger samples to illustrate v2 support, a command line demo
+    and an app for App Engine.
+- Added OAuth sample app which uses App Engine.
+- Added the gCal:sequence element to CalendarEventEntry (thanks Anton).
+- Added two decorators to diaply warnings when deprecated methods are used.
+- Added a login utility for command line samples to share to standardize the
+    auth process on in a sample program.
+- Fixed a bug in v2 XML parsing which prevented multiversion XML classes from
+    correctly parsing and generating v2 code.
+- Fixed v1 HTTP Host header settings, not default ports should now be
+    included in the Host header.
+- Fixed pickle error when an OAuth-RSA token is saved to the App Engine
+    datastore.
+- Fixed missing data in the Document List API unit tests.
+- Improved backwards compatibility of v2 data model classes be adding aliases
+    to v1 functions.
+
+=== 1.3.3 ===
+June 5, 2009 (revision 724)
+
+- Added support for the Google Finance API. Thanks Swee Heng!
+- The Google Data Service classes now support version 1.0a of the OAuth
+    protocol (Thanks Eric!).
+- Fixed a naming bug in unit tests for atom.service which appeared when using
+    Python 2.6.x
+- Fixed URL parameter propogation when calling GDataService.Delete. The URL
+    parameters are now preserved.
+- Fixed incorrect return type for gdata.FeedLinkFromString.
+- Added data model classes for the Atom and AtomPub XML elements which support
+    version 2 of the Google Data APIs (by means of dynamic AtomPub namespace
+    switching). The version 2 XML classes are much more backwards compatible
+    with v1 classes than in previous releases.
+
+=== 1.3.2 ===
+May 22, 2009 (revision 711)
+
+- Added support for the Google Analytics API. Thanks Sal Uryasev!
+- Added support for the Google Book Search API. Thanks James Sams!
+- Improved support for 2 legged OAuth and added a sample app. Thanks Eric
+    Bidelman!
+- Simplified the way an XML response from the server is parsed into the
+    desired class for the version 2.0 API client (gdata.client.GDClient).
+
+=== 1.3.1 ===
+April 23, 2009 (revision 695)
+
+- Fixed issues with setting the developer key in the YouTubeService
+    constructor.
+- For the Document List API (thanks Eric!):
+  - Added writersCanInvite element
+  - Fixed a small errors in Document Entry
+  - Added category label when creating different types of docs
+  - Fixed DownLoad helpers which shouldn't write a file if server returns
+      error. Fixes issue 240.
+  - Added DocumentListEntryFromString converter and using DocumentListEntry
+      class instead of GDataEntry class to create entries.
+- URLs in HTTP requests can now be unicode strings. Resolves issue 233.
+- Improvements for the upcoming version 2.0.0 release:
+  - The v2 auth code now support AuthSub and has been tested on App Engine.
+  - Unit tests for the v2 client code will default to not use the local file
+      cache but will make live requests unless cached responses is set to
+      True in the test configuration module.
+  - Older v1 unit tests can now use the v2 testing framework, migrated 
+      contacts API tests as a proof of concept. This will come in handy when
+      testing backwards compatibility for the 2.0 release.
+  - Improved support for unicode and other character encodings in the v2 XML
+      core module.
+
+=== 1.3.0 ===
+Mar 20, 2009 (revision 665)
+
+- Added support for the Google Health API. (Thanks Eric Bidelman!)
+- Added support for the groups management in the Google Apps Provisioning
+    API. (Thanks to Tony Chen and Oskar Casquero!)
+- Added the following new features for the Google Documents List API:
+    (Thanks again to Eric Bidelman for adding all of these!)
+  - Folder create, move docs/folders in and out of other folders. (Thanks
+      Nizam Sayeed!)
+  - Suppport for modifications to Access Control Lists for documents.
+  - Export functionality for documents, spreadsheets, and presentations.
+  - Updated the docs_example.py sample app.
+  - New new XML elements: resourceID, lastViewed, and lastModifiedBy.
+- Added ability to update web clip settings in the Google Apps email settigns
+    API. (Thanks Takashi Matsuo.)
+- Fixed a bug in calendarExample that would cause execution to fail when an
+    event attendee does not have any attendeeStatus data. (Thanks Trevor
+    Johns!)
+- Fixed AuthSub request URLs which should be https. (Yay Eric!)
+- Fixed logic when changing email settings when using the Google Apps API to
+    only send properties which have been specified. (Thanks Jay Lee!)
+- Includes a new and experimental client class (gdata.client.GDClient) which
+    can be used with version two of the Google Data API protocol. This class
+    may change in backwards incompatible ways before the 2.0.0 release, so
+    use at your own risk. 
+
+=== 1.2.4 ===
+Jan 22, 2009 (revision 603)
+
+- Added a new AtomPubClient class (and supporting classes) which begins a
+    foundation on which support for version two of the Google Data protocol
+    will be built.
+- OAuth methods can now specify the desired OAuth server with the default
+    being the Google Accounts end point (thanks Dag Brattli!).
+- Improved support for unicode strings in XML element class attributes and
+    text nodes (thanks again to Dag).
+- Fixed constructors for Service classes which inherit from GDataService
+    to ensure that all parameters are passed up to the superclass 
+    constructor (thanks Guillaume Ryder!).
+- Added a 'contact_list' property to ContactsService to simplify API usage
+    for shared contacts (thanks Guillaume once again).
+- For Google Contacts, added a GetFeedUri method to help users generating
+     feed URIs (Guillaume for a hat-trick).
+- New unit tests to ensure that the ordering of entry objects within a feed
+    is preserved when converting to and from XML.
+
+
+=== 1.2.3 ===
+Dec 3, 2008 (revision 585)
+
+- Added support for OAuth (thanks to Kunal Shah!). Your client can now obtain 
+    an authorization token using the OAuth protocol.
+- Added support for Secure AuthSub (thanks Eric Bidelman!). Your client can
+    digitally sign requests using RSA allowing Google service to verify that
+    the request came from your application.
+- Added a new module for parsing XML which will be used in future versions to
+    support version of the Google Data APIs protocol. This new library handles
+    versioning of XML schemas.
+- The Google Contacts API sample now pages through results.
+- Added phone number rel types using in the Google Contacts API.
+- The YouTube service module will use cElementTree if it is available. 
+    Improves XML parsing speed.
+- Fixed typo in gdata.geo, changed longtitude to longitude but kept an alias
+    for backwards compatibility.
+- Fixed Blogger's GetBlogId regular expressions to extract the ID from 
+    multiple kinds of entries.
+- Fixed type check in atom.http to allow unicode URL strings.
+- Added webmastertools test to the packaged download which fixed failures 
+    when running all data tests.
+- Improved compatibility of unit tests with Python2.3.
+- Added copies of tlslite and dependencies to support secure AuthSub and
+    OAuth.
+- Changed the default host for Google Apps API requests to 
+    apps-apis.google.com.
+
+
+=== 1.2.2 ===
+Oct 15, 2008 (revision 556)
+
+- Added support for the following APIs:
+      Google Apps Email Migration API
+      Google Apps Email Settings API
+      Google Webmaster Tools Data API
+    Some modules for the above are not yet fully tested, so please file an 
+    issue if you notice something is not working as expected.
+- Restored support for gdata.http_request_handler when using App Engine to
+    preserve backwards compatibility.
+- Simplified auth token management by adding a current_token member to 
+    service classes. Also added settings to control when the token_store
+    is updated when using SetXToken() methods. The token_store will only be
+    queried if there is no current_token.
+- Fixed issue with requests to HTTPS URLs in which an AuthSub token was seen
+    as invalid because the request contained the default port number (443).
+    The library no longer includes the port in the Host header if it is using
+    the default.
+- Resolved issues with YouTube token scopes.
+- Fixed issue which appeared when the Calendar API issues a redirect to a 
+    PUT request. The library now correctly retries with a PUT (instead of
+    a POST).
+- Added workaround for differences in how the App Engine SDK handles 
+    redirects.
+- Fixed typo in gdata.EntryLink declaration.
+- Fixed invalid host errors seen when using some HTTP proxies.
+
+
+=== 1.2.1 ===
+Sep 15, 2008 (revision 529)
+
+- The gdata.alt.appengine module now replaces a Service object's token_store
+    with an AppEngineTokenStore which automatically associates auth tokens 
+    with the current user and stores the auth tokens in the datastore.
+- Streamlined the gdata.auth module. There are now six recommended functions
+    for using Google auth mechanisms. GDataService now uses these six
+    functions.
+- Added an override_token in Service objects (AtomService, GDataService) 
+    which bypasses the token_store. This member is helpful when using a 
+    single use AuthSub token which is only valid for one request and so
+    would not be reused.
+- gdata.alt.appengin.run_on_appengine will now return the modified Service
+    object. This allows statements like:
+    client = gdata.alt.appengin.run_on_appengine(
+        gdata.blogger.service.BloggerService())
+- Fixed content length header issue in gdata.alt.appengine which caused
+    errors when running on App Engine when HTTP headers are set to 
+    non-string values.
+- Fixed function naming issue in gdata.alt.appengine, a "private" function
+    was not accessible in some import styles.
+- Fixed issue in atom.http which surfaces when passing in a string for the
+    port number. Ports are now cast to ints. 
+- Updated pydocs.
+
+
+=== 1.2.0 ===
+Sep 9, 2008 (revision 522)
+
+- Refactored HTTP request mechanisms and the way that Authorization headers
+    are created and applied to requests. These changes make it easier to 
+    swap out the HTTP layer to allow the library to be used in different
+    environments (like Google App Engine). The changes in Auth token logic
+    should make it much easier to add support for secure AuthSub and OAuth.
+    For more details on this change, see the following wiki page:
+    http://code.google.com/p/gdata-python-client/wiki/HTTPRequestRefactoring
+- Fixed issues with token string modification which caused certain AuthSub 
+    token values to become invalid.
+- Created a new module for parsing and constructing URLs (atom.url).
+- Created a module for token storage which will lookup the correct auth token
+    to be used for a particular URL.
+- Auth tokens are now represented as objects and contain information about the
+    scopes (URLs) for which they can be used. The token object is responsible
+    for adding the Authorization header to the request.
+- Added new functions to gdata.auth for extracting the raw token string from
+    a response to an AuthSub token upgrade request.
+- Added support for the location query parameter in YouTube queries.
+- Added groups functionality to the Contacts API library.
+- Batch request support added for Contacts API operations.
+- Added default behavior to text_db GetTables: when no worksheet name or ID
+    is specified, all tables are retrieved.
+- Fixed client login for YouTube.
+- Fixed issue in YouTube service when setting the developer key.
+- Fixed bug in YouTube service which raised an exception when inserting a
+    video using a file-like object.
+- Added a method to Feed and Entry classes to find the "previous" link.
+- A failure when attempting to upgrade a single use AuthSub token to a session
+    token will now raise an exception.
+- AppsForYourDomainException now uses Python2.5 style exception construction.
+- Moved the logic for using this library on Google App Engine into a new 
+    module: gdata.alt.appengine.
+
+
+=== 1.1.1 ===
+June 13, 2008 (revision 421)
+
+- Added support for new feeds available in the Google Contacts API. Adding
+    contact groups, querying for contacts in a group, specifying extended
+    properties, and setting the contact's photo are now supported.
+- The ExtendedProperty class can now contain a blob of XML instead of just
+    an attribute value. This is used in the Google Contacts Data API. 
+- The YouTube service now has methods for updating playlists and removing a
+    video from a playlist.
+- Added geo-location to the YouTube service class.
+- When using ClientLogin with Blogger, the default account type is now set
+    to 'GOOGLE'. This prevents the rare problem of a user having a Google
+    Apps account which conflicts with his or her Google Account used for
+    Blogger.
+- Added support for the in-reply-to element which appears in Blogger 
+    comments.
+
+
+=== 1.1.0 ===
+June 6, 2008 (revision 403)
+
+- Added modules for YouTube.
+- Added modules for Blogger to simplify using the Blogger API.
+- Updated pydocs for all modules.
+- New member in service object to allow the ClientLogin server to be changed.
+    Required to be able to use ClientLogin with YouTube.
+- Iterating over Google Apps Feeds can now be accomplished using a generator.
+- New unit tests for the Google Apps Provisioning API.
+- Bug fixes to the mock_service module used in unit tests.
+- Fixed a bug in Query string generation when using category queries.
+- Improved ease of use for Calendar query construction, URL components are
+    now escaped automatically by default.
+- Bug fix, added timezone element to CalendarEventFeed.
+- Improved docstrings to describe token access methods (specifically 
+    GetAuthSubToken).
+- Moved ExtendedProperty class into gdata module from gdata.calendar since
+    it is now also used in the Google Contacts Data API. 
+
+
+=== 1.0.13 ===
+May 8, 2008 (revision 357)
+
+- Added sample code illustrating the use of the Contacts API modules.
+- Added a mock_service module which will allow for faster test execution
+    by simulating a server and replaying recordings instead of making
+    HTTP requests to a remote server.
+- Fixed a but in the gdata.auth module which could cause certain characters
+    at the start of the token to be removed incorrectly.
+- Fixed a bug in the gdata.apps.service module which caused an import to 
+    fail when loading ElementTree in some cases.
+- Service unit tests should run correctly when using run_service_tests 
+    and run_all_tests now that the subtests have been made into packages.
+
+
+=== 1.0.12.1 ===
+April 10, 2008 (revision 341)
+
+- Added new import statements so that xml.etree.ElementTree can be used. 
+    Needed for the library to run on Google App Engine.
+
+
+=== 1.0.12 ===
+April 8, 2008 (revision 334)
+
+- Added support for the Google Contacts API.
+- Added a gdata.urlfetch module which allows this library to be used in 
+    Google App Engine. This module uses urlfetch instead of httplib to 
+    perform HTTP requests.
+- Refactored atom.service and gdata.service to make it easier to swap out the
+    HTTP communication layer.
+- Fixed a bug in the Push method of gdata.spreadsheet.text_db.
+- Sped up InsertRow method in gdata.spreadsheet.service.
+- Improved XML parsing efficiency in gdata.calendar.service.
+- Added new attribuges for the Google Apps login element.
+- Improved UpdatePhotoBlob in gdata.photo.service.
+- Added pydocs for Google Contacts API and updates in other modules.
+
+=== 1.0.11.1 ===
+March 13, 2008 (revision 314)
+
+- Added text_db module to gdata.spreadsheet which makes using the Spreadsheets
+    API feel more like using a simple database. This module streamlines use
+    of the list feed.
+- Compatibility fixes for geo and photos modules to run on Python 2.2 and 2.3.
+- Added the orderby parameter to gdata.service's Query class.
+- Changed the blogger sample to use orderby=updated so that queries on 
+    updated min or max will work.
+- Fix to string encoding in the atom core when converting text members to XML.
+
+
+=== 1.0.11 ===
+February 11, 2008 (revision 290)
+
+- Modified the gdata.service.GDataService to include a handler member to 
+    which all HTTP requests are delegated. This will allow the underlying
+    HTTP client to be swapped out and pave the way for use of a mock server
+    in unit tests.
+- Fixed character encoding problems when parsing non ASCII XML.
+- Added pydocs for gdata's geo, exif, and media packages. 
+
+
+=== 1.0.10.1 ===
+December 20, 2007 (revision 265)
+
+- Photos packages for working with the Picasa Web Albums Data API.
+- New modules for handling media, geo, and exif XML elements.
+- Packages for the Google Code Seach API.
+- New PyDoc HTML pages generated from the source code.
+- Extracted authentication code into a seperate module which can be used in
+    other applications.
+- The core XML parser should now fully support UTF-8 strings, there are also
+    options to change the default encoding.
+- Bugfixes in Atom service's proxy support when authenticating with the proxy.
+- Spreadsheets UpdateCell can now take integers for the row and column 
+    parameters.
+- Added INSTALL.txt to explain the installation process. The content was 
+    copied from the getting started article here:
+    http://code.google.com/support/bin/answer.py?answer=75582
+- You can now create update and delete worksheets within a Google 
+    Spreadsheet.
+- Added convenience methods to service object to ease the process of 
+    iterating through a feed.
+- For Document List queries, added the ability to construct schema-qualified
+    named folder queries.
+
+
+=== 1.0.9 === 
+October 15, 2007 (revision 213)
+
+- Added support for batch requests for the Google Spreadsheets cells feed,
+    Google Calendar's events feed, and Google Base's items feed.
+- Authentication requests can now be sent to a different server by modifying 
+    a module variable in gdata.service.
+- Fixed the birthdaySample mashup.
+- User Agent headers now fit the pattern used in other Google data client 
+    libraries.
+- Made it easier to access custom elements for Google Base items. 
+
+
+=== 1.0.8 ===
+August 31, 2007 (revision 192)
+
+- Major refactoring of the data model classes. Improved XML parsing
+    performance.
+- Created a script to run all of the tests, one to run the data model tests,
+    and one to run all service tests.
+- Changes to MediaSource to handle uploading files on Windows.
+- All of the sample code should now work in Python 2.2 and higher. I removed
+    2.4 dependancies.
+- Minor change to the Blogger sample; it now uses entry.GetSelfLink().
+- Added fix to prevent socket.sslerror and redirect failures when using a
+    proxy.
+- Google Calendar event entries can now contain a reference to the original
+    event. The original event element is present when describing a recurrance
+    exception.
+- Added timezone parameter to Google Calendar queries. This allows the client
+    to request that event times be expressed in a specific timezone.
+
+
+=== 1.0.7 ===
+August 7, 2007
+
+- Added new test for the Documents List data API's service module.
+- Updated setup.py to include the docs package in the installation.
+
+
+=== 1.0.6 ===
+Aug 2, 2007
+
+- Support for Documents List API added along with sample code.
+
+=== 1.0.5 ===
+July 31, 2007
+
+- XML parsing can now use cElementTree if it is available, this should speed 
+    up XML parsing.
+- Redirects now include all params in the original HTTP request.
+- Added support for WebContent and QuickAdd features of Google Calendar data 
+    API.
+- Proxy support added.
+- Binary MIME uploads now work for Windows files when performing media uploads.
+- New calendar functionality for add/edit/delete calendar and add/edit/delete 
+    subscriptions. Also, added new functionality for Calendar Gadgets.
+
+
+=== 1.0.4 ===
+June 23, 2007
+
+- Added data and service modules for Google Apps.
+- XML parsing can now be configured in gdata module service calls to avoid 
+    multiparsing to convert to the desired type.
+- Fixed UTF-8 support in the Atom modules.
+- The spreadsheets example now works with UTF-8 column names.
+- Fixed a type in the Google Base dry-run sample.
+- Calendar's Who element no longer requires a name when converting to XML.
+
+
+=== 1.0.3 ===
+May 30, 2007
+
+- Added a mashup sample using the spreadsheets and calendar services.
+- Reduced the number of unnecessary namespace declarations in the XML produced 
+    by objects.
+- Changed type of custom elements in a spreadsheets list entry.
+- Fixed bugs in spreadsheetsExample.py.
+- Spreadsheet entries now inherit from GDataEntry and have gdata specific 
+    convenience methods. 
+
+
+=== 1.0.2 ===
+May 4, 2007
+
+- Added support for media. Services can now upload images, the tests for this
+    service use the Picasa Web Albums data API.
+- Added example code illustrating Blogger operations.
+- Fixed host name processing for URLs which have -'s in the host name.
+- Added a debug setting for service classes.
+- Added user agent header.
+- Made finding links of a specific type easier when dealing with Atom elements.
+    Atom Entries now have GetXLink methods.
+- Simplified finding license links in Atom Entries. 
+
+
+=== 1.0.1 ===
+April 20, 2007
+
+- Rearranged package structure, tests are in their own directory and Google
+    data API extension classes are nested under the gdata package.
+- Simplified accessing extension elements by adding FindExtesions.
+- Provided a setup.py file for distutils based installation.
+- Added support for the app:draft element.
+- Imports ElementTree from XML libraries in Python 2.5
+- Fixed _EntryLinkFromElementTree in the calendar data module.
+- Fixed various _TakeChildFromElementTree methods in calendar data module.
+- Fixed delete and update operations in the spreadsheetExample script.
+- Fixed setting sort order and order by in calendar's service module.
+- Added HTTP BasicAuth for AtomService.
+
+
+=== 1.0 ===
+March 26, 2007
+
+Initial release

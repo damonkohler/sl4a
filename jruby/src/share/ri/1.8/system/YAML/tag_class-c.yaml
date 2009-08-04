@@ -1,0 +1,24 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Associates a taguri <em>tag</em> with a Ruby class <em>cls</em>. The taguri is used to give types to classes when loading YAML. Taguris are of the form:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  tag:authorityName,date:specific\n"
+- !ruby/struct:SM::Flow::P 
+  body: The <tt>authorityName</tt> is a domain name or email address. The <tt>date</tt> is the date the type was issued in YYYY or YYYY-MM or YYYY-MM-DD format. The <tt>specific</tt> is a name for the type being added.
+- !ruby/struct:SM::Flow::P 
+  body: "For example, built-in YAML types have 'yaml.org' as the <tt>authorityName</tt> and '2002' as the <tt>date</tt>. The <tt>specific</tt> is simply the name of the type:"
+- !ruby/struct:SM::Flow::VERB 
+  body: " tag:yaml.org,2002:int\n tag:yaml.org,2002:float\n tag:yaml.org,2002:timestamp\n"
+- !ruby/struct:SM::Flow::P 
+  body: The domain must be owned by you on the <tt>date</tt> declared. If you don't own any domains on the date you declare the type, you can simply use an e-mail address.
+- !ruby/struct:SM::Flow::VERB 
+  body: " tag:why@ruby-lang.org,2004:notes/personal\n"
+full_name: YAML::tag_class
+is_singleton: true
+name: tag_class
+params: ( tag, cls )
+visibility: public

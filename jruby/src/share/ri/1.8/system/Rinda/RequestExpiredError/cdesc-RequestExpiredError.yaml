@@ -1,0 +1,17 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Raised when trying to use an expired tuple.
+constants: []
+
+full_name: Rinda::RequestExpiredError
+includes: []
+
+instance_methods: []
+
+name: RequestExpiredError
+superclass: ThreadError

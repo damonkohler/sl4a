@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (args, invocation_chain)
+is_singleton: false
+block_params: 
+name: invoke_prerequisites
+comment: 
+full_name: Rake::MultiTask#invoke_prerequisites
+visibility: public
+aliases: []
+

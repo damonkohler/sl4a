@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::MailTo#check_headers
+is_singleton: false
+name: check_headers
+params: (v)
+visibility: private

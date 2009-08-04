@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Formatters::Pretty#write_element
+is_singleton: false
+name: write_element
+params: (node, output)
+visibility: protected

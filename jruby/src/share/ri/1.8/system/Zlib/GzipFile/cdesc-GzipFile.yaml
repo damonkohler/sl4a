@@ -1,0 +1,43 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: wrap
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Zlib::GzipFile is an abstract class for handling a gzip formatted compressed file. The operations are defined in the subclasses, Zlib::GzipReader for reading, and Zlib::GzipWriter for writing.
+- !ruby/struct:SM::Flow::P 
+  body: GzipReader should be used by associating an IO, or IO-like, object.
+constants: []
+
+full_name: Zlib::GzipFile
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: close
+- !ruby/object:RI::MethodSummary 
+  name: closed?
+- !ruby/object:RI::MethodSummary 
+  name: comment
+- !ruby/object:RI::MethodSummary 
+  name: crc
+- !ruby/object:RI::MethodSummary 
+  name: finish
+- !ruby/object:RI::MethodSummary 
+  name: level
+- !ruby/object:RI::MethodSummary 
+  name: mtime
+- !ruby/object:RI::MethodSummary 
+  name: orig_name
+- !ruby/object:RI::MethodSummary 
+  name: os_code
+- !ruby/object:RI::MethodSummary 
+  name: sync
+- !ruby/object:RI::MethodSummary 
+  name: sync=
+- !ruby/object:RI::MethodSummary 
+  name: to_io
+name: GzipFile
+superclass: Object

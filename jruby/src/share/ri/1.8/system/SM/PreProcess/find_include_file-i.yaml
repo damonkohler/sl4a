@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Look for the given file in the directory containing the current file, and then in each of the directories specified in the RDOC_INCLUDE path
+full_name: SM::PreProcess#find_include_file
+is_singleton: false
+name: find_include_file
+params: (name)
+visibility: private

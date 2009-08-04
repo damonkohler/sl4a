@@ -1,0 +1,25 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: quiet_mode=
+- !ruby/object:RI::MethodSummary 
+  name: run
+comment: 
+constants: []
+
+full_name: RUNIT::CUI::TestRunner
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: create_mediator
+- !ruby/object:RI::MethodSummary 
+  name: create_result
+- !ruby/object:RI::MethodSummary 
+  name: run
+name: TestRunner
+superclass: Test::Unit::UI::Console::TestRunner

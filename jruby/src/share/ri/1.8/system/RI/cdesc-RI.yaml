@@ -1,0 +1,20 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: We handle the parsing of options, and subsequently as a singleton object to be queried for option values
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: VERSION_STRING
+  value: "\"ri v1.0.1 - 20041108\""
+full_name: RI
+includes: []
+
+instance_methods: []
+
+name: RI
+superclass: 

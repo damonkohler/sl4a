@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Calculates CRC checksum for <tt>string</tt>, and returns updated value of <tt>crc</tt>. If <tt>string</tt> is omitted, it returns the CRC initial value. If <tt>crc</tt> is omitted, it assumes that the initial value is given to <tt>crc</tt>.
+- !ruby/struct:SM::Flow::P 
+  body: "FIXME: expression."
+full_name: Zlib::crc32
+is_singleton: true
+name: crc32
+params: " Zlib.crc32(string, adler)\n"
+visibility: public

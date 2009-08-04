@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::WSDLLiteralRegistry::new
+is_singleton: true
+name: new
+params: (definedtypes = XSD::NamedElements::Empty, definedelements = XSD::NamedElements::Empty)
+visibility: public

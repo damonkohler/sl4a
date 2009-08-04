@@ -1,0 +1,10 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+complete();
+return;
+
+// should never get here
+assert(false);
+

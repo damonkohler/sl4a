@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: String in Ruby could be a binary.
+full_name: XSD::XSDHexBinary::new
+is_singleton: true
+name: new
+params: (value = nil)
+visibility: public

@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: []
+
+full_name: SM::ToHtml#on_tags
+is_singleton: false
+name: on_tags
+params: (res, item)
+visibility: private

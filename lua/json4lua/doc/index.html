@@ -1,0 +1,388 @@
+<html>
+<head>
+<title>JSON4Lua and JSONRPC4Lua</title>
+<style type="text/css">
+body {
+  font-family: Arial, Helvetica, Geneva;
+  font-size: 10pt;
+}
+
+.copyright {
+  color: #999999;
+  font-size: 8pt;
+  text-align:center;
+}  
+
+.navBar {
+  border-left: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+  margin-top:5px;
+  margin-bottom: 5px;
+}
+.navBar h1 {
+  background-image: url('pics/lunartone.gif');
+  background-color: #e0c088;
+  color: white;
+  font-size: 9pt;
+  margin: 0px;
+  padding: 4px;
+}
+
+.navBar .navItem a {
+  color: #999999;
+  font-size: 8pt;
+  padding: 2px 2px 2px 10px;
+  text-decoration:none;
+}
+
+.navBar .navItem a:hover {
+  color: #ff9900;
+  text-decoration: underline;
+}
+
+.titleBar {
+  border-bottom: 2px dotted gray;
+  font-size: 20pt;
+  font-weight: bold;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.workArea {
+  border: 1px none lightgray;
+  font-family: Times New Roman;
+  padding: 8px;
+  padding-left: 15px;
+}
+
+.workArea a {
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.workArea a:hover { 
+  color: #ff9900;
+  text-decoration: underline;
+}
+
+.workArea .downloadTable {
+  border: 1px solid lightgray;
+  padding: 0px;
+  margin: 0px;
+}
+
+.workArea .downloadTable * th {
+  background-color: #e0c088;
+  background-image: url('pics/lunartone.gif');
+  color: white;
+}
+
+.workArea .downloadTable * tr {
+  border: 1px solid lightgray;
+}
+
+.workArea .downloadTable * td {
+  vertical-align: top;
+}
+
+.workArea * dt {
+  font-size: 12pt;
+  margin-top: 10px;
+}
+
+.workArea * .example {
+  background-color: #ffffcc;
+  border: 1px dashed lightgray;
+  padding: 10px;
+}
+
+.workArea h1 {
+  font-size: 16pt;
+  font-weight: bold;
+}
+
+.workArea h2 {
+  font-size: 14pt;
+  font-weight: normal;
+  color: gray;
+}
+
+</style>
+<body>
+<table border="0">
+  <tr>
+    <td valign="top">
+    <img src="pics/json4lua.gif"><p/>
+    <!-- NAVIGATION BARS -->
+    
+    <div class="navBar">
+    <h1>This Page</h1>
+    <div class="navItem"><a href="#news">Latest News</a></div>    
+    <div class="navItem"><a href="#introduction">Introduction</a></div>
+    <div class="navItem"><a href="#licence">Licence</a></div>
+    <div class="navItem"><a href="#requirements">Requirements</a></div>
+    <div class="navItem"><a href="#download">Download</a></div>
+    <div class="navItem"><a href="#installation">Installation</a></div>    
+    <div class="navItem"><a href="#usage">Usage &amp; Reference</a>
+		  <div class="navItem" style="margin-left: 4px"><a href="#json_decode">decode</a></div>
+			<div class="navItem" style="margin-left: 4px"><a href="#json_encode">encode</a></div>
+			<div class="navItem" style="margin-left: 4px"><a href="#json_null">null</a></div>
+			<div class="navItem" style="margin-left: 4px"><a href="#json_rpc_call">rpc.call</a></div>
+			<div class="navItem" style="margin-left: 4px"><a href="#json_rpc_proxy">rpc.proxy</a></div>
+			<div class="navItem" style="margin-left: 4px"><a href="#json_rpcserver_serve">rpcserver.serve</a></div>
+			
+		</div>
+    <div class="navItem"><a href="#roadmap">History &amp; Roadmap</a></div>
+    </div>	<!-- end of navigation bar: This Site  -->
+    
+    <div class="navBar">
+    <h1>json.luaforge</h1>
+    <div class="navItem"><a href="http://luaforge.net/projects/json/">Summary</a></div>
+    <div class="navItem"><a href="http://luaforge.net/forum/?group_id=143">Forums</a></div>
+    <div class="navItem"><a href="http://luaforge.net/tracker/?group_id=143">Tracker</a></div>
+    <div class="navItem"><a href="http://luaforge.net/news/?group_id=143">News</a></div>
+    <!--<div class="navItem"><a href="http://luaforge.net/scm/?group_id=143">CVS</a></div>-->
+    <div class="navItem"><a href="http://luaforge.net/frs/?group_id=143">Files</a></div>
+    </div>	<!-- end of navigation bar: json.luaforge -->
+    
+    <div class="navBar">
+    <h1>Lua</h1>
+    <div class="navItem"><a href="http://www.lua.org/">Lua</a></div>
+    <div class="navItem"><a href="http://www.luaforge.net/">Lua Forge</a></div>
+    <div class="navItem"><a href="http://www.keplerproject.org/cgilua/">CGI Lua</a></div>
+    <div class="navItem"><a href="http://www.keplerproject.org/compat/">Lua compat-5.1</a></div>
+    <div class="navItem"><a href="http://www.cs.princeton.edu/~diego/professional/luasocket/">Lua Socket 2.0</a></div>
+    <div class="navItem"><a href="http://www.keplerproject.org/xavante/">Xavante</a></div>
+    </div>	<!-- end of navigation bar: Lua Resources -->
+
+    <div class="navBar">
+    <h1>JSON</h1>
+    <div class="navItem"><a href="http://www.json.org/">json.org</a></div>
+    <div class="navItem"><a href="http://www.json-rpc.org/">json-rpc.org</a></div>
+    </div>	<!-- end of navigation bar: Lua Resources -->
+
+    </td>
+    <!-- MAIN WORK AREA -->
+    <td valign="top" class="workArea">
+      <div class="titleBar">JSON4Lua and JSONRPC4Lua</div>
+      <!-- *****************  LATEST NEWS *****************  -->
+      <h1><a name="news"></a>Latest News</h1>
+			The 0.9.20 release fixes a bug in Lua 5.1 operation, introduces a <a href="#json_null"><code>json.null</code></a> value to force null values in JSON encodings, improves performance (over 50% faster on some tests), and permits <code>/* comments */</code> in the JSON string being decoded.
+      
+      <!-- *****************  INTRODUCTION ***************** -->
+      <h1><a name="introduction"></a>Introduction</h1>
+      JSON4Lua and JSONRPC4Lua implement <a href="http://www.json.org">JSON (JavaScript Object Notation)</a> encoding and decoding and a <a href="http://www.json-rpc.org/">JSON-RPC-over-http</a> client for <a href="http://www.lua.org/">Lua</a>.<p/>
+
+JSON is JavaScript Object Notation, a simple encoding of Javascript-like objects that is ideal for lightweight transmission of relatively weakly-typed data.
+A sub-package of JSON4Lua is JSONRPC4Lua, which provides a simple JSON-RPC-over-http client and server (in a CGILua environment) for Lua. Please seen the documentation below for JSONRPC4Lua.
+
+	<!-- *****************  LICENCE *****************  -->
+      <h1><a name="licence"></a>Licence</h1>
+      JSON4Lua is licensed under the GPL. Please see <a href="LICENCE.txt">LICENCE.txt</a> for details.<p/>
+      
+      <!-- *****************  REQUIREMENTS ***************** -->
+      <a name="requirements"></a><h1>Requirements</h1>
+      JSON4Lua is a pure-Lua module that is Lua 5.0 compatible (if you have <a href="http://www.keplerproject.org/compat/">compat-5.1</a> for Lua 5.0). JSON4Lua also works (perfectly, I hope) under Lua 5.1, which is where I largely use it nowadays. Since Lua is platform independent, so is JSON4Lua.<p/>
+      
+      The JSON4RPC sub-module requires <a href="http://www.cs.princeton.edu/~diego/professional/luasocket/">Lua Socket 2.0</a>. It uses <code>socket.http</code> for for the RPC over http connection. Socket 2.0 includes <code>ltn12</code>, which is also used by JSON4RPC.<p />
+      
+      To use <code>json.rpcserver</code> you need a <a href="http://www.keplerproject.org/cgilua/">CGILua</a> enabled webserver. However, a quick <a href="cgilua_patch.html">patch</a> is required in CGILua 5.0 to support JSON-RPC.
+      
+      <!-- ***************** START OF DOWNLOAD SECTION ***************** -->
+      <h1><a name="download"></a>Download</h1>
+      JSON4Lua is hosted on <a href="http://www.luaforge.net">LuaForge</a>.
+      <table cols="2" class="downloadTable">
+      <tr><th>Version</th><th>Date</th><th>Notes</th></tr>
+	  <tr><td><a href="http://luaforge.net/frs/?group_id=143">0.9.20</a></td><td>4 January 2006</td><td>
+		Introduction of local Lua functions for private functions (removed _ function prefix). <br />
+	Fixed Lua 5.1 compatibility issues.<br />
+	Introduced <code>json.null</code> to have null values in associative arrays.<br />
+	Performance improvement (more than 50% on some tests) through <code>table.concat</code> rather than <code>..</code> operator.<br/>
+	<code>json.decode</code> now ignores <code>/* */</code> comments in the JSON string.<br />
+	      </td></tr>			
+	  <tr><td><a href="http://luaforge.net/frs/?group_id=143">0.9.10</a></td><td>20 December 2005</td><td>
+		Fixes bug with array representation when nil / null values occur in the array.<br />
+		Adds content-type header of <code>text/plain</code> to JSON RPC http requests.<br />
+		Introduces <code>json.rpcserver</code> module with simple JSON RPC enablement for Lua objects.<br />
+		Moved the <code>json.lua</code> file into the <code>json</code> directory. Ensure, therefore, that your <code>LUA_PATH</code> contains a module-finding form like <code>LUA_PATH = c:\proj\lua\?\?.lua;?.lua</code>.<br/>
+	      </td></tr>
+      <tr>
+	<td><a href="http://luaforge.net/frs/?group_id=143">0.9.01</a></td>
+	<td>19 December 2005</td>
+	<td>Minor corrections to documentation.</td>
+      </tr>
+      <tr>
+        <td><a href="http://luaforge.net/frs/?group_id=143">0.9.00</a></td>
+        <td>19 December 2005</td>
+	<td>First release</td>
+      </tr>
+      </table>
+      <!-- END OF DOWNLOAD SECTION -->
+      
+      <!-- ***************** START OF INSTALLATION SECTION *****************  -->
+      <h1><a name="installation"></a>Installation</h1>
+      As of version 0.9.10, all the JSON4Lua files are contained in the <code>json</code> subdirectory in the distribution zip.<p />
+      Simply copy the <code>json</code> subdirectory so that it is in your Lua path.<p />
+      Ensure that your <code>LUA_PATH</code> variable permits module resolution of the form <code>?/?.lua</code>.<p />
+      <b>Example</b>
+      <div class="example">
+      </div>
+        <h2>Using Windows</h2>
+	Under Windows, set your Lua path as (my Lua installation is in <code>c:\proj\lua\</code>): <p/>
+	<code>
+	set LUA_PATH=c:\proj\lua\?.lua;c:\proj\lua\?\?.lua;?.lua
+	</code><p/>
+	For compat-5.1.lua to start when Lua starts (if you're using Lua 5.0), you also need:<p/>
+	<code>
+	set LUA_INIT=@c:\proj\lua\compat-5.1.lua
+	</code><p />
+	You probably also want to set your library path:<p/>
+	<code>set LUA_CPATH=c:\proj\lua\lib\?.dll;?.dll</code>
+	
+	<!------------------------ USAGE AND REFERENCE -------------------->
+	<h1><a name="usage"></a>Usage &amp; Reference</h1>
+	The following functions in <b>JSON4Lua</b> and <b>JSONRPC4Lua</b> are of interest:<p />
+	<dl>
+	  <dt><a name="json_encode"></a><code>string <b>json.encode</b>( lua_object )</code></dt>
+	    <dd>Returns the Lua object JSON encoded into a string.<p/>
+	    <b>Example</b>
+	    <div class="example">
+	    <code>
+	    json = require("json")<br/>
+	    print (json.encode( { 1, 2, 'fred', {first='mars',second='venus',third='earth'} } ))
+	    </code><p/>
+	    prints<p/><code> [1,2,"fred", {"first":"mars","second":"venus","third","earth"}]</code>
+	    </div>
+	    
+	    </dd>
+	  <dt><a name="json_decode"></a><code>lua_object <b>json.decode</b>( json_string )</code></dt>
+	    <dd>Decodes the JSON encoded data structure, and returns a Lua object with the appropriate data.<p/>
+	    <b>Example</b>
+
+	    <div class="example">
+	    <code>
+	    json = require("json")<br/>
+	    
+	    testString = [[ { "one":1 , "two":2, "primes":[2,3,5,7] } ]]<br/>
+	    o = json.decode(testString)<br/>
+	    table.foreach(o,print)<br />
+	    print ("Primes are:")<br />
+	    table.foreach(o.primes,print)
+	    </code><p/>
+	    prints:<p/>
+	    <pre>
+one		1
+two		2
+primes		table: 0032B928
+Primes are:
+1		2
+2		3
+3		5
+4		7</pre>
+	   </div></dd>
+		 
+		<dt><a name="json_null"></a><code><b>json.null</b></code></dt>
+		<dd>Returns a unique value that will be encoded as a <code>null</code> in a JSON encoding.
+		<p>This is necessary in one situation. In Lua, if a key in a table has a <code>nil</code> value, the key is simply discarded (since any non-existent key has a nil value). The encoding of arrays has been built to manage this nil-values in arrays, but associative arrays provide a problem. Consider:
+		<div class="example"><pre>t = { user="test", password=nil }</pre></div>
+		Since Lua simply discards the <code>password</code> key, JSON4Lua encodes this as the JSON string 
+		<div class="example"><pre>{"user":"test"}</pre></div>
+		If, for some reason, your JSON RPC Server requires a defined <code>null</code> value, use the following code:
+		<div class="example"><pre>t = { user="test", password=json.null }</pre></div>
+		This will now correctly encode to:
+		<div class="example"><pre>{"user":"test","password":null}</pre></div>
+		Incidentally, <code>json.null</code> is simply a function that returns itself, so that you can use either <code>json.null</code> or <code>json.null()</code> as you fancy.
+		</dd>
+		
+
+	  <dt><a name="json_rpc_call"></a><code>result, error <b>json.rpc.call</b> ( url, method, ...)</code></dt>
+	  <dd>Calls the named method on the given url with the arg parameters. Returns the result and the error. If <code>error</code> is <code>nil</code>, no error occurred.<p/>
+	    <b>Example</b>
+	    <div class="example">
+	    <pre>require ("json.rpc")
+result, error = json.rpc.call("http://jsolait.net/testj.py","echo","Test echo!")
+print(result)</pre>
+	    <p />prints<p />
+	    <pre>Test echo!</pre>
+	    </div>
+	  </dd>
+	  <dt><a name="json_rpc_proxy"></a><code>proxyServer = <b>json.rpc.proxy</b> (url)</code></dt>
+	  <dd>Creates a proxy server object on which JSON-RPC calls can be made. Each call will return the <code>result, error</code>. If <code>error</code> is <code>nil</code>, no error occurred.<p/>
+	    <b>Example</b>
+	    <div class="example">
+	    <pre>
+require ("json.rpc")
+server = json.rpc.proxy("http://jsolait.net/testj.py")
+result, error  = server.echo('Test echo!')
+print(result)</pre>
+	    <p />prints<p />
+	    <pre>Test echo!</pre>
+	    </div>	  
+	  </dd>
+	  
+	  <dt><a name="json_rpcserver_serve"></a><code><b>json.rpcserver.serve</b>(object[, packReturn])</code></dt>
+	  <dd>
+	  Handles an incoming CGILua request as a JSON RPC request and serves the request from
+	  the given object.
+		<p />The optional <code>packReturn</code> parameter, if set <code>true</code>, will, if the requested
+	  method returns more than one value, pack these returned values into an array. If only a single value 
+	  is returned, it is not packed into an array. If <code>packReturn</code> is <code>false</code> (or not set), only the first 
+	  return value from the requested method will be returned. This is necessitated since the JSON protocol does not permit a method call to return more than a single value.
+		<p/>
+	  
+	  <code>serve</code> returns nothing.<p/>
+	  
+	  <b>Example</b>
+	  <div class="example">
+	  <pre>
+--
+-- jsonrpc.lua
+-- Installed in a CGILua webserver environment (with necessary CGI Lua 5.0 patch)
+--
+require ('json.rpcserver')
+
+-- The Lua class that is to serve JSON RPC requests
+local myServer = {
+  echo = function (msg) return msg end,
+  average = function(...)
+    local total=0
+    local count=0
+    for i=1, table.getn(arg) do
+      total = total + arg[i]
+      count = count + 1
+    end
+    return { average= total/count, sum = total, n=count }
+  end
+}
+
+json.rpcserver.serve(myServer)
+</pre>
+An example of using this JSON RPC server from a Lua file:
+<pre>
+require ('json.rpc')
+local server = json.rpc.proxy('http://www.myserver.com/jsonrpc.lua')
+table.foreach(server.average(10,15,23), print)
+</pre>
+Prints:
+<pre>
+average	16
+sum	48
+n	3
+</pre>
+	</div>
+	  
+	  </dd>
+	</dl>
+	
+	<!-- ***************** HISTORY AND ROADMAP ***************** -->
+	<h1><a name="roadmap"></a>History &amp; Roadmap</h1>
+  The downloads sections details the versions and their related histories. I will wait for Lua 5.1 to be final (expected late January) before making the JSON4Lua module beta. If no serious bugs or objections are encountered, I will make the module 1.0 on 1 April 2006 (to coincide with April Fool's day!)
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="copyright">&copy; 2005, 2006 Craig Mason-Jones</td>
+  </tr>  
+</table>
+</body>
+</html>

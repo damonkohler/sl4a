@@ -1,0 +1,17 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the name or string corresponding to <em>sym</em>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   :fred.id2name   #=&gt; &quot;fred&quot;\n"
+full_name: Symbol#to_s
+is_singleton: false
+name: to_s
+params: |
+  sym.id2name   => string
+  sym.to_s      => string
+
+visibility: public

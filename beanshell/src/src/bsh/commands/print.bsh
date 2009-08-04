@@ -1,0 +1,53 @@
+/**
+	Print the string value of the argument, which may be of any type.
+	If beanshell is running interactively, the output will always go to the 
+	command line, otherwise it will go to System.out.
+	<p>
+
+	Most often the printed value of an object will simply be the Java 
+	toString() of the object.  However if the argument is an array the contents 
+	of the array will be (recursively) listed in a verbose way.
+	<p>
+
+	Note that you are always free to use System.out.println() 
+	instead of print().
+*/
+bsh.help.print = "usage: print( value )";
+import bsh.CollectionManager;
+import bsh.StringUtil;
+import bsh.Primitive;
+
+void print( arg ) 
+{
+	if ( arg == null )
+		arg = "null";
+	
+	if ( !(arg instanceof Primitive) 
+		&& !(arg instanceof bsh.ClassIdentifier ) 
+		&& arg.getClass().isArray() )
+	{
+        print( StringUtil.normalizeClassName(arg.getClass()) + ": {");
+		for(int i=0; i<arg.length; i++)
+			print( arg[i] + (i<arg.length?",":"") );
+		print("}");
+	}
+	else
+		this.interpreter.println(String.valueOf(arg));
+
+/*
+Do we want to iterate over iterable things?
+Most of the them already know how to print themselves.
+
+	this.cm = CollectionManager.getCollectionManager();
+	if ( cm.isBshIterable( arg ) )
+	{
+		// could also just use a for(:) loop here... except for the commas
+		this.iterator = cm.getBshIterator( arg );
+        print( StringUtil.normalizeClassName(arg.getClass()) + ": {");
+		while( iterator.hasNext() )
+			print( iterator.next() + (iterator.hasNext()?",":"") );
+		print("}");
+	}
+*/
+}
+

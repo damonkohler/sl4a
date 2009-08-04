@@ -1,0 +1,29 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: class_desc_path
+- !ruby/object:RI::MethodSummary 
+  name: external_to_internal
+- !ruby/object:RI::MethodSummary 
+  name: internal_to_external
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: RI::RiWriter
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_class
+- !ruby/object:RI::MethodSummary 
+  name: add_method
+- !ruby/object:RI::MethodSummary 
+  name: path_to_dir
+- !ruby/object:RI::MethodSummary 
+  name: remove_class
+name: RiWriter
+superclass: Object

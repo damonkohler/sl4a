@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Find methods matching 'name' in ourselves and in any classes we contain
+full_name: RI::ClassEntry#recursively_find_methods_matching
+is_singleton: false
+name: recursively_find_methods_matching
+params: (name, is_class_method)
+visibility: public

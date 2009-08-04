@@ -1,0 +1,17 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+foo( arg ) {
+	print("namespace = "+this.namespace);
+	if ( arg < 5 ) {
+		print( "recursing");
+		next=foo( arg + 1 );
+		assert( next == arg + 1 );
+	}
+	return arg;
+}
+
+foo(1);
+
+complete();

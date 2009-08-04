@@ -1,0 +1,17 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the number of instance variables.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Customer = Struct.new(:name, :address, :zip)\n   joe = Customer.new(&quot;Joe Smith&quot;, &quot;123 Maple, Anytown NC&quot;, 12345)\n   joe.length   #=&gt; 3\n"
+full_name: Struct#size
+is_singleton: false
+name: size
+params: |
+  struct.length    => fixnum
+  struct.size      => fixnum
+
+visibility: public

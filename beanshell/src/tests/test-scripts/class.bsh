@@ -1,0 +1,124 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+assert( Foo == void );
+
+import bsh.NameSpace;
+
+class Foo
+{
+	static int a = 5;
+	int b;
+	// this resolves to instance object or This depending on compound
+	Object instanceThis = this;
+	NameSpace instanceThisNameSpace = this.namespace;
+	q=5; // loose vars act like private instance vars
+
+	Foo() { } 
+
+	Foo( int c ) {
+		b=c;
+	}
+
+	void method() 
+	{ 
+		assert( a == 5 );
+		assert( a.getClass() == bsh.Primitive.class );
+		print( a.getClass() );
+		assert( b.getClass() == bsh.Primitive.class );
+		new byte[a];
+		assert( q == 5 );
+		assert( this == instanceThis );
+		assert( this.namespace == instanceThisNameSpace );
+
+		// block namespace
+		{
+			assert( this == instanceThis );
+			assert( this.namespace == instanceThisNameSpace );
+		}
+
+		assert( this instanceof Foo );
+
+	}
+
+	setQ(int a) { q=a; }
+	getQ() { return q; }
+
+	// can still assign loose to class
+	// resolution magically makes unqualified 'this' into instance but
+	// compound resolution uses namespace
+	void assignThis() { 
+		this.goober = 42; 
+	}
+	void checkThis() { 
+		assert( goober == 42 ); 
+		assert( this.goober == 42 ); 
+		assert( this instanceof Foo );
+	}
+
+	static void smethod() 
+	{
+		assert( a == 5 );
+
+		// can't see instance vars or methods from static
+		assert(isEvalError("print(q)"));
+		assert(isEvalError("print(b)"));
+		assert(isEvalError("method()"));
+
+		// no 'this' in static context
+		assert( isEvalError("this") );
+	}
+
+}
+
+print( Foo );
+
+// static
+print( Foo );
+print("Foo.a = "+Foo.a );
+assert(Foo.a == 5);
+assert(isEvalError("print(Foo.b)"));
+Foo.smethod();
+assert(isEvalError("Foo.method()"));
+assert( Foo.a.getClass() == bsh.Primitive.class );
+
+// instance
+foo = new Foo();
+assert( foo.b == 0 ); // uninitialized instance
+assert( foo.a == 5 ); // static
+foo.method(); // instance
+foo.smethod(); // static
+//assert( foo.q == 5 ); // loose instance private
+foo.setQ(6);
+assert( foo.getQ()==6);
+print( "foo.getQ" +foo.getQ() );
+
+foo.assignThis();
+foo.checkThis();
+
+// non default constructors
+foo2 = new Foo(6);
+assert( foo2.b == 6 );
+assert( foo2.a == 5 );
+
+class Bar implements Runnable { }
+bar = new Bar();
+class Gee3 implements Runnable, ActionListener { }
+new Gee3();
+
+class Foo2 {
+	instanceThis = this;
+	method() 
+	{
+		assert( this == instanceThis );
+		bar() {
+			assert( this != instanceThis );
+			assert( this.namespace.getName().equals("bar") );
+		}
+		bar();
+	}
+}
+new Foo2().method();
+
+complete();

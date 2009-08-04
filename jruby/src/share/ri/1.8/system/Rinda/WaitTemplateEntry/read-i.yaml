@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Rinda::WaitTemplateEntry#read
+is_singleton: false
+name: read
+params: (tuple)
+visibility: public

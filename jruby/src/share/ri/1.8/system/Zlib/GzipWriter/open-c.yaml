@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Opens a file specified by <tt>filename</tt> for writing gzip compressed data, and returns a GzipWriter object associated with that file. Further details of this method are found in Zlib::GzipWriter.new and Zlib::GzipWriter#wrap.
+full_name: Zlib::GzipWriter::open
+is_singleton: true
+name: open
+params: " Zlib::GzipWriter.open(filename, level=nil, strategy=nil) { |gz| ... }\n"
+visibility: public

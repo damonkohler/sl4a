@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Element#tag_name_with_prefix
+is_singleton: false
+name: tag_name_with_prefix
+params: (prefix)
+visibility: private

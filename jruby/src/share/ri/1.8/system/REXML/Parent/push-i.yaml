@@ -1,0 +1,13 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: "<<"
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Alias for #add"
+full_name: REXML::Parent#push
+is_singleton: false
+name: push
+params: ( object )
+visibility: public

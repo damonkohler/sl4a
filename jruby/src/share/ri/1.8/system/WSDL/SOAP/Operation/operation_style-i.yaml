@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::SOAP::Operation#operation_style
+is_singleton: false
+name: operation_style
+params: ()
+visibility: public

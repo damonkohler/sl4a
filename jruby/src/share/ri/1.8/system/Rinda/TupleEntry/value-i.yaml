@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Return the object which makes up the tuple itself: the Array or Hash."
+full_name: Rinda::TupleEntry#value
+is_singleton: false
+name: value
+params: ()
+visibility: public

@@ -1,0 +1,152 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: This program is copyrighted free software by NAKAMURA, Hiroshi. You can redistribute it and/or modify it under the same terms of Ruby's license; either the dual license version in 2003, or any later version.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ArrayTypeAttrName
+  value: XSD::QName.new(Namespace, 'arrayType')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: BindingName
+  value: XSD::QName.new(Namespace, 'binding')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DefinitionsName
+  value: XSD::QName.new(Namespace, 'definitions')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DocumentationName
+  value: XSD::QName.new(Namespace, 'documentation')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: FaultName
+  value: XSD::QName.new(Namespace, 'fault')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ImportName
+  value: XSD::QName.new(Namespace, 'import')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: InputName
+  value: XSD::QName.new(Namespace, 'input')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MessageName
+  value: XSD::QName.new(Namespace, 'message')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: OperationName
+  value: XSD::QName.new(Namespace, 'operation')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: OutputName
+  value: XSD::QName.new(Namespace, 'output')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PartName
+  value: XSD::QName.new(Namespace, 'part')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PortName
+  value: XSD::QName.new(Namespace, 'port')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PortTypeName
+  value: XSD::QName.new(Namespace, 'portType')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ServiceName
+  value: XSD::QName.new(Namespace, 'service')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TypesName
+  value: XSD::QName.new(Namespace, 'types')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SchemaName
+  value: XSD::QName.new(XSD::Namespace, 'schema')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SOAPAddressName
+  value: XSD::QName.new(SOAPBindingNamespace, 'address')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SOAPBindingName
+  value: XSD::QName.new(SOAPBindingNamespace, 'binding')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SOAPHeaderName
+  value: XSD::QName.new(SOAPBindingNamespace, 'header')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SOAPBodyName
+  value: XSD::QName.new(SOAPBindingNamespace, 'body')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SOAPFaultName
+  value: XSD::QName.new(SOAPBindingNamespace, 'fault')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SOAPOperationName
+  value: XSD::QName.new(SOAPBindingNamespace, 'operation')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: BindingAttrName
+  value: XSD::QName.new(nil, 'binding')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ElementAttrName
+  value: XSD::QName.new(nil, 'element')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: LocationAttrName
+  value: XSD::QName.new(nil, 'location')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MessageAttrName
+  value: XSD::QName.new(nil, 'message')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NameAttrName
+  value: XSD::QName.new(nil, 'name')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NamespaceAttrName
+  value: XSD::QName.new(nil, 'namespace')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ParameterOrderAttrName
+  value: XSD::QName.new(nil, 'parameterOrder')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TargetNamespaceAttrName
+  value: XSD::QName.new(nil, 'targetNamespace')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TypeAttrName
+  value: XSD::QName.new(nil, 'type')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Version
+  value: "'0.0.2'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Namespace
+  value: "'http://schemas.xmlsoap.org/wsdl/'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SOAPBindingNamespace
+  value: "'http://schemas.xmlsoap.org/wsdl/soap/'"
+full_name: WSDL
+includes: []
+
+instance_methods: []
+
+name: WSDL
+superclass: 

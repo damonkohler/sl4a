@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::Charset::is_utf8
+is_singleton: true
+name: is_utf8
+params: (str)
+visibility: public

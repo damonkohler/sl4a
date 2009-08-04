@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Alias for #escape"
+full_name: URI::Escape#encode
+is_singleton: false
+name: encode
+params: (str, unsafe = UNSAFE)
+visibility: public

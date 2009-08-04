@@ -1,0 +1,19 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+assert( FooR == void );
+
+class FooR {
+	public int get() { return 42; }
+}
+assert( new FooR().get() == 42 );
+
+class FooR {
+	public int get() { return 43; }
+}
+assert( new FooR().get() == 43 );
+
+class BarR extends FooR { }
+
+complete();

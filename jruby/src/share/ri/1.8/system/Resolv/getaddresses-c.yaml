@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::getaddresses
+is_singleton: true
+name: getaddresses
+params: (name)
+visibility: public

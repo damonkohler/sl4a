@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Rss#textinput
+is_singleton: false
+name: textinput
+params: ()
+visibility: public

@@ -1,0 +1,93 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: default_factory
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: excn_handler_obj2soap
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: excn_handler_soap2obj
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: StringFactory
+  value: StringFactory_.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: BasetypeFactory
+  value: BasetypeFactory_.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DateTimeFactory
+  value: DateTimeFactory_.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ArrayFactory
+  value: ArrayFactory_.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Base64Factory
+  value: Base64Factory_.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: URIFactory
+  value: URIFactory_.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TypedArrayFactory
+  value: TypedArrayFactory_.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TypedStructFactory
+  value: TypedStructFactory_.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: HashFactory
+  value: HashFactory_.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SOAPBaseMap
+  value: "[     [::NilClass,     ::SOAP::SOAPNil,        BasetypeFactory],     [::TrueClass,    ::SOAP::SOAPBoolean,    BasetypeFactory],     [::FalseClass,   ::SOAP::SOAPBoolean,    BasetypeFactory],     [::String,       ::SOAP::SOAPString,     StringFactory],     [::DateTime,     ::SOAP::SOAPDateTime,   DateTimeFactory],     [::Date,         ::SOAP::SOAPDate,       DateTimeFactory],     [::Time,         ::SOAP::SOAPDateTime,   DateTimeFactory],     [::Time,         ::SOAP::SOAPTime,       DateTimeFactory],     [::Float,        ::SOAP::SOAPDouble,     BasetypeFactory,       {:derived_class => true}],     [::Float,        ::SOAP::SOAPFloat,      BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPInt,        BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPLong,       BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPInteger,    BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPShort,      BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPByte,       BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPNonPositiveInteger, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPNegativeInteger, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPNonNegativeInteger, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPPositiveInteger, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPUnsignedLong, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPUnsignedInt, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPUnsignedShort, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPUnsignedByte, BasetypeFactory,       {:derived_class => true}],     [::URI::Generic, ::SOAP::SOAPAnyURI,     URIFactory,       {:derived_class => true}],     [::String,       ::SOAP::SOAPBase64,     Base64Factory],     [::String,       ::SOAP::SOAPHexBinary,  Base64Factory],     [::String,       ::SOAP::SOAPDecimal,    BasetypeFactory],     [::String,       ::SOAP::SOAPDuration,   BasetypeFactory],     [::String,       ::SOAP::SOAPGYearMonth, BasetypeFactory],     [::String,       ::SOAP::SOAPGYear,      BasetypeFactory],     [::String,       ::SOAP::SOAPGMonthDay,  BasetypeFactory],     [::String,       ::SOAP::SOAPGDay,       BasetypeFactory],     [::String,       ::SOAP::SOAPGMonth,     BasetypeFactory],     [::String,       ::SOAP::SOAPQName,      BasetypeFactory],      [::Hash,         ::SOAP::SOAPArray,      HashFactory],     [::Hash,         ::SOAP::SOAPStruct,     HashFactory],      [::Array,        ::SOAP::SOAPArray,      ArrayFactory,       {:derived_class => true}],      [::SOAP::Mapping::SOAPException,                      ::SOAP::SOAPStruct,     TypedStructFactory,       {:type => XSD::QName.new(RubyCustomTypeNamespace, \"SOAPException\")}],  ]"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RubyOriginalMap
+  value: "[     [::NilClass,     ::SOAP::SOAPNil,        BasetypeFactory],     [::TrueClass,    ::SOAP::SOAPBoolean,    BasetypeFactory],     [::FalseClass,   ::SOAP::SOAPBoolean,    BasetypeFactory],     [::String,       ::SOAP::SOAPString,     StringFactory],     [::DateTime,     ::SOAP::SOAPDateTime,   DateTimeFactory],     [::Date,         ::SOAP::SOAPDate,       DateTimeFactory],     [::Time,         ::SOAP::SOAPDateTime,   DateTimeFactory],     [::Time,         ::SOAP::SOAPTime,       DateTimeFactory],     [::Float,        ::SOAP::SOAPDouble,     BasetypeFactory,       {:derived_class => true}],     [::Float,        ::SOAP::SOAPFloat,      BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPInt,        BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPLong,       BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPInteger,    BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPShort,      BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPByte,       BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPNonPositiveInteger, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPNegativeInteger, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPNonNegativeInteger, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPPositiveInteger, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPUnsignedLong, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPUnsignedInt, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPUnsignedShort, BasetypeFactory,       {:derived_class => true}],     [::Integer,      ::SOAP::SOAPUnsignedByte, BasetypeFactory,       {:derived_class => true}],     [::URI::Generic, ::SOAP::SOAPAnyURI,     URIFactory,       {:derived_class => true}],     [::String,       ::SOAP::SOAPBase64,     Base64Factory],     [::String,       ::SOAP::SOAPHexBinary,  Base64Factory],     [::String,       ::SOAP::SOAPDecimal,    BasetypeFactory],     [::String,       ::SOAP::SOAPDuration,   BasetypeFactory],     [::String,       ::SOAP::SOAPGYearMonth, BasetypeFactory],     [::String,       ::SOAP::SOAPGYear,      BasetypeFactory],     [::String,       ::SOAP::SOAPGMonthDay,  BasetypeFactory],     [::String,       ::SOAP::SOAPGDay,       BasetypeFactory],     [::String,       ::SOAP::SOAPGMonth,     BasetypeFactory],     [::String,       ::SOAP::SOAPQName,      BasetypeFactory],      [::Hash,         ::SOAP::SOAPArray,      HashFactory],     [::Hash,         ::SOAP::SOAPStruct,     HashFactory],      # Does not allow Array's subclass here.     [::Array,        ::SOAP::SOAPArray,      ArrayFactory],      [::SOAP::Mapping::SOAPException,                      ::SOAP::SOAPStruct,     TypedStructFactory,       {:type => XSD::QName.new(RubyCustomTypeNamespace, \"SOAPException\")}],   ]"
+full_name: SOAP::Mapping::Registry
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: _obj2soap
+- !ruby/object:RI::MethodSummary 
+  name: _soap2obj
+- !ruby/object:RI::MethodSummary 
+  name: add
+- !ruby/object:RI::MethodSummary 
+  name: addextend2obj
+- !ruby/object:RI::MethodSummary 
+  name: addextend2obj
+- !ruby/object:RI::MethodSummary 
+  name: addextend2soap
+- !ruby/object:RI::MethodSummary 
+  name: addiv2obj
+- !ruby/object:RI::MethodSummary 
+  name: find_mapped_obj_class
+- !ruby/object:RI::MethodSummary 
+  name: find_mapped_soap_class
+- !ruby/object:RI::MethodSummary 
+  name: obj2soap
+- !ruby/object:RI::MethodSummary 
+  name: set
+- !ruby/object:RI::MethodSummary 
+  name: soap2obj
+name: Registry
+superclass: Object

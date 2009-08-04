@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: retrieve class_name for the supplied uri and tag_name If it doesn't exist, capitalize the tag_name
+full_name: RSS::BaseListener::class_name
+is_singleton: true
+name: class_name
+params: (uri, tag_name)
+visibility: public

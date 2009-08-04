@@ -1,0 +1,23 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+assert( System.getProperties() instanceof java.util.Properties );
+assert( java.lang.System.getProperties() instanceof java.util.Properties );
+assert( System.out instanceof java.io.OutputStream );
+assert( java.lang.System.out instanceof java.io.OutputStream );
+
+// throws clauses
+foo() throws Exception { }
+foo() throws Exception, IllegalStateException { }
+assert( isEvalError("foo() throws Exception, Booga { }") ); // undef throws
+void foo() throws Exception { }
+void foo() throws Exception, IllegalStateException { }
+foo();
+
+// various return types
+URL foo11() { }
+URL [] foo12() { }
+URL [][] foo13() { }
+
+complete();

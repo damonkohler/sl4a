@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RUNIT::Assert#assert_not_match
+is_singleton: false
+name: assert_not_match
+params: (actual_string, expected_re, message="")
+visibility: public

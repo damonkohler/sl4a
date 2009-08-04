@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Called when an XML PI is encountered in the document. EG: &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf&quot;?&gt; @p version the version attribute value. EG, &quot;1.0&quot; @p encoding the encoding attribute value, or nil. EG, &quot;utf&quot; @p standalone the standalone attribute value, or nil. EG, nil"
+full_name: REXML::StreamListener#xmldecl
+is_singleton: false
+name: xmldecl
+params: (version, encoding, standalone)
+visibility: public

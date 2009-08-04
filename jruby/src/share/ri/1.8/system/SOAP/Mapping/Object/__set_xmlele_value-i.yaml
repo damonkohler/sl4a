@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::Object#__set_xmlele_value
+is_singleton: false
+name: __set_xmlele_value
+params: (key, org, value)
+visibility: private

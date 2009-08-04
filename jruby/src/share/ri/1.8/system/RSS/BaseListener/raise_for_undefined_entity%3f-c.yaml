@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::BaseListener::raise_for_undefined_entity?
+is_singleton: true
+name: raise_for_undefined_entity?
+params: ()
+visibility: public

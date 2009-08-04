@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a fixed-length queue with a maximum size of <tt>max</tt>.
+full_name: SizedQueue::new
+is_singleton: true
+name: new
+params: (max)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::ToHtml#end_accepting
+is_singleton: false
+name: end_accepting
+params: ()
+visibility: public

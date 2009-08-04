@@ -1,0 +1,127 @@
+= 3.1.0.1 =
+
+Fixed a small but annoying bug that caused BS to crash when presented
+with HTML that contained boolean attributes.
+
+= 3.1.0 =
+
+A hybrid version that supports 2.4 and can be automatically converted
+to run under Python 3.0. There are three backwards-incompatible
+changes you should be aware of, but no new features or deliberate
+behavior changes.
+
+1. str() may no longer do what you want. This is because the meaning
+of str() inverts between Python 2 and 3; in Python 2 it gives you a
+byte string, in Python 3 it gives you a Unicode string.
+
+The effect of this is that you can't pass an encoding to .__str__
+anymore. Use encode() to get a string and decode() to get Unicode, and
+you'll be ready (well, readier) for Python 3.
+
+2. Beautiful Soup is now based on HTMLParser rather than SGMLParser,
+which is gone in Python 3. There's some bad HTML that SGMLParser
+handled but HTMLParser doesn't, usually to do with attribute values
+that aren't closed or have brackets inside them:
+
+  <a href="foo</a>, </a><a href="bar">baz</a>
+  <a b="<a>">', '<a b="&lt;a&gt;"></a><a>"></a>
+
+A later version of Beautiful Soup will allow you to plug in different
+parsers to make tradeoffs between speed and the ability to handle bad
+HTML.
+
+3. In Python 3 (but not Python 2),HTMLParser converts entities within
+attributes to the corresponding Unicode characters. In Python 2 it's
+possible to parse this string and leave the &eacute; intact.
+
+ <a href="http://crummy.com?sacr&eacute;&bleu">
+
+In Python 3, the &eacute; is always converted to \xe9 during
+parsing.
+
+
+= 3.0.7a =
+
+Added an import that makes BS work in Python 2.3.
+
+
+= 3.0.7 =
+
+Fixed a UnicodeDecodeError when unpickling documents that contain
+non-ASCII characters.
+
+Fixed a TypeError that occured in some circumstances when a tag
+contained no text.
+
+Jump through hoops to avoid the use of chardet, which can be extremely
+slow in some circumstances. UTF-8 documents should never trigger the
+use of chardet.
+
+Whitespace is preserved inside <pre> and <textarea> tags that contain
+nothing but whitespace.
+
+Beautiful Soup can now parse a doctype that's scoped to an XML namespace.
+
+
+= 3.0.6 =
+
+Got rid of a very old debug line that prevented chardet from working.
+
+Added a Tag.decompose() method that completely disconnects a tree or a
+subset of a tree, breaking it up into bite-sized pieces that are
+easy for the garbage collecter to collect.
+
+Tag.extract() now returns the tag that was extracted.
+
+Tag.findNext() now does something with the keyword arguments you pass
+it instead of dropping them on the floor.
+
+Fixed a Unicode conversion bug.
+
+Fixed a bug that garbled some <meta> tags when rewriting them.
+
+
+= 3.0.5 =
+
+Soup objects can now be pickled, and copied with copy.deepcopy.
+
+Tag.append now works properly on existing BS objects. (It wasn't
+originally intended for outside use, but it can be now.) (Giles
+Radford)
+
+Passing in a nonexistent encoding will no longer crash the parser on
+Python 2.4 (John Nagle).
+
+Fixed an underlying bug in SGMLParser that thinks ASCII has 255
+characters instead of 127 (John Nagle).
+
+Entities are converted more consistently to Unicode characters.
+
+Entity references in attribute values are now converted to Unicode
+characters when appropriate. Numeric entities are always converted,
+because SGMLParser always converts them outside of attribute values.
+
+ALL_ENTITIES happens to just be the XHTML entities, so I renamed it to
+XHTML_ENTITIES.
+
+The regular expression for bare ampersands was too loose. In some
+cases ampersands were not being escaped. (Sam Ruby?)
+
+Non-breaking spaces and other special Unicode space characters are no
+longer folded to ASCII spaces. (Robert Leftwich)
+
+Information inside a TEXTAREA tag is now parsed literally, not as HTML
+tags. TEXTAREA now works exactly the same way as SCRIPT. (Zephyr Fang)
+
+
+= 3.0.4 =
+
+Fixed a bug that crashed Unicode conversion in some cases.
+
+Fixed a bug that prevented UnicodeDammit from being used as a
+general-purpose data scrubber.
+
+Fixed some unit test failures when running against Python 2.5.
+
+When considering whether to convert smart quotes, UnicodeDammit now
+looks at the original encoding in a case-insensitive way.

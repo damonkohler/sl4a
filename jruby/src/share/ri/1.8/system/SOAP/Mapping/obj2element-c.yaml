@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::obj2element
+is_singleton: true
+name: obj2element
+params: (obj)
+visibility: public

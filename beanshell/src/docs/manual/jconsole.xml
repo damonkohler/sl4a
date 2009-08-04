@@ -1,0 +1,83 @@
+<section>
+<name filename="jconsole">Using JConsole</name>
+
+<img src="colorconsole.jpg"/>
+<p/>
+
+The bsh.util.JConsole is a light weight graphical shell console window,
+with simple command editing and history capabilities.  BeanShell uses
+the JConsole for the GUI desktop mode again in the JRemoteApplet
+for the remote server mode.
+<p/>
+
+You can use the JConsole to provide an interactive BeanShell prompt in 
+your own applications.  
+You are free to use the JConsole for your own purposes outside of BeanShell
+as well!  It is a fairly generic shell window easily attached to any kind of 
+streams or through the simple console interface.
+<p/>
+
+JConsole is a Swing component.  Embed it in your application as you would 
+any other swing component.  For example:
+
+<example>
+JConsole console = new JConsole();
+myPanel.add(console);
+</example>
+
+You can connect an Interpreter to the console by specifying it in the
+Interpreter constructor, like so:
+
+<example>
+Interpreter interpreter = new Interpreter( console );
+new Thread( interpreter ).start(); // start a thread to call the run() method
+</example>
+
+Or you can connect the JConsole to the Interpreter directly with 
+Interpreter setConsole().  
+<p/>
+
+For external use, JConsole can supply a PrintWriter through its getOut() 
+method and has a full suite of direct print() methods.  
+
+<tip>
+When interacting with any Swing component from outside the Java event handling 
+thread, use the Swing thread safety facilities: SwingUtilities.invokeNow() 
+and invokeLater().           
+</tip>
+
+<h2>ConsoleInterface</h2>
+
+JConsole implements the bsh.ConsoleInterface interface, which defines how
+the Interpreter interacts with a console object.  To the interpreter a console
+is simply a set of I/O streams with some optimized print methods:
+
+<table border="1" cellpadding="5">
+<tr><td>Reader getIn();</td></tr>
+<tr><td>PrintStream getOut();</td></tr>
+<tr><td>PrintStream getErr();</td></tr>
+<tr><td>void println( String s );</td></tr>
+<tr><td>void print( String s );</td></tr>
+<tr><td>void error( String s );</td></tr>
+</table>
+
+Any object that implements this interface can be attached to the Interpreter
+as a GUI console.
+<p/>
+
+The bsh.util.GUIConsoleInterface extends the ConsoleInterface and adds
+methods for printing a string with a color attribute, supplying wait 
+feedback (the wait cursor) and name completion support.  JConsole implements
+this interface and it is used indirectly via BeanShell commands when it
+is detected.
+<p/>
+
+<h3>AWTConsole</h3>
+
+The bsh.util.AWTConsole is a legacy implementation of the GUI Console using
+AWT instead of Swing.  This console does work, but it is not as slick or
+pretty as the JConsole.  The primary reason it is still here is to support
+remote access from generic web browsers using only Java 1.1.
+
+
+</section>

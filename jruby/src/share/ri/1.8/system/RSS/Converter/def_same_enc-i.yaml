@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Converter#def_same_enc
+is_singleton: false
+name: def_same_enc
+params: ()
+visibility: public

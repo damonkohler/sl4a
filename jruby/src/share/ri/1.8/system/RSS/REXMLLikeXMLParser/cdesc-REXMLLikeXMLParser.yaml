@@ -1,0 +1,27 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: RSS::REXMLLikeXMLParser
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: "::XML::Encoding_ja"
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: character
+- !ruby/object:RI::MethodSummary 
+  name: endElement
+- !ruby/object:RI::MethodSummary 
+  name: listener=
+- !ruby/object:RI::MethodSummary 
+  name: processingInstruction
+- !ruby/object:RI::MethodSummary 
+  name: startElement
+- !ruby/object:RI::MethodSummary 
+  name: xmlDecl
+name: REXMLLikeXMLParser
+superclass: "::XML::Parser"

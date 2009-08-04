@@ -1,0 +1,50 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: fault
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: input
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: name
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: output
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: soapoperation
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::OperationBinding
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: find_operation
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+- !ruby/object:RI::MethodSummary 
+  name: porttype
+- !ruby/object:RI::MethodSummary 
+  name: soapaction
+- !ruby/object:RI::MethodSummary 
+  name: soapoperation_name
+- !ruby/object:RI::MethodSummary 
+  name: soapoperation_style
+- !ruby/object:RI::MethodSummary 
+  name: targetnamespace
+name: OperationBinding
+superclass: Info

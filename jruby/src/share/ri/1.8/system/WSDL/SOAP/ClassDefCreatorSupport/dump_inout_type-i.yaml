@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::SOAP::ClassDefCreatorSupport#dump_inout_type
+is_singleton: false
+name: dump_inout_type
+params: (param)
+visibility: private

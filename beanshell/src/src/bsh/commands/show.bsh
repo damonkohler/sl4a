@@ -1,0 +1,11 @@
+/**
+	Toggle on or off displaying the results of expressions (off by default).
+	When show mode is on bsh will print() the value returned by each expression 
+	you type on the command line.
+*/
+
+bsh.help.show = "usage: show()";
+
+show()  {
+	this.interpreter.setShowResults( !this.interpreter.getShowResults() );
+}

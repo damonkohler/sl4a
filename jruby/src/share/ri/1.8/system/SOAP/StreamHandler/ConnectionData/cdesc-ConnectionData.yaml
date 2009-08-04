@@ -1,0 +1,39 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: is_fault
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: receive_contenttype
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: receive_string
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: send_contenttype
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: send_string
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: soapaction
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: SOAP::StreamHandler::ConnectionData
+includes: []
+
+instance_methods: []
+
+name: ConnectionData
+superclass: Object

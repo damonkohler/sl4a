@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: (o)
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Deletes every element of the set for which block evaluates to true, and returns self.
+full_name: Set#delete_if
+is_singleton: false
+name: delete_if
+params: () {|o| ...}
+visibility: public

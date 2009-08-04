@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Sync_m#sync_exclusive?
+is_singleton: false
+name: sync_exclusive?
+params: ()
+visibility: public

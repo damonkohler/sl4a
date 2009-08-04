@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::GenericServer#call_callback
+is_singleton: false
+name: call_callback
+params: (callback_name, *args)
+visibility: private

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RI::HtmlFormatter#break_to_newline
+is_singleton: false
+name: break_to_newline
+params: ()
+visibility: public

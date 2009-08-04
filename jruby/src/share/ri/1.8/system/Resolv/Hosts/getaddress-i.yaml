@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::Hosts#getaddress
+is_singleton: false
+name: getaddress
+params: (name)
+visibility: public

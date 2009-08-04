@@ -1,0 +1,25 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: as_string
+- !ruby/object:RI::MethodSummary 
+  name: bitmap_for
+- !ruby/object:RI::MethodSummary 
+  name: each_name_of
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: We manage a set of attributes. Each attribute has a symbol name and a bit value
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SPECIAL
+  value: "1"
+full_name: SM::Attribute
+includes: []
+
+instance_methods: []
+
+name: Attribute
+superclass: Object

@@ -1,0 +1,15 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Description
+- !ruby/struct:SM::Flow::P 
+  body: Creates a new URI::FTP object from components of URI::FTP with check. It is scheme, userinfo, host, port, path and typecode. It provided by an Array or a Hash. typecode is &quot;a&quot;, &quot;i&quot; or &quot;d&quot;.
+full_name: URI::FTP::build
+is_singleton: true
+name: build
+params: (args)
+visibility: public

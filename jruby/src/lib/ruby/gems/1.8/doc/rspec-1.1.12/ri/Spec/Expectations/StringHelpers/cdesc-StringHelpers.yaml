@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: StringHelpers
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: starts_with?
+full_name: Spec::Expectations::StringHelpers
+superclass: 
+class_methods: []
+

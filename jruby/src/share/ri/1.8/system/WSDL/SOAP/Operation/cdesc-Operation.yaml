@@ -1,0 +1,36 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: soapaction
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: style
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::SOAP::Operation
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: input_info
+- !ruby/object:RI::MethodSummary 
+  name: operation_style
+- !ruby/object:RI::MethodSummary 
+  name: output_info
+- !ruby/object:RI::MethodSummary 
+  name: param_info
+- !ruby/object:RI::MethodSummary 
+  name: parent_binding
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+name: Operation
+superclass: Info

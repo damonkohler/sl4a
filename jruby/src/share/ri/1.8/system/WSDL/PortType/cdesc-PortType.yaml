@@ -1,0 +1,32 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: name
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: operations
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::PortType
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: find_binding
+- !ruby/object:RI::MethodSummary 
+  name: locations
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+- !ruby/object:RI::MethodSummary 
+  name: targetnamespace
+name: PortType
+superclass: Info

@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: to_ary
+block_params: 
+comment: 
+full_name: WEBrick::HTTPUtils::FormData#list
+is_singleton: false
+name: list
+params: ()
+visibility: public

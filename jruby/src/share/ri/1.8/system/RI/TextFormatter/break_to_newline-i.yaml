@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: called when we want to ensure a nbew 'wrap' starts on a newline Only needed for HtmlFormatter, because the rest do their own line breaking
+full_name: RI::TextFormatter#break_to_newline
+is_singleton: false
+name: break_to_newline
+params: ()
+visibility: public

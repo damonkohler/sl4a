@@ -1,0 +1,127 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+import mypackage.*;
+
+a=new Accessibility2();
+
+//
+// No accessibility
+//
+
+setAccessibility(false);
+
+assert( Fields.propTest == 22 );
+assert(Accessibility2.sfield4==4);
+
+/*
+	package mypackage;
+	class A { public static field; }
+	public class B extends A { }
+
+	Should 'field' of non-public A be accessible through public class B?
+	javac would allow this, but reflection API only works with accessibility on
+*/
+//assert(Accessibility2.supersfield4==4);
+
+javax.swing.JInternalFrame.DO_NOTHING_ON_CLOSE;
+
+assert( isEvalError("a.get1()") );
+assert( isEvalError("a.field1") );
+
+//
+// With accessibility
+//
+
+setAccessibility(true);
+
+javax.swing.JInternalFrame.DO_NOTHING_ON_CLOSE;
+
+/*
+x=new Accessibility2(1);
+x=new Accessibility2(1,2);
+x=new Accessibility2(1,2,3);
+*/
+
+// methods
+assert(a.getB1()==1);
+assert(a.getB2()==2);
+assert(a.getB3()==3);
+assert(a.getB4()==4);
+
+// static methods
+assert(Accessibility1.supersget1()==1);
+assert(Accessibility1.supersget2()==2);
+assert(Accessibility1.supersget3()==3);
+assert(Accessibility1.supersget4()==4);
+
+assert(Accessibility2.sget1()==1);
+assert(Accessibility2.sget2()==2);
+assert(Accessibility2.sget3()==3);
+assert(Accessibility2.sget4()==4);
+
+assert(Accessibility2.supersget1()==1);
+assert(Accessibility2.supersget2()==2);
+assert(Accessibility2.supersget3()==3);
+assert(Accessibility2.supersget4()==4);
+
+// methods from package hidden superclass
+assert(a.get4()==4);
+assert(a.get3()==3);
+assert(a.get2()==2);
+assert(a.get1()==1);
+assert(a.get1(1)==1);
+
+// fields
+assert(a.field1==1);
+assert(a.field2==2);
+assert(a.field3==3);
+assert(a.field4==4);
+
+// static fields
+assert(Accessibility1.supersfield1==1);
+assert(Accessibility1.supersfield2==2);
+assert(Accessibility1.supersfield3==3);
+// why is this broken?
+assert(Accessibility1.supersfield4==4);
+
+assert(Accessibility2.sfield1==1);
+assert(Accessibility2.sfield2==2);
+assert(Accessibility2.sfield3==3);
+assert(Accessibility2.sfield4==4);
+
+assert(Accessibility2.supersfield1==1);
+assert(Accessibility2.supersfield2==2);
+assert(Accessibility2.supersfield3==3);
+assert(Accessibility2.supersfield4==4);
+
+a=null;
+
+/*
+b=new Accessibility1();
+
+x=new Accessibility1(1);
+x=new Accessibility1(1,2);
+x=new Accessibility1(1,2,3);
+
+assert(b.get1()==1);
+assert(b.get2()==2);
+assert(b.get3()==3);
+assert(b.get4()==4);
+
+assert(b.field1==1);
+assert(b.field2==2);
+assert(b.field3==3);
+assert(b.field4==4);
+*/
+
+m=new MethodSelection();
+assert(m.foo("foo").equals("public"));
+assert(m.foo(2).equals("private"));
+warning("this test runs on sparc but fails on windows... Nail this down.");
+assert(m.foo(null).equals("public"));
+
+setAccessibility(false);
+
+complete();

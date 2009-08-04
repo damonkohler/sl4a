@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Router#add_headerhandler
+is_singleton: false
+name: add_headerhandler
+params: (handler)
+visibility: public

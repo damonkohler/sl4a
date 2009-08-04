@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: e1, e2
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Iterate over the elements of this vector and <tt>v</tt> in conjunction.
+full_name: Vector#each2
+is_singleton: false
+name: each2
+params: (v) {|e1, e2| ...}
+visibility: public

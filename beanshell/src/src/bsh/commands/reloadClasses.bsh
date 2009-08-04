@@ -1,0 +1,55 @@
+/**
+	Reload the specified class, package name, or all classes if no name is 
+	given.  e.g.
+	<p>
+
+	<pre>
+    reloadClasses();
+    reloadClasses("mypackage.*");
+    reloadClasses(".*")  // reload unpackaged classes
+    reloadClasses("mypackage.MyClass") 
+	</pre>
+	<p>
+
+	See "Class Path Management"
+
+	@method void reloadClasses( [ package name ] )
+*/
+
+bsh.help.reloadClasses= 
+	"usage: reloadClasses( String class | String package | String [] classes )";
+
+import bsh.ClassPathException;
+
+void reloadClasses( item ) 
+{
+	this.bcm = this.caller.namespace.getClassManager();
+
+	try {
+		if ( item instanceof String [] )
+			bcm.reloadClasses( item );
+		else {
+			this.name = item;
+
+			if ( name.endsWith(".*" ) ) {
+				if ( name.equals(".*" ) )
+					this.pack = "<unpackaged>";
+				else
+					this.pack = name.substring( 0, name.length()-2 );
+				
+				bcm.reloadPackage( pack );
+			} else
+				bcm.reloadClasses( new String[] { name } );
+		}
+	} catch ( ClassPathException e ) {
+		error( e.getMessage() );
+	}
+}
+
+/**
+	Reload all classes
+*/
+void reloadClasses() 
+{
+	this.caller.namespace.getClassManager().reloadAllClasses();
+}

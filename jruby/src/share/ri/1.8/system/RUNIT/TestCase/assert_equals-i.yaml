@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RUNIT::TestCase#assert_equals
+is_singleton: false
+name: assert_equals
+params: (*args)
+visibility: public

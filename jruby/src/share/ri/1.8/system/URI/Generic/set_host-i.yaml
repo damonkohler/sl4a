@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::Generic#set_host
+is_singleton: false
+name: set_host
+params: (v)
+visibility: protected

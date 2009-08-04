@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: returns the domain name as a string.
+- !ruby/struct:SM::Flow::P 
+  body: The domain name doesn't have a trailing dot even if the name object is absolute.
+- !ruby/struct:SM::Flow::VERB 
+  body: "  p Resolv::DNS::Name.create(&quot;x.y.z.&quot;).to_s #=&gt; &quot;x.y.z&quot;\n  p Resolv::DNS::Name.create(&quot;x.y.z&quot;).to_s #=&gt; &quot;x.y.z&quot;\n"
+full_name: Resolv::DNS::Name#to_s
+is_singleton: false
+name: to_s
+params: ()
+visibility: public

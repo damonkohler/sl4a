@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Validation::State#previous=
+is_singleton: false
+name: previous=
+params: ( previous )
+visibility: public

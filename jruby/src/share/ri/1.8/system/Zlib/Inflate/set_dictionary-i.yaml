@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Sets the preset dictionary and returns <tt>string</tt>. This method is available just only after a Zlib::NeedDict exception was raised. See zlib.h for details.
+- !ruby/struct:SM::Flow::P 
+  body: "TODO: document better!"
+full_name: Zlib::Inflate#set_dictionary
+is_singleton: false
+name: set_dictionary
+params: (p1)
+visibility: public

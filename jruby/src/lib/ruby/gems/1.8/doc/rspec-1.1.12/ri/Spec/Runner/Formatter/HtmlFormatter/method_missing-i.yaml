@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (sym, *args)
+is_singleton: false
+block_params: 
+name: method_missing
+comment: 
+full_name: Spec::Runner::Formatter::HtmlFormatter#method_missing
+visibility: public
+aliases: []
+

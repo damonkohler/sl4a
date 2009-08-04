@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a singleton RingFinger and looks for a RingServer. Returns the created RingFinger.
+full_name: Rinda::RingFinger::finger
+is_singleton: true
+name: finger
+params: ()
+visibility: public

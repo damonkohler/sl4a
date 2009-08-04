@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a new Failure with the given location and message.
+full_name: Test::Unit::Failure::new
+is_singleton: true
+name: new
+params: (test_name, location, message)
+visibility: public

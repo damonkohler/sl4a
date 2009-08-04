@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::EncodingStyle::SOAPHandler#decode_basetype
+is_singleton: false
+name: decode_basetype
+params: (klass, elename)
+visibility: private

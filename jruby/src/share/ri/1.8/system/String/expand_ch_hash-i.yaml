@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: String#expand_ch_hash
+is_singleton: false
+name: expand_ch_hash
+params: (from, to)
+visibility: private

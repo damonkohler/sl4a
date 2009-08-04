@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: YAML::Pairs#has_key?
+is_singleton: false
+name: has_key?
+params: ( k )
+visibility: public

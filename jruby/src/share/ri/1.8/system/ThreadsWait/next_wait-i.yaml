@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Waits until any of the specified threads has terminated, and returns the one that does.
+- !ruby/struct:SM::Flow::P 
+  body: If there is no thread to wait, raises <tt>ErrNoWaitingThread</tt>. If <tt>nonblock</tt> is true, and there is no terminated thread, raises <tt>ErrNoFinishedThread</tt>.
+full_name: ThreadsWait#next_wait
+is_singleton: false
+name: next_wait
+params: (nonblock = nil)
+visibility: public

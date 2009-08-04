@@ -1,0 +1,44 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: extract
+- !ruby/object:RI::MethodSummary 
+  name: join
+- !ruby/object:RI::MethodSummary 
+  name: parse
+- !ruby/object:RI::MethodSummary 
+  name: regexp
+- !ruby/object:RI::MethodSummary 
+  name: split
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: URI support for Ruby
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "Author:"
+    body: Akira Yamada &lt;akira@ruby-lang.org&gt;
+  - !ruby/struct:SM::Flow::LI 
+    label: "Documentation:"
+    body: Akira Yamada &lt;akira@ruby-lang.org&gt;, Dmitry V. Sabanin &lt;sdmitry@lrn.ru&gt;
+  - !ruby/struct:SM::Flow::LI 
+    label: "License:"
+    body: Copyright (c) 2001 akira yamada &lt;akira@ruby-lang.org&gt; You can redistribute it and/or modify it under the same term as Ruby.
+  - !ruby/struct:SM::Flow::LI 
+    label: "Revision:"
+    body: "$Id: uri.rb 11708 2007-02-12 23:01:19Z shyouhei $"
+  type: :NOTE
+- !ruby/struct:SM::Flow::P 
+  body: See URI for documentation
+constants: []
+
+full_name: URI
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: REGEXP
+instance_methods: []
+
+name: URI
+superclass: 

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (world, type, name, *args, &block)
+is_singleton: true
+block_params: 
+name: store_and_call
+comment: 
+full_name: Spec::Story::World::store_and_call
+visibility: public
+aliases: []
+

@@ -1,0 +1,27 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: REXML::Validation::Interleave
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: expected
+- !ruby/object:RI::MethodSummary 
+  name: inspect
+- !ruby/object:RI::MethodSummary 
+  name: matches?
+- !ruby/object:RI::MethodSummary 
+  name: next
+- !ruby/object:RI::MethodSummary 
+  name: next_current
+- !ruby/object:RI::MethodSummary 
+  name: reset
+name: Interleave
+superclass: Choice

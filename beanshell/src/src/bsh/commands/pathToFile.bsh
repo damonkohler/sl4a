@@ -1,0 +1,10 @@
+/**
+	Create a File object corresponding to the specified file path name, taking
+	into account the bsh current working directory (bsh.cwd)
+*/
+
+bsh.help.pathToFile = "usage: File pathToFile( String )";
+
+File pathToFile( String filename ) {
+	return this.interpreter.pathToFile( filename );
+}

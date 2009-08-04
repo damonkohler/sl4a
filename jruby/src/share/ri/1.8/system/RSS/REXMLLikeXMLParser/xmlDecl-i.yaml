@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::REXMLLikeXMLParser#xmlDecl
+is_singleton: false
+name: xmlDecl
+params: (version, encoding, standalone)
+visibility: public

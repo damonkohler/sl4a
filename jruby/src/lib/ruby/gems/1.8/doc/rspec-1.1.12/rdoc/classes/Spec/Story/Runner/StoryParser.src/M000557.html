@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>states (Spec::Story::Runner::StoryParser)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/spec/story/runner/story_parser.rb, line 85</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">states</span>
+          <span class="ruby-ivar">@states</span> <span class="ruby-operator">||=</span> {
+            <span class="ruby-identifier">:starting_state</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">StartingState</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>),
+            <span class="ruby-identifier">:story_state</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">StoryState</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>),
+            <span class="ruby-identifier">:scenario_state</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">ScenarioState</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>),
+            <span class="ruby-identifier">:given_state</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">GivenState</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>),
+            <span class="ruby-identifier">:when_state</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">WhenState</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>),
+            <span class="ruby-identifier">:then_state</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">ThenState</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>)
+          }
+        <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

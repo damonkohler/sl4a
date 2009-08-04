@@ -1,0 +1,124 @@
+
+/**
+ * Make a new workspaceEditor associated with a workspace and place it on the
+ * desktop.
+ *
+ * @method workspaceEditor( bsh.Interpreter parent, String name )
+ *
+ * @author Pat Niemeyer
+ * @author Daniel Leuck
+ */
+ 
+import java.awt.Insets;
+import bsh.Interpreter;
+
+workspaceEditor(Interpreter parent, String name ) 
+{
+	
+	if ( bsh.system.desktop == void ) {
+		print("This only works with the bsh desktop...");
+		return;
+	}
+
+	this.textarea = new JTextArea(15,40);
+	textarea.setLineWrap(true);
+	textarea.setWrapStyleWord(true);
+	textarea.setTabSize(4);
+	textarea.setMargin( new Insets(5,5,5,5) );
+	textarea.font=new Font("Monospaced", 0, 12);
+
+	// probably should overload desktop makeInternalFrame
+	this.frame = 
+		new JInternalFrame("Editor for: "+name, true, true, true, true );
+	frame.frameIcon=bsh.system.icons.script;
+	frame.getContentPane().add( new JScrollPane(textarea), "Center");
+	frame.setVisible( true );
+
+	open() 
+	{
+		this.chooser = new JFileChooser();
+		chooser.setCurrentDirectory( pathToFile(bsh.cwd) );
+		this.returnVal = chooser.showOpenDialog( bsh.system.desktop.pane );
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			this.file = chooser.getSelectedFile();
+			this.reader=new FileReader( file );
+			this.ca=new char [file.length()];
+			reader.read(ca);
+			textarea.setText( new String(ca) );
+		}
+	}
+
+	save() 
+	{
+		this.chooser = new JFileChooser();
+		chooser.setCurrentDirectory( pathToFile(bsh.cwd) );
+		this.returnVal = chooser.showSaveDialog( bsh.system.desktop.pane );
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			this.file = chooser.getSelectedFile();
+			this.writer=new FileWriter( file );
+			writer.write( textarea.getText().toCharArray() );
+			writer.close();
+		}
+	}
+
+	run() 
+	{
+		this.interpreter = makeWorkspace( "Run Output: " +name);
+		// should make this new namespace... look at run() command
+    	interpreter.eval( textarea.getText() );
+		print("done run...");
+	}
+
+	actionPerformed(e) 
+	{
+		this.com = e.getActionCommand();
+		if ( com.equals("Close") )
+			frame.setClosed(true);
+		else if ( com.equals("New") )
+			textarea.setText("");
+		else if ( com.equals("Open") )
+			open();
+		else if ( com.equals("Save") )
+			save();
+		else if ( com.equals("Eval in Workspace") )
+			// eval in parent global namespace
+    		parent.eval( textarea.getText() );
+		else if ( com.equals("Run in new Workspace") )
+			run();
+	}
+
+	this.menubar = new JMenuBar();
+	this.menu = new JMenu("File");
+	this.mi = new JMenuItem("New");
+	mi.addActionListener(this);
+	menu.add(mi);
+	mi = new JMenuItem("Open");
+	mi.addActionListener(this);
+	menu.add(mi);
+	mi = new JMenuItem("Save");
+	mi.addActionListener(this);
+	menu.add(mi);
+	mi = new JMenuItem("Close");
+	mi.addActionListener(this);
+	menu.add(mi);
+	menubar.add(menu);
+
+	menu = new JMenu("Evaluate");
+	mi = new JMenuItem("Eval in Workspace");
+	mi.addActionListener(this);
+	menu.add(mi);
+	mi = new JMenuItem("Run in new Workspace");
+	mi.addActionListener(this);
+	menu.add(mi);
+	menubar.add(menu);
+
+	menu = fontMenu( textarea );
+	menubar.add(menu);
+
+	frame.setMenuBar( menubar );
+
+	frame.pack();
+	bsh.system.desktop.addInternalFrame( frame );
+	frame.selected=true;
+	return frame;
+}

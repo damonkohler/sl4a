@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::XMLParser::Parser#parse
+is_singleton: false
+name: parse
+params: (string_or_readable)
+visibility: public

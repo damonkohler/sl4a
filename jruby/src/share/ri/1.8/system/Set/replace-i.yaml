@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Replaces the contents of the set with the contents of the given enumerable object and returns self.
+full_name: Set#replace
+is_singleton: false
+name: replace
+params: (enum)
+visibility: public

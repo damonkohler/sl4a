@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a copy of <em>str</em> with all lowercase letters replaced with their uppercase counterparts. The operation is locale insensitive---only characters ``a'' to ``z'' are affected.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;hEllO&quot;.upcase   #=&gt; &quot;HELLO&quot;\n"
+full_name: String#upcase
+is_singleton: false
+name: upcase
+params: |
+  str.upcase   => new_str
+
+visibility: public

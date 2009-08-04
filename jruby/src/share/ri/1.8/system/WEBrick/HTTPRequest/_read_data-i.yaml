@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPRequest#_read_data
+is_singleton: false
+name: _read_data
+params: (io, method, arg)
+visibility: private

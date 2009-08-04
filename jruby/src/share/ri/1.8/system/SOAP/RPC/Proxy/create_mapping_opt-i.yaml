@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Proxy#create_mapping_opt
+is_singleton: false
+name: create_mapping_opt
+params: (hash = nil)
+visibility: private

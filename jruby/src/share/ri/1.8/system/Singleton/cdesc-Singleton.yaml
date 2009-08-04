@@ -1,0 +1,80 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: The Singleton module implements the Singleton pattern.
+- !ruby/struct:SM::Flow::P 
+  body: "Usage:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "   class Klass\n      include Singleton\n      # ...\n   end\n"
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: this ensures that only one instance of Klass lets call it ``the instance'' can be created.
+  - !ruby/struct:SM::Flow::P 
+    body: "a,b = Klass.instance, Klass.instance a == b # =&gt; true a.new # NoMethodError - new is private ..."
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: ``The instance'' is created at instantiation time, in other words the first call of Klass.instance(), thus
+  - !ruby/struct:SM::Flow::VERB 
+    body: "  class OtherKlass\n    include Singleton\n    # ...\n  end\n  ObjectSpace.each_object(OtherKlass){} # =&gt; 0.\n"
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: This behavior is preserved under inheritance and cloning.
+  type: :BULLET
+- !ruby/struct:SM::Flow::P 
+  body: This is achieved by marking
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Klass.new and Klass.allocate - as private
+  type: :BULLET
+- !ruby/struct:SM::Flow::P 
+  body: Providing (or modifying) the class methods
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Klass.inherited(sub_klass) and Klass.clone() - to ensure that the Singleton pattern is properly inherited and cloned.
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: "Klass.instance() - returning ``the instance''. After a successful self modifying (normally the first) call the method body is a simple:"
+  - !ruby/struct:SM::Flow::VERB 
+    body: "   def Klass.instance()\n     return @<em>instance</em>\n   end\n"
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Klass._load(str) - calling Klass.instance()
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Klass._instantiate?() - returning ``the instance'' or nil. This hook method puts a second (or nth) thread calling Klass.instance() on a waiting loop. The return value signifies the successful completion or premature termination of the first, or more generally, current &quot;instantiation thread&quot;.
+  type: :BULLET
+- !ruby/struct:SM::Flow::P 
+  body: The instance method of Singleton are
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: clone and dup - raising TypeErrors to prevent cloning or duping
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: _dump(depth) - returning the empty string. Marshalling strips by default all state information, e.g. instance variables and taint state, from ``the instance''. Providing custom _load(str) and _dump(depth) hooks allows the (partially) resurrections of a previous state of ``the instance''.
+  type: :BULLET
+constants: []
+
+full_name: Singleton
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: _dump
+- !ruby/object:RI::MethodSummary 
+  name: clone
+- !ruby/object:RI::MethodSummary 
+  name: dup
+name: Singleton
+superclass: 

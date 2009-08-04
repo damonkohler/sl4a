@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Called by TupleSpace to notify this NotifyTemplateEntry of a new event.
+full_name: Rinda::NotifyTemplateEntry#notify
+is_singleton: false
+name: notify
+params: (ev)
+visibility: public

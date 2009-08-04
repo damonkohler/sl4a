@@ -1,0 +1,4 @@
+This directory contains Python code written for the Android Scripting Engine.
+
+android.py Python module for accessing the AndroidProxy.
+scripts/ example Python scripts.

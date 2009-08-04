@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: ()
+is_singleton: false
+block_params: 
+name: pending_fixed?
+comment: 
+full_name: Spec::Runner::Reporter::Failure#pending_fixed?
+visibility: public
+aliases: []
+

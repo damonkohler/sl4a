@@ -1,0 +1,18 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: RSS::Maker::RSS09::Textinput
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: have_required_values?
+- !ruby/object:RI::MethodSummary 
+  name: to_rss
+name: Textinput
+superclass: TextinputBase

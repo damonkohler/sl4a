@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the length of <em>str</em>.
+full_name: String#length
+is_singleton: false
+name: length
+params: |
+  str.length   => integer
+
+visibility: public

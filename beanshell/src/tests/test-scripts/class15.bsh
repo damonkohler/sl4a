@@ -1,0 +1,18 @@
+source("TestHarness.bsh");
+
+class Foo15 {
+	Foo15 getFoo() { return null; }
+	void putFoo( Foo15 foo ) { }
+	static Foo15 getFooStatic() { return null; }
+	static void putFooStatic( Foo15 foo ) { }
+}
+
+interface Bar15 {
+	Bar15 getBar();
+	void putBar( Bar15 foo );
+}
+
+f = new Foo15();
+ic=Bar15.class;
+
+complete();

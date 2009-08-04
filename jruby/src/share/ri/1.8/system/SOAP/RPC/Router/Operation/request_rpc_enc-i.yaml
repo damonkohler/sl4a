@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Router::Operation#request_rpc_enc
+is_singleton: false
+name: request_rpc_enc
+params: (request, mapping_registry, opt)
+visibility: private

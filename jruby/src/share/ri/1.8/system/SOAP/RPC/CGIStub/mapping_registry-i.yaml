@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::CGIStub#mapping_registry
+is_singleton: false
+name: mapping_registry
+params: ()
+visibility: public

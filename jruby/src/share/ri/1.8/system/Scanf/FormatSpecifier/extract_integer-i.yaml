@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Scanf::FormatSpecifier#extract_integer
+is_singleton: false
+name: extract_integer
+params: (s)
+visibility: private

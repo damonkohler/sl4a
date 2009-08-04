@@ -1,0 +1,24 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Type
+  value: QName.new(Namespace, HexBinaryLiteral)
+full_name: XSD::XSDHexBinary
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: screen_data
+- !ruby/object:RI::MethodSummary 
+  name: set_encoded
+- !ruby/object:RI::MethodSummary 
+  name: string
+name: XSDHexBinary
+superclass: XSDAnySimpleType

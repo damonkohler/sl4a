@@ -1,0 +1,92 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: importedschema
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: imports
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: location
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: name
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: targetnamespace
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: array_complextype
+- !ruby/object:RI::MethodSummary 
+  name: exception_complextype
+- !ruby/object:RI::MethodSummary 
+  name: fault_complextype
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+- !ruby/object:RI::MethodSummary 
+  name: soap_rpc_complextypes
+comment: 
+constants: []
+
+full_name: WSDL::Definitions
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_type
+- !ruby/object:RI::MethodSummary 
+  name: binding
+- !ruby/object:RI::MethodSummary 
+  name: bindings
+- !ruby/object:RI::MethodSummary 
+  name: collect_attributes
+- !ruby/object:RI::MethodSummary 
+  name: collect_complextypes
+- !ruby/object:RI::MethodSummary 
+  name: collect_elements
+- !ruby/object:RI::MethodSummary 
+  name: collect_fault_messages
+- !ruby/object:RI::MethodSummary 
+  name: collect_faulttypes
+- !ruby/object:RI::MethodSummary 
+  name: collect_simpletypes
+- !ruby/object:RI::MethodSummary 
+  name: elements_from_message
+- !ruby/object:RI::MethodSummary 
+  name: inspect
+- !ruby/object:RI::MethodSummary 
+  name: message
+- !ruby/object:RI::MethodSummary 
+  name: messages
+- !ruby/object:RI::MethodSummary 
+  name: op_bind_rpc?
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+- !ruby/object:RI::MethodSummary 
+  name: porttype
+- !ruby/object:RI::MethodSummary 
+  name: porttype_binding
+- !ruby/object:RI::MethodSummary 
+  name: porttypes
+- !ruby/object:RI::MethodSummary 
+  name: rpc_operation_complextypes
+- !ruby/object:RI::MethodSummary 
+  name: service
+- !ruby/object:RI::MethodSummary 
+  name: services
+- !ruby/object:RI::MethodSummary 
+  name: soap_rpc_complextypes
+- !ruby/object:RI::MethodSummary 
+  name: targetnamespace=
+name: Definitions
+superclass: Info

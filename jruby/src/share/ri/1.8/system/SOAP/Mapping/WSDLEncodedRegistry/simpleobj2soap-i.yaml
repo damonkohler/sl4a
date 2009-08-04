@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::WSDLEncodedRegistry#simpleobj2soap
+is_singleton: false
+name: simpleobj2soap
+params: (obj, type)
+visibility: private

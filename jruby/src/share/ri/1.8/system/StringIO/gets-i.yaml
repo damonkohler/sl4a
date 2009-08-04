@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: See IO#gets.
+full_name: StringIO#gets
+is_singleton: false
+name: gets
+params: |
+  strio.gets(sep_string=$/)   -> string or nil
+
+visibility: public

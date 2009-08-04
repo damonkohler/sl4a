@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "&lt;!ELEMENT ...&gt;"
+full_name: REXML::SAX2Listener#elementdecl
+is_singleton: false
+name: elementdecl
+params: (content)
+visibility: public

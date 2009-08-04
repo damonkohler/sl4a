@@ -1,0 +1,35 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: Resolv::DNS::Message::MessageDecoder
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: get_bytes
+- !ruby/object:RI::MethodSummary 
+  name: get_label
+- !ruby/object:RI::MethodSummary 
+  name: get_labels
+- !ruby/object:RI::MethodSummary 
+  name: get_length16
+- !ruby/object:RI::MethodSummary 
+  name: get_name
+- !ruby/object:RI::MethodSummary 
+  name: get_question
+- !ruby/object:RI::MethodSummary 
+  name: get_rr
+- !ruby/object:RI::MethodSummary 
+  name: get_string
+- !ruby/object:RI::MethodSummary 
+  name: get_string_list
+- !ruby/object:RI::MethodSummary 
+  name: get_unpack
+name: MessageDecoder
+superclass: Object

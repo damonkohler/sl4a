@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::Definitions#op_bind_rpc?
+is_singleton: false
+name: op_bind_rpc?
+params: (op_bind)
+visibility: private

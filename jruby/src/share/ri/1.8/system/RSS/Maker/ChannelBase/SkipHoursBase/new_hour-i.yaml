@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: hour
+comment: 
+full_name: RSS::Maker::ChannelBase::SkipHoursBase#new_hour
+is_singleton: false
+name: new_hour
+params: () {|hour| ...}
+visibility: public

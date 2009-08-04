@@ -1,0 +1,30 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: StoryState
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: eof
+- !ruby/object:RI::MethodSummary 
+  name: event
+- !ruby/object:RI::MethodSummary 
+  name: given
+- !ruby/object:RI::MethodSummary 
+  name: one_more_of_the_same
+- !ruby/object:RI::MethodSummary 
+  name: other
+- !ruby/object:RI::MethodSummary 
+  name: outcome
+- !ruby/object:RI::MethodSummary 
+  name: scenario
+- !ruby/object:RI::MethodSummary 
+  name: story
+full_name: Spec::Story::Runner::StoryParser::StoryState
+superclass: State
+class_methods: []
+

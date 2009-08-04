@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (story_runner=Spec::Story::Runner.story_runner)
+is_singleton: false
+block_params: 
+name: run
+comment: 
+full_name: Spec::Story::Runner::PlainTextStoryRunner#run
+visibility: public
+aliases: []
+

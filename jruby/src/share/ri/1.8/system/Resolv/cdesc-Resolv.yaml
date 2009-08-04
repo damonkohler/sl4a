@@ -1,0 +1,46 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: each_address
+- !ruby/object:RI::MethodSummary 
+  name: each_name
+- !ruby/object:RI::MethodSummary 
+  name: getaddress
+- !ruby/object:RI::MethodSummary 
+  name: getaddresses
+- !ruby/object:RI::MethodSummary 
+  name: getname
+- !ruby/object:RI::MethodSummary 
+  name: getnames
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DefaultResolver
+  value: self.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AddressRegex
+  value: /(?:#{IPv4::Regex})|(?:#{IPv6::Regex})/
+full_name: Resolv
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: each_address
+- !ruby/object:RI::MethodSummary 
+  name: each_name
+- !ruby/object:RI::MethodSummary 
+  name: getaddress
+- !ruby/object:RI::MethodSummary 
+  name: getaddresses
+- !ruby/object:RI::MethodSummary 
+  name: getname
+- !ruby/object:RI::MethodSummary 
+  name: getnames
+name: Resolv
+superclass: Object

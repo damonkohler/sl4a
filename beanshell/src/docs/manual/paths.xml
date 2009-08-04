@@ -1,0 +1,48 @@
+<section>
+<name filename="paths">Working with Dirctories and Paths</name>
+
+BeanShell supports the notion of a <em>current working directory</em> for
+commands that work with files.  The cd() command can be used to change the
+working directory and pwd() can be used to display the current value.
+The BeanShell current working directory is stored in the variable bsh.cwd.
+<p/>
+
+All commands that work with files respect the working directory, including
+the following:
+<p/>
+
+<ul>
+<li>dir()</li>
+<li>source()</li>
+<li>run(),</li>
+<li>cat()</li>
+<li>load()</li>
+<li>save()</li>
+<li>mv()</li>
+<li>rm()</li>
+<li>addClassPath()</li>
+</ul>
+
+<h2>pathToFile()</h2>
+
+As a convenience for writing your own scripts and commands you can use
+the pathToFile() command to translate a relative file path to an absolute
+one relative to the current working directory.  Absolute paths are unmodified.
+
+<example>
+absfilename = pathToFile( filename );
+</example>
+
+<h2>Path Names and Slashes</h2>
+
+When working with path names you can generally just use forward slashes
+in BeanShell.  Java localizes forward slashes to the appropriate value
+under Windows environments.  If you must use backslashes remember to 
+escape them by doubling them:
+
+<example>
+dir("c:/Windows"); // ok
+dir("c:\\Windows"); // ok
+</example>
+
+</section>

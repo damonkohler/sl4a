@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::Generic#eql?
+is_singleton: false
+name: eql?
+params: (oth)
+visibility: public

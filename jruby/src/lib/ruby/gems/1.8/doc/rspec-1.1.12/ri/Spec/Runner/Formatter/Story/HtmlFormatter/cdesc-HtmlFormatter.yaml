@@ -1,0 +1,48 @@
+--- !ruby/object:RI::ClassDescription 
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: ERB::Util
+name: HtmlFormatter
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: collected_steps
+- !ruby/object:RI::MethodSummary 
+  name: found_scenario
+- !ruby/object:RI::MethodSummary 
+  name: print_step
+- !ruby/object:RI::MethodSummary 
+  name: run_ended
+- !ruby/object:RI::MethodSummary 
+  name: run_started
+- !ruby/object:RI::MethodSummary 
+  name: scenario_ended
+- !ruby/object:RI::MethodSummary 
+  name: scenario_failed
+- !ruby/object:RI::MethodSummary 
+  name: scenario_pending
+- !ruby/object:RI::MethodSummary 
+  name: scenario_started
+- !ruby/object:RI::MethodSummary 
+  name: scenario_succeeded
+- !ruby/object:RI::MethodSummary 
+  name: step_failed
+- !ruby/object:RI::MethodSummary 
+  name: step_pending
+- !ruby/object:RI::MethodSummary 
+  name: step_succeeded
+- !ruby/object:RI::MethodSummary 
+  name: step_upcoming
+- !ruby/object:RI::MethodSummary 
+  name: story_ended
+- !ruby/object:RI::MethodSummary 
+  name: story_started
+full_name: Spec::Runner::Formatter::Story::HtmlFormatter
+superclass: BaseTextFormatter
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::MIMEMessage::Headers#parse_rhs
+is_singleton: false
+name: parse_rhs
+params: (str)
+visibility: public

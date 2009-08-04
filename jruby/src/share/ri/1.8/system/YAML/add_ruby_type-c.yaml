@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Add a transfer method for a builtin type
+full_name: YAML::add_ruby_type
+is_singleton: true
+name: add_ruby_type
+params: ( type_tag, &transfer_proc )
+visibility: public

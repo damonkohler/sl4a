@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (current_story_runner)
+is_singleton: true
+block_params: 
+name: current_story_runner=
+comment: 
+full_name: Spec::Story::Runner::StoryRunner::current_story_runner=
+visibility: public
+aliases: []
+

@@ -1,0 +1,36 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: elements
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: maxoccurs
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: minoccurs
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::XMLSchema::Choice
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "<<"
+- !ruby/object:RI::MethodSummary 
+  name: elementformdefault
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+- !ruby/object:RI::MethodSummary 
+  name: targetnamespace
+name: Choice
+superclass: Info

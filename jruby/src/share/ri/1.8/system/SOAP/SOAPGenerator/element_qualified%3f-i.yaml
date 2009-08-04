@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::SOAPGenerator#element_qualified?
+is_singleton: false
+name: element_qualified?
+params: (element)
+visibility: public

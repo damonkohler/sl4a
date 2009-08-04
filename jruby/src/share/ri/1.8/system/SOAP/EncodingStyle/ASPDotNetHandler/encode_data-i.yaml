@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: encode interface.
+full_name: SOAP::EncodingStyle::ASPDotNetHandler#encode_data
+is_singleton: false
+name: encode_data
+params: (generator, ns, data, parent)
+visibility: public

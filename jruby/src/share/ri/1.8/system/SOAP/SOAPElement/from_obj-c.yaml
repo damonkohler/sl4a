@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::SOAPElement::from_obj
+is_singleton: true
+name: from_obj
+params: (obj, namespace = nil)
+visibility: public

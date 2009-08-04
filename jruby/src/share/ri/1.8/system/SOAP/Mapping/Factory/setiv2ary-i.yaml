@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::Factory#setiv2ary
+is_singleton: false
+name: setiv2ary
+params: (obj, node, map)
+visibility: private

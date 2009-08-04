@@ -1,0 +1,51 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: last_match_tried
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: last_spec_tried
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: matched_count
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: space
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: string_left
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SPECIFIERS
+  value: "'diuXxofeEgsc'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: REGEX
+  value: "/         # possible space, followed by...           (?:\\s*           # percent sign, followed by...             %             # another percent sign, or...               (?:%|                  # optional assignment suppression flag                  \\*?                  # optional maximum field width                  \\d*                    # named character class, ...                    (?:\\[\\[:\\w+:\\]\\]|                    # traditional character class, or...                       \\[[^\\]]*\\]|                    # specifier letter.                       [#{SPECIFIERS}])))|             # or miscellaneous characters               [^%\\s]+/ix"
+full_name: Scanf::FormatString
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: last_spec
+- !ruby/object:RI::MethodSummary 
+  name: match
+- !ruby/object:RI::MethodSummary 
+  name: prune
+- !ruby/object:RI::MethodSummary 
+  name: spec_count
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+name: FormatString
+superclass: Object

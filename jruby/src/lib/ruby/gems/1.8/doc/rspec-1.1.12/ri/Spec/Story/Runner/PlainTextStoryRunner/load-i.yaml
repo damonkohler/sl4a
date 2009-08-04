@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (path)
+is_singleton: false
+block_params: 
+name: load
+comment: 
+full_name: Spec::Story::Runner::PlainTextStoryRunner#load
+visibility: public
+aliases: []
+

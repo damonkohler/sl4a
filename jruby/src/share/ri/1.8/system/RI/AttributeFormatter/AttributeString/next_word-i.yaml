@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: accept non space, then all following spaces
+full_name: RI::AttributeFormatter::AttributeString#next_word
+is_singleton: false
+name: next_word
+params: ()
+visibility: public

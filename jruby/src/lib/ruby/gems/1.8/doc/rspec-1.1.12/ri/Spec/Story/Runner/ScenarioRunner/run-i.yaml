@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (scenario, world)
+is_singleton: false
+block_params: 
+name: run
+comment: 
+full_name: Spec::Story::Runner::ScenarioRunner#run
+visibility: public
+aliases: []
+

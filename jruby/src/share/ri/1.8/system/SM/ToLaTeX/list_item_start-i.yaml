@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::ToLaTeX#list_item_start
+is_singleton: false
+name: list_item_start
+params: (am, fragment)
+visibility: private

@@ -1,0 +1,25 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Ruby's Float is double-precision 64-bit floating point value.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Type
+  value: QName.new(Namespace, DoubleLiteral)
+full_name: XSD::XSDDouble
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: FloatConstants
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: _to_s
+- !ruby/object:RI::MethodSummary 
+  name: screen_data
+name: XSDDouble
+superclass: XSDAnySimpleType

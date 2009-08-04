@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::DNS::Resource::get_class
+is_singleton: true
+name: get_class
+params: (type_value, class_value)
+visibility: public

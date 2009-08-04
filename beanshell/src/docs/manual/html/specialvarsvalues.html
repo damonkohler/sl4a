@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><head><title>Special Variables and Values</title></head><body bgcolor="ffffff"><table cellspacing="10"><tr><td align="center"><a href="http://www.beanshell.org/"><img src="../images/homebutton.gif"/><br/>Home</a></td><td><a href="interfaces.html#Scripting_Interfaces"><img src="../images/backbutton.gif"/><br/>Back
+			</a></td><td align="center"><a href="contents.html"><img src="../images/upbutton.gif"/><br/>Contents</a></td><td align="center"><a href="commands.html#BeanShell_Commands"><img src="../images/forwardbutton.gif"/><br/>Next
+			</a></td></tr></table><h1>Special Variables and Values</h1>
+
+
+In addition to the scope modifiers: 'this', 'super', 'global', BeanShell
+supports a number of pre-defined system variables, "magic" values, and methods.
+<p CLEAR="ALL"/>
+
+<em>Special Values</em>
+<p CLEAR="ALL"/>
+<ul>
+<li><strong>$_</strong> - The value of the last expression evaluated.  The
+strange construct for this is drawn from Perl, but the idea exists in many
+scripting languages.  It is useful for getting back 
+the last result when you are working interactively.  
+</li>
+
+<li><strong>$_e</strong> - The last uncaught exception object thrown.  
+This is useful in interactive use for retrieving the last exception to inspect
+it for details.
+</li>
+
+<li><strong>bsh</strong> - The BeanShell root system object, containing 
+system information and variables.</li>
+
+<li><strong>bsh.args</strong> - An array of Strings passed as command 
+line arguments to the BeanShell interpreter.</li>
+
+<li><strong>bsh.shared</strong> - A special static space which is 
+shared across all interpreter instances.  Normally each bsh.Interpreter 
+instance is entirely independent; having its own unique global namespace
+and settings.  bsh.shared is implemented as a static namespace in the 
+bsh.Interpreter class.  It was added primarily to support communication
+among instances for the GUI desktop.
+</li>
+
+<li><strong>bsh.console</strong> - If BeanShell is running in 
+its GUI desktop mode, this variable holds a reference to the current 
+interpreter's console, if it has one.</li>
+
+<li><strong>bsh.appletcontext</strong> - If BeanShell
+is running inside an Applet, the current applet context, if one exists.</li>
+
+<li><strong>bsh.cwd</strong> - A String representing the current working
+directory of the BeanShell interpreter.  This is used or manipulated by the 
+cd(), dir(), pwd(), and pathToFile() commands.</li>
+
+<li><strong>bsh.show</strong> - A boolean value used by the show() command.
+It indicates whether results are always printed, for interactive use.
+</li>
+
+<li><strong>bsh.interactive</strong> - A boolean indicating whether this 
+interpreter running in an interactive mode</li> 
+
+<li><strong>bsh.evalOnly</strong> - A boolean indicating whether this 
+interpreter has an input stream or whether is it only serving as an engine 
+for eval() operations (e.g. for embedded use).</li>
+</ul>
+<p CLEAR="ALL"/>
+
+<p/><center><table cellpadding="5" border="1" width="90%"><tr><td bgcolor="#eeeebb"><strong>Note:</strong><br CLEAR="ALL"/>
+The choice of "bsh" for the root system object name was somewhat unfortunate
+because it conflicts with the current package name for BeanShell (also bsh).
+This means that if you wish to work with BeanShell classes explicitly from
+BeanShell scripts (e.g. bsh.Interpreter) you must first import them, e.g.:
+<pre>
+    import bsh.Interpreter;
+    i=new Interpreter();
+</pre>
+</td></tr></table></center><p/>
+
+<h2><a name="Special_Members_of_'this'_type_References">Special Members of 'this' type References</a></h2>
+<p CLEAR="ALL"/>
+
+'this' type references have several "magic" members:  
+
+<ul>
+
+<li><strong>this.variables</strong> - An array of Strings listing the 
+variables defined in the current method context (namespace).</li>
+
+<li><strong>this.methods</strong> - An array of Strings listing the methods 
+defined the current method context (namespace).</li>
+
+<li><strong>this.interpreter</strong> - A bsh.Interpreter reference to the 
+currently executing BeanShell Interpreter object.</li>
+
+<li><strong>this.namespace</strong> - A bsh.NameSpace reference to the BeanShell
+NameSpace object of the current method context. See "Advanced Topics".</li>
+
+<li><strong>this.caller</strong> - A bsh.This reference to the calling
+BeanShell method context. See "Variables and Scope Modifiers".</li>
+
+<li><strong>this.callstack</strong> - An array of bsh.NameSpace references 
+representing the "call stack" up to the current method context. 
+See "Advanced Topics".</li>
+
+</ul>
+<p CLEAR="ALL"/>
+
+These magic references are primarily used by BeanShell commands. 
+<p CLEAR="ALL"/>
+
+<h2><a name="Undefined_Variables">Undefined Variables</a></h2>
+<p CLEAR="ALL"/>
+You can test to see if a variable is defined using the special value 
+<b>void</b>.  For example:
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+if ( foobar == void )
+    // undefined
+</pre></td></tr></table></center><p/>
+
+You can return a variable to the undefined state using the unset() command:
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+a == void;  // true
+a=5;
+unset("a"); // note the quotes
+a == void;  // true
+</pre></td></tr></table></center><p/>
+
+<h2><a name="Setting_the_Command_Prompt">Setting the Command Prompt</a></h2>
+
+Users may set the command line prompt string for use in interactive mode 
+by setting the value of the variable bsh.prompt or by defining the scripted
+method (or command) getBshPrompt().  
+<p CLEAR="ALL"/>
+
+If the command or method getBshPrompt() is defined it will be called to
+get a string to display as the user prompt.  For example, one could
+define the following method to place the current working directory into
+their command prompt:
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+	getBshPrompt() { return bsh.cwd + " % "; }
+</pre></td></tr></table></center><p/>
+
+The default getBshPrompt() command returns the value of the variable
+bsh.prompt if it is defined or the string "bsh % " if not.  If the
+getBshPrompt() method or command does not exist, throws an exception, or does
+not return a String, a default prompt of "bsh % " will be used.
+<p CLEAR="ALL"/>
+
+<table cellspacing="10"><tr><td align="center"><a href="http://www.beanshell.org/"><img src="../images/homebutton.gif"/><br/>Home</a></td><td><a href="interfaces.html#Scripting_Interfaces"><img src="../images/backbutton.gif"/><br/>Back
+			</a></td><td align="center"><a href="contents.html"><img src="../images/upbutton.gif"/><br/>Contents</a></td><td align="center"><a href="commands.html#BeanShell_Commands"><img src="../images/forwardbutton.gif"/><br/>Next
+			</a></td></tr></table></body></html>

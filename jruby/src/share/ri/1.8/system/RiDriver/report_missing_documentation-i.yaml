@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Couldn't find documentation in <tt>path</tt>, so tell the user what to do
+full_name: RiDriver#report_missing_documentation
+is_singleton: false
+name: report_missing_documentation
+params: (path)
+visibility: public

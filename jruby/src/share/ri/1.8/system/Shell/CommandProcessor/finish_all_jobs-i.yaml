@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Alias for #check_point"
+full_name: Shell::CommandProcessor#finish_all_jobs
+is_singleton: false
+name: finish_all_jobs
+params: ()
+visibility: public

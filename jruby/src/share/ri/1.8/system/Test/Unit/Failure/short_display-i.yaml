@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a brief version of the error description.
+full_name: Test::Unit::Failure#short_display
+is_singleton: false
+name: short_display
+params: ()
+visibility: public

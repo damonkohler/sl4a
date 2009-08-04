@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPUtils#normalize_path
+is_singleton: false
+name: normalize_path
+params: (path)
+visibility: public

@@ -1,0 +1,15 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Describe the contents of this struct in a string.
+full_name: Struct#to_s
+is_singleton: false
+name: to_s
+params: |
+  struct.to_s      => string
+  struct.inspect   => string
+
+visibility: public

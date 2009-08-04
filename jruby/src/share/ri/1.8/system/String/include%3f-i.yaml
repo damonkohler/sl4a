@@ -1,0 +1,17 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns <tt>true</tt> if <em>str</em> contains the given string or character.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;hello&quot;.include? &quot;lo&quot;   #=&gt; true\n   &quot;hello&quot;.include? &quot;ol&quot;   #=&gt; false\n   &quot;hello&quot;.include? ?h     #=&gt; true\n"
+full_name: String#include?
+is_singleton: false
+name: include?
+params: |
+  str.include? other_str   => true or false
+  str.include? fixnum      => true or false
+
+visibility: public

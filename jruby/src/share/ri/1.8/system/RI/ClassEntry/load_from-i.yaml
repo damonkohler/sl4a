@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: read in our methods and any classes and modules in our namespace. Methods are stored in files called name-c|i.yaml, where the 'name' portion is the external form of the method name and the c|i is a class|instance flag
+full_name: RI::ClassEntry#load_from
+is_singleton: false
+name: load_from
+params: (dir)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (name)
+is_singleton: false
+block_params: 
+name: create_given_scenario
+comment: 
+full_name: Spec::Story::Runner::StoryMediator#create_given_scenario
+visibility: public
+aliases: []
+

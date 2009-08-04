@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Return an exact match to a particular name
+full_name: RI::ClassEntry#contained_class_named
+is_singleton: false
+name: contained_class_named
+params: (name)
+visibility: public

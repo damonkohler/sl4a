@@ -1,0 +1,17 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Base class of errors that occur when processing GZIP files.
+constants: []
+
+full_name: Zlib::GzipFile::Error
+includes: []
+
+instance_methods: []
+
+name: Error
+superclass: Zlib::Error

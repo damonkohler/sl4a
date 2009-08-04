@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPRequest#read_chunk_size
+is_singleton: false
+name: read_chunk_size
+params: (socket)
+visibility: private

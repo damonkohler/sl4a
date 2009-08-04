@@ -1,0 +1,19 @@
+/**
+	Return an "empty" BeanShell object context which can be used to hold 
+	data items.  e.g. 
+	<p>
+	<pre>
+    myStuff = object();
+    myStuff.foo = 42;
+    myStuff.bar = "blah";
+	</pre>
+
+	@method This object()
+*/
+
+bsh.help.object = "usage: object()";
+
+object() { 
+	return this; 
+}
+

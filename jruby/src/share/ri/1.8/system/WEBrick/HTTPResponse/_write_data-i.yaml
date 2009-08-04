@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPResponse#_write_data
+is_singleton: false
+name: _write_data
+params: (socket, data)
+visibility: private

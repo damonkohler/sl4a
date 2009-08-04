@@ -1,0 +1,47 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: Reporter
+constants: 
+- !ruby/object:RI::Constant 
+  name: EXAMPLE_PENDING_DEPRECATION_WARNING
+  value: '<<-WARNING         DEPRECATION NOTICE: RSpec''s formatters have changed
+    example_pending         to accept three arguments instead of just two. Please
+    see the rdoc         for Spec::Runner::Formatter::BaseFormatter#example_pending         for
+    more information.                    Please update any custom formatters to accept
+    the third argument         to example_pending. Support for example_pending with
+    two arguments         and this warning message will be removed after the RSpec
+    1.1.5 release.       WARNING'
+  comment: 
+comment: 
+attributes: 
+- !ruby/object:RI::Attribute 
+  name: example_groups
+  comment: 
+  rw: R
+- !ruby/object:RI::Attribute 
+  name: options
+  comment: 
+  rw: R
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_example_group
+- !ruby/object:RI::MethodSummary 
+  name: dump
+- !ruby/object:RI::MethodSummary 
+  name: end
+- !ruby/object:RI::MethodSummary 
+  name: example_failed
+- !ruby/object:RI::MethodSummary 
+  name: example_finished
+- !ruby/object:RI::MethodSummary 
+  name: example_started
+- !ruby/object:RI::MethodSummary 
+  name: failure
+- !ruby/object:RI::MethodSummary 
+  name: start
+full_name: Spec::Runner::Reporter
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the argument unchanged. Just for compatibility to IO.
+full_name: StringIO#sync=
+is_singleton: false
+name: sync=
+params: " strio.sync = boolean -> boolean "
+visibility: public

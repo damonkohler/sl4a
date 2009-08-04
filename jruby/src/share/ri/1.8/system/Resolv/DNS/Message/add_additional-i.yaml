@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::DNS::Message#add_additional
+is_singleton: false
+name: add_additional
+params: (name, ttl, data)
+visibility: public

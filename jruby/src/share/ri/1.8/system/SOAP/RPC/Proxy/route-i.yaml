@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Proxy#route
+is_singleton: false
+name: route
+params: (req_header, req_body, reqopt, resopt)
+visibility: public

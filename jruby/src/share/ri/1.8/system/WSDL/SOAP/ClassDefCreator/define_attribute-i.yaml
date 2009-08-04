@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::SOAP::ClassDefCreator#define_attribute
+is_singleton: false
+name: define_attribute
+params: (c, attributes)
+visibility: private

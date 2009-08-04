@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: ensure that the Singleton pattern is properly inherited
+full_name: SingletonClassMethods#inherited
+is_singleton: false
+name: inherited
+params: (sub_klass)
+visibility: private

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::SyndicationModel#validate_sy_updatePeriod
+is_singleton: false
+name: validate_sy_updatePeriod
+params: (value)
+visibility: private

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Scanf::FormatSpecifier#mid_match?
+is_singleton: false
+name: mid_match?
+params: ()
+visibility: public

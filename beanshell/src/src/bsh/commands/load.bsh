@@ -1,0 +1,88 @@
+/**
+	Load a serialized Java object from filename.  Returns the object.
+*/
+
+bsh.help.load = "usage: load(filename)";
+
+setAccessibility(true);
+
+import bsh.BshClassManager;
+import java.io.*;
+import java.lang.reflect.Proxy;
+
+import bsh.Capabilities;
+
+if ( Capabilities.classExists("bsh.ClassGeneratorImpl") )
+{
+public class BshObjectInputStream extends ObjectInputStream
+{
+	BshClassManager bcm;
+
+	public BshObjectInputStream( BshClassManager bcm, InputStream in)
+        throws IOException, StreamCorruptedException
+    {
+		super(in);
+		this.bcm = bcm;
+    }
+
+    protected Class resolveClass( ObjectStreamClass clas )
+        throws IOException, ClassNotFoundException
+    {
+//        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+//        return Class.forName( clas.getName(), false, loader );
+		Class c = null;
+		try {
+			c = super.resolveClass( clas );
+		} catch ( ClassNotFoundException e ) { }
+		if ( c != null )
+			return c;
+		c = bcm.classForName( clas.getName() );
+		if ( c != null )
+			return c;
+		throw new ClassNotFoundException( "bcm not found: "+clas.getName() );
+	}
+
+/*
+	protected Class resolveProxyClass( java.lang.String[] interfaces )
+        throws IOException, ClassNotFoundException
+    {
+		return super.resolveProxyClass( interfaces );
+
+//        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+//
+//        Class[] classes = new Class[interfaces.length];
+//
+//        for (int i = 0; i < interfaces.length; i++)
+//            classes[i] = Class.forName(interfaces[i], false, loader);
+//
+//        try {
+//            return Proxy.getProxyClass(loader, classes);
+//        } catch (IllegalArgumentException e) {
+//            throw new ClassNotFoundException("Proxy class not found", e);
+//        }
+    }
+*/
+}
+}
+
+Object load( String filename )
+{
+	this.file = pathToFile( filename );
+
+	Object obj;
+	FileInputStream in = new FileInputStream( file );
+	javap( BshObjectInputStream );
+	ObjectInputStream oin;
+	if ( BshObjectInputStream != void )
+		oin = new BshObjectInputStream( this.namespace.getClassManager(), in );
+	else
+		oin = new ObjectInputStream( in );
+	obj = oin.readObject();
+	oin.close();
+
+	// bind bsh objects into the caller's namespace
+	if ( obj instanceof bsh.This )
+		bind( obj, this.caller.namespace );
+
+	return obj;
+}

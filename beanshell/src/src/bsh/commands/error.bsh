@@ -1,0 +1,10 @@
+/**
+	Print the item as an error.  
+	In the GUI console the text will show up in (something like) red, 
+	else it will be printed to standard error.
+*/
+
+void error( item ) {
+	this.interpreter.error( String.valueOf(item) );
+}
+

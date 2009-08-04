@@ -1,0 +1,42 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: name
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: path_names
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: RI::ClassEntry
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_path
+- !ruby/object:RI::MethodSummary 
+  name: all_method_names
+- !ruby/object:RI::MethodSummary 
+  name: classes_and_modules
+- !ruby/object:RI::MethodSummary 
+  name: contained_class_named
+- !ruby/object:RI::MethodSummary 
+  name: contained_modules_matching
+- !ruby/object:RI::MethodSummary 
+  name: full_name
+- !ruby/object:RI::MethodSummary 
+  name: load_from
+- !ruby/object:RI::MethodSummary 
+  name: local_methods_matching
+- !ruby/object:RI::MethodSummary 
+  name: methods_matching
+- !ruby/object:RI::MethodSummary 
+  name: recursively_find_methods_matching
+name: ClassEntry
+superclass: Object

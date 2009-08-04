@@ -1,0 +1,101 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: Test::Unit::UI::GTK2::TestRunner
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_fault
+- !ruby/object:RI::MethodSummary 
+  name: assertion_count_label
+- !ruby/object:RI::MethodSummary 
+  name: attach_to_mediator
+- !ruby/object:RI::MethodSummary 
+  name: clear_fault
+- !ruby/object:RI::MethodSummary 
+  name: detail_panel
+- !ruby/object:RI::MethodSummary 
+  name: detail_scrolled_window
+- !ruby/object:RI::MethodSummary 
+  name: error_count_label
+- !ruby/object:RI::MethodSummary 
+  name: failure_count_label
+- !ruby/object:RI::MethodSummary 
+  name: fault_detail_label
+- !ruby/object:RI::MethodSummary 
+  name: fault_list
+- !ruby/object:RI::MethodSummary 
+  name: finished
+- !ruby/object:RI::MethodSummary 
+  name: green_style
+- !ruby/object:RI::MethodSummary 
+  name: info_panel
+- !ruby/object:RI::MethodSummary 
+  name: inner_detail_sub_panel
+- !ruby/object:RI::MethodSummary 
+  name: lazy_initialize
+- !ruby/object:RI::MethodSummary 
+  name: list_panel
+- !ruby/object:RI::MethodSummary 
+  name: list_scrolled_window
+- !ruby/object:RI::MethodSummary 
+  name: main_panel
+- !ruby/object:RI::MethodSummary 
+  name: main_window
+- !ruby/object:RI::MethodSummary 
+  name: outer_detail_sub_panel
+- !ruby/object:RI::MethodSummary 
+  name: output_status
+- !ruby/object:RI::MethodSummary 
+  name: progress_panel
+- !ruby/object:RI::MethodSummary 
+  name: raw_show_fault
+- !ruby/object:RI::MethodSummary 
+  name: red_style
+- !ruby/object:RI::MethodSummary 
+  name: reset_ui
+- !ruby/object:RI::MethodSummary 
+  name: result_changed
+- !ruby/object:RI::MethodSummary 
+  name: run_button
+- !ruby/object:RI::MethodSummary 
+  name: run_count_label
+- !ruby/object:RI::MethodSummary 
+  name: run_test
+- !ruby/object:RI::MethodSummary 
+  name: setup_mediator
+- !ruby/object:RI::MethodSummary 
+  name: setup_ui
+- !ruby/object:RI::MethodSummary 
+  name: show_fault
+- !ruby/object:RI::MethodSummary 
+  name: start
+- !ruby/object:RI::MethodSummary 
+  name: start_ui
+- !ruby/object:RI::MethodSummary 
+  name: started
+- !ruby/object:RI::MethodSummary 
+  name: status_entry
+- !ruby/object:RI::MethodSummary 
+  name: status_panel
+- !ruby/object:RI::MethodSummary 
+  name: stop
+- !ruby/object:RI::MethodSummary 
+  name: suite_name_entry
+- !ruby/object:RI::MethodSummary 
+  name: suite_panel
+- !ruby/object:RI::MethodSummary 
+  name: test_finished
+- !ruby/object:RI::MethodSummary 
+  name: test_progress_bar
+- !ruby/object:RI::MethodSummary 
+  name: test_started
+name: TestRunner
+superclass: Object

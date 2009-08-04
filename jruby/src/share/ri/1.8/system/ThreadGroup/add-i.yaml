@@ -1,0 +1,20 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Adds the given <em>thread</em> to this group, removing it from any other group to which it may have previously belonged.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   puts &quot;Initial group is #{ThreadGroup::Default.list}&quot;\n   tg = ThreadGroup.new\n   t1 = Thread.new { sleep }\n   t2 = Thread.new { sleep }\n   puts &quot;t1 is #{t1}&quot;\n   puts &quot;t2 is #{t2}&quot;\n   tg.add(t1)\n   puts &quot;Initial group now #{ThreadGroup::Default.list}&quot;\n   puts &quot;tg group now #{tg.list}&quot;\n"
+- !ruby/struct:SM::Flow::P 
+  body: <em>produces:</em>
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Initial group is #&lt;Thread:0x401bdf4c&gt;\n   t1 is #&lt;Thread:0x401b3c90&gt;\n   t2 is #&lt;Thread:0x401b3c18&gt;\n   Initial group now #&lt;Thread:0x401b3c18&gt;#&lt;Thread:0x401bdf4c&gt;\n   tg group now #&lt;Thread:0x401b3c90&gt;\n"
+full_name: ThreadGroup#add
+is_singleton: false
+name: add
+params: |
+  thgrp.add(thread)   => thgrp
+
+visibility: public

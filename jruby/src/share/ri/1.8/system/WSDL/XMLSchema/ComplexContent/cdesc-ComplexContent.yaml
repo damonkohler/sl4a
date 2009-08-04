@@ -1,0 +1,40 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: attributes
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: base
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: content
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: derivetype
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::XMLSchema::ComplexContent
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: basetype
+- !ruby/object:RI::MethodSummary 
+  name: elementformdefault
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+- !ruby/object:RI::MethodSummary 
+  name: targetnamespace
+name: ComplexContent
+superclass: Info

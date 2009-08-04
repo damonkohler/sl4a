@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Accessor method for elements of the tuple.
+full_name: Rinda::Tuple#[]
+is_singleton: false
+name: "[]"
+params: (k)
+visibility: public

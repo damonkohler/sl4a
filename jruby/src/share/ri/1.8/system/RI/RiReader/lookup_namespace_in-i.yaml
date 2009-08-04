@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RI::RiReader#lookup_namespace_in
+is_singleton: false
+name: lookup_namespace_in
+params: (target, namespaces)
+visibility: public

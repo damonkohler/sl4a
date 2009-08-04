@@ -1,0 +1,19 @@
+--- !ruby/object:RI::ClassDescription 
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Spec::Expectations::StringHelpers
+name: String
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: arg_regexp
+- !ruby/object:RI::MethodSummary 
+  name: step_name
+full_name: String
+superclass: Object
+class_methods: []
+

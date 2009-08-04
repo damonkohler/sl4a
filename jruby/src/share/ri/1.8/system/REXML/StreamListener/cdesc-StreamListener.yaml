@@ -1,0 +1,44 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: A template for stream parser listeners. Note that the declarations (attlistdecl, elementdecl, etc) are trivially processed; REXML doesn't yet handle doctype entity declarations, so you have to parse them out yourself.
+constants: []
+
+full_name: REXML::StreamListener
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: attlistdecl
+- !ruby/object:RI::MethodSummary 
+  name: cdata
+- !ruby/object:RI::MethodSummary 
+  name: comment
+- !ruby/object:RI::MethodSummary 
+  name: doctype
+- !ruby/object:RI::MethodSummary 
+  name: doctype_end
+- !ruby/object:RI::MethodSummary 
+  name: elementdecl
+- !ruby/object:RI::MethodSummary 
+  name: entity
+- !ruby/object:RI::MethodSummary 
+  name: entitydecl
+- !ruby/object:RI::MethodSummary 
+  name: instruction
+- !ruby/object:RI::MethodSummary 
+  name: notationdecl
+- !ruby/object:RI::MethodSummary 
+  name: tag_end
+- !ruby/object:RI::MethodSummary 
+  name: tag_start
+- !ruby/object:RI::MethodSummary 
+  name: text
+- !ruby/object:RI::MethodSummary 
+  name: xmldecl
+name: StreamListener
+superclass: 

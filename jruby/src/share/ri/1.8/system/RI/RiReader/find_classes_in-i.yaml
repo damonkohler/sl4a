@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::RULE 
+  width: 2
+full_name: RI::RiReader#find_classes_in
+is_singleton: false
+name: find_classes_in
+params: (res, klass)
+visibility: private

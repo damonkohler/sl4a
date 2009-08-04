@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns whether <tt>self</tt>'s encoding is EUC-JP or not.
+- !ruby/struct:SM::Flow::P 
+  body: <b>Note</b> don't expect this return value is MatchData.
+full_name: String#iseuc
+is_singleton: false
+name: iseuc
+params: |
+  String#iseuc   -> obj or nil
+
+visibility: public

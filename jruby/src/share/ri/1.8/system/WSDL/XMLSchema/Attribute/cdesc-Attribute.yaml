@@ -1,0 +1,64 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: arytype
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: default
+  rw: W
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: fixed
+  rw: W
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: form
+  rw: W
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: local_simpletype
+  rw: W
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: name
+  rw: W
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: ref
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: type
+  rw: W
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: use
+  rw: W
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: attr_reader_ref
+- !ruby/object:RI::MethodSummary 
+  name: attr_reader_ref
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::XMLSchema::Attribute
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: directelement?
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+- !ruby/object:RI::MethodSummary 
+  name: refelement
+- !ruby/object:RI::MethodSummary 
+  name: targetnamespace
+name: Attribute
+superclass: Info

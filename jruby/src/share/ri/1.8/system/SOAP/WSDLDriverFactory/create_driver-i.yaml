@@ -1,0 +1,13 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: createDriver
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: depricated old interface
+full_name: SOAP::WSDLDriverFactory#create_driver
+is_singleton: false
+name: create_driver
+params: (servicename = nil, portname = nil)
+visibility: public

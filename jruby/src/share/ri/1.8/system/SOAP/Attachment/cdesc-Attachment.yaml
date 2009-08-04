@@ -1,0 +1,40 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: contenttype
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: io
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: contentid
+- !ruby/object:RI::MethodSummary 
+  name: mime_contentid
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: SOAP::Attachment
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: content
+- !ruby/object:RI::MethodSummary 
+  name: contentid
+- !ruby/object:RI::MethodSummary 
+  name: contentid=
+- !ruby/object:RI::MethodSummary 
+  name: mime_contentid
+- !ruby/object:RI::MethodSummary 
+  name: save
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+- !ruby/object:RI::MethodSummary 
+  name: write
+name: Attachment
+superclass: Object

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPUtils#parse_form_data
+is_singleton: false
+name: parse_form_data
+params: (io, boundary)
+visibility: public

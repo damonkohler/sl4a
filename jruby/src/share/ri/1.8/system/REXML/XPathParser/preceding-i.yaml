@@ -1,0 +1,20 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Builds a nodeset of all of the preceding nodes of the supplied node, in reverse document order
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "preceding:"
+    body: includes every element in the document that precedes this node,
+  type: :NOTE
+- !ruby/struct:SM::Flow::P 
+  body: except for ancestors
+full_name: REXML::XPathParser#preceding
+is_singleton: false
+name: preceding
+params: ( node )
+visibility: private

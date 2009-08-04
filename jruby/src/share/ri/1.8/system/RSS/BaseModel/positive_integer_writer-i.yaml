@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::BaseModel#positive_integer_writer
+is_singleton: false
+name: positive_integer_writer
+params: (name, disp_name=name)
+visibility: private

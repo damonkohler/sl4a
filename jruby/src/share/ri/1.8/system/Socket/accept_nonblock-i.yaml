@@ -1,0 +1,32 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Accepts an incoming connection using accept(2) after O_NONBLOCK is set for the underlying file descriptor. It returns an array containg the accpeted socket for the incoming connection, <em>client_socket</em>, and a string that contains the <tt>struct</tt> sockaddr information about the caller, <em>client_sockaddr</em>.
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Example
+- !ruby/struct:SM::Flow::VERB 
+  body: "     # In one script, start this first\n     require 'socket'\n     include Socket::Constants\n     socket = Socket.new(AF_INET, SOCK_STREAM, 0)\n     sockaddr = Socket.sockaddr_in(2200, 'localhost')\n     socket.bind(sockaddr)\n     socket.listen(5)\n     begin\n       client_socket, client_sockaddr = socket.accept_nonblock\n     rescue Errno::EAGAIN, Errno::ECONNABORTED, Errno::EPROTO, Errno::EINTR\n       IO.select([socket])\n       retry\n     end\n     puts &quot;The client said, '#{client_socket.readline.chomp}'&quot;\n     client_socket.puts &quot;Hello from script one!&quot;\n     socket.close\n\n     # In another script, start this second\n     require 'socket'\n     include Socket::Constants\n     socket = Socket.new(AF_INET, SOCK_STREAM, 0)\n     sockaddr = Socket.sockaddr_in(2200, 'localhost')\n     socket.connect(sockaddr)\n     socket.puts &quot;Hello from script 2.&quot;\n     puts &quot;The server said, '#{socket.readline.chomp}'&quot;\n     socket.close\n"
+- !ruby/struct:SM::Flow::P 
+  body: Refer to Socket#accept for the exceptions that may be thrown if the call to <em>accept_nonblock</em> fails.
+- !ruby/struct:SM::Flow::P 
+  body: Socket#accept_nonblock may raise any error corresponding to accept(2) failure, including Errno::EAGAIN.
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: See
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Socket#accept
+  type: :BULLET
+full_name: Socket#accept_nonblock
+is_singleton: false
+name: accept_nonblock
+params: |
+  socket.accept_nonblock => [client_socket, client_sockaddr]
+
+visibility: public

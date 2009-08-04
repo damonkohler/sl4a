@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RI::RiWriter#add_method
+is_singleton: false
+name: add_method
+params: (class_desc, method_desc)
+visibility: public

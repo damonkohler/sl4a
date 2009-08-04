@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::Generic#query=
+is_singleton: false
+name: query=
+params: (v)
+visibility: public

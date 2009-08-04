@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::Utils#create_self_signed_cert
+is_singleton: false
+name: create_self_signed_cert
+params: (bits, cn, comment)
+visibility: public

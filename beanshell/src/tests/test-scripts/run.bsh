@@ -1,0 +1,33 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// basic stuff
+a=1;
+global.g = 7;
+r = run("Data/run_aux.bsh");
+assert( a==1 );
+assert( r.a == 5 );
+// run_aux does sets global g to 6, it should not appear here 
+assert( global.g == 7 );
+assert( r.g == 6 );
+
+// Note: this could fail legitimately if we're not in the test dir...
+assert( r.cwd != void );
+assert( !r.cwd.equals( bsh.cwd) );
+
+arg = object();
+arg.foo=1;
+r = run("Data/run_aux.bsh", arg);
+// run_aux copies runArgument to ra 
+assert( r.ra.foo == 1 );
+
+// test that classloading doesn't affect us
+r=run("Data/run_aux2.bsh");
+assert( r.c == 5 );
+assert( isEvalError("new AddClass()") );
+// should show no class loading...
+//this.namespace.getClassManager().dump( new PrintWriter(System.out,true));
+
+complete();
+

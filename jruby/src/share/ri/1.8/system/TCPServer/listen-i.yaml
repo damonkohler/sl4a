@@ -1,0 +1,116 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Listens for connections, using the specified <tt>int</tt> as the backlog. A call to <em>listen</em> only applies if the <tt>socket</tt> is of type SOCK_STREAM or SOCK_SEQPACKET.
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Parameter
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: <tt>backlog</tt> - the maximum length of the queue for pending connections.
+  type: :BULLET
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Example 1
+- !ruby/struct:SM::Flow::VERB 
+  body: "     require 'socket'\n     include Socket::Constants\n     socket = Socket.new( AF_INET, SOCK_STREAM, 0 )\n     sockaddr = Socket.pack_sockaddr_in( 2200, 'localhost' )\n     socket.bind( sockaddr )\n     socket.listen( 5 )\n"
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: "Example 2 (listening on an arbitary port, unix-based systems only):"
+- !ruby/struct:SM::Flow::VERB 
+  body: "     require 'socket'\n     include Socket::Constants\n     socket = Socket.new( AF_INET, SOCK_STREAM, 0 )\n     socket.listen( 1 )\n"
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Unix-based Exceptions
+- !ruby/struct:SM::Flow::P 
+  body: On unix based systems the above will work because a new <tt>sockaddr</tt> struct is created on the address ADDR_ANY, for an arbitrary port number as handed off by the kernel. It will not work on Windows, because Windows requires that the <tt>socket</tt> is bound by calling <em>bind</em> before it can <em>listen</em>.
+- !ruby/struct:SM::Flow::P 
+  body: If the <em>backlog</em> amount exceeds the implementation-dependent maximum queue length, the implementation's maximum queue length will be used.
+- !ruby/struct:SM::Flow::P 
+  body: "On unix-based based systems the following system exceptions may be raised if the call to <em>listen</em> fails:"
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EBADF - the <em>socket</em> argument is not a valid file descriptor
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EDESTADDRREQ - the <em>socket</em> is not bound to a local address, and the protocol does not support listening on an unbound socket
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EINVAL - the <em>socket</em> is already connected
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENOTSOCK - the <em>socket</em> argument does not refer to a socket
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EOPNOTSUPP - the <em>socket</em> protocol does not support listen
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EACCES - the calling process does not have approriate privileges
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EINVAL - the <em>socket</em> has been shut down
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENOBUFS - insufficient resources are available in the system to complete the call
+  type: :BULLET
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Windows Exceptions
+- !ruby/struct:SM::Flow::P 
+  body: "On Windows systems the following system exceptions may be raised if the call to <em>listen</em> fails:"
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENETDOWN - the network is down
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EADDRINUSE - the socket's local address is already in use. This usually occurs during the execution of <em>bind</em> but could be delayed if the call to <em>bind</em> was to a partially wildcard address (involving ADDR_ANY) and if a specific address needs to be commmitted at the time of the call to <em>listen</em>
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EINPROGRESS - a Windows Sockets 1.1 call is in progress or the service provider is still processing a callback function
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EINVAL - the <tt>socket</tt> has not been bound with a call to <em>bind</em>.
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EISCONN - the <tt>socket</tt> is already connected
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EMFILE - no more socket descriptors are available
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENOBUFS - no buffer space is available
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENOTSOC - <tt>socket</tt> is not a socket
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EOPNOTSUPP - the referenced <tt>socket</tt> is not a type that supports the <em>listen</em> method
+  type: :BULLET
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: See
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: listen manual pages on unix-based systems
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: listen function in Microsoft's Winsock functions reference
+  type: :BULLET
+full_name: TCPServer#listen
+is_singleton: false
+name: listen
+params: |
+  socket.listen( int ) => 0
+
+visibility: public

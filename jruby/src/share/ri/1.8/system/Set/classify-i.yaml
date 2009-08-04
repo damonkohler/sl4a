@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: o
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Classifies the set by the return value of the given block and returns a hash of {value =&gt; set of elements} pairs. The block is called once for each element of the set, passing the element as parameter.
+- !ruby/struct:SM::Flow::P 
+  body: "e.g.:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  require 'set'\n  files = Set.new(Dir.glob(&quot;*.rb&quot;))\n  hash = files.classify { |f| File.mtime(f).year }\n  p hash    # =&gt; {2000=&gt;#&lt;Set: {&quot;a.rb&quot;, &quot;b.rb&quot;}&gt;,\n            #     2001=&gt;#&lt;Set: {&quot;c.rb&quot;, &quot;d.rb&quot;, &quot;e.rb&quot;}&gt;,\n            #     2002=&gt;#&lt;Set: {&quot;f.rb&quot;}&gt;}\n"
+full_name: Set#classify
+is_singleton: false
+name: classify
+params: ( {|o| ...}
+visibility: public

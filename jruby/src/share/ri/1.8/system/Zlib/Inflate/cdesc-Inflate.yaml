@@ -1,0 +1,29 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: inflate
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Zlib:Inflate is the class for decompressing compressed data. Unlike Zlib::Deflate, an instance of this class is not able to duplicate (clone, dup) itself.
+constants: []
+
+full_name: Zlib::Inflate
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "<<"
+- !ruby/object:RI::MethodSummary 
+  name: inflate
+- !ruby/object:RI::MethodSummary 
+  name: set_dictionary
+- !ruby/object:RI::MethodSummary 
+  name: sync
+- !ruby/object:RI::MethodSummary 
+  name: sync_point?
+name: Inflate
+superclass: Zlib::ZStream

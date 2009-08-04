@@ -1,0 +1,41 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Requests a connection to be made on the given <tt>server_sockaddr</tt> after O_NONBLOCK is set for the underlying file descriptor. Returns 0 if successful, otherwise an exception is raised.
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Parameter
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: <tt>server_sockaddr</tt> - the <tt>struct</tt> sockaddr contained in a string
+  type: :BULLET
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: "Example:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "     # Pull down Google's web page\n     require 'socket'\n     include Socket::Constants\n     socket = Socket.new(AF_INET, SOCK_STREAM, 0)\n     sockaddr = Socket.sockaddr_in(80, 'www.google.com')\n     begin\n       socket.connect_nonblock(sockaddr)\n     rescue Errno::EINPROGRESS\n       IO.select(nil, [socket])\n       begin\n         socket.connect_nonblock(sockaddr)\n       rescue Errno::EISCONN\n       end\n     end\n     socket.write(&quot;GET / HTTP/1.0\\r\\n\\r\\n&quot;)\n     results = socket.read\n"
+- !ruby/struct:SM::Flow::P 
+  body: Refer to Socket#connect for the exceptions that may be thrown if the call to <em>connect_nonblock</em> fails.
+- !ruby/struct:SM::Flow::P 
+  body: Socket#connect_nonblock may raise any error corresponding to connect(2) failure, including Errno::EINPROGRESS.
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: See
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Socket#connect
+  type: :BULLET
+full_name: Socket#connect_nonblock
+is_singleton: false
+name: connect_nonblock
+params: |
+  socket.connect_nonblock(server_sockaddr) => 0
+
+visibility: public

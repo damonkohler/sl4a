@@ -1,0 +1,129 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+class Foo33 
+{
+	static int a = 5;
+	int b;
+	int b2=42;
+	Object fooThis = this;
+	int q=5;
+
+	// Leave this as default level accessibility...
+	// prompts some important accessibility issues.
+	// maybe make a clear standalone case for that... TODO.
+	Foo33() { } // Foo33 needs a default constructor for Bar33()
+
+	Foo33( int c ) {
+		b=c;
+	}
+
+	void method() { 
+		assert( a == 5 );
+		assert( q == 5 || q==6/*after setQ()*/);
+		assert( this == fooThis );
+
+		// block namespace
+		{
+			assert( this == fooThis );
+		}
+	}
+
+	setQ(int a) { q=a; }
+
+	static void smethod() 
+	{
+		assert( a == 5 );
+
+		// can't see instance vars or methods from static
+		assert(isEvalError("print(q)"));
+		assert(isEvalError("print(b)"));
+		assert(isEvalError("method()"));
+	}
+
+	method2() { 
+		return "foo"; 
+	}
+}
+
+class Bar33 extends Foo33 { 
+	int b2=99; // override
+	Object barThis = this;
+
+	barMethod() {
+		assert( b2 == 99 );
+		assert( this.b2 == 99 );
+assert(false);
+//assert( super.b2 == 42 );
+		method();
+		smethod();
+		assert( this == barThis );
+		assert( method2().equals("bar") );
+		assert( _bshSupermethod2().equals("foo") );
+		assert( super.method2().equals("foo") );
+	}
+	method2() { return "bar"; }
+}
+
+// static
+assert(Bar33.a == 5);
+assert(isEvalError("print(Bar33.b)"));
+Bar33.smethod();
+assert(isEvalError("Bar33.method()"));
+
+// instance
+assert( bar == void );
+bar = new Bar33();
+assert( bar.b == 0 ); // uninitialized instance
+assert( bar.a == 5 ); // static
+assert( bar instanceof Bar33 );
+assert( bar instanceof Foo33 );
+bar.method(); // instance
+bar.smethod(); // static
+bar.setQ(6);
+if ( Interpreter.LOCALSCOPING ) // not sure if we should allow this
+	assert( bar.q == 5 );
+else
+	assert( bar.q == 6 );
+
+// non default constructors
+assert(isEvalError("new Bar33(6)"));
+bar2 = new Bar33();
+assert( bar2.b == 0 );
+assert( bar2.a == 5 );
+assert( bar2.q == 5 );
+assert( bar2.b2 == 99 );
+
+// Version 1.3 doesn't support this.
+//assert( ((Foo33)bar2).b2 == 42 );
+
+// subclass tests
+bar.barMethod();
+
+class Gee extends Bar33 { }
+
+// static
+assert(Gee.a == 5);
+assert(isEvalError("print(Gee.b)"));
+Gee.smethod();
+assert(isEvalError("Gee.method()"));
+
+// instance
+gee = new Gee();
+assert( gee.b == 0 ); // uninitialized instance
+assert( gee.a == 5 ); // static
+gee.method(); // instance
+gee.smethod(); // static
+assert( gee.q == 5 ); // loose instance
+gee.setQ(6);
+if ( Interpreter.LOCALSCOPING ) // not sure if we should allow this
+	assert( gee.q == 5 );
+else
+	assert( gee.q == 6 );
+
+assert( bar.method2().equals("bar") );
+assert( gee.method2().equals("bar") );
+
+complete();
+

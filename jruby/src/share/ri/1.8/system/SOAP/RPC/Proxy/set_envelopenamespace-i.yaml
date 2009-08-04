@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Proxy#set_envelopenamespace
+is_singleton: false
+name: set_envelopenamespace
+params: (env, namespace)
+visibility: private

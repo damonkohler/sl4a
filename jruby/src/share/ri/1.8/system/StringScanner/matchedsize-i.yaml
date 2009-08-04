@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Equivalent to #matched_size. This method is obsolete; use #matched_size instead."
+full_name: StringScanner#matchedsize
+is_singleton: false
+name: matchedsize
+params: ()
+visibility: public

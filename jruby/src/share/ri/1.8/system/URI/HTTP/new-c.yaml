@@ -1,0 +1,21 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Description
+- !ruby/struct:SM::Flow::P 
+  body: Create a new URI::HTTP object from generic URI components as per RFC 2396. No HTTP-specific syntax checking (as per RFC 1738) is performed.
+- !ruby/struct:SM::Flow::P 
+  body: Arguments are <tt>scheme</tt>, <tt>userinfo</tt>, <tt>host</tt>, <tt>port</tt>, <tt>registry</tt>, <tt>path</tt>, <tt>opaque</tt>, <tt>query</tt> and <tt>fragment</tt>, in that order.
+- !ruby/struct:SM::Flow::P 
+  body: "Example:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "    uri = URI::HTTP.new(['http', nil, &quot;www.example.com&quot;, nil, &quot;/path&quot;,\n      &quot;query&quot;, 'fragment'])\n"
+full_name: URI::HTTP::new
+is_singleton: true
+name: new
+params: (*arg)
+visibility: public

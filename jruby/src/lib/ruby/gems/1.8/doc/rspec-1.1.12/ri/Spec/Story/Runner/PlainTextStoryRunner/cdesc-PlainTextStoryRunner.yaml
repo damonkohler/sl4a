@@ -1,0 +1,23 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: PlainTextStoryRunner
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: '[]='
+- !ruby/object:RI::MethodSummary 
+  name: load
+- !ruby/object:RI::MethodSummary 
+  name: run
+- !ruby/object:RI::MethodSummary 
+  name: steps
+full_name: Spec::Story::Runner::PlainTextStoryRunner
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

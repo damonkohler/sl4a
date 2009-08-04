@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: add_document_method
+block_params: 
+comment: 
+full_name: SOAP::RPC::Router#add_document_operation
+is_singleton: false
+name: add_document_operation
+params: (receiver, soapaction, name, param_def, opt = {})
+visibility: public

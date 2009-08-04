@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: ()
+is_singleton: false
+block_params: 
+name: arg_regexp
+comment: 
+full_name: Regexp#arg_regexp
+visibility: public
+aliases: []
+

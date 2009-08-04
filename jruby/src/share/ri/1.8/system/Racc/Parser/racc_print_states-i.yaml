@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Racc::Parser#racc_print_states
+is_singleton: false
+name: racc_print_states
+params: (s)
+visibility: private

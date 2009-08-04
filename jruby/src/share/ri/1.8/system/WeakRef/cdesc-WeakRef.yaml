@@ -1,0 +1,27 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: WeakRef is a class to represent a reference to an object that is not seen by the tracing phase of the garbage collector. This allows the referenced object to be garbage collected as if nothing is referring to it. Because WeakRef delegates method calls to the referenced object, it may be used in place of that object, i.e. it is of the same duck type.
+- !ruby/struct:SM::Flow::P 
+  body: "Usage:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  foo = Object.new\n  foo = Object.new\n  p foo.to_s                  # original's class\n  foo = WeakRef.new(foo)\n  p foo.to_s                  # should be same class\n  ObjectSpace.garbage_collect\n  p foo.to_s                  # should raise exception (recycled)\n"
+constants: []
+
+full_name: WeakRef
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: __getobj__
+- !ruby/object:RI::MethodSummary 
+  name: __setobj__
+- !ruby/object:RI::MethodSummary 
+  name: weakref_alive?
+name: WeakRef
+superclass: Delegator

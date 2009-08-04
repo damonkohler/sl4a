@@ -1,0 +1,228 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: char_no
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: continue
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: debug_level
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: exception_on_syntax_error
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: exception_on_syntax_error
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: indent
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: indent
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: lex_state
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: line_no
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: read_auto_clean_up
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: readed_auto_clean_up
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: seek
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: skip_space
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: skip_space
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: debug?
+- !ruby/object:RI::MethodSummary 
+  name: debug?
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Lexical analyzer for Ruby source
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ENINDENT_CLAUSE
+  value: "[     \"case\", \"class\", \"def\", \"do\", \"for\", \"if\",     \"module\", \"unless\", \"until\", \"while\", \"begin\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DEINDENT_CLAUSE
+  value: "[\"end\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PERCENT_LTYPE
+  value: "{     \"q\" => \"\\'\",     \"Q\" => \"\\\"\",     \"x\" => \"\\`\",     \"r\" => \"/\",     \"w\" => \"]\",     \"W\" => \"]\",     \"s\" => \":\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PERCENT_PAREN
+  value: "{     \"{\" => \"}\",     \"[\" => \"]\",     \"<\" => \">\",     \"(\" => \")\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Ltype2Token
+  value: "{     \"\\'\" => TkSTRING,     \"\\\"\" => TkSTRING,     \"\\`\" => TkXSTRING,     \"/\" => TkREGEXP,     \"]\" => TkDSTRING,     \":\" => TkSYMBOL"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DLtype2Token
+  value: "{     \"\\\"\" => TkDSTRING,     \"\\`\" => TkDXSTRING,     \"/\" => TkDREGEXP,   }"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ENINDENT_CLAUSE
+  value: "[     \"case\", \"class\", \"def\", \"do\", \"for\", \"if\",     \"module\", \"unless\", \"until\", \"while\", \"begin\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DEINDENT_CLAUSE
+  value: "[\"end\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PERCENT_LTYPE
+  value: "{     \"q\" => \"\\'\",     \"Q\" => \"\\\"\",     \"x\" => \"\\`\",     \"r\" => \"/\",     \"w\" => \"]\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PERCENT_PAREN
+  value: "{     \"{\" => \"}\",     \"[\" => \"]\",     \"<\" => \">\",     \"(\" => \")\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Ltype2Token
+  value: "{     \"\\'\" => TkSTRING,     \"\\\"\" => TkSTRING,     \"\\`\" => TkXSTRING,     \"/\" => TkREGEXP,     \"]\" => TkDSTRING"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DLtype2Token
+  value: "{     \"\\\"\" => TkDSTRING,     \"\\`\" => TkDXSTRING,     \"/\" => TkDREGEXP,   }"
+full_name: RubyLex
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: RubyToken
+- !ruby/object:RI::IncludedModule 
+  name: RubyToken
+- !ruby/object:RI::IncludedModule 
+  name: IRB
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: buf_input
+- !ruby/object:RI::MethodSummary 
+  name: char_no
+- !ruby/object:RI::MethodSummary 
+  name: each_top_level_statement
+- !ruby/object:RI::MethodSummary 
+  name: eof?
+- !ruby/object:RI::MethodSummary 
+  name: get_read
+- !ruby/object:RI::MethodSummary 
+  name: get_readed
+- !ruby/object:RI::MethodSummary 
+  name: getc
+- !ruby/object:RI::MethodSummary 
+  name: getc
+- !ruby/object:RI::MethodSummary 
+  name: getc_of_rests
+- !ruby/object:RI::MethodSummary 
+  name: getc_of_rests
+- !ruby/object:RI::MethodSummary 
+  name: gets
+- !ruby/object:RI::MethodSummary 
+  name: gets
+- !ruby/object:RI::MethodSummary 
+  name: identify_comment
+- !ruby/object:RI::MethodSummary 
+  name: identify_comment
+- !ruby/object:RI::MethodSummary 
+  name: identify_gvar
+- !ruby/object:RI::MethodSummary 
+  name: identify_gvar
+- !ruby/object:RI::MethodSummary 
+  name: identify_here_document
+- !ruby/object:RI::MethodSummary 
+  name: identify_here_document
+- !ruby/object:RI::MethodSummary 
+  name: identify_identifier
+- !ruby/object:RI::MethodSummary 
+  name: identify_identifier
+- !ruby/object:RI::MethodSummary 
+  name: identify_number
+- !ruby/object:RI::MethodSummary 
+  name: identify_number
+- !ruby/object:RI::MethodSummary 
+  name: identify_quotation
+- !ruby/object:RI::MethodSummary 
+  name: identify_quotation
+- !ruby/object:RI::MethodSummary 
+  name: identify_string
+- !ruby/object:RI::MethodSummary 
+  name: identify_string
+- !ruby/object:RI::MethodSummary 
+  name: initialize_input
+- !ruby/object:RI::MethodSummary 
+  name: lex
+- !ruby/object:RI::MethodSummary 
+  name: lex
+- !ruby/object:RI::MethodSummary 
+  name: lex_init
+- !ruby/object:RI::MethodSummary 
+  name: lex_init
+- !ruby/object:RI::MethodSummary 
+  name: lex_int2
+- !ruby/object:RI::MethodSummary 
+  name: lex_int2
+- !ruby/object:RI::MethodSummary 
+  name: line_no
+- !ruby/object:RI::MethodSummary 
+  name: peek
+- !ruby/object:RI::MethodSummary 
+  name: peek
+- !ruby/object:RI::MethodSummary 
+  name: peek_equal?
+- !ruby/object:RI::MethodSummary 
+  name: peek_equal?
+- !ruby/object:RI::MethodSummary 
+  name: peek_match?
+- !ruby/object:RI::MethodSummary 
+  name: prompt
+- !ruby/object:RI::MethodSummary 
+  name: read_escape
+- !ruby/object:RI::MethodSummary 
+  name: read_escape
+- !ruby/object:RI::MethodSummary 
+  name: set_input
+- !ruby/object:RI::MethodSummary 
+  name: set_prompt
+- !ruby/object:RI::MethodSummary 
+  name: skip_inner_expression
+- !ruby/object:RI::MethodSummary 
+  name: token
+- !ruby/object:RI::MethodSummary 
+  name: token
+- !ruby/object:RI::MethodSummary 
+  name: ungetc
+- !ruby/object:RI::MethodSummary 
+  name: ungetc
+name: RubyLex
+superclass: Object

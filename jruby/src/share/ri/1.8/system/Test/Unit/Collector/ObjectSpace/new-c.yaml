@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::Collector::ObjectSpace::new
+is_singleton: true
+name: new
+params: (source=::ObjectSpace)
+visibility: public

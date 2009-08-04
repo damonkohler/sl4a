@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Fetches the index of a given child @param child the child to get the index of @return the index of the child, or nil if the object is not a child of this parent.
+full_name: REXML::Parent#index
+is_singleton: false
+name: index
+params: ( child )
+visibility: public

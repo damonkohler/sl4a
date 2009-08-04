@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: servant entry interface
+full_name: SOAP::RPC::HTTPServer#add_rpc_request_servant
+is_singleton: false
+name: add_rpc_request_servant
+params: (factory, namespace = @default_namespace)
+visibility: public

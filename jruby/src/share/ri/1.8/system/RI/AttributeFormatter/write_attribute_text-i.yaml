@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: overridden in specific formatters
+full_name: RI::AttributeFormatter#write_attribute_text
+is_singleton: false
+name: write_attribute_text
+params: (prefix, line)
+visibility: protected

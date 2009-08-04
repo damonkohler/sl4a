@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Router#ensure_styleuse_option
+is_singleton: false
+name: ensure_styleuse_option
+params: (opt, style, use)
+visibility: private

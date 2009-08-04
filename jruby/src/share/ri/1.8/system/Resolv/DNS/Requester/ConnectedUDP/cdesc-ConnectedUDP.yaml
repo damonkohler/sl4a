@@ -1,0 +1,17 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: Resolv::DNS::Requester::ConnectedUDP
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: sender
+name: ConnectedUDP
+superclass: Requester

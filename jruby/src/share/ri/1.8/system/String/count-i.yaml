@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Each <em>other_str</em> parameter defines a set of characters to count. The intersection of these sets defines the characters to count in <em>str</em>. Any <em>other_str</em> that starts with a caret (^) is negated. The sequence c1--c2 means all characters between c1 and c2.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   a = &quot;hello world&quot;\n   a.count &quot;lo&quot;            #=&gt; 5\n   a.count &quot;lo&quot;, &quot;o&quot;       #=&gt; 2\n   a.count &quot;hello&quot;, &quot;^l&quot;   #=&gt; 4\n   a.count &quot;ej-m&quot;          #=&gt; 4\n"
+full_name: String#count
+is_singleton: false
+name: count
+params: |
+  str.count([other_str]+)   => fixnum
+
+visibility: public

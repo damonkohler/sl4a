@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPStatus#info?
+is_singleton: false
+name: info?
+params: (code)
+visibility: public

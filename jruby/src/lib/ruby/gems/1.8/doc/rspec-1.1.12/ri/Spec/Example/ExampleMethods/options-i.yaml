@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: ()
+is_singleton: false
+block_params: 
+name: options
+comment: 
+full_name: Spec::Example::ExampleMethods#options
+visibility: public
+aliases: []
+

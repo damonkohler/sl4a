@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::StandaloneServer#create_config
+is_singleton: false
+name: create_config
+params: ()
+visibility: private

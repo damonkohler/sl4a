@@ -1,0 +1,72 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Represents a tagged XML element. Elements are characterized by having children, attributes, and names, and can themselves be children.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NAMESPLIT
+  value: /^(?:(#{XMLTokens::NCNAME_STR}):)?(#{XMLTokens::NCNAME_STR})/u
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PARENTS
+  value: "[ :element, :document, :doctype ]"
+full_name: REXML::Light::Node
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "<<"
+- !ruby/object:RI::MethodSummary 
+  name: =~
+- !ruby/object:RI::MethodSummary 
+  name: "[]"
+- !ruby/object:RI::MethodSummary 
+  name: "[]="
+- !ruby/object:RI::MethodSummary 
+  name: children
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: has_name?
+- !ruby/object:RI::MethodSummary 
+  name: local_name
+- !ruby/object:RI::MethodSummary 
+  name: local_name=
+- !ruby/object:RI::MethodSummary 
+  name: name
+- !ruby/object:RI::MethodSummary 
+  name: name=
+- !ruby/object:RI::MethodSummary 
+  name: namespace
+- !ruby/object:RI::MethodSummary 
+  name: namespace=
+- !ruby/object:RI::MethodSummary 
+  name: namespace_of
+- !ruby/object:RI::MethodSummary 
+  name: namesplit
+- !ruby/object:RI::MethodSummary 
+  name: node_type
+- !ruby/object:RI::MethodSummary 
+  name: parent
+- !ruby/object:RI::MethodSummary 
+  name: parent=
+- !ruby/object:RI::MethodSummary 
+  name: prefix
+- !ruby/object:RI::MethodSummary 
+  name: prefix_of
+- !ruby/object:RI::MethodSummary 
+  name: root
+- !ruby/object:RI::MethodSummary 
+  name: size
+- !ruby/object:RI::MethodSummary 
+  name: text=
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+name: Node
+superclass: Object

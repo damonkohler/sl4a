@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (title, narrative)
+is_singleton: false
+block_params: 
+name: story_ended
+comment: 
+full_name: Spec::Runner::Formatter::Story::PlainTextFormatter#story_ended
+visibility: public
+aliases: []
+

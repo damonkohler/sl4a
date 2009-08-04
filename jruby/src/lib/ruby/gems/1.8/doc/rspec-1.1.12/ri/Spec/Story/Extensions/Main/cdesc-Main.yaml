@@ -1,0 +1,22 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: Main
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: Story
+- !ruby/object:RI::MethodSummary 
+  name: run_story
+- !ruby/object:RI::MethodSummary 
+  name: steps_for
+- !ruby/object:RI::MethodSummary 
+  name: with_steps_for
+full_name: Spec::Story::Extensions::Main
+superclass: 
+class_methods: []
+

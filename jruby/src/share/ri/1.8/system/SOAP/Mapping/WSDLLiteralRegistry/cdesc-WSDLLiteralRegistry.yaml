@@ -1,0 +1,85 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: definedelements
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: definedtypes
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: excn_handler_obj2soap
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: excn_handler_soap2obj
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MAPPING_OPT
+  value: "{ :no_reference => true }"
+full_name: SOAP::Mapping::WSDLLiteralRegistry
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_attributes2plainobj
+- !ruby/object:RI::MethodSummary 
+  name: add_attributes2soap
+- !ruby/object:RI::MethodSummary 
+  name: add_attributes2stubobj
+- !ruby/object:RI::MethodSummary 
+  name: add_elements2plainobj
+- !ruby/object:RI::MethodSummary 
+  name: add_elements2soap
+- !ruby/object:RI::MethodSummary 
+  name: add_elements2stubobj
+- !ruby/object:RI::MethodSummary 
+  name: any2obj
+- !ruby/object:RI::MethodSummary 
+  name: any2soap
+- !ruby/object:RI::MethodSummary 
+  name: anytype2obj
+- !ruby/object:RI::MethodSummary 
+  name: base2soap
+- !ruby/object:RI::MethodSummary 
+  name: complexobj2soap
+- !ruby/object:RI::MethodSummary 
+  name: define_xmlattr
+- !ruby/object:RI::MethodSummary 
+  name: define_xmlattr
+- !ruby/object:RI::MethodSummary 
+  name: define_xmlattr_accessor
+- !ruby/object:RI::MethodSummary 
+  name: define_xmlattr_accessor
+- !ruby/object:RI::MethodSummary 
+  name: mappingobj2soap
+- !ruby/object:RI::MethodSummary 
+  name: obj2elesoap
+- !ruby/object:RI::MethodSummary 
+  name: obj2soap
+- !ruby/object:RI::MethodSummary 
+  name: obj2typesoap
+- !ruby/object:RI::MethodSummary 
+  name: schema_attribute_definition
+- !ruby/object:RI::MethodSummary 
+  name: schema_element_definition
+- !ruby/object:RI::MethodSummary 
+  name: simpleobj2soap
+- !ruby/object:RI::MethodSummary 
+  name: soap2obj
+- !ruby/object:RI::MethodSummary 
+  name: soapele2plainobj
+- !ruby/object:RI::MethodSummary 
+  name: soapele2stubobj
+- !ruby/object:RI::MethodSummary 
+  name: stubobj2soap
+name: WSDLLiteralRegistry
+superclass: Registry

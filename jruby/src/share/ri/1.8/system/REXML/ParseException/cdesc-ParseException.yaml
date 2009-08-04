@@ -1,0 +1,34 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: continued_exception
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: parser
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: source
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: REXML::ParseException
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: context
+- !ruby/object:RI::MethodSummary 
+  name: line
+- !ruby/object:RI::MethodSummary 
+  name: position
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+name: ParseException
+superclass: RuntimeError

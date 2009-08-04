@@ -1,0 +1,17 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: DuckTypeConstraint
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: ==
+full_name: Spec::Mocks::ArgumentConstraints::DuckTypeConstraint
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

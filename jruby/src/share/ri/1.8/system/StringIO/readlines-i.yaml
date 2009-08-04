@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: See IO#readlines.
+full_name: StringIO#readlines
+is_singleton: false
+name: readlines
+params: |
+  strio.readlines(sep_string=$/)  ->   array
+
+visibility: public

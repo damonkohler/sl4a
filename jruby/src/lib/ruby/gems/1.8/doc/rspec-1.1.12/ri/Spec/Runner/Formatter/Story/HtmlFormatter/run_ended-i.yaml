@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: ()
+is_singleton: false
+block_params: 
+name: run_ended
+comment: 
+full_name: Spec::Runner::Formatter::Story::HtmlFormatter#run_ended
+visibility: public
+aliases: []
+

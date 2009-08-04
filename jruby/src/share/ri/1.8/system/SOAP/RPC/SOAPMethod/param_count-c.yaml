@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::SOAPMethod::param_count
+is_singleton: true
+name: param_count
+params: (param_def, *type)
+visibility: public

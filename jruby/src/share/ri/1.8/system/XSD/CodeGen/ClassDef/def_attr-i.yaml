@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::CodeGen::ClassDef#def_attr
+is_singleton: false
+name: def_attr
+params: (attrname, writable = true, varname = nil)
+visibility: public

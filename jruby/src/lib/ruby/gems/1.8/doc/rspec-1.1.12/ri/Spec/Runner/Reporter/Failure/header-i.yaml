@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: ()
+is_singleton: false
+block_params: 
+name: header
+comment: 
+full_name: Spec::Runner::Reporter::Failure#header
+visibility: public
+aliases: []
+

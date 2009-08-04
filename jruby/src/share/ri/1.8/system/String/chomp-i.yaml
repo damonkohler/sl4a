@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a new <tt>String</tt> with the given record separator removed from the end of <em>str</em> (if present). If <tt>$/</tt> has not been changed from the default Ruby record separator, then <tt>chomp</tt> also removes carriage return characters (that is it will remove <tt>\n</tt>, <tt>\r</tt>, and <tt>\r\n</tt>).
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;hello&quot;.chomp            #=&gt; &quot;hello&quot;\n   &quot;hello\\n&quot;.chomp          #=&gt; &quot;hello&quot;\n   &quot;hello\\r\\n&quot;.chomp        #=&gt; &quot;hello&quot;\n   &quot;hello\\n\\r&quot;.chomp        #=&gt; &quot;hello\\n&quot;\n   &quot;hello\\r&quot;.chomp          #=&gt; &quot;hello&quot;\n   &quot;hello \\n there&quot;.chomp   #=&gt; &quot;hello \\n there&quot;\n   &quot;hello&quot;.chomp(&quot;llo&quot;)     #=&gt; &quot;he&quot;\n"
+full_name: String#chomp
+is_singleton: false
+name: chomp
+params: |
+  str.chomp(separator=$/)   => new_str
+
+visibility: public

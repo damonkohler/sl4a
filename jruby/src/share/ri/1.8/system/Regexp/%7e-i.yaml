@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Match---Matches <em>rxp</em> against the contents of <tt>$_</tt>. Equivalent to <tt><em>rxp</em> =~ $_</tt>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   $_ = &quot;input data&quot;\n   ~ /at/   #=&gt; 7\n"
+full_name: Regexp#~
+is_singleton: false
+name: "~"
+params: |
+  ~ rxp   => integer or nil
+
+visibility: public

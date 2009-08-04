@@ -1,0 +1,27 @@
+/**
+	Enable or disable "Strict Java Mode".
+	When strict Java mode is enabled BeanShell will:
+	<p>
+
+	<ol>
+	<li>Require typed variable declarations, method arguments and return types.
+	<li>Modify the scoping of variables to look for the variable
+	declaration first in the parent namespace, as in a java method inside 
+	a java class.  e.g. if you can write a method called incrementFoo() that 
+	will do the expected thing without referring to "super.foo".
+	</ul>
+	<p/>
+
+	See "Strict Java Mode" for more details.
+	<p/>
+
+	<em>Note: Currently most standard BeanShell commands will not work in 
+	Strict Java mode simply because they have not been written with full
+	types, etc.
+*/
+
+void setStrictJava( boolean val ) 
+{
+	this.interpreter.setStrictJava( val );
+}
+

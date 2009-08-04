@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: children
+block_params: 
+comment: 
+full_name: REXML::Parent#to_a
+is_singleton: false
+name: to_a
+params: ()
+visibility: public

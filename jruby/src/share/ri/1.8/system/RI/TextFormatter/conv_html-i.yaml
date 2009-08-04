@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: convert HTML entities back to ASCII
+full_name: RI::TextFormatter#conv_html
+is_singleton: false
+name: conv_html
+params: (txt)
+visibility: public

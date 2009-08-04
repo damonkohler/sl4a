@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: now insert start/ends between list entries at the same level that have different element types
+full_name: SM::LineCollection#add_list_breaks
+is_singleton: false
+name: add_list_breaks
+params: ()
+visibility: private

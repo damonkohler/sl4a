@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::TaxonomyTopicsModel::TaxonomyTopics::required_uri
+is_singleton: true
+name: required_uri
+params: ()
+visibility: public

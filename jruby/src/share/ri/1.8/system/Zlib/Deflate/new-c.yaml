@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a new deflate stream for compression. See zlib.h for details of each argument. If an argument is nil, the default value of that argument is used.
+- !ruby/struct:SM::Flow::P 
+  body: "TODO: document better!"
+full_name: Zlib::Deflate::new
+is_singleton: true
+name: new
+params: " Zlib::Deflate.new(level=nil, windowBits=nil, memlevel=nil, strategy=nil)\n"
+visibility: public

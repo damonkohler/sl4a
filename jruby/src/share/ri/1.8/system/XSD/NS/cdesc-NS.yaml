@@ -1,0 +1,43 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: default_namespace
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: $1 and $2 are necessary.
+  name: ParseRegexp
+  value: Regexp.new('^([^:]+)(?::(.+))?$')
+full_name: XSD::NS
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: assign
+- !ruby/object:RI::MethodSummary 
+  name: assigned?
+- !ruby/object:RI::MethodSummary 
+  name: assigned_tag?
+- !ruby/object:RI::MethodSummary 
+  name: assigner=
+- !ruby/object:RI::MethodSummary 
+  name: clone_ns
+- !ruby/object:RI::MethodSummary 
+  name: compare
+- !ruby/object:RI::MethodSummary 
+  name: each_ns
+- !ruby/object:RI::MethodSummary 
+  name: name
+- !ruby/object:RI::MethodSummary 
+  name: parse
+- !ruby/object:RI::MethodSummary 
+  name: parse_local
+name: NS
+superclass: Object

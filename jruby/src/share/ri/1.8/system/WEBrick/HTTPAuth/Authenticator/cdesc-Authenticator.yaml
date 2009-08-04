@@ -1,0 +1,54 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: logger
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: realm
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: userdb
+  rw: R
+class_methods: []
+
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RequestField
+  value: "\"Authorization\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ResponseField
+  value: "\"WWW-Authenticate\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ResponseInfoField
+  value: "\"Authentication-Info\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AuthException
+  value: HTTPStatus::Unauthorized
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AuthScheme
+  value: nil
+full_name: WEBrick::HTTPAuth::Authenticator
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: check_init
+- !ruby/object:RI::MethodSummary 
+  name: check_scheme
+- !ruby/object:RI::MethodSummary 
+  name: error
+- !ruby/object:RI::MethodSummary 
+  name: info
+- !ruby/object:RI::MethodSummary 
+  name: log
+name: Authenticator
+superclass: 

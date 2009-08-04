@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RI::RiReader#top_level_namespace
+is_singleton: false
+name: top_level_namespace
+params: ()
+visibility: public

@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: node
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "The iterator version of the #tsort method. <tt><em>obj</em>.tsort_each</tt> is similar to <tt><em>obj</em>.tsort.each</tt>, but modification of <em>obj</em> during the iteration may lead to unexpected results."
+- !ruby/struct:SM::Flow::P 
+  body: "#tsort_each returns <tt>nil</tt>. If there is a cycle, TSort::Cyclic is raised."
+full_name: TSort#tsort_each
+is_singleton: false
+name: tsort_each
+params: ( {|node| ...}
+visibility: public

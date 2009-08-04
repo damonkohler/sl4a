@@ -1,0 +1,122 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Accepts an incoming connection returning an array containing a new Socket object and a string holding the <tt>struct</tt> sockaddr information about the caller.
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Example
+- !ruby/struct:SM::Flow::VERB 
+  body: "     # In one script, start this first\n     require 'socket'\n     include Socket::Constants\n     socket = Socket.new( AF_INET, SOCK_STREAM, 0 )\n     sockaddr = Socket.pack_sockaddr_in( 2200, 'localhost' )\n     socket.bind( sockaddr )\n     socket.listen( 5 )\n     client, client_sockaddr = socket.accept\n     puts &quot;The client said, '#{client.readline.chomp}'&quot;\n     client.puts &quot;Hello from script one!&quot;\n     socket.close\n\n     # In another script, start this second\n     require 'socket'\n     include Socket::Constants\n     socket = Socket.new( AF_INET, SOCK_STREAM, 0 )\n     sockaddr = Socket.pack_sockaddr_in( 2200, 'localhost' )\n     socket.connect( sockaddr )\n     socket.puts &quot;Hello from script 2.&quot;\n     puts &quot;The server said, '#{socket.readline.chomp}'&quot;\n     socket.close\n"
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Unix-based Exceptions
+- !ruby/struct:SM::Flow::P 
+  body: "On unix-based based systems the following system exceptions may be raised if the call to <em>accept</em> fails:"
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EAGAIN - O_NONBLOCK is set for the <tt>socket</tt> file descriptor and no connections are parent to be accepted
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EWOULDBLOCK - same as Errno::EAGAIN
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EBADF - the <tt>socket</tt> is not a valid file descriptor
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ECONNABORTED - a connection has been aborted
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EFAULT - the socket's internal address or address length parameter cannot be access or written
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EINTR - the <em>accept</em> method was interrupted by a signal that was caught before a valid connection arrived
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EINVAL - the <tt>socket</tt> is not accepting connections
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EMFILE - OPEN_MAX file descriptors are currently open in the calling process
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENOBUFS - no buffer space is available
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENOMEM - there was insufficient memory available to complete the operation
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENOSR - there was insufficient STREAMS resources available to complete the operation
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENFILE - the maximum number of file descriptors in the system are already open
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENOTSOCK - the <tt>socket</tt> does not refer to a socket
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EOPNOTSUPP - the socket type for the calling <tt>socket</tt> does not support accept connections
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EPROTO - a protocol error has occurred
+  type: :BULLET
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: Windows Exceptions
+- !ruby/struct:SM::Flow::P 
+  body: "On Windows systems the following system exceptions may be raised if the call to <em>accept</em> fails:"
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ECONNRESET - an incoming connection was indicated, but was terminated by the remote peer prior to accepting the connection
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EFAULT - the socket's internal address or address length parameter is too small or is not a valid part of the user space address
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EINVAL - the <em>listen</em> method was not invoked prior to calling <em>accept</em>
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EINPROGRESS - a blocking Windows Sockets 1.1 call is in progress or the service provider is still processing a callback function
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EMFILE - the queue is not empty, upong etry to <em>accept</em> and there are no socket descriptors available
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENETDOWN - the network is down
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENOBUFS - no buffer space is available
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::ENOTSOCK - <tt>socket</tt> is not a socket
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EOPNOTSUPP - <tt>socket</tt> is not a type that supports connection-oriented service.
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: Errno::EWOULDBLOCK - <tt>socket</tt> is marked as nonblocking and no connections are present to be accepted
+  type: :BULLET
+- !ruby/struct:SM::Flow::H 
+  level: 3
+  text: See
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: accept manual pages on unix-based systems
+  - !ruby/struct:SM::Flow::LI 
+    label: "*"
+    body: accept function in Microsoft's Winsock functions reference
+  type: :BULLET
+full_name: Socket#accept
+is_singleton: false
+name: accept
+params: |
+  socket.accept => [ socket, string ]
+
+visibility: public

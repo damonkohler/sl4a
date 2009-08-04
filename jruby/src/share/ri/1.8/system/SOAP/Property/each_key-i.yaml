@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: (value)
+comment: 
+full_name: SOAP::Property#each_key
+is_singleton: false
+name: each_key
+params: () {|value| ...}
+visibility: private

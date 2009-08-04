@@ -1,0 +1,22 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: RUNIT::TestSuite
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add
+- !ruby/object:RI::MethodSummary 
+  name: add_test
+- !ruby/object:RI::MethodSummary 
+  name: count_test_cases
+- !ruby/object:RI::MethodSummary 
+  name: run
+name: TestSuite
+superclass: Test::Unit::TestSuite

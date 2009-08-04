@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Reads all tuples matching <tt>tuple</tt> from the proxied TupleSpace. See TupleSpace#read_all.
+full_name: Rinda::TupleSpaceProxy#read_all
+is_singleton: false
+name: read_all
+params: (tuple)
+visibility: public

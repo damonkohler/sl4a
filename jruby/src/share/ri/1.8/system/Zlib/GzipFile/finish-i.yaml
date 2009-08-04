@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Closes the GzipFile object. Unlike Zlib::GzipFile#close, this method never calls the close method of the associated IO object. Returns the associated IO object.
+full_name: Zlib::GzipFile#finish
+is_singleton: false
+name: finish
+params: ()
+visibility: public

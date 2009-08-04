@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Struct::yaml_tag_read_class
+is_singleton: true
+name: yaml_tag_read_class
+params: ( name )
+visibility: public

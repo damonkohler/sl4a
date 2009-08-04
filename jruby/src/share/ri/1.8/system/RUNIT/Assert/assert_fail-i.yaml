@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RUNIT::Assert#assert_fail
+is_singleton: false
+name: assert_fail
+params: (message="")
+visibility: public

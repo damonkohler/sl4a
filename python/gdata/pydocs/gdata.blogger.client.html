@@ -1,0 +1,492 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module gdata.blogger.client</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gdata.html"><font color="#ffffff">gdata</font></a>.<a href="gdata.blogger.html"><font color="#ffffff">blogger</font></a>.client</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/gdata/blogger/client.py">/usr/local/svn/gdata-python-client/src/gdata/blogger/client.py</a></font></td></tr></table>
+    <p><tt>Contains&nbsp;a&nbsp;client&nbsp;to&nbsp;communicate&nbsp;with&nbsp;the&nbsp;Blogger&nbsp;servers.<br>
+&nbsp;<br>
+For&nbsp;documentation&nbsp;on&nbsp;the&nbsp;Blogger&nbsp;API,&nbsp;see:<br>
+<a href="http://code.google.com/apis/blogger/">http://code.google.com/apis/blogger/</a></tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="atom.html">atom</a><br>
+</td><td width="25%" valign=top><a href="gdata.html">gdata</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="gdata.client.html#GDClient">gdata.client.GDClient</a>(<a href="atom.client.html#AtomPubClient">atom.client.AtomPubClient</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.blogger.client.html#BloggerClient">BloggerClient</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="gdata.client.html#Query">gdata.client.Query</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.blogger.client.html#Query">Query</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BloggerClient">class <strong>BloggerClient</strong></a>(<a href="gdata.client.html#GDClient">gdata.client.GDClient</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.blogger.client.html#BloggerClient">BloggerClient</a></dd>
+<dd><a href="gdata.client.html#GDClient">gdata.client.GDClient</a></dd>
+<dd><a href="atom.client.html#AtomPubClient">atom.client.AtomPubClient</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="BloggerClient-AddComment"><strong>AddComment</strong></a> = <a href="#BloggerClient-add_comment">add_comment</a>(self, blog_id, post_id, body, auth_token<font color="#909090">=None</font>, title_type<font color="#909090">='text'</font>, body_type<font color="#909090">='html'</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-AddPost"><strong>AddPost</strong></a> = <a href="#BloggerClient-add_post">add_post</a>(self, blog_id, title, body, labels<font color="#909090">=None</font>, draft<font color="#909090">=False</font>, auth_token<font color="#909090">=None</font>, title_type<font color="#909090">='text'</font>, body_type<font color="#909090">='html'</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-Delete"><strong>Delete</strong></a> = <a href="#BloggerClient-delete">delete</a>(self, entry_or_uri, auth_token<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-GetBlogArchive"><strong>GetBlogArchive</strong></a> = <a href="#BloggerClient-get_blog_archive">get_blog_archive</a>(self, blog_id, auth_token<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-GetBlogComments"><strong>GetBlogComments</strong></a> = <a href="#BloggerClient-get_blog_comments">get_blog_comments</a>(self, blog_id, auth_token<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.blogger.data.CommentFeed'&gt;</font>, query<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-GetBlogs"><strong>GetBlogs</strong></a> = <a href="#BloggerClient-get_blogs">get_blogs</a>(self, user_id<font color="#909090">='default'</font>, auth_token<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.blogger.data.BlogFeed'&gt;</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-GetPostComments"><strong>GetPostComments</strong></a> = <a href="#BloggerClient-get_post_comments">get_post_comments</a>(self, blog_id, post_id, auth_token<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.blogger.data.CommentFeed'&gt;</font>, query<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-GetPosts"><strong>GetPosts</strong></a> = <a href="#BloggerClient-get_posts">get_posts</a>(self, blog_id, auth_token<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.blogger.data.BlogPostFeed'&gt;</font>, query<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-Update"><strong>Update</strong></a> = <a href="#BloggerClient-update">update</a>(self, entry, auth_token<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-add_comment"><strong>add_comment</strong></a>(self, blog_id, post_id, body, auth_token<font color="#909090">=None</font>, title_type<font color="#909090">='text'</font>, body_type<font color="#909090">='html'</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-add_post"><strong>add_post</strong></a>(self, blog_id, title, body, labels<font color="#909090">=None</font>, draft<font color="#909090">=False</font>, auth_token<font color="#909090">=None</font>, title_type<font color="#909090">='text'</font>, body_type<font color="#909090">='html'</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-delete"><strong>delete</strong></a>(self, entry_or_uri, auth_token<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-get_blog_archive"><strong>get_blog_archive</strong></a>(self, blog_id, auth_token<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-get_blog_comments"><strong>get_blog_comments</strong></a>(self, blog_id, auth_token<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.blogger.data.CommentFeed'&gt;</font>, query<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-get_blogs"><strong>get_blogs</strong></a>(self, user_id<font color="#909090">='default'</font>, auth_token<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.blogger.data.BlogFeed'&gt;</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-get_post_comments"><strong>get_post_comments</strong></a>(self, blog_id, post_id, auth_token<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.blogger.data.CommentFeed'&gt;</font>, query<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-get_posts"><strong>get_posts</strong></a>(self, blog_id, auth_token<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.blogger.data.BlogPostFeed'&gt;</font>, query<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-update"><strong>update</strong></a>(self, entry, auth_token<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>api_version</strong> = '2'</dl>
+
+<dl><dt><strong>auth_scopes</strong> = ['http://www.blogger.com/feeds/']</dl>
+
+<dl><dt><strong>auth_serice</strong> = 'blogger'</dl>
+
+<hr>
+Methods inherited from <a href="gdata.client.html#GDClient">gdata.client.GDClient</a>:<br>
+<dl><dt><a name="BloggerClient-ClientLogin"><strong>ClientLogin</strong></a> = client_login(self, email, password, source, service<font color="#909090">=None</font>, account_type<font color="#909090">='HOSTED_OR_GOOGLE'</font>, auth_url<font color="#909090">='https://www.google.com/accounts/ClientLogin'</font>, captcha_token<font color="#909090">=None</font>, captcha_response<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="BloggerClient-GetAccessToken"><strong>GetAccessToken</strong></a> = get_access_token(self, request_token, url<font color="#909090">='https://www.google.com/accounts/OAuthGetAccessToken'</font>)</dt><dd><tt>Exchanges&nbsp;an&nbsp;authorized&nbsp;OAuth&nbsp;request&nbsp;token&nbsp;for&nbsp;an&nbsp;access&nbsp;token.<br>
+&nbsp;<br>
+Contacts&nbsp;the&nbsp;Google&nbsp;OAuth&nbsp;server&nbsp;to&nbsp;upgrade&nbsp;a&nbsp;previously&nbsp;authorized<br>
+request&nbsp;token.&nbsp;Once&nbsp;the&nbsp;request&nbsp;token&nbsp;is&nbsp;upgraded&nbsp;to&nbsp;an&nbsp;access&nbsp;token,<br>
+the&nbsp;access&nbsp;token&nbsp;may&nbsp;be&nbsp;used&nbsp;to&nbsp;access&nbsp;the&nbsp;user's&nbsp;data.<br>
+&nbsp;<br>
+For&nbsp;more&nbsp;details,&nbsp;see&nbsp;the&nbsp;Google&nbsp;Accounts&nbsp;OAuth&nbsp;documentation:<br>
+<a href="http://code.google.com/apis/accounts/docs/OAuth.html#AccessToken">http://code.google.com/apis/accounts/docs/OAuth.html#AccessToken</a><br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;request_token:&nbsp;An&nbsp;OAuth&nbsp;token&nbsp;which&nbsp;has&nbsp;been&nbsp;authorized&nbsp;by&nbsp;the&nbsp;user.<br>
+&nbsp;&nbsp;url:&nbsp;(optional)&nbsp;The&nbsp;URL&nbsp;to&nbsp;which&nbsp;the&nbsp;upgrade&nbsp;request&nbsp;should&nbsp;be&nbsp;sent.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to:&nbsp;https://www.google.com/accounts/OAuthAuthorizeToken</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-GetEntry"><strong>GetEntry</strong></a> = get_entry(self, uri, auth_token<font color="#909090">=None</font>, converter<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.data.GDEntry'&gt;</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-GetFeed"><strong>GetFeed</strong></a> = get_feed(self, uri, auth_token<font color="#909090">=None</font>, converter<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.data.GDFeed'&gt;</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-GetNext"><strong>GetNext</strong></a> = get_next(self, feed, auth_token<font color="#909090">=None</font>, converter<font color="#909090">=None</font>, desired_class<font color="#909090">=None</font>, **kwargs)</dt><dd><tt>Fetches&nbsp;the&nbsp;next&nbsp;set&nbsp;of&nbsp;results&nbsp;from&nbsp;the&nbsp;feed.&nbsp;<br>
+&nbsp;<br>
+When&nbsp;requesting&nbsp;a&nbsp;feed,&nbsp;the&nbsp;number&nbsp;of&nbsp;entries&nbsp;returned&nbsp;is&nbsp;capped&nbsp;at&nbsp;a<br>
+service&nbsp;specific&nbsp;default&nbsp;limit&nbsp;(often&nbsp;25&nbsp;entries).&nbsp;You&nbsp;can&nbsp;specify&nbsp;your<br>
+own&nbsp;entry-count&nbsp;cap&nbsp;using&nbsp;the&nbsp;max-results&nbsp;URL&nbsp;query&nbsp;parameter.&nbsp;If&nbsp;there<br>
+are&nbsp;more&nbsp;results&nbsp;than&nbsp;could&nbsp;fit&nbsp;under&nbsp;max-results,&nbsp;the&nbsp;feed&nbsp;will&nbsp;contain<br>
+a&nbsp;next&nbsp;link.&nbsp;This&nbsp;method&nbsp;performs&nbsp;a&nbsp;GET&nbsp;against&nbsp;this&nbsp;next&nbsp;results&nbsp;URL.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;new&nbsp;feed&nbsp;object&nbsp;containing&nbsp;the&nbsp;next&nbsp;set&nbsp;of&nbsp;entries&nbsp;in&nbsp;this&nbsp;feed.</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-GetOAuthToken"><strong>GetOAuthToken</strong></a> = get_oauth_token(self, scopes, next, consumer_key, consumer_secret<font color="#909090">=None</font>, rsa_private_key<font color="#909090">=None</font>, url<font color="#909090">='https://www.google.com/accounts/OAuthGetRequestToken'</font>)</dt><dd><tt>Obtains&nbsp;an&nbsp;OAuth&nbsp;request&nbsp;token&nbsp;to&nbsp;allow&nbsp;the&nbsp;user&nbsp;to&nbsp;authorize&nbsp;this&nbsp;app.<br>
+&nbsp;<br>
+Once&nbsp;this&nbsp;client&nbsp;has&nbsp;a&nbsp;request&nbsp;token,&nbsp;the&nbsp;user&nbsp;can&nbsp;authorize&nbsp;the&nbsp;request<br>
+token&nbsp;by&nbsp;visiting&nbsp;the&nbsp;authorization&nbsp;URL&nbsp;in&nbsp;their&nbsp;browser.&nbsp;After&nbsp;being<br>
+redirected&nbsp;back&nbsp;to&nbsp;this&nbsp;app&nbsp;at&nbsp;the&nbsp;'next'&nbsp;URL,&nbsp;this&nbsp;app&nbsp;can&nbsp;then&nbsp;exchange<br>
+the&nbsp;authorized&nbsp;request&nbsp;token&nbsp;for&nbsp;an&nbsp;access&nbsp;token.<br>
+&nbsp;<br>
+For&nbsp;more&nbsp;information&nbsp;see&nbsp;the&nbsp;documentation&nbsp;on&nbsp;Google&nbsp;Accounts&nbsp;with&nbsp;OAuth:<br>
+<a href="http://code.google.com/apis/accounts/docs/OAuth.html#AuthProcess">http://code.google.com/apis/accounts/docs/OAuth.html#AuthProcess</a><br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;scopes:&nbsp;list&nbsp;of&nbsp;strings&nbsp;or&nbsp;atom.http_core.Uri&nbsp;objects&nbsp;which&nbsp;specify&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL&nbsp;prefixes&nbsp;which&nbsp;this&nbsp;app&nbsp;will&nbsp;be&nbsp;accessing.&nbsp;For&nbsp;example,&nbsp;to&nbsp;access<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;Google&nbsp;Calendar&nbsp;API,&nbsp;you&nbsp;would&nbsp;want&nbsp;to&nbsp;use&nbsp;scopes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;['https://www.google.com/calendar/feeds/',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'<a href="http://www.google.com/calendar/feeds/">http://www.google.com/calendar/feeds/</a>']<br>
+&nbsp;&nbsp;next:&nbsp;str&nbsp;or&nbsp;atom.http_core.Uri&nbsp;object,&nbsp;The&nbsp;URL&nbsp;which&nbsp;the&nbsp;user's&nbsp;browser<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should&nbsp;be&nbsp;sent&nbsp;to&nbsp;after&nbsp;they&nbsp;authorize&nbsp;access&nbsp;to&nbsp;their&nbsp;data.&nbsp;This<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should&nbsp;be&nbsp;a&nbsp;URL&nbsp;in&nbsp;your&nbsp;application&nbsp;which&nbsp;will&nbsp;read&nbsp;the&nbsp;token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;information&nbsp;from&nbsp;the&nbsp;URL&nbsp;and&nbsp;upgrade&nbsp;the&nbsp;request&nbsp;token&nbsp;to&nbsp;an&nbsp;access<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;token.<br>
+&nbsp;&nbsp;consumer_key:&nbsp;str&nbsp;This&nbsp;is&nbsp;the&nbsp;identifier&nbsp;for&nbsp;this&nbsp;application&nbsp;which&nbsp;you<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should&nbsp;have&nbsp;received&nbsp;when&nbsp;you&nbsp;registered&nbsp;your&nbsp;application&nbsp;with&nbsp;Google<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;use&nbsp;OAuth.<br>
+&nbsp;&nbsp;consumer_secret:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;shared&nbsp;secret&nbsp;between&nbsp;your&nbsp;app&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Google&nbsp;which&nbsp;provides&nbsp;evidence&nbsp;that&nbsp;this&nbsp;request&nbsp;is&nbsp;coming&nbsp;from&nbsp;you<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;application&nbsp;and&nbsp;not&nbsp;another&nbsp;app.&nbsp;If&nbsp;present,&nbsp;this&nbsp;libraries&nbsp;assumes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;you&nbsp;want&nbsp;to&nbsp;use&nbsp;an&nbsp;HMAC&nbsp;signature&nbsp;to&nbsp;verify&nbsp;requests.&nbsp;Keep&nbsp;this&nbsp;data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;secret.<br>
+&nbsp;&nbsp;rsa_private_key:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;RSA&nbsp;private&nbsp;key&nbsp;which&nbsp;is&nbsp;used&nbsp;to&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;generate&nbsp;a&nbsp;digital&nbsp;signature&nbsp;which&nbsp;is&nbsp;checked&nbsp;by&nbsp;Google's&nbsp;server.&nbsp;If<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;present,&nbsp;this&nbsp;library&nbsp;assumes&nbsp;that&nbsp;you&nbsp;want&nbsp;to&nbsp;use&nbsp;an&nbsp;RSA&nbsp;signature<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;verify&nbsp;requests.&nbsp;Keep&nbsp;this&nbsp;data&nbsp;a&nbsp;secret.<br>
+&nbsp;&nbsp;url:&nbsp;The&nbsp;URL&nbsp;to&nbsp;which&nbsp;a&nbsp;request&nbsp;for&nbsp;a&nbsp;token&nbsp;should&nbsp;be&nbsp;made.&nbsp;The&nbsp;default<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;Google's&nbsp;OAuth&nbsp;request&nbsp;token&nbsp;provider.</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-ModifyRequest"><strong>ModifyRequest</strong></a> = modify_request(self, http_request)</dt><dd><tt>Adds&nbsp;or&nbsp;changes&nbsp;request&nbsp;before&nbsp;making&nbsp;the&nbsp;HTTP&nbsp;request.<br>
+&nbsp;<br>
+This&nbsp;client&nbsp;will&nbsp;add&nbsp;the&nbsp;API&nbsp;version&nbsp;if&nbsp;it&nbsp;is&nbsp;specified.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;override&nbsp;this&nbsp;method&nbsp;to&nbsp;add&nbsp;their&nbsp;own&nbsp;request&nbsp;<br>
+modifications&nbsp;before&nbsp;the&nbsp;request&nbsp;is&nbsp;made.</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-Post"><strong>Post</strong></a> = post(self, entry, uri, auth_token<font color="#909090">=None</font>, converter<font color="#909090">=None</font>, desired_class<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-Request"><strong>Request</strong></a> = request(self, method<font color="#909090">=None</font>, uri<font color="#909090">=None</font>, auth_token<font color="#909090">=None</font>, http_request<font color="#909090">=None</font>, converter<font color="#909090">=None</font>, desired_class<font color="#909090">=None</font>, redirects_remaining<font color="#909090">=4</font>, **kwargs)</dt><dd><tt>Make&nbsp;an&nbsp;HTTP&nbsp;request&nbsp;to&nbsp;the&nbsp;server.<br>
+&nbsp;<br>
+See&nbsp;also&nbsp;documentation&nbsp;for&nbsp;atom.client.AtomPubClient.request.<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;302&nbsp;redirect&nbsp;is&nbsp;sent&nbsp;from&nbsp;the&nbsp;server&nbsp;to&nbsp;the&nbsp;client,&nbsp;this&nbsp;client<br>
+assumes&nbsp;that&nbsp;the&nbsp;redirect&nbsp;is&nbsp;in&nbsp;the&nbsp;form&nbsp;used&nbsp;by&nbsp;the&nbsp;Google&nbsp;Calendar&nbsp;API.<br>
+The&nbsp;same&nbsp;request&nbsp;URI&nbsp;and&nbsp;method&nbsp;will&nbsp;be&nbsp;used&nbsp;as&nbsp;in&nbsp;the&nbsp;original&nbsp;request,<br>
+but&nbsp;a&nbsp;gsessionid&nbsp;URL&nbsp;parameter&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;request&nbsp;URI&nbsp;with<br>
+the&nbsp;value&nbsp;provided&nbsp;in&nbsp;the&nbsp;server's&nbsp;302&nbsp;redirect&nbsp;response.&nbsp;If&nbsp;the&nbsp;302<br>
+redirect&nbsp;is&nbsp;not&nbsp;in&nbsp;the&nbsp;format&nbsp;specified&nbsp;by&nbsp;the&nbsp;Google&nbsp;Calendar&nbsp;API,&nbsp;a<br>
+RedirectError&nbsp;will&nbsp;be&nbsp;raised&nbsp;containing&nbsp;the&nbsp;body&nbsp;of&nbsp;the&nbsp;server's<br>
+response.<br>
+&nbsp;<br>
+The&nbsp;method&nbsp;calls&nbsp;the&nbsp;client's&nbsp;modify_request&nbsp;method&nbsp;to&nbsp;make&nbsp;any&nbsp;changes<br>
+required&nbsp;by&nbsp;the&nbsp;client&nbsp;before&nbsp;the&nbsp;request&nbsp;is&nbsp;made.&nbsp;For&nbsp;example,&nbsp;a<br>
+version&nbsp;2&nbsp;client&nbsp;could&nbsp;add&nbsp;a&nbsp;GData-Version:&nbsp;2&nbsp;header&nbsp;to&nbsp;the&nbsp;request&nbsp;in<br>
+its&nbsp;modify_request&nbsp;method.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;method:&nbsp;str&nbsp;The&nbsp;HTTP&nbsp;verb&nbsp;for&nbsp;this&nbsp;request,&nbsp;usually&nbsp;'GET',&nbsp;'POST',&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'PUT',&nbsp;or&nbsp;'DELETE'<br>
+&nbsp;&nbsp;uri:&nbsp;atom.http_core.Uri,&nbsp;str,&nbsp;or&nbsp;unicode&nbsp;The&nbsp;URL&nbsp;being&nbsp;requested.<br>
+&nbsp;&nbsp;auth_token:&nbsp;An&nbsp;object&nbsp;which&nbsp;sets&nbsp;the&nbsp;Authorization&nbsp;HTTP&nbsp;header&nbsp;in&nbsp;its<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modify_request&nbsp;method.&nbsp;Recommended&nbsp;classes&nbsp;include&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gdata.gauth.ClientLoginToken&nbsp;and&nbsp;gdata.gauth.AuthSubToken<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;among&nbsp;others.<br>
+&nbsp;&nbsp;http_request:&nbsp;(optional)&nbsp;atom.http_core.HttpRequest<br>
+&nbsp;&nbsp;converter:&nbsp;function&nbsp;which&nbsp;takes&nbsp;the&nbsp;body&nbsp;of&nbsp;the&nbsp;response&nbsp;as&nbsp;it's&nbsp;only<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;argument&nbsp;and&nbsp;returns&nbsp;the&nbsp;desired&nbsp;object.<br>
+&nbsp;&nbsp;desired_class:&nbsp;class&nbsp;descended&nbsp;from&nbsp;atom.core.XmlElement&nbsp;to&nbsp;which&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;successful&nbsp;response&nbsp;should&nbsp;be&nbsp;converted.&nbsp;If&nbsp;there&nbsp;is&nbsp;no<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;converter&nbsp;function&nbsp;specified&nbsp;(converter=None)&nbsp;then&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;desired_class&nbsp;will&nbsp;be&nbsp;used&nbsp;in&nbsp;calling&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;atom.core.parse&nbsp;function.&nbsp;If&nbsp;neither<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;desired_class&nbsp;nor&nbsp;the&nbsp;converter&nbsp;is&nbsp;specified,&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP&nbsp;reponse&nbsp;object&nbsp;will&nbsp;be&nbsp;returned.<br>
+&nbsp;&nbsp;redirects_remaining:&nbsp;(optional)&nbsp;int,&nbsp;if&nbsp;this&nbsp;number&nbsp;is&nbsp;0&nbsp;and&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp;sends&nbsp;a&nbsp;302&nbsp;redirect,&nbsp;the&nbsp;request&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;raise&nbsp;an&nbsp;exception.&nbsp;This&nbsp;parameter&nbsp;is&nbsp;used&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recursive&nbsp;request&nbsp;calls&nbsp;to&nbsp;avoid&nbsp;an&nbsp;infinite&nbsp;loop.<br>
+&nbsp;<br>
+Any&nbsp;additional&nbsp;arguments&nbsp;are&nbsp;passed&nbsp;through&nbsp;to&nbsp;<br>
+atom.client.AtomPubClient.request.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;An&nbsp;HTTP&nbsp;response&nbsp;object&nbsp;(see&nbsp;atom.http_core.HttpResponse&nbsp;for&nbsp;a<br>
+&nbsp;&nbsp;description&nbsp;of&nbsp;the&nbsp;object's&nbsp;interface)&nbsp;if&nbsp;no&nbsp;converter&nbsp;was<br>
+&nbsp;&nbsp;specified&nbsp;and&nbsp;no&nbsp;desired_class&nbsp;was&nbsp;specified.&nbsp;If&nbsp;a&nbsp;converter&nbsp;function<br>
+&nbsp;&nbsp;was&nbsp;provided,&nbsp;the&nbsp;results&nbsp;of&nbsp;calling&nbsp;the&nbsp;converter&nbsp;are&nbsp;returned.&nbsp;If&nbsp;no<br>
+&nbsp;&nbsp;converter&nbsp;was&nbsp;specified&nbsp;but&nbsp;a&nbsp;desired_class&nbsp;was&nbsp;provided,&nbsp;the&nbsp;response<br>
+&nbsp;&nbsp;body&nbsp;will&nbsp;be&nbsp;converted&nbsp;to&nbsp;the&nbsp;class&nbsp;using&nbsp;<br>
+&nbsp;&nbsp;atom.core.parse.</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-RequestClientLoginToken"><strong>RequestClientLoginToken</strong></a> = request_client_login_token(self, email, password, source, service<font color="#909090">=None</font>, account_type<font color="#909090">='HOSTED_OR_GOOGLE'</font>, auth_url<font color="#909090">=&lt;atom.http_core.Uri object at 0xd12e50&gt;</font>, captcha_token<font color="#909090">=None</font>, captcha_response<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="BloggerClient-UpgradeToken"><strong>UpgradeToken</strong></a> = upgrade_token(self, token<font color="#909090">=None</font>, url<font color="#909090">=&lt;atom.http_core.Uri object at 0xd12e90&gt;</font>)</dt><dd><tt>Asks&nbsp;the&nbsp;Google&nbsp;auth&nbsp;server&nbsp;for&nbsp;a&nbsp;multi-use&nbsp;AuthSub&nbsp;token.<br>
+&nbsp;<br>
+For&nbsp;details&nbsp;on&nbsp;AuthSub,&nbsp;see:<br>
+<a href="http://code.google.com/apis/accounts/docs/AuthSub.html">http://code.google.com/apis/accounts/docs/AuthSub.html</a><br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;token:&nbsp;gdata.gauth.AuthSubToken&nbsp;or&nbsp;gdata.gauth.SecureAuthSubToken<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(optional)&nbsp;If&nbsp;no&nbsp;token&nbsp;is&nbsp;passed&nbsp;in,&nbsp;the&nbsp;client's&nbsp;auth_token&nbsp;member<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;used&nbsp;to&nbsp;request&nbsp;the&nbsp;new&nbsp;token.&nbsp;The&nbsp;token&nbsp;object&nbsp;will&nbsp;be&nbsp;modified<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;contain&nbsp;the&nbsp;new&nbsp;session&nbsp;token&nbsp;string.<br>
+&nbsp;&nbsp;url:&nbsp;str&nbsp;or&nbsp;atom.http_core.Uri&nbsp;(optional)&nbsp;The&nbsp;URL&nbsp;to&nbsp;which&nbsp;the&nbsp;token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;upgrade&nbsp;request&nbsp;should&nbsp;be&nbsp;sent.&nbsp;Defaults&nbsp;to:&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://www.google.com/accounts/AuthSubSessionToken<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;upgraded&nbsp;gdata.gauth.AuthSubToken&nbsp;object.</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-client_login"><strong>client_login</strong></a>(self, email, password, source, service<font color="#909090">=None</font>, account_type<font color="#909090">='HOSTED_OR_GOOGLE'</font>, auth_url<font color="#909090">='https://www.google.com/accounts/ClientLogin'</font>, captcha_token<font color="#909090">=None</font>, captcha_response<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="BloggerClient-get_access_token"><strong>get_access_token</strong></a>(self, request_token, url<font color="#909090">='https://www.google.com/accounts/OAuthGetAccessToken'</font>)</dt><dd><tt>Exchanges&nbsp;an&nbsp;authorized&nbsp;OAuth&nbsp;request&nbsp;token&nbsp;for&nbsp;an&nbsp;access&nbsp;token.<br>
+&nbsp;<br>
+Contacts&nbsp;the&nbsp;Google&nbsp;OAuth&nbsp;server&nbsp;to&nbsp;upgrade&nbsp;a&nbsp;previously&nbsp;authorized<br>
+request&nbsp;token.&nbsp;Once&nbsp;the&nbsp;request&nbsp;token&nbsp;is&nbsp;upgraded&nbsp;to&nbsp;an&nbsp;access&nbsp;token,<br>
+the&nbsp;access&nbsp;token&nbsp;may&nbsp;be&nbsp;used&nbsp;to&nbsp;access&nbsp;the&nbsp;user's&nbsp;data.<br>
+&nbsp;<br>
+For&nbsp;more&nbsp;details,&nbsp;see&nbsp;the&nbsp;Google&nbsp;Accounts&nbsp;OAuth&nbsp;documentation:<br>
+<a href="http://code.google.com/apis/accounts/docs/OAuth.html#AccessToken">http://code.google.com/apis/accounts/docs/OAuth.html#AccessToken</a><br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;request_token:&nbsp;An&nbsp;OAuth&nbsp;token&nbsp;which&nbsp;has&nbsp;been&nbsp;authorized&nbsp;by&nbsp;the&nbsp;user.<br>
+&nbsp;&nbsp;url:&nbsp;(optional)&nbsp;The&nbsp;URL&nbsp;to&nbsp;which&nbsp;the&nbsp;upgrade&nbsp;request&nbsp;should&nbsp;be&nbsp;sent.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to:&nbsp;https://www.google.com/accounts/OAuthAuthorizeToken</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-get_entry"><strong>get_entry</strong></a>(self, uri, auth_token<font color="#909090">=None</font>, converter<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.data.GDEntry'&gt;</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-get_feed"><strong>get_feed</strong></a>(self, uri, auth_token<font color="#909090">=None</font>, converter<font color="#909090">=None</font>, desired_class<font color="#909090">=&lt;class 'gdata.data.GDFeed'&gt;</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-get_next"><strong>get_next</strong></a>(self, feed, auth_token<font color="#909090">=None</font>, converter<font color="#909090">=None</font>, desired_class<font color="#909090">=None</font>, **kwargs)</dt><dd><tt>Fetches&nbsp;the&nbsp;next&nbsp;set&nbsp;of&nbsp;results&nbsp;from&nbsp;the&nbsp;feed.&nbsp;<br>
+&nbsp;<br>
+When&nbsp;requesting&nbsp;a&nbsp;feed,&nbsp;the&nbsp;number&nbsp;of&nbsp;entries&nbsp;returned&nbsp;is&nbsp;capped&nbsp;at&nbsp;a<br>
+service&nbsp;specific&nbsp;default&nbsp;limit&nbsp;(often&nbsp;25&nbsp;entries).&nbsp;You&nbsp;can&nbsp;specify&nbsp;your<br>
+own&nbsp;entry-count&nbsp;cap&nbsp;using&nbsp;the&nbsp;max-results&nbsp;URL&nbsp;query&nbsp;parameter.&nbsp;If&nbsp;there<br>
+are&nbsp;more&nbsp;results&nbsp;than&nbsp;could&nbsp;fit&nbsp;under&nbsp;max-results,&nbsp;the&nbsp;feed&nbsp;will&nbsp;contain<br>
+a&nbsp;next&nbsp;link.&nbsp;This&nbsp;method&nbsp;performs&nbsp;a&nbsp;GET&nbsp;against&nbsp;this&nbsp;next&nbsp;results&nbsp;URL.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;new&nbsp;feed&nbsp;object&nbsp;containing&nbsp;the&nbsp;next&nbsp;set&nbsp;of&nbsp;entries&nbsp;in&nbsp;this&nbsp;feed.</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-get_oauth_token"><strong>get_oauth_token</strong></a>(self, scopes, next, consumer_key, consumer_secret<font color="#909090">=None</font>, rsa_private_key<font color="#909090">=None</font>, url<font color="#909090">='https://www.google.com/accounts/OAuthGetRequestToken'</font>)</dt><dd><tt>Obtains&nbsp;an&nbsp;OAuth&nbsp;request&nbsp;token&nbsp;to&nbsp;allow&nbsp;the&nbsp;user&nbsp;to&nbsp;authorize&nbsp;this&nbsp;app.<br>
+&nbsp;<br>
+Once&nbsp;this&nbsp;client&nbsp;has&nbsp;a&nbsp;request&nbsp;token,&nbsp;the&nbsp;user&nbsp;can&nbsp;authorize&nbsp;the&nbsp;request<br>
+token&nbsp;by&nbsp;visiting&nbsp;the&nbsp;authorization&nbsp;URL&nbsp;in&nbsp;their&nbsp;browser.&nbsp;After&nbsp;being<br>
+redirected&nbsp;back&nbsp;to&nbsp;this&nbsp;app&nbsp;at&nbsp;the&nbsp;'next'&nbsp;URL,&nbsp;this&nbsp;app&nbsp;can&nbsp;then&nbsp;exchange<br>
+the&nbsp;authorized&nbsp;request&nbsp;token&nbsp;for&nbsp;an&nbsp;access&nbsp;token.<br>
+&nbsp;<br>
+For&nbsp;more&nbsp;information&nbsp;see&nbsp;the&nbsp;documentation&nbsp;on&nbsp;Google&nbsp;Accounts&nbsp;with&nbsp;OAuth:<br>
+<a href="http://code.google.com/apis/accounts/docs/OAuth.html#AuthProcess">http://code.google.com/apis/accounts/docs/OAuth.html#AuthProcess</a><br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;scopes:&nbsp;list&nbsp;of&nbsp;strings&nbsp;or&nbsp;atom.http_core.Uri&nbsp;objects&nbsp;which&nbsp;specify&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL&nbsp;prefixes&nbsp;which&nbsp;this&nbsp;app&nbsp;will&nbsp;be&nbsp;accessing.&nbsp;For&nbsp;example,&nbsp;to&nbsp;access<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;Google&nbsp;Calendar&nbsp;API,&nbsp;you&nbsp;would&nbsp;want&nbsp;to&nbsp;use&nbsp;scopes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;['https://www.google.com/calendar/feeds/',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'<a href="http://www.google.com/calendar/feeds/">http://www.google.com/calendar/feeds/</a>']<br>
+&nbsp;&nbsp;next:&nbsp;str&nbsp;or&nbsp;atom.http_core.Uri&nbsp;object,&nbsp;The&nbsp;URL&nbsp;which&nbsp;the&nbsp;user's&nbsp;browser<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should&nbsp;be&nbsp;sent&nbsp;to&nbsp;after&nbsp;they&nbsp;authorize&nbsp;access&nbsp;to&nbsp;their&nbsp;data.&nbsp;This<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should&nbsp;be&nbsp;a&nbsp;URL&nbsp;in&nbsp;your&nbsp;application&nbsp;which&nbsp;will&nbsp;read&nbsp;the&nbsp;token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;information&nbsp;from&nbsp;the&nbsp;URL&nbsp;and&nbsp;upgrade&nbsp;the&nbsp;request&nbsp;token&nbsp;to&nbsp;an&nbsp;access<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;token.<br>
+&nbsp;&nbsp;consumer_key:&nbsp;str&nbsp;This&nbsp;is&nbsp;the&nbsp;identifier&nbsp;for&nbsp;this&nbsp;application&nbsp;which&nbsp;you<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should&nbsp;have&nbsp;received&nbsp;when&nbsp;you&nbsp;registered&nbsp;your&nbsp;application&nbsp;with&nbsp;Google<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;use&nbsp;OAuth.<br>
+&nbsp;&nbsp;consumer_secret:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;shared&nbsp;secret&nbsp;between&nbsp;your&nbsp;app&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Google&nbsp;which&nbsp;provides&nbsp;evidence&nbsp;that&nbsp;this&nbsp;request&nbsp;is&nbsp;coming&nbsp;from&nbsp;you<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;application&nbsp;and&nbsp;not&nbsp;another&nbsp;app.&nbsp;If&nbsp;present,&nbsp;this&nbsp;libraries&nbsp;assumes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;you&nbsp;want&nbsp;to&nbsp;use&nbsp;an&nbsp;HMAC&nbsp;signature&nbsp;to&nbsp;verify&nbsp;requests.&nbsp;Keep&nbsp;this&nbsp;data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;secret.<br>
+&nbsp;&nbsp;rsa_private_key:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;RSA&nbsp;private&nbsp;key&nbsp;which&nbsp;is&nbsp;used&nbsp;to&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;generate&nbsp;a&nbsp;digital&nbsp;signature&nbsp;which&nbsp;is&nbsp;checked&nbsp;by&nbsp;Google's&nbsp;server.&nbsp;If<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;present,&nbsp;this&nbsp;library&nbsp;assumes&nbsp;that&nbsp;you&nbsp;want&nbsp;to&nbsp;use&nbsp;an&nbsp;RSA&nbsp;signature<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;verify&nbsp;requests.&nbsp;Keep&nbsp;this&nbsp;data&nbsp;a&nbsp;secret.<br>
+&nbsp;&nbsp;url:&nbsp;The&nbsp;URL&nbsp;to&nbsp;which&nbsp;a&nbsp;request&nbsp;for&nbsp;a&nbsp;token&nbsp;should&nbsp;be&nbsp;made.&nbsp;The&nbsp;default<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;Google's&nbsp;OAuth&nbsp;request&nbsp;token&nbsp;provider.</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-modify_request"><strong>modify_request</strong></a>(self, http_request)</dt><dd><tt>Adds&nbsp;or&nbsp;changes&nbsp;request&nbsp;before&nbsp;making&nbsp;the&nbsp;HTTP&nbsp;request.<br>
+&nbsp;<br>
+This&nbsp;client&nbsp;will&nbsp;add&nbsp;the&nbsp;API&nbsp;version&nbsp;if&nbsp;it&nbsp;is&nbsp;specified.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;override&nbsp;this&nbsp;method&nbsp;to&nbsp;add&nbsp;their&nbsp;own&nbsp;request&nbsp;<br>
+modifications&nbsp;before&nbsp;the&nbsp;request&nbsp;is&nbsp;made.</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-post"><strong>post</strong></a>(self, entry, uri, auth_token<font color="#909090">=None</font>, converter<font color="#909090">=None</font>, desired_class<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-request"><strong>request</strong></a>(self, method<font color="#909090">=None</font>, uri<font color="#909090">=None</font>, auth_token<font color="#909090">=None</font>, http_request<font color="#909090">=None</font>, converter<font color="#909090">=None</font>, desired_class<font color="#909090">=None</font>, redirects_remaining<font color="#909090">=4</font>, **kwargs)</dt><dd><tt>Make&nbsp;an&nbsp;HTTP&nbsp;request&nbsp;to&nbsp;the&nbsp;server.<br>
+&nbsp;<br>
+See&nbsp;also&nbsp;documentation&nbsp;for&nbsp;atom.client.AtomPubClient.request.<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;302&nbsp;redirect&nbsp;is&nbsp;sent&nbsp;from&nbsp;the&nbsp;server&nbsp;to&nbsp;the&nbsp;client,&nbsp;this&nbsp;client<br>
+assumes&nbsp;that&nbsp;the&nbsp;redirect&nbsp;is&nbsp;in&nbsp;the&nbsp;form&nbsp;used&nbsp;by&nbsp;the&nbsp;Google&nbsp;Calendar&nbsp;API.<br>
+The&nbsp;same&nbsp;request&nbsp;URI&nbsp;and&nbsp;method&nbsp;will&nbsp;be&nbsp;used&nbsp;as&nbsp;in&nbsp;the&nbsp;original&nbsp;request,<br>
+but&nbsp;a&nbsp;gsessionid&nbsp;URL&nbsp;parameter&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;request&nbsp;URI&nbsp;with<br>
+the&nbsp;value&nbsp;provided&nbsp;in&nbsp;the&nbsp;server's&nbsp;302&nbsp;redirect&nbsp;response.&nbsp;If&nbsp;the&nbsp;302<br>
+redirect&nbsp;is&nbsp;not&nbsp;in&nbsp;the&nbsp;format&nbsp;specified&nbsp;by&nbsp;the&nbsp;Google&nbsp;Calendar&nbsp;API,&nbsp;a<br>
+RedirectError&nbsp;will&nbsp;be&nbsp;raised&nbsp;containing&nbsp;the&nbsp;body&nbsp;of&nbsp;the&nbsp;server's<br>
+response.<br>
+&nbsp;<br>
+The&nbsp;method&nbsp;calls&nbsp;the&nbsp;client's&nbsp;modify_request&nbsp;method&nbsp;to&nbsp;make&nbsp;any&nbsp;changes<br>
+required&nbsp;by&nbsp;the&nbsp;client&nbsp;before&nbsp;the&nbsp;request&nbsp;is&nbsp;made.&nbsp;For&nbsp;example,&nbsp;a<br>
+version&nbsp;2&nbsp;client&nbsp;could&nbsp;add&nbsp;a&nbsp;GData-Version:&nbsp;2&nbsp;header&nbsp;to&nbsp;the&nbsp;request&nbsp;in<br>
+its&nbsp;modify_request&nbsp;method.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;method:&nbsp;str&nbsp;The&nbsp;HTTP&nbsp;verb&nbsp;for&nbsp;this&nbsp;request,&nbsp;usually&nbsp;'GET',&nbsp;'POST',&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'PUT',&nbsp;or&nbsp;'DELETE'<br>
+&nbsp;&nbsp;uri:&nbsp;atom.http_core.Uri,&nbsp;str,&nbsp;or&nbsp;unicode&nbsp;The&nbsp;URL&nbsp;being&nbsp;requested.<br>
+&nbsp;&nbsp;auth_token:&nbsp;An&nbsp;object&nbsp;which&nbsp;sets&nbsp;the&nbsp;Authorization&nbsp;HTTP&nbsp;header&nbsp;in&nbsp;its<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modify_request&nbsp;method.&nbsp;Recommended&nbsp;classes&nbsp;include&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gdata.gauth.ClientLoginToken&nbsp;and&nbsp;gdata.gauth.AuthSubToken<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;among&nbsp;others.<br>
+&nbsp;&nbsp;http_request:&nbsp;(optional)&nbsp;atom.http_core.HttpRequest<br>
+&nbsp;&nbsp;converter:&nbsp;function&nbsp;which&nbsp;takes&nbsp;the&nbsp;body&nbsp;of&nbsp;the&nbsp;response&nbsp;as&nbsp;it's&nbsp;only<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;argument&nbsp;and&nbsp;returns&nbsp;the&nbsp;desired&nbsp;object.<br>
+&nbsp;&nbsp;desired_class:&nbsp;class&nbsp;descended&nbsp;from&nbsp;atom.core.XmlElement&nbsp;to&nbsp;which&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;successful&nbsp;response&nbsp;should&nbsp;be&nbsp;converted.&nbsp;If&nbsp;there&nbsp;is&nbsp;no<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;converter&nbsp;function&nbsp;specified&nbsp;(converter=None)&nbsp;then&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;desired_class&nbsp;will&nbsp;be&nbsp;used&nbsp;in&nbsp;calling&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;atom.core.parse&nbsp;function.&nbsp;If&nbsp;neither<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;desired_class&nbsp;nor&nbsp;the&nbsp;converter&nbsp;is&nbsp;specified,&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP&nbsp;reponse&nbsp;object&nbsp;will&nbsp;be&nbsp;returned.<br>
+&nbsp;&nbsp;redirects_remaining:&nbsp;(optional)&nbsp;int,&nbsp;if&nbsp;this&nbsp;number&nbsp;is&nbsp;0&nbsp;and&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp;sends&nbsp;a&nbsp;302&nbsp;redirect,&nbsp;the&nbsp;request&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;raise&nbsp;an&nbsp;exception.&nbsp;This&nbsp;parameter&nbsp;is&nbsp;used&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recursive&nbsp;request&nbsp;calls&nbsp;to&nbsp;avoid&nbsp;an&nbsp;infinite&nbsp;loop.<br>
+&nbsp;<br>
+Any&nbsp;additional&nbsp;arguments&nbsp;are&nbsp;passed&nbsp;through&nbsp;to&nbsp;<br>
+atom.client.AtomPubClient.request.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;An&nbsp;HTTP&nbsp;response&nbsp;object&nbsp;(see&nbsp;atom.http_core.HttpResponse&nbsp;for&nbsp;a<br>
+&nbsp;&nbsp;description&nbsp;of&nbsp;the&nbsp;object's&nbsp;interface)&nbsp;if&nbsp;no&nbsp;converter&nbsp;was<br>
+&nbsp;&nbsp;specified&nbsp;and&nbsp;no&nbsp;desired_class&nbsp;was&nbsp;specified.&nbsp;If&nbsp;a&nbsp;converter&nbsp;function<br>
+&nbsp;&nbsp;was&nbsp;provided,&nbsp;the&nbsp;results&nbsp;of&nbsp;calling&nbsp;the&nbsp;converter&nbsp;are&nbsp;returned.&nbsp;If&nbsp;no<br>
+&nbsp;&nbsp;converter&nbsp;was&nbsp;specified&nbsp;but&nbsp;a&nbsp;desired_class&nbsp;was&nbsp;provided,&nbsp;the&nbsp;response<br>
+&nbsp;&nbsp;body&nbsp;will&nbsp;be&nbsp;converted&nbsp;to&nbsp;the&nbsp;class&nbsp;using&nbsp;<br>
+&nbsp;&nbsp;atom.core.parse.</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-request_client_login_token"><strong>request_client_login_token</strong></a>(self, email, password, source, service<font color="#909090">=None</font>, account_type<font color="#909090">='HOSTED_OR_GOOGLE'</font>, auth_url<font color="#909090">=&lt;atom.http_core.Uri object at 0xd12e50&gt;</font>, captcha_token<font color="#909090">=None</font>, captcha_response<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="BloggerClient-upgrade_token"><strong>upgrade_token</strong></a>(self, token<font color="#909090">=None</font>, url<font color="#909090">=&lt;atom.http_core.Uri object at 0xd12e90&gt;</font>)</dt><dd><tt>Asks&nbsp;the&nbsp;Google&nbsp;auth&nbsp;server&nbsp;for&nbsp;a&nbsp;multi-use&nbsp;AuthSub&nbsp;token.<br>
+&nbsp;<br>
+For&nbsp;details&nbsp;on&nbsp;AuthSub,&nbsp;see:<br>
+<a href="http://code.google.com/apis/accounts/docs/AuthSub.html">http://code.google.com/apis/accounts/docs/AuthSub.html</a><br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;token:&nbsp;gdata.gauth.AuthSubToken&nbsp;or&nbsp;gdata.gauth.SecureAuthSubToken<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(optional)&nbsp;If&nbsp;no&nbsp;token&nbsp;is&nbsp;passed&nbsp;in,&nbsp;the&nbsp;client's&nbsp;auth_token&nbsp;member<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;used&nbsp;to&nbsp;request&nbsp;the&nbsp;new&nbsp;token.&nbsp;The&nbsp;token&nbsp;object&nbsp;will&nbsp;be&nbsp;modified<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;contain&nbsp;the&nbsp;new&nbsp;session&nbsp;token&nbsp;string.<br>
+&nbsp;&nbsp;url:&nbsp;str&nbsp;or&nbsp;atom.http_core.Uri&nbsp;(optional)&nbsp;The&nbsp;URL&nbsp;to&nbsp;which&nbsp;the&nbsp;token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;upgrade&nbsp;request&nbsp;should&nbsp;be&nbsp;sent.&nbsp;Defaults&nbsp;to:&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://www.google.com/accounts/AuthSubSessionToken<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;upgraded&nbsp;gdata.gauth.AuthSubToken&nbsp;object.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="gdata.client.html#GDClient">gdata.client.GDClient</a>:<br>
+<dl><dt><strong>auth_service</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="atom.client.html#AtomPubClient">atom.client.AtomPubClient</a>:<br>
+<dl><dt><a name="BloggerClient-Get"><strong>Get</strong></a> = get(self, uri<font color="#909090">=None</font>, auth_token<font color="#909090">=None</font>, http_request<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-Put"><strong>Put</strong></a> = put(self, uri<font color="#909090">=None</font>, data<font color="#909090">=None</font>, auth_token<font color="#909090">=None</font>, http_request<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-__init__"><strong>__init__</strong></a>(self, http_client<font color="#909090">=None</font>, host<font color="#909090">=None</font>, auth_token<font color="#909090">=None</font>, source<font color="#909090">=None</font>, **kwargs)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;AtomPubClient&nbsp;instance.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;source:&nbsp;The&nbsp;name&nbsp;of&nbsp;your&nbsp;application.<br>
+&nbsp;&nbsp;http_client:&nbsp;An&nbsp;object&nbsp;capable&nbsp;of&nbsp;performing&nbsp;HTTP&nbsp;requests&nbsp;through&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;request&nbsp;method.&nbsp;This&nbsp;object&nbsp;is&nbsp;used&nbsp;to&nbsp;perform&nbsp;the&nbsp;request<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when&nbsp;the&nbsp;AtomPubClient's&nbsp;request&nbsp;method&nbsp;is&nbsp;called.&nbsp;Used&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allow&nbsp;HTTP&nbsp;requests&nbsp;to&nbsp;be&nbsp;directed&nbsp;to&nbsp;a&nbsp;mock&nbsp;server,&nbsp;or&nbsp;use<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;alternate&nbsp;library&nbsp;instead&nbsp;of&nbsp;the&nbsp;default&nbsp;of&nbsp;httplib&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make&nbsp;HTTP&nbsp;requests.<br>
+&nbsp;&nbsp;host:&nbsp;str&nbsp;The&nbsp;default&nbsp;host&nbsp;name&nbsp;to&nbsp;use&nbsp;if&nbsp;a&nbsp;host&nbsp;is&nbsp;not&nbsp;specified&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;requested&nbsp;URI.<br>
+&nbsp;&nbsp;auth_token:&nbsp;An&nbsp;object&nbsp;which&nbsp;sets&nbsp;the&nbsp;HTTP&nbsp;Authorization&nbsp;header&nbsp;when&nbsp;its<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modify_request&nbsp;method&nbsp;is&nbsp;called.</tt></dd></dl>
+
+<dl><dt><a name="BloggerClient-get"><strong>get</strong></a>(self, uri<font color="#909090">=None</font>, auth_token<font color="#909090">=None</font>, http_request<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="BloggerClient-put"><strong>put</strong></a>(self, uri<font color="#909090">=None</font>, data<font color="#909090">=None</font>, auth_token<font color="#909090">=None</font>, http_request<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.client.html#AtomPubClient">atom.client.AtomPubClient</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="atom.client.html#AtomPubClient">atom.client.AtomPubClient</a>:<br>
+<dl><dt><strong>auth_token</strong> = None</dl>
+
+<dl><dt><strong>host</strong> = None</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Query">class <strong>Query</strong></a>(<a href="gdata.client.html#Query">gdata.client.Query</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.blogger.client.html#Query">Query</a></dd>
+<dd><a href="gdata.client.html#Query">gdata.client.Query</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Query-ModifyRequest"><strong>ModifyRequest</strong></a> = <a href="#Query-modify_request">modify_request</a>(self, http_request)</dt></dl>
+
+<dl><dt><a name="Query-__init__"><strong>__init__</strong></a>(self, order_by<font color="#909090">=None</font>, **kwargs)</dt></dl>
+
+<dl><dt><a name="Query-modify_request"><strong>modify_request</strong></a>(self, http_request)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="gdata.client.html#Query">gdata.client.Query</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>BLOGS_URL</strong> = 'http://www.blogger.com/feeds/%s/blogs'<br>
+<strong>BLOG_ARCHIVE_URL</strong> = 'http://www.blogger.com/feeds/%s/archive/full'<br>
+<strong>BLOG_COMMENTS_URL</strong> = 'http://www.blogger.com/feeds/%s/comments/default'<br>
+<strong>BLOG_POST_COMMENTS_URL</strong> = 'http://www.blogger.com/feeds/%s/%s/comments/default'<br>
+<strong>BLOG_POST_URL</strong> = 'http://www.blogger.com/feeds/%s/posts/default'<br>
+<strong>__author__</strong> = 'j.s@google.com (Jeff Scudder)'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">j.s@google.com&nbsp;(Jeff&nbsp;Scudder)</td></tr></table>
+</body></html>

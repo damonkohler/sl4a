@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::SOAPMethod::create_doc_param_def
+is_singleton: true
+name: create_doc_param_def
+params: (req_qnames, res_qnames)
+visibility: public

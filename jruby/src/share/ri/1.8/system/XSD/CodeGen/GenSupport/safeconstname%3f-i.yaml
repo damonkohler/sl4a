@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::CodeGen::GenSupport#safeconstname?
+is_singleton: false
+name: safeconstname?
+params: (name)
+visibility: public

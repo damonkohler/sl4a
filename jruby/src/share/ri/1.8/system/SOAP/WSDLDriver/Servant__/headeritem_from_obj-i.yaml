@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::WSDLDriver::Servant__#headeritem_from_obj
+is_singleton: false
+name: headeritem_from_obj
+params: (obj, name)
+visibility: private

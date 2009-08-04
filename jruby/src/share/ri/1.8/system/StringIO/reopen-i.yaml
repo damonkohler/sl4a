@@ -1,0 +1,15 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Reinitializes <b>strio</b> with the given <em>other_StrIO</em> or <em>string</em> and <em>mode</em> (see StringIO#new).
+full_name: StringIO#reopen
+is_singleton: false
+name: reopen
+params: |
+  strio.reopen(other_StrIO)     -> strio
+  strio.reopen(string, mode)    -> strio
+
+visibility: public

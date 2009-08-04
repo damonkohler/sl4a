@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: For local attribute key parsing
+- !ruby/struct:SM::Flow::VERB 
+  body: "  &lt;foo xmlns=&quot;urn:a&quot; xmlns:n1=&quot;urn:a&quot; bar=&quot;1&quot; n1:baz=&quot;2&quot; /&gt;\n    =&gt;\n  {}bar, {urn:a}baz\n"
+full_name: XSD::NS#parse_local
+is_singleton: false
+name: parse_local
+params: (elem)
+visibility: public

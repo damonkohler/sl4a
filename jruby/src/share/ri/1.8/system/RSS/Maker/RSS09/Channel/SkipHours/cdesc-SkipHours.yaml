@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: RSS::Maker::RSS09::Channel::SkipHours
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: to_rss
+name: SkipHours
+superclass: SkipHoursBase

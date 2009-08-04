@@ -1,0 +1,54 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: open
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: STD0013 (RFC 1035, etc.) ftp://ftp.isi.edu/in-notes/iana/assignments/dns-parameters
+  name: Port
+  value: "53"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: UDPSize
+  value: "512"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DNSThreadGroup
+  value: ThreadGroup.new
+full_name: Resolv::DNS
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: close
+- !ruby/object:RI::MethodSummary 
+  name: each_address
+- !ruby/object:RI::MethodSummary 
+  name: each_name
+- !ruby/object:RI::MethodSummary 
+  name: each_resource
+- !ruby/object:RI::MethodSummary 
+  name: extract_resources
+- !ruby/object:RI::MethodSummary 
+  name: getaddress
+- !ruby/object:RI::MethodSummary 
+  name: getaddresses
+- !ruby/object:RI::MethodSummary 
+  name: getname
+- !ruby/object:RI::MethodSummary 
+  name: getnames
+- !ruby/object:RI::MethodSummary 
+  name: getresource
+- !ruby/object:RI::MethodSummary 
+  name: getresources
+- !ruby/object:RI::MethodSummary 
+  name: lazy_initialize
+name: DNS
+superclass: Object

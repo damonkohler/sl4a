@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: (@retval_name, @retval)
+comment: 
+full_name: SOAP::RPC::SOAPMethodResponse#each
+is_singleton: false
+name: each
+params: () {|@retval_name, @retval| ...}
+visibility: public

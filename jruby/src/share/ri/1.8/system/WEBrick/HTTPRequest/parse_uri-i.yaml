@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: orig_parse_uri
+block_params: 
+comment: 
+full_name: WEBrick::HTTPRequest#parse_uri
+is_singleton: false
+name: parse_uri
+params: (str, scheme="http")
+visibility: private

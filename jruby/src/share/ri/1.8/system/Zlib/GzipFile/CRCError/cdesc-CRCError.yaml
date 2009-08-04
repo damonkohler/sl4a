@@ -1,0 +1,17 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Raised when the CRC checksum recorded in gzip file footer is not equivalent to the CRC checksum of the actual uncompressed data.
+constants: []
+
+full_name: Zlib::GzipFile::CRCError
+includes: []
+
+instance_methods: []
+
+name: CRCError
+superclass: Zlib::GzipFile::Error

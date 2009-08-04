@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::DNS::Message::MessageEncoder#put_pack
+is_singleton: false
+name: put_pack
+params: (template, *d)
+visibility: public

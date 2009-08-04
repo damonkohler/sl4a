@@ -1,0 +1,51 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+foo() { print("foo"); }
+foo();
+
+bar( a ) { assert(a==5); }
+bar( 5 );
+
+bar2( a, b ) { return a+b; }
+assert( bar2( 100, 200 ) == 300 );
+
+gee( int a ) { print(a); }
+gee( 79 );
+
+print("Trying wrong argument type:");
+try { eval( "gee( \"foo\" );" ); } catch( bsh.EvalError e ) { 
+	flag(); print("flag1"); }
+
+print("wrong number of args:");
+try { eval( "gee()" ); } catch( bsh.EvalError e ) { flag(); print("flag2"); }
+print("wrong number of args again:");
+try { eval( "gee(1,2)" ); } catch( bsh.EvalError e ) { flag(); print("flag3"); }
+
+print("wrong return type:");
+int goo2( String s1 ) { return s1; }
+try { eval("print(goo2(\"foo\"));"); } catch( bsh.EvalError e ) { 
+	flag(); print("flag4"); }
+
+String goo3( a ) { return a; }
+assert( goo3("foo").equals("foo") ); // == ok here
+
+print("wrong return type again:");
+try { eval("goo3(2)"); } catch ( bsh.EvalError e ) { flag(); print("flag5"); }
+
+// should be ok
+void booga1() { };
+void booga2() { return; };
+booga1();
+booga2();
+
+print("return from void method type");
+void blah() { return "foo"; }
+try { eval("print(blah());"); } catch ( bsh.EvalError e ) { 
+	flag(); print("flag6"); }
+
+assert( flag() == 6 );
+
+complete();
+

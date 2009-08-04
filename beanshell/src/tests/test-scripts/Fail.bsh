@@ -1,0 +1,16 @@
+#!/bin/java bsh.Interpreter
+
+// This unit always fails...
+// The test runner should make sure that it does.
+
+source("TestHarness.bsh");
+
+
+foo() {
+	if ( true ) {
+		assert(false);
+	}
+}
+foo();
+
+complete();

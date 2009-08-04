@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::Collector::Dir#recursive_collect
+is_singleton: false
+name: recursive_collect
+params: (name, already_gathered)
+visibility: public

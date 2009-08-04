@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+params: (listener)
+is_singleton: true
+block_params: 
+name: register_listener
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Use this to register a customer output formatter.
+full_name: Spec::Story::Runner::register_listener
+visibility: public
+aliases: []
+

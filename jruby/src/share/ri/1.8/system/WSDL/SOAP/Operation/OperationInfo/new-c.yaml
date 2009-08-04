@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::SOAP::Operation::OperationInfo::new
+is_singleton: true
+name: new
+params: (style, op_name, optype_name, headerparts, bodyparts, faultpart, soapaction)
+visibility: public

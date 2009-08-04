@@ -1,0 +1,51 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: activate
+- !ruby/object:RI::MethodSummary 
+  name: each_active_object
+- !ruby/object:RI::MethodSummary 
+  name: inactivate
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: process_controllers_exclusive
+comment: 
+constants: []
+
+full_name: Shell::ProcessController
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: active_job?
+- !ruby/object:RI::MethodSummary 
+  name: active_jobs
+- !ruby/object:RI::MethodSummary 
+  name: active_jobs_exist?
+- !ruby/object:RI::MethodSummary 
+  name: add_schedule
+- !ruby/object:RI::MethodSummary 
+  name: jobs
+- !ruby/object:RI::MethodSummary 
+  name: jobs_exist?
+- !ruby/object:RI::MethodSummary 
+  name: kill_job
+- !ruby/object:RI::MethodSummary 
+  name: sfork
+- !ruby/object:RI::MethodSummary 
+  name: start_job
+- !ruby/object:RI::MethodSummary 
+  name: terminate_job
+- !ruby/object:RI::MethodSummary 
+  name: wait_all_jobs_execution
+- !ruby/object:RI::MethodSummary 
+  name: waiting_job?
+- !ruby/object:RI::MethodSummary 
+  name: waiting_jobs
+- !ruby/object:RI::MethodSummary 
+  name: waiting_jobs_exist?
+name: ProcessController
+superclass: Object

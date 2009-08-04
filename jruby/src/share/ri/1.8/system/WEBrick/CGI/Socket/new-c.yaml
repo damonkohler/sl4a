@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::CGI::Socket::new
+is_singleton: true
+name: new
+params: (config, env, stdin, stdout)
+visibility: public

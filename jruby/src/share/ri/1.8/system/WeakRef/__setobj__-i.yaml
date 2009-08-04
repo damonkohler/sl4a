@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WeakRef#__setobj__
+is_singleton: false
+name: __setobj__
+params: (obj)
+visibility: public

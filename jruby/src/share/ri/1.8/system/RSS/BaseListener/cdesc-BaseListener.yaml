@@ -1,0 +1,34 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: available_tags
+- !ruby/object:RI::MethodSummary 
+  name: class_name
+- !ruby/object:RI::MethodSummary 
+  name: def_get_text_element
+- !ruby/object:RI::MethodSummary 
+  name: install_class_name
+- !ruby/object:RI::MethodSummary 
+  name: install_get_text_element
+- !ruby/object:RI::MethodSummary 
+  name: install_setter
+- !ruby/object:RI::MethodSummary 
+  name: raise_for_undefined_entity?
+- !ruby/object:RI::MethodSummary 
+  name: register_uri
+- !ruby/object:RI::MethodSummary 
+  name: setter
+- !ruby/object:RI::MethodSummary 
+  name: uri_registered?
+comment: 
+constants: []
+
+full_name: RSS::BaseListener
+includes: []
+
+instance_methods: []
+
+name: BaseListener
+superclass: Object

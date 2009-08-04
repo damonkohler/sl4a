@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Element::plural_forms
+is_singleton: true
+name: plural_forms
+params: ()
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::BaseListener::install_get_text_element
+is_singleton: true
+name: install_get_text_element
+params: (uri, name, setter)
+visibility: public

@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: install_have_attribute_element
+block_params: 
+comment: 
+full_name: RSS::BaseModel#install_have_child_element
+is_singleton: false
+name: install_have_child_element
+params: (tag_name, uri, occurs, name=nil)
+visibility: public

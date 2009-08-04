@@ -1,0 +1,15 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+assert( java.awt.geom.Rectangle2D.Float.class instanceof Class );
+
+assert( InnerClass.Inner.y == 6 );
+assert( new InnerClass.Inner() instanceof Object );
+assert( new InnerClass.Inner().x == 5 );
+
+assert( InnerClass.Inner.Inner2.class instanceof Class );
+assert( new InnerClass.Inner.Inner2() instanceof Object );
+
+complete();
+

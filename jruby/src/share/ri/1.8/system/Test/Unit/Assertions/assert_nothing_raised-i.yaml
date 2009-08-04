@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: ""
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Passes if block does not raise an exception.
+- !ruby/struct:SM::Flow::P 
+  body: "Example:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  assert_nothing_raised do\n    [1, 2].uniq\n  end\n"
+full_name: Test::Unit::Assertions#assert_nothing_raised
+is_singleton: false
+name: assert_nothing_raised
+params: (*args) {|| ...}
+visibility: public

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Net::HTTP is stupid about the multiple header fields. Here is workaround:"
+full_name: WEBrick::HTTPProxyServer#set_cookie
+is_singleton: false
+name: set_cookie
+params: (src, dst)
+visibility: public

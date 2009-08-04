@@ -1,0 +1,208 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: fragment
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: host
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: opaque
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: path
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: port
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: query
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: registry
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: scheme
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: build
+- !ruby/object:RI::MethodSummary 
+  name: build2
+- !ruby/object:RI::MethodSummary 
+  name: component
+- !ruby/object:RI::MethodSummary 
+  name: default_port
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: use_registry
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Base class for all URI classes. Implements generic URI syntax as per RFC 2396.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: DEFAULT_PORT
+  value: nil
+- !ruby/object:RI::Constant 
+  comment: 
+  name: COMPONENT
+  value: "[       :scheme,        :userinfo, :host, :port, :registry,        :path, :opaque,        :query,        :fragment"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: USE_REGISTRY
+  value: "false"
+full_name: URI::Generic
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: URI
+- !ruby/object:RI::IncludedModule 
+  name: REGEXP
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: +
+- !ruby/object:RI::MethodSummary 
+  name: "-"
+- !ruby/object:RI::MethodSummary 
+  name: ==
+- !ruby/object:RI::MethodSummary 
+  name: absolute
+- !ruby/object:RI::MethodSummary 
+  name: absolute?
+- !ruby/object:RI::MethodSummary 
+  name: check_fragment
+- !ruby/object:RI::MethodSummary 
+  name: check_host
+- !ruby/object:RI::MethodSummary 
+  name: check_opaque
+- !ruby/object:RI::MethodSummary 
+  name: check_password
+- !ruby/object:RI::MethodSummary 
+  name: check_path
+- !ruby/object:RI::MethodSummary 
+  name: check_port
+- !ruby/object:RI::MethodSummary 
+  name: check_query
+- !ruby/object:RI::MethodSummary 
+  name: check_registry
+- !ruby/object:RI::MethodSummary 
+  name: check_scheme
+- !ruby/object:RI::MethodSummary 
+  name: check_user
+- !ruby/object:RI::MethodSummary 
+  name: check_userinfo
+- !ruby/object:RI::MethodSummary 
+  name: coerce
+- !ruby/object:RI::MethodSummary 
+  name: component
+- !ruby/object:RI::MethodSummary 
+  name: component_ary
+- !ruby/object:RI::MethodSummary 
+  name: default_port
+- !ruby/object:RI::MethodSummary 
+  name: eql?
+- !ruby/object:RI::MethodSummary 
+  name: escape_userpass
+- !ruby/object:RI::MethodSummary 
+  name: find_proxy
+- !ruby/object:RI::MethodSummary 
+  name: fragment=
+- !ruby/object:RI::MethodSummary 
+  name: hash
+- !ruby/object:RI::MethodSummary 
+  name: hierarchical?
+- !ruby/object:RI::MethodSummary 
+  name: host=
+- !ruby/object:RI::MethodSummary 
+  name: inspect
+- !ruby/object:RI::MethodSummary 
+  name: merge
+- !ruby/object:RI::MethodSummary 
+  name: merge!
+- !ruby/object:RI::MethodSummary 
+  name: merge0
+- !ruby/object:RI::MethodSummary 
+  name: merge_path
+- !ruby/object:RI::MethodSummary 
+  name: normalize
+- !ruby/object:RI::MethodSummary 
+  name: normalize!
+- !ruby/object:RI::MethodSummary 
+  name: opaque=
+- !ruby/object:RI::MethodSummary 
+  name: password
+- !ruby/object:RI::MethodSummary 
+  name: password=
+- !ruby/object:RI::MethodSummary 
+  name: path=
+- !ruby/object:RI::MethodSummary 
+  name: path_query
+- !ruby/object:RI::MethodSummary 
+  name: port=
+- !ruby/object:RI::MethodSummary 
+  name: query=
+- !ruby/object:RI::MethodSummary 
+  name: registry=
+- !ruby/object:RI::MethodSummary 
+  name: relative?
+- !ruby/object:RI::MethodSummary 
+  name: replace!
+- !ruby/object:RI::MethodSummary 
+  name: route_from
+- !ruby/object:RI::MethodSummary 
+  name: route_from0
+- !ruby/object:RI::MethodSummary 
+  name: route_from_path
+- !ruby/object:RI::MethodSummary 
+  name: route_to
+- !ruby/object:RI::MethodSummary 
+  name: scheme=
+- !ruby/object:RI::MethodSummary 
+  name: select
+- !ruby/object:RI::MethodSummary 
+  name: set_fragment
+- !ruby/object:RI::MethodSummary 
+  name: set_host
+- !ruby/object:RI::MethodSummary 
+  name: set_opaque
+- !ruby/object:RI::MethodSummary 
+  name: set_password
+- !ruby/object:RI::MethodSummary 
+  name: set_path
+- !ruby/object:RI::MethodSummary 
+  name: set_port
+- !ruby/object:RI::MethodSummary 
+  name: set_query
+- !ruby/object:RI::MethodSummary 
+  name: set_registry
+- !ruby/object:RI::MethodSummary 
+  name: set_scheme
+- !ruby/object:RI::MethodSummary 
+  name: set_user
+- !ruby/object:RI::MethodSummary 
+  name: set_userinfo
+- !ruby/object:RI::MethodSummary 
+  name: split_path
+- !ruby/object:RI::MethodSummary 
+  name: split_userinfo
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+- !ruby/object:RI::MethodSummary 
+  name: user
+- !ruby/object:RI::MethodSummary 
+  name: user=
+- !ruby/object:RI::MethodSummary 
+  name: userinfo
+- !ruby/object:RI::MethodSummary 
+  name: userinfo=
+name: Generic
+superclass: Object

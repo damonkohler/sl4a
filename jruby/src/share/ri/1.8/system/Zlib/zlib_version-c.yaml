@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the string which represents the version of zlib library.
+full_name: Zlib::zlib_version
+is_singleton: true
+name: zlib_version
+params: ()
+visibility: public

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>add_example_group (Spec::Runner::Formatter::NestedTextFormatter)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/spec/runner/formatter/nested_text_formatter.rb, line 13</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_example_group</span>(<span class="ruby-identifier">example_group</span>)
+          <span class="ruby-keyword kw">super</span>
+
+          <span class="ruby-identifier">current_nested_example_groups</span> = <span class="ruby-identifier">described_example_group_chain</span>
+          <span class="ruby-identifier">current_nested_example_groups</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">nested_example_group</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+            <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">nested_example_group</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">previous_nested_example_groups</span>[<span class="ruby-identifier">i</span>]
+              <span class="ruby-identifier">output</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{'  ' * i}#{nested_example_group.description_args.join}&quot;</span>
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+
+          <span class="ruby-ivar">@previous_nested_example_groups</span> = <span class="ruby-identifier">described_example_group_chain</span>
+        <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

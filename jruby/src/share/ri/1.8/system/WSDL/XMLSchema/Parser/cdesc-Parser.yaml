@@ -1,0 +1,32 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::XMLSchema::Parser
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: XSD
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: characters
+- !ruby/object:RI::MethodSummary 
+  name: charset
+- !ruby/object:RI::MethodSummary 
+  name: decode_tag
+- !ruby/object:RI::MethodSummary 
+  name: decode_tag_end
+- !ruby/object:RI::MethodSummary 
+  name: decode_text
+- !ruby/object:RI::MethodSummary 
+  name: end_element
+- !ruby/object:RI::MethodSummary 
+  name: parse
+- !ruby/object:RI::MethodSummary 
+  name: start_element
+name: Parser
+superclass: Object

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (line)
+is_singleton: false
+block_params: 
+name: one_more_of_the_same
+comment: 
+full_name: Spec::Story::Runner::StoryParser::GivenState#one_more_of_the_same
+visibility: public
+aliases: []
+

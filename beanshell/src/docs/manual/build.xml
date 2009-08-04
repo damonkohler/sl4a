@@ -1,0 +1,60 @@
+<project default="manual">
+	<property name="imagedir" value="../images"/>
+	<property name="bshmanual" value="bshmanual"/>
+	<!-- 
+		I am currently using the GPL 'htmldoc' to build a PDF from the HTML:
+			http://www.easysw.com/htmldoc/ 
+		I tried many xhtml->fo stylesheets, but none seemed to work well.	
+
+	<property name="htmldoc" value="/home/niemeyp/pkg/htmldoc/bin/htmldoc"/>
+	-->
+	<property name="htmldoc" value="/pkg/htmldoc/bin/htmldoc"/>
+
+	<target name="manual">     
+		<!-- Build it every time... later we can add an updtodate check -->
+		<touch file="manual.xml"/>
+
+		<!-- Single page build -->
+		<!--
+		-->
+		<style style="xsl/manual.xsl" in="manual.xml" out="${bshmanual}.html">
+			<param name="imagedir" expression="${imagedir}"/>
+		</style>
+
+		<!-- multi-page build -->
+		<mkdir dir="html"/>
+		<!--
+		-->
+		<style style="xsl/manual.xsl" in="manual.xml" out="xsl.log">
+			<param name="imagedir" expression="${imagedir}"/>
+			<param name="multipage" expression="true"/>
+			<param name="pagesdir" expression="html"/>
+		</style>
+		<copy file="html/contents.html" tofile="html/index.html"/>
+	</target>   
+
+	<!-- Output a list of all images referenced by the manual -->
+	<target name="images">     
+		<style style="xsl/imagelist.xsl" in="manual.xml" out="imagelist.txt"/>
+	</target>   
+
+	<target name="pdf" depends="manual">
+		<apply executable="${htmldoc}">
+			<arg value="--webpage"/>
+			<arg value="--jpeg=0"/>
+			<arg value="--header"/><arg value="..."/>
+			<arg value="--linkstyle"/><arg value="plain"/>
+			<arg value="-f"/><arg value="${bshmanual}.pdf"/>
+			<fileset dir="." includes="${bshmanual}.html"/>
+		</apply>
+	</target>
+
+	<target name="clean">     
+		<delete quiet="true" file="${bshmanual}.html"/>
+		<delete quiet="true" file="${bshmanual}.pdf"/>
+		<delete quiet="true" file="imagelist.txt"/>
+		<delete quiet="true" file="xsl.log"/>
+		<delete quiet="true" dir="html"/>
+	</target>   
+
+</project>

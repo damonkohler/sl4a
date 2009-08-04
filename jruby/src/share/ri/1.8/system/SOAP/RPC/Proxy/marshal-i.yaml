@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Proxy#marshal
+is_singleton: false
+name: marshal
+params: (env, opt)
+visibility: private

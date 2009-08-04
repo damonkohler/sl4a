@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Generates a Source object @param arg Either a String, or an IO @return a Source, or nil if a bad argument was given
+full_name: REXML::SourceFactory::create_from
+is_singleton: true
+name: create_from
+params: (arg)
+visibility: public

@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Only use this if you do not want the XML declaration to be written; this object is ignored by the XML writer. Otherwise, instantiate your own XMLDecl and add it to the document.
+- !ruby/struct:SM::Flow::P 
+  body: Note that XML 1.1 documents <b>must</b> include an XML declaration
+full_name: REXML::XMLDecl::default
+is_singleton: true
+name: default
+params: ()
+visibility: public

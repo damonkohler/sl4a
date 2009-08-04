@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a single-row matrix from this vector.
+full_name: Vector#covector
+is_singleton: false
+name: covector
+params: ()
+visibility: public

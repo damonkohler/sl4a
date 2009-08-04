@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: <tt>s.rest_size</tt> is equivalent to <tt>s.rest.size</tt>.
+full_name: StringScanner#rest_size
+is_singleton: false
+name: rest_size
+params: ()
+visibility: public

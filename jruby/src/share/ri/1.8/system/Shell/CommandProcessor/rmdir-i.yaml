@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: CommandProcessor#rmdir(*path)
+- !ruby/struct:SM::Flow::VERB 
+  body: "    path: String\n  same as Dir.rmdir()\n"
+full_name: Shell::CommandProcessor#rmdir
+is_singleton: false
+name: rmdir
+params: (*path)
+visibility: public

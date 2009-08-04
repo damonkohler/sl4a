@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the main thread for the process.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Thread.main   #=&gt; #&lt;Thread:0x401bdf4c run&gt;\n"
+full_name: Thread::main
+is_singleton: true
+name: main
+params: |
+  Thread.main   => thread
+
+visibility: public

@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: pushd
+block_params: ""
+comment: 
+full_name: Shell#pushdir
+is_singleton: false
+name: pushdir
+params: (path = nil) {|| ...}
+visibility: public

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Return a block consisting of fragments which are paragraphs, list entries or verbatim text. We merge consecutive lines of the same type and level together. We are also slightly tricky with lists: the lines following a list introduction look like paragraph lines at the next level, and we remap them into list entries instead"
+full_name: SM::SimpleMarkup#group_lines
+is_singleton: false
+name: group_lines
+params: ()
+visibility: private

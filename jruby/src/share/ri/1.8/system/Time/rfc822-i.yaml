@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Alias for #rfc2822"
+full_name: Time#rfc822
+is_singleton: false
+name: rfc822
+params: ()
+visibility: public

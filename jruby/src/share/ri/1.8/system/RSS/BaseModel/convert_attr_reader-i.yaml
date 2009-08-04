@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::BaseModel#convert_attr_reader
+is_singleton: false
+name: convert_attr_reader
+params: (*attrs)
+visibility: private

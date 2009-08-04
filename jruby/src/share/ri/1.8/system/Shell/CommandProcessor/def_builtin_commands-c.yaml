@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: CommandProcessor.def_builtin_commands(delegation_class, command_specs)
+- !ruby/struct:SM::Flow::VERB 
+  body: "    delegation_class: Class or Module\n    command_specs: [[command_name, [argument,...]],...]\n       command_name: String\n       arguments:      String\n          FILENAME?? -&gt; expand_path(filename??)\n          *FILENAME?? -&gt; filename??.collect{|f|expand_path(f)}.join(&quot;, &quot;)\n  define command_name(argument,...) as\n      delegation_class.command_name(argument,...)\n"
+full_name: Shell::CommandProcessor::def_builtin_commands
+is_singleton: true
+name: def_builtin_commands
+params: (delegation_class, command_specs)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Router#lookup_operation
+is_singleton: false
+name: lookup_operation
+params: (soapaction, body)
+visibility: private

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+params: (name, &block)
+is_singleton: false
+block_params: 
+name: when
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: 'Alias for #When'
+full_name: Spec::Story::StepGroup#when
+visibility: public
+aliases: []
+

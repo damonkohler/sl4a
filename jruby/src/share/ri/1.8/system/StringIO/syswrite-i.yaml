@@ -1,0 +1,15 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Appends the given string to the underlying buffer string of <b>strio</b>. The stream must be opened for writing. If the argument is not a string, it will be converted to a string using <tt>to_s</tt>. Returns the number of bytes written. See IO#write.
+full_name: StringIO#syswrite
+is_singleton: false
+name: syswrite
+params: |
+  strio.write(string)    -> integer
+  strio.syswrite(string) -> integer
+
+visibility: public

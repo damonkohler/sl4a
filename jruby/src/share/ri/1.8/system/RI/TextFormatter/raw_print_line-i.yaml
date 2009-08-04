@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: []
+
+full_name: RI::TextFormatter#raw_print_line
+is_singleton: false
+name: raw_print_line
+params: (txt)
+visibility: public

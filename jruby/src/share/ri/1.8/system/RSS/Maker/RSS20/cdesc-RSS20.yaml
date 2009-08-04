@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: RSS::Maker::RSS20
+includes: []
+
+instance_methods: []
+
+name: RSS20
+superclass: RSS09

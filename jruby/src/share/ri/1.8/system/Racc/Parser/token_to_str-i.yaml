@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Racc::Parser#token_to_str
+is_singleton: false
+name: token_to_str
+params: (t)
+visibility: private

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RubyLex#skip_inner_expression
+is_singleton: false
+name: skip_inner_expression
+params: ()
+visibility: public

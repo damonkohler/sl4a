@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="manual.xsl"?>
+
+<!DOCTYPE manual [
+  <!ELEMENT manual ANY>
+
+  <!ENTITY title SYSTEM "title.xml">
+  <!ENTITY intro SYSTEM "intro.xml">
+  <!ENTITY quickstart SYSTEM "quickstart.xml">
+  <!ENTITY syntax SYSTEM "syntax.xml">
+  <!ENTITY methods SYSTEM "methods.xml">
+  <!ENTITY objects SYSTEM "objects.xml">
+  <!ENTITY scope SYSTEM "scope.xml">
+  <!ENTITY interfaces SYSTEM "interfaces.xml">
+  <!ENTITY specialvarsvalues SYSTEM "specialvarsvalues.xml">
+  <!ENTITY classpath SYSTEM "classpath.xml">
+  <!ENTITY desktop SYSTEM "desktop.xml">
+  <!ENTITY remotemode SYSTEM "remotemode.xml">
+  <!ENTITY parser SYSTEM "parser.xml">
+  <!ENTITY execscripts SYSTEM "execscripts.xml">
+  <!ENTITY reflectivestyle SYSTEM "reflectivestyle.xml">
+  <!ENTITY more SYSTEM "more.xml">
+  <!ENTITY credit SYSTEM "credit.xml">
+  <!ENTITY bshcommands SYSTEM "bshcommands.xml">
+  <!ENTITY bshdoc SYSTEM "bshdoc.xml">
+  <!ENTITY commands SYSTEM "commands.xml">
+  <!ENTITY usercommands SYSTEM "usercommands.xml">
+  <!ENTITY standalonemode SYSTEM "standalonemode.xml">
+  <!ENTITY embeddedmode SYSTEM "embeddedmode.xml">
+  <!ENTITY servletmode SYSTEM "servletmode.xml">
+  <!ENTITY appletmode SYSTEM "appletmode.xml">
+  <!ENTITY jconsole SYSTEM "jconsole.xml">
+  <!ENTITY strictjava SYSTEM "strictjava.xml">
+  <!ENTITY bsf SYSTEM "bsf.xml">
+  <!ENTITY contents SYSTEM "contents.xml">
+
+  <!-- I can't figure out how to move this to the included bshcommands file -->
+  <!ENTITY bshcommands-bshdoc SYSTEM "bshcommands-bshdoc.xml">
+]>
+
+<manual>
+	&title;
+	&contents; <!-- Auto generated table of contents -->
+	&intro;
+	&quickstart;
+	&syntax;
+	&methods;
+	&objects;
+	&scope;
+	&interfaces;
+	&specialvarsvalues;
+	&commands;
+	&usercommands;
+	&strictjava;
+	&classpath;
+	&standalonemode;
+	&embeddedmode;
+	&remotemode;
+	&servletmode;
+	&appletmode;
+	&desktop;
+	&bshdoc;
+	&parser;
+	&jconsole;
+	&reflectivestyle;
+	&execscripts;
+	&bsf;
+	&more;
+	&credit;
+	&bshcommands; <!-- bshdoc auto generated bsh commands documentation -->
+</manual>
+
+

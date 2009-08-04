@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: add_rpc_headerhandler
+block_params: 
+comment: 
+full_name: SOAP::RPC::HTTPServer#add_headerhandler
+is_singleton: false
+name: add_headerhandler
+params: (obj)
+visibility: public

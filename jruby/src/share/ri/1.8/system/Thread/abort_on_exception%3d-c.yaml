@@ -1,0 +1,20 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: When set to <tt>true</tt>, all threads will abort if an exception is raised. Returns the new state.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Thread.abort_on_exception = true\n   t1 = Thread.new do\n     puts  &quot;In new thread&quot;\n     raise &quot;Exception from thread&quot;\n   end\n   sleep(1)\n   puts &quot;not reached&quot;\n"
+- !ruby/struct:SM::Flow::P 
+  body: <em>produces:</em>
+- !ruby/struct:SM::Flow::VERB 
+  body: "   In new thread\n   prog.rb:4: Exception from thread (RuntimeError)\n    from prog.rb:2:in `initialize'\n    from prog.rb:2:in `new'\n    from prog.rb:2\n"
+full_name: Thread::abort_on_exception=
+is_singleton: true
+name: abort_on_exception=
+params: |
+  Thread.abort_on_exception= boolean   => true or false
+
+visibility: public

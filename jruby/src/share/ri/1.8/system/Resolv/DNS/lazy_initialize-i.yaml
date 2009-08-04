@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::DNS#lazy_initialize
+is_singleton: false
+name: lazy_initialize
+params: ()
+visibility: public

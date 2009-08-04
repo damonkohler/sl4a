@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::WSDLLiteralRegistry#add_elements2stubobj
+is_singleton: false
+name: add_elements2stubobj
+params: (node, obj)
+visibility: private

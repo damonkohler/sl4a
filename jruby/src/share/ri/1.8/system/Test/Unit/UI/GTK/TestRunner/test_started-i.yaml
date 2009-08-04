@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::GTK::TestRunner#test_started
+is_singleton: false
+name: test_started
+params: (test_name)
+visibility: private

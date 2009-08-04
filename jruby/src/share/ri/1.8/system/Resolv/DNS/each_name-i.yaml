@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: resource.name
+comment: 
+full_name: Resolv::DNS#each_name
+is_singleton: false
+name: each_name
+params: (address) {|resource.name| ...}
+visibility: public

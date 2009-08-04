@@ -1,0 +1,4 @@
+This directory contains resources related to Lua.
+
+src/ contains the modified Lua 5.4.1 source for cross compilation to the Android G1.
+ase/ contains Lua code written for the Android Scripting Environment.

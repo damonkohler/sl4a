@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns <tt>true</tt> iff the scan pointer is at the beginning of the line.
+- !ruby/struct:SM::Flow::VERB 
+  body: "  s = StringScanner.new(&quot;test\\ntest\\n&quot;)\n  s.bol?           # =&gt; true\n  s.scan(/te/)\n  s.bol?           # =&gt; false\n  s.scan(/st\\n/)\n  s.bol?           # =&gt; true\n  s.terminate\n  s.bol?           # =&gt; true\n"
+full_name: StringScanner#beginning_of_line?
+is_singleton: false
+name: beginning_of_line?
+params: ()
+visibility: public

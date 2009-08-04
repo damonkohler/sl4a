@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Removes leading and trailing whitespace from <em>str</em>. Returns <tt>nil</tt> if <em>str</em> was not altered.
+full_name: String#strip!
+is_singleton: false
+name: strip!
+params: |
+  str.strip!   => str or nil
+
+visibility: public

@@ -1,0 +1,4 @@
+This directory contains resources related to BeanShell.
+
+bsh-2.0b4.jar is symlink to the BeanShell JAR used by ASE.
+src/ contains the BeanShell source. It is also available here: http://www.beanshell.org/developer.html

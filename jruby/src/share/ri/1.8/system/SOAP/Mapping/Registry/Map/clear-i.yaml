@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::Registry::Map#clear
+is_singleton: false
+name: clear
+params: ()
+visibility: public

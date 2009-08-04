@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Rinda::WaitTemplateEntry#cancel
+is_singleton: false
+name: cancel
+params: ()
+visibility: public

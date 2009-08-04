@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: add_method_with_soapaction_as
+block_params: 
+comment: 
+full_name: SOAP::RPC::Driver#add_rpc_method_with_soapaction_as
+is_singleton: false
+name: add_rpc_method_with_soapaction_as
+params: (name, name_as, soapaction, *params)
+visibility: public

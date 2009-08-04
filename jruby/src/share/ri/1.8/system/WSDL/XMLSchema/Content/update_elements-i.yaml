@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::XMLSchema::Content#update_elements
+is_singleton: false
+name: update_elements
+params: ()
+visibility: private

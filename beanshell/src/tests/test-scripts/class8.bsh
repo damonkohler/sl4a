@@ -1,0 +1,26 @@
+source("TestHarness.bsh");
+
+// Test package declaration and ability to reflexively refer to the class
+package booga;
+
+class Foo88
+{
+	Foo88 foo;
+
+	Foo88() { 
+		this.foo = this;
+	}
+
+	Foo88 get() { return this; }
+
+	void blah( Foo88 f ) {
+		assert( f instanceof Foo88 );
+	}
+}
+
+f=new Foo88();
+assert( f.foo == f );
+assert( f.get() == f );
+f.blah( f );
+
+complete();

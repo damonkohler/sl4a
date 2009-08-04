@@ -1,0 +1,53 @@
+/**
+    Show component in a frame, centered and packed, handling disposal with
+	the close button.
+	<p>
+
+	Display the component, centered and packed, in a Frame, JFrame, or 
+	JInternalFrame.  Returns the frame.  If the GUI desktop is running then a 
+	JInternaFrame will be used and automatically added to the desktop.  
+	Otherwise if Swing is available a top level JFrame will be created.  
+	Otherwise a plain AWT Frame will be created.
+
+	@method Frame | JFrame | JInternalFrame frame( Component component )
+
+*/
+bsh.help.frame = "usage: frame( Component component )";
+ 
+import java.awt.*;
+import bsh.Capabilities;
+
+frame( Component comp ) 
+{
+	// Ignore unhandled method invocations from listeners.
+	invoke( method, args ) { }
+
+    windowClosing( event ) {
+        frame.dispose();
+    }
+
+	// if the desktop is there make an internal frame
+	if ( bsh.system.desktop != void ) {
+		this.frame = bsh.system.desktop.makeInternalFrame("frame");
+		frame.setClosable(true);
+		frame.getContentPane().add( comp, "Center" );
+    	frame.pack();  // must pack before adding to desktop?
+		bsh.system.desktop.addInternalFrame( frame );
+	} else {
+		// make an external JFrame or Frame
+		if ( Capabilities.haveSwing() ) {
+			this.frame = new javax.swing.JFrame();
+			frame.getContentPane().add( comp, "Center" );
+		} else {
+			this.frame = new Frame();
+			frame.add( comp, "Center" );
+		}
+
+		frame.addWindowListener(this);
+    	frame.pack();
+	}
+
+    frame.show();
+    return frame;
+}
+

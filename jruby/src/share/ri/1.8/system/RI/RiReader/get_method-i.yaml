@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: return the MethodDescription for a given MethodEntry by deserializing the YAML
+full_name: RI::RiReader#get_method
+is_singleton: false
+name: get_method
+params: (method_entry)
+visibility: public

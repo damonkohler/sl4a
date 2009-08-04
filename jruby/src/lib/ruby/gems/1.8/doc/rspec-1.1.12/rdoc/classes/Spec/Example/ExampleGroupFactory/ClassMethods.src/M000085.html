@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>determine_superclass (Spec::Example::ExampleGroupFactory::ClassMethods)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/spec/example/example_group_factory.rb, line 78</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">determine_superclass</span>(<span class="ruby-identifier">opts</span>)
+          <span class="ruby-identifier">key</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:type</span>]
+            <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:type</span>]
+          <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:spec_path</span>] <span class="ruby-operator">=~</span> <span class="ruby-node">/spec(\\|\/)(#{@example_group_types.keys.join('|')})/</span>
+            <span class="ruby-identifier">$2</span> <span class="ruby-operator">==</span> <span class="ruby-value str">''</span> <span class="ruby-operator">?</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">$2</span>.<span class="ruby-identifier">to_sym</span>
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">get</span>(<span class="ruby-identifier">key</span>)
+        <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

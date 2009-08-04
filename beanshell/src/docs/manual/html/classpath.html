@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><head><title>Class Loading and Class Path Management</title></head><body bgcolor="ffffff"><table cellspacing="10"><tr><td align="center"><a href="http://www.beanshell.org/"><img src="../images/homebutton.gif"/><br/>Home</a></td><td><a href="strictjava.html#Strict_Java_Mode"><img src="../images/backbutton.gif"/><br/>Back
+			</a></td><td align="center"><a href="contents.html"><img src="../images/upbutton.gif"/><br/>Contents</a></td><td align="center"><a href="standalonemode.html#Modes_of_Operation"><img src="../images/forwardbutton.gif"/><br/>Next
+			</a></td></tr></table><h1>Class Loading and Class Path Management</h1>
+
+
+BeanShell is capable of some very fine grained and sophisticated class 
+reloading and modifications to the class path.  BeanShell can even map
+the entire class path to allow for automatic importing of classes.
+
+
+<h2><a name="Changing_the_Class_Path">Changing the Class Path</a></h2>
+
+<strong>addClassPath( URL | path )</strong>
+<p CLEAR="ALL"/>
+Add the specified directory or archive to the classpath.  Archives may be
+located by URL, allowing them to be loaded over the network.
+<p CLEAR="ALL"/>
+Examples:
+<p CLEAR="ALL"/>
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+addClassPath( "/home/pat/java/classes" );
+addClassPath( "/home/pat/java/mystuff.jar" );
+addClassPath( new URL("http://myserver/~pat/somebeans.jar") );
+</pre></td></tr></table></center><p/>
+
+Note that if you add class path that overlaps with the existing Java user 
+classpath then the new path will effectively reload the classes in that
+area.
+<p CLEAR="ALL"/>
+
+If you add a relative path to the classpath it is evaluated to an absolute
+path; it does not "move with you".
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+cd("/tmp");
+addClassPath("."); // /tmp
+</pre></td></tr></table></center><p/>
+
+<strong>setClassPath( URL [] )</strong>
+<p CLEAR="ALL"/>
+Change the entire classpath to the specified array of directories and/or 
+archives.  
+<p CLEAR="ALL"/>
+
+This command has some important side effects.  It effectively causes all
+classes to be reloaded (including any in the Java user class path at startup).
+Please see "Class Reloading" below for further details.
+<p CLEAR="ALL"/>
+
+Note: setClassPath() cannot currently be used to make the classpath smaller 
+than the Java user path at startup.
+<p CLEAR="ALL"/>
+
+
+<h2><a name="Auto-Importing_from_the_Classpath">Auto-Importing from the Classpath</a></h2>
+
+As an alternative to explicitly importing class names you may use the
+following statement to trigger automatic importing:
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+import *;
+</pre></td></tr></table></center><p/>
+
+There may be a significant delay while the class path is mapped.  This is why
+auto-importing is not turned on by default.  When run interactively, Bsh will 
+report the areas that it is mapping.
+<p CLEAR="ALL"/>
+
+It is only necessary to issue the auto-import command once.  Thereafter changes
+in the classpath via the addClassPath() and setClassPath() commands will
+remap as necessary.
+<p CLEAR="ALL"/>
+
+<em>
+Note: As of BeanShell 1.1alpha new class files added to the classpath 
+(from outside of BeanShell) after mapping will not be seen in imports.
+</em>
+
+
+<h2><a name="Reloading_Classes">Reloading Classes</a></h2>
+
+BeanShell provides an easy to use mechanism for reloading classes from the 
+classpath.  It is possible in BeanShell to reload arbitrary subsets of classes 
+down to a single class file.  However There are subtle issues to be understood 
+with respect to what it means to reload a class in the Java environment. 
+Please see the discussion of class loading detail below.  But in a nutshell,
+it is important that classes which work together be reloaded together at
+the same time, unless you know what you are doing.
+<p CLEAR="ALL"/>
+
+<strong>reloadClasses( [ package name ] )</strong>
+<p CLEAR="ALL"/>
+The most course level of class reloading is accomplished by issuing the 
+reloadClasses() command with no arguments.  
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+reloadClasses();
+</pre></td></tr></table></center><p/>
+
+This will effectively reload all
+classes in the current classpath (including any changes you have made through
+addClassPath()).
+<p CLEAR="ALL"/>
+
+<em>
+Note: that reloading the full path is actually a light weight operation that 
+simply replaces the class loader - normal style class loading is done as
+classes are subsequently referenced.
+</em>
+<p CLEAR="ALL"/>
+
+Be aware that any object instances which you have previously created may not 
+function with new objects created by the new class loader.  Please see the
+discussion of class loading details below.
+<p CLEAR="ALL"/>
+
+You can also reload all of the classes in a specified package:
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+reloadClasses("mypackage.*");
+</pre></td></tr></table></center><p/>
+
+This will reload only the classes in the specified package.  The classes will
+be reloaded even if they are located in different places in the classpath (e.g.
+if you have some of the package in one directory and some in another).
+<p CLEAR="ALL"/>
+
+As a special case for reloading unpackaged classes the following commands
+are equivalent:
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+reloadClasses(".*") 
+reloadClasses("&lt;unpackaged&gt;")
+</pre></td></tr></table></center><p/>
+<p CLEAR="ALL"/>
+
+You can also reload just an individual class file:
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+reloadClasses("mypackage.MyClass") 
+</pre></td></tr></table></center><p/>
+
+<em>Note: As of alpha1.1 classes contained in archives (jar files) cannot be
+reloaded. i.e. jar files cannot be swapped.</em>
+<p CLEAR="ALL"/>
+
+<h4>Mapping the path</h4>
+
+Unlike the reloadClases() command which reloads the entire class path,
+when you issue a command to reload a package or individual class name
+BeanShell must map some portions of the classpath to find the location of 
+those class files.  This operation can be time consuming, but it is only
+done once.  If running in interactive mode feedback will be given on the
+progress of the mapping.
+<p CLEAR="ALL"/>
+
+<h2><a name="Loading_Classes_Explicitly">Loading Classes Explicitly</a></h2>
+
+In order to perform an explicit class lookup by name while taking into 
+account any BeanShell class path modification you must use a replacement
+for the standard Class.forName() method.
+<p CLEAR="ALL"/>
+
+The getClass() command will load a class by name, using the BeanShell
+classpath.  Alternately, you can consult the class manager explicitly:
+
+<p/><center><table border="1" cellpadding="5" width="100%"><tr><td bgcolor="#dfdfdc"><pre>
+name="foo.bar.MyClass";
+c = getClass( name );
+c = BshClassManager.classForName( name );  // equivalent
+</pre></td></tr></table></center><p/>
+
+<h2><a name="Setting_the_Default_ClassLoader">Setting the Default ClassLoader</a></h2>
+
+The bsh.Interpeter setClassLoader() and bsh.BshClassManager.setClassLoader()
+methods can be used to set an external class loader which is consulted
+for all basic class loading in BeanShell.  
+<p CLEAR="ALL"/>
+
+BeanShell will use the specified class loader at the same point where it 
+would otherwise use the plain Class.forName().  If no explicit classpath 
+management is done from the script (addClassPath(), setClassPath(), 
+reloadClasses()) then BeanShell will only use the supplied classloader.  
+If additional classpath management is done then BeanShell will perform that 
+in addition to the supplied external classloader.  However BeanShell is not 
+currently able to reload classes supplied through the external classloader.  
+<p CLEAR="ALL"/>
+
+
+<h2><a name="Class_Loading_in_Java">Class Loading in Java</a></h2>
+
+A fundamental Java security proposition is that classes may only be loaded 
+through a class loader once and that classes loaded through different class
+loaders live in different name spaces.  By different name spaces I mean that
+they are not considered to be of the same type, even if they came from the
+very same class file.
+<p CLEAR="ALL"/>
+You can think of this in the following way:  When you load classes through
+a new class loader imagine that every class name is prefixed with the 
+identifier "FromClassLoaderXXX" and that all internal references to other
+classes loaded through that class loader are similarly rewritten.  Now if
+you attempt to pass a reference to a class instance loaded through another
+class loader to one of your newly loaded objects, it will not recognize it
+as the same type of class.
+<p CLEAR="ALL"/>
+
+BeanShell works with objects dynamically through the reflection API, so
+your scripts will not have a problem recognizing reloaded class objects.
+However any objects which have you already created might not like them.
+
+
+<h2><a name="Class_Loading_in_BeanShell">Class Loading in BeanShell</a></h2>
+
+The following is a discussion of the BeanShell class loader architecture,
+which allows both course class path extension and fine grained individual
+class reloading.
+<p CLEAR="ALL"/>
+
+<strong>Thriftiness</strong> - Abiding by the BeanShell thriftiness 
+proposition: no class loading code is exercised unless directed by a
+command.  BeanShell begins with no class loader and only adds class loading
+in layers as necessary to achieve desired effects.
+<p CLEAR="ALL"/>
+
+The following diagram illustrates the two layer class loading scheme:
+<p CLEAR="ALL"/>
+<center>
+<img src="../images/bshclassloading.gif"/>
+</center>
+<p CLEAR="ALL"/>
+
+A "base" class loader is used to handle course changes to the classpath 
+including added path.  Unless directed by setClassPath() the base loader will
+only add path and will not cover existing Java user class path.  This prevents
+unnecessary class space changes for the existing classes.
+<p CLEAR="ALL"/>
+
+Packages of classes and individual classes are mapped in sets by class 
+loaders capable of handling discrete files.  A mapping of reloaded classes
+is maintained.  The discrete file class loaders will also use this mapping
+to resolve names outside there space, so when any individual class is reloaded
+it will see all previously reloaded classes as well.
+<p CLEAR="ALL"/>
+
+The BshClassManager knows about all class loader changes and broadcasts
+notification of changes to registered listeners.  BeanShell namespaces use
+this mechanism to dereference cached type information, however they do not
+remove existing object instances.
+<p CLEAR="ALL"/>
+
+Type caching is extremely important to BeanShell performance.  So changing
+the classloader, which necessitates clearing all type caches, should be 
+considered an expensive operation. 
+<p CLEAR="ALL"/>
+
+
+<table cellspacing="10"><tr><td align="center"><a href="http://www.beanshell.org/"><img src="../images/homebutton.gif"/><br/>Home</a></td><td><a href="strictjava.html#Strict_Java_Mode"><img src="../images/backbutton.gif"/><br/>Back
+			</a></td><td align="center"><a href="contents.html"><img src="../images/upbutton.gif"/><br/>Contents</a></td><td align="center"><a href="standalonemode.html#Modes_of_Operation"><img src="../images/forwardbutton.gif"/><br/>Next
+			</a></td></tr></table></body></html>

@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: []
+
+full_name: RI::TextFormatter#wrap
+is_singleton: false
+name: wrap
+params: (txt, prefix=@indent, linelen=@width)
+visibility: public

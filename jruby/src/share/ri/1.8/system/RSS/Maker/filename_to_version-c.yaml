@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Maker::filename_to_version
+is_singleton: true
+name: filename_to_version
+params: (filename)
+visibility: public

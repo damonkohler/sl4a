@@ -1,0 +1,74 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: compile
+- !ruby/object:RI::MethodSummary 
+  name: escape
+- !ruby/object:RI::MethodSummary 
+  name: last_match
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: quote
+- !ruby/object:RI::MethodSummary 
+  name: union
+- !ruby/object:RI::MethodSummary 
+  name: yaml_new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Document-class: Regexp"
+- !ruby/struct:SM::Flow::P 
+  body: A <tt>Regexp</tt> holds a regular expression, used to match a pattern against strings. Regexps are created using the <tt>/.../</tt> and <tt>%r{...}</tt> literals, and by the <tt>Regexp::new</tt> constructor.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: IGNORECASE
+  value: INT2FIX(RE_OPTION_IGNORECASE)
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EXTENDED
+  value: INT2FIX(RE_OPTION_EXTENDED)
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MULTILINE
+  value: INT2FIX(RE_OPTION_MULTILINE)
+full_name: Regexp
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "&"
+- !ruby/object:RI::MethodSummary 
+  name: ==
+- !ruby/object:RI::MethodSummary 
+  name: ===
+- !ruby/object:RI::MethodSummary 
+  name: =~
+- !ruby/object:RI::MethodSummary 
+  name: casefold?
+- !ruby/object:RI::MethodSummary 
+  name: eql?
+- !ruby/object:RI::MethodSummary 
+  name: hash
+- !ruby/object:RI::MethodSummary 
+  name: inspect
+- !ruby/object:RI::MethodSummary 
+  name: kcode
+- !ruby/object:RI::MethodSummary 
+  name: match
+- !ruby/object:RI::MethodSummary 
+  name: options
+- !ruby/object:RI::MethodSummary 
+  name: source
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+- !ruby/object:RI::MethodSummary 
+  name: to_yaml
+- !ruby/object:RI::MethodSummary 
+  name: "|"
+- !ruby/object:RI::MethodSummary 
+  name: "~"
+name: Regexp
+superclass: Object

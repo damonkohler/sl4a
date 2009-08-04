@@ -1,0 +1,17 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a canonical string representation of <em>time</em>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Time.now.asctime   #=&gt; &quot;Wed Apr  9 08:56:03 2003&quot;\n"
+full_name: Time#asctime
+is_singleton: false
+name: asctime
+params: |
+  time.asctime => string
+  time.ctime   => string
+
+visibility: public

@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a new string with the characters from <em>str</em> in reverse order.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;stressed&quot;.reverse   #=&gt; &quot;desserts&quot;\n"
+full_name: String#reverse
+is_singleton: false
+name: reverse
+params: |
+  str.reverse   => new_str
+
+visibility: public

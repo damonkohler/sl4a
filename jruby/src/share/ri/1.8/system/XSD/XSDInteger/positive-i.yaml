@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::XSDInteger#positive
+is_singleton: false
+name: positive
+params: (v)
+visibility: private

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (type, description, *args)
+is_singleton: false
+block_params: 
+name: step_upcoming
+comment: 
+full_name: Spec::Runner::Formatter::Story::PlainTextFormatter#step_upcoming
+visibility: public
+aliases: []
+

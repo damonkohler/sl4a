@@ -1,0 +1,22 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: The read portion of an IO#readbytes attempt.
+  name: data
+  rw: R
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: TruncatedDataError is raised when IO#readbytes fails to read enough data.
+constants: []
+
+full_name: TruncatedDataError
+includes: []
+
+instance_methods: []
+
+name: TruncatedDataError
+superclass: IOError

@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: StoryRunnerStepGroupAdapter
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: run
+full_name: Spec::Story::Extensions::Main::StoryRunnerStepGroupAdapter
+superclass: 
+class_methods: []
+

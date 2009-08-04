@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: The type of this event. Will be one of :tag_start, :tag_end, :text, :processing_instruction, :comment, :doctype, :attlistdecl, :entitydecl, :notationdecl, :entity, :cdata, :xmldecl, or :error.
+full_name: REXML::Parsers::PullEvent::new
+is_singleton: true
+name: new
+params: (arg)
+visibility: public

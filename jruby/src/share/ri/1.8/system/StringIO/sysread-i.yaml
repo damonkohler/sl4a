@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Similar to #read, but raises <tt>EOFError</tt> at end of string instead of returning <tt>nil</tt>, as well as IO#sysread does."
+full_name: StringIO#sysread
+is_singleton: false
+name: sysread
+params: |
+  strio.sysread(integer[, outbuf])    -> string
+
+visibility: public

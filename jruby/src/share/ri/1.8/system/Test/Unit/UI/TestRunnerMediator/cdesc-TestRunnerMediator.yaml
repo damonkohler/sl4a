@@ -1,0 +1,33 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Provides an interface to write any given UI against, hopefully making it easy to write new UIs.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RESET
+  value: name + "::RESET"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: STARTED
+  value: name + "::STARTED"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: FINISHED
+  value: name + "::FINISHED"
+full_name: Test::Unit::UI::TestRunnerMediator
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Util::Observable
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: create_result
+- !ruby/object:RI::MethodSummary 
+  name: run_suite
+name: TestRunnerMediator
+superclass: Object

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a GzipWriter object associated with <tt>io</tt>. <tt>level</tt> and <tt>strategy</tt> should be the same as the arguments of Zlib::Deflate.new. The GzipWriter object writes gzipped data to <tt>io</tt>. At least, <tt>io</tt> must respond to the <tt>write</tt> method that behaves same as write method in IO class.
+full_name: Zlib::GzipWriter::new
+is_singleton: true
+name: new
+params: " Zlib::GzipWriter.new(io, level, strategy)\n"
+visibility: public

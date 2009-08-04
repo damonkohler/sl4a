@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Components of the URI in the order.
+full_name: URI::Generic::component
+is_singleton: true
+name: component
+params: ()
+visibility: public

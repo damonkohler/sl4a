@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: (v)
+comment: 
+full_name: SOAP::SOAPArray#traverse
+is_singleton: false
+name: traverse
+params: () {|v| ...}
+visibility: public

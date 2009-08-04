@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Resets the position of the file pointer to the point created the GzipReader object. The associated IO object needs to respond to the <tt>seek</tt> method.
+full_name: Zlib::GzipReader#rewind
+is_singleton: false
+name: rewind
+params: ()
+visibility: public

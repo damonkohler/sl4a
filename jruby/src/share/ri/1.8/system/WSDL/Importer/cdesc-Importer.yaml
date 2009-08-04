@@ -1,0 +1,17 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: import
+comment: 
+constants: []
+
+full_name: WSDL::Importer
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: parse
+name: Importer
+superclass: WSDL::XMLSchema::Importer

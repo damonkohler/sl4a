@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::AttributeManager#change_attribute
+is_singleton: false
+name: change_attribute
+params: (current, new)
+visibility: public

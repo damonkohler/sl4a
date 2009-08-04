@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: If <em>errno</em> corresponds to a known system error code, constructs the appropriate <tt>Errno</tt> class for that error, otherwise constructs a generic <tt>SystemCallError</tt> object. The error number is subsequently available via the <tt>errno</tt> method.
+full_name: SystemCallError::new
+is_singleton: true
+name: new
+params: |
+  SystemCallError.new(msg, errno)  => system_call_error_subclass
+
+visibility: public

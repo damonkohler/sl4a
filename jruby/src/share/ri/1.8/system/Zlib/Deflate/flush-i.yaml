@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: This method is equivalent to <tt>deflate('', flush)</tt>. If flush is omitted, <tt>Zlib::SYNC_FLUSH</tt> is used as flush. This method is just provided to improve the readability of your Ruby program.
+- !ruby/struct:SM::Flow::P 
+  body: "TODO: document better!"
+full_name: Zlib::Deflate#flush
+is_singleton: false
+name: flush
+params: " flush(flush)\n"
+visibility: public

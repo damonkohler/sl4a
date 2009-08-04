@@ -1,0 +1,119 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: cascade
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: command_processor
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Dir related methods
+  - !ruby/struct:SM::Flow::P 
+    body: Shell#cwd/dir/getwd/pwd Shell#chdir/cd Shell#pushdir/pushd Shell#popdir/popd Shell#mkdir Shell#rmdir
+  name: cwd
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: debug
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: debug
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: dir_stack
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: process_controller
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: record_separator
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: system_path
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: umask
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: verbose
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: verbose
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: alias_command
+- !ruby/object:RI::MethodSummary 
+  name: cd
+- !ruby/object:RI::MethodSummary 
+  name: debug=
+- !ruby/object:RI::MethodSummary 
+  name: def_system_command
+- !ruby/object:RI::MethodSummary 
+  name: default_record_separator
+- !ruby/object:RI::MethodSummary 
+  name: default_record_separator=
+- !ruby/object:RI::MethodSummary 
+  name: default_system_path
+- !ruby/object:RI::MethodSummary 
+  name: default_system_path=
+- !ruby/object:RI::MethodSummary 
+  name: install_system_commands
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: notify
+- !ruby/object:RI::MethodSummary 
+  name: unalias_command
+- !ruby/object:RI::MethodSummary 
+  name: undef_system_command
+comment: 
+- !ruby/struct:SM::Flow::VERB 
+  body: "  version.rb - shell version definition file\n      $Release Version: 0.6.0$\n      $Revision: 11708 $\n      $Date: 2007-02-13 08:01:19 +0900 (Tue, 13 Feb 2007) $\n      by Keiju ISHITSUKA(Nihon Rational Software Co.,Ltd)\n"
+- !ruby/struct:SM::Flow::P 
+  body: --
+constants: []
+
+full_name: Shell
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Error
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: cd
+- !ruby/object:RI::MethodSummary 
+  name: chdir
+- !ruby/object:RI::MethodSummary 
+  name: debug=
+- !ruby/object:RI::MethodSummary 
+  name: expand_path
+- !ruby/object:RI::MethodSummary 
+  name: inspect
+- !ruby/object:RI::MethodSummary 
+  name: jobs
+- !ruby/object:RI::MethodSummary 
+  name: kill
+- !ruby/object:RI::MethodSummary 
+  name: popd
+- !ruby/object:RI::MethodSummary 
+  name: popdir
+- !ruby/object:RI::MethodSummary 
+  name: pushd
+- !ruby/object:RI::MethodSummary 
+  name: pushdir
+- !ruby/object:RI::MethodSummary 
+  name: system_path=
+name: Shell
+superclass: Object

@@ -1,0 +1,25 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+a = new int [5];
+a[0] = 1;
+assert(a[0] == 1);
+assert(a[1] == 0);
+
+a = new String[5];
+a[0] = "foo";
+assert(a[0].equals("foo"));
+assert(a[1] == null );
+
+a = new String[5][5];
+a[1][1] = "foo";
+assert( a[1] instanceof String [] );
+assert( a[1][1].equals("foo") );
+assert( a[1][0] == null );
+
+String [][] t = new String[5][5];
+assert( t instanceof String [][] );
+
+complete();
+

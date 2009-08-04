@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Add to other inline sequences. For example, we could add WikiWords using something like:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "   parser.add_special(/\\b([A-Z][a-z]+[A-Z]\\w+)/, :WIKIWORD)\n"
+- !ruby/struct:SM::Flow::P 
+  body: Each wiki word will be presented to the output formatter via the accept_special method
+full_name: SM::SimpleMarkup#add_special
+is_singleton: false
+name: add_special
+params: (pattern, name)
+visibility: public

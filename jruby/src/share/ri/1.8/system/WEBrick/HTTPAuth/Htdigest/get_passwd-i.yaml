@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPAuth::Htdigest#get_passwd
+is_singleton: false
+name: get_passwd
+params: (realm, user, reload_db)
+visibility: public

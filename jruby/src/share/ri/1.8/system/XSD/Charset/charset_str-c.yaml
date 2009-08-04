@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::Charset::charset_str
+is_singleton: true
+name: charset_str
+params: (label)
+visibility: public

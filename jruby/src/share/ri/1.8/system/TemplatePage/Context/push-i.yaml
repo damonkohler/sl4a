@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: TemplatePage::Context#push
+is_singleton: false
+name: push
+params: (hash)
+visibility: public

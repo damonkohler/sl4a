@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::NamedElements#find_name
+is_singleton: false
+name: find_name
+params: (name)
+visibility: public

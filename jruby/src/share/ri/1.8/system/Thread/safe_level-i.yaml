@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the safe level in effect for <em>thr</em>. Setting thread-local safe levels can help when implementing sandboxes which run insecure code.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   thr = Thread.new { $SAFE = 3; sleep }\n   Thread.current.safe_level   #=&gt; 0\n   thr.safe_level              #=&gt; 3\n"
+full_name: Thread#safe_level
+is_singleton: false
+name: safe_level
+params: |
+  thr.safe_level   => integer
+
+visibility: public

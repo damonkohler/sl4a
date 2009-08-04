@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::XMLDecl#dowrite
+is_singleton: false
+name: dowrite
+params: ()
+visibility: public

@@ -1,0 +1,36 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Synopsis
+- !ruby/struct:SM::Flow::VERB 
+  body: "  URI::split(uri)\n"
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Args
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "+uri+:"
+    body: String with URI.
+  type: :NOTE
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Description
+- !ruby/struct:SM::Flow::P 
+  body: "Splits the string on following parts and returns array with result:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  * Scheme\n  * Userinfo\n  * Host\n  * Port\n  * Registry\n  * Path\n  * Opaque\n  * Query\n  * Fragment\n"
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Usage
+- !ruby/struct:SM::Flow::VERB 
+  body: "  require 'uri'\n\n  p URI.split(&quot;http://www.ruby-lang.org/&quot;)\n  # =&gt; [&quot;http&quot;, nil, &quot;www.ruby-lang.org&quot;, nil, nil, &quot;/&quot;, nil, nil, nil]\n"
+full_name: URI::split
+is_singleton: true
+name: split
+params: (uri)
+visibility: public

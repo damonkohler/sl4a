@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: ExampleGroupHierarchy
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: []
+
+full_name: Spec::Example::ExampleGroupMethods::ExampleGroupHierarchy
+superclass: Array
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "RFC3253: Versioning Extensions to WebDAV"
+- !ruby/struct:SM::Flow::VERB 
+  body: "         (Web Distributed Authoring and Versioning)\n"
+- !ruby/struct:SM::Flow::P 
+  body: VERSION-CONTROL REPORT CHECKOUT CHECK_IN UNCHECKOUT MKWORKSPACE UPDATE LABEL MERGE ACTIVITY
+full_name: WEBrick::HTTPServlet::FileHandler#exec_handler
+is_singleton: false
+name: exec_handler
+params: (req, res)
+visibility: private

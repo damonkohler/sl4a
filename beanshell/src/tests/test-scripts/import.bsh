@@ -1,0 +1,31 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// run() creates a sub interpreter
+result = run("Data/import_aux1.bsh");
+assert( result.myClassVisible );
+
+// imports in the run are not leaked to us
+assert( this.namespace.getClass("MyClass") == null );
+
+// As you would expect, source does give us the imports of the source file
+source("Data/import_aux1.bsh");
+assert( this.namespace.getClass("MyClass") != null );
+
+// Child run()s do not inherit the imports!
+// Is this correct behavior or broken?
+result = run("Data/import_aux2.bsh");
+if ( !result.myClassVisible ) {
+	//warning("Child run()s do not inherit their parent's imports");
+}
+
+// Subsequent sourcing of course should see the previous imports
+source("Data/import_aux2.bsh");
+assert( myClassVisible );
+
+// test for specific bug...
+// the bug would cause a stack overflow here and probably stop the VM
+assert( isEvalError("import NoSuchClass; NoSuchClass foo;") );
+
+complete();

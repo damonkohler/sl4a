@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Cookie::parse()
+- !ruby/struct:SM::Flow::VERB 
+  body: "  It parses Cookie field sent from the user agent.\n"
+full_name: WEBrick::Cookie::parse
+is_singleton: true
+name: parse
+params: (str)
+visibility: public

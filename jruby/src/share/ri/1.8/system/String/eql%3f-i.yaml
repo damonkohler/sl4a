@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Two strings are equal if the have the same length and content.
+full_name: String#eql?
+is_singleton: false
+name: eql?
+params: |
+  str.eql?(other)   => true or false
+
+visibility: public

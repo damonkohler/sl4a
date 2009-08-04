@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a TupleEntry based on <tt>ary</tt> with an optional renewer or expiry time <tt>sec</tt>.
+- !ruby/struct:SM::Flow::P 
+  body: A renewer must implement the <tt>renew</tt> method which returns a Numeric, nil, or true to indicate when the tuple has expired.
+full_name: Rinda::TupleEntry::new
+is_singleton: true
+name: new
+params: (ary, sec=nil)
+visibility: public

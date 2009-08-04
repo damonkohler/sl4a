@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::Fragment::for
+is_singleton: true
+name: for
+params: (line)
+visibility: public

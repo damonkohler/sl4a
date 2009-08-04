@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates a new StringScanner object to scan over the given <tt>string</tt>. <tt>dup</tt> argument is obsolete and not used now.
+full_name: StringScanner::new
+is_singleton: true
+name: new
+params: " StringScanner.new(string, dup = false)\n"
+visibility: public

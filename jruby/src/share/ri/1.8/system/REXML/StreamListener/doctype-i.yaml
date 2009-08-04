@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Handles a doctype declaration. Any attributes of the doctype which are not supplied will be nil. # EG, &lt;!DOCTYPE me PUBLIC &quot;foo&quot; &quot;bar&quot;&gt; @p name the name of the doctype; EG, &quot;me&quot; @p pub_sys &quot;PUBLIC&quot;, &quot;SYSTEM&quot;, or nil. EG, &quot;PUBLIC&quot; @p long_name the supplied long name, or nil. EG, &quot;foo&quot; @p uri the uri of the doctype, or nil. EG, &quot;bar&quot;"
+full_name: REXML::StreamListener#doctype
+is_singleton: false
+name: doctype
+params: (name, pub_sys, long_name, uri)
+visibility: public

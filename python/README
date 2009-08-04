@@ -1,0 +1,4 @@
+This directory contains resources related to Python.
+
+src/ contains the modified Python 2.6 source for cross compilation to the Android G1.
+ase/ contains Python code written for the Android Scripting Environment.

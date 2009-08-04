@@ -1,0 +1,53 @@
+#!/bin/java bsh.Interpreter
+
+/**
+	'super' refers to the parent context in which the method was evaluated,
+	*not* the caller's namespace.
+*/
+
+source("TestHarness.bsh");
+
+// Test 1
+
+foo() {
+	foocontext = this;
+
+	calledOutsideFoo( caller ) {
+		assert( super == foocontext );
+		assert( super != caller );
+	}
+
+	return this;
+}
+
+foo().calledOutsideFoo( this );
+
+helper() {
+	foo().calledOutsideFoo( this );
+}
+
+helper();
+
+// End Test 1
+
+// Test 2
+
+baseContext = this;
+
+x=5;
+bar( caller ) {
+	assert( super == baseContext );
+	assert( super != caller );
+	assert( super.x == 5 );
+}
+
+caller() {
+	this.x=99;
+	bar(this);
+}
+
+caller();
+
+// End Test 2
+
+complete();

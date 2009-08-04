@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RubyLex#ungetc
+is_singleton: false
+name: ungetc
+params: (c = nil)
+visibility: public

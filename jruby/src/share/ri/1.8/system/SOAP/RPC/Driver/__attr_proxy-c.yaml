@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Driver::__attr_proxy
+is_singleton: true
+name: __attr_proxy
+params: (symbol, assignable = false)
+visibility: public

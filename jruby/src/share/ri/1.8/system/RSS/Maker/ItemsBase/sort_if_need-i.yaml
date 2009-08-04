@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Maker::ItemsBase#sort_if_need
+is_singleton: false
+name: sort_if_need
+params: ()
+visibility: private

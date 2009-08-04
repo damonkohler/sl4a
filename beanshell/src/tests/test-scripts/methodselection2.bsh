@@ -1,0 +1,71 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+import bsh.*;
+
+/**
+	Make sure that overloaded method resolution knows whether it's looking
+	for a static only or a dynamic/static method
+*/
+
+m=new MethodSelection();
+// repetition here to check for obscure old bug
+assert( m.staticVsDynamic1( new Object() ) == Object.class );
+assert( m.staticVsDynamic1( new Object() ) == Object.class );
+assert( m.staticVsDynamic1( new String() ) == String.class );
+assert( m.staticVsDynamic1( new String() ) == String.class );
+
+assert( MethodSelection.staticVsDynamic1( new Object() ) == Object.class );
+assert( MethodSelection.staticVsDynamic1( new Object() ) == Object.class );
+
+// the best match is the static String form... javac would error on this
+// rather than select the overloaded form, so so will we...
+assert( isEvalError("MethodSelection.staticVsDynamic1( new String() )"  ) );
+
+al=new ArrayList();
+al.add("foo");
+assert( isEvalError("ArrayList.add(\"foo\")") );
+assert( isEvalError("java.util.ArrayList.add(\"foo\")"));
+
+// various null argument problems that used to throw internal errors should now
+// just be eval errors
+try { 
+	eval("new Character(null)");
+} catch ( EvalError e ) {
+	// as long as it's not an InterpreterError or worse
+}
+try { 
+	eval("new java.net.URL(null, new Integer(0))");
+} catch ( EvalError e ) {
+	// as long as it's not an InterpreterError or worse
+}
+
+// should add our own test, but for now try a real situation...
+if ( Capabilities.classExists("java.util.Map") )
+{
+	map = new HashMap();
+	umap = Collections.unmodifiableMap( map);
+	try {
+		umap.put("foo", "bar");
+	} catch ( UnsupportedOperationException e ) {
+		flag();
+	}
+	assert( flag() == 1 );
+}
+else
+	warning("Can't test method selection on package private impl...");
+
+/*
+	Can we see a concrete public method in a package-private abstract 
+	base class?  The method is *not* be overridden in the public concrete
+	class... 
+	This seems to be a Java core reflection deficiency... There appears to
+	be no wy to access such a method.
+*/
+mpc=new mypackage.Concrete();
+if ( isEvalError("mpc.visible()") )
+	warning("Java Reflection bug: can't access package private abstract public method");
+
+complete();
+

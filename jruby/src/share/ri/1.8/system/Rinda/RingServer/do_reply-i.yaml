@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Pulls lookup tuples out of the TupleSpace and sends their DRb object the address of the local TupleSpace.
+full_name: Rinda::RingServer#do_reply
+is_singleton: false
+name: do_reply
+params: ()
+visibility: public

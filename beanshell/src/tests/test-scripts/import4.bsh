@@ -1,0 +1,60 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// Object imports
+
+Map map = new HashMap();
+map.put("foo", "bar");
+
+this.namespace.importObject( map );
+
+assert( get("foo").equals("bar") );
+put("goo", "gee");
+assert( get("goo").equals("gee") );
+
+toString();
+
+StringBuffer sb = new StringBuffer("foobar99blahgee");
+this.namespace.importObject(sb);
+
+assert( substring(0,3).equals("foo") );
+assert( indexOf("99") == 6 );
+
+// Static imports
+
+import static java.lang.Math.*;
+// equivalent to
+//this.namespace.importStatic( java.lang.Math.class );
+
+assert( sqrt(4.0) == 2.0 );
+
+// object again
+assert( substring(0,3).equals("foo") );
+
+// fields
+
+assert( PI > 3.0 && PI < 4.0 );
+
+Fields.staticField2 = 42;
+
+import static Fields.*;
+
+assert( staticField2 == 42 );
+staticField2 = 43;
+assert( staticField2 == 43 );
+assert( Fields.staticField2 == 43 );
+
+Fields fields = new Fields();
+
+importObject( fields );
+fields.x = 99;
+
+assert( fields.x == 99 );
+assert( x == 99 );
+x=100;
+assert( x == 100 );
+assert( fields.x == 100 );
+
+complete();
+

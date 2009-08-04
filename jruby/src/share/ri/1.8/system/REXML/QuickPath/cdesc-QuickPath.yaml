@@ -1,0 +1,42 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: attribute
+- !ruby/object:RI::MethodSummary 
+  name: axe
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: filter
+- !ruby/object:RI::MethodSummary 
+  name: first
+- !ruby/object:RI::MethodSummary 
+  name: function
+- !ruby/object:RI::MethodSummary 
+  name: match
+- !ruby/object:RI::MethodSummary 
+  name: method_missing
+- !ruby/object:RI::MethodSummary 
+  name: name
+- !ruby/object:RI::MethodSummary 
+  name: parse_args
+- !ruby/object:RI::MethodSummary 
+  name: predicate
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EMPTY_HASH
+  value: "{}"
+full_name: REXML::QuickPath
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Functions
+- !ruby/object:RI::IncludedModule 
+  name: XMLTokens
+instance_methods: []
+
+name: QuickPath
+superclass: Object

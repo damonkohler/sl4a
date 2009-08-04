@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::DateTimeFactory_#soap2obj
+is_singleton: false
+name: soap2obj
+params: (obj_class, node, info, map)
+visibility: public

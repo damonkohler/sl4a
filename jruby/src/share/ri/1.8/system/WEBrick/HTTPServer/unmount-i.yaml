@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: umount
+block_params: 
+comment: 
+full_name: WEBrick::HTTPServer#unmount
+is_singleton: false
+name: unmount
+params: (dir)
+visibility: public

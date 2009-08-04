@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::ToFlow#accept_list_end
+is_singleton: false
+name: accept_list_end
+params: (am, fragment)
+visibility: public

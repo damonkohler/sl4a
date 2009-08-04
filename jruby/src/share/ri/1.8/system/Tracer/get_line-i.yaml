@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Tracer#get_line
+is_singleton: false
+name: get_line
+params: (file, line)
+visibility: public

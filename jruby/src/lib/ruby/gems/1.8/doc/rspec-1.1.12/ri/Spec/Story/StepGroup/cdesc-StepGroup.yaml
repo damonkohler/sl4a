@@ -1,0 +1,47 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: StepGroup
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "<<"
+- !ruby/object:RI::MethodSummary 
+  name: Given
+- !ruby/object:RI::MethodSummary 
+  name: GivenScenario
+- !ruby/object:RI::MethodSummary 
+  name: Then
+- !ruby/object:RI::MethodSummary 
+  name: When
+- !ruby/object:RI::MethodSummary 
+  name: add
+- !ruby/object:RI::MethodSummary 
+  name: add_to
+- !ruby/object:RI::MethodSummary 
+  name: clear
+- !ruby/object:RI::MethodSummary 
+  name: create_matcher
+- !ruby/object:RI::MethodSummary 
+  name: empty?
+- !ruby/object:RI::MethodSummary 
+  name: find
+- !ruby/object:RI::MethodSummary 
+  name: given
+- !ruby/object:RI::MethodSummary 
+  name: given_scenario
+- !ruby/object:RI::MethodSummary 
+  name: then
+- !ruby/object:RI::MethodSummary 
+  name: when
+full_name: Spec::Story::StepGroup
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: steps

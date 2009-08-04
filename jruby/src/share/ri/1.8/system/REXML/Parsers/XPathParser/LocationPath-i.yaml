@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: LocationPath
+- !ruby/struct:SM::Flow::VERB 
+  body: "  | RelativeLocationPath\n  | '/' RelativeLocationPath?\n  | '//' RelativeLocationPath\n"
+full_name: REXML::Parsers::XPathParser#LocationPath
+is_singleton: false
+name: LocationPath
+params: (path, parsed)
+visibility: private

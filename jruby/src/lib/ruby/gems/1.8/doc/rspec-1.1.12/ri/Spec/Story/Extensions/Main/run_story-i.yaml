@@ -1,0 +1,13 @@
+--- !ruby/object:RI::MethodDescription 
+params: (*args, &block)
+is_singleton: false
+block_params: 
+name: run_story
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Calling this deprecated is silly, since it hasn't been released yet. But,
+    for those who are reading this - this will be deleted before the 1.1 release.
+full_name: Spec::Story::Extensions::Main#run_story
+visibility: public
+aliases: []
+

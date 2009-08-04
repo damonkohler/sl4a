@@ -1,0 +1,53 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: The current buffer (what we're going to read next)
+  name: buffer
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: encoding
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: The line number of the last consumed text
+  name: line
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: A Source can be searched for patterns, and wraps buffers and other objects and provides consumption of text
+constants: []
+
+full_name: REXML::Source
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Encoding
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: consume
+- !ruby/object:RI::MethodSummary 
+  name: current_line
+- !ruby/object:RI::MethodSummary 
+  name: empty?
+- !ruby/object:RI::MethodSummary 
+  name: encoding=
+- !ruby/object:RI::MethodSummary 
+  name: match
+- !ruby/object:RI::MethodSummary 
+  name: match_to
+- !ruby/object:RI::MethodSummary 
+  name: match_to_consume
+- !ruby/object:RI::MethodSummary 
+  name: position
+- !ruby/object:RI::MethodSummary 
+  name: read
+- !ruby/object:RI::MethodSummary 
+  name: scan
+name: Source
+superclass: Object

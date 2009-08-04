@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: add_method_with_namespace_as
+block_params: 
+comment: 
+full_name: SOAP::RPC::CGIStub#add_rpc_method_with_namespace_as
+is_singleton: false
+name: add_rpc_method_with_namespace_as
+params: (namespace, obj, name, name_as, *param)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Marshal::dump
+is_singleton: true
+name: dump
+params: (obj, io = nil)
+visibility: public

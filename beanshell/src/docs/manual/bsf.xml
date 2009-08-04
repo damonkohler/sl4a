@@ -1,0 +1,87 @@
+<section>
+<name filename="bsf">BSF Bean Scripting Framework</name>
+
+BSF is the Apache "Bean Scripting Framework".  
+It is generic framework that allows
+many scripting languages to be plugged into an application.  It shields
+the application from knowledge of how to invoke the scripting languages and
+their APIs, via adapter "engines". 
+<p/>
+
+BeanShell supports the BSF API by providing the necessary adapter.  
+This means that BeanShell can be used as a scripting language for any BSF
+2.3 capable application simply by dropping the bsh JAR file into the classpath.
+<p/>
+
+Prior to version 2.3, BSF was maintained by IBM.  
+To get BeanShell to work with older versions of BSF you must use the 
+older bsh-bsf-1.2x.jar file which includes the adapter class for the previous
+ibm packaged BSF API.
+You must also explicitly register the BeanShell adapter with older versions
+of BSF.  Here is an example of how to do that:
+
+<example>
+import com.ibm.bsf.*;
+
+// register beanshell with the BSF framework
+String [] extensions = { "bsh" };
+BSFManager.registerScriptingEngine(
+    "beanshell", "bsh.util.BeanShellBSFEngine", extensions );
+</example>
+
+
+See 
+<a href="http://jakarta.apache.org/bsf/">http://jakarta.apache.org/bsf/</a> 
+and
+<a href="http://oss.software.ibm.com/developerworks/projects/bsf">
+http://oss.software.ibm.com/developerworks/projects/bsf</a> 
+
+for more information about BSF.
+
+<h2>Ant</h2>
+
+<em>This section needs to be updated.  I'm not sure what versionf of Ant use
+the new and which use the old BSF API.</em>
+<p/>
+
+Ant 1.5+ has explicit support for BeanShell as a BSF scripting language.
+The BeanShell JAR file includes the necessary BSF adapter.  You must
+simply specify language="beanshell" in your script tags.
+
+<h3>Installation</h3>
+
+To use BeanShell within Ant you must do two things:
+<ol>
+<li>Add the
+<a href="http://jakarta.apache.org/bsf/">
+BSF bsf.jar file</a>
+to ANT_HOME/lib or the classpath.</li>
+<li>Add the 
+<a href="http://www.beanshell.org/download.html">
+BeanShell bsh.jar file</a>
+to ANT_HOME/lib or the classpath.</li>
+</ol>
+<p/>
+
+You can then run scripts from a file, or in-line like so:
+<p/>
+
+<example><![CDATA[
+<project name="testbsh" default="runscript" basedir=".">
+    <target name="runscript">
+
+        <!-- Run script from a file -->
+        <script language="beanshell" src="myscript.bsh"/>
+
+        <!-- Run script in-line -->
+        <script language="beanshell">&lt;![CDATA[
+            for(int i=0; i<10; i++ )
+                print( "i="+i );
+        ]]&gt;</script>
+
+    </target>
+</project>
+]]></example>
+
+
+</section>

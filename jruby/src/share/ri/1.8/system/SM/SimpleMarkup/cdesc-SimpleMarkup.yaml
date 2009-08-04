@@ -1,0 +1,66 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Synopsis
+- !ruby/struct:SM::Flow::P 
+  body: This code converts <tt>input_string</tt>, which is in the format described in markup/simple_markup.rb, to HTML. The conversion takes place in the <tt>convert</tt> method, so you can use the same SimpleMarkup object to convert multiple input strings.
+- !ruby/struct:SM::Flow::VERB 
+  body: "  require 'rdoc/markup/simple_markup'\n  require 'rdoc/markup/simple_markup/to_html'\n\n  p = SM::SimpleMarkup.new\n  h = SM::ToHtml.new\n\n  puts p.convert(input_string, h)\n"
+- !ruby/struct:SM::Flow::P 
+  body: "You can extend the SimpleMarkup parser to recognise new markup sequences, and to add special processing for text that matches a regular epxression. Here we make WikiWords significant to the parser, and also make the sequences {word} and &lt;no&gt;text...&lt;/no&gt; signify strike-through text. When then subclass the HTML output class to deal with these:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "  require 'rdoc/markup/simple_markup'\n  require 'rdoc/markup/simple_markup/to_html'\n\n  class WikiHtml &lt; SM::ToHtml\n    def handle_special_WIKIWORD(special)\n      &quot;&lt;font color=red&gt;&quot; + special.text + &quot;&lt;/font&gt;&quot;\n    end\n  end\n\n  p = SM::SimpleMarkup.new\n  p.add_word_pair(&quot;{&quot;, &quot;}&quot;, :STRIKE)\n  p.add_html(&quot;no&quot;, :STRIKE)\n\n  p.add_special(/\\b([A-Z][a-z]+[A-Z]\\w+)/, :WIKIWORD)\n\n  h = WikiHtml.new\n  h.add_tag(:STRIKE, &quot;&lt;strike&gt;&quot;, &quot;&lt;/strike&gt;&quot;)\n\n  puts &quot;&lt;body&gt;&quot; + p.convert(ARGF.read, h) + &quot;&lt;/body&gt;&quot;\n"
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Output Formatters
+- !ruby/struct:SM::Flow::P 
+  body: <em>missing</em>
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SPACE
+  value: ?\s
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: "List entries look like:"
+  - !ruby/struct:SM::Flow::VERB 
+    body: " *       text\n 1.      text\n [label] text\n label:: text\n"
+  - !ruby/struct:SM::Flow::P 
+    body: Flag it as a list entry, and work out the indent for subsequent lines
+  name: SIMPLE_LIST_RE
+  value: /^(                   (  \*          (?# bullet)                     |-           (?# bullet)                     |\d+\.       (?# numbered )                     |[A-Za-z]\.  (?# alphabetically numbered )                   )                   \s+                 )\S/x
+- !ruby/object:RI::Constant 
+  comment: 
+  name: LABEL_LIST_RE
+  value: "/^(                         (  \\[.*?\\]    (?# labeled  )                           |\\S.*::     (?# note     )                         )(?:\\s+|$)                       )/x"
+full_name: SM::SimpleMarkup
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_html
+- !ruby/object:RI::MethodSummary 
+  name: add_special
+- !ruby/object:RI::MethodSummary 
+  name: add_word_pair
+- !ruby/object:RI::MethodSummary 
+  name: assign_types_to_lines
+- !ruby/object:RI::MethodSummary 
+  name: content
+- !ruby/object:RI::MethodSummary 
+  name: convert
+- !ruby/object:RI::MethodSummary 
+  name: get_line_types
+- !ruby/object:RI::MethodSummary 
+  name: group_lines
+- !ruby/object:RI::MethodSummary 
+  name: handled_labeled_list
+name: SimpleMarkup
+superclass: Object

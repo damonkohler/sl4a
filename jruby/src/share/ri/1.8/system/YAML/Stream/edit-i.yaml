@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: YAML::Stream#edit
+is_singleton: false
+name: edit
+params: ( doc_num, doc )
+visibility: public

@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: ProcessCommand#rehash
+- !ruby/struct:SM::Flow::VERB 
+  body: "  clear command hash table.\n"
+full_name: Shell::CommandProcessor#rehash
+is_singleton: false
+name: rehash
+params: ()
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (klass)
+is_singleton: false
+block_params: 
+name: inherited
+comment: 
+full_name: Spec::Example::ExampleGroupMethods#inherited
+visibility: public
+aliases: []
+

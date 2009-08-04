@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Element#validate_for_stream
+is_singleton: false
+name: validate_for_stream
+params: (tags, ignore_unknown_element=true)
+visibility: public

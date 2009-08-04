@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Fetches <tt>key</tt> from the tuple.
+full_name: Rinda::TupleEntry#fetch
+is_singleton: false
+name: fetch
+params: (key)
+visibility: public

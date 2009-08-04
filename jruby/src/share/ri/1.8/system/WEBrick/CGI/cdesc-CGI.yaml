@@ -1,0 +1,31 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: config
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: logger
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CGIError
+  value: Class.new(StandardError)
+full_name: WEBrick::CGI
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "[]"
+- !ruby/object:RI::MethodSummary 
+  name: service
+- !ruby/object:RI::MethodSummary 
+  name: start
+name: CGI
+superclass: Object

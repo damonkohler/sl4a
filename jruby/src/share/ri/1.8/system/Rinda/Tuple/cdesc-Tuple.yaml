@@ -1,0 +1,33 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: A tuple is the elementary object in Rinda programming. Tuples may be matched against templates if the tuple and the template are the same size.
+constants: []
+
+full_name: Rinda::Tuple
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "[]"
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: fetch
+- !ruby/object:RI::MethodSummary 
+  name: hash?
+- !ruby/object:RI::MethodSummary 
+  name: init_with_ary
+- !ruby/object:RI::MethodSummary 
+  name: init_with_hash
+- !ruby/object:RI::MethodSummary 
+  name: size
+- !ruby/object:RI::MethodSummary 
+  name: value
+name: Tuple
+superclass: Object

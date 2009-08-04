@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns whether this individual test passed or not. Primarily for use in teardown so that artifacts can be left behind if the test fails.
+full_name: Test::Unit::TestCase#passed?
+is_singleton: false
+name: passed?
+params: ()
+visibility: private

@@ -1,0 +1,42 @@
+/**
+	Open the class browser to view the specified class.  
+	If the argument is a string it is considered to be a class name.  
+	If the argument is an object, the class of the object is used.  
+	If the arg is a class, the class is used.
+	<p>
+
+	Note: To browse the String class you can't supply a String.
+	You'd have to do:  browseClass( String.class );
+	<p>
+
+
+	@method void browseClass( String | Object | Class )
+*/
+import bsh.ClassIdentifier;
+
+browseClass( Object o ) 
+{
+	String classname;
+	if ( o instanceof String)
+		classname = o;
+	else if ( o instanceof ClassIdentifier )
+		classname = this.namespace.identifierToClass(o).getName();
+	else if ( o instanceof Class )
+		classname = o.getName();
+	else 
+		classname = o.getClass().getName();
+
+	// really need a way to unset and more poweful testing...
+	if ( bsh.system.desktop == void 
+			|| bsh.system.desktop.classbrowser == void 
+			|| bsh.system.desktop.classbrowser == null ) 
+	{
+		this.browser = classBrowser();
+	} else {
+		this.browser = bsh.system.desktop.classbrowser;
+		bsh.system.desktop.classbrowser.toFront();
+	}
+
+	browser.driveToClass( classname );
+}
+

@@ -1,0 +1,16 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+failb() {
+	fail();
+	return false;
+}
+
+// fail() should not be evaluated here
+if ( true || failb() ) { }
+
+// fail() should not be evaluated here
+if ( false && failb() ) { }
+
+complete();

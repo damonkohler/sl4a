@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::XSDUnsignedByte#mininclusive
+is_singleton: false
+name: mininclusive
+params: ()
+visibility: private

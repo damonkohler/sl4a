@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Driver#wiredump_file_base=
+is_singleton: false
+name: wiredump_file_base=
+params: (wiredump_file_base)
+visibility: public

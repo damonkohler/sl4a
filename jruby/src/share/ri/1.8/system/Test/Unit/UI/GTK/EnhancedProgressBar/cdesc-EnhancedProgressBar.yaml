@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: Test::Unit::UI::GTK::EnhancedProgressBar
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: set_style
+name: EnhancedProgressBar
+superclass: Gtk::ProgressBar

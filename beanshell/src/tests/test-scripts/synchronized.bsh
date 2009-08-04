@@ -1,0 +1,33 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+lock =new Object();
+synchronized( lock ) 
+{
+	flag();
+	// wait() and notify() would fail if we weren't sync'd on lock
+	lock.wait(1);
+	lock.notifyAll();
+}
+assert(flag()==1);
+
+synchronized foo() {
+	flag();
+	lock=super;
+	lock.wait(1);
+	lock.notifyAll();
+}
+foo();
+assert(flag()==3);
+
+// failed to sync
+bar() {
+	lock=super;
+	lock.wait(1);
+	lock.notifyAll();
+}
+assert(isEvalError("bar()"));
+
+complete();
+

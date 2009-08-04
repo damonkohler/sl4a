@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::CodeGen::ModuleDef#dump_requirepath
+is_singleton: false
+name: dump_requirepath
+params: ()
+visibility: private

@@ -1,0 +1,26 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: create_generator
+- !ruby/object:RI::MethodSummary 
+  name: create_parser
+- !ruby/object:RI::MethodSummary 
+  name: default_parser_option
+- !ruby/object:RI::MethodSummary 
+  name: default_parser_option=
+- !ruby/object:RI::MethodSummary 
+  name: marshal
+- !ruby/object:RI::MethodSummary 
+  name: unmarshal
+comment: 
+constants: []
+
+full_name: SOAP::Processor
+includes: []
+
+instance_methods: []
+
+name: Processor
+superclass: 

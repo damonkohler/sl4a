@@ -1,0 +1,17 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Attribute Assignment---Assigns to the instance variable named by <em>symbol</em> or <em>fixnum</em> the value <em>obj</em> and returns it. Will raise a <tt>NameError</tt> if the named variable does not exist, or an <tt>IndexError</tt> if the index is out of range.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Customer = Struct.new(:name, :address, :zip)\n   joe = Customer.new(&quot;Joe Smith&quot;, &quot;123 Maple, Anytown NC&quot;, 12345)\n\n   joe[&quot;name&quot;] = &quot;Luke&quot;\n   joe[:zip]   = &quot;90210&quot;\n\n   joe.name   #=&gt; &quot;Luke&quot;\n   joe.zip    #=&gt; &quot;90210&quot;\n"
+full_name: Struct#[]=
+is_singleton: false
+name: "[]="
+params: |
+  struct[symbol] = obj    => obj
+  struct[fixnum] = obj    => obj
+
+visibility: public

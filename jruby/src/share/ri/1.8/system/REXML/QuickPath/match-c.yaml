@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::QuickPath::match
+is_singleton: true
+name: match
+params: (element, path, namespaces=EMPTY_HASH)
+visibility: public

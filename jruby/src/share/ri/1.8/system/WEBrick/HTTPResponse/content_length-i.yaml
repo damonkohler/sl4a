@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPResponse#content_length
+is_singleton: false
+name: content_length
+params: ()
+visibility: public

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Alias for #def_method"
+full_name: XSD::CodeGen::ModuleDef#def_publicmethod
+is_singleton: false
+name: def_publicmethod
+params: (name, *params)
+visibility: public

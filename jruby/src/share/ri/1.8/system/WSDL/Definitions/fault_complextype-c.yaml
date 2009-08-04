@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::Definitions::fault_complextype
+is_singleton: true
+name: fault_complextype
+params: ()
+visibility: public

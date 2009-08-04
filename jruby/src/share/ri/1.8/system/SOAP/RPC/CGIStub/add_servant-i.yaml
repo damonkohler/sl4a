@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Alias for #add_rpc_servant"
+full_name: SOAP::RPC::CGIStub#add_servant
+is_singleton: false
+name: add_servant
+params: (obj, namespace = @default_namespace)
+visibility: public

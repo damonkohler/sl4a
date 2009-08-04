@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: each
+block_params: k, fetch( k ) }
+comment: 
+full_name: YAML::DBM#each_pair
+is_singleton: false
+name: each_pair
+params: () {|k, fetch( k ) }| ...}
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Parser::ParseFrame#node=
+is_singleton: false
+name: node=
+params: (node)
+visibility: public

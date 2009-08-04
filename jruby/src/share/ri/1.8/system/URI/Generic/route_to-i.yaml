@@ -1,0 +1,29 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Args
+- !ruby/object:SM::Flow::LIST 
+  contents: 
+  - !ruby/struct:SM::Flow::LI 
+    label: "+oth+:"
+    body: URI or String
+  type: :NOTE
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Description
+- !ruby/struct:SM::Flow::P 
+  body: Calculates relative path to oth from self
+- !ruby/struct:SM::Flow::H 
+  level: 2
+  text: Usage
+- !ruby/struct:SM::Flow::VERB 
+  body: "  require 'uri'\n\n  uri = URI.parse('http://my.example.com')\n  p uri.route_to('http://my.example.com/main.rbx?page=1')\n  #=&gt; #&lt;URI::Generic:0x2020c2f6 URL:/main.rbx?page=1&gt;\n"
+full_name: URI::Generic#route_to
+is_singleton: false
+name: route_to
+params: (oth)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::BaseModel#date_writer
+is_singleton: false
+name: date_writer
+params: (name, type, disp_name=name)
+visibility: private

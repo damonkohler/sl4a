@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns underlying String object, the subject of IO.
+full_name: StringIO#string
+is_singleton: false
+name: string
+params: " strio.string     -> string\n"
+visibility: public

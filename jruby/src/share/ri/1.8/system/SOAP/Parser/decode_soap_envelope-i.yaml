@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Parser#decode_soap_envelope
+is_singleton: false
+name: decode_soap_envelope
+params: (ns, ele, attrs, parent)
+visibility: private

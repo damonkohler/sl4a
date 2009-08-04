@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP#set_basic_auth
+is_singleton: false
+name: set_basic_auth
+params: (uri, user_id, passwd)
+visibility: public

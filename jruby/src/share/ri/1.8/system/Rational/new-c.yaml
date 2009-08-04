@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: This method is actually private.
+full_name: Rational::new
+is_singleton: true
+name: new
+params: (num, den)
+visibility: public

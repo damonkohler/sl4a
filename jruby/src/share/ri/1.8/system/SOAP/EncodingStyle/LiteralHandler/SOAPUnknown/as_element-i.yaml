@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::EncodingStyle::LiteralHandler::SOAPUnknown#as_element
+is_singleton: false
+name: as_element
+params: ()
+visibility: public

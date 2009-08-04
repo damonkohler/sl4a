@@ -1,0 +1,15 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: SOAP::RPC::RPCError
+includes: []
+
+instance_methods: []
+
+name: RPCError
+superclass: Error

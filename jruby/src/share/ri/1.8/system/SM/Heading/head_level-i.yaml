@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::Heading#head_level
+is_singleton: false
+name: head_level
+params: ()
+visibility: public

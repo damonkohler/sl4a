@@ -1,0 +1,25 @@
+/**
+	Change the point size of the font on the specified component, to ptsize.
+	This is just a convenience for playing with GUI components.
+*/
+
+bsh.help.setFont = "usage: setFont( Component comp, int size )";
+
+Font setFont(Component comp, String family, int style, int size) {
+		
+    this.font = comp.getFont();
+	
+    this.family = (family==null) ? font.family : family;
+    this.style = (style==-1) ? font.style : style;
+	this.size = (size==-1) ? font.size : size;
+	
+    font = new Font(family, style, size);
+    comp.setFont(font);
+	comp.validate();
+    return font;	
+}
+
+Font setFont(Component comp, int size) {
+	return setFont(comp, null, -1, size);
+}
+

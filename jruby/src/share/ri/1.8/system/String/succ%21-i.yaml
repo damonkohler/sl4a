@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: original_succ!
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Equivalent to <tt>String#succ</tt>, but modifies the receiver in place.
+full_name: String#succ!
+is_singleton: false
+name: succ!
+params: |
+  str.succ!   => str
+  str.next!   => str
+
+visibility: public

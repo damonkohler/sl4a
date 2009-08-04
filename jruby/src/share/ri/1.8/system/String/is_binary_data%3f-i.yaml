@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: String#is_binary_data?
+is_singleton: false
+name: is_binary_data?
+params: ()
+visibility: public

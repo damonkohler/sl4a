@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: A TupleEntry is dead when it is canceled or expired.
+full_name: Rinda::TupleEntry#alive?
+is_singleton: false
+name: alive?
+params: ()
+visibility: public

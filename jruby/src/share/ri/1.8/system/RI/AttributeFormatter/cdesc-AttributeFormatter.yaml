@@ -1,0 +1,39 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Handle text with attributes. We're a base class: there are different presentation classes (one, for example, uses overstrikes to handle bold and underlining, while another using ANSI escape sequences"
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: BOLD
+  value: "1"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ITALIC
+  value: "2"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CODE
+  value: "4"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ATTR_MAP
+  value: "{       \"b\"    => BOLD,       \"code\" => CODE,       \"em\"   => ITALIC,       \"i\"    => ITALIC,       \"tt\"   => CODE"
+full_name: RI::AttributeFormatter
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_attributes_to
+- !ruby/object:RI::MethodSummary 
+  name: bold_print
+- !ruby/object:RI::MethodSummary 
+  name: wrap
+- !ruby/object:RI::MethodSummary 
+  name: write_attribute_text
+name: AttributeFormatter
+superclass: TextFormatter

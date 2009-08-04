@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Property#generate_new_key
+is_singleton: false
+name: generate_new_key
+params: ()
+visibility: private

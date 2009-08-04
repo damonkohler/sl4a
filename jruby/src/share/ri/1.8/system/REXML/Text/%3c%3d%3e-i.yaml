@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: <tt>other</tt> a String or a Text <tt>returns</tt> the result of (to_s &lt;=&gt; arg.to_s)
+full_name: REXML::Text#<=>
+is_singleton: false
+name: <=>
+params: ( other )
+visibility: public

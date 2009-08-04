@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns the canceled status.
+full_name: Rinda::TupleEntry#canceled?
+is_singleton: false
+name: canceled?
+params: ()
+visibility: public

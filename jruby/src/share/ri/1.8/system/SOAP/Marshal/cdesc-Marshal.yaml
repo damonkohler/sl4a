@@ -1,0 +1,27 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: dump
+- !ruby/object:RI::MethodSummary 
+  name: load
+- !ruby/object:RI::MethodSummary 
+  name: marshal
+- !ruby/object:RI::MethodSummary 
+  name: unmarshal
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Trying xsd:dateTime data to be recovered as aTime.
+  name: MarshalMappingRegistry
+  value: Mapping::Registry.new(     :allow_original_mapping => true)
+full_name: SOAP::Marshal
+includes: []
+
+instance_methods: []
+
+name: Marshal
+superclass: 

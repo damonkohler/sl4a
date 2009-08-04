@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: StepGroupHash
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: []
+
+full_name: Spec::Story::StepGroupHash
+superclass: Hash
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

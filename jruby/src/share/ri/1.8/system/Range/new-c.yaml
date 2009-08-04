@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Constructs a range using the given <em>start</em> and <em>end</em>. If the third parameter is omitted or is <tt>false</tt>, the <em>range</em> will include the end object; otherwise, it will be excluded.
+full_name: Range::new
+is_singleton: true
+name: new
+params: |
+  Range.new(start, end, exclusive=false)    => range
+
+visibility: public

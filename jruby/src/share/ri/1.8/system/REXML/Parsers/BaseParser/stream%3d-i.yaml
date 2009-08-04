@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: REXML::Parsers::BaseParser#stream=
+is_singleton: false
+name: stream=
+params: ( source )
+visibility: public

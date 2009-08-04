@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Shell::CommandProcessor#find_system_command
+is_singleton: false
+name: find_system_command
+params: (command)
+visibility: public

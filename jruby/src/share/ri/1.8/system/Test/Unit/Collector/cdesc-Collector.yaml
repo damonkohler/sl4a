@@ -1,0 +1,23 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: Test::Unit::Collector
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_suite
+- !ruby/object:RI::MethodSummary 
+  name: filter=
+- !ruby/object:RI::MethodSummary 
+  name: include?
+- !ruby/object:RI::MethodSummary 
+  name: sort
+name: Collector
+superclass: 

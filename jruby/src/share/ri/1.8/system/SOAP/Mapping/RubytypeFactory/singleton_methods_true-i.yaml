@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::RubytypeFactory#singleton_methods_true
+is_singleton: false
+name: singleton_methods_true
+params: (obj)
+visibility: private

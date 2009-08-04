@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::CodeGen::GenSupport#trim_indent
+is_singleton: false
+name: trim_indent
+params: (str)
+visibility: private

@@ -1,0 +1,50 @@
+/**
+	Return a new object that is a child of the specified object.
+	<strong>
+	Note: this command will likely change along with a better inheritance 
+	mechanism for bsh in a future release.</strong>
+	<p>
+
+	extend() is like the object() command, which
+	creates a new bsh scripted object, except that the namespace of
+	the new object is a child of the parent object. 
+	<p>
+
+	For example:
+	<p>
+
+    <pre>
+    foo=object();
+    bar=extend(foo);
+
+    is equivalent to:
+      
+    foo() { 
+        bar() {
+            return this; 
+        }
+    }
+
+    foo=foo();
+    bar=foo.bar();
+
+    and also:
+     
+    oo=object();
+    ar=object();
+    ar.namespace.bind( foo.namespace );
+    </pre>
+	<p>
+
+	The last example above is exactly what the extend() command does.
+	In each case the bar object inherits variables from foo in the usual way.
+
+	@method This extend( This object )
+*/
+bsh.help.extend= "usage: extend( This parent )";
+extend( bsh.This parent ) 
+{
+	this.namespace.setParent( parent.namespace );
+	return this; 
+}
+

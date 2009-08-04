@@ -1,0 +1,1 @@
+addedCommand( int a ) { return a; }

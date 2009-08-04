@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Add indent to the buffer
+full_name: YAML::BaseEmitter#indent!
+is_singleton: false
+name: indent!
+params: ()
+visibility: public

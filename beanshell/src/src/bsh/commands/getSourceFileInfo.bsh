@@ -1,0 +1,27 @@
+/**
+	Return the name of the file or source from which the current interpreter
+	is reading.  Note that if you use this within a method, the result will
+	not be the file from which the method was sourced, but will be the file 
+	that the caller of the method is reading.   Methods are sourced once but
+	can be called many times... Each time the interpreter may be associated
+	with a different file and it is that calling interpreter that you are
+	asking for information.
+	<p>
+
+	Note: although it may seems like this command would always return the
+	getSourceFileInfo.bsh file, it does not since it is being executed after
+	sourcing by the caller's interpreter.
+	If one wanted to know the file from which a bsh method was sourced one
+	would have to either capture that info when the file was sourced (by
+	saving the state of the getSourceFileInfo() in a variable outside of
+	the method or more generally we could add the info to the BshMethod class
+	so that bsh methods remember from what source they were created...
+*/
+
+bsh.help.getSourceFileInfo = "usage: getSourceFileInfo()";
+
+import bsh.Interpreter;
+
+getSourceFileInfo() {
+	return this.interpreter.getSourceFileInfo();
+}

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::ToFlow#off_tags
+is_singleton: false
+name: off_tags
+params: (res, item)
+visibility: private

@@ -1,0 +1,85 @@
+#!/bin/sh
+#! The following hack allows java to reside anywhere in the path.
+//bin/sh -c "exec java bsh.Interpreter $0 $*"; exit
+
+// Change to the test directory
+path=pathToFile( getSourceFileInfo() ).getAbsolutePath();
+cd( dirname( path ) );
+
+list=pathToFile( bsh.cwd ).list();
+
+failed=false;
+warnings=false;
+failedTests = "";
+warnedTests = "";
+
+// Test the test harness
+// Yes, it's been an issue before.
+r=run("Fail.bsh");
+if ( r.test_failed == void || !r.test_failed 
+	|| !r.test_completed == void || !r.test_completed ) {
+	print("Test harness failure: Fail.bsh!");
+	exit();
+}
+
+time=System.currentTimeMillis();
+
+for( i=0; i<list.length; i++) 
+{
+	f=list[i];
+
+	if ( !f.endsWith(".bsh") 
+		|| f.equals("RunAllTests.bsh") 
+		|| f.equals("Fail.bsh") 
+		|| f.equals("TestHarness.bsh" ) 
+		//|| f.equals("LastTest.bsh" ) 
+	) 
+	{
+		print("Skipping File: "+f);
+		continue;
+	}
+
+	print("Running test: "+f);
+	try {
+		r=run(f);
+	} catch ( EvalError e) {
+		print("Script: "+f+" produced an eval Error: " + e );
+		r=object();
+		r.test_failed = true;
+	}
+
+	if ( r.test_failed == void )
+		r.test_failed = true;
+	if ( r.test_completed == void )
+		r.test_completed = false;
+	if ( r.test_warning == void )
+		r.test_warning = false;
+
+	if ( r.test_failed || !r.test_completed ) {
+		print("Test: "+f+" FAILED!");
+
+		failed = true;
+		failedTests = failedTests + "\t" + f + "\n";
+	}
+
+	if ( r.test_warning ) {
+		warnings = true;
+		warnedTests = warnedTests + "\t" + f + "\n";
+	}
+}
+
+print("----------------------------------------");
+if ( failed  )
+	print("FAILED Tests:\n" + failedTests);
+
+if ( warnings )
+	print("Warnings on Tests:\n" + warnedTests);
+
+if ( !failed && !warnings )
+	print("All tests passed OK.");
+
+print("Time to run all tests: "+(System.currentTimeMillis() - time) + "ms");
+
+if ( !bsh.interactive )
+	exit();
+

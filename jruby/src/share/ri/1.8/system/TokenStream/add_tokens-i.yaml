@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: TokenStream#add_tokens
+is_singleton: false
+name: add_tokens
+params: (tks)
+visibility: public

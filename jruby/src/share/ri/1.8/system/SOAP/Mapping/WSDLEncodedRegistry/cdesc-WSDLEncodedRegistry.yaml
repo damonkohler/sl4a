@@ -1,0 +1,70 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: definedelements
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: definedtypes
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: excn_handler_obj2soap
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: excn_handler_soap2obj
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MapKeyName
+  value: XSD::QName.new(nil, "key")
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MapValueName
+  value: XSD::QName.new(nil, "value")
+full_name: SOAP::Mapping::WSDLEncodedRegistry
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: TraverseSupport
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_elements2stubobj
+- !ruby/object:RI::MethodSummary 
+  name: any2obj
+- !ruby/object:RI::MethodSummary 
+  name: any2soap
+- !ruby/object:RI::MethodSummary 
+  name: array2soap
+- !ruby/object:RI::MethodSummary 
+  name: base2soap
+- !ruby/object:RI::MethodSummary 
+  name: complexobj2soap
+- !ruby/object:RI::MethodSummary 
+  name: elements2soap
+- !ruby/object:RI::MethodSummary 
+  name: map2soap
+- !ruby/object:RI::MethodSummary 
+  name: obj2soap
+- !ruby/object:RI::MethodSummary 
+  name: obj2typesoap
+- !ruby/object:RI::MethodSummary 
+  name: schema_element_definition
+- !ruby/object:RI::MethodSummary 
+  name: simpleobj2soap
+- !ruby/object:RI::MethodSummary 
+  name: soap2obj
+- !ruby/object:RI::MethodSummary 
+  name: soap2soap
+- !ruby/object:RI::MethodSummary 
+  name: soap2stubobj
+- !ruby/object:RI::MethodSummary 
+  name: struct2soap
+name: WSDLEncodedRegistry
+superclass: Registry

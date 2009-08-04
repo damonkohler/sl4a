@@ -1,0 +1,247 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: connect_timeout
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: debug_dev
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: no_proxy
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: protocol_version
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: proxy
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: receive_timeout
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: send_timeout
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: ssl_config
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: This program is copyrighted free software by NAKAMURA, Hiroshi. You can redistribute it and/or modify it under the same terms of Ruby's license; either the dual license version in 2003, or any later version.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TypeMap
+  value: "{   XSD::XSDAnySimpleType::Type => SOAPAnySimpleType,   XSD::XSDString::Type => SOAPString,   XSD::XSDBoolean::Type => SOAPBoolean,   XSD::XSDDecimal::Type => SOAPDecimal,   XSD::XSDFloat::Type => SOAPFloat,   XSD::XSDDouble::Type => SOAPDouble,   XSD::XSDDuration::Type => SOAPDuration,   XSD::XSDDateTime::Type => SOAPDateTime,   XSD::XSDTime::Type => SOAPTime,   XSD::XSDDate::Type => SOAPDate,   XSD::XSDGYearMonth::Type => SOAPGYearMonth,   XSD::XSDGYear::Type => SOAPGYear,   XSD::XSDGMonthDay::Type => SOAPGMonthDay,   XSD::XSDGDay::Type => SOAPGDay,   XSD::XSDGMonth::Type => SOAPGMonth,   XSD::XSDHexBinary::Type => SOAPHexBinary,   XSD::XSDBase64Binary::Type => SOAPBase64,   XSD::XSDAnyURI::Type => SOAPAnyURI,   XSD::XSDQName::Type => SOAPQName,   XSD::XSDInteger::Type => SOAPInteger,   XSD::XSDNonPositiveInteger::Type => SOAPNonPositiveInteger,   XSD::XSDNegativeInteger::Type => SOAPNegativeInteger,   XSD::XSDLong::Type => SOAPLong,   XSD::XSDInt::Type => SOAPInt,   XSD::XSDShort::Type => SOAPShort,   XSD::XSDByte::Type => SOAPByte,   XSD::XSDNonNegativeInteger::Type => SOAPNonNegativeInteger,   XSD::XSDUnsignedLong::Type => SOAPUnsignedLong,   XSD::XSDUnsignedInt::Type => SOAPUnsignedInt,   XSD::XSDUnsignedShort::Type => SOAPUnsignedShort,   XSD::XSDUnsignedByte::Type => SOAPUnsignedByte,   XSD::XSDPositiveInteger::Type => SOAPPositiveInteger,    SOAP::SOAPBase64::Type => SOAPBase64, }"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NO_PROXY_HOSTS
+  value: "['localhost']"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: VERSION
+  value: Version = '1.5.5'
+- !ruby/object:RI::Constant 
+  comment: 
+  name: PropertyName
+  value: "'soap/property'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EnvelopeNamespace
+  value: "'http://schemas.xmlsoap.org/soap/envelope/'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EncodingNamespace
+  value: "'http://schemas.xmlsoap.org/soap/encoding/'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: LiteralNamespace
+  value: "'http://xml.apache.org/xml-soap/literalxml'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NextActor
+  value: "'http://schemas.xmlsoap.org/soap/actor/next'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleEnvelope
+  value: "'Envelope'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleHeader
+  value: "'Header'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleBody
+  value: "'Body'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleFault
+  value: "'Fault'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleFaultString
+  value: "'faultstring'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleFaultActor
+  value: "'faultactor'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleFaultCode
+  value: "'faultcode'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleFaultDetail
+  value: "'detail'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrMustUnderstand
+  value: "'mustUnderstand'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrEncodingStyle
+  value: "'encodingStyle'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrActor
+  value: "'actor'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrRoot
+  value: "'root'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrArrayType
+  value: "'arrayType'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrOffset
+  value: "'offset'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrPosition
+  value: "'position'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ValueArray
+  value: "'Array'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleEnvelopeName
+  value: XSD::QName.new(EnvelopeNamespace, EleEnvelope).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleHeaderName
+  value: XSD::QName.new(EnvelopeNamespace, EleHeader).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleBodyName
+  value: XSD::QName.new(EnvelopeNamespace, EleBody).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleFaultName
+  value: XSD::QName.new(EnvelopeNamespace, EleFault).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleFaultStringName
+  value: XSD::QName.new(nil, EleFaultString).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleFaultActorName
+  value: XSD::QName.new(nil, EleFaultActor).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleFaultCodeName
+  value: XSD::QName.new(nil, EleFaultCode).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EleFaultDetailName
+  value: XSD::QName.new(nil, EleFaultDetail).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrMustUnderstandName
+  value: XSD::QName.new(EnvelopeNamespace, AttrMustUnderstand).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrEncodingStyleName
+  value: XSD::QName.new(EnvelopeNamespace, AttrEncodingStyle).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrRootName
+  value: XSD::QName.new(EncodingNamespace, AttrRoot).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrArrayTypeName
+  value: XSD::QName.new(EncodingNamespace, AttrArrayType).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrOffsetName
+  value: XSD::QName.new(EncodingNamespace, AttrOffset).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AttrPositionName
+  value: XSD::QName.new(EncodingNamespace, AttrPosition).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ValueArrayName
+  value: XSD::QName.new(EncodingNamespace, ValueArray).freeze
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Base64Literal
+  value: "'base64'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SOAPNamespaceTag
+  value: "'env'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: XSDNamespaceTag
+  value: "'xsd'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: XSINamespaceTag
+  value: "'xsi'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MediaType
+  value: "'text/xml'"
+full_name: SOAP
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: create_connection
+- !ruby/object:RI::MethodSummary 
+  name: get_content
+- !ruby/object:RI::MethodSummary 
+  name: no_proxy?
+- !ruby/object:RI::MethodSummary 
+  name: post
+- !ruby/object:RI::MethodSummary 
+  name: proxy=
+- !ruby/object:RI::MethodSummary 
+  name: reset
+- !ruby/object:RI::MethodSummary 
+  name: reset_all
+- !ruby/object:RI::MethodSummary 
+  name: save_cookie_store
+- !ruby/object:RI::MethodSummary 
+  name: set_basic_auth
+- !ruby/object:RI::MethodSummary 
+  name: set_cookie_store
+- !ruby/object:RI::MethodSummary 
+  name: start
+- !ruby/object:RI::MethodSummary 
+  name: test_loopback_response
+name: SOAP
+superclass: 

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Should return a Hash, String or nil.
+full_name: SOAP::Header::SimpleHandler#on_simple_outbound
+is_singleton: false
+name: on_simple_outbound
+params: ()
+visibility: public

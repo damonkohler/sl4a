@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Deprecated in favor of <tt>Process::times</tt>
+full_name: Time::times
+is_singleton: true
+name: times
+params: |
+  Time.times => struct_tms
+
+visibility: public

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="section">
+      <oneOrMore>
+        <choice>
+          <text/>
+          <element name="b">
+            <data type="NCName"/>
+          </element>
+          <element name="br">
+            <attribute name="CLEAR">
+              <data type="NCName"/>
+            </attribute>
+          </element>
+          <element name="em">
+            <text/>
+          </element>
+          <element name="example">
+            <text/>
+          </element>
+          <element name="h2">
+            <text/>
+          </element>
+          <element name="h3">
+            <text/>
+          </element>
+          <element name="img">
+            <attribute name="src">
+              <data type="NCName"/>
+            </attribute>
+          </element>
+          <element name="name">
+            <attribute name="filename">
+              <data type="NCName"/>
+            </attribute>
+            <text/>
+          </element>
+          <element name="note">
+            <text/>
+          </element>
+          <element name="p">
+            <empty/>
+          </element>
+          <element name="pre">
+            <text/>
+          </element>
+          <element name="table">
+            <attribute name="border">
+              <data type="integer"/>
+            </attribute>
+            <attribute name="cellpadding">
+              <data type="integer"/>
+            </attribute>
+            <oneOrMore>
+              <element name="tr">
+                <element name="td">
+                  <text/>
+                </element>
+              </element>
+            </oneOrMore>
+          </element>
+          <element name="tip">
+            <text/>
+          </element>
+        </choice>
+      </oneOrMore>
+    </element>
+  </start>
+</grammar>

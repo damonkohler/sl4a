@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: on_charref_hex
+block_params: 
+comment: 
+full_name: RSS::XMLScanListener#on_charref
+is_singleton: false
+name: on_charref
+params: (code)
+visibility: public

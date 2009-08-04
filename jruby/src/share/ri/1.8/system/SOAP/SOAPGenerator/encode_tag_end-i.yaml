@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::SOAPGenerator#encode_tag_end
+is_singleton: false
+name: encode_tag_end
+params: (elename, cr = nil)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: ()
+is_singleton: true
+block_params: 
+name: listeners
+comment: 
+full_name: Spec::Story::World::listeners
+visibility: public
+aliases: []
+

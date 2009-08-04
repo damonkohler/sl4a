@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Produce a nicely formatted string-version of <em>rxp</em>. Perhaps surprisingly, <tt>#inspect</tt> actually produces the more natural version of the string than <tt>#to_s</tt>.
+- !ruby/struct:SM::Flow::VERB 
+  body: "    /ab+c/ix.to_s         #=&gt; /ab+c/ix\n"
+full_name: Regexp#inspect
+is_singleton: false
+name: inspect
+params: |
+  rxp.inspect   => string
+
+visibility: public

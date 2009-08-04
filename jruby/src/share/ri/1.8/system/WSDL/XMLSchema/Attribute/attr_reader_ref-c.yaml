@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::XMLSchema::Attribute::attr_reader_ref
+is_singleton: true
+name: attr_reader_ref
+params: (symbol)
+visibility: public

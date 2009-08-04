@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Called when %foo; is encountered in a doctype declaration. @p content &quot;foo&quot;
+full_name: REXML::StreamListener#entity
+is_singleton: false
+name: entity
+params: (content)
+visibility: public

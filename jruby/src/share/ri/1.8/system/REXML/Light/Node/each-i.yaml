@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: ( at(x+4) )
+comment: 
+full_name: REXML::Light::Node#each
+is_singleton: false
+name: each
+params: ( &block ) {|at(x+4 )| ...}
+visibility: public

@@ -1,0 +1,20 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Iterates over the elements <em>rng</em>, passing each in turn to the block. You can only iterate if the start object of the range supports the <tt>succ</tt> method (which means that you can't iterate over ranges of <tt>Float</tt> objects).
+- !ruby/struct:SM::Flow::VERB 
+  body: "   (10..15).each do |n|\n      print n, ' '\n   end\n"
+- !ruby/struct:SM::Flow::P 
+  body: <em>produces:</em>
+- !ruby/struct:SM::Flow::VERB 
+  body: "   10 11 12 13 14 15\n"
+full_name: Range#each
+is_singleton: false
+name: each
+params: |
+  rng.each {| i | block } => rng
+
+visibility: public

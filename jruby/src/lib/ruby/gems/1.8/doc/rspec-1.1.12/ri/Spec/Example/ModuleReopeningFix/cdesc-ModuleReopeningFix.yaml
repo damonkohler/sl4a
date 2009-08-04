@@ -1,0 +1,23 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: ModuleReopeningFix
+constants: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: This is a fix for ...Something in Ruby 1.8.6??... (Someone fill in here please
+    - Aslak)
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: child_modules
+- !ruby/object:RI::MethodSummary 
+  name: include
+- !ruby/object:RI::MethodSummary 
+  name: included
+full_name: Spec::Example::ModuleReopeningFix
+superclass: 
+class_methods: []
+

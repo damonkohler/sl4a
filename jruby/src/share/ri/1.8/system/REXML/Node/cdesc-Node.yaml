@@ -1,0 +1,32 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Represents a node in the tree. Nodes are never encountered except as superclasses of other objects. Nodes have siblings.
+constants: []
+
+full_name: REXML::Node
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: each_recursive
+- !ruby/object:RI::MethodSummary 
+  name: find_first_recursive
+- !ruby/object:RI::MethodSummary 
+  name: indent
+- !ruby/object:RI::MethodSummary 
+  name: index_in_parent
+- !ruby/object:RI::MethodSummary 
+  name: next_sibling_node
+- !ruby/object:RI::MethodSummary 
+  name: parent?
+- !ruby/object:RI::MethodSummary 
+  name: previous_sibling_node
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+name: Node
+superclass: 

@@ -1,0 +1,43 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: bodyparts
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: faultpart
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: headerparts
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: op_name
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: optype_name
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: soapaction
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: style
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::SOAP::Operation::OperationInfo
+includes: []
+
+instance_methods: []
+
+name: OperationInfo
+superclass: Object

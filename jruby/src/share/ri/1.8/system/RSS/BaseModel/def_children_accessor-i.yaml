@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::BaseModel#def_children_accessor
+is_singleton: false
+name: def_children_accessor
+params: (accessor_name, plural_name)
+visibility: private

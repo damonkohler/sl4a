@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPAuth::DigestAuth::make_passwd
+is_singleton: true
+name: make_passwd
+params: (realm, user, pass)
+visibility: public

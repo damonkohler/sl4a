@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::SOAPEnvelope#header=
+is_singleton: false
+name: header=
+params: (header)
+visibility: public

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Servlet interfaces for WEBrick.
+full_name: SOAP::RPC::SOAPlet#get_instance
+is_singleton: false
+name: get_instance
+params: (config, *options)
+visibility: public

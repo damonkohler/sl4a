@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: () {|@step_group if block_given?| ...}
+is_singleton: false
+block_params: '@step_group if block_given?'
+name: steps
+comment: 
+full_name: Spec::Story::Runner::PlainTextStoryRunner#steps
+visibility: public
+aliases: []
+

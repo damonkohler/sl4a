@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: XSD::XMLParser::XMLScanner#on_attr_charref_hex
+is_singleton: false
+name: on_attr_charref_hex
+params: (code)
+visibility: public

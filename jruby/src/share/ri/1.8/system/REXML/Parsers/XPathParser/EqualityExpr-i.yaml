@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "| EqualityExpr ('=' | '!=') RelationalExpr | RelationalExpr"
+full_name: REXML::Parsers::XPathParser#EqualityExpr
+is_singleton: false
+name: EqualityExpr
+params: (path, parsed)
+visibility: private

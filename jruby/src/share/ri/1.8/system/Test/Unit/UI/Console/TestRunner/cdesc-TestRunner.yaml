@@ -1,0 +1,45 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Runs a Test::Unit::TestSuite on the console.
+constants: []
+
+full_name: Test::Unit::UI::Console::TestRunner
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: add_fault
+- !ruby/object:RI::MethodSummary 
+  name: attach_to_mediator
+- !ruby/object:RI::MethodSummary 
+  name: create_mediator
+- !ruby/object:RI::MethodSummary 
+  name: finished
+- !ruby/object:RI::MethodSummary 
+  name: nl
+- !ruby/object:RI::MethodSummary 
+  name: output
+- !ruby/object:RI::MethodSummary 
+  name: output?
+- !ruby/object:RI::MethodSummary 
+  name: output_single
+- !ruby/object:RI::MethodSummary 
+  name: setup_mediator
+- !ruby/object:RI::MethodSummary 
+  name: start
+- !ruby/object:RI::MethodSummary 
+  name: start_mediator
+- !ruby/object:RI::MethodSummary 
+  name: started
+- !ruby/object:RI::MethodSummary 
+  name: test_finished
+- !ruby/object:RI::MethodSummary 
+  name: test_started
+name: TestRunner
+superclass: Object

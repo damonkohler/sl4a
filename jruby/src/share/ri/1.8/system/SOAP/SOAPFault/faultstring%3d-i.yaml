@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::SOAPFault#faultstring=
+is_singleton: false
+name: faultstring=
+params: (rhs)
+visibility: public

@@ -1,0 +1,29 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: cpu
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: os
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: decode_rdata
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TypeValue
+  value: "13"
+full_name: Resolv::DNS::Resource::HINFO
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: encode_rdata
+name: HINFO
+superclass: Resource

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: e1, e2
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Like Vector#collect2, but returns a Vector instead of an Array.
+full_name: Vector#map2
+is_singleton: false
+name: map2
+params: (v) {|e1, e2| ...}
+visibility: public

@@ -1,0 +1,80 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+java.lang.System.out.println("Basic print: passed");
+System.out.println("Imported java.lang: passed");
+
+System.out.println("print date:");
+System.out.println( new java.util.Date() );
+System.out.println("print var containing date:");
+a = new java.util.Date();
+System.out.println( a );
+
+print("method access on var");
+s = "failed pass failed";
+assert( s.substring(7,11).equals("pass") );
+
+System.out.println("static method access");
+assert( System.currentTimeMillis() > 900000000000L );
+
+System.out.println("static field access");
+out = System.out;
+assert( out instanceof PrintStream );
+
+out.println("more field access:");
+// note: this could conceivably change , but I doubt it
+assert( java.awt.GridBagConstraints.BOTH == 1 );
+
+assert( this == this );
+assert( super == super );
+assert( ((ActionListener)this) == ((ActionListener)this) );
+
+// unset works
+assert( goober123423 == void );
+goober123423=5;
+assert( goober123423 != void );
+unset("goober123423");
+assert( goober123423 == void );
+
+// unset scope works
+foo=5;
+foo() {
+	foo=6;
+	unset("foo");
+	assert(foo==void);
+}
+assert(foo==5);
+
+// Can re-declare typed vars with the same type
+int a=5;
+int a=6;
+// but not a different type
+assert(isEvalError("Object a=\"foo\""));
+
+// untyped can be overridden with a typed
+un1 = "foo";
+un1 = 5;
+String un1 = "foo";
+un1="bar";
+assert(isEvalError("un1=5"));
+
+// typed declaration and assignments work
+assert( isEvalError("String s1 = 5"));
+String s2;
+assert( isEvalError("s2 = 5"));
+
+// variable names take precendence over class names, as in Java
+assert( java.lang.System.out instanceof PrintStream );
+java.lang.System.out.println("ok");
+java = 5; // hide class namespace with var
+assert( isEvalError("java.lang.System.out instanceof PrintStream"));
+// caching of method resolution could mess this up
+assert( isEvalError("java.lang.System.out.println(\"ok\")") );
+
+// make sure void assignments don't work in method return
+void voidmethod1() { }
+assert( isEvalError("s1=voidmethod1()") );
+assert( isEvalError("String s2=voidmethod1()") );
+
+complete();

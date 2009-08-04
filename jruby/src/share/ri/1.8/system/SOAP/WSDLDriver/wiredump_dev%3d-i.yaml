@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::WSDLDriver#wiredump_dev=
+is_singleton: false
+name: wiredump_dev=
+params: (wiredump_dev)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: keystr
+comment: 
+full_name: YAML::DBM#fetch
+is_singleton: false
+name: fetch
+params: ( keystr, ifnone = nil ) {|keystr| ...}
+visibility: public

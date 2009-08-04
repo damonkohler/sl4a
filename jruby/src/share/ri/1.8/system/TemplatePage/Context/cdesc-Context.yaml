@@ -1,0 +1,25 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: A context holds a stack of key/value pairs (like a symbol table). When asked to resolve a key, it first searches the top of the stack, then the next level, and so on until it finds a match (or runs out of entries)
+constants: []
+
+full_name: TemplatePage::Context
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: find_scalar
+- !ruby/object:RI::MethodSummary 
+  name: lookup
+- !ruby/object:RI::MethodSummary 
+  name: pop
+- !ruby/object:RI::MethodSummary 
+  name: push
+name: Context
+superclass: Object

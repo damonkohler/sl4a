@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Alias for #xmlschema"
+full_name: Time#iso8601
+is_singleton: false
+name: iso8601
+params: (fraction_digits=0)
+visibility: public

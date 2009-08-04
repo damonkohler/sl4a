@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: tests subdomain-of relation.
+- !ruby/struct:SM::Flow::VERB 
+  body: "  domain = Resolv::DNS::Name.create(&quot;y.z&quot;)\n  p Resolv::DNS::Name.create(&quot;w.x.y.z&quot;).subdomain_of?(domain) #=&gt; true\n  p Resolv::DNS::Name.create(&quot;x.y.z&quot;).subdomain_of?(domain) #=&gt; true\n  p Resolv::DNS::Name.create(&quot;y.z&quot;).subdomain_of?(domain) #=&gt; false\n  p Resolv::DNS::Name.create(&quot;z&quot;).subdomain_of?(domain) #=&gt; false\n  p Resolv::DNS::Name.create(&quot;x.y.z.&quot;).subdomain_of?(domain) #=&gt; false\n  p Resolv::DNS::Name.create(&quot;w.z&quot;).subdomain_of?(domain) #=&gt; false\n"
+full_name: Resolv::DNS::Name#subdomain_of?
+is_singleton: false
+name: subdomain_of?
+params: (other)
+visibility: public

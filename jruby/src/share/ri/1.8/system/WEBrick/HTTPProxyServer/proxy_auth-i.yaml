@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPProxyServer#proxy_auth
+is_singleton: false
+name: proxy_auth
+params: (req, res)
+visibility: public

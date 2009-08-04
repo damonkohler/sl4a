@@ -1,0 +1,9 @@
+#!/bin/java bsh.Interpreter
+source("TestHarness.bsh");
+
+print("hello world test...");
+print("source file = "+bsh.sourceFile);
+
+assert(true);
+
+complete();

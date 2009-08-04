@@ -1,0 +1,40 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: version.rb -- version and release date
+- !ruby/struct:SM::Flow::P 
+  body: "Author: IPR -- Internet Programming with Ruby -- writers Copyright (c) 2000 TAKAHASHI Masayoshi, GOTOU YUUZOU Copyright (c) 2003 Internet Programming with Ruby writers. All rights reserved."
+- !ruby/struct:SM::Flow::P 
+  body: "$IPR: version.rb,v 1.74 2003/07/22 19:20:43 gotoyuzo Exp $"
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NullReader
+  value: Object.new
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CR
+  value: "\"\\x0d\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: LF
+  value: "\"\\x0a\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CRLF
+  value: "\"\\x0d\\x0a\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: VERSION
+  value: "\"1.3.1\""
+full_name: WEBrick
+includes: []
+
+instance_methods: []
+
+name: WEBrick
+superclass: 

@@ -1,0 +1,25 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Both forms iterate through <em>str</em>, matching the pattern (which may be a <tt>Regexp</tt> or a <tt>String</tt>). For each match, a result is generated and either added to the result array or passed to the block. If the pattern contains no groups, each individual result consists of the matched string, <tt>$&amp;</tt>. If the pattern contains groups, each individual result is itself an array containing one entry per group.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   a = &quot;cruel world&quot;\n   a.scan(/\\w+/)        #=&gt; [&quot;cruel&quot;, &quot;world&quot;]\n   a.scan(/.../)        #=&gt; [&quot;cru&quot;, &quot;el &quot;, &quot;wor&quot;]\n   a.scan(/(...)/)      #=&gt; [[&quot;cru&quot;], [&quot;el &quot;], [&quot;wor&quot;]]\n   a.scan(/(..)(..)/)   #=&gt; [[&quot;cr&quot;, &quot;ue&quot;], [&quot;l &quot;, &quot;wo&quot;]]\n"
+- !ruby/struct:SM::Flow::P 
+  body: "And the block form:"
+- !ruby/struct:SM::Flow::VERB 
+  body: "   a.scan(/\\w+/) {|w| print &quot;&lt;&lt;#{w}&gt;&gt; &quot; }\n   print &quot;\\n&quot;\n   a.scan(/(.)(.)/) {|x,y| print y, x }\n   print &quot;\\n&quot;\n"
+- !ruby/struct:SM::Flow::P 
+  body: <em>produces:</em>
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &lt;&lt;cruel&gt;&gt; &lt;&lt;world&gt;&gt;\n   rceu lowlr\n"
+full_name: String#scan
+is_singleton: false
+name: scan
+params: |
+  str.scan(pattern)                         => array
+  str.scan(pattern) {|match, ...| block }   => str
+
+visibility: public

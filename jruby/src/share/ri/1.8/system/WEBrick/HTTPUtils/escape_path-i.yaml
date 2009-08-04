@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPUtils#escape_path
+is_singleton: false
+name: escape_path
+params: (str)
+visibility: public

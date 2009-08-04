@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: This DRbObjectTemplate matches <tt>ro</tt> if the remote object's drburi and drbref are the same. <tt>nil</tt> is used as a wildcard.
+full_name: Rinda::DRbObjectTemplate#===
+is_singleton: false
+name: ===
+params: (ro)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (scenario_runner, world_creator = World)
+is_singleton: true
+block_params: 
+name: new
+comment: 
+full_name: Spec::Story::Runner::StoryRunner::new
+visibility: public
+aliases: []
+

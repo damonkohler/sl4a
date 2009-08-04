@@ -1,0 +1,36 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "For anyType object: SOAP::Mapping::Object not ::Object"
+constants: []
+
+full_name: SOAP::Mapping::Object
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Marshallable
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "[]"
+- !ruby/object:RI::MethodSummary 
+  name: "[]="
+- !ruby/object:RI::MethodSummary 
+  name: __add_xmlele_value
+- !ruby/object:RI::MethodSummary 
+  name: __define_attr_accessor
+- !ruby/object:RI::MethodSummary 
+  name: __define_attr_accessor
+- !ruby/object:RI::MethodSummary 
+  name: __set_xmlele_value
+- !ruby/object:RI::MethodSummary 
+  name: __xmlattr
+- !ruby/object:RI::MethodSummary 
+  name: __xmlele
+- !ruby/object:RI::MethodSummary 
+  name: inspect
+name: Object
+superclass: Object

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Removes the listener indicated by listener_key from the channel indicated by channel_name. Returns the registered proc, or nil if none was found.
+full_name: Test::Unit::Util::Observable#remove_listener
+is_singleton: false
+name: remove_listener
+params: (channel_name, listener_key)
+visibility: public

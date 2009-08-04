@@ -1,0 +1,58 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: fault
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: input
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: name
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: output
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: parameter_order
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: type
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::Operation
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: input_info
+- !ruby/object:RI::MethodSummary 
+  name: inputname
+- !ruby/object:RI::MethodSummary 
+  name: inputparts
+- !ruby/object:RI::MethodSummary 
+  name: output_info
+- !ruby/object:RI::MethodSummary 
+  name: outputname
+- !ruby/object:RI::MethodSummary 
+  name: outputparts
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+- !ruby/object:RI::MethodSummary 
+  name: sort_parts
+- !ruby/object:RI::MethodSummary 
+  name: targetnamespace
+name: Operation
+superclass: Info

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::DNS::Config::parse_resolv_conf
+is_singleton: true
+name: parse_resolv_conf
+params: (filename)
+visibility: public

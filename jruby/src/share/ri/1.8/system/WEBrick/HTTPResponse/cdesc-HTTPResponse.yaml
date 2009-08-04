@@ -1,0 +1,115 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: body
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: config
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: cookies
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: filename
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: header
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: http_version
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: keep_alive
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: reason_phrase
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: request_http_version
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: request_method
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: request_uri
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: sent_size
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: status
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: BUFSIZE
+  value: 1024*4
+full_name: WEBrick::HTTPResponse
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "[]"
+- !ruby/object:RI::MethodSummary 
+  name: "[]="
+- !ruby/object:RI::MethodSummary 
+  name: _send_file
+- !ruby/object:RI::MethodSummary 
+  name: _write_data
+- !ruby/object:RI::MethodSummary 
+  name: chunked=
+- !ruby/object:RI::MethodSummary 
+  name: chunked?
+- !ruby/object:RI::MethodSummary 
+  name: content_length
+- !ruby/object:RI::MethodSummary 
+  name: content_length=
+- !ruby/object:RI::MethodSummary 
+  name: content_type
+- !ruby/object:RI::MethodSummary 
+  name: content_type=
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: keep_alive?
+- !ruby/object:RI::MethodSummary 
+  name: send_body
+- !ruby/object:RI::MethodSummary 
+  name: send_body_io
+- !ruby/object:RI::MethodSummary 
+  name: send_body_string
+- !ruby/object:RI::MethodSummary 
+  name: send_header
+- !ruby/object:RI::MethodSummary 
+  name: send_response
+- !ruby/object:RI::MethodSummary 
+  name: set_error
+- !ruby/object:RI::MethodSummary 
+  name: set_redirect
+- !ruby/object:RI::MethodSummary 
+  name: setup_header
+- !ruby/object:RI::MethodSummary 
+  name: status=
+- !ruby/object:RI::MethodSummary 
+  name: status_line
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+name: HTTPResponse
+superclass: Object

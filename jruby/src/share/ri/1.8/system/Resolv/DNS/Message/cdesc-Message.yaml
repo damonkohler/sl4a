@@ -1,0 +1,86 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: aa
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: additional
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: answer
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: authority
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: id
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: opcode
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: qr
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: question
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: ra
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: rcode
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: rd
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: tc
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: decode
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: Resolv::DNS::Message
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: ==
+- !ruby/object:RI::MethodSummary 
+  name: add_additional
+- !ruby/object:RI::MethodSummary 
+  name: add_answer
+- !ruby/object:RI::MethodSummary 
+  name: add_authority
+- !ruby/object:RI::MethodSummary 
+  name: add_question
+- !ruby/object:RI::MethodSummary 
+  name: each_additional
+- !ruby/object:RI::MethodSummary 
+  name: each_answer
+- !ruby/object:RI::MethodSummary 
+  name: each_authority
+- !ruby/object:RI::MethodSummary 
+  name: each_question
+- !ruby/object:RI::MethodSummary 
+  name: each_resource
+- !ruby/object:RI::MethodSummary 
+  name: encode
+name: Message
+superclass: Object

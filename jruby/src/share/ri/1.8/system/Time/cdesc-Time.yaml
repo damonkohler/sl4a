@@ -1,0 +1,183 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: _load
+- !ruby/object:RI::MethodSummary 
+  name: apply_offset
+- !ruby/object:RI::MethodSummary 
+  name: at
+- !ruby/object:RI::MethodSummary 
+  name: gm
+- !ruby/object:RI::MethodSummary 
+  name: httpdate
+- !ruby/object:RI::MethodSummary 
+  name: local
+- !ruby/object:RI::MethodSummary 
+  name: make_time
+- !ruby/object:RI::MethodSummary 
+  name: mktime
+- !ruby/object:RI::MethodSummary 
+  name: month_days
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: now
+- !ruby/object:RI::MethodSummary 
+  name: parse
+- !ruby/object:RI::MethodSummary 
+  name: rfc2822
+- !ruby/object:RI::MethodSummary 
+  name: times
+- !ruby/object:RI::MethodSummary 
+  name: utc
+- !ruby/object:RI::MethodSummary 
+  name: w3cdtf
+- !ruby/object:RI::MethodSummary 
+  name: xmlschema
+- !ruby/object:RI::MethodSummary 
+  name: yaml_new
+- !ruby/object:RI::MethodSummary 
+  name: zone_offset
+- !ruby/object:RI::MethodSummary 
+  name: zone_utc?
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Implements the extensions to the Time class that are described in the documentation for the time.rb library.
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ZoneOffset
+  value: "{       'UTC' => 0,       # ISO 8601       'Z' => 0,       # RFC 822       'UT' => 0, 'GMT' => 0,       'EST' => -5, 'EDT' => -4,       'CST' => -6, 'CDT' => -5,       'MST' => -7, 'MDT' => -6,       'PST' => -8, 'PDT' => -7,       # Following definition of military zones is original one.       # See RFC 1123 and RFC 2822 for the error in RFC 822.       'A' => +1, 'B' => +2, 'C' => +3, 'D' => +4,  'E' => +5,  'F' => +6,        'G' => +7, 'H' => +8, 'I' => +9, 'K' => +10, 'L' => +11, 'M' => +12,       'N' => -1, 'O' => -2, 'P' => -3, 'Q' => -4,  'R' => -5,  'S' => -6,        'T' => -7, 'U' => -8, 'V' => -9, 'W' => -10, 'X' => -11, 'Y' => -12,     }"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: LeapYearMonthDays
+  value: "[31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CommonYearMonthDays
+  value: "[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: MonthValue
+  value: "{       'JAN' => 1, 'FEB' => 2, 'MAR' => 3, 'APR' => 4, 'MAY' => 5, 'JUN' => 6,       'JUL' => 7, 'AUG' => 8, 'SEP' => 9, 'OCT' =>10, 'NOV' =>11, 'DEC' =>12"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RFC2822_DAY_NAME
+  value: "[     'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RFC2822_MONTH_NAME
+  value: "[     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'"
+full_name: Time
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Comparable
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: +
+- !ruby/object:RI::MethodSummary 
+  name: "-"
+- !ruby/object:RI::MethodSummary 
+  name: <=>
+- !ruby/object:RI::MethodSummary 
+  name: _dump
+- !ruby/object:RI::MethodSummary 
+  name: asctime
+- !ruby/object:RI::MethodSummary 
+  name: ctime
+- !ruby/object:RI::MethodSummary 
+  name: day
+- !ruby/object:RI::MethodSummary 
+  name: dst?
+- !ruby/object:RI::MethodSummary 
+  name: eql?
+- !ruby/object:RI::MethodSummary 
+  name: getgm
+- !ruby/object:RI::MethodSummary 
+  name: getlocal
+- !ruby/object:RI::MethodSummary 
+  name: getutc
+- !ruby/object:RI::MethodSummary 
+  name: gmt?
+- !ruby/object:RI::MethodSummary 
+  name: gmt_offset
+- !ruby/object:RI::MethodSummary 
+  name: gmtime
+- !ruby/object:RI::MethodSummary 
+  name: gmtoff
+- !ruby/object:RI::MethodSummary 
+  name: hash
+- !ruby/object:RI::MethodSummary 
+  name: hour
+- !ruby/object:RI::MethodSummary 
+  name: httpdate
+- !ruby/object:RI::MethodSummary 
+  name: inspect
+- !ruby/object:RI::MethodSummary 
+  name: isdst
+- !ruby/object:RI::MethodSummary 
+  name: iso8601
+- !ruby/object:RI::MethodSummary 
+  name: localtime
+- !ruby/object:RI::MethodSummary 
+  name: marshal_dump
+- !ruby/object:RI::MethodSummary 
+  name: marshal_load
+- !ruby/object:RI::MethodSummary 
+  name: mday
+- !ruby/object:RI::MethodSummary 
+  name: min
+- !ruby/object:RI::MethodSummary 
+  name: mon
+- !ruby/object:RI::MethodSummary 
+  name: month
+- !ruby/object:RI::MethodSummary 
+  name: rfc2822
+- !ruby/object:RI::MethodSummary 
+  name: rfc822
+- !ruby/object:RI::MethodSummary 
+  name: sec
+- !ruby/object:RI::MethodSummary 
+  name: strftime
+- !ruby/object:RI::MethodSummary 
+  name: succ
+- !ruby/object:RI::MethodSummary 
+  name: to_a
+- !ruby/object:RI::MethodSummary 
+  name: to_date
+- !ruby/object:RI::MethodSummary 
+  name: to_datetime
+- !ruby/object:RI::MethodSummary 
+  name: to_f
+- !ruby/object:RI::MethodSummary 
+  name: to_i
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+- !ruby/object:RI::MethodSummary 
+  name: to_yaml
+- !ruby/object:RI::MethodSummary 
+  name: tv_sec
+- !ruby/object:RI::MethodSummary 
+  name: tv_usec
+- !ruby/object:RI::MethodSummary 
+  name: usec
+- !ruby/object:RI::MethodSummary 
+  name: utc
+- !ruby/object:RI::MethodSummary 
+  name: utc?
+- !ruby/object:RI::MethodSummary 
+  name: utc_offset
+- !ruby/object:RI::MethodSummary 
+  name: wday
+- !ruby/object:RI::MethodSummary 
+  name: xmlschema
+- !ruby/object:RI::MethodSummary 
+  name: yday
+- !ruby/object:RI::MethodSummary 
+  name: year
+- !ruby/object:RI::MethodSummary 
+  name: zone
+name: Time
+superclass: Object

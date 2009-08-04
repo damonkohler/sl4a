@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: []
+
+full_name: WEBrick::HTTPUtils#parse_header
+is_singleton: false
+name: parse_header
+params: (raw)
+visibility: public

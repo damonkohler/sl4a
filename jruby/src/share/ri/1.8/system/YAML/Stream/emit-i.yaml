@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: YAML::Stream#emit
+is_singleton: false
+name: emit
+params: ( io = nil )
+visibility: public

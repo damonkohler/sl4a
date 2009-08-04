@@ -1,0 +1,54 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ENTITIES
+  value: "{       'lt' => '<',       'gt' => '>',       'amp' => '&',       'quot' => '\"',       'apos' => '\\''"
+full_name: RSS::XMLScanListener
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: XMLScan::Visitor
+- !ruby/object:RI::IncludedModule 
+  name: ListenerMixin
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: entity
+- !ruby/object:RI::MethodSummary 
+  name: on_attr_charref
+- !ruby/object:RI::MethodSummary 
+  name: on_attr_charref_hex
+- !ruby/object:RI::MethodSummary 
+  name: on_attr_entityref
+- !ruby/object:RI::MethodSummary 
+  name: on_attr_value
+- !ruby/object:RI::MethodSummary 
+  name: on_attribute
+- !ruby/object:RI::MethodSummary 
+  name: on_charref
+- !ruby/object:RI::MethodSummary 
+  name: on_charref_hex
+- !ruby/object:RI::MethodSummary 
+  name: on_entityref
+- !ruby/object:RI::MethodSummary 
+  name: on_etag
+- !ruby/object:RI::MethodSummary 
+  name: on_stag
+- !ruby/object:RI::MethodSummary 
+  name: on_stag_end
+- !ruby/object:RI::MethodSummary 
+  name: on_stag_end_empty
+- !ruby/object:RI::MethodSummary 
+  name: on_xmldecl_encoding
+- !ruby/object:RI::MethodSummary 
+  name: on_xmldecl_end
+- !ruby/object:RI::MethodSummary 
+  name: on_xmldecl_standalone
+- !ruby/object:RI::MethodSummary 
+  name: on_xmldecl_version
+name: XMLScanListener
+superclass: BaseListener

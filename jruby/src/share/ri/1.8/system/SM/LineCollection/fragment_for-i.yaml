@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Factory for different fragment types
+full_name: SM::LineCollection#fragment_for
+is_singleton: false
+name: fragment_for
+params: (*args)
+visibility: public

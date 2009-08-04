@@ -1,0 +1,122 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: racc_runtime_type
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Runtime_Version
+  value: "'1.4.5'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Runtime_Revision
+  value: "'$originalRevision: 1.8 $'.split[1]"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Runtime_Core_Version_R
+  value: "'1.4.5'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Runtime_Core_Revision_R
+  value: "'$originalRevision: 1.8 $'.split[1]"
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: Racc_Runtime_Core_Version_C = (defined in extention)
+  name: Racc_Runtime_Core_Revision_C
+  value: Racc_Runtime_Core_Id_C.split[2]
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Main_Parsing_Routine
+  value: ":_racc_do_parse_c"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_YY_Parse_Method
+  value: ":_racc_yyparse_c"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Runtime_Core_Version
+  value: Racc_Runtime_Core_Version_C
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Runtime_Core_Revision
+  value: Racc_Runtime_Core_Revision_C
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Runtime_Type
+  value: "'c'"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Main_Parsing_Routine
+  value: ":_racc_do_parse_rb"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_YY_Parse_Method
+  value: ":_racc_yyparse_rb"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Runtime_Core_Version
+  value: Racc_Runtime_Core_Version_R
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Runtime_Core_Revision
+  value: Racc_Runtime_Core_Revision_R
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Racc_Runtime_Type
+  value: "'ruby'"
+full_name: Racc::Parser
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: _racc_do_parse_rb
+- !ruby/object:RI::MethodSummary 
+  name: _racc_do_reduce
+- !ruby/object:RI::MethodSummary 
+  name: _racc_evalact
+- !ruby/object:RI::MethodSummary 
+  name: _racc_init_sysvars
+- !ruby/object:RI::MethodSummary 
+  name: _racc_setup
+- !ruby/object:RI::MethodSummary 
+  name: _racc_yyparse_rb
+- !ruby/object:RI::MethodSummary 
+  name: do_parse
+- !ruby/object:RI::MethodSummary 
+  name: next_token
+- !ruby/object:RI::MethodSummary 
+  name: on_error
+- !ruby/object:RI::MethodSummary 
+  name: racc_accept
+- !ruby/object:RI::MethodSummary 
+  name: racc_e_pop
+- !ruby/object:RI::MethodSummary 
+  name: racc_next_state
+- !ruby/object:RI::MethodSummary 
+  name: racc_print_stacks
+- !ruby/object:RI::MethodSummary 
+  name: racc_print_states
+- !ruby/object:RI::MethodSummary 
+  name: racc_read_token
+- !ruby/object:RI::MethodSummary 
+  name: racc_reduce
+- !ruby/object:RI::MethodSummary 
+  name: racc_shift
+- !ruby/object:RI::MethodSummary 
+  name: racc_token2str
+- !ruby/object:RI::MethodSummary 
+  name: token_to_str
+- !ruby/object:RI::MethodSummary 
+  name: yyaccept
+- !ruby/object:RI::MethodSummary 
+  name: yyerrok
+- !ruby/object:RI::MethodSummary 
+  name: yyerror
+- !ruby/object:RI::MethodSummary 
+  name: yyparse
+name: Parser
+superclass: Object

@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: th if block_given?
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Waits until all of the specified threads are terminated. If a block is supplied for the method, it is executed for each thread termination.
+- !ruby/struct:SM::Flow::P 
+  body: Raises exceptions in the same manner as <tt>next_wait</tt>.
+full_name: ThreadsWait#all_waits
+is_singleton: false
+name: all_waits
+params: () {|th if block_given?| ...}
+visibility: public

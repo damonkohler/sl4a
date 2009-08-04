@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::SOAPMethodRequest#create_method_response
+is_singleton: false
+name: create_method_response
+params: (response_name = nil)
+visibility: public

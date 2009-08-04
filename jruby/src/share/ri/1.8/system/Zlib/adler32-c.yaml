@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Calculates Alder-32 checksum for <tt>string</tt>, and returns updated value of <tt>adler</tt>. If <tt>string</tt> is omitted, it returns the Adler-32 initial value. If <tt>adler</tt> is omitted, it assumes that the initial value is given to <tt>adler</tt>.
+- !ruby/struct:SM::Flow::P 
+  body: "FIXME: expression."
+full_name: Zlib::adler32
+is_singleton: true
+name: adler32
+params: " Zlib.adler32(string, adler)\n"
+visibility: public

@@ -1,0 +1,22 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+// Verify that basic type operations work for scripted classes.
+// As of BeanShell 1.3 all scripted classes are instances of bsh.This and have
+// bsh.This type.  This is a workaround and will be corrected in bsh 2.0.
+
+class Foo22 { }
+class Bar22 extends Foo22 { }
+
+Foo22 foo = new Foo22();
+Bar22 bar = new Bar22();
+
+assert( foo instanceof Foo22 );
+assert( bar instanceof Bar22 );
+assert( bar instanceof Foo22 );
+// Add me for 2.0
+assert( !(foo instanceof Bar22) ); // Workaround for 1.3.
+
+
+complete();

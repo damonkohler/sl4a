@@ -1,0 +1,25 @@
+source("TestHarness.bsh");
+
+// class9 same as class8 but without package
+
+class Foo88
+{
+	Foo88 foo;
+
+	Foo88() { 
+		this.foo = this;
+	}
+
+	Foo88 get() { return this; }
+
+	void blah( Foo88 f ) {
+		assert( f instanceof Foo88 );
+	}
+}
+
+f=new Foo88();
+assert( f.foo == f );
+assert( f.get() == f );
+f.blah( f );
+
+complete();

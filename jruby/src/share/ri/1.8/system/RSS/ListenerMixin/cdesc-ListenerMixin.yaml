@@ -1,0 +1,61 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: do_validate
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: ignore_unknown_element
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: rss
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CONTENT_PATTERN
+  value: /\s*([^=]+)=(["'])([^\2]+?)\2/
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NAMESPLIT
+  value: /^(?:([\w:][-\w\d.]*):)?([\w:][-\w\d.]*)/
+full_name: RSS::ListenerMixin
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: _ns
+- !ruby/object:RI::MethodSummary 
+  name: check_ns
+- !ruby/object:RI::MethodSummary 
+  name: instruction
+- !ruby/object:RI::MethodSummary 
+  name: parse_pi_content
+- !ruby/object:RI::MethodSummary 
+  name: split_name
+- !ruby/object:RI::MethodSummary 
+  name: start_RDF
+- !ruby/object:RI::MethodSummary 
+  name: start_else_element
+- !ruby/object:RI::MethodSummary 
+  name: start_get_text_element
+- !ruby/object:RI::MethodSummary 
+  name: start_have_something_element
+- !ruby/object:RI::MethodSummary 
+  name: start_rss
+- !ruby/object:RI::MethodSummary 
+  name: tag_end
+- !ruby/object:RI::MethodSummary 
+  name: tag_start
+- !ruby/object:RI::MethodSummary 
+  name: text
+- !ruby/object:RI::MethodSummary 
+  name: xmldecl
+name: ListenerMixin
+superclass: 

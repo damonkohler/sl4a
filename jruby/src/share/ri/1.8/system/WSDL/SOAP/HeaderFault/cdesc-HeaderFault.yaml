@@ -1,0 +1,38 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: encodingstyle
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: message
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: namespace
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: part
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: use
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WSDL::SOAP::HeaderFault
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: parse_attr
+- !ruby/object:RI::MethodSummary 
+  name: parse_element
+name: HeaderFault
+superclass: Info

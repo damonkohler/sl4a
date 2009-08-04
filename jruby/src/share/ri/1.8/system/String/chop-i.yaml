@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns a new <tt>String</tt> with the last character removed. If the string ends with <tt>\r\n</tt>, both characters are removed. Applying <tt>chop</tt> to an empty string returns an empty string. <tt>String#chomp</tt> is often a safer alternative, as it leaves the string unchanged if it doesn't end in a record separator.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   &quot;string\\r\\n&quot;.chop   #=&gt; &quot;string&quot;\n   &quot;string\\n\\r&quot;.chop   #=&gt; &quot;string\\n&quot;\n   &quot;string\\n&quot;.chop     #=&gt; &quot;string&quot;\n   &quot;string&quot;.chop       #=&gt; &quot;strin&quot;\n   &quot;x&quot;.chop.chop       #=&gt; &quot;&quot;\n"
+full_name: String#chop
+is_singleton: false
+name: chop
+params: |
+  str.chop   => new_str
+
+visibility: public

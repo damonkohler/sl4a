@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Property#local_assign
+is_singleton: false
+name: local_assign
+params: (key, value)
+visibility: protected

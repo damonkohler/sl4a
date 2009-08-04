@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::SOAPMethod::create_rpc_param_def
+is_singleton: true
+name: create_rpc_param_def
+params: (param_names)
+visibility: public

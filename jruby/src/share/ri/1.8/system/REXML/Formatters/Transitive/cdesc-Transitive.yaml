@@ -1,0 +1,23 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: The Transitive formatter writes an XML document that parses to an identical document as the source document. This means that no extra whitespace nodes are inserted, and whitespace within text nodes is preserved. Within these constraints, the document is pretty-printed, with whitespace inserted into the metadata to introduce formatting.
+- !ruby/struct:SM::Flow::P 
+  body: Note that this is only useful if the original XML is not already formatted. Since this formatter does not alter whitespace nodes, the results of formatting already formatted XML will be odd.
+constants: []
+
+full_name: REXML::Formatters::Transitive
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: write_element
+- !ruby/object:RI::MethodSummary 
+  name: write_text
+name: Transitive
+superclass: Default

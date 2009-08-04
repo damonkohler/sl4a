@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::UI::Tk::TestRunner#show_fault
+is_singleton: false
+name: show_fault
+params: (fault)
+visibility: private

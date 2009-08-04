@@ -1,0 +1,4 @@
+INSTALLATION
+============
+
+See INSTALLATION section in doc/index.html

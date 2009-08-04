@@ -1,0 +1,20 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: ScenarioCollector
+constants: []
+
+comment: 
+attributes: 
+- !ruby/object:RI::Attribute 
+  name: scenarios
+  comment: 
+  rw: RW
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: Scenario
+full_name: Spec::Story::Runner::ScenarioCollector
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

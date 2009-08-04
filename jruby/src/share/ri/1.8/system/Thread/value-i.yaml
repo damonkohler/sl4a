@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Waits for <em>thr</em> to complete (via <tt>Thread#join</tt>) and returns its value.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   a = Thread.new { 2 + 2 }\n   a.value   #=&gt; 4\n"
+full_name: Thread#value
+is_singleton: false
+name: value
+params: |
+  thr.value   => obj
+
+visibility: public

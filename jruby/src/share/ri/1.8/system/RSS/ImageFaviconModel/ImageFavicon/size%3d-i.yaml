@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: image_size=
+block_params: 
+comment: 
+full_name: RSS::ImageFaviconModel::ImageFavicon#size=
+is_singleton: false
+name: size=
+params: (new_value)
+visibility: public

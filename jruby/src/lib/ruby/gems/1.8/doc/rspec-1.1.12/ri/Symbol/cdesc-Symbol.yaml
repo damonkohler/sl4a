@@ -1,0 +1,16 @@
+--- !ruby/object:RI::ClassDescription 
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Spec::Expectations::StringHelpers
+name: Symbol
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: []
+
+full_name: Symbol
+superclass: Object
+class_methods: []
+

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::EncodingStyle::ASPDotNetHandler#decode_tag
+is_singleton: false
+name: decode_tag
+params: (ns, elename, attrs, parent)
+visibility: public

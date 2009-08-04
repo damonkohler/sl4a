@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Element#tag_filter
+is_singleton: false
+name: tag_filter
+params: (tags)
+visibility: private

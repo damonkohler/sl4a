@@ -1,0 +1,43 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+import bsh.NameSpace;
+import bsh.CallStack;
+
+this.caller;
+
+// Try to get to the top through chained calls...
+// This could of course fail legitimately if we are really really deep!!!
+assert( this.caller.caller.caller.caller.caller.caller.caller.caller.namespace
+	== NameSpace.JAVACODE );
+
+// various things which should be explicitly prevented
+assert( isEvalError("super.caller") );
+assert( isEvalError("global.caller") );
+assert( isEvalError("super.this.caller") );
+assert( isEvalError("this.this") );
+assert( isEvalError("super.this") );
+tmp=this;
+assert( isEvalError("tmp.caller") );
+
+assert( this.callstack instanceof CallStack );
+
+foo( caller ) {
+	assert( this.caller == caller );
+}
+foo( this );
+
+topcaller = this.caller;
+top=this;
+foo() {
+	foo=this;
+	bar() {
+		assert( this.caller == foo);
+		assert( this.caller.caller == top );
+		assert( this.caller.caller.caller == topcaller );
+	}
+}
+foo();
+
+complete();

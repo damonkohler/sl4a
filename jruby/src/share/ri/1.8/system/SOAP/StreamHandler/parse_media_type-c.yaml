@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::StreamHandler::parse_media_type
+is_singleton: true
+name: parse_media_type
+params: (str)
+visibility: public

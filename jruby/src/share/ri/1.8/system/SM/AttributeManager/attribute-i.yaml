@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Return an attribute object with the given turn_on and turn_off bits set
+full_name: SM::AttributeManager#attribute
+is_singleton: false
+name: attribute
+params: (turn_on, turn_off)
+visibility: public

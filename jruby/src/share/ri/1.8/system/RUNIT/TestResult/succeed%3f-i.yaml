@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RUNIT::TestResult#succeed?
+is_singleton: false
+name: succeed?
+params: ()
+visibility: public

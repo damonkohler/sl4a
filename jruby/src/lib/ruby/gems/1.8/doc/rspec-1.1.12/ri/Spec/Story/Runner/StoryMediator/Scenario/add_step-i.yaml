@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (step)
+is_singleton: false
+block_params: 
+name: add_step
+comment: 
+full_name: Spec::Story::Runner::StoryMediator::Scenario#add_step
+visibility: public
+aliases: []
+

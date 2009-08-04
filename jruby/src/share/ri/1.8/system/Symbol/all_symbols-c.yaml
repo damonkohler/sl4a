@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns an array of all the symbols currently in Ruby's symbol table.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Symbol.all_symbols.size    #=&gt; 903\n   Symbol.all_symbols[1,20]   #=&gt; [:floor, :ARGV, :Binding, :symlink,\n                                   :chown, :EOFError, :$;, :String,\n                                   :LOCK_SH, :&quot;setuid?&quot;, :$&lt;,\n                                   :default_proc, :compact, :extend,\n                                   :Tms, :getwd, :$=, :ThreadGroup,\n                                   :wait2, :$&gt;]\n"
+full_name: Symbol::all_symbols
+is_singleton: true
+name: all_symbols
+params: |
+  Symbol.all_symbols    => array
+
+visibility: public

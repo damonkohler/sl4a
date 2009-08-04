@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RUNIT::TestSuite#run
+is_singleton: false
+name: run
+params: (result, &progress_block)
+visibility: public

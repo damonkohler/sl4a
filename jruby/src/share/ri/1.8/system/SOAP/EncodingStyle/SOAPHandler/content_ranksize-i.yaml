@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::EncodingStyle::SOAPHandler#content_ranksize
+is_singleton: false
+name: content_ranksize
+params: (typename)
+visibility: private

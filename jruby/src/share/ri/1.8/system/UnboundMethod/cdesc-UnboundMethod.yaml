@@ -1,0 +1,38 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "Ruby supports two forms of objectified methods. Class <tt>Method</tt> is used to represent methods that are associated with a particular object: these method objects are bound to that object. Bound method objects for an object can be created using <tt>Object#method</tt>."
+- !ruby/struct:SM::Flow::P 
+  body: Ruby also supports unbound methods; methods objects that are not associated with a particular object. These can be created either by calling <tt>Module#instance_method</tt> or by calling <tt>unbind</tt> on a bound method object. The result of both of these is an <tt>UnboundMethod</tt> object.
+- !ruby/struct:SM::Flow::P 
+  body: Unbound methods can only be called after they are bound to an object. That object must be be a kind_of? the method's original class.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   class Square\n     def area\n       @side * @side\n     end\n     def initialize(side)\n       @side = side\n     end\n   end\n\n   area_un = Square.instance_method(:area)\n\n   s = Square.new(12)\n   area = area_un.bind(s)\n   area.call   #=&gt; 144\n"
+- !ruby/struct:SM::Flow::P 
+  body: "Unbound methods are a reference to the method at the time it was objectified: subsequent changes to the underlying class will not affect the unbound method."
+- !ruby/struct:SM::Flow::VERB 
+  body: "   class Test\n     def test\n       :original\n     end\n   end\n   um = Test.instance_method(:test)\n   class Test\n     def test\n       :modified\n     end\n   end\n   t = Test.new\n   t.test            #=&gt; :modified\n   um.bind(t).call   #=&gt; :original\n"
+constants: []
+
+full_name: UnboundMethod
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: ==
+- !ruby/object:RI::MethodSummary 
+  name: arity
+- !ruby/object:RI::MethodSummary 
+  name: bind
+- !ruby/object:RI::MethodSummary 
+  name: clone
+- !ruby/object:RI::MethodSummary 
+  name: inspect
+- !ruby/object:RI::MethodSummary 
+  name: to_s
+name: UnboundMethod
+superclass: Object

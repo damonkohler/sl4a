@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Shell::CommandProcessor::add_delegate_command_to_shell
+is_singleton: true
+name: add_delegate_command_to_shell
+params: (id)
+visibility: public

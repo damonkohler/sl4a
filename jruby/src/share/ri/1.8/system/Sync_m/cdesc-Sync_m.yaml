@@ -1,0 +1,81 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: sync_ex_count
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: sync_ex_locker
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: sync_mode
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: sync_sh_locker
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: sync_upgrade_waiting
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: sync_waiting
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: append_features
+- !ruby/object:RI::MethodSummary 
+  name: define_aliases
+- !ruby/object:RI::MethodSummary 
+  name: extend_object
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: RCS_ID
+  value: "'-$Header$-'"
+- !ruby/object:RI::Constant 
+  comment: 
+  - !ruby/struct:SM::Flow::P 
+    body: lock mode
+  name: UN
+  value: ":UN"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: SH
+  value: ":SH"
+- !ruby/object:RI::Constant 
+  comment: 
+  name: EX
+  value: ":EX"
+full_name: Sync_m
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: sync_exclusive?
+- !ruby/object:RI::MethodSummary 
+  name: sync_extended
+- !ruby/object:RI::MethodSummary 
+  name: sync_initialize
+- !ruby/object:RI::MethodSummary 
+  name: sync_lock
+- !ruby/object:RI::MethodSummary 
+  name: sync_locked?
+- !ruby/object:RI::MethodSummary 
+  name: sync_shared?
+- !ruby/object:RI::MethodSummary 
+  name: sync_synchronize
+- !ruby/object:RI::MethodSummary 
+  name: sync_try_lock
+- !ruby/object:RI::MethodSummary 
+  name: sync_try_lock_sub
+- !ruby/object:RI::MethodSummary 
+  name: sync_unlock
+name: Sync_m
+superclass: 

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::Documentation#parse_element
+is_singleton: false
+name: parse_element
+params: (element)
+visibility: public

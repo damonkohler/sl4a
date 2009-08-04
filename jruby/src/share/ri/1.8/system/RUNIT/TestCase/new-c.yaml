@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RUNIT::TestCase::new
+is_singleton: true
+name: new
+params: (test_name, suite_name=self.class.name)
+visibility: public

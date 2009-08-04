@@ -1,0 +1,16 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Returns <tt>true</tt> if <em>thr</em> is dead or sleeping.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   a = Thread.new { Thread.stop }\n   b = Thread.current\n   a.stop?   #=&gt; true\n   b.stop?   #=&gt; false\n"
+full_name: Thread#stop?
+is_singleton: false
+name: stop?
+params: |
+  thr.stop?   => true or false
+
+visibility: public

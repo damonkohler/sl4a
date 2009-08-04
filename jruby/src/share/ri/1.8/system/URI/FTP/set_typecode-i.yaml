@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::FTP#set_typecode
+is_singleton: false
+name: set_typecode
+params: (v)
+visibility: protected

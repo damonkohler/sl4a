@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPServlet::AbstractServlet#redirect_to_directory_uri
+is_singleton: false
+name: redirect_to_directory_uri
+params: (req, res)
+visibility: private

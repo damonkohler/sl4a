@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+params: (example, error)
+is_singleton: false
+block_params: 
+name: example_failed
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: 'Alias for #failure'
+full_name: Spec::Runner::Reporter#example_failed
+visibility: public
+aliases: []
+

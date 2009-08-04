@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Router#first_input_part_qname
+is_singleton: false
+name: first_input_part_qname
+params: (param_def)
+visibility: private

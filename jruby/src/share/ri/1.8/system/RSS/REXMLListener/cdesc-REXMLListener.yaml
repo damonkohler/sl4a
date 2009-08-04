@@ -1,0 +1,20 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: raise_for_undefined_entity?
+comment: 
+constants: []
+
+full_name: RSS::REXMLListener
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: REXML::StreamListener
+- !ruby/object:RI::IncludedModule 
+  name: ListenerMixin
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: xmldecl
+name: REXMLListener
+superclass: BaseListener

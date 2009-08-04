@@ -1,0 +1,26 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: about
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: image_size
+  rw: RW
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: RSS::Maker::ImageFaviconModel::ImageFaviconBase
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Base
+- !ruby/object:RI::IncludedModule 
+  name: Maker::DublinCoreModel
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: have_required_values?
+name: ImageFaviconBase
+superclass: Object

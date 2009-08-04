@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPUtils#_make_regex!
+is_singleton: false
+name: _make_regex!
+params: (str)
+visibility: public

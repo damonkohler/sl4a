@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::AttributeManager#copy_string
+is_singleton: false
+name: copy_string
+params: (start_pos, end_pos)
+visibility: public

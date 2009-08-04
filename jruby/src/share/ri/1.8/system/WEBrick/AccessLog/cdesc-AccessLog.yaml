@@ -1,0 +1,41 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CLF_TIME_FORMAT
+  value: "\"[%d/%b/%Y:%H:%M:%S %Z]\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: COMMON_LOG_FORMAT
+  value: "\"%h %l %u %t \\\"%r\\\" %s %b\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CLF
+  value: COMMON_LOG_FORMAT
+- !ruby/object:RI::Constant 
+  comment: 
+  name: REFERER_LOG_FORMAT
+  value: "\"%{Referer}i -> %U\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: AGENT_LOG_FORMAT
+  value: "\"%{User-Agent}i\""
+- !ruby/object:RI::Constant 
+  comment: 
+  name: COMBINED_LOG_FORMAT
+  value: "\"#{CLF} \\\"%{Referer}i\\\" \\\"%{User-agent}i\\\"\""
+full_name: WEBrick::AccessLog
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: format
+- !ruby/object:RI::MethodSummary 
+  name: setup_params
+name: AccessLog
+superclass: 

@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Attempt to convert rss to a URI, but just return it if there's a ::URI::Error
+full_name: RSS::Parser#to_uri
+is_singleton: false
+name: to_uri
+params: (rss)
+visibility: private

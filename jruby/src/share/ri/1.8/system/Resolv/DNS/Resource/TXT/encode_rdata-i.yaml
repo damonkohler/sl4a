@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Resolv::DNS::Resource::TXT#encode_rdata
+is_singleton: false
+name: encode_rdata
+params: (msg)
+visibility: public

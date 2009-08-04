@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Test::Unit::AutoRunner::run
+is_singleton: true
+name: run
+params: (force_standalone=false, default_dir=nil, argv=ARGV, &block)
+visibility: public

@@ -1,0 +1,73 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+import bsh.CollectionManager;
+import bsh.Capabilities;
+cm = CollectionManager.getCollectionManager();
+
+iterator = cm.getBshIterator( "ffoo" );
+while( iterator.hasNext() )
+{
+	Character cc = iterator.next();
+	assert( cc instanceof Character );
+	char cp = iterator.next();
+	assert( cp.getType() == Character.TYPE );
+	flag();
+}
+assert( flag() == 2 );
+
+assert( cm.isBshIterable( new int[5] ) );
+assert( cm.isBshIterable( new Vector().elements() ) );
+
+// using collections aware iterator
+if ( cm instanceof bsh.collection.CollectionManagerImpl )
+{
+	print("Doing collections tests..");
+	al = new ArrayList();
+	al.add("foo");
+	al.add("bar");
+	al.add("gee");
+
+
+	iterator = cm.getBshIterator( al );
+	while ( iterator.hasNext() )
+	{
+		iterator.next();
+		flag();
+	}
+	assert( flag() == 6 );
+
+	print("here2");
+
+	Iterator javait = al.iterator();
+	while ( javait.hasNext() )
+	{
+		javait.next();
+		flag();
+	}
+	assert( flag() == 10 );
+
+	// test Java 5 Iterable
+	if ( Capabilities.classExists("java.lang.Iterable") )
+	{
+		list=new ArrayList();
+		list.add("foo");
+		list.add("bar");
+
+		iterable = new Iterable() {
+			Iterator iterator() {
+				return list.iterator();
+			}
+		};
+
+		for( i : iterable )
+			flag();
+
+		assert( flag() == 13 );
+	} 
+
+} else
+	warning("No collections to test");
+
+complete();

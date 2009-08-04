@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: line unless line.deleted
+comment: 
+full_name: SM::Lines#each
+is_singleton: false
+name: each
+params: () {|line unless line.deleted| ...}
+visibility: public

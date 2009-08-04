@@ -1,0 +1,17 @@
+--- !ruby/object:RI::ClassDescription 
+includes: []
+
+name: AnyArgConstraint
+constants: []
+
+comment: 
+attributes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: ==
+full_name: Spec::Mocks::ArgumentConstraints::AnyArgConstraint
+superclass: Object
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new

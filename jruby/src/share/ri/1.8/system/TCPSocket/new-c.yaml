@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Opens a TCP connection to <tt>remote_host</tt> on <tt>remote_port</tt>. If <tt>local_host</tt> and <tt>local_port</tt> are specified, then those parameters are used on the local end to establish the connection.
+full_name: TCPSocket::new
+is_singleton: true
+name: new
+params: |
+  TCPSocket.new(remote_host, remote_port, local_host=nil, local_port=nil)
+
+visibility: public

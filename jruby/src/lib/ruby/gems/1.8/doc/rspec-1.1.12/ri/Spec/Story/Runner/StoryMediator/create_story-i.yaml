@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (title, narrative)
+is_singleton: false
+block_params: 
+name: create_story
+comment: 
+full_name: Spec::Story::Runner::StoryMediator#create_story
+visibility: public
+aliases: []
+

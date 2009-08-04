@@ -1,0 +1,545 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module gdata.alt.appengine</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gdata.html"><font color="#ffffff">gdata</font></a>.<a href="gdata.alt.html"><font color="#ffffff">alt</font></a>.appengine</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/gdata/alt/appengine.py">/usr/local/svn/gdata-python-client/src/gdata/alt/appengine.py</a></font></td></tr></table>
+    <p><tt>Provides&nbsp;HTTP&nbsp;functions&nbsp;for&nbsp;gdata.service&nbsp;to&nbsp;use&nbsp;on&nbsp;Google&nbsp;App&nbsp;Engine<br>
+&nbsp;<br>
+<a href="#AppEngineHttpClient">AppEngineHttpClient</a>:&nbsp;Provides&nbsp;an&nbsp;HTTP&nbsp;request&nbsp;method&nbsp;which&nbsp;uses&nbsp;App&nbsp;Engine's<br>
+&nbsp;&nbsp;&nbsp;urlfetch&nbsp;API.&nbsp;Set&nbsp;the&nbsp;http_client&nbsp;member&nbsp;of&nbsp;a&nbsp;GDataService&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;instance&nbsp;of&nbsp;an&nbsp;<a href="#AppEngineHttpClient">AppEngineHttpClient</a>&nbsp;to&nbsp;allow&nbsp;the&nbsp;gdata&nbsp;library&nbsp;to&nbsp;run&nbsp;on<br>
+&nbsp;&nbsp;&nbsp;Google&nbsp;App&nbsp;Engine.<br>
+&nbsp;<br>
+run_on_appengine:&nbsp;Function&nbsp;which&nbsp;will&nbsp;modify&nbsp;an&nbsp;existing&nbsp;GDataService&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;&nbsp;&nbsp;to&nbsp;allow&nbsp;it&nbsp;to&nbsp;run&nbsp;on&nbsp;App&nbsp;Engine.&nbsp;It&nbsp;works&nbsp;by&nbsp;creating&nbsp;a&nbsp;new&nbsp;instance&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;the&nbsp;<a href="#AppEngineHttpClient">AppEngineHttpClient</a>&nbsp;and&nbsp;replacing&nbsp;the&nbsp;GDataService&nbsp;<a href="__builtin__.html#object">object</a>'s<br>
+&nbsp;&nbsp;&nbsp;http_client.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="StringIO.html">StringIO</a><br>
+<a href="atom.html">atom</a><br>
+</td><td width="25%" valign=top><a href="google.appengine.ext.db.html">google.appengine.ext.db</a><br>
+<a href="google.appengine.api.memcache.html">google.appengine.api.memcache</a><br>
+</td><td width="25%" valign=top><a href="pickle.html">pickle</a><br>
+<a href="google.appengine.api.urlfetch.html">google.appengine.api.urlfetch</a><br>
+</td><td width="25%" valign=top><a href="google.appengine.api.users.html">google.appengine.api.users</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.alt.appengine.html#HttpResponse">HttpResponse</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.alt.appengine.html#AppEngineHttpClient">AppEngineHttpClient</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="atom.token_store.html#TokenStore">atom.token_store.TokenStore</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.alt.appengine.html#AppEngineTokenStore">AppEngineTokenStore</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="google.appengine.ext.db.html#Model">google.appengine.ext.db.Model</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.alt.appengine.html#TokenCollection">TokenCollection</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AppEngineHttpClient">class <strong>AppEngineHttpClient</strong></a>(<a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.alt.appengine.html#AppEngineHttpClient">AppEngineHttpClient</a></dd>
+<dd><a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="AppEngineHttpClient-__init__"><strong>__init__</strong></a>(self, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="AppEngineHttpClient-request"><strong>request</strong></a>(self, operation, url, data<font color="#909090">=None</font>, headers<font color="#909090">=None</font>)</dt><dd><tt>Performs&nbsp;an&nbsp;HTTP&nbsp;call&nbsp;to&nbsp;the&nbsp;server,&nbsp;supports&nbsp;GET,&nbsp;POST,&nbsp;PUT,&nbsp;and<br>
+DELETE.<br>
+&nbsp;<br>
+Usage&nbsp;example,&nbsp;perform&nbsp;and&nbsp;HTTP&nbsp;GET&nbsp;on&nbsp;<a href="http://www.google.com/">http://www.google.com/</a>:<br>
+&nbsp;&nbsp;import&nbsp;atom.http<br>
+&nbsp;&nbsp;client&nbsp;=&nbsp;atom.http.HttpClient()<br>
+&nbsp;&nbsp;http_response&nbsp;=&nbsp;client.<a href="#AppEngineHttpClient-request">request</a>('GET',&nbsp;'<a href="http://www.google.com/">http://www.google.com/</a>')<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;operation:&nbsp;str&nbsp;The&nbsp;HTTP&nbsp;operation&nbsp;to&nbsp;be&nbsp;performed.&nbsp;This&nbsp;is&nbsp;usually&nbsp;one<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;'GET',&nbsp;'POST',&nbsp;'PUT',&nbsp;or&nbsp;'DELETE'<br>
+&nbsp;&nbsp;data:&nbsp;filestream,&nbsp;list&nbsp;of&nbsp;parts,&nbsp;or&nbsp;other&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;converted<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;a&nbsp;string.&nbsp;Should&nbsp;be&nbsp;set&nbsp;to&nbsp;None&nbsp;when&nbsp;performing&nbsp;a&nbsp;GET&nbsp;or&nbsp;DELETE.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;data&nbsp;is&nbsp;a&nbsp;file-like&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;read,&nbsp;this&nbsp;method&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read&nbsp;a&nbsp;chunk&nbsp;of&nbsp;100K&nbsp;bytes&nbsp;at&nbsp;a&nbsp;time&nbsp;and&nbsp;send&nbsp;them.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;data&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;parts&nbsp;to&nbsp;be&nbsp;sent,&nbsp;each&nbsp;part&nbsp;will&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evaluated&nbsp;and&nbsp;sent.<br>
+&nbsp;&nbsp;url:&nbsp;The&nbsp;full&nbsp;URL&nbsp;to&nbsp;which&nbsp;the&nbsp;request&nbsp;should&nbsp;be&nbsp;sent.&nbsp;Can&nbsp;be&nbsp;a&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;atom.url.Url.<br>
+&nbsp;&nbsp;headers:&nbsp;dict&nbsp;of&nbsp;strings.&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;should&nbsp;be&nbsp;sent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;request.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><a name="AppEngineHttpClient-delete"><strong>delete</strong></a>(self, url, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="AppEngineHttpClient-get"><strong>get</strong></a>(self, url, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="AppEngineHttpClient-post"><strong>post</strong></a>(self, url, data, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="AppEngineHttpClient-put"><strong>put</strong></a>(self, url, data, headers<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><strong>debug</strong> = False</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AppEngineTokenStore">class <strong>AppEngineTokenStore</strong></a>(<a href="atom.token_store.html#TokenStore">atom.token_store.TokenStore</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Stores&nbsp;the&nbsp;user's&nbsp;auth&nbsp;tokens&nbsp;in&nbsp;the&nbsp;App&nbsp;Engine&nbsp;datastore.<br>
+&nbsp;<br>
+Tokens&nbsp;are&nbsp;only&nbsp;written&nbsp;to&nbsp;the&nbsp;datastore&nbsp;if&nbsp;a&nbsp;user&nbsp;is&nbsp;signed&nbsp;in&nbsp;(if&nbsp;<br>
+users.get_current_user()&nbsp;returns&nbsp;a&nbsp;user&nbsp;<a href="__builtin__.html#object">object</a>).<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.alt.appengine.html#AppEngineTokenStore">AppEngineTokenStore</a></dd>
+<dd><a href="atom.token_store.html#TokenStore">atom.token_store.TokenStore</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="AppEngineTokenStore-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="AppEngineTokenStore-add_token"><strong>add_token</strong></a>(self, token)</dt><dd><tt>Associates&nbsp;the&nbsp;token&nbsp;with&nbsp;the&nbsp;current&nbsp;user&nbsp;and&nbsp;stores&nbsp;it.<br>
+&nbsp;<br>
+If&nbsp;there&nbsp;is&nbsp;no&nbsp;current&nbsp;user,&nbsp;the&nbsp;token&nbsp;will&nbsp;not&nbsp;be&nbsp;stored.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;False&nbsp;if&nbsp;the&nbsp;token&nbsp;was&nbsp;not&nbsp;stored.</tt></dd></dl>
+
+<dl><dt><a name="AppEngineTokenStore-find_token"><strong>find_token</strong></a>(self, url)</dt><dd><tt>Searches&nbsp;the&nbsp;current&nbsp;user's&nbsp;collection&nbsp;of&nbsp;token&nbsp;for&nbsp;a&nbsp;token&nbsp;which&nbsp;can<br>
+be&nbsp;used&nbsp;for&nbsp;a&nbsp;request&nbsp;to&nbsp;the&nbsp;url.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;stored&nbsp;token&nbsp;which&nbsp;belongs&nbsp;to&nbsp;the&nbsp;current&nbsp;user&nbsp;and&nbsp;is&nbsp;valid&nbsp;for&nbsp;the<br>
+&nbsp;&nbsp;desired&nbsp;URL.&nbsp;If&nbsp;there&nbsp;is&nbsp;no&nbsp;current&nbsp;user,&nbsp;or&nbsp;there&nbsp;is&nbsp;no&nbsp;valid&nbsp;user&nbsp;<br>
+&nbsp;&nbsp;token&nbsp;in&nbsp;the&nbsp;datastore,&nbsp;a&nbsp;atom.http_interface.GenericToken&nbsp;is&nbsp;returned.</tt></dd></dl>
+
+<dl><dt><a name="AppEngineTokenStore-remove_all_tokens"><strong>remove_all_tokens</strong></a>(self)</dt><dd><tt>Removes&nbsp;all&nbsp;of&nbsp;the&nbsp;current&nbsp;user's&nbsp;tokens&nbsp;from&nbsp;the&nbsp;datastore.</tt></dd></dl>
+
+<dl><dt><a name="AppEngineTokenStore-remove_token"><strong>remove_token</strong></a>(self, token)</dt><dd><tt>Removes&nbsp;the&nbsp;token&nbsp;from&nbsp;the&nbsp;current&nbsp;user's&nbsp;collection&nbsp;in&nbsp;the&nbsp;datastore.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;False&nbsp;if&nbsp;the&nbsp;token&nbsp;was&nbsp;not&nbsp;removed,&nbsp;this&nbsp;could&nbsp;be&nbsp;because&nbsp;the&nbsp;token&nbsp;was<br>
+&nbsp;&nbsp;not&nbsp;in&nbsp;the&nbsp;datastore,&nbsp;or&nbsp;because&nbsp;there&nbsp;is&nbsp;no&nbsp;current&nbsp;user.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.token_store.html#TokenStore">atom.token_store.TokenStore</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HttpResponse">class <strong>HttpResponse</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Translates&nbsp;a&nbsp;urlfetch&nbsp;resoinse&nbsp;to&nbsp;look&nbsp;like&nbsp;an&nbsp;hhtplib&nbsp;resoinse.<br>
+&nbsp;<br>
+Used&nbsp;to&nbsp;allow&nbsp;the&nbsp;resoinse&nbsp;from&nbsp;HttpRequest&nbsp;to&nbsp;be&nbsp;usable&nbsp;by&nbsp;gdata.service<br>
+methods.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="HttpResponse-__init__"><strong>__init__</strong></a>(self, urlfetch_response)</dt></dl>
+
+<dl><dt><a name="HttpResponse-getheader"><strong>getheader</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="HttpResponse-read"><strong>read</strong></a>(self, length<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TokenCollection">class <strong>TokenCollection</strong></a>(<a href="google.appengine.ext.db.html#Model">google.appengine.ext.db.Model</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Datastore&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;which&nbsp;associates&nbsp;auth&nbsp;tokens&nbsp;with&nbsp;the&nbsp;current&nbsp;user.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.alt.appengine.html#TokenCollection">TokenCollection</a></dd>
+<dd><a href="google.appengine.ext.db.html#Model">google.appengine.ext.db.Model</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>pickled_tokens</strong></dt>
+<dd><tt>A&nbsp;string&nbsp;that&nbsp;can&nbsp;be&nbsp;longer&nbsp;than&nbsp;500&nbsp;bytes.<br>
+&nbsp;<br>
+This&nbsp;type&nbsp;should&nbsp;be&nbsp;used&nbsp;for&nbsp;large&nbsp;binary&nbsp;values&nbsp;to&nbsp;make&nbsp;sure&nbsp;the&nbsp;datastore<br>
+has&nbsp;good&nbsp;performance&nbsp;for&nbsp;queries.</tt></dd>
+</dl>
+<dl><dt><strong>user</strong></dt>
+<dd><tt>A&nbsp;user&nbsp;property.</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="google.appengine.ext.db.html#Model">google.appengine.ext.db.Model</a>:<br>
+<dl><dt><a name="TokenCollection-__init__"><strong>__init__</strong></a>(self, parent<font color="#909090">=None</font>, key_name<font color="#909090">=None</font>, _app<font color="#909090">=None</font>, **kwds)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;instance&nbsp;of&nbsp;this&nbsp;model.<br>
+&nbsp;<br>
+To&nbsp;create&nbsp;a&nbsp;new&nbsp;entity,&nbsp;you&nbsp;instantiate&nbsp;a&nbsp;model&nbsp;and&nbsp;then&nbsp;call&nbsp;<a href="#TokenCollection-save">save</a>(),<br>
+which&nbsp;saves&nbsp;the&nbsp;entity&nbsp;to&nbsp;the&nbsp;datastore:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;person&nbsp;=&nbsp;Person()<br>
+&nbsp;&nbsp;&nbsp;person.name&nbsp;=&nbsp;'Bret'<br>
+&nbsp;&nbsp;&nbsp;person.<a href="#TokenCollection-save">save</a>()<br>
+&nbsp;<br>
+You&nbsp;can&nbsp;initialize&nbsp;properties&nbsp;in&nbsp;the&nbsp;model&nbsp;in&nbsp;the&nbsp;constructor&nbsp;with&nbsp;keyword<br>
+arguments:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;person&nbsp;=&nbsp;Person(name='Bret')<br>
+&nbsp;<br>
+We&nbsp;initialize&nbsp;all&nbsp;other&nbsp;properties&nbsp;to&nbsp;the&nbsp;default&nbsp;value&nbsp;(as&nbsp;defined&nbsp;by&nbsp;the<br>
+properties&nbsp;in&nbsp;the&nbsp;model&nbsp;definition)&nbsp;if&nbsp;they&nbsp;are&nbsp;not&nbsp;provided&nbsp;in&nbsp;the<br>
+constructor.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;parent:&nbsp;Parent&nbsp;instance&nbsp;for&nbsp;this&nbsp;instance&nbsp;or&nbsp;None,&nbsp;indicating&nbsp;a&nbsp;top-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;level&nbsp;instance.<br>
+&nbsp;&nbsp;key_name:&nbsp;Name&nbsp;for&nbsp;new&nbsp;model&nbsp;instance.<br>
+&nbsp;&nbsp;_app:&nbsp;Intentionally&nbsp;undocumented.<br>
+&nbsp;&nbsp;args:&nbsp;Keyword&nbsp;arguments&nbsp;mapping&nbsp;to&nbsp;properties&nbsp;of&nbsp;model.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-delete"><strong>delete</strong></a>(self)</dt><dd><tt>Deletes&nbsp;this&nbsp;entity&nbsp;from&nbsp;the&nbsp;datastore.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;TransactionFailedError&nbsp;if&nbsp;the&nbsp;data&nbsp;could&nbsp;not&nbsp;be&nbsp;committed.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-dynamic_properties"><strong>dynamic_properties</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;dynamic&nbsp;properties&nbsp;defined&nbsp;for&nbsp;instance.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-instance_properties"><strong>instance_properties</strong></a>(self)</dt><dd><tt>Alias&nbsp;for&nbsp;dyanmic_properties.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-is_saved"><strong>is_saved</strong></a>(self)</dt><dd><tt>Determine&nbsp;if&nbsp;entity&nbsp;is&nbsp;persisted&nbsp;in&nbsp;the&nbsp;datastore.<br>
+&nbsp;<br>
+New&nbsp;instances&nbsp;of&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;do&nbsp;not&nbsp;start&nbsp;out&nbsp;saved&nbsp;in&nbsp;the&nbsp;data.&nbsp;&nbsp;Objects&nbsp;which<br>
+are&nbsp;saved&nbsp;to&nbsp;or&nbsp;loaded&nbsp;from&nbsp;the&nbsp;Datastore&nbsp;will&nbsp;have&nbsp;a&nbsp;True&nbsp;saved&nbsp;state.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;True&nbsp;if&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;has&nbsp;been&nbsp;persisted&nbsp;to&nbsp;the&nbsp;datastore,&nbsp;otherwise&nbsp;False.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-key"><strong>key</strong></a>(self)</dt><dd><tt>Unique&nbsp;key&nbsp;for&nbsp;this&nbsp;entity.<br>
+&nbsp;<br>
+This&nbsp;property&nbsp;is&nbsp;only&nbsp;available&nbsp;if&nbsp;this&nbsp;entity&nbsp;is&nbsp;already&nbsp;stored&nbsp;in&nbsp;the<br>
+datastore,&nbsp;so&nbsp;it&nbsp;is&nbsp;available&nbsp;if&nbsp;this&nbsp;entity&nbsp;was&nbsp;fetched&nbsp;returned&nbsp;from&nbsp;a<br>
+query,&nbsp;or&nbsp;after&nbsp;<a href="#TokenCollection-save">save</a>()&nbsp;is&nbsp;called&nbsp;the&nbsp;first&nbsp;time&nbsp;for&nbsp;new&nbsp;entities.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;Datastore&nbsp;key&nbsp;of&nbsp;persisted&nbsp;entity.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;NotSavedError&nbsp;when&nbsp;entity&nbsp;is&nbsp;not&nbsp;persistent.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-parent"><strong>parent</strong></a>(self)</dt><dd><tt>Get&nbsp;the&nbsp;parent&nbsp;of&nbsp;the&nbsp;model&nbsp;instance.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;Parent&nbsp;of&nbsp;contained&nbsp;entity&nbsp;or&nbsp;parent&nbsp;provided&nbsp;in&nbsp;constructor,&nbsp;None&nbsp;if<br>
+&nbsp;&nbsp;instance&nbsp;has&nbsp;no&nbsp;parent.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-parent_key"><strong>parent_key</strong></a>(self)</dt><dd><tt>Get&nbsp;the&nbsp;parent's&nbsp;key.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;useful&nbsp;for&nbsp;avoiding&nbsp;a&nbsp;potential&nbsp;fetch&nbsp;from&nbsp;the&nbsp;datastore<br>
+but&nbsp;still&nbsp;get&nbsp;information&nbsp;about&nbsp;the&nbsp;instances&nbsp;parent.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;Parent&nbsp;key&nbsp;of&nbsp;entity,&nbsp;None&nbsp;if&nbsp;there&nbsp;is&nbsp;no&nbsp;parent.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-put"><strong>put</strong></a>(self)</dt><dd><tt>Writes&nbsp;this&nbsp;model&nbsp;instance&nbsp;to&nbsp;the&nbsp;datastore.<br>
+&nbsp;<br>
+If&nbsp;this&nbsp;instance&nbsp;is&nbsp;new,&nbsp;we&nbsp;add&nbsp;an&nbsp;entity&nbsp;to&nbsp;the&nbsp;datastore.<br>
+Otherwise,&nbsp;we&nbsp;update&nbsp;this&nbsp;instance,&nbsp;and&nbsp;the&nbsp;key&nbsp;will&nbsp;remain&nbsp;the<br>
+same.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;key&nbsp;of&nbsp;the&nbsp;instance&nbsp;(either&nbsp;the&nbsp;existing&nbsp;key&nbsp;or&nbsp;a&nbsp;new&nbsp;key).<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;TransactionFailedError&nbsp;if&nbsp;the&nbsp;data&nbsp;could&nbsp;not&nbsp;be&nbsp;committed.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-save"><strong>save</strong></a> = put(self)</dt><dd><tt>Writes&nbsp;this&nbsp;model&nbsp;instance&nbsp;to&nbsp;the&nbsp;datastore.<br>
+&nbsp;<br>
+If&nbsp;this&nbsp;instance&nbsp;is&nbsp;new,&nbsp;we&nbsp;add&nbsp;an&nbsp;entity&nbsp;to&nbsp;the&nbsp;datastore.<br>
+Otherwise,&nbsp;we&nbsp;update&nbsp;this&nbsp;instance,&nbsp;and&nbsp;the&nbsp;key&nbsp;will&nbsp;remain&nbsp;the<br>
+same.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;key&nbsp;of&nbsp;the&nbsp;instance&nbsp;(either&nbsp;the&nbsp;existing&nbsp;key&nbsp;or&nbsp;a&nbsp;new&nbsp;key).<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;TransactionFailedError&nbsp;if&nbsp;the&nbsp;data&nbsp;could&nbsp;not&nbsp;be&nbsp;committed.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-to_xml"><strong>to_xml</strong></a>(self, _entity_class<font color="#909090">=&lt;class 'google.appengine.api.datastore.Entity'&gt;</font>)</dt><dd><tt>Generate&nbsp;an&nbsp;XML&nbsp;representation&nbsp;of&nbsp;this&nbsp;model&nbsp;instance.<br>
+&nbsp;<br>
+atom&nbsp;and&nbsp;gd:namespace&nbsp;properties&nbsp;are&nbsp;converted&nbsp;to&nbsp;XML&nbsp;according&nbsp;to&nbsp;their<br>
+respective&nbsp;schemas.&nbsp;For&nbsp;more&nbsp;information,&nbsp;see:<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="http://www.atomenabled.org/developers/syndication/">http://www.atomenabled.org/developers/syndication/</a><br>
+&nbsp;&nbsp;<a href="http://code.google.com/apis/gdata/common-elements.html">http://code.google.com/apis/gdata/common-elements.html</a></tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="google.appengine.ext.db.html#Model">google.appengine.ext.db.Model</a>:<br>
+<dl><dt><a name="TokenCollection-all"><strong>all</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Returns&nbsp;a&nbsp;query&nbsp;over&nbsp;all&nbsp;instances&nbsp;of&nbsp;this&nbsp;model&nbsp;from&nbsp;the&nbsp;datastore.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;Query&nbsp;that&nbsp;will&nbsp;retrieve&nbsp;all&nbsp;instances&nbsp;from&nbsp;entity&nbsp;collection.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-entity_type"><strong>entity_type</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Soon&nbsp;to&nbsp;be&nbsp;removed&nbsp;alias&nbsp;for&nbsp;kind.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-fields"><strong>fields</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Soon&nbsp;to&nbsp;be&nbsp;removed&nbsp;alias&nbsp;for&nbsp;properties.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-from_entity"><strong>from_entity</strong></a>(cls, entity)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Converts&nbsp;the&nbsp;entity&nbsp;representation&nbsp;of&nbsp;this&nbsp;model&nbsp;to&nbsp;an&nbsp;instance.<br>
+&nbsp;<br>
+Converts&nbsp;datastore.Entity&nbsp;instance&nbsp;to&nbsp;an&nbsp;instance&nbsp;of&nbsp;cls.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;entity:&nbsp;Entity&nbsp;loaded&nbsp;directly&nbsp;from&nbsp;datastore.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;KindError&nbsp;when&nbsp;cls&nbsp;is&nbsp;incorrect&nbsp;model&nbsp;for&nbsp;entity.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-get"><strong>get</strong></a>(cls, keys)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Fetch&nbsp;instance&nbsp;from&nbsp;the&nbsp;datastore&nbsp;of&nbsp;a&nbsp;specific&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;type&nbsp;using&nbsp;key.<br>
+&nbsp;<br>
+We&nbsp;support&nbsp;Key&nbsp;objects&nbsp;and&nbsp;string&nbsp;keys&nbsp;(we&nbsp;convert&nbsp;them&nbsp;to&nbsp;Key&nbsp;objects<br>
+automatically).<br>
+&nbsp;<br>
+Useful&nbsp;for&nbsp;ensuring&nbsp;that&nbsp;specific&nbsp;instance&nbsp;types&nbsp;are&nbsp;retrieved&nbsp;from&nbsp;the<br>
+datastore.&nbsp;&nbsp;It&nbsp;also&nbsp;helps&nbsp;that&nbsp;the&nbsp;source&nbsp;code&nbsp;clearly&nbsp;indicates&nbsp;what<br>
+kind&nbsp;of&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;is&nbsp;being&nbsp;retreived.&nbsp;&nbsp;Example:<br>
+&nbsp;<br>
+&nbsp;&nbsp;story&nbsp;=&nbsp;Story.<a href="#TokenCollection-get">get</a>(story_key)<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;keys:&nbsp;Key&nbsp;within&nbsp;datastore&nbsp;entity&nbsp;collection&nbsp;to&nbsp;find;&nbsp;or&nbsp;string&nbsp;key;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;list&nbsp;of&nbsp;Keys&nbsp;or&nbsp;string&nbsp;keys.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;If&nbsp;a&nbsp;single&nbsp;key&nbsp;was&nbsp;given:&nbsp;a&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;instance&nbsp;associated&nbsp;with&nbsp;key<br>
+&nbsp;&nbsp;for&nbsp;provided&nbsp;class&nbsp;if&nbsp;it&nbsp;exists&nbsp;in&nbsp;the&nbsp;datastore,&nbsp;otherwise<br>
+&nbsp;&nbsp;None;&nbsp;if&nbsp;a&nbsp;list&nbsp;of&nbsp;keys&nbsp;was&nbsp;given:&nbsp;a&nbsp;list&nbsp;whose&nbsp;items&nbsp;are&nbsp;either<br>
+&nbsp;&nbsp;a&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;instance&nbsp;or&nbsp;None.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;KindError&nbsp;if&nbsp;any&nbsp;of&nbsp;the&nbsp;retreived&nbsp;objects&nbsp;are&nbsp;not&nbsp;instances&nbsp;of&nbsp;the<br>
+&nbsp;&nbsp;type&nbsp;associated&nbsp;with&nbsp;call&nbsp;to&nbsp;'get'.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-get_by_id"><strong>get_by_id</strong></a>(cls, ids, parent<font color="#909090">=None</font>)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Get&nbsp;instance&nbsp;of&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;class&nbsp;by&nbsp;id.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;key_names:&nbsp;A&nbsp;single&nbsp;id&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;ids.<br>
+&nbsp;&nbsp;parent:&nbsp;Parent&nbsp;of&nbsp;instances&nbsp;to&nbsp;get.&nbsp;&nbsp;Can&nbsp;be&nbsp;a&nbsp;model&nbsp;or&nbsp;key.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-get_by_key_name"><strong>get_by_key_name</strong></a>(cls, key_names, parent<font color="#909090">=None</font>)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Get&nbsp;instance&nbsp;of&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;class&nbsp;by&nbsp;its&nbsp;key's&nbsp;name.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;key_names:&nbsp;A&nbsp;single&nbsp;key-name&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;key-names.<br>
+&nbsp;&nbsp;parent:&nbsp;Parent&nbsp;of&nbsp;instances&nbsp;to&nbsp;get.&nbsp;&nbsp;Can&nbsp;be&nbsp;a&nbsp;model&nbsp;or&nbsp;key.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-get_or_insert"><strong>get_or_insert</strong></a>(cls, key_name, **kwds)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Transactionally&nbsp;retrieve&nbsp;or&nbsp;create&nbsp;an&nbsp;instance&nbsp;of&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;class.<br>
+&nbsp;<br>
+This&nbsp;acts&nbsp;much&nbsp;like&nbsp;the&nbsp;Python&nbsp;dictionary&nbsp;setdefault()&nbsp;method,&nbsp;where&nbsp;we<br>
+first&nbsp;try&nbsp;to&nbsp;retrieve&nbsp;a&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;instance&nbsp;with&nbsp;the&nbsp;given&nbsp;key&nbsp;name&nbsp;and&nbsp;parent.<br>
+If&nbsp;it's&nbsp;not&nbsp;present,&nbsp;then&nbsp;we&nbsp;create&nbsp;a&nbsp;new&nbsp;instance&nbsp;(using&nbsp;the&nbsp;*kwds<br>
+supplied)&nbsp;and&nbsp;insert&nbsp;that&nbsp;with&nbsp;the&nbsp;supplied&nbsp;key&nbsp;name.<br>
+&nbsp;<br>
+Subsequent&nbsp;calls&nbsp;to&nbsp;this&nbsp;method&nbsp;with&nbsp;the&nbsp;same&nbsp;key_name&nbsp;and&nbsp;parent&nbsp;will<br>
+always&nbsp;yield&nbsp;the&nbsp;same&nbsp;entity&nbsp;(though&nbsp;not&nbsp;the&nbsp;same&nbsp;actual&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;instance),<br>
+regardless&nbsp;of&nbsp;the&nbsp;*kwds&nbsp;supplied.&nbsp;If&nbsp;the&nbsp;specified&nbsp;entity&nbsp;has&nbsp;somehow<br>
+been&nbsp;deleted&nbsp;separately,&nbsp;then&nbsp;the&nbsp;next&nbsp;call&nbsp;will&nbsp;create&nbsp;a&nbsp;new&nbsp;entity&nbsp;and<br>
+return&nbsp;it.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;'parent'&nbsp;keyword&nbsp;argument&nbsp;is&nbsp;supplied,&nbsp;it&nbsp;must&nbsp;be&nbsp;a&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;instance.<br>
+It&nbsp;will&nbsp;be&nbsp;used&nbsp;as&nbsp;the&nbsp;parent&nbsp;of&nbsp;the&nbsp;new&nbsp;instance&nbsp;of&nbsp;this&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;class&nbsp;if<br>
+one&nbsp;is&nbsp;created.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;especially&nbsp;useful&nbsp;for&nbsp;having&nbsp;just&nbsp;one&nbsp;unique&nbsp;entity&nbsp;for<br>
+a&nbsp;specific&nbsp;identifier.&nbsp;Insertion/retrieval&nbsp;is&nbsp;done&nbsp;transactionally,&nbsp;which<br>
+guarantees&nbsp;uniqueness.<br>
+&nbsp;<br>
+Example&nbsp;usage:<br>
+&nbsp;<br>
+&nbsp;&nbsp;class&nbsp;WikiTopic(db.<a href="google.appengine.ext.db.html#Model">Model</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;creation_date&nbsp;=&nbsp;db.DatetimeProperty(auto_now_add=True)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;body&nbsp;=&nbsp;db.TextProperty(required=True)<br>
+&nbsp;<br>
+&nbsp;&nbsp;#&nbsp;The&nbsp;first&nbsp;time&nbsp;through&nbsp;we'll&nbsp;create&nbsp;the&nbsp;new&nbsp;topic.<br>
+&nbsp;&nbsp;wiki_word&nbsp;=&nbsp;'CommonIdioms'<br>
+&nbsp;&nbsp;topic&nbsp;=&nbsp;WikiTopic.<a href="#TokenCollection-get_or_insert">get_or_insert</a>(wiki_word,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body='This&nbsp;topic&nbsp;is&nbsp;totally&nbsp;new!')<br>
+&nbsp;&nbsp;assert&nbsp;topic.<a href="#TokenCollection-key">key</a>().name()&nbsp;==&nbsp;'CommonIdioms'<br>
+&nbsp;&nbsp;assert&nbsp;topic.body&nbsp;==&nbsp;'This&nbsp;topic&nbsp;is&nbsp;totally&nbsp;new!'<br>
+&nbsp;<br>
+&nbsp;&nbsp;#&nbsp;The&nbsp;second&nbsp;time&nbsp;through&nbsp;will&nbsp;just&nbsp;retrieve&nbsp;the&nbsp;entity.<br>
+&nbsp;&nbsp;overwrite_topic&nbsp;=&nbsp;WikiTopic.<a href="#TokenCollection-get_or_insert">get_or_insert</a>(wiki_word,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body='A&nbsp;totally&nbsp;different&nbsp;message!')<br>
+&nbsp;&nbsp;assert&nbsp;topic.<a href="#TokenCollection-key">key</a>().name()&nbsp;==&nbsp;'CommonIdioms'<br>
+&nbsp;&nbsp;assert&nbsp;topic.body&nbsp;==&nbsp;'This&nbsp;topic&nbsp;is&nbsp;totally&nbsp;new!'<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;key_name:&nbsp;Key&nbsp;name&nbsp;to&nbsp;retrieve&nbsp;or&nbsp;create.<br>
+&nbsp;&nbsp;**kwds:&nbsp;Keyword&nbsp;arguments&nbsp;to&nbsp;pass&nbsp;to&nbsp;the&nbsp;constructor&nbsp;of&nbsp;the&nbsp;model&nbsp;class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;an&nbsp;instance&nbsp;for&nbsp;the&nbsp;specified&nbsp;key&nbsp;name&nbsp;does&nbsp;not&nbsp;already&nbsp;exist.&nbsp;If<br>
+&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;instance&nbsp;with&nbsp;the&nbsp;supplied&nbsp;key_name&nbsp;and&nbsp;parent&nbsp;already&nbsp;exists,&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rest&nbsp;of&nbsp;these&nbsp;arguments&nbsp;will&nbsp;be&nbsp;discarded.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;Existing&nbsp;instance&nbsp;of&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;class&nbsp;with&nbsp;the&nbsp;specified&nbsp;key_name&nbsp;and&nbsp;parent<br>
+&nbsp;&nbsp;or&nbsp;a&nbsp;new&nbsp;one&nbsp;that&nbsp;has&nbsp;just&nbsp;been&nbsp;created.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;TransactionFailedError&nbsp;if&nbsp;the&nbsp;specified&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;instance&nbsp;could&nbsp;not&nbsp;be<br>
+&nbsp;&nbsp;retrieved&nbsp;or&nbsp;created&nbsp;transactionally&nbsp;(due&nbsp;to&nbsp;high&nbsp;contention,&nbsp;etc).</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-gql"><strong>gql</strong></a>(cls, query_string, *args, **kwds)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Returns&nbsp;a&nbsp;query&nbsp;using&nbsp;GQL&nbsp;query&nbsp;string.<br>
+&nbsp;<br>
+See&nbsp;appengine/ext/gql&nbsp;for&nbsp;more&nbsp;information&nbsp;about&nbsp;GQL.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;query_string:&nbsp;properly&nbsp;formatted&nbsp;GQL&nbsp;query&nbsp;string&nbsp;with&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'SELECT&nbsp;*&nbsp;FROM&nbsp;&lt;entity&gt;'&nbsp;part&nbsp;omitted<br>
+&nbsp;&nbsp;*args:&nbsp;rest&nbsp;of&nbsp;the&nbsp;positional&nbsp;arguments&nbsp;used&nbsp;to&nbsp;bind&nbsp;numeric&nbsp;references<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;query.<br>
+&nbsp;&nbsp;**kwds:&nbsp;dictionary-based&nbsp;arguments&nbsp;(for&nbsp;named&nbsp;parameters).</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-kind"><strong>kind</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Returns&nbsp;the&nbsp;datastore&nbsp;kind&nbsp;we&nbsp;use&nbsp;for&nbsp;this&nbsp;model.<br>
+&nbsp;<br>
+We&nbsp;just&nbsp;use&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;model&nbsp;for&nbsp;now,&nbsp;ignoring&nbsp;potential&nbsp;collisions.</tt></dd></dl>
+
+<dl><dt><a name="TokenCollection-properties"><strong>properties</strong></a>(cls)<font color="#909090"><font face="helvetica, arial"> from <a href="google.appengine.ext.db.html#PropertiedClass">google.appengine.ext.db.PropertiedClass</a></font></font></dt><dd><tt>Returns&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;all&nbsp;the&nbsp;properties&nbsp;defined&nbsp;for&nbsp;this&nbsp;model.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="google.appengine.ext.db.html#Model">google.appengine.ext.db.Model</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="google.appengine.ext.db.html#Model">google.appengine.ext.db.Model</a>:<br>
+<dl><dt><strong>__metaclass__</strong> = &lt;class 'google.appengine.ext.db.PropertiedClass'&gt;<dd><tt>Meta-class&nbsp;for&nbsp;initializing&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;classes&nbsp;properties.<br>
+&nbsp;<br>
+Used&nbsp;for&nbsp;initializing&nbsp;Properties&nbsp;defined&nbsp;in&nbsp;the&nbsp;context&nbsp;of&nbsp;a&nbsp;model.<br>
+By&nbsp;using&nbsp;a&nbsp;meta-class&nbsp;much&nbsp;of&nbsp;the&nbsp;configuration&nbsp;of&nbsp;a&nbsp;Property<br>
+descriptor&nbsp;becomes&nbsp;implicit.&nbsp;&nbsp;By&nbsp;using&nbsp;this&nbsp;meta-class,&nbsp;descriptors<br>
+that&nbsp;are&nbsp;of&nbsp;class&nbsp;<a href="google.appengine.ext.db.html#Model">Model</a>&nbsp;are&nbsp;notified&nbsp;about&nbsp;which&nbsp;class&nbsp;they<br>
+belong&nbsp;to&nbsp;and&nbsp;what&nbsp;attribute&nbsp;they&nbsp;are&nbsp;associated&nbsp;with&nbsp;and&nbsp;can<br>
+do&nbsp;appropriate&nbsp;initialization&nbsp;via&nbsp;__property_config__.<br>
+&nbsp;<br>
+Duplicate&nbsp;properties&nbsp;are&nbsp;not&nbsp;permitted.</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-load_auth_tokens"><strong>load_auth_tokens</strong></a>()</dt><dd><tt>Reads&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;the&nbsp;current&nbsp;user's&nbsp;tokens&nbsp;from&nbsp;the&nbsp;datastore.<br>
+&nbsp;<br>
+If&nbsp;there&nbsp;is&nbsp;no&nbsp;current&nbsp;user&nbsp;(a&nbsp;user&nbsp;is&nbsp;not&nbsp;signed&nbsp;in&nbsp;to&nbsp;the&nbsp;app)&nbsp;or&nbsp;the&nbsp;user<br>
+does&nbsp;not&nbsp;have&nbsp;any&nbsp;tokens,&nbsp;an&nbsp;empty&nbsp;dictionary&nbsp;is&nbsp;returned.</tt></dd></dl>
+ <dl><dt><a name="-run_on_appengine"><strong>run_on_appengine</strong></a>(gdata_service, store_tokens<font color="#909090">=True</font>, single_user_mode<font color="#909090">=False</font>)</dt><dd><tt>Modifies&nbsp;a&nbsp;GDataService&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;allow&nbsp;it&nbsp;to&nbsp;run&nbsp;on&nbsp;App&nbsp;Engine.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;gdata_service:&nbsp;An&nbsp;instance&nbsp;of&nbsp;AtomService,&nbsp;GDataService,&nbsp;or&nbsp;any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;their&nbsp;subclasses&nbsp;which&nbsp;has&nbsp;an&nbsp;http_client&nbsp;member&nbsp;and&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;token_store&nbsp;member.<br>
+&nbsp;&nbsp;store_tokens:&nbsp;Boolean,&nbsp;defaults&nbsp;to&nbsp;True.&nbsp;If&nbsp;True,&nbsp;the&nbsp;gdata_service<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;attempt&nbsp;to&nbsp;add&nbsp;each&nbsp;token&nbsp;to&nbsp;it's&nbsp;token_store&nbsp;when<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SetClientLoginToken&nbsp;or&nbsp;SetAuthSubToken&nbsp;is&nbsp;called.&nbsp;If&nbsp;False<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;tokens&nbsp;will&nbsp;not&nbsp;automatically&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;token_store.<br>
+&nbsp;&nbsp;single_user_mode:&nbsp;Boolean,&nbsp;defaults&nbsp;to&nbsp;False.&nbsp;If&nbsp;True,&nbsp;the&nbsp;current_token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;member&nbsp;of&nbsp;gdata_service&nbsp;will&nbsp;be&nbsp;set&nbsp;when&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SetClientLoginToken&nbsp;or&nbsp;SetAuthTubToken&nbsp;is&nbsp;called.&nbsp;If&nbsp;set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;True,&nbsp;the&nbsp;current_token&nbsp;is&nbsp;set&nbsp;in&nbsp;the&nbsp;gdata_service<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;anyone&nbsp;who&nbsp;accesses&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;will&nbsp;use&nbsp;the&nbsp;same&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;token.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note:&nbsp;If&nbsp;store_tokens&nbsp;is&nbsp;set&nbsp;to&nbsp;False&nbsp;and&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;single_user_mode&nbsp;is&nbsp;set&nbsp;to&nbsp;False,&nbsp;all&nbsp;tokens&nbsp;will&nbsp;be&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ignored,&nbsp;since&nbsp;the&nbsp;library&nbsp;assumes:&nbsp;the&nbsp;tokens&nbsp;should&nbsp;not<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;stored&nbsp;in&nbsp;the&nbsp;datastore&nbsp;and&nbsp;they&nbsp;should&nbsp;not&nbsp;be&nbsp;stored<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;gdata_service&nbsp;<a href="__builtin__.html#object">object</a>.&nbsp;This&nbsp;will&nbsp;make&nbsp;it&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;impossible&nbsp;to&nbsp;make&nbsp;requests&nbsp;which&nbsp;require&nbsp;authorization.</tt></dd></dl>
+ <dl><dt><a name="-save_auth_tokens"><strong>save_auth_tokens</strong></a>(token_dict)</dt><dd><tt>Associates&nbsp;the&nbsp;tokens&nbsp;with&nbsp;the&nbsp;current&nbsp;user&nbsp;and&nbsp;writes&nbsp;to&nbsp;the&nbsp;datastore.<br>
+&nbsp;<br>
+If&nbsp;there&nbsp;us&nbsp;no&nbsp;current&nbsp;user,&nbsp;the&nbsp;tokens&nbsp;are&nbsp;not&nbsp;written&nbsp;and&nbsp;this&nbsp;function<br>
+returns&nbsp;None.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;key&nbsp;of&nbsp;the&nbsp;datastore&nbsp;entity&nbsp;containing&nbsp;the&nbsp;user's&nbsp;tokens,&nbsp;or&nbsp;None&nbsp;if<br>
+&nbsp;&nbsp;there&nbsp;was&nbsp;no&nbsp;current&nbsp;user.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__author__</strong> = 'api.jscudder (Jeff Scudder)'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">api.jscudder&nbsp;(Jeff&nbsp;Scudder)</td></tr></table>
+</body></html>

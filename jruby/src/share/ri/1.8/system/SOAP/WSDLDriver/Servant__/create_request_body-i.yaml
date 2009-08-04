@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::WSDLDriver::Servant__#create_request_body
+is_singleton: false
+name: create_request_body
+params: (op_info, *values)
+visibility: private

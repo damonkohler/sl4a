@@ -1,0 +1,21 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: NAME
+  value: "'collected from the ObjectSpace'"
+full_name: Test::Unit::Collector::ObjectSpace
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Collector
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: collect
+name: ObjectSpace
+superclass: Object

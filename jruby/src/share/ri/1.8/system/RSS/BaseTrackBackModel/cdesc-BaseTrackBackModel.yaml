@@ -1,0 +1,20 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ELEMENTS
+  value: "%w(ping about)"
+full_name: RSS::BaseTrackBackModel
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: TrackBackUtils
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: append_features
+name: BaseTrackBackModel
+superclass: 

@@ -1,0 +1,80 @@
+/** 
+ * A one pixel wide bevel border.  This border works for buttons (with optional
+ * rollover) and other components
+ *
+ * @author Daniel Leuck
+ */
+import javax.swing.border.*;
+
+Insets INSETS = new Insets(1,1,1,1);
+
+public thinBorder() { return thinBorder(null, null, false); }
+
+public thinBorder(Color lightColor, Color darkColor) {
+	return thinBorder(lightColor, darkColor, false);	
+}
+
+public thinBorder(Color lightColor, Color darkColor, boolean rollOver) 
+{			
+	/**
+	 * Draw a 1 pixel border given a color for topLeft and bottomRight.	
+	 */
+	drawBorder(g, x, y, width, height, topLeft, bottomRight) {
+		//Color oldColor = g.color;
+		Color oldColor = g.getColor();
+		
+		//g.color=topLeft;
+		g.setColor(topLeft);
+		g.drawLine(x, y, x+width-1, y);
+		g.drawLine(x, y, x, y+height-1);
+		
+		//g.color=bottomRight;
+		g.setColor(bottomRight);
+		g.drawLine(x+width-1, y, x+width-1, y+height-1);
+		g.drawLine(x, y+height-1, x+width-1, y+height-1);		
+		
+		//g.color=oldColor;
+		g.setColor(oldColor);
+	}
+		
+	public void paintBorder(c, g, x, y, width, height) 
+	{	
+	// Access to the background color is protected on the Mac for
+	// some reason... workaround
+	try {
+		Color bgColor = c.background;	
+
+		Color dark = (darkColor==null) ? bgColor.darker().darker() :
+				darkColor;
+		Color light = (lightColor==null) ? bgColor.brighter() :
+				lightColor;			
+
+		if(c instanceof AbstractButton) {
+			if(c.rolloverEnabled && !c.model.rollover && c.opaque)	{
+				drawBorder(g, x, y, width, height, bgColor, bgColor);					
+			} else {
+				if(c.model.isPressed())
+					drawBorder(g, x, y, width, height, dark, light);
+				else
+					drawBorder(g, x, y, width, height, light, dark);
+			}
+		} else {
+			drawBorder(g, x, y, width, height, light, dark);		
+		}
+	} catch ( SecurityException e ) { }
+	}
+
+	/**
+	 * Returns the insets of the border.
+	 *
+	 * @param c the component for which this border insets value applies
+	 */
+	public Insets getBorderInsets(Component c) { return INSETS; } 
+	
+	/**
+	 * Always returns false
+	 */
+	public boolean isBorderOpaque() { return false; }
+	
+	return this;
+}

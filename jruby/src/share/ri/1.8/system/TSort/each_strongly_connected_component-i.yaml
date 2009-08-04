@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: nodes
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "The iterator version of the #strongly_connected_components method. <tt><em>obj</em>.each_strongly_connected_component</tt> is similar to <tt><em>obj</em>.strongly_connected_components.each</tt>, but modification of <em>obj</em> during the iteration may lead to unexpected results."
+- !ruby/struct:SM::Flow::P 
+  body: "#each_strongly_connected_component returns <tt>nil</tt>."
+full_name: TSort#each_strongly_connected_component
+is_singleton: false
+name: each_strongly_connected_component
+params: ( {|nodes| ...}
+visibility: public

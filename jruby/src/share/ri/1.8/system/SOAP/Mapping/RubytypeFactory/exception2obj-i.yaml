@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Mapping::RubytypeFactory#exception2obj
+is_singleton: false
+name: exception2obj
+params: (klass, node, map)
+visibility: private

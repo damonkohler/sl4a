@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "req_header: [[element, mustunderstand, encodingstyle(QName/String)], ...] req_body: SOAPBasetype/SOAPCompoundtype"
+full_name: SOAP::WSDLDriver::Servant__#document_send
+is_singleton: false
+name: document_send
+params: (name, header_obj, body_obj)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::SOAP::ClassDefCreatorSupport#basetype_mapped_class
+is_singleton: false
+name: basetype_mapped_class
+params: (name)
+visibility: public

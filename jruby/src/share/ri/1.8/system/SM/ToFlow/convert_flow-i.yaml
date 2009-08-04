@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SM::ToFlow#convert_flow
+is_singleton: false
+name: convert_flow
+params: (flow)
+visibility: private

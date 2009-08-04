@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Set#flatten_merge
+is_singleton: false
+name: flatten_merge
+params: (set, seen = Set.new)
+visibility: protected

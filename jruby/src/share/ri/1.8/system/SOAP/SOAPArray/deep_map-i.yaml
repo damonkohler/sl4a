@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::SOAPArray#deep_map
+is_singleton: false
+name: deep_map
+params: (ary, &block)
+visibility: public

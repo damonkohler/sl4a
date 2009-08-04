@@ -1,0 +1,20 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+/** 
+	comment
+	// single line
+*/
+
+// single line
+
+// if the last line of the file is a single line commet with no 
+// terminating line feed the parser errors..  I have tried the obvious
+// fix for this problem in the comment expression, but it doesn't work.
+this.interpreter.eval("42; // comment at end of line");
+
+complete();
+
+// to trigger in this file
+// Use a binary editor to remove the trailing linefeed and see this -->

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+params: (message=nil)
+is_singleton: true
+block_params: 
+name: new
+comment: 
+full_name: Spec::Example::ExamplePendingError::new
+visibility: public
+aliases: []
+

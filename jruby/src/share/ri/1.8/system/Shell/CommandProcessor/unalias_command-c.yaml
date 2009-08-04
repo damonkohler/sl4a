@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: Shell::CommandProcessor::unalias_command
+is_singleton: true
+name: unalias_command
+params: (ali)
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::XMLStyleSheet#alternate=
+is_singleton: false
+name: alternate=
+params: (value)
+visibility: public

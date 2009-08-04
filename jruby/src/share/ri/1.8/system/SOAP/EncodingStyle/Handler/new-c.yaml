@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::EncodingStyle::Handler::new
+is_singleton: true
+name: new
+params: (charset)
+visibility: public

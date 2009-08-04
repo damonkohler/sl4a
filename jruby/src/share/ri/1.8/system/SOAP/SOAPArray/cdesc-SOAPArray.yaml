@@ -1,0 +1,86 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: arytype
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: offset
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: rank
+  rw: R
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: size
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: size_fixed
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: sparse
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: create_arytype
+- !ruby/object:RI::MethodSummary 
+  name: decode
+- !ruby/object:RI::MethodSummary 
+  name: new
+- !ruby/object:RI::MethodSummary 
+  name: parse_type
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: ITEM_NAME
+  value: XSD::QName.new(nil, 'item')
+- !ruby/object:RI::Constant 
+  comment: 
+  name: TypeParseRegexp
+  value: Regexp.new('^(.+)\[([\d,]*)\]$')
+full_name: SOAP::SOAPArray
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: SOAPCompoundtype
+- !ruby/object:RI::IncludedModule 
+  name: Enumerable
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "[]"
+- !ruby/object:RI::MethodSummary 
+  name: "[]="
+- !ruby/object:RI::MethodSummary 
+  name: add
+- !ruby/object:RI::MethodSummary 
+  name: deep_map
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: include?
+- !ruby/object:RI::MethodSummary 
+  name: offset=
+- !ruby/object:RI::MethodSummary 
+  name: offsetnext
+- !ruby/object:RI::MethodSummary 
+  name: position
+- !ruby/object:RI::MethodSummary 
+  name: ranksize
+- !ruby/object:RI::MethodSummary 
+  name: replace
+- !ruby/object:RI::MethodSummary 
+  name: retrieve
+- !ruby/object:RI::MethodSummary 
+  name: soap2array
+- !ruby/object:RI::MethodSummary 
+  name: to_a
+- !ruby/object:RI::MethodSummary 
+  name: traverse
+- !ruby/object:RI::MethodSummary 
+  name: traverse_data
+name: SOAPArray
+superclass: XSD::NSDBase

@@ -1,0 +1,19 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: fault
+  rw: R
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: Test::Unit::UI::GTK::FaultListItem
+includes: []
+
+instance_methods: []
+
+name: FaultListItem
+superclass: Gtk::ListItem

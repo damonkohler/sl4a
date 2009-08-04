@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Creates new StringIO instance from with <em>string</em> and <em>mode</em>.
+full_name: StringIO::new
+is_singleton: true
+name: new
+params: " StringIO.new(string=\"\"[, mode])\n"
+visibility: public

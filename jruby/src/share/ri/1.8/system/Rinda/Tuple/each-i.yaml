@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: (k, v)
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Iterate through the tuple, yielding the index or key, and the value, thus ensuring arrays are iterated similarly to hashes.
+full_name: Rinda::Tuple#each
+is_singleton: false
+name: each
+params: ( {|k, v| ...}
+visibility: public

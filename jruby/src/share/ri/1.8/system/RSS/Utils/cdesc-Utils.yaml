@@ -1,0 +1,26 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: RSS::Utils
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: element_initialize_arguments?
+- !ruby/object:RI::MethodSummary 
+  name: get_file_and_line_from_caller
+- !ruby/object:RI::MethodSummary 
+  name: h
+- !ruby/object:RI::MethodSummary 
+  name: html_escape
+- !ruby/object:RI::MethodSummary 
+  name: new_with_value_if_need
+- !ruby/object:RI::MethodSummary 
+  name: to_class_name
+name: Utils
+superclass: 

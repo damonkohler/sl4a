@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Method to extract colon-seperated type and class, returning the type and the constant of the class
+full_name: YAML::read_type_class
+is_singleton: true
+name: read_type_class
+params: ( type, obj_class )
+visibility: public

@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::CGIStub#on_init
+is_singleton: false
+name: on_init
+params: ()
+visibility: public

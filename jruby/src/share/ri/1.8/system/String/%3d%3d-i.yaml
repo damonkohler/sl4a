@@ -1,0 +1,14 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Equality---If <em>obj</em> is not a <tt>String</tt>, returns <tt>false</tt>. Otherwise, returns <tt>true</tt> if <em>str</em> <tt>&lt;=&gt;</tt> <em>obj</em> returns zero.
+full_name: String#==
+is_singleton: false
+name: ==
+params: |
+  str == obj   => true or false
+
+visibility: public

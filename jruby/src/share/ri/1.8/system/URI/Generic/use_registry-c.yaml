@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "DOC: FIXME!"
+full_name: URI::Generic::use_registry
+is_singleton: true
+name: use_registry
+params: ()
+visibility: public

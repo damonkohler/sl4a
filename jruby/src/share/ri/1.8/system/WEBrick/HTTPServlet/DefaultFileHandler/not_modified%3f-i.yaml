@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPServlet::DefaultFileHandler#not_modified?
+is_singleton: false
+name: not_modified?
+params: (req, res, mtime, etag)
+visibility: public

@@ -1,0 +1,454 @@
+<section>
+<name filename="commands">Adding BeanShell Commands</name>
+
+BeanShell Commands are scripted methods or compiled Java classes which are 
+dynamically loaded from the classpath to implement a method.
+All of the standard commands we discuss in this manual live in the BeanShell
+JAR file under the path /bsh/commands.
+<p/>
+
+Adding to the set of "prefab" commands supplied with BeanShell is as easy as 
+writing any other BeanShell methods.  You simply have to place your 
+script into a file named with the same name as the command and place the
+file in the classpath.  You may then "import" the commands with the
+importCommands() method.  
+<p/>
+
+Command files can be placed anywhere in the BeanShell classpath.
+You can use even use the addClassPath() or setClassPath() commands to add new 
+command directories or JARs containing commands to your script at any time.
+<p/>
+
+<h2>Hello World</h2>
+
+For example, let's make a helloWorld() command:
+
+<example>
+// File: helloWorld.bsh
+helloWorld() { 
+    print("Hello World!");
+}
+</example>
+
+Place the command file helloWorld.bsh in a directory or JAR in your
+classpath and import it with the importCommands() command.  
+You can either set the classpath
+externally for Java or inside of BeanShell with the addClassPath() command.
+For example, suppose we have placed
+the file in the path: /home/pat/mycommands/helloWorld.bsh.
+We could then do:
+
+<example>
+addClassPath("/home/pat");  // If it's not already in our classpath
+importCommands("/mycommands");
+</example>
+
+We can now use helloWorld() just like any other BeanShell command.
+
+<example>
+helloWorld(); // prints "Hello World!"
+</example>
+
+importCommands() will accept either a "resource path" style path name or a
+Java package name.  Either one is simply converted to a resource path or 
+Java package name as required to load scripts or compiled BeanShell command
+classes.  A relative path (e.g. "mycommands") is turned into an absolute path
+by prepending "/".  You may import "loose" commands (like unpackaged classes)
+at the top of the classpath by importing "/".
+<p/>
+If for example you have placed BeanShell commands along with your other 
+classes in a Java package called com.xyz.utils in your classpath, you can 
+import those commands with:
+
+<example>
+// equivalent
+importCommands("com.xyz.utils");
+importCommands("/com/xyz/utils");
+</example>
+
+Imported commands are scoped just like imported classes.  So if you import
+commands in a method or object they are local to that scope.
+
+<h3>Overloaded Commands</h3>
+
+BeanShell command scripts can contain any number of overloaded forms of the
+command method, e.g.:
+
+<example>
+// File: helloWorld.bsh
+helloWorld() { 
+	print("Hello World!"); 
+}
+helloWorld( String msg ) { 
+	print("Hello World: "+msg); 
+}
+</example>
+
+BeanShell will select the appropriate method based on the
+usual rules for methods selection.
+
+
+<h2>Compiled Commands</h2>
+
+You can also implement BeanShell commands as compiled classes instead of
+scripts if you wish.  Your class name must simply be the name of the command
+(matching case as well) and it must implement one or more static invoke()
+methods who's signatures match a pattern.  The first two
+arguments of the invoke() method must be the bsh.Interpreter
+and bsh.CallStack objects that provide context to all BeanShell scripts.
+Then any number (possibly zero) of arguments, which are the arguments of the
+command may follow.  
+BeanShell will select the appropriate method based on the
+usual rules for methods selection.
+<p/>
+
+The dir() command is an example of a BeanShell command that is implemented in
+Java.   Let's look at a snippet from it to see how it implements a pair of
+invoke() methods for the dir() and dir(path) commands.
+<p/>
+
+<example>
+/**
+	Implement dir() command.
+*/
+public static void invoke( Interpreter env, CallStack callstack ) 
+{
+	String dir = ".";
+	invoke( env, callstack, dir );
+}
+
+/**
+	Implement dir( String directory ) command.
+*/
+public static void invoke( 
+	Interpreter env, CallStack callstack, String dir ) 
+{
+...
+}
+</example>
+
+<h2>User Defined Commands with invoke()</h2>
+
+It is useful to note that the invoke() meta-method which we described in the
+section "Scripting Interfaces" can be used directly in scope as well as through
+an object reference and one could use this to load arbitrary commands or
+implement arbitrary behavior for commands (undefined method calls).  For
+example:
+
+<example>
+invoke( String methodName, Object [] arguments ) { 
+	print("You invoked the method: "+ methodName );
+}
+
+// invoke() will be called to handle noSuchMethod()
+noSuchMethod("foo"); 
+</example>
+
+invoke() is called to handle any method invocations for undefined methods 
+within its scope.  In this case we have declared it at the global scope.
+<p/>
+
+<h2>Commands Scope</h2>
+
+Scripted BeanShell commands are loaded when no existing method matches
+the command name.
+When a command script is loaded it is sourced (evaluated) in the 'global' scope
+of the interpreter.  This means that once the command is loaded the methods
+declared in the command script are then defined in the interpreter's global
+scope and subsequent calls to the command are simply handled by
+the those methods as any other scripted method.
+<p/>
+
+<note>
+Note that this means that currently scripted commands
+may only be loaded once and then they are effectively cached. 
+</note>
+<p/>
+
+<h2>Getting the Caller Context</h2>
+
+A useful feature of BeanShell for command writers is the 'this.caller'
+reference, which allows you to create side effects (set or modify variables) in
+the method caller's scope.  For example:
+
+<example>
+fooSetter() {
+    this.caller.foo=42;
+}
+</example>
+
+The above command has the effect that after running it the variable 'foo'
+will be set in the caller's scope. e.g.:
+
+<example>
+fooSetter();
+print( foo ); // 42
+</example>
+
+It may appear that we could simply have used the 'super' modifier to accomplish
+this and in this case it would have worked.  However it would not have been 
+correct in general because the 'super' of fooSetter() always points to the same
+location - the scope in which it was defined.   We would like fooSetter() to
+set the variable in whatever scope it was called from.
+<p/>
+
+To reiterate:
+The 'super' of a method is always
+the context in which the method was defined.  But the caller may be any context
+in which the method is used.  In the following example,
+the parent context of foo() and the caller context of foo() are the same:
+
+<example>
+foo() { ... }
+foo();
+</example>
+
+But this is not always the case, as for bar() in the following example:
+
+<example>
+foo() { 
+    bar() { ... }
+    ...
+}
+
+// somewhere
+fooObject.bar();
+</example>
+
+The special "magic" field reference: 'this.caller' makes it possible 
+to reach the context of whomever called bar().  The 'this.caller' reference 
+always refers to the calling context of the current method context.
+<p/>
+
+<img src="caller.gif"/>
+<p/>
+
+The diagram above shows the foo() and bar() scopes, along with the caller's
+scope access via 'this.caller'.
+<p/>
+
+This is very useful in writing BeanShell commands.  
+BeanShell command methods are always loaded into the global 
+scope.  If you refer to 'super' from your command you will simply 
+get 'global'.  Often it is desirable to write commands that explicitly have 
+side effects in the caller's scope.  The ability to do so makes it possible to
+write new kinds of commands that have the appearance of being "built-in" 
+to the language.  
+<p/>
+
+A good example of this is the eval() BeanShell command.  eval() evaluates
+a string as if it were typed in the current context.  To do this, it sends
+the string to an instance of the BeanShell interpreter.  But when it does
+so it tells the interpreter to evaluate the string in a specific namespace:
+the namespace of the caller; using this.caller.
+
+<example>
+    eval("a=5");
+    print( a ); // 5
+</example>
+
+The eval() command is implemented simply as:
+
+<example>
+eval( String text ) {
+	this.interpreter.eval( text, this.caller.namespace );
+}
+</example>
+
+As a novelty, you can follow the call chain further back if you want to 
+by chaining the '.caller' reference, like so:
+
+<example>
+    this.caller.caller...;
+</example>
+
+Or, more generally, another magic reference 'this.callstack' returns an
+array of bsh.NameSpace objects representing the full call "stack".  This is
+an advanced topic for developers that we'll discuss in another location.
+
+<h2>setNameSpace()</h2>
+
+In the previous discussion we used the this.caller reference to allow us to
+write commands that have side effects in the caller's context.  This is a
+powerful tool.  But what happens when one command calls another command that
+intends to do this?  That would leave the side effects in the first command's
+context, not it's original caller.  Fortunately this doesn't come up all that
+often.  But there is a general way to solve this problem.
+That is to use the powerful 
+setNameSpace() method to "step into" the caller's context.  After that we may
+set variables and call methods exactly as if we were in the caller's context
+(because we are).  If all commands did this there would be no need to use the
+this.caller reference explicitly (indeed, we may make it idiomatic for all 
+commands to do this in the future).  
+<p/>
+
+<example>
+myCommand() {
+	// "Step into" the caller's namespace.
+	setNameSpace( this.caller.namespace );
+
+	// work as if we were in the caller's namespace.
+}
+</example>
+
+You can try out the setNameSpace() command with arbitrary object scope's 
+as well.  For example:
+
+<example>
+object = object();
+
+// save our namespace
+savedNameSpace = this.namespace;
+
+// step into object's namespace
+setNameSpace( object.namespace );
+
+// Work in the object's scope
+a=1;
+b=2;
+
+// step back 
+setNameSpace( savedNameSpace );
+
+print( object.a ); // 1
+print( object.b ); // 2
+
+print( a ); // ERROR! undefined
+</example>
+
+
+<h2>Getting the Invocation Text</h2>
+
+You can get specific information about the invocation of a method
+using namespace.getInvocationLine() and namespace.getInvocationText().
+The most important use for this is in support of the ability to write an
+assert() method for unit tests that automatically prints the assertion text.
+
+<example>
+assert( boolean condition ) 
+{
+    if ( condition )
+        print( "Test Passed..." );
+    else {
+        print(
+            "Test FAILED: "
+            +"Line: "+ this.namespace.getInvocationLine()
+            +" : "+this.namespace.getInvocationText()
+            +" : while evaluating file: "+getSourceFileInfo()
+        );
+        super.test_failed = true;
+    }
+}
+</example>
+
+<h2>Working with Dirctories and Paths</h2>
+
+BeanShell supports the notion of a <em>current working directory</em> for
+commands that work with files.  The cd() command can be used to change the
+working directory and pwd() can be used to display the current value.
+The BeanShell current working directory is stored in the variable bsh.cwd.
+<p/>
+
+All commands that work with files respect the working directory, including
+the following:
+<p/>
+
+<ul>
+<li>dir()</li>
+<li>source()</li>
+<li>run(),</li>
+<li>cat()</li>
+<li>load()</li>
+<li>save()</li>
+<li>mv()</li>
+<li>rm()</li>
+<li>addClassPath()</li>
+</ul>
+
+<h3>pathToFile()</h3>
+
+As a convenience for writing your own scripts and commands you can use
+the pathToFile() command to translate a relative file path to an absolute
+one relative to the current working directory.  Absolute paths are unmodified.
+
+<example>
+absfilename = pathToFile( filename );
+</example>
+
+<h3>Path Names and Slashes</h3>
+
+When working with path names you can generally just use forward slashes
+in BeanShell.  Java localizes forward slashes to the appropriate value
+under Windows environments.  If you must use backslashes remember to 
+escape them by doubling them:
+
+<example>
+dir("c:/Windows"); // ok
+dir("c:\\Windows"); // ok
+</example>
+
+
+<h2>Working With Class Identifiers</h2>
+
+You may have noticed that certain BeanShell commands such as javap(),
+which(), and browseClass() which take a class as an argument can accept any 
+type of argument, including a plain Java class identifier.  For example,
+all of the following are legal:
+
+<example>
+javap( Date.class ); // use a class type directly
+javap( new Date() ); // uses class of object
+javap( "java.util.Date" ); // Uses string name of class
+javap( java.util.Date );  // Use plain class identifier
+</example>
+
+In the last case above we used the plain Java class identifier 
+java.util.Date.  In Beanshell this resolves to a bsh.ClassIdentifier
+reference.  You can get the class represented by a ClassIdentifier using the 
+Name.identifierToClass() method.  Here is an example of how to work
+with all of the above, converting the argument to a class type:
+
+<example>
+	import bsh.ClassIdentifier;
+
+    if ( o instanceof ClassIdentifier )
+        clas = this.namespace.identifierToClass(o);
+    if ( o instanceof String)
+        clas = this.namespace.getClass((String)o);
+    else if ( o instanceof Class )
+        clas = o;
+    else
+        clas = o.getClass();
+</example>
+
+
+<h2>Working with Iterable Types</h2>
+
+In conjunction with the enhanced for-loop added in BeanShell version 1.3 a
+unified API was added to provide support for iteration over composite types.
+The bsh.BshIterator interface provides the standard hasNext() and next()
+methods of the java.util.Iterator interface, but is available in all versions
+of Java and can be created for all composite types including arrays.  
+<p/>
+
+The BeanShell CollectionManager is used to get a BshIterator for an interable
+object or array.  It is a dynamically loaded extension, so it provides support
+for the java.util.Collections API when available, but does not break 
+compatability for Java 1.1 applications.
+
+You can use this in the implementation of BeanShell commands to iterate 
+over Enumeration, arrays, Vector, String, StringBuffer and 
+(when the java.util.collections API is present) Collections and Iterator.
+<p/>
+
+<example>
+cm = CollectionManager.getCollectionManager();
+if ( cm.isBshIterable( myObject ) ) 
+{
+	BshIterator iterator = cm.getBshIterator( myObject );
+	while ( iterator.hasNext() )
+		i = iterator.next();
+}
+</example>
+
+</section>

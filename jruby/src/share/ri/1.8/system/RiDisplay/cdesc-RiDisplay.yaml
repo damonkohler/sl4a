@@ -1,0 +1,26 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: append_features
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: This is a kind of 'flag' module. If you want to write your own 'ri' display module (perhaps because you'r writing an IDE or somesuch beast), you simply write a class which implements the various 'display' methods in 'DefaultDisplay', and include the 'RiDisplay' module in that class.
+- !ruby/struct:SM::Flow::P 
+  body: To access your class from the command line, you can do
+- !ruby/struct:SM::Flow::VERB 
+  body: "   ruby -r &lt;your source file&gt;  ../ri ....\n"
+- !ruby/struct:SM::Flow::P 
+  body: If folks <em>really</em> want to do this from the command line, I'll build an option in
+constants: []
+
+full_name: RiDisplay
+includes: []
+
+instance_methods: []
+
+name: RiDisplay
+superclass: 

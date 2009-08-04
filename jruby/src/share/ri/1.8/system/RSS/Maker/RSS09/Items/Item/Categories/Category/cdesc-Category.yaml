@@ -1,0 +1,15 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: []
+
+full_name: RSS::Maker::RSS09::Items::Item::Categories::Category
+includes: []
+
+instance_methods: []
+
+name: Category
+superclass: CategoryBase

@@ -1,0 +1,44 @@
+<section>
+<name filename="execscripts">Executable scripts under Unix</name>
+
+You can use BeanShell for writing scripts as you would any other shell 
+under many Unixs:
+
+<example>
+#!/usr/java/bin/java bsh.Interpreter 
+
+print("foo");
+</example>
+
+However some flavors of Unix are more picky about what they will allow
+as a shell program.  For those you can use the following hack to make
+your BeanShell scripts executable.
+
+<example>
+#!/bin/sh
+# The following hack allows java to reside anywhere in the PATH.
+//bin/true; exec java bsh.Interpreter "$0" "$@"
+
+print("foo");
+</example>
+
+The above trick presumes that /bin/true exists on your system and that //bin is
+the same as /bin.  The // causes BeanShell to ignore the line.
+<p/>
+
+The above has been tested on Solaris.  It does not seem to work under Cygwin.
+
+<h3>OSX</h3>
+
+For OSX the path is a bit different:
+
+<example>
+#!/Library/Java/home/bin/java bsh.Interpreter
+
+print("foo");
+</example>
+
+On OSX /usr/bin/java is itself a shell script, which unfortunately won't
+work out-of-the-box.
+
+</section>

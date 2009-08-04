@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: URI::LDAP#set_scope
+is_singleton: false
+name: set_scope
+params: (val)
+visibility: protected

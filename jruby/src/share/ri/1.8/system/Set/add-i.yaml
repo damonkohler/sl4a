@@ -1,0 +1,13 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: "<<"
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Adds the given object to the set and returns self. Use <tt>merge</tt> to add several elements at once.
+full_name: Set#add
+is_singleton: false
+name: add
+params: (o)
+visibility: public

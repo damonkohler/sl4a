@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPUtils#split_header_value
+is_singleton: false
+name: split_header_value
+params: (str)
+visibility: public

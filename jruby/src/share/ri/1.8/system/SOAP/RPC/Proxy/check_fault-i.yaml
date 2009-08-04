@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::RPC::Proxy#check_fault
+is_singleton: false
+name: check_fault
+params: (body)
+visibility: public

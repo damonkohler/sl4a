@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: "(k, value.empty? ? nil : value.join(\", \"))"
+comment: 
+full_name: WEBrick::HTTPRequest#each
+is_singleton: false
+name: each
+params: "() {|k, value.empty? ? nil : value.join(\", \")| ...}"
+visibility: public

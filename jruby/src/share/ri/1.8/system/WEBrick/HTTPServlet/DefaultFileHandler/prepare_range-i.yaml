@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WEBrick::HTTPServlet::DefaultFileHandler#prepare_range
+is_singleton: false
+name: prepare_range
+params: (range, filesize)
+visibility: public

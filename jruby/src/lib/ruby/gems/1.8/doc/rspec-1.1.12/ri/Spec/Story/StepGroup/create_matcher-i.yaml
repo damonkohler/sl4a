@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+params: (type, name, &block)
+is_singleton: false
+block_params: 
+name: create_matcher
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: TODO - make me private
+full_name: Spec::Story::StepGroup#create_matcher
+visibility: public
+aliases: []
+

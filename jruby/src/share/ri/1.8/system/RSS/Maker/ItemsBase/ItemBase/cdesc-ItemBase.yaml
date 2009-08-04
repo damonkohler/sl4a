@@ -1,0 +1,32 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: []
+
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: CategoriesBase
+  value: ChannelBase::CategoriesBase
+full_name: RSS::Maker::ItemsBase::ItemBase
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Base
+- !ruby/object:RI::IncludedModule 
+  name: ContentModel
+- !ruby/object:RI::IncludedModule 
+  name: DublinCoreModel
+- !ruby/object:RI::IncludedModule 
+  name: Maker::ImageItemModel
+- !ruby/object:RI::IncludedModule 
+  name: TaxonomyTopicsModel
+- !ruby/object:RI::IncludedModule 
+  name: TrackBackModel
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: <=>
+- !ruby/object:RI::MethodSummary 
+  name: current_element
+name: ItemBase
+superclass: Object

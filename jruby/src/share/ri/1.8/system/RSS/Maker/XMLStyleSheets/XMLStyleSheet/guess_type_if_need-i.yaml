@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Maker::XMLStyleSheets::XMLStyleSheet#guess_type_if_need
+is_singleton: false
+name: guess_type_if_need
+params: (xss)
+visibility: private

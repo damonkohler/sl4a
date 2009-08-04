@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: for backward compatibility
+full_name: SOAP::RPC::SOAPlet#app_scope_router
+is_singleton: false
+name: app_scope_router
+params: ()
+visibility: public

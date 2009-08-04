@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: "@@context[:node] if defined? @@context[:node].namespace"
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Helper method.
+full_name: REXML::Functions::get_namespace
+is_singleton: true
+name: get_namespace
+params: ( node_set = nil ) {|@@context[:node] if defined? @@context[:node].namespace| ...}
+visibility: public

@@ -1,0 +1,44 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: []
+
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: []
+
+full_name: WEBrick::CGI::Socket
+includes: 
+- !ruby/object:RI::IncludedModule 
+  name: Enumerable
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: "<<"
+- !ruby/object:RI::MethodSummary 
+  name: add_header
+- !ruby/object:RI::MethodSummary 
+  name: addr
+- !ruby/object:RI::MethodSummary 
+  name: cert
+- !ruby/object:RI::MethodSummary 
+  name: cipher
+- !ruby/object:RI::MethodSummary 
+  name: each
+- !ruby/object:RI::MethodSummary 
+  name: gets
+- !ruby/object:RI::MethodSummary 
+  name: input
+- !ruby/object:RI::MethodSummary 
+  name: peer_cert
+- !ruby/object:RI::MethodSummary 
+  name: peer_cert_chain
+- !ruby/object:RI::MethodSummary 
+  name: peeraddr
+- !ruby/object:RI::MethodSummary 
+  name: read
+- !ruby/object:RI::MethodSummary 
+  name: request_line
+- !ruby/object:RI::MethodSummary 
+  name: setup_header
+name: Socket
+superclass: Object

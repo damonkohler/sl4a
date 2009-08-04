@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: If <tt>value</tt> is an instance of class <tt>klass</tt>, return it, else create a new instance of <tt>klass</tt> with value <tt>value</tt>.
+full_name: RSS::Utils#new_with_value_if_need
+is_singleton: false
+name: new_with_value_if_need
+params: (klass, value)
+visibility: public

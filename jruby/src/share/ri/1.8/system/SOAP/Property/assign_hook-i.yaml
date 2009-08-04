@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: SOAP::Property#assign_hook
+is_singleton: false
+name: assign_hook
+params: (ary, cascade, &hook)
+visibility: private

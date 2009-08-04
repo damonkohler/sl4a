@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Removes <tt>ary</tt> from the TupleBag.
+full_name: Rinda::TupleBag#delete
+is_singleton: false
+name: delete
+params: (ary)
+visibility: public

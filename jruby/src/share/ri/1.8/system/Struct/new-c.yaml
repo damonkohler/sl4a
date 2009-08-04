@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: []
+
+full_name: Struct::new
+is_singleton: true
+name: new
+params: (...)
+visibility: public

@@ -1,0 +1,13 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: length
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: "@return the number of children of this parent"
+full_name: REXML::Parent#size
+is_singleton: false
+name: size
+params: ()
+visibility: public

@@ -1,0 +1,13 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: finish_all_jobs
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: ProcessCommand#transact
+full_name: Shell::CommandProcessor#check_point
+is_singleton: false
+name: check_point
+params: ()
+visibility: public

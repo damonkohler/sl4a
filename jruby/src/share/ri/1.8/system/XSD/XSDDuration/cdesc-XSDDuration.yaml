@@ -1,0 +1,51 @@
+--- !ruby/object:RI::ClassDescription 
+attributes: 
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: day
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: hour
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: min
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: month
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: sec
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: sign
+  rw: RW
+- !ruby/object:RI::Attribute 
+  comment: 
+  name: year
+  rw: RW
+class_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: new
+comment: 
+constants: 
+- !ruby/object:RI::Constant 
+  comment: 
+  name: Type
+  value: QName.new(Namespace, DurationLiteral)
+full_name: XSD::XSDDuration
+includes: []
+
+instance_methods: 
+- !ruby/object:RI::MethodSummary 
+  name: _set
+- !ruby/object:RI::MethodSummary 
+  name: _to_s
+- !ruby/object:RI::MethodSummary 
+  name: screen_data
+name: XSDDuration
+superclass: XSDAnySimpleType

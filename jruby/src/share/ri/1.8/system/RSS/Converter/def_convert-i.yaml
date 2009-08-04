@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: RSS::Converter#def_convert
+is_singleton: false
+name: def_convert
+params: (depth=0)
+visibility: public

@@ -1,0 +1,11 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: 
+- !ruby/object:RI::AliasName 
+  name: set
+block_params: 
+comment: 
+full_name: SOAP::Mapping::Registry#add
+is_singleton: false
+name: add
+params: (obj_class, soap_class, factory, info = nil)
+visibility: public

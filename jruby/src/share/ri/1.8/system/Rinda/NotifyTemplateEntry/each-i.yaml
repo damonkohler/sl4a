@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: event, tuple
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Yields event/tuple pairs until this NotifyTemplateEntry expires.
+full_name: Rinda::NotifyTemplateEntry#each
+is_singleton: false
+name: each
+params: ( {|event, tuple| ...}
+visibility: public

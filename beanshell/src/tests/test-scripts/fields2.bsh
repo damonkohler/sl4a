@@ -1,0 +1,54 @@
+#!/bin/java bsh.Interpreter
+
+source("TestHarness.bsh");
+
+object().x=5;
+foo() {
+	bar() { 
+		return this; 
+	}
+	bar2() {
+		return foo();
+	}
+	return this;
+}
+
+foo().x=5;
+foo().bar();
+fb=foo().bar();
+fb.xx=5;
+
+foo().bar().x=5;
+foo().bar2().bar().x=5;
+
+// just an experiment 
+foo().bar2().bar2().bar2().bar();
+
+setAccessibility(true);
+Thread.currentThread().daemon = false;
+Thread.currentThread().currentThread().daemon = false;
+Thread.currentThread().currentThread().currentThread().daemon = false;
+setAccessibility(false);
+
+Fields [] fa = { new Fields(), new Fields() };
+fa[0].x=5;
+
+// The allocation case doesn't work
+// Need to add this case to LHSPrimaryPrefix, I think.
+// but I don't want to unless someone can point out a valid use
+//new Fields().x=5;
+
+// I always like to throw in the original text of the bug report, even
+// if I think it's equivalent
+i = new bsh.Interpreter();
+i.set("x", 10);
+i.set("y",5);
+i.set("s1","MY ");
+i.set("s2","STRING");
+assert( i.eval("!s1.equals(s2)") == true );
+
+f=new Fields();
+assert( f.x.getClass() == bsh.Primitive.class );
+assert( Fields.staticField.getClass() == bsh.Primitive.class );
+
+complete();

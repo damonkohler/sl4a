@@ -1,0 +1,12 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: raises ValueSpaceError if check failed
+full_name: XSD::XSDAnySimpleType#screen_data
+is_singleton: false
+name: screen_data
+params: (value)
+visibility: private

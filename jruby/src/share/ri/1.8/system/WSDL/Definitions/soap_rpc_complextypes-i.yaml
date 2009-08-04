@@ -1,0 +1,10 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+full_name: WSDL::Definitions#soap_rpc_complextypes
+is_singleton: false
+name: soap_rpc_complextypes
+params: (binding)
+visibility: public

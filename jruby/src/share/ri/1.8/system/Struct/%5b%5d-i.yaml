@@ -1,0 +1,17 @@
+--- !ruby/object:RI::MethodDescription 
+aliases: []
+
+block_params: 
+comment: 
+- !ruby/struct:SM::Flow::P 
+  body: Attribute Reference---Returns the value of the instance variable named by <em>symbol</em>, or indexed (0..length-1) by <em>fixnum</em>. Will raise <tt>NameError</tt> if the named variable does not exist, or <tt>IndexError</tt> if the index is out of range.
+- !ruby/struct:SM::Flow::VERB 
+  body: "   Customer = Struct.new(:name, :address, :zip)\n   joe = Customer.new(&quot;Joe Smith&quot;, &quot;123 Maple, Anytown NC&quot;, 12345)\n\n   joe[&quot;name&quot;]   #=&gt; &quot;Joe Smith&quot;\n   joe[:name]    #=&gt; &quot;Joe Smith&quot;\n   joe[0]        #=&gt; &quot;Joe Smith&quot;\n"
+full_name: Struct#[]
+is_singleton: false
+name: "[]"
+params: |
+  struct[symbol]    => anObject
+  struct[fixnum]    => anObject 
+
+visibility: public
