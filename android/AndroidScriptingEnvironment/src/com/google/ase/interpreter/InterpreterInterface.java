@@ -28,52 +28,67 @@ public interface InterpreterInterface {
   /**
    * Returns the name of the interpreter.
    */
-  public abstract String getName();
+  String getName();
 
   /**
    * Returns the filename extension for scripts to be run by the interpreter.
    */
-  public abstract String getExtension();
+  String getExtension();
 
   /**
    * Returns a new process for the interpreter.
    */
-  public abstract InterpreterProcessInterface buildProcess(
-      AndroidFacade facade, String launchScript);
+  InterpreterProcessInterface buildProcess(AndroidFacade facade, String launchScript);
 
   /**
    * Returns a nicer looking name.
    */
-  public abstract String getNiceName();
+  String getNiceName();
 
   /**
    * Returns true if the interpreter is installed.
    */
-  public abstract boolean isInstalled();
+  boolean isInstalled();
 
   /**
    * Returns a helpful template of typical script content.
    */
-  public abstract String getContentTemplate();
+  String getContentTemplate();
 
   /**
    * Returns the URL where the interpreter can be downloaded from.
    */
-  public abstract String getInterpreterArchiveUrl();
+  String getInterpreterArchiveUrl();
+
+  /**
+   * Returns the URL where the interpreter extras can be downloaded from.
+   */
+  String getInterpreterExtrasArchiveUrl();
 
   /**
    * Returns the URL where the example scripts can be downloaded from.
    */
-  public abstract String getScriptsArchiveUrl();
+  String getScriptsArchiveUrl();
 
   /**
    * Returns the name of the archive that contains the interpreter.
    */
-  public abstract String getInterpreterArchiveName();
+  String getInterpreterArchiveName();
+
+  /**
+   * Returns the name of the archive that contains the interpreter extras.
+   */
+  String getInterpreterExtrasArchiveName();
 
   /**
    * Returns the name of the archive that contains the sample scripts.
    */
-  public abstract String getScriptsArchiveName();
+  String getScriptsArchiveName();
+
+  boolean hasInterpreterArchive();
+
+  boolean hasInterpreterExtrasArchive();
+
+  boolean hasScriptsArchive();
 
 }

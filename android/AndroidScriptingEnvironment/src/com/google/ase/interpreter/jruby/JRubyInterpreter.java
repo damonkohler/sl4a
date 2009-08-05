@@ -16,15 +16,11 @@
 
 package com.google.ase.interpreter.jruby;
 
-import android.util.Log;
-
 import com.google.ase.AndroidFacade;
 import com.google.ase.interpreter.AbstractInterpreter;
 import com.google.ase.interpreter.InterpreterProcessInterface;
 
 public class JRubyInterpreter extends AbstractInterpreter {
-
-  private static final String TAG = "JRubyInterpreter";
 
   @Override
   public String getExtension() {
@@ -44,12 +40,22 @@ public class JRubyInterpreter extends AbstractInterpreter {
 
   @Override
   public InterpreterProcessInterface buildProcess(AndroidFacade facade, String scriptName) {
-    try {
-      return new JRubyInterpreterProcess(facade, scriptName);
-    } catch (Exception e) {
-      Log.e(TAG, "Failed to create JRuby interpreter.", e);
-      return null;
-    }
+    return new JRubyInterpreterProcess(facade, scriptName);
+  }
+
+  @Override
+  public boolean hasInterpreterArchive() {
+    return false;
+  }
+
+  @Override
+  public boolean hasInterpreterExtrasArchive() {
+    return true;
+  }
+
+  @Override
+  public boolean hasScriptsArchive() {
+    return false;
   }
 
 }

@@ -36,7 +36,8 @@ public class InterpreterInstaller extends Activity {
   private InterpreterInterface mInterpreter;
 
   private static enum RequestCode {
-    DOWNLOAD_INTERPRETER, DOWNLOAD_SCRIPTS, EXTRACT_INTERPRETER, EXTRACT_SCRIPTS
+    DOWNLOAD_INTERPRETER, DOWNLOAD_INTERPRETER_EXTRAS, DOWNLOAD_SCRIPTS,
+    EXTRACT_INTERPRETER, EXTRACT_INTERPRETER_EXTRAS, EXTRACT_SCRIPTS
   }
 
   @Override
@@ -72,6 +73,13 @@ public class InterpreterInstaller extends Activity {
     startActivityForResult(intent, RequestCode.DOWNLOAD_INTERPRETER.ordinal());
   }
 
+  private void downloadInterpreterExtras() {
+    Intent intent = new Intent(this, UrlDownloader.class);
+    intent.putExtra(Constants.EXTRA_URL, mInterpreter.getInterpreterExtrasArchiveUrl());
+    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.DOWNLOAD_ROOT);
+    startActivityForResult(intent, RequestCode.DOWNLOAD_INTERPRETER_EXTRAS.ordinal());
+  }
+
   private void downloadScripts() {
     Intent intent = new Intent(this, UrlDownloader.class);
     intent.putExtra(Constants.EXTRA_URL, mInterpreter.getScriptsArchiveUrl());
@@ -87,6 +95,14 @@ public class InterpreterInstaller extends Activity {
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER.ordinal());
   }
 
+  private void extractInterpreterExtras() {
+    Intent intent = new Intent(this, ZipExtractor.class);
+    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT,
+        mInterpreter.getInterpreterExtrasArchiveName()).getAbsolutePath());
+    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.INTERPRETER_EXTRAS_ROOT);
+    startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER_EXTRAS.ordinal());
+  }
+
   private void extractScripts() {
     Intent intent = new Intent(this, ZipExtractor.class);
     intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT,
@@ -99,51 +115,92 @@ public class InterpreterInstaller extends Activity {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     RequestCode request = RequestCode.values()[requestCode];
-    if (resultCode == RESULT_OK) {
+
+    if (resultCode != RESULT_OK) {
+      // This switch handles failure cases. If a step is expected to succeed, it will cause the
+      // installation to abort.
       switch (request) {
         case DOWNLOAD_INTERPRETER:
-          downloadScripts();
+          if (mInterpreter.hasInterpreterArchive()) {
+            AseLog.e(this, "Downloading interpreter failed.");
+            abort();
+            return;
+          }
+          break;
+        case DOWNLOAD_INTERPRETER_EXTRAS:
+          if (mInterpreter.hasInterpreterExtrasArchive()) {
+            AseLog.e(this, "Downloading interpreter extras failed.");
+            abort();
+            return;
+          }
           break;
         case DOWNLOAD_SCRIPTS:
-          extractInterpreter();
+          if (mInterpreter.hasScriptsArchive()) {
+            AseLog.e(this, "Downloading scripts failed.");
+            abort();
+            return;
+          }
           break;
         case EXTRACT_INTERPRETER:
-          extractScripts();
+          if (mInterpreter.hasInterpreterArchive()) {
+            AseLog.e(this, "Extracting interpreter failed.");
+            abort();
+            return;
+          }
+          break;
+        case EXTRACT_INTERPRETER_EXTRAS:
+          if (mInterpreter.hasInterpreterExtrasArchive()) {
+            AseLog.e(this, "Extracting interpreter extras failed.");
+            abort();
+            return;
+          }
           break;
         case EXTRACT_SCRIPTS:
-          success();
-          return;
+          if (mInterpreter.hasScriptsArchive()) {
+            AseLog.e(this, "Extracting scripts failed.");
+            abort();
+            return;
+          }
+          break;
         default:
-          break;
-      }
-    } else {
-      switch (request) {
-        case DOWNLOAD_INTERPRETER:
-          AseLog.e(this, "Downloading interpreter failed.");
-          break;
-        case DOWNLOAD_SCRIPTS:
-          AseLog.e(this, "Downloading scripts failed.");
-          // It's OK for this to fail, continue installation process.
-          extractInterpreter();
+          AseLog.e(this, "Unknown installation state.");
+          abort();
           return;
-        case EXTRACT_INTERPRETER:
-          AseLog.e(this, "Extracting interpreter failed.");
-          break;
-        case EXTRACT_SCRIPTS:
-          // It's OK for this to fail too.
-          success();
-          return;
-        default:
-          break;
       }
-      setResult(RESULT_CANCELED);
-      finish();
+    }
+
+    // This switch defines the progression of installation steps.
+    switch (request) {
+      case DOWNLOAD_INTERPRETER:
+        downloadInterpreterExtras();
+        break;
+      case DOWNLOAD_INTERPRETER_EXTRAS:
+        downloadScripts();
+        break;
+      case DOWNLOAD_SCRIPTS:
+        extractInterpreter();
+        break;
+      case EXTRACT_INTERPRETER:
+        extractInterpreterExtras();
+        break;
+      case EXTRACT_INTERPRETER_EXTRAS:
+        extractScripts();
+        break;
+      case EXTRACT_SCRIPTS:
+        AseLog.v(this, "Installation successful.");
+        setResult(RESULT_OK);
+        finish();
+        return;
+      default:
+        AseLog.e(this, "Unknown installation state.");
+        abort();
+        return;
     }
   }
 
-  private void success() {
-    AseLog.v(this, "Installation successful.");
-    setResult(RESULT_OK);
+  private void abort() {
+    AseLog.v(this, "Installation failed.");
+    setResult(RESULT_CANCELED);
     finish();
   }
 }

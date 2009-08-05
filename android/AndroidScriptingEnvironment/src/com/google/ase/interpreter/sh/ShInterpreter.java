@@ -22,7 +22,7 @@ import com.google.ase.interpreter.InterpreterProcessInterface;
 
 /**
  * Represents the shell.
- * 
+ *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ShInterpreter extends AbstractInterpreter {
@@ -44,5 +44,20 @@ public class ShInterpreter extends AbstractInterpreter {
   @Override
   public String getNiceName() {
     return "Shell";
+  }
+
+  @Override
+  public boolean hasInterpreterArchive() {
+    return false;
+  }
+
+  @Override
+  public boolean hasInterpreterExtrasArchive() {
+    return false;
+  }
+
+  @Override
+  public boolean hasScriptsArchive() {
+    return false;
   }
 }

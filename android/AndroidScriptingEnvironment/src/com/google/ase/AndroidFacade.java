@@ -87,7 +87,11 @@ public class AndroidFacade {
   private final SensorEventListener mSensorListener = new SensorEventListener() {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+      if (mSensorReadings == null) {
+        mSensorReadings = new Bundle();
+      }
       mSensorReadings.putInt("accuracy", accuracy);
+      postEvent("sensors", mSensorReadings);
     }
 
     @Override
@@ -96,21 +100,21 @@ public class AndroidFacade {
         mSensorReadings = new Bundle();
       }
       switch (event.sensor.getType()) {
-      case Sensor.TYPE_ORIENTATION:
-        mSensorReadings.putFloat("azimuth", event.values[0]);
-        mSensorReadings.putFloat("pitch", event.values[1]);
-        mSensorReadings.putFloat("roll", event.values[2]);
-        break;
-      case Sensor.TYPE_ACCELEROMETER:
-        mSensorReadings.putFloat("xforce", event.values[0]);
-        mSensorReadings.putFloat("yforce", event.values[1]);
-        mSensorReadings.putFloat("zforce", event.values[2]);
-        break;
-      case Sensor.TYPE_MAGNETIC_FIELD:
-        mSensorReadings.putFloat("xmag", event.values[0]);
-        mSensorReadings.putFloat("ymag", event.values[1]);
-        mSensorReadings.putFloat("zmag", event.values[2]);
-        break;
+        case Sensor.TYPE_ORIENTATION:
+          mSensorReadings.putFloat("azimuth", event.values[0]);
+          mSensorReadings.putFloat("pitch", event.values[1]);
+          mSensorReadings.putFloat("roll", event.values[2]);
+          break;
+        case Sensor.TYPE_ACCELEROMETER:
+          mSensorReadings.putFloat("xforce", event.values[0]);
+          mSensorReadings.putFloat("yforce", event.values[1]);
+          mSensorReadings.putFloat("zforce", event.values[2]);
+          break;
+        case Sensor.TYPE_MAGNETIC_FIELD:
+          mSensorReadings.putFloat("xmag", event.values[0]);
+          mSensorReadings.putFloat("ymag", event.values[1]);
+          mSensorReadings.putFloat("zmag", event.values[2]);
+          break;
       }
       postEvent("sensors", mSensorReadings);
     }
@@ -306,7 +310,7 @@ public class AndroidFacade {
   public Intent startActivityForResult(final String action, final String uri) {
     // TODO(damonkohler): This method only seems to work in Activities?
     if (!(mContext instanceof Activity)) {
-      Log.e(TAG, "Invalid context. Activity required.");
+      AseLog.e("Invalid context. Activity required.");
       // TODO(damonkohler): Exception instead?
       return null;
     }
@@ -321,7 +325,7 @@ public class AndroidFacade {
           }
           ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
         } catch (Exception e) {
-          Log.e(TAG, "Failed to launch intent.", e);
+          AseLog.e("Failed to launch intent.", e);
         }
       }
     });
@@ -329,7 +333,7 @@ public class AndroidFacade {
     try {
       mLatch.await();
     } catch (InterruptedException e) {
-      Log.e(TAG, "Interrupted while waiting for handler to complete.", e);
+      AseLog.e("Interrupted while waiting for handler to complete.", e);
     }
     return mStartActivityResult;
   }
@@ -394,16 +398,13 @@ public class AndroidFacade {
   }
 
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (resultCode == Activity.RESULT_OK) {
-      if (requestCode == REQUEST_CODE) {
-        Log.v(TAG, "Request completed. Received intent: " + data);
+    if (requestCode == REQUEST_CODE) {
+      if (resultCode == Activity.RESULT_OK) {
+        AseLog.v("Request completed. Received intent: " + data);
         mStartActivityResult = data;
-        if (mLatch != null) {
-          mLatch.countDown();
-        }
+      } else if (requestCode == Activity.RESULT_CANCELED) {
+        AseLog.v("Request canceled.");
       }
-    } else if (requestCode == Activity.RESULT_CANCELED) {
-      Log.v(TAG, "Request canceled.");
       if (mLatch != null) {
         mLatch.countDown();
       }

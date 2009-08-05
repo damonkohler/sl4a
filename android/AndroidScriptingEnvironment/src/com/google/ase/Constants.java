@@ -37,8 +37,11 @@ public class Constants {
   public static final String EXTRA_OUTPUT_PATH = "com.google.ase.extra.OUTPUT_PATH";
   public static final String EXTRA_URL = "com.google.ase.extra.URL";
 
-  public static final String SDCARD_ROOT = "/sdcard";
+  public static final String SDCARD_ROOT = "/sdcard/";
   public static final String DOWNLOAD_ROOT = SDCARD_ROOT;
-  public static final String SCRIPTS_ROOT = SDCARD_ROOT + "/ase/scripts/";
+  public static final String SDCARD_ASE_ROOT = SDCARD_ROOT + "/ase/";
+  public static final String ASE_DALVIK_CACHE_ROOT = SDCARD_ASE_ROOT + "dalvik-cache/";
+  public static final String SCRIPTS_ROOT = SDCARD_ASE_ROOT + "scripts/";
+  public static final String INTERPRETER_EXTRAS_ROOT = SDCARD_ASE_ROOT + "extra/";
   public static final String INTERPRETER_ROOT = "/data/data/com.google.ase/";
 }

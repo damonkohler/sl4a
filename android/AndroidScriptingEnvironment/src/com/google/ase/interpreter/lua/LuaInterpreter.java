@@ -26,6 +26,7 @@ import com.google.ase.interpreter.InterpreterProcessInterface;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class LuaInterpreter extends AbstractInterpreter {
+
   @Override
   public String getExtension() {
     return ".lua";
@@ -37,11 +38,6 @@ public class LuaInterpreter extends AbstractInterpreter {
   }
 
   @Override
-  public InterpreterProcessInterface buildProcess(AndroidFacade facade, String scriptName) {
-    return new LuaInterpreterProcess(facade, scriptName);
-  }
-
-  @Override
   public String getNiceName() {
     return "Lua 5.1.4";
   }
@@ -49,6 +45,26 @@ public class LuaInterpreter extends AbstractInterpreter {
   @Override
   public String getContentTemplate() {
     return "require 'android'\n\n";
+  }
+
+  @Override
+  public InterpreterProcessInterface buildProcess(AndroidFacade facade, String scriptName) {
+    return new LuaInterpreterProcess(facade, scriptName);
+  }
+
+  @Override
+  public boolean hasInterpreterArchive() {
+    return true;
+  }
+
+  @Override
+  public boolean hasInterpreterExtrasArchive() {
+    return false;
+  }
+
+  @Override
+  public boolean hasScriptsArchive() {
+    return true;
   }
 
 }

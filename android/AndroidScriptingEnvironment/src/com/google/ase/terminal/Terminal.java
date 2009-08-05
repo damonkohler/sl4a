@@ -28,7 +28,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +35,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.google.ase.AndroidFacade;
+import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.CustomWindowTitle;
 import com.google.ase.R;
@@ -158,7 +158,7 @@ public class Terminal extends Activity {
   }
 
   private void startInterpreter() {
-    Log.v(TAG, "Staring interpreter.");
+    AseLog.v("Starting interpreter.");
     mAndroidFacade = new AndroidFacade(this, new Handler(), getIntent());
     InterpreterInterface interpreter = InterpreterManager.getInterpreterByName(mInterpreterName);
     if (interpreter != null) {

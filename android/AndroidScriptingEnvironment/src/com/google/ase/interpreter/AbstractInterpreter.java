@@ -36,6 +36,11 @@ public abstract class AbstractInterpreter implements InterpreterInterface {
   }
 
   @Override
+  public String getInterpreterExtrasArchiveName() {
+    return getName() + "_extras.zip";
+  }
+
+  @Override
   public String getScriptsArchiveName() {
     return getName() + "_scripts.zip";
   }
@@ -49,4 +54,10 @@ public abstract class AbstractInterpreter implements InterpreterInterface {
   public String getScriptsArchiveUrl() {
     return BASE_INSTALL_URL + getName() + "/" + getScriptsArchiveName();
   }
+
+  @Override
+  public String getInterpreterExtrasArchiveUrl() {
+    return BASE_INSTALL_URL + getName() + "/" + getInterpreterExtrasArchiveName();
+  }
+
 }

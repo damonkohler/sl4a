@@ -1,6 +1,5 @@
 This directory contains resources related to JRuby.
 
-ase/ contains Ruby code written for the Android Scripting Environment.
 json/ contains the JSON implementation for Ruby http://json.rubyforge.org/
 jruby-complete-1.2.0RC1.jar, patched jruby-complete.jar (+json +android.rb)
 
@@ -39,7 +38,7 @@ diff -r jruby-1.2.0RC1/build.xml jruby-1.2.0RC1.patched/build.xml
 
 * Downloaded the json sources from http://rubyforge.org/frs/?group_id=953 and put them in lib/ruby/1.8/json/.
 
-* Copy android.rb to lib/ruby/1.8/.
+* Added android.rb to lib/ruby/1.8/
 
-* Build jar-complete and added jruby-complete.jar to eclipse project.
+* Build jruby-complete.jar.
 

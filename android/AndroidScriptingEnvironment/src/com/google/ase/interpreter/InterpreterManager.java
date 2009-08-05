@@ -47,13 +47,13 @@ public class InterpreterManager {
           new ShInterpreter(), new JRubyInterpreter());
 
   public static boolean checkInstalled(final String interpreterName) {
-    // TODO(damonkohler): Hack for BeanShell and Shell.
-    if (interpreterName.equals("bsh") || interpreterName.equals("sh") ||
-        interpreterName.equals("jruby")) {
+    if (interpreterName.equals("sh")) {
+      // Shell is installed by the system.
       return true;
     }
-    File interpreterDir = new File(Constants.INTERPRETER_ROOT + interpreterName);
-    return interpreterDir.exists();
+    File interpreterDirectory = new File(Constants.INTERPRETER_ROOT + interpreterName);
+    File interpreterExtrasDirectory = new File(Constants.INTERPRETER_EXTRAS_ROOT + interpreterName);
+    return interpreterDirectory.exists() || interpreterExtrasDirectory.exists();
   }
 
   /**

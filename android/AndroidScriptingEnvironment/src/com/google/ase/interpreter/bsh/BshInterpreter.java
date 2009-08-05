@@ -16,15 +16,11 @@
 
 package com.google.ase.interpreter.bsh;
 
-import android.util.Log;
-
 import com.google.ase.AndroidFacade;
 import com.google.ase.interpreter.AbstractInterpreter;
 import com.google.ase.interpreter.InterpreterProcessInterface;
 
 public class BshInterpreter extends AbstractInterpreter {
-
-  private static final String TAG = "BshInterpreter";
 
   @Override
   public String getExtension() {
@@ -43,12 +39,22 @@ public class BshInterpreter extends AbstractInterpreter {
 
   @Override
   public InterpreterProcessInterface buildProcess(AndroidFacade facade, String scriptName) {
-    try {
-      return new BshInterpreterProcess(facade, scriptName);
-    } catch (Exception e) {
-      Log.e(TAG, "Failed to create BSH interpreter.", e);
-      return null;
-    }
+    return new BshInterpreterProcess(facade, scriptName);
+  }
+
+  @Override
+  public boolean hasInterpreterArchive() {
+    return false;
+  }
+
+  @Override
+  public boolean hasInterpreterExtrasArchive() {
+    return true;
+  }
+
+  @Override
+  public boolean hasScriptsArchive() {
+    return true;
   }
 
 }

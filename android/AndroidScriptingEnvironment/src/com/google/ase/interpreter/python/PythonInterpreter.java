@@ -50,4 +50,19 @@ public class PythonInterpreter extends AbstractInterpreter {
   public String getContentTemplate() {
     return "import android\n\ndroid = android.Android()";
   }
+
+  @Override
+  public boolean hasInterpreterArchive() {
+    return true;
+  }
+
+  @Override
+  public boolean hasInterpreterExtrasArchive() {
+    return false;
+  }
+
+  @Override
+  public boolean hasScriptsArchive() {
+    return true;
+  }
 }
