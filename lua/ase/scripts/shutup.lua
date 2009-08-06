@@ -2,11 +2,10 @@
 --the ringer.
 require "android"
 android.startSensing()
-android.sleep(1)  --Give the sensors a moment to come online.
 silent = false
 while true do
-  s = android.readSensors()
-  facedown = s.result and s.result.roll and s.result.roll < -9
+  e = android.receiveEvent()
+  facedown = e.result and e.result.roll and e.result.roll < -9
   if facedown and not silent then
     android.vibrate(100)  --A short vibration to indicate we're in silent mode.
     android.setRingerSilent(true)
