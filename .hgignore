@@ -1,0 +1,5 @@
+syntax: glob
+*.class
+*.dex
+*.swp
+android/AndroidScriptingEnvironment/bin/*
