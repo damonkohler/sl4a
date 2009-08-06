@@ -1,1 +1,3 @@
-android.makeToast("Hello, Android!");
+source("/sdcard/ase/extra/bsh/android.bsh");
+droid = Android();
+droid.call("makeToast", "Hello, Android!");
