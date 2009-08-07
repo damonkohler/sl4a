@@ -36,4 +36,12 @@ public class ShInterpreterProcess extends AbstractInterpreterProcess {
   private void buildEnvironment() {
     mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
   }
+
+  @Override
+  protected void writeInterpreterCommand() {
+    if (mLaunchScript != null) {
+      print(SHELL_BIN + " " + mLaunchScript + "\n");
+    }
+  }
+
 }
