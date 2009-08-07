@@ -122,6 +122,14 @@ public class Terminal extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    // TODO(damonkohler): Until we are able to save and return state, it's better to just die.
+    if (savedInstanceState != null) {
+      AseLog.e("Attempted to restore previous state. Aborting.");
+      finish();
+      return;
+    }
+
     requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
     setContentView(R.layout.term);
     CustomWindowTitle.buildWindowTitle(this);

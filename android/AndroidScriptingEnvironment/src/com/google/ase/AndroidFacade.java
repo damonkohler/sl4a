@@ -315,6 +315,10 @@ public class AndroidFacade {
       return null;
     }
 
+    // TODO(damonkohler): Make it possible for either ASE or user scripts to save and restore state.
+    // This prevents ASE from being closed when the new activity is launched.
+    ((Activity) mContext).setPersistent(true);
+
     mLatch = new CountDownLatch(1);
     mHandler.post(new Runnable() {
       public void run() {
@@ -335,6 +339,9 @@ public class AndroidFacade {
     } catch (InterruptedException e) {
       AseLog.e("Interrupted while waiting for handler to complete.", e);
     }
+
+    // Restore the default behavior of ASE being closed when additional resources are required.
+    ((Activity) mContext).setPersistent(false);
     return mStartActivityResult;
   }
 
