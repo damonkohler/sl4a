@@ -42,6 +42,6 @@ public class Constants {
   public static final String SDCARD_ASE_ROOT = SDCARD_ROOT + "/ase/";
   public static final String ASE_DALVIK_CACHE_ROOT = SDCARD_ASE_ROOT + "dalvik-cache/";
   public static final String SCRIPTS_ROOT = SDCARD_ASE_ROOT + "scripts/";
-  public static final String INTERPRETER_EXTRAS_ROOT = SDCARD_ASE_ROOT + "extra/";
+  public static final String INTERPRETER_EXTRAS_ROOT = SDCARD_ASE_ROOT + "extras/";
   public static final String INTERPRETER_ROOT = "/data/data/com.google.ase/";
 }

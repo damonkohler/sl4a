@@ -1,0 +1,216 @@
+#!/bin/sh
+
+#
+# package-android-sh
+#
+# Package the built Perl for the android platform.
+#
+
+perl_exe=../perl.arm
+arm_lib=../xlib/arm
+
+Config_pm=$arm_lib/Config.pm
+JSON_tgz=JSON.tar.gz
+
+echo "[sanity checks...]"
+if test ! -f "$perl_exe"
+then
+  echo "$0: Cannot find the ARM perl executable '$perl_exe', aborting."
+  exit 1
+fi
+if test ! -d "$arm_lib"
+then
+  echo "$0: Cannot find the ARM library directory '$arm_lib', aborting."
+  exit 1
+fi
+if test ! -f "$Config_pm"
+then
+  echo "$0: Cannot find the configuration file '$Config_pm', aborting."
+  exit 1
+fi
+if test ! -f "$JSON_tgz"
+then
+  echo "$0: Cannot find the JSON library '$JSON_tgz', aborting."
+  exit 1
+fi
+echo "[sanity checks passed]"
+
+echo "[packaging...]"
+rm -rf android
+
+# These are almost like from config.sh but they are withOUT the
+# /data/data/com.google.com prefix.
+installlib=perl/5.10.0
+installarchlib=perl/5.10.0/arm-eabi-linux
+mkdir -p android/$installarchlib
+
+sitelib=android/sdcard/ase/extras/perl/site_perl
+
+stage () {
+  if test $# = 2
+  then
+    if test -f "$1"
+    then
+      case "$2" in
+      android/*)
+        echo "\t$1 -> $2"
+        mkdir -p $(dirname $2)
+        cp -f $1 $2
+        ;;
+      *) echo "$0: stage: second argument needs to begin with android, got $2"
+         exit 1
+         ;;
+      esac
+    else
+      echo "$0: stage: first argument needs to be an existing file"
+      exit 1
+    fi
+  else
+    echo "$0: stage: needs two arguments, got: $@"
+    exit 1
+  fi
+}
+
+echo "[copying perl executable]"
+stage $perl_exe android/perl/perl
+
+# TODO: lib.pm?
+echo "[copying basic libraries]"
+for lib in Config.pm Config_*.pl
+do
+  for l in $(ls $arm_lib/$lib)
+  do
+    dst=android/$installlib/$(echo $l | sed 's:^'$arm_lib'/::')
+    stage $l $dst
+  done
+done
+for lib in AutoLoader.pm base.pm bytes.pm Carp.pm Carp/*.pm Config_*.pl constant.pm CPAN.pm CPAN/*.pm Cwd.pm Exporter.pm Exporter/*.pm File/*.pm Getopt/*.pm IPC/*.pm lib.pm overload.pm perl5db.pl re.pm strict.pm Symbol.pm Term/ReadLine.pm Text/*.pm Tie/*.pm vars.pm warnings.pm warnings/*.pm
+do
+  lib=$(ls ../lib/$lib)
+  for l in $lib
+  do
+    dst=android/$installlib/$(echo $l | sed 's:^\.\./lib/::')
+    stage $l $dst
+  done
+done
+
+echo "[copying AutoLoader files]"
+for al in $(find ../xlib '(' -name '*.al' -o -name '*.ix' ')' -print)
+do
+  case "$al" in
+  */Storable/*) ;; # Not yet.
+  *) dst=android/$installlib/$(echo $al | sed 's:^'$arm_lib'/::')
+     stage $al $dst
+     ;;
+  esac
+done
+
+echo "[copying extension libraries]"
+for pm in $(find $arm_lib -name '*.pm' -print)
+do
+  src=$pm
+  dst=$(echo $src | sed -e "s:^$arm_lib/::" -e 's:^lib/::')
+  stage $src android/$installlib/$dst
+done
+
+echo "[copying extra libraries]"
+
+tar zxf $JSON_tgz
+json_dir=$(ls -d JSON-*.*/)
+case "$json_dir" in
+'') echo "$0: Failed to extract a JSON directory, aborting."
+    exit 1 ;;
+*" "*) echo "$0: Too many JSON directories ($json_dir), aborting."
+       exit 1 ;;
+esac
+json_dir=$(echo $json_dir | sed 's:/$::')
+json_pm=$(ls $json_dir/lib/JSON.pm)
+if test ! -f "$json_pm"
+then
+  echo "$0: Could not find a JSON.pm inside the $JSON_tgz, aborting."
+  rm -rf JSON-*.*/
+  exit 1
+fi
+for lib in $(find $json_dir/lib -type f -name '*.pm' -print)
+do
+  dst=$sitelib/$(echo $lib | sed "s:^$json_dir/lib/::")
+  stage $lib $dst
+done
+rm -rf JSON-*.*/
+
+stage Android.pm $sitelib/Android.pm
+
+echo "[generating installer]"
+cd android
+EMULATOR_INSTALLER=install-android-emulator-sh
+ASEROOT=/data/data/com.google.ase
+rm -f $EMULATOR_INSTALLER
+
+cat >$EMULATOR_INSTALLER <<__EOF__
+#!/bin/sh
+
+echo
+echo "[installing perl]"
+echo
+
+__EOF__
+
+echo "adb shell mkdir $ASEROOT" >> $EMULATOR_INSTALLER
+for d in $(find . -type d -print | sed 's:^\./::')
+do
+  case "$d" in
+  '.') ;;
+  *) case "$d" in
+     sdcard/*) echo "adb shell mkdir /$d" >> $EMULATOR_INSTALLER ;;
+     *) echo "adb shell mkdir $ASEROOT/$d" >> $EMULATOR_INSTALLER ;;
+     esac
+  esac 
+done
+for f in $(find . -type f -print | sed 's:^\./::')
+do
+  case "$f" in
+  *install-android-sh) ;;
+  *) d=$(dirname $f)
+     r=$ASEROOT
+     case "$d" in
+     sdcard/*) echo "adb push $f /$d" >> $EMULATOR_INSTALLER ;;
+     *) echo "adb push $f $ASEROOT/$d" >> $EMULATOR_INSTALLER ;;
+     esac
+     ;;
+  esac
+done
+
+cat >>$EMULATOR_INSTALLER <<__EOF__
+echo
+echo "[perl installed]"
+echo
+__EOF__
+
+EMULATOR_UNINSTALLER=uninstall-android-emulator-sh
+cat >$EMULATOR_UNINSTALLER <<__EOF__
+#!/bin/sh
+
+echo
+echo "[uninstalling perl]"
+echo
+
+# TODO: sanity check: "did you really mean to do this?"
+
+sh -x -c "adb shell rm -r /data/data/com.google.ase/perl /sdcard/ase/extras/perl"
+
+echo
+echo "[perl uninstalled]"
+echo
+__EOF__
+ls -l $EMULATOR_INSTALLER
+ls -l $EMULATOR_UNINSTALLER
+
+cd ..
+
+rm -f android.zip
+zip -q -r android.zip android
+
+echo "[packaging done]"
+ls -lsk android.zip
+
+exit 0

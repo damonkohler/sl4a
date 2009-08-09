@@ -1,0 +1,145 @@
+# this is a build script for ARM-linux cross-compiling.
+# it builds miniperl on HOST and then perl for TARGET
+# this approach is like Perl-CE cross-compiling, and allows
+# for full TARGET perl (as opposed to renamed miniperl)
+
+# to skip Configure/build for HOST miniperl, pass "noconf" argument to
+# this script
+
+# note how invoked Makefile.PL for cross-compilation:
+#   ./miniperl -Ilib -MCross Makefile.PL
+
+# steps are:
+# - run HOST configure
+# - build HOST miniperl
+# given freshly-created HOST makefile and existing miniperl fix makefile
+# to use the crosscompile settings.
+
+rm -rf android android.zip
+
+# -- Extensions --
+#
+# Building fine but left out for now: attributes Devel/Peek MIME/Base64 mro PerlIO/scalar PerlIO/via Safe Storable Time/Piece
+# Would be nice but do not build trivially: Time/HiRes
+# Big/complex: Compress* DB_File Encode Errno Filter/Util/Call IO/Compress Math/BigInt/FastCalc PerlIO/encoding Time/HiRes Unicode/Normalize
+# Unlikely to be useful: ByteLoader GDBM_File NDBM_File Opcode SDBM_File XS/APItest XS/Typemap
+# Unlikely to ever build: I18N/Langinfo IPC/SysV Sys/Syslog threads threads/shared Win32*
+# Not really an ext: Attribute/Handlers
+
+static_ext='B Cwd Data/Dumper Devel/PPPort Digest/MD5 Digest/SHA Fcntl File/Glob IO List/Util POSIX Socket Sys/Hostname Time/HiRes'
+
+echo "[building for android]"
+
+cd ..
+
+cleanup () {
+  echo "[cleaning up]"
+  if test -f ../Configure -a -d ../Cross -a -d ../Porting
+  then
+     cd ..
+  fi
+  perl Porting/manicheck | awk '{print $1}' | xargs rm
+}
+
+if [[ "x$1" == xcleanup* ]] ; then
+  cleanup
+  exit 0
+fi
+
+agcc_test () {
+  echo 'int main() { return 0; }' > tmp$$.c
+  success=0
+  if agcc -o tmp$$ tmp$$.c > /tmp/$$.out; then
+     success=1
+  else
+     cat /tmp/$$.out
+  fi
+  rm -f tmp$$.? tmp$$
+  echo $success
+}
+
+CROSS_NAME=arm
+CCPREF=arm-eabi-
+CROSSCC=agcc
+
+if [[ "x$1" != xnoconf* ]] ; then
+  echo "[configuring for host]"
+  echo "[testing for agcc]"
+  case "$(agcc_test)" in
+  1) ;;
+  *) echo "$0: agcc is not working right."
+     echo "$0: You need to have .../prebuilt/OS-CPU/toolchain/arm-eabi-X.Y.Z/bin/arm-eabi-agcc in your PATH."
+     echo "$0: Cannot continue, aborting."
+     cleanup 
+     exit 1 ;;
+  esac 
+  cleanup
+  # Configure on HOST
+  ./Configure -des -Dprefix=./dummy -Dusedevel || exit 1
+fi
+
+# miniperl on HOST
+cp -f Cross/config.sh-arm-linux-android Cross/config-${CROSS_NAME}.sh
+
+echo "[building for host]"
+make miniperl
+make uudmap.h
+make git_version.h
+
+./miniperl -Ilib configpm --cross=arm
+make lib/re.pm lib/lib.pm
+
+# do the rest for TARGET
+
+echo "[building for target]"
+
+export CROSSCC
+export CROSS_NAME
+
+$CROSSCC --version
+
+# call make thusly so it will crosscompile...
+XCOREDIR=xlib/$CROSS_NAME/CORE
+PERL_CONFIG_SH=Cross/config-${CROSS_NAME}.sh
+
+cp -f $PERL_CONFIG_SH config.sh
+for sh in config_h Makefile Policy_sh cflags makeaperl makedepend makedir myconfig writemain
+do
+  sh $sh.SH
+done
+
+# make cflags do cross-compile work (now its hackish, will be improved!)
+rm -f cflags-cross-$CROSS_NAME
+cp Cross/cflags-cross-$CROSS_NAME .
+rm -f Makefile-cross-$CROSS_NAME
+CROSS_NAME=$CROSS_NAME sh Cross/Makefile-cross-SH
+cp -f Cross/Makefile-cross-$CROSS_NAME .
+cp -f Makefile-cross-$CROSS_NAME makefile
+
+mkdir -p ${XCOREDIR}
+
+cp -f *.h xlib/$CROSS_NAME
+
+mv -f Makefile Makefile.host
+rm -f GNUmakefile
+rm -f *.o
+
+touch xlib/$CROSS_NAME/Config.pm
+
+AR=${CCPREF}ar
+
+MAKEFILE=Makefile-cross-$CROSS_NAME
+make -f ${MAKEFILE} xconfig.h || exit 1
+make -f ${MAKEFILE} libperl.a OBJ_EXT=.o EXE_EXT=.$CROSS_NAME LIB_EXT=.a AR=${AR} || exit 1
+make -f ${MAKEFILE} miniperl.${CROSS_NAME} MAKEFILE=${MAKEFILE} AR=${AR} || exit 1
+make -f ${MAKEFILE} perl.${CROSS_NAME} MAKEFILE=${MAKEFILE} AR=${AR} || exit 1
+
+echo
+
+ls -l perl.${CROSS_NAME}
+
+echo
+echo "[android build done]"
+echo
+echo "[you can try next package-android-sh]"
+echo

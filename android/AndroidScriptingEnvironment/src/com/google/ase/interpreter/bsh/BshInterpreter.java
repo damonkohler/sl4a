@@ -39,7 +39,7 @@ public class BshInterpreter extends AbstractInterpreter {
 
   @Override
   public String getContentTemplate() {
-    return "source(\"/sdcard/ase/extra/bsh/android.bsh\");\ndroid = Android();\n";
+    return "source(\"/sdcard/ase/extras/bsh/android.bsh\");\ndroid = Android();\n";
   }
 
   @Override

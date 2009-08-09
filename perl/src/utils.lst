@@ -1,0 +1,34 @@
+pod/pod2html
+pod/pod2latex
+pod/pod2man
+pod/pod2text
+pod/pod2usage
+pod/podchecker
+pod/podselect
+utils/c2ph      # link = utils/pstruct
+utils/cpan
+utils/config_data
+utils/corelist
+utils/dprofpp
+utils/enc2xs
+utils/h2ph
+utils/h2xs
+utils/instmodsh
+utils/libnetcfg
+utils/perlbug	# link = utils/perlthanks
+utils/perldoc   # pod = pod/perldoc.pod
+utils/perlivp
+utils/piconv
+utils/pl2pm
+utils/prove
+utils/ptar
+utils/ptardiff
+utils/cpanp-run-perl
+utils/cpanp
+utils/cpan2dist
+utils/shasum
+utils/splain
+utils/xsubpp
+x2p/a2p         # pod = x2p/a2p.pod
+x2p/find2perl
+x2p/s2p         # link = x2p/psed

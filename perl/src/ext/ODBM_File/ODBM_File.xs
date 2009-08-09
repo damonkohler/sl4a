@@ -1,0 +1,211 @@
+#include "EXTERN.h"
+#include "perl.h"
+#include "XSUB.h"
+
+#ifdef I_DBM
+#  include <dbm.h>
+#else
+#  ifdef I_RPCSVC_DBM
+#    include <rpcsvc/dbm.h>
+#  endif
+#endif
+
+#ifndef HAS_DBMINIT_PROTO
+int	dbminit(char* filename);
+int	dbmclose(void);
+datum	fetch(datum key);
+int	store(datum key, datum dat);
+int	delete(datum key); 
+datum	firstkey(void);
+datum	nextkey(datum key);
+#endif
+
+#ifdef DBM_BUG_DUPLICATE_FREE 
+/*
+ * DBM on at least Ultrix and HPUX call dbmclose() from dbminit(),
+ * resulting in duplicate free() because dbmclose() does *not*
+ * check if it has already been called for this DBM.
+ * If some malloc/free calls have been done between dbmclose() and
+ * the next dbminit(), the memory might be used for something else when
+ * it is freed.
+ * Verified to work on ultrix4.3.  Probably will work on HP/UX.
+ * Set DBM_BUG_DUPLICATE_FREE in the extension hint file.
+ */
+/* Close the previous dbm, and fail to open a new dbm */
+#define dbmclose()	((void) dbminit("/non/exist/ent"))
+#endif
+
+#include <fcntl.h>
+
+typedef struct {
+	void * 	dbp ;
+	SV *    filter_fetch_key ;
+	SV *    filter_store_key ;
+	SV *    filter_fetch_value ;
+	SV *    filter_store_value ;
+	int     filtering ;
+	} ODBM_File_type;
+
+typedef ODBM_File_type * ODBM_File ;
+typedef datum datum_key ;
+typedef datum datum_key_copy ;
+typedef datum datum_value ;
+
+#define odbm_FETCH(db,key)			fetch(key)
+#define odbm_STORE(db,key,value,flags)		store(key,value)
+#define odbm_DELETE(db,key)			delete(key)
+#define odbm_FIRSTKEY(db)			firstkey()
+#define odbm_NEXTKEY(db,key)			nextkey(key)
+
+#define MY_CXT_KEY "ODBM_File::_guts" XS_VERSION
+
+typedef struct {
+    int		x_dbmrefcnt;
+} my_cxt_t;
+
+START_MY_CXT
+
+#define dbmrefcnt	(MY_CXT.x_dbmrefcnt)
+
+#ifndef DBM_REPLACE
+#define DBM_REPLACE 0
+#endif
+
+MODULE = ODBM_File	PACKAGE = ODBM_File	PREFIX = odbm_
+
+BOOT:
+{
+    MY_CXT_INIT;
+}
+
+ODBM_File
+odbm_TIEHASH(dbtype, filename, flags, mode)
+	char *		dbtype
+	char *		filename
+	int		flags
+	int		mode
+	CODE:
+	{
+	    char *tmpbuf;
+	    void * dbp ;
+	    dMY_CXT;
+
+	    if (dbmrefcnt++)
+		croak("Old dbm can only open one database");
+	    Newx(tmpbuf, strlen(filename) + 5, char);
+	    SAVEFREEPV(tmpbuf);
+	    sprintf(tmpbuf,"%s.dir",filename);
+	    if (stat(tmpbuf, &PL_statbuf) < 0) {
+		if (flags & O_CREAT) {
+		    if (mode < 0 || close(creat(tmpbuf,mode)) < 0)
+			croak("ODBM_File: Can't create %s", filename);
+		    sprintf(tmpbuf,"%s.pag",filename);
+		    if (close(creat(tmpbuf,mode)) < 0)
+			croak("ODBM_File: Can't create %s", filename);
+		}
+		else
+		    croak("ODBM_FILE: Can't open %s", filename);
+	    }
+	    dbp = (void*)(dbminit(filename) >= 0 ? &dbmrefcnt : 0);
+	    RETVAL = (ODBM_File)safemalloc(sizeof(ODBM_File_type)) ;
+    	    Zero(RETVAL, 1, ODBM_File_type) ;
+	    RETVAL->dbp = dbp ;
+	    ST(0) = sv_mortalcopy(&PL_sv_undef);
+	    sv_setptrobj(ST(0), RETVAL, dbtype);
+	}
+
+void
+DESTROY(db)
+	ODBM_File	db
+	PREINIT:
+	dMY_CXT;
+	CODE:
+	dbmrefcnt--;
+	dbmclose();
+	safefree(db);
+
+datum_value
+odbm_FETCH(db, key)
+	ODBM_File	db
+	datum_key_copy	key
+
+int
+odbm_STORE(db, key, value, flags = DBM_REPLACE)
+	ODBM_File	db
+	datum_key	key
+	datum_value	value
+	int		flags
+    CLEANUP:
+	if (RETVAL) {
+	    if (RETVAL < 0 && errno == EPERM)
+		croak("No write permission to odbm file");
+	    croak("odbm store returned %d, errno %d, key \"%s\"",
+			RETVAL,errno,key.dptr);
+	}
+
+int
+odbm_DELETE(db, key)
+	ODBM_File	db
+	datum_key	key
+
+datum_key
+odbm_FIRSTKEY(db)
+	ODBM_File	db
+
+datum_key
+odbm_NEXTKEY(db, key)
+	ODBM_File	db
+	datum_key	key
+
+
+#define setFilter(type)					\
+	{						\
+	    if (db->type)				\
+	        RETVAL = sv_mortalcopy(db->type) ; 	\
+	    ST(0) = RETVAL ;				\
+	    if (db->type && (code == &PL_sv_undef)) {	\
+                SvREFCNT_dec(db->type) ;		\
+	        db->type = Nullsv ;			\
+	    }						\
+	    else if (code) {				\
+	        if (db->type)				\
+	            sv_setsv(db->type, code) ;		\
+	        else					\
+	            db->type = newSVsv(code) ;		\
+	    }	    					\
+	}
+
+
+
+SV *
+filter_fetch_key(db, code)
+	ODBM_File	db
+	SV *		code
+	SV *		RETVAL = &PL_sv_undef ;
+	CODE:
+	    DBM_setFilter(db->filter_fetch_key, code) ;
+
+SV *
+filter_store_key(db, code)
+	ODBM_File	db
+	SV *		code
+	SV *		RETVAL =  &PL_sv_undef ;
+	CODE:
+	    DBM_setFilter(db->filter_store_key, code) ;
+
+SV *
+filter_fetch_value(db, code)
+	ODBM_File	db
+	SV *		code
+	SV *		RETVAL =  &PL_sv_undef ;
+	CODE:
+	    DBM_setFilter(db->filter_fetch_value, code) ;
+
+SV *
+filter_store_value(db, code)
+	ODBM_File	db
+	SV *		code
+	SV *		RETVAL =  &PL_sv_undef ;
+	CODE:
+	    DBM_setFilter(db->filter_store_value, code) ;
+

@@ -1,0 +1,12 @@
+!/encengine.c
+/Byte/Byte.xs
+/CN/CN.xs
+/EBCDIC/EBCDIC.xs
+/JP/JP.xs
+/KR/KR.xs
+/Symbol/Symbol.xs
+/TW/TW.xs
+*.exh
+*.h
+!/Encode/encode.h
+*.fnm

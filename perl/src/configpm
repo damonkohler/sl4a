@@ -1,0 +1,1144 @@
+#!./miniperl -w
+#
+# configpm
+#
+# Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,
+# 2002, 2003, 2004, 2005, 2006, 2007 Larry Wall and others.
+#
+#
+# Regenerate the files
+#
+#    lib/Config.pm
+#    lib/Config_heavy.pl
+#    lib/Config.pod
+#    lib/Cross.pm (optionally)
+#
+#
+# from the contents of the static files
+#
+#    Porting/Glossary
+#    myconfig.SH
+#
+# and from the contents of the Configure-generated file
+#
+#    config.sh
+#
+# Note that output directory is xlib/[cross-name]/ for cross-compiling
+#
+# It will only update Config.pm and Config_heavy.pl if the contents of
+# either file would be different. Note that *both* files are updated in
+# this case, since for example an extension makefile that has a dependency
+# on Config.pm should trigger even if only Config_heavy.pl has changed.
+
+sub usage { die <<EOF }
+usage: $0  [ options ]
+    --cross=PLATFORM    cross-compile for a different platform
+    --no-glossary       don't include Porting/Glossary in lib/Config.pod
+EOF
+
+use strict;
+use vars qw(%Config $Config_SH_expanded);
+
+my $how_many_common = 22;
+
+# commonly used names to precache (and hence lookup fastest)
+my %Common;
+
+while ($how_many_common--) {
+    $_ = <DATA>;
+    chomp;
+    /^(\S+):\s*(\d+)$/ or die "Malformed line '$_'";
+    $Common{$1} = $1;
+}
+
+# names of things which may need to have slashes changed to double-colons
+my %Extensions = map {($_,$_)}
+                 qw(dynamic_ext static_ext extensions known_extensions);
+
+# allowed opts as well as specifies default and initial values
+my %Allowed_Opts = (
+    'cross'    => '', # --cross=PLATFORM - crosscompiling for PLATFORM
+    'glossary' => 1,  # --no-glossary  - no glossary file inclusion,
+                      #                  for compactness
+);
+
+sub opts {
+    # user specified options
+    my %given_opts = (
+        # --opt=smth
+        (map {/^--([\-_\w]+)=(.*)$/} @ARGV),
+        # --opt --no-opt --noopt
+        (map {/^no-?(.*)$/i?($1=>0):($_=>1)} map {/^--([\-_\w]+)$/} @ARGV),
+    );
+
+    my %opts = (%Allowed_Opts, %given_opts);
+
+    for my $opt (grep {!exists $Allowed_Opts{$_}} keys %given_opts) {
+        warn "option '$opt' is not recognized";
+	usage;
+    }
+    @ARGV = grep {!/^--/} @ARGV;
+
+    return %opts;
+}
+
+
+my %Opts = opts();
+
+my ($Config_SH, $Config_PM, $Config_heavy, $Config_POD);
+my $Glossary = 'Porting/Glossary';
+
+if ($Opts{cross}) {
+  # creating cross-platform config file
+  mkdir "xlib";
+  mkdir "xlib/$Opts{cross}";
+  $Config_PM = "xlib/$Opts{cross}/Config.pm";
+  $Config_POD = "xlib/$Opts{cross}/Config.pod";
+  $Config_SH = "Cross/config-$Opts{cross}.sh";
+}
+else {
+  $Config_PM = "lib/Config.pm";
+  $Config_POD = "lib/Config.pod";
+  $Config_SH = "config.sh";
+}
+($Config_heavy = $Config_PM) =~ s/\.pm$/_heavy.pl/;
+die "Can't automatically determine name for Config_heavy.pl from '$Config_PM'"
+  if $Config_heavy eq $Config_PM;
+
+my $config_txt;
+my $heavy_txt;
+
+$heavy_txt .= <<'ENDOFBEG';
+# This file was created by configpm when Perl was built. Any changes
+# made to this file will be lost the next time perl is built.
+
+package Config;
+use strict;
+# use warnings; Pulls in Carp
+# use vars pulls in Carp
+ENDOFBEG
+
+my $myver = sprintf "%vd", $^V;
+
+$config_txt .= sprintf <<'ENDOFBEG', ($myver) x 3;
+# This file was created by configpm when Perl was built. Any changes
+# made to this file will be lost the next time perl is built.
+
+# for a description of the variables, please have a look at the
+# Glossary file, as written in the Porting folder, or use the url:
+# http://perl5.git.perl.org/perl.git/blob/HEAD:/Porting/Glossary
+
+package Config;
+use strict;
+# use warnings; Pulls in Carp
+# use vars pulls in Carp
+@Config::EXPORT = qw(%%Config);
+@Config::EXPORT_OK = qw(myconfig config_sh config_vars config_re);
+
+# Need to stub all the functions to make code such as print Config::config_sh
+# keep working
+
+sub myconfig;
+sub config_sh;
+sub config_vars;
+sub config_re;
+
+my %%Export_Cache = map {($_ => 1)} (@Config::EXPORT, @Config::EXPORT_OK);
+
+our %%Config;
+
+# Define our own import method to avoid pulling in the full Exporter:
+sub import {
+    my $pkg = shift;
+    @_ = @Config::EXPORT unless @_;
+
+    my @funcs = grep $_ ne '%%Config', @_;
+    my $export_Config = @funcs < @_ ? 1 : 0;
+
+    no strict 'refs';
+    my $callpkg = caller(0);
+    foreach my $func (@funcs) {
+	die sprintf qq{"%%s" is not exported by the %%s module\n},
+	    $func, __PACKAGE__ unless $Export_Cache{$func};
+	*{$callpkg.'::'.$func} = \&{$func};
+    }
+
+    *{"$callpkg\::Config"} = \%%Config if $export_Config;
+    return;
+}
+
+die "Perl lib version (%s) doesn't match executable version ($])"
+    unless $^V;
+
+$^V eq %s
+    or die "Perl lib version (%s) doesn't match executable version (" .
+	sprintf("v%%vd",$^V) . ")";
+
+ENDOFBEG
+
+
+my @non_v    = ();
+my @v_others = ();
+my $in_v     = 0;
+my %Data     = ();
+
+
+my %seen_quotes;
+{
+  my ($name, $val);
+  open(CONFIG_SH, $Config_SH) || die "Can't open $Config_SH: $!";
+  while (<CONFIG_SH>) {
+    next if m:^#!/bin/sh:;
+
+    # Catch PERL_CONFIG_SH=true and PERL_VERSION=n line from Configure.
+    s/^(\w+)=(true|\d+)\s*$/$1='$2'\n/ or m/^(\w+)='(.*)'$/;
+    my($k, $v) = ($1, $2);
+
+    # grandfather PATCHLEVEL and SUBVERSION and CONFIG
+    if ($k) {
+	if ($k eq 'PERL_VERSION') {
+	    push @v_others, "PATCHLEVEL='$v'\n";
+	}
+	elsif ($k eq 'PERL_SUBVERSION') {
+	    push @v_others, "SUBVERSION='$v'\n";
+	}
+	elsif ($k eq 'PERL_CONFIG_SH') {
+	    push @v_others, "CONFIG='$v'\n";
+	}
+    }
+
+    # We can delimit things in config.sh with either ' or ". 
+    unless ($in_v or m/^(\w+)=(['"])(.*\n)/){
+	push(@non_v, "#$_"); # not a name='value' line
+	next;
+    }
+    my $quote = $2;
+    if ($in_v) { 
+        $val .= $_;
+    }
+    else { 
+        ($name,$val) = ($1,$3); 
+    }
+    $in_v = $val !~ /$quote\n/;
+    next if $in_v;
+
+    s,/,::,g if $Extensions{$name};
+
+    $val =~ s/$quote\n?\z//;
+
+    my $line = "$name=$quote$val$quote\n";
+    push(@v_others, $line);
+    $seen_quotes{$quote}++;
+  }
+  close CONFIG_SH;
+}
+
+# This is somewhat grim, but I want the code for parsing config.sh here and
+# now so that I can expand $Config{ivsize} and $Config{ivtype}
+
+my $fetch_string = <<'EOT';
+
+# Search for it in the big string
+sub fetch_string {
+    my($self, $key) = @_;
+
+EOT
+
+if ($seen_quotes{'"'}) {
+    # We need the full ' and " code
+    $fetch_string .= <<'EOT';
+    my $quote_type = "'";
+    my $marker = "$key=";
+
+    # Check for the common case, ' delimited
+    my $start = index($Config_SH_expanded, "\n$marker$quote_type");
+    # If that failed, check for " delimited
+    if ($start == -1) {
+        $quote_type = '"';
+        $start = index($Config_SH_expanded, "\n$marker$quote_type");
+    }
+EOT
+} else {
+    $fetch_string .= <<'EOT';
+    # We only have ' delimted.
+    my $start = index($Config_SH_expanded, "\n$key=\'");
+EOT
+}
+$fetch_string .= <<'EOT';
+    # Start can never be -1 now, as we've rigged the long string we're
+    # searching with an initial dummy newline.
+    return undef if $start == -1;
+
+    $start += length($key) + 3;
+
+EOT
+if (!$seen_quotes{'"'}) {
+    # Don't need the full ' and " code, or the eval expansion.
+    $fetch_string .= <<'EOT';
+    my $value = substr($Config_SH_expanded, $start,
+                       index($Config_SH_expanded, "'\n", $start)
+		       - $start);
+EOT
+} else {
+    $fetch_string .= <<'EOT';
+    my $value = substr($Config_SH_expanded, $start,
+                       index($Config_SH_expanded, "$quote_type\n", $start)
+		       - $start);
+
+    # If we had a double-quote, we'd better eval it so escape
+    # sequences and such can be interpolated. Since the incoming
+    # value is supposed to follow shell rules and not perl rules,
+    # we escape any perl variable markers
+    if ($quote_type eq '"') {
+	$value =~ s/\$/\\\$/g;
+	$value =~ s/\@/\\\@/g;
+	eval "\$value = \"$value\"";
+    }
+EOT
+}
+$fetch_string .= <<'EOT';
+    # So we can say "if $Config{'foo'}".
+    $value = undef if $value eq 'undef';
+    $self->{$key} = $value; # cache it
+}
+EOT
+
+eval $fetch_string;
+die if $@;
+
+# Calculation for the keys for byteorder
+# This is somewhat grim, but I need to run fetch_string here.
+our $Config_SH_expanded = join "\n", '', @v_others;
+
+my $t = fetch_string ({}, 'ivtype');
+my $s = fetch_string ({}, 'ivsize');
+
+# byteorder does exist on its own but we overlay a virtual
+# dynamically recomputed value.
+
+# However, ivtype and ivsize will not vary for sane fat binaries
+
+my $f = $t eq 'long' ? 'L!' : $s == 8 ? 'Q': 'I';
+
+my $byteorder_code;
+if ($s == 4 || $s == 8) {
+    my $list = join ',', reverse(2..$s);
+    my $format = 'a'x$s;
+    $byteorder_code = <<"EOT";
+
+my \$i = 0;
+foreach my \$c ($list) { \$i |= ord(\$c); \$i <<= 8 }
+\$i |= ord(1);
+our \$byteorder = join('', unpack('$format', pack('$f', \$i)));
+EOT
+} else {
+    $byteorder_code = "our \$byteorder = '?'x$s;\n";
+}
+
+my @need_relocation;
+
+if (fetch_string({},'userelocatableinc')) {
+    foreach my $what (qw(prefixexp
+
+			 archlibexp
+			 html1direxp
+			 html3direxp
+			 man1direxp
+			 man3direxp
+			 privlibexp
+			 scriptdirexp
+			 sitearchexp
+			 sitebinexp
+			 sitehtml1direxp
+			 sitehtml3direxp
+			 sitelibexp
+			 siteman1direxp
+			 siteman3direxp
+			 sitescriptexp
+			 vendorarchexp
+			 vendorbinexp
+			 vendorhtml1direxp
+			 vendorhtml3direxp
+			 vendorlibexp
+			 vendorman1direxp
+			 vendorman3direxp
+			 vendorscriptexp
+
+			 siteprefixexp
+			 sitelib_stem
+			 vendorlib_stem
+
+			 installarchlib
+			 installhtml1dir
+			 installhtml3dir
+			 installman1dir
+			 installman3dir
+			 installprefix
+			 installprefixexp
+			 installprivlib
+			 installscript
+			 installsitearch
+			 installsitebin
+			 installsitehtml1dir
+			 installsitehtml3dir
+			 installsitelib
+			 installsiteman1dir
+			 installsiteman3dir
+			 installsitescript
+			 installvendorarch
+			 installvendorbin
+			 installvendorhtml1dir
+			 installvendorhtml3dir
+			 installvendorlib
+			 installvendorman1dir
+			 installvendorman3dir
+			 installvendorscript
+			 )) {
+	push @need_relocation, $what if fetch_string({}, $what) =~ m!^\.\.\./!;
+    }
+}
+
+my %need_relocation;
+@need_relocation{@need_relocation} = @need_relocation;
+
+# This can have .../ anywhere:
+if (fetch_string({}, 'otherlibdirs') =~ m!\.\.\./!) {
+    $need_relocation{otherlibdirs} = 'otherlibdirs';
+}
+
+my $relocation_code = <<'EOT';
+
+sub relocate_inc {
+  my $libdir = shift;
+  return $libdir unless $libdir =~ s!^\.\.\./!!;
+  my $prefix = $^X;
+  if ($prefix =~ s!/[^/]*$!!) {
+    while ($libdir =~ m!^\.\./!) {
+      # Loop while $libdir starts "../" and $prefix still has a trailing
+      # directory
+      last unless $prefix =~ s!/([^/]+)$!!;
+      # but bail out if the directory we picked off the end of $prefix is .
+      # or ..
+      if ($1 eq '.' or $1 eq '..') {
+	# Undo! This should be rare, hence code it this way rather than a
+	# check each time before the s!!! above.
+	$prefix = "$prefix/$1";
+	last;
+      }
+      # Remove that leading ../ and loop again
+      substr ($libdir, 0, 3, '');
+    }
+    $libdir = "$prefix/$libdir";
+  }
+  $libdir;
+}
+EOT
+
+if (%need_relocation) {
+  my $relocations_in_common;
+  # otherlibdirs only features in the hash
+  foreach (keys %need_relocation) {
+    $relocations_in_common++ if $Common{$_};
+  }
+  if ($relocations_in_common) {
+    $config_txt .= $relocation_code;
+  } else {
+    $heavy_txt .= $relocation_code;
+  }
+}
+
+$heavy_txt .= join('', @non_v) . "\n";
+
+# copy config summary format from the myconfig.SH script
+$heavy_txt .= "our \$summary = <<'!END!';\n";
+open(MYCONFIG,"<myconfig.SH") || die "open myconfig.SH failed: $!";
+1 while defined($_ = <MYCONFIG>) && !/^Summary of/;
+do { $heavy_txt .= $_ } until !defined($_ = <MYCONFIG>) || /^\s*$/;
+close(MYCONFIG);
+
+$heavy_txt .= "\n!END!\n" . <<'EOT';
+my $summary_expanded;
+
+sub myconfig {
+    return $summary_expanded if $summary_expanded;
+    ($summary_expanded = $summary) =~ s{\$(\w+)}
+		 { 
+			my $c;
+			if ($1 eq 'git_ancestor_line') {
+				if ($Config::Config{git_ancestor}) {
+					$c= "\n  Ancestor: $Config::Config{git_ancestor}";
+				} else {
+					$c= "";
+				}
+			} else {
+                     		$c = $Config::Config{$1}; 
+			}
+			defined($c) ? $c : 'undef' 
+		}ge;
+    $summary_expanded;
+}
+
+local *_ = \my $a;
+$_ = <<'!END!';
+EOT
+
+$heavy_txt .= join('', sort @v_others) . "!END!\n";
+
+# Only need the dynamic byteorder code in Config.pm if 'byteorder' is one of
+# the precached keys
+if ($Common{byteorder}) {
+    $config_txt .= $byteorder_code;
+} else {
+    $heavy_txt .= $byteorder_code;
+}
+
+if (@need_relocation) {
+$heavy_txt .= 'foreach my $what (qw(' . join (' ', @need_relocation) .
+      ")) {\n" . <<'EOT';
+    s/^($what=)(['"])(.*?)\2/$1 . $2 . relocate_inc($3) . $2/me;
+}
+EOT
+# Currently it only makes sense to do the ... relocation on Unix, so there's
+# no need to emulate the "which separator for this platform" logic in perl.c -
+# ':' will always be applicable
+if ($need_relocation{otherlibdirs}) {
+$heavy_txt .= << 'EOT';
+s{^(otherlibdirs=)(['"])(.*?)\2}
+ {$1 . $2 . join ':', map {relocate_inc($_)} split ':', $3 . $2}me;
+EOT
+}
+}
+
+$heavy_txt .= <<'EOT';
+s/(byteorder=)(['"]).*?\2/$1$2$Config::byteorder$2/m;
+
+my $config_sh_len = length $_;
+
+our $Config_SH_expanded = "\n$_" . << 'EOVIRTUAL';
+EOT
+
+foreach my $prefix (qw(ccflags ldflags)) {
+    my $value = fetch_string ({}, $prefix);
+    my $withlargefiles = fetch_string ({}, $prefix . "_uselargefiles");
+    if (defined $withlargefiles) {
+        $value =~ s/\Q$withlargefiles\E\b//;
+        $heavy_txt .= "${prefix}_nolargefiles='$value'\n";
+    }
+}
+
+foreach my $prefix (qw(libs libswanted)) {
+    my $value = fetch_string ({}, $prefix);
+    my $withlf = fetch_string ({}, 'libswanted_uselargefiles');
+    next unless defined $withlf;
+    my @lflibswanted
+       = split(' ', fetch_string ({}, 'libswanted_uselargefiles'));
+    if (@lflibswanted) {
+	my %lflibswanted;
+	@lflibswanted{@lflibswanted} = ();
+	if ($prefix eq 'libs') {
+	    my @libs = grep { /^-l(.+)/ &&
+                            not exists $lflibswanted{$1} }
+		                    split(' ', fetch_string ({}, 'libs'));
+	    $value = join(' ', @libs);
+	} else {
+	    my @libswanted = grep { not exists $lflibswanted{$_} }
+	                          split(' ', fetch_string ({}, 'libswanted'));
+	    $value = join(' ', @libswanted);
+	}
+    }
+    $heavy_txt .= "${prefix}_nolargefiles='$value'\n";
+}
+
+$heavy_txt .= "EOVIRTUAL\n";
+
+$heavy_txt .= <<'ENDOFGIT';
+eval {
+	# do not have hairy conniptions if this isnt available
+	require 'Config_git.pl';
+	$Config_SH_expanded .= $Config::Git_Data;
+	1;
+} or warn "Warning: failed to load Config_git.pl, something strange about this perl...\n";
+ENDOFGIT
+
+$heavy_txt .= $fetch_string;
+
+$config_txt .= <<'ENDOFEND';
+
+sub FETCH {
+    my($self, $key) = @_;
+
+    # check for cached value (which may be undef so we use exists not defined)
+    return $self->{$key} if exists $self->{$key};
+
+    return $self->fetch_string($key);
+}
+ENDOFEND
+
+$heavy_txt .= <<'ENDOFEND';
+
+my $prevpos = 0;
+
+sub FIRSTKEY {
+    $prevpos = 0;
+    substr($Config_SH_expanded, 1, index($Config_SH_expanded, '=') - 1 );
+}
+
+sub NEXTKEY {
+ENDOFEND
+if ($seen_quotes{'"'}) {
+$heavy_txt .= <<'ENDOFEND';
+    # Find out how the current key's quoted so we can skip to its end.
+    my $quote = substr($Config_SH_expanded,
+		       index($Config_SH_expanded, "=", $prevpos)+1, 1);
+    my $pos = index($Config_SH_expanded, qq($quote\n), $prevpos) + 2;
+ENDOFEND
+} else {
+    # Just ' quotes, so it's much easier.
+$heavy_txt .= <<'ENDOFEND';
+    my $pos = index($Config_SH_expanded, qq('\n), $prevpos) + 2;
+ENDOFEND
+}
+$heavy_txt .= <<'ENDOFEND';
+    my $len = index($Config_SH_expanded, "=", $pos) - $pos;
+    $prevpos = $pos;
+    $len > 0 ? substr($Config_SH_expanded, $pos, $len) : undef;
+}
+
+sub EXISTS {
+    return 1 if exists($_[0]->{$_[1]});
+
+    return(index($Config_SH_expanded, "\n$_[1]='") != -1
+ENDOFEND
+if ($seen_quotes{'"'}) {
+$heavy_txt .= <<'ENDOFEND';
+           or index($Config_SH_expanded, "\n$_[1]=\"") != -1
+ENDOFEND
+}
+$heavy_txt .= <<'ENDOFEND';
+          );
+}
+
+sub STORE  { die "\%Config::Config is read-only\n" }
+*DELETE = \&STORE;
+*CLEAR  = \&STORE;
+
+
+sub config_sh {
+    substr $Config_SH_expanded, 1, $config_sh_len;
+}
+
+sub config_re {
+    my $re = shift;
+    return map { chomp; $_ } grep eval{ /^(?:$re)=/ }, split /^/,
+    $Config_SH_expanded;
+}
+
+sub config_vars {
+    # implements -V:cfgvar option (see perlrun -V:)
+    foreach (@_) {
+	# find optional leading, trailing colons; and query-spec
+	my ($notag,$qry,$lncont) = m/^(:)?(.*?)(:)?$/;	# flags fore and aft, 
+	# map colon-flags to print decorations
+	my $prfx = $notag ? '': "$qry=";		# tag-prefix for print
+	my $lnend = $lncont ? ' ' : ";\n";		# line ending for print
+
+	# all config-vars are by definition \w only, any \W means regex
+	if ($qry =~ /\W/) {
+	    my @matches = config_re($qry);
+	    print map "$_$lnend", @matches ? @matches : "$qry: not found"		if !$notag;
+	    print map { s/\w+=//; "$_$lnend" } @matches ? @matches : "$qry: not found"	if  $notag;
+	} else {
+	    my $v = (exists $Config::Config{$qry}) ? $Config::Config{$qry}
+						   : 'UNKNOWN';
+	    $v = 'undef' unless defined $v;
+	    print "${prfx}'${v}'$lnend";
+	}
+    }
+}
+
+# Called by the real AUTOLOAD
+sub launcher {
+    undef &AUTOLOAD;
+    goto \&$Config::AUTOLOAD;
+}
+
+1;
+ENDOFEND
+
+if ($^O eq 'os2') {
+    $config_txt .= <<'ENDOFSET';
+my %preconfig;
+if ($OS2::is_aout) {
+    my ($value, $v) = $Config_SH_expanded =~ m/^used_aout='(.*)'\s*$/m;
+    for (split ' ', $value) {
+        ($v) = $Config_SH_expanded =~ m/^aout_$_='(.*)'\s*$/m;
+        $preconfig{$_} = $v eq 'undef' ? undef : $v;
+    }
+}
+$preconfig{d_fork} = undef unless $OS2::can_fork; # Some funny cases can't
+sub TIEHASH { bless {%preconfig} }
+ENDOFSET
+    # Extract the name of the DLL from the makefile to avoid duplication
+    my ($f) = grep -r, qw(GNUMakefile Makefile);
+    my $dll;
+    if (open my $fh, '<', $f) {
+	while (<$fh>) {
+	    $dll = $1, last if /^PERL_DLL_BASE\s*=\s*(\S*)\s*$/;
+	}
+    }
+    $config_txt .= <<ENDOFSET if $dll;
+\$preconfig{dll_name} = '$dll';
+ENDOFSET
+} else {
+    $config_txt .= <<'ENDOFSET';
+sub TIEHASH {
+    bless $_[1], $_[0];
+}
+ENDOFSET
+}
+
+foreach my $key (keys %Common) {
+    my $value = fetch_string ({}, $key);
+    # Is it safe on the LHS of => ?
+    my $qkey = $key =~ /^[A-Za-z_][A-Za-z0-9_]*$/ ? $key : "'$key'";
+    if (defined $value) {
+	# Quote things for a '' string
+	$value =~ s!\\!\\\\!g;
+	$value =~ s!'!\\'!g;
+	$value = "'$value'";
+	if ($key eq 'otherlibdirs') {
+	    $value = "join (':', map {relocate_inc(\$_)} split (':', $value))";
+	} elsif ($need_relocation{$key}) {
+	    $value = "relocate_inc($value)";
+	}
+    } else {
+	$value = "undef";
+    }
+    $Common{$key} = "$qkey => $value";
+}
+
+if ($Common{byteorder}) {
+    $Common{byteorder} = 'byteorder => $byteorder';
+}
+my $fast_config = join '', map { "    $_,\n" } sort values %Common;
+
+# Sanity check needed to stop an infite loop if Config_heavy.pl fails to define
+# &launcher for some reason (eg it got truncated)
+$config_txt .= sprintf <<'ENDOFTIE', $fast_config;
+
+sub DESTROY { }
+
+sub AUTOLOAD {
+    require 'Config_heavy.pl';
+    goto \&launcher unless $Config::AUTOLOAD =~ /launcher$/;
+    die "&Config::AUTOLOAD failed on $Config::AUTOLOAD";
+}
+
+# tie returns the object, so the value returned to require will be true.
+tie %%Config, 'Config', {
+%s};
+ENDOFTIE
+
+
+open(CONFIG_POD, ">$Config_POD") or die "Can't open $Config_POD: $!";
+print CONFIG_POD <<'ENDOFTAIL';
+=head1 NAME
+
+Config - access Perl configuration information
+
+=head1 SYNOPSIS
+
+    use Config;
+    if ($Config{usethreads}) {
+	print "has thread support\n"
+    } 
+
+    use Config qw(myconfig config_sh config_vars config_re);
+
+    print myconfig();
+
+    print config_sh();
+
+    print config_re();
+
+    config_vars(qw(osname archname));
+
+
+=head1 DESCRIPTION
+
+The Config module contains all the information that was available to
+the C<Configure> program at Perl build time (over 900 values).
+
+Shell variables from the F<config.sh> file (written by Configure) are
+stored in the readonly-variable C<%Config>, indexed by their names.
+
+Values stored in config.sh as 'undef' are returned as undefined
+values.  The perl C<exists> function can be used to check if a
+named variable exists.
+
+For a description of the variables, please have a look at the
+Glossary file, as written in the Porting folder, or use the url:
+http://perl5.git.perl.org/perl.git/blob/HEAD:/Porting/Glossary
+
+=over 4
+
+=item myconfig()
+
+Returns a textual summary of the major perl configuration values.
+See also C<-V> in L<perlrun/Switches>.
+
+=item config_sh()
+
+Returns the entire perl configuration information in the form of the
+original config.sh shell variable assignment script.
+
+=item config_re($regex)
+
+Like config_sh() but returns, as a list, only the config entries who's
+names match the $regex.
+
+=item config_vars(@names)
+
+Prints to STDOUT the values of the named configuration variable. Each is
+printed on a separate line in the form:
+
+  name='value';
+
+Names which are unknown are output as C<name='UNKNOWN';>.
+See also C<-V:name> in L<perlrun/Switches>.
+
+=back
+
+=head1 EXAMPLE
+
+Here's a more sophisticated example of using %Config:
+
+    use Config;
+    use strict;
+
+    my %sig_num;
+    my @sig_name;
+    unless($Config{sig_name} && $Config{sig_num}) {
+	die "No sigs?";
+    } else {
+	my @names = split ' ', $Config{sig_name};
+	@sig_num{@names} = split ' ', $Config{sig_num};
+	foreach (@names) {
+	    $sig_name[$sig_num{$_}] ||= $_;
+	}   
+    }
+
+    print "signal #17 = $sig_name[17]\n";
+    if ($sig_num{ALRM}) { 
+	print "SIGALRM is $sig_num{ALRM}\n";
+    }   
+
+=head1 WARNING
+
+Because this information is not stored within the perl executable
+itself it is possible (but unlikely) that the information does not
+relate to the actual perl binary which is being used to access it.
+
+The Config module is installed into the architecture and version
+specific library directory ($Config{installarchlib}) and it checks the
+perl version number when loaded.
+
+The values stored in config.sh may be either single-quoted or
+double-quoted. Double-quoted strings are handy for those cases where you
+need to include escape sequences in the strings. To avoid runtime variable
+interpolation, any C<$> and C<@> characters are replaced by C<\$> and
+C<\@>, respectively. This isn't foolproof, of course, so don't embed C<\$>
+or C<\@> in double-quoted strings unless you're willing to deal with the
+consequences. (The slashes will end up escaped and the C<$> or C<@> will
+trigger variable interpolation)
+
+=head1 GLOSSARY
+
+Most C<Config> variables are determined by the C<Configure> script
+on platforms supported by it (which is most UNIX platforms).  Some
+platforms have custom-made C<Config> variables, and may thus not have
+some of the variables described below, or may have extraneous variables
+specific to that particular port.  See the port specific documentation
+in such cases.
+
+=cut
+
+ENDOFTAIL
+
+if ($Opts{glossary}) {
+  open(GLOS, "<$Glossary") or die "Can't open $Glossary: $!";
+}
+my %seen = ();
+my $text = 0;
+$/ = '';
+
+sub process {
+  if (s/\A(\w*)\s+\(([\w.]+)\):\s*\n(\t?)/=item C<$1>\n\nFrom F<$2>:\n\n/m) {
+    my $c = substr $1, 0, 1;
+    unless ($seen{$c}++) {
+      print CONFIG_POD <<EOF if $text;
+=back
+
+=cut
+
+EOF
+      print CONFIG_POD <<EOF;
+=head2 $c
+
+=over 4
+
+=cut
+
+EOF
+     $text = 1;
+    }
+  }
+  elsif (!$text || !/\A\t/) {
+    warn "Expected a Configure variable header",
+      ($text ? " or another paragraph of description" : () );
+  }
+  s/n't/n\00t/g;		# leave can't, won't etc untouched
+  s/^\t\s+(.*)/\n$1/gm;		# Indented lines ===> new paragraph
+  s/^(?<!\n\n)\t(.*)/$1/gm;	# Not indented lines ===> text
+  s{([\'\"])(?=[^\'\"\s]*[./][^\'\"\s]*\1)([^\'\"\s]+)\1}(F<$2>)g; # '.o'
+  s{([\'\"])([^\'\"\s]+)\1}(C<$2>)g; # "date" command
+  s{\'([A-Za-z_\- *=/]+)\'}(C<$1>)g; # 'ln -s'
+  s{
+     (?<! [\w./<\'\"] )		# Only standalone file names
+     (?! e \. g \. )		# Not e.g.
+     (?! \. \. \. )		# Not ...
+     (?! \d )			# Not 5.004
+     (?! read/ )		# Not read/write
+     (?! etc\. )		# Not etc.
+     (?! I/O )			# Not I/O
+     (
+	\$ ?			# Allow leading $
+	[\w./]* [./] [\w./]*	# Require . or / inside
+     )
+     (?<! \. (?= [\s)] ) )	# Do not include trailing dot
+     (?! [\w/] )		# Include all of it
+   }
+   (F<$1>)xg;			# /usr/local
+  s/((?<=\s)~\w*)/F<$1>/g;	# ~name
+  s/(?<![.<\'\"])\b([A-Z_]{2,})\b(?![\'\"])/C<$1>/g;	# UNISTD
+  s/(?<![.<\'\"])\b(?!the\b)(\w+)\s+macro\b/C<$1> macro/g; # FILE_cnt macro
+  s/n[\0]t/n't/g;		# undo can't, won't damage
+}
+
+if ($Opts{glossary}) {
+    <GLOS>;				# Skip the "DO NOT EDIT"
+    <GLOS>;				# Skip the preamble
+  while (<GLOS>) {
+    process;
+    print CONFIG_POD;
+  }
+}
+
+print CONFIG_POD <<'ENDOFTAIL';
+
+=back
+
+=head1 GIT DATA
+
+Information on the git commit from which the current perl binary was compiled
+can be found in the variable C<$Config::Git_Data>.  The variable is a
+structured string that looks something like this:
+
+  git_commit_id='ea0c2dbd5f5ac6845ecc7ec6696415bf8e27bd52'
+  git_describe='GitLive-blead-1076-gea0c2db'
+  git_branch='smartmatch'
+  git_uncommitted_changes=''
+  git_commit_id_title='Commit id:'
+  git_commit_date='2009-05-09 17:47:31 +0200'
+
+Its format is not guaranteed not to change over time.
+
+=head1 NOTE
+
+This module contains a good example of how to use tie to implement a
+cache and an example of how to make a tied variable readonly to those
+outside of it.
+
+=cut
+
+ENDOFTAIL
+
+close(GLOS) if $Opts{glossary};
+close(CONFIG_POD);
+print "written $Config_POD\n";
+
+my $orig_config_txt = "";
+my $orig_heavy_txt = "";
+{
+    local $/;
+    my $fh;
+    $orig_config_txt = <$fh> if open $fh, "<", $Config_PM;
+    $orig_heavy_txt  = <$fh> if open $fh, "<", $Config_heavy;
+}
+
+if ($orig_config_txt ne $config_txt or $orig_heavy_txt ne $heavy_txt) {
+    open CONFIG, ">", $Config_PM or die "Can't open $Config_PM: $!\n";
+    open CONFIG_HEAVY, ">", $Config_heavy or die "Can't open $Config_heavy: $!\n";
+    print CONFIG $config_txt;
+    print CONFIG_HEAVY $heavy_txt;
+    close(CONFIG_HEAVY);
+    close(CONFIG);
+    print "updated $Config_PM\n";
+    print "updated $Config_heavy\n";
+}
+
+
+# Now create Cross.pm if needed
+if ($Opts{cross}) {
+  open CROSS, ">lib/Cross.pm" or die "Can not open >lib/Cross.pm: $!";
+  my $cross = <<'EOS';
+# typical invocation:
+#   perl -MCross Makefile.PL
+#   perl -MCross=wince -V:cc
+package Cross;
+
+sub import {
+  my ($package,$platform) = @_;
+  unless (defined $platform) {
+    # if $platform is not specified, then use last one when
+    # 'configpm; was invoked with --cross option
+    $platform = '***replace-marker***';
+  }
+  @INC = map {/\blib\b/?(do{local $_=$_;s/\blib\b/xlib\/$platform/;$_},$_):($_)} @INC;
+  $::Cross::platform = $platform;
+}
+
+1;
+EOS
+  $cross =~ s/\*\*\*replace-marker\*\*\*/$Opts{cross}/g;
+  print CROSS $cross;
+  close CROSS;
+  print "written lib/Cross.pm\n";
+  unshift(@INC,"xlib/$Opts{cross}");
+}
+
+# Now do some simple tests on the Config.pm file we have created
+unshift(@INC,'lib');
+unshift(@INC,'xlib/symbian') if $Opts{cross};
+require $Config_PM;
+require $Config_heavy;
+import Config;
+
+die "$0: $Config_PM not valid"
+	unless $Config{'PERL_CONFIG_SH'} eq 'true';
+
+die "$0: error processing $Config_PM"
+	if defined($Config{'an impossible name'})
+	or $Config{'PERL_CONFIG_SH'} ne 'true' # test cache
+	;
+
+die "$0: error processing $Config_PM"
+	if eval '$Config{"cc"} = 1'
+	or eval 'delete $Config{"cc"}'
+	;
+
+
+exit 0;
+# Popularity of various entries in %Config, based on a large build and test
+# run of code in the Fotango build system:
+__DATA__
+path_sep:	8490
+d_readlink:	7101
+d_symlink:	7101
+archlibexp:	4318
+sitearchexp:	4305
+sitelibexp:	4305
+privlibexp:	4163
+ldlibpthname:	4041
+libpth:	2134
+archname:	1591
+exe_ext:	1256
+scriptdir:	1155
+version:	1116
+useithreads:	1002
+osvers:	982
+osname:	851
+inc_version_list:	783
+dont_use_nlink:	779
+intsize:	759
+usevendorprefix:	642
+dlsrc:	624
+cc:	541
+lib_ext:	520
+so:	512
+ld:	501
+ccdlflags:	500
+ldflags:	495
+obj_ext:	495
+cccdlflags:	493
+lddlflags:	493
+ar:	492
+dlext:	492
+libc:	492
+ranlib:	492
+full_ar:	491
+vendorarchexp:	491
+vendorlibexp:	491
+installman1dir:	489
+installman3dir:	489
+installsitebin:	489
+installsiteman1dir:	489
+installsiteman3dir:	489
+installvendorman1dir:	489
+installvendorman3dir:	489
+d_flexfnam:	474
+eunicefix:	360
+d_link:	347
+installsitearch:	344
+installscript:	341
+installprivlib:	337
+binexp:	336
+installarchlib:	336
+installprefixexp:	336
+installsitelib:	336
+installstyle:	336
+installvendorarch:	336
+installvendorbin:	336
+installvendorlib:	336
+man1ext:	336
+man3ext:	336
+sh:	336
+siteprefixexp:	336
+installbin:	335
+usedl:	332
+ccflags:	285
+startperl:	232
+optimize:	231
+usemymalloc:	229
+cpprun:	228
+sharpbang:	228
+perllibs:	225
+usesfio:	224
+usethreads:	220
+perlpath:	218
+extensions:	217
+usesocks:	208
+shellflags:	198
+make:	191
+d_pwage:	189
+d_pwchange:	189
+d_pwclass:	189
+d_pwcomment:	189
+d_pwexpire:	189
+d_pwgecos:	189
+d_pwpasswd:	189
+d_pwquota:	189
+gccversion:	189
+libs:	186
+useshrplib:	186
+cppflags:	185
+ptrsize:	185
+shrpenv:	185
+static_ext:	185
+use5005threads:	185
+uselargefiles:	185
+alignbytes:	184
+byteorder:	184
+ccversion:	184
+config_args:	184
+cppminus:	184

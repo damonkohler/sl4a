@@ -1,0 +1,63 @@
+To build for Android follow these steps:
+
+(1) Add these to the beginning of your PATH:
+
+	$ANDROID_ROOT/ase_src/tools:$ANDROID_ROOT/out/host/darwin-x86/bin:$ANDROID_ROOT/prebuilt/darwin-x86/toolchain/arm-eabi-$GCC_VERSION/bin
+
+where $ANDROID_ROOT is where you have installed the Android SDK and
+the ASE source, and $GCC_VERSION is whatever version the SDK has,
+e.g. "4.3.1".  Try running these:
+
+    which agcc
+    which arm-aebi-gcc
+
+and if either of those says "not found", your PATH is wrong.
+
+(2) cd Cross
+
+(3) sh build-arm-android-sh 2>&1 | tee build-arm-android-sh.log
+
+To package for Android you need to get the latest JSON::PP module
+from CPAN.  Open this URL:
+
+http://search.cpan.org/search?query=JSON%3A%3APP&mode=module
+
+and download the latest version: first click on e.g. JSON-2.15, and
+then click on [Download].  Copy the downloaded .tar.gz to this
+directory with the name JSON.tar.gz.  Then run the packaging script:
+
+(4) sh package-android-sh
+
+This generates a subdirectory called 'android', and that directory
+packaged as 'android.zip'.  To install the files, cd to the android
+subdirectory and run
+
+    sh install-android-emulator-sh
+
+(You need to have the 'adb' command in your PATH.)
+
+If you run into problems and want to start over, run the build script
+with a single argument 'cleanup':
+
+  sh build-arm-android-sh cleanup
+
+If you need to erase your perl installation from the emulator, you can do
+
+  sh uninstall-android-emulator-sh
+
+but please do be careful with that, it really does remove everything
+about the Perl installation, INCLUDING third-party modules.
+
+NOTE1: the android patch(es) are *too* well-integrated with the rest
+of the Cross/*, in fact, with a high probability they broke something
+else, most likely the N770 cross-build.
+
+NOTE2: in case some active perl5-porter walks by: the changes made for
+getting Android are very, very far from being clean enough for merging
+with the offical repository.
+
+NOTE3: the initial port done at this patch level (.patch):
+maint-5.10 2009-08-03.22:35:06 83f7cfe400060c20aff210f572a35d80532a56ac GitLive-maint-5.10-1712-g83f7cfe
+
+-- 
+jhi@google.com
