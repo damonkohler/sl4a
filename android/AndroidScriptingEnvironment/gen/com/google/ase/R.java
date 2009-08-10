@@ -71,6 +71,7 @@ public final class R {
         public static final int dialog_title_initialcommand_preference=0x7f070014;
         public static final int dialog_title_shell_preference=0x7f070011;
         public static final int keyboard_preferences=0x7f07000a;
+        public static final int no_scripts_message=0x7f070018;
         public static final int shell_preferences=0x7f07000e;
         public static final int summary_color_preference=0x7f070008;
         public static final int summary_controlkey_preference=0x7f07000c;

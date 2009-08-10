@@ -16,6 +16,7 @@
 
 package com.google.ase;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -669,6 +670,16 @@ public class AndroidProxy {
     } catch (JSONException e) {
       return JsonRpcResult.error("Failed to build event object.", e);
     }
+  }
+
+  @Rpc(
+     description = "Returns a list of packages running activities or services.",
+     returns = "List of packages running activities."
+  )
+  public JSONObject getRunningPackages(JSONArray params) {
+    String[] packages = mAndroidFacade.getRunningPackages().getStringArray("packages");
+    JSONArray result = new JSONArray(Arrays.asList(packages));
+    return JsonRpcResult.result(result);
   }
 
   /**

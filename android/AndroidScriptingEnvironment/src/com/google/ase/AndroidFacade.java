@@ -17,11 +17,14 @@
 package com.google.ase;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -70,6 +73,7 @@ public class AndroidFacade {
   private final CircularBuffer<Bundle> mEventBuffer;
   private static final int EVENT_BUFFER_LIMIT = 1024;
 
+  private final ActivityManager mActivityManager;
   private final WifiManager mWifi;
   private final SmsManager mSms;
   private final AudioManager mAudio;
@@ -185,6 +189,7 @@ public class AndroidFacade {
     mIntent = intent;
     mActivityResult = new Intent();
     mSms = SmsManager.getDefault();
+    mActivityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
     mWifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
     mAudio = (AudioManager) mContext.getSystemService(Activity.AUDIO_SERVICE);
     mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
@@ -584,4 +589,24 @@ public class AndroidFacade {
       mTts.shutdown();
     }
   }
+
+  public Bundle getRunningPackages() {
+    Set<String> runningPackages = new HashSet<String>();
+    List<ActivityManager.RunningAppProcessInfo> appProcesses =
+        mActivityManager.getRunningAppProcesses();
+    for (ActivityManager.RunningAppProcessInfo info : appProcesses) {
+      for (String packageName : info.pkgList) {
+        runningPackages.add(packageName);
+      }
+    }
+    List<ActivityManager.RunningServiceInfo> serviceProcesses =
+        mActivityManager.getRunningServices(Integer.MAX_VALUE);
+    for (ActivityManager.RunningServiceInfo info : serviceProcesses) {
+      runningPackages.add(info.service.getPackageName());
+    }
+    Bundle result = new Bundle();
+    result.putStringArray("packages", (String[]) runningPackages.toArray());
+    return result;
+  }
+
 }
