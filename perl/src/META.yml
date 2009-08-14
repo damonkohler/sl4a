@@ -110,7 +110,6 @@ no_index:
     - lib/Tie/File
     - lib/Tie/RefHash
     - lib/Unicode/Collate
-    - lib/version
     - t/lib/compress
     - t/lib/Filter/Simple/
     - t/lib/MakeMaker
@@ -246,6 +245,7 @@ no_index:
     - lib/ExtUtils/t/00compile.t
     - lib/ExtUtils/t/arch_check.t
     - lib/ExtUtils/t/backwards.t
+    - lib/ExtUtils/t/basic.pl
     - lib/ExtUtils/t/basic.t
     - lib/ExtUtils/t/build_man.t
     - lib/ExtUtils/t/can_write_dir.t
@@ -266,11 +266,9 @@ no_index:
     - lib/ExtUtils/t/Installapi2.t
     - lib/ExtUtils/t/Installed.t
     - lib/ExtUtils/t/installed_file.t
-    - lib/ExtUtils/t/InstallWithMM.t
     - lib/ExtUtils/t/is_of_type.t
     - lib/ExtUtils/t/Liblist.t
     - lib/ExtUtils/t/make.t
-    - lib/ExtUtils/t/MakeMaker_Parameters.t
     - lib/ExtUtils/t/maketext_filter.t
     - lib/ExtUtils/t/Manifest.t
     - lib/ExtUtils/t/metafile_data.t
@@ -302,7 +300,6 @@ no_index:
     - lib/ExtUtils/t/recurs.t
     - lib/ExtUtils/t/revision.t
     - lib/ExtUtils/t/split_command.t
-    - lib/ExtUtils/t/test_boilerplate.t
     - lib/ExtUtils/t/testdata/reallylongdirectoryname/arch1/Config.pm
     - lib/ExtUtils/t/testdata/reallylongdirectoryname/arch2/Config.pm
     - lib/ExtUtils/t/testlib.t

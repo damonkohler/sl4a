@@ -3680,7 +3680,7 @@ d  50f17f89e3 2009/07/22 Make fresh_perl_is() strip newlines off the expect
 d  76856ab861 2009/07/22 This is a test for rt.cpan.org 60508 which I can't
 			    see also 5945e41e91
 d  95266a8888 2009/07/22 v-strings are not deprecated
-M  7f4ffa9dba 2009/07/23 [rjbs] very minor tweaks to description of maint/b
+d  7f4ffa9dba 2009/07/23 [rjbs] very minor tweaks to description of maint/b
 R  28271a2356 2009/07/23 Merge branch 'blead' of ssh://perl5.git.perl.org/p
 				MERGE: 7f4ffa9dba 95266a8888
 R  a4133167b5 2009/07/23 Restore full name of mro::mro_invalidate_all_metho
@@ -3706,15 +3706,6 @@ d  b7bfa855cd 2009/07/25 Do not use a regex in DB::sub
 			    deferred till after 5.10.1
 d  d80618d264 2009/07/25 Save and restore PL_regeol for op inside of regex 
 d  2788925507 2009/07/25 Tests for commit 1375cf1cf2085f851bb176047d5e60248
-
-# delete local $a[$idx]
-# 
-d  91d1c79f6c 2009/07/25 Introduce save_aelem_flags()
-d  75d34a09f3 2009/07/25 Add a new SAVEf_KEEPOLDELEM flag to save_scalar_at
-d  af097752b4 2009/07/25 Introduce save_hdelete() and SAVEHDELETE()
-d  47cfc530da 2009/07/25 Use the new SAVEHDELETE() macro wherever possible
-d  7332a6c406 2009/07/25 Introduce "delete local"
-
 M  f0c5aa00ee 2009/07/26 dup saved_curcop in PL_parser
 d  4ba71d51f7 2009/07/26 Allow -C on the #! line when it is identical to -C
 			    add but the t/run/switchC.t have been merged;
@@ -3725,17 +3716,12 @@ M  bd0ab00df4 2009/07/26 Tidy code added in 4ba71d51f72efb2af8dc9748dd62219
 d  74b2b4b178 2009/07/26 Add tests for where -C differs between then #! and
 M  9db5571e8d 2009/07/26 Suggest using Inline as a pre-uploading test for a
 M  bd54d59dd6 2009/07/26 fix vim highlighting problem
-d  e9105d30ed 2009/07/26 much better swap logic to support reentrancy and f
-			    There is a maint-specifc version of this patch
-			    available; see
-			    <alpine.LFD.2.00.0908022008030.27039@ein.m-l.org>
-			    also see 41377f6490
+M  e9105d30ed 2009/07/26 much better swap logic to support reentrancy and f
 M  1784bd3e6b 2009/07/26 needed something to change to test patch mailing l
 M  89f530a6b8 2009/07/27 Add security contact information to perlsec
 M  4085a37725 2009/07/27 Update Module::Build to 0.34_02
 d  ff19758235 2009/07/27 Avoid using embedded newlines in the "one"liners p
-R  82151c42dd 2009/07/27 Make cxinc member of the public API
-			    pollutes whole world with #define cxinc ...
+.  82151c42dd 2009/07/27 Make cxinc member of the public API
 M  174830c759 2009/07/27 missing "to" in perlxs
 d  6100a0a495 2009/07/27 syswrite prints garbage if called with empty scala
 d  e41cc77942 2009/07/27 Regression test for [perl #67912]
@@ -3744,104 +3730,11 @@ d  c1d4704a25 2009/07/27 Make test pass with miniperl
 d  c5836baf9b 2009/07/27 Make test pass with miniperl
 d  8e2e2108bd 2009/07/27 Add core test boilerplate to some base.pm tests
 d  304efdcbf5 2009/07/27 Add core test boilerplates
-d  d361fafa2e 2009/07/27 Document "delete local" in perlsub
 d  a5c2649359 2009/07/27 Add support for new flag D in embed.fnc (deprecate
 d  dfeca2c828 2009/07/27 Port t/op/sysio.t to test.pl
 d  dd61358a03 2009/07/27 Really check that sysread(I, $x, 1, -4) dies with 
-M  031cefa092 2009/07/27 add a simple utility to Porting/ which knows how t
-M  16f0d0fcc4 2009/07/27 cleanup the EUI/EUMM test mess, and bump Install.p
-d  41377f6490 2009/07/27 remove Devel-PPPort part change included in e9105d
+d  031cefa092 2009/07/27 add a simple utility to Porting/ which knows how t
+.  16f0d0fcc4 2009/07/27 cleanup the EUI/EUMM test mess, and bump Install.p
+.  41377f6490 2009/07/27 remove Devel-PPPort part change included in e9105d
 M  692a467c73 2009/07/27 Final release of version-0.77 for inclusion in 5.1
 M  05b3708e8e 2009/07/27 bump 'version' to 0.77 in Maintainers.pl
-M  919d72bf3e 2009/07/28 add tool to create .tgz snapshot files with .patch
-M  09236310cc 2009/07/28 update manifest to reflect two new utilities
-M  a23cb041bc 2009/07/28 Add Porting/make_snapshot.pl
-M  fe4f778754 2009/07/28 changes required to Make It Work on the perl gitwe
-M  40c5390990 2009/07/28 dont leave temporary files laying around
-M  46743ef75e 2009/07/28 A first stab at walking through the release-manage
-M  9b05e87488 2009/07/28 makerel now tells you _which_ files differ from th
-d  0409250f9c 2009/07/29 Make test pass with -t
-R  f71d6157c7 2009/07/29 Forbid labels with keyword names
-			    not backwards compatible
-M  bc35a5dd94 2009/07/29 Tabs, not spaces, in MANIFEST.
-M  6a7cbfe84d 2009/07/29 podtidy
-M  5bd03515d2 2009/07/29 bump-perl-version false positives
-M  398f002c97 2009/07/29 Add a test to verify that the MANIFEST file is wel
-d  8bc6a5d5cc 2009/07/29 warnings.pl and lib/warnings.pm have been changed 
-			    warnings.pm hasn't changed in maint, and
-			    warnings.pl doesn't matter much
-M  c372fac7e5 2009/07/29 Sort the MANIFEST.
-M  b8ca42e11b 2009/07/29 Add MANIFEST sort test
-M  1d5727c1fd 2009/07/29 hints/bsdos.sh:  Add correct flags for compilation
-d  f9a83b0024 2009/07/29 Merge branch 'deletelocal' into blead
-				MERGE: 1d5727c1fd d361fafa2e
-M  ef314d296a 2009/07/29 Escape the periods in some Stratus VOS-specific co
-M  3d967d9abe 2009/07/29 Avoid shelling out to an external sort to verify t
-M  55878aed38 2009/07/29 add 'regen' steps to the release_managers_guide
-M  dc2f75c0f2 2009/07/29 Porting/corelist.pl can now update Module::CoreLis
-M  b20f263759 2009/07/29 much much quicker solution
-M  ed34cb0da3 2009/07/29 convert the contents of make_dot_patch into a func
-M  11a595870a 2009/07/29 we want the git-describe of the requested item, no
-M  4e86fc4bd8 2009/07/30 Sort MANIFEST using Perl
-M  ee56566fc6 2009/07/30 'git st' is not a standard git command.
-M  8cf77941f2 2009/07/30 Try longst prefixes first, else lib/CPAN may match
-R  28ccebc469 2009/07/30 Add new error "Can't use keyword '%s' as a label"
-			    not backwards compatible
-M  daa8514ad7 2009/07/31 Add lib/version/Internals.pod to MANIFEST and Port
-M  f96e7a95cb 2009/07/31 Add Porting/GitUtils.pm to MANIFEST
-M  f629640b47 2009/07/31 Mention in apidocs that av_push takes ownership of
-M  781f5a38a3 2009/07/31 Clean up the .exists files on VMS.
-M  fd838dcfd6 2009/07/31 Start refactoring out release management steps tha
-M  db3f805ef9 2009/07/31 Copyediting the release_managers_guide.
-M  8c35d28540 2009/07/31 Linearized the release-manager's guide to make it 
-M  98b0b1df93 2009/07/31 Fixed maintainership for lib/ExtUtils/t/InstallWit
-d  2b4af749f7 2009/07/31 made the manicheck actions (previously releng) int
-M  5c4676374b 2009/08/01 Removed a release-engineering step. (It's been rep
-d  61a7d4fdb0 2009/08/01 Pre-resolve symlink for File::Stat test under -Dmk
-d  942d1a9e30 2009/08/03 Clean up the new maintainers.t to be a bit more se
-M  00229b9760 2009/08/03 Udpdated checkAUTHORS.pl to expect the output of g
-M  ce80ee9198 2009/08/03 Updated the release_managers_guide with informatio
-M  f1dc912dca 2009/08/03 Updated Ingy's entry in Authors to match his legal
-M  3c975e438f 2009/08/03 Updated AUTHORS to include all contributors with m
-M  1c05a96ef7 2009/08/03 Reoved the suggestion that we might want to consid
-M  8fccd523e6 2009/08/03 buildtoc should be executable
-d  bf61c8520d 2009/08/03 Flipped checkcase.pl from a porting tool to an act
-			    see also 6b77813cba
-M  57433fbf3a 2009/08/03 Be a bit clearer about always needing to regen per
-M  96db07ef41 2009/08/03 Minor typo fix in a comment
-M  233e9d1c28 2009/08/03 Y2038 doc pointers in the little helper C tools
-M  44a7a252c8 2009/08/03 Move content of Todo.micro into perltodo
-d  6b77813cba 2009/08/03 Add the new "porting" test directory to the test h
-M  d5f2802546 2009/08/03 Document what needs to happen when you add a new t
-M  1841b79869 2009/08/03 MacPerl is gone. Its test bits should be now remov
-M  1af1c0d6fc 2009/08/03 Update the description of the 'system' function to
-d  cd86ed9d43 2009/08/03 Remove the port to MiNT.  It's a dead platform tha
-d  e94c1c0554 2009/08/03 Removed vestigal support for Tenon Intersystems Ma
-M  a7fb14411f 2009/08/03 Yuval Kogman's address was special cased for non-i
-M  95da743b36 2009/08/03 Minor spelling nit in last perlfunc updated
-d  9e8c38e478 2009/08/03 Remove the README for the now-gone machten port
-M  fda5b70af8 2009/08/03 Further work to cut down the unattributed authors 
-M  91fb030ae1 2009/08/03 Maintainers.pl: update for ExtUtils::Install
-M  d10dbbde5a 2009/08/03 bump-perl-version: over-keen false-positive remova
-M  38711ea604 2009/08/03 Continued work to get Porting/checkAUTHORS.pl to a
-M  b5e2dde18e 2009/08/03 Now down to 50 addresses in the git logs who aren'
-M  4d2c8158ba 2009/08/04 Fix corelist generation section of the release man
-M  bfadf2baa9 2009/08/04 Improve the broken order of the release_managers_g
-M  c2615aa941 2009/08/04 Removed bald-faced lies I inserted about the merge
-M  d781deb654 2009/08/04 WIFEXITED() cygwin regression
-d  dd3e51dc8a 2009/08/04 Promote blocks resulting from constant folding to 
-M  2e831dfd27 2009/08/04 release_managers_guide: make into two logical sect
-M  20b15ed1ed 2009/08/04 The AUTHORS file is now short only about thirty 'r
-M  dd0e54ba0e 2009/08/04 minor tweaks to release_managers_guide.pod
-M  d7eb1120ad 2009/08/04 release_managers_guide: add patchlevel.h stuff
-d  46a76da79a 2009/08/05 win32/perlhost.h: use symbolic constant
-R  240bfeb992 2009/08/05 add CLONEf_KEEP_PTR_TABLE to win fork emulation.
-			    (see 682bcedc3e)
-M  c07671d743 2009/08/05 Now down to 17 unknown addresses which "should" be
-M  b0b93b3c77 2009/08/05 in perl_clone_using, free the prt_table
-R  682bcedc3e 2009/08/05 Revert "add CLONEf_KEEP_PTR_TABLE to win fork emul
-M  039dab9882 2009/08/05 The current CPAN is very noisy on download failure
-M  cb06ebec41 2009/08/05 ExtUtils::MakeMaker 6.55_02
-M  3ed7368117 2009/08/05 fix for EU:MM 6.55_02 failing test,
-M  909fb0b7fb 2009/08/05 Updated Module::CoreList for the 5.10.1 release
-M  a0db33fef5 2009/08/06 release_managers_guide: tweak ordering of 'on-the-

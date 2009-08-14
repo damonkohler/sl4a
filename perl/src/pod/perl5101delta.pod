@@ -403,8 +403,7 @@ Upgraded from version 2.008 to 2.020.
 
 =item C<CPAN>
 
-Upgraded from version 1.9205 to 1.9402. C<CPAN::FTP> has a local fix to
-stop it being too verbose on download failure.
+Upgraded from version 1.9205 to 1.9402.
 
 =item C<CPANPLUS>
 
@@ -485,11 +484,11 @@ Upgraded from version 1.27 to 1.28.
 
 =item C<ExtUtils::Install>
 
-Upgraded from version 1.44 to 1.54.
+Upgraded from version 1.44 to 1.52_03.
 
 =item C<ExtUtils::MakeMaker>
 
-Upgraded from version 6.42 to 6.55_02.
+Upgraded from version 6.42 to 6.55_01.
 
 Note that C<ExtUtils::MakeMaker::bytes> and C<ExtUtils::MakeMaker::vmsish>
 have been removed from this distribution.
@@ -1037,6 +1036,8 @@ F<win32/buildext.pl>.
 
 =item AIX
 
+=over 0
+
 Removed F<libbsd> for AIX 5L and 6.1. Only flock() was used from F<libbsd>.
 
 Removed F<libgdbm> for AIX 5L and 6.1. The F<libgdbm> is delivered as an
@@ -1044,6 +1045,8 @@ optional package with the AIX Toolbox. Unfortunately the 64 bit version
 is broken.
 
 Hints changes mean that AIX 4.2 should work again.
+
+=back
 
 =item Cygwin
 
@@ -1089,6 +1092,8 @@ will no longer be dropped under race conditions.
 
 =item VMS
 
+=over 0
+
 Reads from the in-memory temporary files of C<PerlIO::scalar> used to fail
 if C<$/> was set to a numeric reference (to indicate record-style reads).
 This is now fixed.
@@ -1102,6 +1107,8 @@ Enabling the C<PERL_VMS_POSIX_EXIT> logical name now encodes a POSIX exit
 status in a VMS condition value for better interaction with GNV's bash
 shell and other utilities that depend on POSIX exit values.  See
 L<perlvms/"$?"> for details.
+
+=back
 
 =back
 
@@ -1485,7 +1492,7 @@ as it is freed.
 =item *
 
 Under ithreads, the regex in C<PL_reg_curpm> is now reference counted. This
-eliminates a lot of hackish workarounds to cope with it not being reference
+eliminates a lot of hackish work-arounds to cope with it not being reference
 counted.
 
 =item *
@@ -1649,45 +1656,7 @@ Check that Unicode and C<tie> work.
 
 =head1 Known Problems
 
-This is a list of some significant unfixed bugs, which are regressions
-from either 5.10.0 or 5.8.x.
-
-=over 4
-
-=item *
-
-C<List::Util::first> misbehaves in the presence of a lexical C<$_>
-(typically introduced by C<my $_> or implicitly by C<given>). The variable
-which gets set for each iteration is the package variable C<$_>, not the
-lexical C<$_> [RT #67694].
-
-A similar issue may occur in other modules that provide functions which
-take a block as their first argument, like
-
-    foo { ... $_ ...} list
-
-=item *
-
-The C<charnames> pragma may generate a run-time error when a regex is
-interpolated [RT #56444]:
-
-    use charnames ':full';
-    my $r1 = qr/\N{THAI CHARACTER SARA I}/;
-    "foo" =~ $r1;    # okay
-    "foo" =~ /$r1+/; # runtime error
-
-A workaround is to generate the character outside of the regex:
-
-    my $a = "\N{THAI CHARACTER SARA I}";
-    my $r1 = qr/$a/;
-
-=item *
-
-Some regexes may run much more slowly when run in a child thread compared
-with the thread the pattern was compiled into [RT #55600].
-
-
-=back
+XXX
 
 =head1 Deprecations
 

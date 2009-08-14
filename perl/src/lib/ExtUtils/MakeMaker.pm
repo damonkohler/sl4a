@@ -18,7 +18,7 @@ our @Overridable;
 my @Prepend_parent;
 my %Recognized_Att_Keys;
 
-our $VERSION = '6.55_02';
+our $VERSION = '6.55_01';
 
 # Emulate something resembling CVS $Revision$
 (our $Revision = $VERSION) =~ s{_}{};
@@ -1776,7 +1776,7 @@ If set to 'none', no man pages will be installed.
 =item INSTALLVENDORSCRIPT
 
 Used by 'make install' which copies files from INST_SCRIPT to this
-directory if INSTALLDIRS is set to vendor.
+directory if INSTALLDIRS is set to is set to vendor.
 
 =item INST_ARCHLIB
 

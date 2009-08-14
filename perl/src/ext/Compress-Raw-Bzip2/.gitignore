@@ -1,5 +1,0 @@
-/bzlib.h
-/bzlib_private.h
-/constants.h
-/constants.xs
-!/bzip2-src/*.c
