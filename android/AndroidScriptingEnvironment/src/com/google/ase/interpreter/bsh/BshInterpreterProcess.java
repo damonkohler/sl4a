@@ -27,7 +27,7 @@ import com.google.ase.jsonrpc.JsonRpcServer;
 public class BshInterpreterProcess extends AbstractInterpreterProcess {
 
   private final static String BSH_BIN =
-      "dalvikvm -classpath /sdcard/ase/extra/bsh/bsh-2.0b4-dx.jar bsh.Interpreter";
+      "dalvikvm -classpath /sdcard/ase/extras/bsh/bsh-2.0b4-dx.jar bsh.Interpreter";
   private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;
 

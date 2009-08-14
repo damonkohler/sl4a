@@ -27,7 +27,7 @@ import com.google.ase.jsonrpc.JsonRpcServer;
 public class JRubyInterpreterProcess extends AbstractInterpreterProcess {
 
   private final static String JRUBY_BIN = "dalvikvm -Xss128k " +
-      "-classpath /sdcard/ase/extra/jruby/jruby-complete-1.2.0RC1-dex.jar org.jruby.Main -X-C";
+      "-classpath /sdcard/ase/extras/jruby/jruby-complete-1.2.0RC1-dex.jar org.jruby.Main -X-C";
 
   private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;

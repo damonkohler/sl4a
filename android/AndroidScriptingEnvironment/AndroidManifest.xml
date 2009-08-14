@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.google.ase" android:versionName="0.10-2 alpha" android:versionCode="11">
+	package="com.google.ase" android:versionCode="12" android:versionName="0.11 alpha">
 	<application android:label="@string/application_title" android:icon="@drawable/ase_logo_48"
 	    android:debuggable="true">
 	    <meta-data android:name="com.a0soft.gphone.aTrackDog.webURL"

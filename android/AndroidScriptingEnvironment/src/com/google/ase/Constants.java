@@ -44,4 +44,5 @@ public class Constants {
   public static final String SCRIPTS_ROOT = SDCARD_ASE_ROOT + "scripts/";
   public static final String INTERPRETER_EXTRAS_ROOT = SDCARD_ASE_ROOT + "extras/";
   public static final String INTERPRETER_ROOT = "/data/data/com.google.ase/";
+  public static final String BASE_INSTALL_URL = "http://android-scripting.googlecode.com/hg/";
 }

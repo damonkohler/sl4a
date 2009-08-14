@@ -16,9 +16,9 @@
 
 package com.google.ase.interpreter;
 
-public abstract class AbstractInterpreter implements InterpreterInterface {
+import com.google.ase.Constants;
 
-  private final String BASE_INSTALL_URL = "http://android-scripting.googlecode.com/svn/trunk/";
+public abstract class AbstractInterpreter implements InterpreterInterface {
 
   @Override
   public boolean isInstalled() {
@@ -47,17 +47,17 @@ public abstract class AbstractInterpreter implements InterpreterInterface {
 
   @Override
   public String getInterpreterArchiveUrl() {
-    return BASE_INSTALL_URL + getName() + "/" + getInterpreterArchiveName();
+    return Constants.BASE_INSTALL_URL + getName() + "/" + getInterpreterArchiveName();
   }
 
   @Override
   public String getScriptsArchiveUrl() {
-    return BASE_INSTALL_URL + getName() + "/" + getScriptsArchiveName();
+    return Constants.BASE_INSTALL_URL + getName() + "/" + getScriptsArchiveName();
   }
 
   @Override
   public String getInterpreterExtrasArchiveUrl() {
-    return BASE_INSTALL_URL + getName() + "/" + getInterpreterExtrasArchiveName();
+    return Constants.BASE_INSTALL_URL + getName() + "/" + getInterpreterExtrasArchiveName();
   }
 
 }

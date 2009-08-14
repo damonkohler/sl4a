@@ -17,6 +17,7 @@
 package com.google.ase.interpreter.bsh;
 
 import com.google.ase.AndroidFacade;
+import com.google.ase.Constants;
 import com.google.ase.interpreter.AbstractInterpreter;
 import com.google.ase.interpreter.InterpreterProcessInterface;
 
@@ -45,6 +46,21 @@ public class BshInterpreter extends AbstractInterpreter {
   @Override
   public InterpreterProcessInterface buildProcess(AndroidFacade facade, String scriptName) {
     return new BshInterpreterProcess(facade, scriptName);
+  }
+
+  @Override
+  public String getInterpreterArchiveUrl() {
+    return Constants.BASE_INSTALL_URL + "beanshell/" + getInterpreterArchiveName();
+  }
+
+  @Override
+  public String getScriptsArchiveUrl() {
+    return Constants.BASE_INSTALL_URL + "beanshell/" + getScriptsArchiveName();
+  }
+
+  @Override
+  public String getInterpreterExtrasArchiveUrl() {
+    return Constants.BASE_INSTALL_URL + "beanshell/" + getInterpreterExtrasArchiveName();
   }
 
   @Override

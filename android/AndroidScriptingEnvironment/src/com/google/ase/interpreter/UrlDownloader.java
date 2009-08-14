@@ -61,7 +61,7 @@ public class UrlDownloader extends Activity {
             InputStream in = mUrlConnection.getInputStream();
             int bytesCopied = StreamUtils.copyInputStream(in, mOutput);
             int size = mUrlConnection.getContentLength();
-            if (bytesCopied != size) {
+            if (bytesCopied != size && size != -1 /* -1 indicates no ContentLength */) {
               throw new IOException("Download incomplete: " + bytesCopied + " != " + size);
             }
             AseLog.v("Download completed successfully.");

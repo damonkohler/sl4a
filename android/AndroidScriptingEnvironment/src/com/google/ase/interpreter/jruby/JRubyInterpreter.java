@@ -55,7 +55,7 @@ public class JRubyInterpreter extends AbstractInterpreter {
 
   @Override
   public boolean hasScriptsArchive() {
-    return false;
+    return true;
   }
 
 }

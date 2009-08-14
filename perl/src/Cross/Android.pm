@@ -32,26 +32,26 @@ BEGIN {
 sub new {
     my $class = shift;
     if (@_) {
-	print STDERR "$0: new() expected no arguments, got @_\n";
+        print STDERR "$0: new() expected no arguments, got @_\n";
     }
     my $fh = IO::Socket::INET->new(Proto    => 'tcp',
-				   PeerAddr => 'localhost',
-				   PeerPort => $PORT)
-	or die "$0: Cannot connect to port $PORT on localhost";
+                                   PeerAddr => 'localhost',
+                                   PeerPort => $PORT)
+        or die "$0: Cannot connect to port $PORT on localhost";
     $fh->autoflush(1);
     bless {
-	conn => $fh,
-	id   => 0,
-    }, $class; 
+        conn => $fh,
+        id   => 0,
+    }, $class;
 }
 
 # One can use this to set the proxy object to display what's being
 # sent down the wire (as JSON), or query the state of tracing.
 sub trace {
     if (@_ == 2) {
-	$_[0]->{trace} = $_[1];
+        $_[0]->{trace} = $_[1];
     } else {
-	return $_[0]->{trace};
+        return $_[0]->{trace};
     }
 }
 
@@ -62,8 +62,8 @@ sub trace {
 # the connection quietly, close() closes the connection noisily.
 sub _close {
     if (defined $_[0]->{conn}) {
-	close($_[0]->{conn});
-	undef $_[0]->{conn};
+        close($_[0]->{conn});
+        undef $_[0]->{conn};
     }
 }
 sub close {
@@ -78,32 +78,32 @@ sub do_rpc {
     my $self = shift;
     my $method = pop;
     my $request = to_json({ id => $self->{id},
-			    method => $method,
-			    params => [ @_ ] }) . "\n";
+                            method => $method,
+                            params => [ @_ ] }) . "\n";
     if ($self->trace) { print STDERR ">> $request" }
     if (defined $self->{conn}) {
-	print { $self->{conn} } $request;
-	$self->{id}++;
-	my $response = readline($self->{conn});
-	if ($self->trace) { print STDERR "<< $response" }
-	if (defined $response && length $response) {
-	    my $result = from_json($response);
-	    if (defined $result && exists $result->{error}) {
-		print STDERR "$0: error: ", to_json($result->{error}), "\n";
-	    }
-	    return $result;
-	}
+        print { $self->{conn} } $request;
+        $self->{id}++;
+        my $response = readline($self->{conn});
+        if ($self->trace) { print STDERR "<< $response" }
+        if (defined $response && length $response) {
+            my $result = from_json($response);
+            if (defined $result && exists $result->{error}) {
+                print STDERR "$0: error: ", to_json($result->{error}), "\n";
+            }
+            return $result;
+        }
     }
     $self->close;
     return;
-} 
+}
 
 # Return stubs that call do_rpc() with the method name smuggled in.
 sub rpc_maker {
     my $method = shift;
     sub {
-	push @_, $method;
-	goto &do_rpc;  # Knock the stub out of the call stack.
+        push @_, $method;
+        goto &do_rpc;  # Knock the stub out of the call stack.
     }
 }
 
@@ -111,11 +111,11 @@ sub help {
     my ($self, $method) = @_;
     my $help = defined $method ? $self->help($method) : $self->_help();
     if (exists $help->{error}) {
-	print STDERR "Failed to retrieve help text.\n";
+        print STDERR "Failed to retrieve help text.\n";
     } else {
-	for my $m (@{ $help->{result} }) {
-	    print "$m\n";
-	}
+        for my $m (@{ $help->{result} }) {
+            print "$m\n";
+        }
     }
 }
 
@@ -125,10 +125,10 @@ sub AUTOLOAD {
     # print STDERR "$0: installing proxy method '$method'\n";
     my $rpc = rpc_maker($method);
     {
-	# Install the RPC proxy method, we will not came here
-	# any more for the same method name.
-	no strict 'refs';
-	*$method = $rpc;
+        # Install the RPC proxy method, we will not came here
+        # any more for the same method name.
+        no strict 'refs';
+        *$method = $rpc;
     }
     goto &$rpc;  # Call the RPC now.
 }
