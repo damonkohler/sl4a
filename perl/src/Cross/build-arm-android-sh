@@ -1,3 +1,4 @@
+#!/bin/bash
 # this is a build script for ARM-linux cross-compiling.
 # it builds miniperl on HOST and then perl for TARGET
 # this approach is like Perl-CE cross-compiling, and allows
@@ -21,7 +22,7 @@ rm -rf android android.zip
 #
 # Building fine but left out for now: attributes Devel/Peek MIME/Base64 mro PerlIO/scalar PerlIO/via Safe Storable Time/Piece
 # Would be nice but do not build trivially: Time/HiRes
-# Big/complex: Compress* DB_File Encode Errno Filter/Util/Call IO/Compress Math/BigInt/FastCalc PerlIO/encoding Time/HiRes Unicode/Normalize
+# Big/complex: Compress* DB_File Encode Filter/Util/Call IO/Compress Math/BigInt/FastCalc PerlIO/encoding Time/HiRes Unicode/Normalize
 # Unlikely to be useful: ByteLoader GDBM_File NDBM_File Opcode SDBM_File XS/APItest XS/Typemap
 # Unlikely to ever build: I18N/Langinfo IPC/SysV Sys/Syslog threads threads/shared Win32*
 # Not really an ext: Attribute/Handlers
@@ -70,9 +71,9 @@ if [[ "x$1" != xnoconf* ]] ; then
   *) echo "$0: agcc is not working right."
      echo "$0: You need to have .../prebuilt/OS-CPU/toolchain/arm-eabi-X.Y.Z/bin/arm-eabi-agcc in your PATH."
      echo "$0: Cannot continue, aborting."
-     cleanup 
+     cleanup
      exit 1 ;;
-  esac 
+  esac
   cleanup
   # Configure on HOST
   ./Configure -des -Dprefix=./dummy -Dusedevel || exit 1
@@ -133,6 +134,7 @@ make -f ${MAKEFILE} xconfig.h || exit 1
 make -f ${MAKEFILE} libperl.a OBJ_EXT=.o EXE_EXT=.$CROSS_NAME LIB_EXT=.a AR=${AR} || exit 1
 make -f ${MAKEFILE} miniperl.${CROSS_NAME} MAKEFILE=${MAKEFILE} AR=${AR} || exit 1
 make -f ${MAKEFILE} perl.${CROSS_NAME} MAKEFILE=${MAKEFILE} AR=${AR} || exit 1
+make -f ${MAKEFILE} ext/Errno/pm_to_blib || exit 1
 
 echo
 

@@ -10,6 +10,8 @@ BEGIN {
 }
 chdir 't';
 
+use File::Find;
+use File::Spec;
 use Test::More;
 
 my $Has_Test_Pod;
@@ -17,8 +19,8 @@ BEGIN {
     $Has_Test_Pod = eval 'use Test::Pod 0.95; 1';
 }
 
-chdir "..";
-my $manifest = "MANIFEST";
+chdir File::Spec->updir;
+my $manifest = File::Spec->catfile('MANIFEST');
 open(my $manifest_fh, "<", $manifest) or die "Can't open $manifest: $!";
 my @modules = map { m{^lib/(\S+)}; $1 } 
               grep { m{^lib/ExtUtils/\S*\.pm} } 

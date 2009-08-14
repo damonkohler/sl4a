@@ -2,7 +2,7 @@ package ExtUtils::MM_DOS;
 
 use strict;
 
-our $VERSION = 6.55_02;
+our $VERSION = 6.55_01;
 
 require ExtUtils::MM_Any;
 require ExtUtils::MM_Unix;

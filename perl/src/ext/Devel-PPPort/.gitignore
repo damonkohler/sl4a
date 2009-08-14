@@ -1,5 +1,0 @@
-/PPPort.pm
-#ignored in /ext
-#/ppport.h
-/module*.c
-/RealPPPort.xs
