@@ -17,6 +17,8 @@
 package com.google.ase;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -595,9 +597,7 @@ public class AndroidFacade {
     List<ActivityManager.RunningAppProcessInfo> appProcesses =
         mActivityManager.getRunningAppProcesses();
     for (ActivityManager.RunningAppProcessInfo info : appProcesses) {
-      for (String packageName : info.pkgList) {
-        runningPackages.add(packageName);
-      }
+      runningPackages.addAll(Arrays.asList(info.pkgList));
     }
     List<ActivityManager.RunningServiceInfo> serviceProcesses =
         mActivityManager.getRunningServices(Integer.MAX_VALUE);
@@ -605,8 +605,11 @@ public class AndroidFacade {
       runningPackages.add(info.service.getPackageName());
     }
     Bundle result = new Bundle();
-    result.putStringArray("packages", (String[]) runningPackages.toArray());
+    result.putStringArrayList("packages", new ArrayList<String>(runningPackages));
     return result;
   }
 
+  public void forceStopPackage(String packageName) {
+    mActivityManager.restartPackage(packageName);
+  }
 }

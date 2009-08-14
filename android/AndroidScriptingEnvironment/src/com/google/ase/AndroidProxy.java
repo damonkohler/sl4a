@@ -16,7 +16,6 @@
 
 package com.google.ase;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -512,7 +511,7 @@ public class AndroidProxy {
     try {
       result = buildJsonIntent(data);
     } catch (JSONException e) {
-      return JsonRpcResult.error("Failed to build JSON result.");
+      return JsonRpcResult.error("Failed to build JSON result.", e);
     }
     return JsonRpcResult.result(result);
   }
@@ -527,7 +526,7 @@ public class AndroidProxy {
     try {
       result = buildJsonIntent(data);
     } catch (JSONException e) {
-      return JsonRpcResult.error("Failed to build JSON result.");
+      return JsonRpcResult.error("Failed to build JSON result.", e);
     }
     return JsonRpcResult.result(result);
   }
@@ -677,9 +676,22 @@ public class AndroidProxy {
      returns = "List of packages running activities."
   )
   public JSONObject getRunningPackages(JSONArray params) {
-    String[] packages = mAndroidFacade.getRunningPackages().getStringArray("packages");
-    JSONArray result = new JSONArray(Arrays.asList(packages));
+    List<String> packages = mAndroidFacade.getRunningPackages().getStringArrayList("packages");
+    JSONArray result = new JSONArray(packages);
     return JsonRpcResult.result(result);
+  }
+
+  @Rpc(
+     description = "Force stops a package.",
+     params = "String package_name"
+  )
+  public JSONObject forceStopPackage(JSONArray params) {
+    try {
+      mAndroidFacade.forceStopPackage(params.getString(0));
+    } catch (JSONException e) {
+      return JsonRpcResult.error("Package name parameter must be specified.", e);
+    }
+    return JsonRpcResult.empty();
   }
 
   /**
