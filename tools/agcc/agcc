@@ -151,19 +151,19 @@ my $have_src = 0;
 while(@ARGV) {
     my $a = shift;
     if(defined $MODES{$a}) {
-	die "Can't specify $a and $mode" if $mode ne "DEFAULT";
-	$mode = $a;
+        die "Can't specify $a and $mode" if $mode ne "DEFAULT";
+        $mode = $a;
     } elsif($a eq "-o") {
-	die "Missing -o argument" if !@ARGV;
-	die "Duplicate -o argument" if defined $out;
-	$out = shift;
+        die "Missing -o argument" if !@ARGV;
+        die "Duplicate -o argument" if defined $out;
+        $out = shift;
     } elsif($a =~ /^-W.*/) {
-	$warn = 1;
+        $warn = 1;
     } elsif($a =~ /^-O.*/) {
-	$opt = 1;
+        $opt = 1;
     } else {
-	if($a =~ /\.(c|cpp|cxx)$/i) { $have_src = 1; }
-	push @args, $a;
+        if($a =~ /\.(c|cpp|cxx)$/i) { $have_src = 1; }
+        push @args, $a;
     }
 }
 

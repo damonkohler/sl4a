@@ -100,7 +100,7 @@
 #define LUA_PATH_DEFAULT \
     "./?.lua;" LUA_LDIR"?/?.lua;" LUA_LDIR"?.lua;" LUA_LDIR"?/init.lua;" \
     LUA_CDIR"?.lua;" LUA_CDIR"?/init.lua;" \
-    LUA_LDIR"../scripts/"
+    "/sdcard/ase/scripts/?.lua;"
 #define LUA_CPATH_DEFAULT \
     "./?.so;" LUA_CDIR"?.so;" LUA_CDIR"loadall.so;" LUA_CDIR"?/init.sl;" \
     LUA_CDIR"?/?.so;"

@@ -5,7 +5,7 @@ android.startSensing()
 silent = false
 while true do
   e = android.receiveEvent()
-  facedown = e.result and e.result.roll and e.result.roll < -9
+  facedown = e.result and e.result.zforce and e.result.zforce < -5
   if facedown and not silent then
     android.vibrate(100)  --A short vibration to indicate we're in silent mode.
     android.setRingerSilent(true)
