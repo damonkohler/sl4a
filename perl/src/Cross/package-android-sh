@@ -84,7 +84,7 @@ do
     stage $l $dst
   done
 done
-for lib in AutoLoader.pm base.pm bytes.pm Carp.pm Carp/*.pm Config_*.pl constant.pm CPAN.pm CPAN/*.pm Cwd.pm Exporter.pm Exporter/*.pm File/*.pm Getopt/*.pm IPC/*.pm lib.pm overload.pm perl5db.pl re.pm strict.pm Symbol.pm Term/ReadLine.pm Text/*.pm Tie/*.pm vars.pm warnings.pm warnings/*.pm
+for lib in AutoLoader.pm base.pm bytes.pm Carp.pm Carp/*.pm Config_*.pl constant.pm CPAN.pm CPAN/*.pm Cwd.pm Exporter.pm Exporter/*.pm File/*.pm Getopt/*.pm IPC/*.pm lib.pm overload.pm perl5db.pl re.pm SelectSaver.pm strict.pm Symbol.pm Term/ReadLine.pm Text/*.pm Tie/*.pm vars.pm warnings.pm warnings/*.pm
 do
   lib=$(ls ../lib/$lib)
   for l in $lib

@@ -85,10 +85,8 @@ ext/Attribute-Handlers/t/constants.t	Test constants and Attribute::Handlers
 ext/Attribute-Handlers/t/data_convert.t	Test attribute data conversion
 ext/Attribute-Handlers/t/linerep.t	See if Attribute::Handlers works
 ext/Attribute-Handlers/t/multi.t	See if Attribute::Handlers works
-ext/attrs/attrs.pm		attrs extension Perl module
-ext/attrs/attrs.xs		attrs extension external subroutines
-ext/attrs/Makefile.PL		attrs extension makefile writer
-ext/attrs/t/attrs.t		See if attrs works with C<sub : attrs>
+ext/attributes/attributes.pm		For "sub foo : attrlist"
+ext/attributes/attributes.xs		For "sub foo : attrlist"
 ext/B/B/Concise.pm	Compiler Concise backend
 ext/B/B/Debug.pm	Compiler Debug backend
 ext/B/B/Deparse.pm	Compiler Deparse backend
@@ -1055,7 +1053,6 @@ ext/Module-Pluggable/t/lib/Zot/.Zork.pm	Module::Pluggable tests
 ext/mro/Changes			mro extension
 ext/mro/mro.pm			mro extension
 ext/mro/mro.xs			mro extension
-ext/mro/t/pluggable.t		Test that c3 mro extension is actually pluggable
 ext/NDBM_File/hints/cygwin.pl	Hint for NDBM_File for named architecture
 ext/NDBM_File/hints/dec_osf.pl	Hint for NDBM_File for named architecture
 ext/NDBM_File/hints/dynixptx.pl	Hint for NDBM_File for named architecture
@@ -1477,6 +1474,7 @@ ext/threads/t/join.t		Testing the join function
 ext/threads/t/kill.t		Tests thread signalling
 ext/threads/t/libc.t		testing libc functions for threadsafety
 ext/threads/t/list.t		Test threads->list()
+ext/threads/t/no_threads.t	threads test for non-threaded Perls
 ext/threads/t/problems.t	Test various memory problems
 ext/threads/t/stack_env.t	Tests for stack limits
 ext/threads/t/stack.t		Tests for stack limits
@@ -1667,10 +1665,7 @@ hints/isc_2.sh			Hints for named architecture
 hints/isc.sh			Hints for named architecture
 hints/linux.sh			Hints for named architecture
 hints/lynxos.sh			Hints for named architecture
-hints/machten_2.sh		Hints for named architecture
-hints/machten.sh		Hints for named architecture
 hints/midnightbsd.sh		Hints for named architecture
-hints/mint.sh			Hints for named architecture
 hints/mips.sh			Hints for named architecture
 hints/mirbsd.sh			Hints for named architecture
 hints/mpc.sh			Hints for named architecture
@@ -1779,7 +1774,6 @@ lib/Archive/Tar/t/src/short/bar.tar.packed	Archive::Tar tests
 lib/Archive/Tar/t/src/short/foo.tbz.packed	Archive::Tar tests
 lib/Archive/Tar/t/src/short/foo.tgz.packed	Archive::Tar tests
 lib/assert.pl			assertion and panic with stack trace
-lib/attributes.pm		For "sub foo : attrlist"
 lib/autodie/exception.pm	Exception class for autodie
 lib/autodie/exception/system.pm	Exception class for autodying system()
 lib/autodie/hints.pm		Hinting interface for autodie
@@ -1938,21 +1932,26 @@ lib/CGI/t/apache.t		See if CGI::Apache still loads
 lib/CGI/t/can.t			See if CGI.pm works
 lib/CGI/t/carp.t		See if CGI::Carp works
 lib/CGI/t/cookie.t		See if CGI::Cookie works
+lib/CGI/t/Dump.t		See if CGI->Dump works
 lib/CGI/t/fast.t		See if CGI::Fast works (if FCGI is installed)
 lib/CGI/t/form.t		See if CGI.pm works
 lib/CGI/t/function.t		See if CGI.pm works
 lib/CGI/t/html.t		See if CGI.pm works
 lib/CGI/t/no_tabindex.t	See if CGI.pm works
+lib/CGI/t/popup_menu.t		See if CGI pop menus work
 lib/CGI/t/pretty.t		See if CGI.pm works
 lib/CGI/t/push.t		See if CGI::Push works
+lib/CGI/t/query_string.t	See if CGI->query_string() works
 lib/CGI/t/request.t		See if CGI.pm works
 lib/CGI/t/start_end_asterisk.t	See if CGI.pm works
 lib/CGI/t/start_end_end.t	See if CGI.pm works
 lib/CGI/t/start_end_start.t	See if CGI.pm works
 lib/CGI/t/switch.t		See if CGI::Switch still loads
+lib/CGI/t/unescapeHTML.t	See if CGI::unescapeHTML() works
 lib/CGI/t/uploadInfo.t		See if CGI.pm works
 lib/CGI/t/upload_post_text.txt.packed	Test data for CGI.pm
 lib/CGI/t/upload.t		See if CGI.pm works
+lib/CGI/t/user_agent.t		See if CGI->user_agent() works
 lib/CGI/t/util-58.t		See if 5.8-dependent features work
 lib/CGI/t/util.t		See if CGI.pm works
 lib/CGI/Util.pm			Utility functions
@@ -2126,6 +2125,7 @@ lib/DBM_Filter/utf8.pm		DBM Filter for UTF-8 Encoding
 lib/dbm_filter_util.pl		Utility functions used by DBM Filter tests
 lib/DB.pm			Debugger API (draft)
 lib/DB.t			See if DB works
+lib/deprecate.pm		A pragma for deprecating modules from the core.
 lib/Devel/SelfStubber.pm	Generate stubs for SelfLoader.pm
 lib/Devel/SelfStubber.t		See if Devel::SelfStubber works
 lib/diagnostics.pm		Print verbose diagnostics
@@ -2814,6 +2814,10 @@ lib/perl5db.pl			Perl debugging routines
 lib/perl5db.t			Tests for the Perl debugger
 lib/perl5db/t/eval-line-bug	Tests for the Perl debugger
 lib/perl5db/t/lvalue-bug	Tests for the Perl debugger
+lib/perl5db/t/proxy-constants	Tests for the Perl debugger
+lib/perl5db/t/rt-61222		Tests for the Perl debugger
+lib/perl5db/t/rt-66110		Tests for the Perl debugger
+lib/perl5db/t/symbol-table-bug	Tests for the Perl debugger
 lib/PerlIO.pm			PerlIO support module
 lib/PerlIO/via/QuotedPrint.pm	PerlIO::via::QuotedPrint
 lib/PerlIO/via/t/QuotedPrint.t	PerlIO::via::QuotedPrint
@@ -3438,13 +3442,6 @@ mg.c				Magic code
 mg.h				Magic header
 minimod.pl			Writes lib/ExtUtils/Miniperl.pm
 miniperlmain.c			Basic perl w/o dynamic loading or extensions
-mint/errno.h			MiNT port
-mint/Makefile			MiNT port
-mint/pwd.c			MiNT port
-mint/README			MiNT port
-mint/stdio.h			MiNT port
-mint/sys/time.h			MiNT port
-mint/time.h			MiNT port
 mkppport			A script that distributes ppport.h
 mkppport.lst			List of extensions that need a ppport.h
 mpeix/mpeix.c			MPE/iX port
@@ -3624,6 +3621,7 @@ pod/perl5004delta.pod		Perl changes in version 5.004
 pod/perl5005delta.pod		Perl changes in version 5.005
 pod/perl5100delta.pod		Perl changes in version 5.10.0
 pod/perl5101delta.pod		Perl changes in version 5.10.1
+pod/perl5110delta.pod		Perl changes in version 5.11.0
 pod/perl561delta.pod		Perl changes in version 5.6.1
 pod/perl56delta.pod		Perl changes in version 5.6
 pod/perl570delta.pod		Perl changes in version 5.7.0
@@ -3701,7 +3699,6 @@ pod/perlnumber.pod		Perl number semantics
 pod/perlobj.pod			Perl objects
 pod/perlopentut.pod		Perl open() tutorial
 pod/perlop.pod			Perl operators and precedence
-pod/perlothrtut.pod		Old Perl threads tutorial
 pod/perlpacktut.pod		Perl pack() and unpack() tutorial
 pod/perlperf.pod		Perl Performance and Optimization Techniques
 pod/perl.pod			Perl overview (this section)
@@ -3758,7 +3755,6 @@ Porting/check83.pl	Check whether we are 8.3-friendly
 Porting/checkansi.pl	Check source code for ANSI-C violations
 Porting/checkARGS_ASSERT.pl	Check we use every PERL_ARGS_ASSERT* macro
 Porting/checkAUTHORS.pl	Check that the AUTHORS file is complete
-Porting/checkcase.pl	Check whether we are case-insensitive-fs-friendly
 Porting/checkcfgvar.pl	Check that config scripts define all symbols
 Porting/checkURL.pl	Check whether we have working URLs
 Porting/checkVERSION.pl	Check whether we have $VERSIONs
@@ -3791,8 +3787,7 @@ Porting/makerel		Release making utility
 Porting/make_snapshot.pl	Make a tgz snapshot of our tree with a .patch file in it
 Porting/manicheck	Check against MANIFEST
 Porting/manisort	Sort the MANIFEST
-Porting/mergelog	log of merges from bleed to maint
-Porting/mergelog-tool	tool to process mergelog
+Porting/perldelta_template	Template for creating new perldelta.pod files
 Porting/podtidy		Reformat pod using Pod::Tidy
 Porting/pumpkin.pod	Guidelines and hints for Perl maintainers
 Porting/README.y2038	Perl notes for the 2038 fix
@@ -3837,11 +3832,9 @@ README.irix			Perl notes for Irix
 README.jp			Perl for Japanese (in EUC-JP)
 README.ko			Perl for Korean (in EUC-KR)
 README.linux			Perl notes for Linux
-README.machten			Perl notes for Power MachTen
 README.macos			Perl notes for Mac OS (Classic)
 README.macosx			Perl notes for Mac OS X
 README.micro			Notes about microperl
-README.mint			Perl notes for MiNT
 README.mpeix			Perl notes for MPE/iX
 README.netware			Perl notes for NetWare
 README.openbsd			Perl notes for OpenBSD
@@ -3937,6 +3930,7 @@ t/base/num.t			See if numbers work
 t/base/pat.t			See if pattern matching works
 t/base/rs.t			See if record-read works
 t/base/term.t			See if various terms work
+t/benchmark/rt26188-speed-up-keys-on-empty-hash.t	Benchmark if keys on empty hashes is fast enough
 t/cmd/elsif.t			See if else-if works
 t/cmd/for.t			See if for loops work
 t/cmd/mod.t			See if statement modifiers work
@@ -3946,10 +3940,9 @@ t/cmd/while.t			See if while loops work
 t/comp/bproto.t			See if builtins conform to their prototypes
 t/comp/cmdopt.t			See if command optimization works
 t/comp/colon.t			See if colons are parsed correctly
-t/comp/cpp.aux			main file for cpp.t
-t/comp/cpp.t			See if C preprocessor works
 t/comp/decl.t			See if declarations work
 t/comp/fold.t			See if constant folding works
+t/comp/hints.aux		Auxillary file for %^H test
 t/comp/hints.t			See if %^H works
 t/comp/multiline.t		See if multiline strings work
 t/comp/opsubs.t			See if q() etc. are not parsed as functions
@@ -3967,11 +3960,15 @@ t/comp/use.t			See if pragmata work
 t/comp/utf.t			See if UTFs work
 t/harness			Finer diagnostics from test suite
 thread.h			Threading header
+time64.c			64 bit clean time.h (code)
+time64_config.h			64 bit clean time.h (configuration)
+time64.h			64 bit clean time.h (header)
 t/io/argv.t			See if ARGV stuff works
 t/io/binmode.t			See if binmode() works
 t/io/crlf.t			See if :crlf works
 t/io/crlf_through.t		See if pipe passes data intact with :crlf
 t/io/dup.t			See if >& works right
+t/io/errno.t			See if $! is correctly set
 t/io/fflush.t			See if auto-flush on fork/exec/system/qx works
 t/io/fs.t			See if directory manipulations work
 t/io/inplace.t			See if inplace editing works
@@ -4014,7 +4011,11 @@ t/lib/compress/truncate.pl	Compress::Zlib
 t/lib/compress/zlib-generic.pl	Compress::Zlib
 t/lib/contains_bad_pod.xr	Pod-Parser test file
 t/lib/contains_pod.xr		Pod-Parser test file
+t/lib/croak.t			Test calls to Perl_croak() in the C source.
 t/lib/cygwin.t			Builtin cygwin function tests
+t/lib/deprecate/Deprecated.pm	Deprecated module to test deprecate.pm
+t/lib/deprecate/Optionally.pm	Optionally deprecated module to test deprecate.pm
+t/lib/deprecate.t		Test deprecate.pm
 t/lib/Devel/switchd.pm		Module for t/run/switchd.t
 t/lib/Dev/Null.pm		Test::More test module
 t/lib/dprof/test1_t		Perl code profiler tests
@@ -4048,6 +4049,7 @@ t/lib/h2ph.h			Test header file for h2ph
 t/lib/h2ph.pht			Generated output from h2ph.h by h2ph, for comparison
 t/lib/locale/latin1		Part of locale.t in Latin 1
 t/lib/locale/utf8		Part of locale.t in UTF8
+t/lib/maintainers.t		Test that Porting/Maintaners.pl is up to date
 t/lib/MakeMaker/Test/NoXS.pm		MakeMaker test utilities
 t/lib/MakeMaker/Test/Setup/BFD.pm	MakeMaker test utilities
 t/lib/MakeMaker/Test/Setup/MPV.pm	MakeMaker test utilities
@@ -4142,6 +4144,8 @@ t/mro/complex_dfs.t		mro tests
 t/mro/dbic_c3.t			mro tests
 t/mro/dbic_dfs.t		mro tests
 t/mro/inconsistent_c3.t		mro tests
+t/mro/isa_c3.t			test for optimisatised mro_get_linear_isa_c3
+t/mro/isa_dfs.t			test for optimisatised mro_get_linear_isa_dfs
 t/mro/method_caching.t		mro tests
 t/mro/next_edgecases.t		mro tests
 t/mro/next_goto.t		mro tests
@@ -4194,6 +4198,7 @@ t/op/die_exit.t			See if die and exit status interaction works
 t/op/die.t			See if die works
 t/op/dor.t			See if defined-or (//) works
 t/op/do.t			See if subroutines work
+t/op/each_array.t		See if array iterators work
 t/op/each.t			See if hash iterators work
 t/op/eval.t			See if eval operator works
 t/op/exec.t			See if exec, system and qx work
@@ -4268,6 +4273,7 @@ t/op/readline.t			See if <> / readline / rcatline work
 t/op/read.t			See if read() works
 t/op/recurse.t			See if deep recursion works
 t/op/ref.t			See if refs and objects work
+t/op/reg_60508.t		See if bug #60508 is fixed
 t/op/reg_email.t		See if regex recursion works by parsing email addresses
 t/op/reg_email_thr.t		See if regex recursion works by parsing email addresses in another thread
 t/op/regexp_noamp.t		See if regular expressions work with optimizations
@@ -4338,7 +4344,9 @@ t/op/vec.t			See if vectors work
 t/op/ver.t			See if v-strings and the %v format flag work
 t/op/wantarray.t		See if wantarray works
 t/op/write.t			See if write works (formats work)
+t/op/yadayada.t			See if ..., !!! and ??? work
 t/perl.supp			Perl valgrind suppressions
+t/pod/diag.t			Test completeness of perldiag.pod
 t/pod/emptycmd.t		Test empty pod directives
 t/pod/emptycmd.xr		Expected results for emptycmd.t
 t/pod/find.t			See if Pod::Find works
@@ -4380,6 +4388,7 @@ t/pod/testpods/lib/Pod/Stuff.pm		Sample data for t/pod/find.t
 t/pod/twice.t			Test Pod::Parser
 t/pod/usage2.pod		Test POD for pod2usage tests
 t/pod/usage.pod			Test POD for pod2usage tests
+t/porting/checkcase.t	Check whether we are case-insensitive-fs-friendly
 t/README			Instructions for regression tests
 t/run/cloexec.t			Test close-on-exec.
 t/run/exit.t			Test perl's exit status.
@@ -4396,8 +4405,6 @@ t/run/switchF.t			Test the -F switch
 t/run/switchI.t			Test the -I switch
 t/run/switchn.t			Test the -n switch
 t/run/switchp.t			Test the -p switch
-t/run/switchPx.aux		Data for switchPx.t
-t/run/switchPx.t		Test the -Px combination
 t/run/switcht.t			Test the -t switch
 t/run/switchx2.aux		Data for switchx.t
 t/run/switchx.aux		Data for switchx.t
@@ -4590,4 +4597,3 @@ x2p/util.c			Utility routines
 x2p/util.h			Public declarations for the above
 x2p/walk.c			Parse tree walker
 XSUB.h				Include file for extension subroutines
-xsutils.c			Additional bundled package methods not in UNIVERSAL::
