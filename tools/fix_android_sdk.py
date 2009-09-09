@@ -51,6 +51,7 @@ def validate_source_and_sdk_locations(src_location, sdk_location):
 
 def copy_sources(src_location, sdk_location):
   sdk = validate_source_and_sdk_locations(src_location, sdk_location)
+  out = os.path.join(src_location, 'out')
   sources = os.path.join(sdk, 'sources')
   if not os.path.exists(sources):
     os.makedirs(sources)
@@ -59,6 +60,8 @@ def copy_sources(src_location, sdk_location):
   written = {}
   # Iterate over all Java files.
   for dir, subdirs, files in os.walk(src_location):
+    if dir.startswith(out):
+      continue  # Skip copying stub files.
     for filename in [f for f in files if f.endswith('.java')]:
       # Search package name.
       source = os.path.join(dir, filename)
