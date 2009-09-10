@@ -67,10 +67,8 @@ public class AndroidProxy {
     return JsonRpcResult.empty();
   }
 
-  @Rpc(
-      description = "Starts tracking phone state."
-  )
-  public JSONObject startTrackingPhoneState() {
+  @Rpc(description = "Starts tracking phone state.")
+  public JSONObject startTrackingPhoneState(JSONArray params) {
     mAndroidFacade.startTrackingPhoneState();
     return JsonRpcResult.empty();
   }
@@ -79,20 +77,17 @@ public class AndroidProxy {
       description = "Returns the current phone state.",
       returns = "A map of \"state\" and \"incomingNumber\""
   )
-  public JSONObject readPhoneState() {
-    Bundle phoneState = mAndroidFacade.readPhoneState();
-    JSONObject result = new JSONObject();
+  public JSONObject readPhoneState(JSONArray params) {
     try {
-      result.put("state", phoneState.get("state"));
-      result.put("incomingNumber", phoneState.get("incomingNumber"));
+      JSONObject result = buildJsonBundle(mAndroidFacade.readPhoneState());
+      return JsonRpcResult.result(result);
     } catch (JSONException e) {
-      return JsonRpcResult.error("Failed to build phone state result.", e);
+      return JsonRpcResult.error("Failed to build location.", e);
     }
-    return JsonRpcResult.result(result);
   }
 
   @Rpc(description = "Stops tracking phone state.")
-  public JSONObject stopTrackingPhoneState() {
+  public JSONObject stopTrackingPhoneState(JSONArray params) {
     mAndroidFacade.stopTrackingPhoneState();
     return JsonRpcResult.empty();
   }
@@ -139,19 +134,11 @@ public class AndroidProxy {
 
   @Rpc(description = "Returns the current value of all collected sensor data.")
   public JSONObject readSensors(JSONArray params) {
-    Bundle sensorsBundle = mAndroidFacade.readSensors();
-    if (sensorsBundle != null) {
-      JSONObject result = new JSONObject();
-      try {
-        for (String sensor : sensorsBundle.keySet()) {
-          result.put(sensor, sensorsBundle.getFloat(sensor));
-        }
-      } catch (JSONException e) {
-        return JsonRpcResult.error("Failed to build JSON result.", e);
-      }
+    try {
+      JSONObject result = buildJsonBundle(mAndroidFacade.readSensors());
       return JsonRpcResult.result(result);
-    } else {
-      return JsonRpcResult.empty();
+    } catch (JSONException e) {
+      return JsonRpcResult.error("Failed to build location.", e);
     }
   }
 
@@ -520,7 +507,7 @@ public class AndroidProxy {
       description = "Display list of contacts to pick from.",
       returns = "A map of result values."
   )
-  public JSONObject pickContact() {
+  public JSONObject pickContact(JSONArray params) {
     Intent data = mAndroidFacade.pick("content://contacts/people");
     JSONObject result;
     try {
@@ -536,7 +523,7 @@ public class AndroidProxy {
       description = "Display list of phone numbers to pick from.",
       returns = "A map of result values."
   )
-  public JSONObject pickPhone() {
+  public JSONObject pickPhone(JSONArray params) {
     Intent data = mAndroidFacade.pick("content://contacts/phones");
     JSONObject result;
     try {
@@ -548,7 +535,7 @@ public class AndroidProxy {
   }
 
    @Rpc(description = "Start barcode scanner.", returns = "A map of result values.")
-  public JSONObject scanBarcode() {
+  public JSONObject scanBarcode(JSONArray params) {
     Intent data = mAndroidFacade.scanBarcode();
     JSONObject result;
     try {
@@ -563,7 +550,7 @@ public class AndroidProxy {
        description = "Start image capture.",
        returns = "A map of result values."
   )
-  public JSONObject captureImage() {
+  public JSONObject captureImage(JSONArray params) {
     Intent data = mAndroidFacade.captureImage();
     JSONObject result;
     try {

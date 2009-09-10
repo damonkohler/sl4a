@@ -168,7 +168,7 @@ public class AndroidFacade {
   private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
-      super.onCallStateChanged(state, incomingNumber);
+      mPhoneState = new Bundle();
       mPhoneState.putString("incomingNumber", incomingNumber);
       switch (state) {
         case TelephonyManager.CALL_STATE_IDLE:
