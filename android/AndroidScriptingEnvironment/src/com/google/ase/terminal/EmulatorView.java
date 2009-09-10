@@ -472,7 +472,7 @@ class EmulatorView extends View implements OnGestureListener {
 
   @Override
   public boolean onSingleTapUp(MotionEvent e) {
-    mInputMethodManager.showSoftInput(this, InputMethodManager.SHOW_FORCED);
+    mInputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT);
     return true;
   }
 }
