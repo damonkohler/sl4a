@@ -126,9 +126,6 @@ public class AndroidFacade {
     }
   };
 
-  private static final int MIN_LOCATION_UPDATE_DISTANCE = 30; // Meters
-  private static final int MIN_LOCATION_UPDATE_TIME = 60000; // Milliseconds
-
   private Bundle buildLocationBundle(Location location) {
     Bundle bundle = new Bundle();
     bundle.putDouble("altitude", location.getAltitude());
@@ -267,7 +264,7 @@ public class AndroidFacade {
     mSensorReadings = null;
   }
 
-  public void startLocating(String accuracy) {
+  public void startLocating(String accuracy, int minUpdateTime, int minUpdateDistance) {
     Criteria criteria = new Criteria();
     if (accuracy == "coarse") {
       criteria.setAccuracy(Criteria.ACCURACY_COARSE);
@@ -275,8 +272,7 @@ public class AndroidFacade {
       criteria.setAccuracy(Criteria.ACCURACY_FINE);
     }
     mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(criteria, true),
-        MIN_LOCATION_UPDATE_TIME, MIN_LOCATION_UPDATE_DISTANCE, mLocationListener,
-        mContext.getMainLooper());
+        minUpdateTime, minUpdateDistance, mLocationListener, mContext.getMainLooper());
   }
 
   // TODO(damonkohler): It might be nice to have a version of this method that
@@ -314,7 +310,7 @@ public class AndroidFacade {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
   }
 
-  public Intent startActivityForResult(final String action, final String uri) {
+  public Intent startActivityForResult(final Intent intent) {
     // TODO(damonkohler): This method only seems to work in Activities?
     if (!(mContext instanceof Activity)) {
       AseLog.e("Invalid context. Activity required.");
@@ -330,10 +326,6 @@ public class AndroidFacade {
     mHandler.post(new Runnable() {
       public void run() {
         try {
-          Intent intent = new Intent(action);
-          if (uri != null) {
-            intent.setData(Uri.parse(uri));
-          }
           ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
         } catch (Exception e) {
           AseLog.e("Failed to launch intent.", e);
@@ -352,15 +344,19 @@ public class AndroidFacade {
     return mStartActivityResult;
   }
 
-  public void startActivity(final String action, final String uri) {
+  public Intent startActivityForResult(final String action, final String uri) {
+    Intent intent = new Intent(action);
+    if (uri != null) {
+      intent.setData(Uri.parse(uri));
+    }
+    return startActivityForResult(intent);
+  }
+
+  public void startActivity(final Intent intent) {
     mLatch = new CountDownLatch(1);
     mHandler.post(new Runnable() {
       public void run() {
         try {
-          Intent intent = new Intent(action);
-          if (uri != null) {
-            intent.setData(Uri.parse(uri));
-          }
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
           mContext.startActivity(intent);
         } catch (Exception e) {
@@ -374,6 +370,14 @@ public class AndroidFacade {
     } catch (InterruptedException e) {
       Log.e(TAG, "Interrupted while waiting for handler to complete.", e);
     }
+  }
+
+  public void startActivity(final String action, final String uri) {
+    Intent intent = new Intent(action);
+    if (uri != null) {
+      intent.setData(Uri.parse(uri));
+    }
+    startActivity(intent);
   }
 
   public void sendTextMessage(String destinationAddress, String text) {

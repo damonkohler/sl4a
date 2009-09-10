@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.ase.jsonrpc.JsonRpcResult;
 import com.google.ase.jsonrpc.Rpc;
@@ -41,8 +40,10 @@ import com.google.ase.jsonrpc.Rpc;
  */
 public class AndroidProxy {
 
-  private static final String TAG = "AndroidProxy";
   private final AndroidFacade mAndroidFacade;
+
+  private static final int MIN_LOCATION_UPDATE_DISTANCE = 30; // Meters
+  private static final int MIN_LOCATION_UPDATE_TIME = 60000; // Milliseconds
 
   public AndroidProxy(AndroidFacade facade) {
     mAndroidFacade = facade;
@@ -150,11 +151,14 @@ public class AndroidProxy {
 
   @Rpc(
       description = "Starts collecting location data.",
-      params = "String accuracy (\"fine\", \"coarse\")"
+      params = "[[[String accuracy (\"fine\", \"coarse\")], [Integer minUpdateTimeMs]], "
+          + "[Integer minUpdateDistanceM]]"
   )
   public JSONObject startLocating(JSONArray params) {
     String accuracy = params.optString(0, "coarse");
-    mAndroidFacade.startLocating(accuracy);
+    int minUpdateTime = params.optInt(1, MIN_LOCATION_UPDATE_TIME);
+    int minUpdateDistance = params.optInt(2, MIN_LOCATION_UPDATE_DISTANCE);
+    mAndroidFacade.startLocating(accuracy, minUpdateTime, minUpdateDistance);
     return JsonRpcResult.empty();
   }
 
@@ -226,7 +230,7 @@ public class AndroidProxy {
       result.put("thoroughfare", address.getThoroughfare());
       result.put("url", address.getUrl());
     } catch (JSONException e) {
-      Log.e(TAG, "Failed to build JSON for address: " + address, e);
+      AseLog.e("Failed to build JSON for address: " + address, e);
       return null;
     }
     return result;
