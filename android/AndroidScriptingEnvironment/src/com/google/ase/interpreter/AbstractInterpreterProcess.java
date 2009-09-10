@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2009 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -33,11 +34,12 @@ import android.util.Log;
 
 import com.google.ase.AndroidFacade;
 import com.google.ase.AndroidProxy;
+import com.google.ase.AseLog;
 import com.google.ase.interpreter.lua.LuaInterpreterProcess;
 
 /**
  * This is a skeletal implementation of an interpreter process.
- * 
+ *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 // TODO(damonkohler): Possibly use ProcessBuilder?
@@ -59,7 +61,7 @@ public abstract class AbstractInterpreterProcess implements InterpreterProcessIn
 
   /**
    * Creates a new {@link LuaInterpreterProcess}.
-   * 
+   *
    * @param ap an instance of {@link AndroidProxy} for the script to connect to
    * @param launchScript the absolute path to a script that should be launched
    *        with the interpreter
@@ -120,6 +122,18 @@ public abstract class AbstractInterpreterProcess implements InterpreterProcessIn
     mOut = new PrintStream(mShellOut, true /* autoflush */);
     mIn = new BufferedReader(new InputStreamReader(mShellIn));
 
+    // Wait until the shell has produced some output before we start writing to it. This prevents
+    // misplaced $ prompts in the output.
+    try {
+      while (!mIn.ready()) {
+        Thread.sleep(1);
+      }
+    } catch (IOException e) {
+      AseLog.e("Failed while waiting for mShellFd.", e);
+    } catch (InterruptedException e) {
+      AseLog.e("Failed while waiting for mShellFd.", e);
+    }
+
     exportEnvironment();
     writeInterpreterCommand();
 
@@ -141,15 +155,9 @@ public abstract class AbstractInterpreterProcess implements InterpreterProcessIn
   }
 
   protected void exportEnvironment() {
-    StringBuilder exports = new StringBuilder();
     for (Entry<String, String> e : mEnvironment.entrySet()) {
-      exports.append("export ");
-      exports.append(e.getKey());
-      exports.append("=\"");
-      exports.append(e.getValue());
-      exports.append("\"\n");
+      println(String.format("export %s=\"%s\"", e.getKey(), e.getValue()));
     }
-    print(exports.toString());
   }
 
   /**
