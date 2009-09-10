@@ -21,6 +21,8 @@ import java.io.PrintStream;
 
 import android.util.Log;
 
+import com.google.ase.AseLog;
+
 /**
  * Renders text into a screen. Contains all the terminal-specific knowlege and state. Emulates a
  * subset of the X Window System xterm terminal, which in turn is an emulator for a subset of the
@@ -947,7 +949,11 @@ class TerminalEmulator {
   }
 
   private void scroll() {
-    mScreen.scroll(mTopMargin, mBottomMargin, getForeColor(), getBackColor());
+    try {
+      mScreen.scroll(mTopMargin, mBottomMargin, getForeColor(), getBackColor());
+    } catch (IllegalArgumentException e) {
+      AseLog.e("Scrolling failed", e);
+    }
   }
 
   /**

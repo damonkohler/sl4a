@@ -174,8 +174,8 @@ public class TranscriptScreen implements Screen {
       throw new IllegalArgumentException();
     }
 
-    // Adjust the transcript so that the last line of the transcript
-    // is ready to receive the newly scrolled data
+    // Adjust the transcript so that the last line of the transcript is ready to receive the newly
+    // scrolled data
     consistencyCheck();
     int expansionRows = Math.min(1, mTotalRows - mActiveRows);
     int rollRows = 1 - expansionRows;

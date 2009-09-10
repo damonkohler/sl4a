@@ -39,6 +39,7 @@
 		</receiver>
 		<activity android:name=".terminal.TerminalPreferences" />
 		<activity android:name=".terminal.Terminal"
+		    android:windowSoftInputMode="adjustResize"
 		    android:configChanges="keyboardHidden|orientation">
 			<intent-filter>
 				<action android:name="com.google.ase.action.LAUNCH_SCRIPT" />

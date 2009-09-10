@@ -36,6 +36,10 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.inputmethod.BaseInputConnection;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.ase.R;
 import com.google.ase.interpreter.InterpreterProcessInterface;
@@ -148,6 +152,8 @@ class EmulatorView extends View implements OnGestureListener {
 
   private float mScrollRemainder;
 
+  private InputMethodManager mInputMethodManager;
+
   /**
    * Our message handler class. Implements a periodic callback.
    */
@@ -167,7 +173,7 @@ class EmulatorView extends View implements OnGestureListener {
 
   public EmulatorView(Context context) {
     super(context);
-    initEmulatorView();
+    initEmulatorView(context);
   }
 
   public EmulatorView(Context context, AttributeSet attrs) {
@@ -175,10 +181,14 @@ class EmulatorView extends View implements OnGestureListener {
     TypedArray a = context.obtainStyledAttributes(R.styleable.EmulatorView);
     initializeScrollbars(a);
     a.recycle();
-    initEmulatorView();
+    initEmulatorView(context);
   }
 
-  private void initEmulatorView() {
+  private void initEmulatorView(Context context) {
+    setFocusable(true);
+    setFocusableInTouchMode(true);
+    mInputMethodManager =
+        (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     mTextRenderer = null;
     mCursorPaint = new Paint();
     mCursorPaint.setARGB(255, 128, 128, 128);
@@ -247,7 +257,6 @@ class EmulatorView extends View implements OnGestureListener {
 
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-    super.onLayout(changed, left, top, right, bottom);
     if (changed) {
       update();
       // A new thread is only created on startup (or if the polling thread dies for some reason).
@@ -294,11 +303,6 @@ class EmulatorView extends View implements OnGestureListener {
   public void pageHorizontal(int deltaColumns) {
     mLeftColumn = Math.max(0, Math.min(mLeftColumn + deltaColumns, mColumns - mVisibleColumns));
     invalidate();
-  }
-
-  @Override
-  public boolean onSingleTapUp(MotionEvent e) {
-    return true;
   }
 
   @Override
@@ -450,5 +454,25 @@ class EmulatorView extends View implements OnGestureListener {
         mLeftColumn = (cx - mVisibleColumns) + 1;
       }
     }
+  }
+
+  @Override
+  public boolean onCheckIsTextEditor() {
+    return true;
+  }
+
+  @Override
+  public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+    outAttrs.imeOptions |=
+        EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_FLAG_NO_ENTER_ACTION
+            | EditorInfo.IME_ACTION_NONE;
+    outAttrs.inputType = EditorInfo.TYPE_NULL;
+    return new BaseInputConnection(this, false);
+  }
+
+  @Override
+  public boolean onSingleTapUp(MotionEvent e) {
+    mInputMethodManager.showSoftInput(this, InputMethodManager.SHOW_FORCED);
+    return true;
   }
 }

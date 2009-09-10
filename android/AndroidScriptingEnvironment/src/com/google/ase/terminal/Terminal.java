@@ -37,7 +37,6 @@ import android.widget.Toast;
 import com.google.ase.AndroidFacade;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
-import com.google.ase.CustomWindowTitle;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
 import com.google.ase.interpreter.InterpreterInterface;
@@ -130,9 +129,8 @@ public class Terminal extends Activity {
       return;
     }
 
-    requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+    requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(R.layout.term);
-    CustomWindowTitle.buildWindowTitle(this);
 
     String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     if (scriptName != null) {
