@@ -25,7 +25,7 @@ import com.google.ase.jsonrpc.JsonRpcServer;
 public class PythonInterpreterProcess extends AbstractInterpreterProcess {
 
   private final static String PYTHON_HOME = "/data/data/com.google.ase/python";
-  private final static String PYTHON_BIN = PYTHON_HOME + "/bin/python";
+  private final static String PYTHON_EXTRAS = Constants.SDCARD_ASE_ROOT + "extras/python/";
 
   private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;
@@ -34,18 +34,15 @@ public class PythonInterpreterProcess extends AbstractInterpreterProcess {
     super(facade, launchScript);
     mAndroidProxy = new AndroidProxy(facade);
     mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).start();
-    buildEnvironment();
-  }
-
-  private void buildEnvironment() {
     mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
     mEnvironment.put("PYTHONHOME", PYTHON_HOME);
-    mEnvironment.put("PYTHONPATH", Constants.SCRIPTS_ROOT);
+    mEnvironment.put("PYTHONPATH", PYTHON_EXTRAS + ":" + Constants.SCRIPTS_ROOT);
   }
 
   @Override
   protected void writeInterpreterCommand() {
-    print(PYTHON_BIN);
+    PythonInterpreter interpreter = new PythonInterpreter();
+    print(interpreter.getBinary().getAbsolutePath());
     if (mLaunchScript != null) {
       print(" " + mLaunchScript);
     }

@@ -16,6 +16,8 @@
 
 package com.google.ase.interpreter.sh;
 
+import java.io.File;
+
 import com.google.ase.AndroidFacade;
 import com.google.ase.interpreter.AbstractInterpreter;
 import com.google.ase.interpreter.InterpreterProcessInterface;
@@ -26,6 +28,7 @@ import com.google.ase.interpreter.InterpreterProcessInterface;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ShInterpreter extends AbstractInterpreter {
+
   @Override
   public String getExtension() {
     return ".sh";
@@ -59,5 +62,10 @@ public class ShInterpreter extends AbstractInterpreter {
   @Override
   public boolean hasScriptsArchive() {
     return false;
+  }
+
+  @Override
+  public File getBinary() {
+    return null;
   }
 }

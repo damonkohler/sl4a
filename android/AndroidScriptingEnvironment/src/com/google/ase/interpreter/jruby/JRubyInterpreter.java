@@ -16,6 +16,8 @@
 
 package com.google.ase.interpreter.jruby;
 
+import java.io.File;
+
 import com.google.ase.AndroidFacade;
 import com.google.ase.interpreter.AbstractInterpreter;
 import com.google.ase.interpreter.InterpreterProcessInterface;
@@ -58,4 +60,8 @@ public class JRubyInterpreter extends AbstractInterpreter {
     return true;
   }
 
+  @Override
+  public File getBinary() {
+    return null;
+  }
 }

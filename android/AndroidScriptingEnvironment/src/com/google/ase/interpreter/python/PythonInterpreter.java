@@ -16,6 +16,8 @@
 
 package com.google.ase.interpreter.python;
 
+import java.io.File;
+
 import com.google.ase.AndroidFacade;
 import com.google.ase.interpreter.AbstractInterpreter;
 import com.google.ase.interpreter.InterpreterProcessInterface;
@@ -26,6 +28,9 @@ import com.google.ase.interpreter.InterpreterProcessInterface;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class PythonInterpreter extends AbstractInterpreter {
+
+  private final static String PYTHON_BIN = "/data/data/com.google.ase/python/bin/python";
+
   @Override
   public String getExtension() {
     return ".py";
@@ -58,11 +63,16 @@ public class PythonInterpreter extends AbstractInterpreter {
 
   @Override
   public boolean hasInterpreterExtrasArchive() {
-    return false;
+    return true;
   }
 
   @Override
   public boolean hasScriptsArchive() {
     return true;
+  }
+
+  @Override
+  public File getBinary() {
+    return new File(PYTHON_BIN);
   }
 }

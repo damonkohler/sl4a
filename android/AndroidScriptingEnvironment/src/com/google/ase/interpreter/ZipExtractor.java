@@ -26,7 +26,6 @@ import java.util.zip.ZipFile;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Exec;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
@@ -83,10 +82,6 @@ public class ZipExtractor extends Activity {
     }.start();
   }
 
-  private void chmod(File path, String permissions) {
-    Exec.createSubprocess("/system/bin/chmod", permissions, path.getAbsolutePath());
-  }
-
   private void unzip() throws ZipException, IOException {
     Enumeration<? extends ZipEntry> entries;
     ZipFile zip = new ZipFile(mInput);
@@ -101,11 +96,9 @@ public class ZipExtractor extends Activity {
       File destination = new File(mOutput, entry.getName());
       if (!destination.getParentFile().exists()) {
         destination.getParentFile().mkdirs();
-        chmod(destination.getParentFile(), "755");
       }
 
       StreamUtils.copyInputStream(zip.getInputStream(entry), destination);
-      chmod(destination, "755");
       AseLog.v("Extracted entry \"" + entry.getName() + "\".");
     }
     zip.close();

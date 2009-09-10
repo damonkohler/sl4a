@@ -16,6 +16,8 @@
 
 package com.google.ase.interpreter.lua;
 
+import java.io.File;
+
 import com.google.ase.AndroidFacade;
 import com.google.ase.interpreter.AbstractInterpreter;
 import com.google.ase.interpreter.InterpreterProcessInterface;
@@ -26,6 +28,8 @@ import com.google.ase.interpreter.InterpreterProcessInterface;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class LuaInterpreter extends AbstractInterpreter {
+
+  private final static String LUA_BIN = "/data/data/com.google.ase/lua/bin/lua";
 
   @Override
   public String getExtension() {
@@ -65,6 +69,11 @@ public class LuaInterpreter extends AbstractInterpreter {
   @Override
   public boolean hasScriptsArchive() {
     return true;
+  }
+
+  @Override
+  public File getBinary() {
+    return new File(LUA_BIN);
   }
 
 }

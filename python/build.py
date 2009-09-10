@@ -71,11 +71,11 @@ def strip(path):
   run('arm-eabi-strip %s' % path)
 
 
-def zipup(out_path, in_path, top, exclude=None):
+def zipup(out_path, in_path, top, exclude=None, prefix=''):
   zip_file = zipfile.ZipFile(out_path, 'w', compression=zipfile.ZIP_DEFLATED)
   for path in find(in_path, exclude=exclude)[0]:
     if not os.path.isdir(path):
-      arcname = path[len(top):].lstrip('/')
+      arcname = prefix + path[len(top):].lstrip('/')
       print 'Adding %s to %s' % (arcname, out_path)
       zip_file.write(path, arcname)
   zip_file.close()
@@ -154,11 +154,12 @@ for lib in libs_to_remove:
 
 print 'Zipping up standard library.'
 libs = os.path.join(pwd, 'src/android/python/lib/python2.6')
-zipup('android/python/lib/python26.zip', libs, libs, exclude=['lib-dynload'])
-map(rm, find(libs, exclude=['lib-dynload'])[0])
-
+# Copy in ASE's Android module.
 shutil.copy(os.path.join(pwd, 'ase', 'android.py'),
             'android/python/lib/python2.6')
+zipup(os.path.join(pwd, 'python_extras.zip'), libs, libs,
+      exclude=['lib-dynload'], prefix='python/')
+map(rm, find(libs, exclude=['lib-dynload'])[0])
 
 print 'Zipping up python interpreter for deployment.'
 zipup(os.path.join(pwd, 'python.zip'),

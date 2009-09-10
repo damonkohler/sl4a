@@ -16,6 +16,8 @@
 
 package com.google.ase.interpreter;
 
+import java.io.File;
+
 import com.google.ase.AndroidFacade;
 
 /**
@@ -90,5 +92,7 @@ public interface InterpreterInterface {
   boolean hasInterpreterExtrasArchive();
 
   boolean hasScriptsArchive();
+
+  File getBinary();
 
 }

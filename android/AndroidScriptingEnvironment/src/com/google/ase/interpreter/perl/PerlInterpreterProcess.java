@@ -23,9 +23,6 @@ import com.google.ase.jsonrpc.JsonRpcServer;
 
 public class PerlInterpreterProcess extends AbstractInterpreterProcess {
 
-  private final static String PERL_HOME = "/data/data/com.google.ase/perl";
-  private final static String PERL_BIN = PERL_HOME + "/perl";
-
   private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;
 
@@ -33,16 +30,13 @@ public class PerlInterpreterProcess extends AbstractInterpreterProcess {
     super(facade, launchScript);
     mAndroidProxy = new AndroidProxy(facade);
     mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).start();
-    buildEnvironment();
-  }
-
-  private void buildEnvironment() {
     mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
   }
 
   @Override
   protected void writeInterpreterCommand() {
-    print(PERL_BIN);
+    PerlInterpreter interpreter = new PerlInterpreter();
+    print(interpreter.getBinary().getAbsolutePath());
     if (mLaunchScript != null) {
       print(" " + mLaunchScript);
     } else {

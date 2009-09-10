@@ -21,6 +21,7 @@ import java.io.File;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Exec;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
@@ -181,6 +182,11 @@ public class InterpreterInstaller extends Activity {
         extractInterpreter();
         break;
       case EXTRACT_INTERPRETER:
+        // After extracting the interpreter, we need to mark the binary (if there is one) as
+        // executable.
+        if (mInterpreter.getBinary() != null) {
+          chmod(mInterpreter.getBinary(), "700");
+        }
         extractInterpreterExtras();
         break;
       case EXTRACT_INTERPRETER_EXTRAS:
@@ -196,6 +202,10 @@ public class InterpreterInstaller extends Activity {
         abort();
         return;
     }
+  }
+
+  private void chmod(File path, String permissions) {
+    Exec.createSubprocess("/system/bin/chmod", permissions, path.getAbsolutePath());
   }
 
   private void abort() {

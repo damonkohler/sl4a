@@ -16,6 +16,8 @@
 
 package com.google.ase.interpreter.bsh;
 
+import java.io.File;
+
 import com.google.ase.AndroidFacade;
 import com.google.ase.Constants;
 import com.google.ase.interpreter.AbstractInterpreter;
@@ -76,6 +78,11 @@ public class BshInterpreter extends AbstractInterpreter {
   @Override
   public boolean hasScriptsArchive() {
     return true;
+  }
+
+  @Override
+  public File getBinary() {
+    return null;
   }
 
 }
