@@ -48,7 +48,7 @@ public class PythonInterpreter extends AbstractInterpreter {
 
   @Override
   public String getNiceName() {
-    return "Python 2.6";
+    return "Python 2.6.2";
   }
 
   @Override

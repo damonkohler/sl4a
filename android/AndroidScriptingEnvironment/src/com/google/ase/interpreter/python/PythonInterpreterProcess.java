@@ -37,6 +37,7 @@ public class PythonInterpreterProcess extends AbstractInterpreterProcess {
     mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
     mEnvironment.put("PYTHONHOME", PYTHON_HOME);
     mEnvironment.put("PYTHONPATH", PYTHON_EXTRAS + ":" + Constants.SCRIPTS_ROOT);
+    mEnvironment.put("TEMP", PYTHON_EXTRAS + "tmp/");
   }
 
   @Override

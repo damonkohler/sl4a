@@ -76,7 +76,7 @@ termios_tcgetattr(PyObject *self, PyObject *args)
 	int i;
 	char ch;
 
-	if (!PyArg_ParseTuple(args, "O&:tcgetattr", 
+	if (!PyArg_ParseTuple(args, "O&:tcgetattr",
 			      fdconv, (void*)&fd))
 		return NULL;
 
@@ -151,11 +151,11 @@ termios_tcsetattr(PyObject *self, PyObject *args)
 	PyObject *term, *cc, *v;
 	int i;
 
-	if (!PyArg_ParseTuple(args, "O&iO:tcsetattr", 
+	if (!PyArg_ParseTuple(args, "O&iO:tcsetattr",
 			      fdconv, &fd, &when, &term))
 		return NULL;
 	if (!PyList_Check(term) || PyList_Size(term) != 7) {
-		PyErr_SetString(PyExc_TypeError, 
+		PyErr_SetString(PyExc_TypeError,
 			     "tcsetattr, arg 3: must be 7 element list");
 		return NULL;
 	}
@@ -174,7 +174,7 @@ termios_tcsetattr(PyObject *self, PyObject *args)
 		return NULL;
 
 	if (!PyList_Check(cc) || PyList_Size(cc) != NCCS) {
-		PyErr_Format(PyExc_TypeError, 
+		PyErr_Format(PyExc_TypeError,
 			"tcsetattr: attributes[6] must be %d element list",
 			     NCCS);
 		return NULL;
@@ -188,7 +188,7 @@ termios_tcsetattr(PyObject *self, PyObject *args)
 		else if (PyInt_Check(v))
 			mode.c_cc[i] = (cc_t) PyInt_AsLong(v);
 		else {
-			PyErr_SetString(PyExc_TypeError, 
+			PyErr_SetString(PyExc_TypeError,
      "tcsetattr: elements of attributes must be characters or integers");
 			return NULL;
 		}
@@ -217,7 +217,7 @@ termios_tcsendbreak(PyObject *self, PyObject *args)
 {
 	int fd, duration;
 
-	if (!PyArg_ParseTuple(args, "O&i:tcsendbreak", 
+	if (!PyArg_ParseTuple(args, "O&i:tcsendbreak",
 			      fdconv, &fd, &duration))
 		return NULL;
 	if (tcsendbreak(fd, duration) == -1)
@@ -227,6 +227,7 @@ termios_tcsendbreak(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+#if 0  // No tcdrain defined for Android.
 PyDoc_STRVAR(termios_tcdrain__doc__,
 "tcdrain(fd) -> None\n\
 \n\
@@ -237,7 +238,7 @@ termios_tcdrain(PyObject *self, PyObject *args)
 {
 	int fd;
 
-	if (!PyArg_ParseTuple(args, "O&:tcdrain", 
+	if (!PyArg_ParseTuple(args, "O&:tcdrain",
 			      fdconv, &fd))
 		return NULL;
 	if (tcdrain(fd) == -1)
@@ -246,6 +247,7 @@ termios_tcdrain(PyObject *self, PyObject *args)
 	Py_INCREF(Py_None);
 	return Py_None;
 }
+#endif
 
 PyDoc_STRVAR(termios_tcflush__doc__,
 "tcflush(fd, queue) -> None\n\
@@ -260,7 +262,7 @@ termios_tcflush(PyObject *self, PyObject *args)
 {
 	int fd, queue;
 
-	if (!PyArg_ParseTuple(args, "O&i:tcflush", 
+	if (!PyArg_ParseTuple(args, "O&i:tcflush",
 			      fdconv, &fd, &queue))
 		return NULL;
 	if (tcflush(fd, queue) == -1)
@@ -283,7 +285,7 @@ termios_tcflow(PyObject *self, PyObject *args)
 {
 	int fd, action;
 
-	if (!PyArg_ParseTuple(args, "O&i:tcflow", 
+	if (!PyArg_ParseTuple(args, "O&i:tcflow",
 			      fdconv, &fd, &action))
 		return NULL;
 	if (tcflow(fd, action) == -1)
@@ -295,17 +297,17 @@ termios_tcflow(PyObject *self, PyObject *args)
 
 static PyMethodDef termios_methods[] =
 {
-	{"tcgetattr", termios_tcgetattr, 
+	{"tcgetattr", termios_tcgetattr,
 	 METH_VARARGS, termios_tcgetattr__doc__},
-	{"tcsetattr", termios_tcsetattr, 
+	{"tcsetattr", termios_tcsetattr,
 	 METH_VARARGS, termios_tcsetattr__doc__},
-	{"tcsendbreak", termios_tcsendbreak, 
+	{"tcsendbreak", termios_tcsendbreak,
 	 METH_VARARGS, termios_tcsendbreak__doc__},
-	{"tcdrain", termios_tcdrain, 
-	 METH_VARARGS, termios_tcdrain__doc__},
-	{"tcflush", termios_tcflush, 
+	// {"tcdrain", termios_tcdrain,
+	//  METH_VARARGS, termios_tcdrain__doc__},
+	{"tcflush", termios_tcflush,
 	 METH_VARARGS, termios_tcflush__doc__},
-	{"tcflow", termios_tcflow, 
+	{"tcflow", termios_tcflow,
 	 METH_VARARGS, termios_tcflow__doc__},
 	{NULL, NULL}
 };

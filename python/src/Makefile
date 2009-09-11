@@ -1157,9 +1157,8 @@ pycremoval:
 clean: pycremoval
 	find . -name '*.o' -exec rm -f {} ';'
 	find . -name '*.s[ol]' -exec rm -f {} ';'
-	find $(srcdir)/build -name 'fficonfig.h' -exec rm -f {} ';' || true
-	find $(srcdir)/build -name 'fficonfig.py' -exec rm -f {} ';' || true
 	rm -rf $(srcdir)/android
+	rm -rf $(srcdir)/build
 
 profile-removal:
 	find . -name '*.gc??' -exec rm -f {} ';'
