@@ -24,17 +24,16 @@
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 	    </activity>
-		<activity android:name=".locale.LocalePlugin" android:label="@string/application_title"
+		<activity-alias android:name="ScriptManager" android:targetActivity="ScriptManager"
+		    android:label="@string/application_title"
 		    android:icon="@drawable/ase_logo_32">
 			<intent-filter>
 				<action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
-				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
-		</activity>
+		</activity-alias>
 		<receiver android:name=".locale.LocaleReceiver">
 			<intent-filter>
-				<action android:name="com.google.ase.locale.action.LAUNCH_SCRIPT" />
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
 			</intent-filter>
 		</receiver>
 		<activity android:name=".terminal.TerminalPreferences" />

@@ -256,11 +256,8 @@ public class ScriptManager extends ListActivity {
       finish();
       return;
     } else if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
-      final Intent intent = new Intent();
-      intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_ACTION_FIRE,
-          com.google.ase.locale.Constants.ACTION_LAUNCH_SCRIPT);
+      Intent intent = new Intent();
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
-
       // Set the description of the action.
       if (scriptName.length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
         intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB,
@@ -268,8 +265,8 @@ public class ScriptManager extends ListActivity {
       } else {
         intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, scriptName);
       }
-
       setResult(RESULT_OK, intent);
+      AseLog.v("Returned launch intent for " + scriptName + " to Locale: " + intent.toURI());
       finish();
       return;
     }
