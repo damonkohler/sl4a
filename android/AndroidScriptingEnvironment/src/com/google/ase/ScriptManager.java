@@ -85,6 +85,12 @@ public class ScriptManager extends ListActivity {
     registerForContextMenu(getListView());
   }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    listScripts();
+  }
+
   /**
    * Populates the list view with all available scripts.
    */
