@@ -311,7 +311,6 @@ public class AndroidFacade {
   }
 
   public Intent startActivityForResult(final Intent intent) {
-    // TODO(damonkohler): This method only seems to work in Activities?
     if (!(mContext instanceof Activity)) {
       AseLog.e("Invalid context. Activity required.");
       // TODO(damonkohler): Exception instead?
@@ -353,6 +352,11 @@ public class AndroidFacade {
   }
 
   public void startActivity(final Intent intent) {
+    if (!(mContext instanceof Activity)) {
+      AseLog.e("Invalid context. Activity required.");
+      // TODO(damonkohler): Exception instead?
+      return;
+    }
     mLatch = new CountDownLatch(1);
     mHandler.post(new Runnable() {
       public void run() {
