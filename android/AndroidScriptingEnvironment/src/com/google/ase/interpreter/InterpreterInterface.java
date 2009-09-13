@@ -59,33 +59,35 @@ public interface InterpreterInterface {
 
   /**
    * Returns the URL where the interpreter can be downloaded from.
+   *
+   * @param interpreterVersion
    */
-  String getInterpreterArchiveUrl();
+  String getInterpreterArchiveUrl(String version);
 
   /**
    * Returns the URL where the interpreter extras can be downloaded from.
    */
-  String getInterpreterExtrasArchiveUrl();
+  String getInterpreterExtrasArchiveUrl(String version);
 
   /**
    * Returns the URL where the example scripts can be downloaded from.
    */
-  String getScriptsArchiveUrl();
+  String getScriptsArchiveUrl(String version);
 
   /**
    * Returns the name of the archive that contains the interpreter.
    */
-  String getInterpreterArchiveName();
+  String getInterpreterArchiveName(String version);
 
   /**
    * Returns the name of the archive that contains the interpreter extras.
    */
-  String getInterpreterExtrasArchiveName();
+  String getInterpreterExtrasArchiveName(String version);
 
   /**
    * Returns the name of the archive that contains the sample scripts.
    */
-  String getScriptsArchiveName();
+  String getScriptsArchiveName(String version);
 
   boolean hasInterpreterArchive();
 

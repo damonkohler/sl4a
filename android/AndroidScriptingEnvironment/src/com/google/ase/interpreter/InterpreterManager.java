@@ -34,9 +34,6 @@ import com.google.ase.interpreter.sh.ShInterpreter;
  *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-// TODO(damonkohler): Should probably use a map instead of a list of
-// interpreters. But, then we wouldn't be able to make this a utility class and
-// the list of interpreters is very small.
 public class InterpreterManager {
 
   private InterpreterManager() {

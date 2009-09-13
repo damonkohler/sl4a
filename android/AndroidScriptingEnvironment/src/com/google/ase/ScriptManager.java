@@ -219,6 +219,7 @@ public class ScriptManager extends ListActivity {
   private void installInterpreter(InterpreterInterface interpreter) {
     Intent intent = new Intent(this, InterpreterInstaller.class);
     intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
+    intent.putExtra(Constants.EXTRA_INTERPRETER_VERSION, AseVersion.getVersion(this));
     startActivityForResult(intent, RequestCode.INSTALL_INTERPETER.ordinal());
   }
 

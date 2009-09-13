@@ -33,6 +33,7 @@ public class Constants {
   public static final String EXTRA_SCRIPT_NAME = "com.google.ase.extra.SCRIPT_NAME";
   public static final String EXTRA_SCRIPT_CONTENT = "com.google.ase.extra.SCRIPT_CONTENT";
   public static final String EXTRA_INTERPRETER_NAME = "com.google.ase.extra.INTERPRETER_NAME";
+  public static final String EXTRA_INTERPRETER_VERSION = "com.google.ase.extra.INTERPRETER_VERSION";
   public static final String EXTRA_INPUT_PATH = "com.google.ase.extra.INPUT_PATH";
   public static final String EXTRA_OUTPUT_PATH = "com.google.ase.extra.OUTPUT_PATH";
   public static final String EXTRA_URL = "com.google.ase.extra.URL";
@@ -44,5 +45,5 @@ public class Constants {
   public static final String SCRIPTS_ROOT = SDCARD_ASE_ROOT + "scripts/";
   public static final String INTERPRETER_EXTRAS_ROOT = SDCARD_ASE_ROOT + "extras/";
   public static final String INTERPRETER_ROOT = "/data/data/com.google.ase/";
-  public static final String BASE_INSTALL_URL = "http://android-scripting.googlecode.com/hg/";
+  public static final String BASE_INSTALL_URL = "http://android-scripting.googlecode.com/files/";
 }
