@@ -17,8 +17,6 @@
 package com.google.ase;
 
 import android.app.Activity;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -28,14 +26,8 @@ public class CustomWindowTitle {
   }
 
   public static void buildWindowTitle(Activity activity) {
-    String versionName = "";
-    try {
-      PackageInfo info = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
-      versionName = info.versionName;
-    } catch (PackageManager.NameNotFoundException e) {
-      AseLog.e("Package name not found", e);
-    }
+    String versionName = AseVersion.getVersion(activity);
     activity.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
-    ((TextView) activity.findViewById(R.id.right_text)).setText(versionName);
+    ((TextView) activity.findViewById(R.id.right_text)).setText("r" + versionName);
   }
 }

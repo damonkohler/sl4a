@@ -1,62 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.google.ase" android:versionCode="12" android:versionName="0.11 alpha">
-	<application android:label="@string/application_title" android:icon="@drawable/ase_logo_48"
-	    android:debuggable="true">
-	    <meta-data android:name="com.a0soft.gphone.aTrackDog.webURL"
-           android:value="http://code.google.com/p/android-scripting" />
-        <meta-data android:name="com.a0soft.gphone.aTrackDog.dlURL"
-           android:value="http://code.google.com/p/android-scripting/downloads/list" />
-        <meta-data android:name="com.a0soft.gphone.aTrackDog.noMarket"
-           android:value="true" />
-		<activity android:name="ScriptManager">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.CREATE_SHORTCUT" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.PICK" />
-				<data android:scheme="content" android:path="ase/scripts" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-	    </activity>
-		<activity-alias android:name="ScriptManager" android:targetActivity="ScriptManager"
-		    android:label="@string/application_title"
-		    android:icon="@drawable/ase_logo_32">
-			<intent-filter>
-				<action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
-			</intent-filter>
-		</activity-alias>
-		<receiver android:name=".locale.LocaleReceiver">
-			<intent-filter>
-				<action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
-			</intent-filter>
-		</receiver>
-		<activity android:name=".terminal.TerminalPreferences" />
-		<activity android:name=".terminal.Terminal"
-		    android:windowSoftInputMode="adjustResize"
-		    android:configChanges="keyboardHidden|orientation">
-			<intent-filter>
-				<action android:name="com.google.ase.action.LAUNCH_SCRIPT" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-		<activity android:name="ScriptEditor">
-			<intent-filter>
-				<action android:name="com.google.ase.action.EDIT_SCRIPT" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-		<activity android:name=".interpreter.InterpreterInstaller" />
-		<activity android:name=".interpreter.UrlDownloader" />
-		<activity android:name=".interpreter.ZipExtractor" />
-		<activity android:name="ScriptKiller" />
-		<service  android:name="ScriptService" android:process=":remote" />
-	</application>
+	package="com.google.ase" android:versionCode="13" android:versionName="13">
+	<application android:debuggable="true"
+	    android:icon="@drawable/ase_logo_48"
+	    android:label="@string/application_title">
+    	<activity android:name="ScriptManager">
+    		<intent-filter>
+    			<action android:name="android.intent.action.MAIN" />
+    			<category android:name="android.intent.category.LAUNCHER" />
+    		</intent-filter>
+    		<intent-filter>
+    			<action android:name="android.intent.action.CREATE_SHORTCUT" />
+    			<category android:name="android.intent.category.DEFAULT" />
+    		</intent-filter>
+    		<intent-filter>
+    			<action android:name="android.intent.action.PICK" />
+    			<data android:scheme="content" android:path="ase/scripts" />
+    			<category android:name="android.intent.category.DEFAULT" />
+    		</intent-filter>
+        </activity>
+    	<activity-alias android:name="LocalePlugin"
+    	    android:targetActivity="ScriptManager"
+    	    android:label="@string/application_title"
+    	    android:icon="@drawable/ase_logo_32">
+    		<intent-filter>
+    			<action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+    		</intent-filter>
+    	</activity-alias>
+    	<receiver android:name=".locale.LocaleReceiver">
+    		<intent-filter>
+    			<action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
+    		</intent-filter>
+    	</receiver>
+    	<activity android:name=".terminal.TerminalPreferences" />
+    	<activity android:name=".terminal.Terminal"
+    	    android:windowSoftInputMode="adjustResize"
+    	    android:configChanges="keyboardHidden|orientation">
+    		<intent-filter>
+    			<action android:name="com.google.ase.action.LAUNCH_SCRIPT" />
+    			<category android:name="android.intent.category.DEFAULT" />
+    		</intent-filter>
+    	</activity>
+    	<activity android:name="ScriptEditor">
+    		<intent-filter>
+    			<action android:name="com.google.ase.action.EDIT_SCRIPT" />
+    			<category android:name="android.intent.category.DEFAULT" />
+    		</intent-filter>
+    	</activity>
+    	<activity android:name=".interpreter.InterpreterInstaller" />
+    	<activity android:name=".interpreter.UrlDownloader" />
+    	<activity android:name=".interpreter.ZipExtractor" />
+    	<activity android:name="ScriptKiller" />
+    	<service  android:name="ScriptService" android:process=":remote" />
+    </application>
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

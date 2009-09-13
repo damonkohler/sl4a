@@ -54,4 +54,5 @@
    <string name="default_value_color_preference">2</string>
    <string name="default_value_controlkey_preference">0</string>
 <string name="no_scripts_message">Start adding scripts and interpreters by pressing the menu button.</string>
+
 </resources>
