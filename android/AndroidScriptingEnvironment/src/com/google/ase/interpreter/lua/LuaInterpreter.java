@@ -76,4 +76,9 @@ public class LuaInterpreter extends AbstractInterpreter {
     return new File(LUA_BIN);
   }
 
+  @Override
+  public int getVersion() {
+    return 0;
+  }
+
 }

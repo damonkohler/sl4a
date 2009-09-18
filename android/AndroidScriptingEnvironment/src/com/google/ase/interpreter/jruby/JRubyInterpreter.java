@@ -64,4 +64,9 @@ public class JRubyInterpreter extends AbstractInterpreter {
   public File getBinary() {
     return null;
   }
+
+  @Override
+  public int getVersion() {
+    return 0;
+  }
 }

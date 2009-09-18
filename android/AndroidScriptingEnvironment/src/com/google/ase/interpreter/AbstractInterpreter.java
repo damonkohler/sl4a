@@ -31,33 +31,33 @@ public abstract class AbstractInterpreter implements InterpreterInterface {
   }
 
   @Override
-  public String getInterpreterArchiveName(String version) {
-    return String.format("%s-r%s.zip", getName(), version);
+  public String getInterpreterArchiveName() {
+    return String.format("%s-r%s.zip", getName(), getVersion());
   }
 
   @Override
-  public String getInterpreterExtrasArchiveName(String version) {
-    return String.format("%s-r%s_extras.zip", getName(), version);
+  public String getInterpreterExtrasArchiveName() {
+    return String.format("%s-r%s_extras.zip", getName(), getVersion());
   }
 
   @Override
-  public String getScriptsArchiveName(String version) {
-    return String.format("%s-r%s_scripts.zip", getName(), version);
+  public String getScriptsArchiveName() {
+    return String.format("%s-r%s_scripts.zip", getName(), getVersion());
   }
 
   @Override
-  public String getInterpreterArchiveUrl(String version) {
-    return Constants.BASE_INSTALL_URL + getInterpreterArchiveName(version);
+  public String getInterpreterArchiveUrl() {
+    return Constants.BASE_INSTALL_URL + getInterpreterArchiveName();
   }
 
   @Override
-  public String getScriptsArchiveUrl(String version) {
-    return Constants.BASE_INSTALL_URL + getScriptsArchiveName(version);
+  public String getScriptsArchiveUrl() {
+    return Constants.BASE_INSTALL_URL + getScriptsArchiveName();
   }
 
   @Override
-  public String getInterpreterExtrasArchiveUrl(String version) {
-    return Constants.BASE_INSTALL_URL + getInterpreterExtrasArchiveName(version);
+  public String getInterpreterExtrasArchiveUrl() {
+    return Constants.BASE_INSTALL_URL + getInterpreterExtrasArchiveName();
   }
 
 }

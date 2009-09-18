@@ -15,44 +15,29 @@
  * limitations under the License.
 -->
 <resources>
-   <string name="application_title">ASE</string>
-   <string name="application_nice_title">Android Scripting Environment</string>
-   
-   <string name="wiki_url">http://code.google.com/p/android-scripting/wiki</string>
-
-
-
-
-
-   <!-- Preference dialog -->
-   <string name="text_preferences">Text</string>
-
-   <string name="title_fontsize_preference">Font size</string>
-   <string name="summary_fontsize_preference">Choose character height in pixels.</string>
-   <string name="dialog_title_fontsize_preference">Font size</string>
-
-   <string name="title_color_preference">Colors</string>
-   <string name="summary_color_preference">Choose text color.</string>
-   <string name="dialog_title_color_preference">Text color</string>
-
-   <string name="keyboard_preferences">Keyboard</string>
-   <string name="title_controlkey_preference">Control key</string>
-   <string name="summary_controlkey_preference">Choose control key.</string>
-   <string name="dialog_title_controlkey_preference">Control key</string>
-
-   <string name="shell_preferences">Shell</string>
-   <string name="title_shell_preference">Command line</string>
-   <string name="summary_shell_preference">Specify the shell command line.</string>
-   <string name="dialog_title_shell_preference">Shell</string>
-
-   <string name="title_initialcommand_preference">Initial command</string>
-   <string name="summary_initialcommand_preference">Sent to the shell when it starts.</string>
-   <string name="dialog_title_initialcommand_preference">Initial Command</string>
-
-   <!-- Don't localize these default values -->
-   <string name="default_value_fontsize_preference">10</string>
-   <string name="default_value_color_preference">2</string>
-   <string name="default_value_controlkey_preference">0</string>
-<string name="no_scripts_message">Start adding scripts and interpreters by pressing the menu button.</string>
-
+  <string name="application_title">ASE</string>
+  <string name="application_nice_title">Android Scripting Environment</string>
+  <string name="wiki_url">http://code.google.com/p/android-scripting/wiki</string>
+  <string name="text_preferences">Text</string>
+  <string name="title_fontsize_preference">Font size</string>
+  <string name="summary_fontsize_preference">Choose character height in pixels.</string>
+  <string name="dialog_title_fontsize_preference">Font size</string>
+  <string name="title_color_preference">Colors</string>
+  <string name="summary_color_preference">Choose text color.</string>
+  <string name="dialog_title_color_preference">Text color</string>
+  <string name="keyboard_preferences">Keyboard</string>
+  <string name="title_controlkey_preference">Control key</string>
+  <string name="summary_controlkey_preference">Choose control key.</string>
+  <string name="dialog_title_controlkey_preference">Control key</string>
+  <string name="shell_preferences">Shell</string>
+  <string name="title_shell_preference">Command line</string>
+  <string name="summary_shell_preference">Specify the shell command line.</string>
+  <string name="dialog_title_shell_preference">Shell</string>
+  <string name="title_initialcommand_preference">Initial command</string>
+  <string name="summary_initialcommand_preference">Sent to the shell when it starts.</string>
+  <string name="dialog_title_initialcommand_preference">Initial Command</string>
+  <string name="default_value_fontsize_preference">10</string>
+  <string name="default_value_color_preference">2</string>
+  <string name="default_value_controlkey_preference">0</string>
+  <string name="no_scripts_message">Start adding scripts and interpreters by pressing the menu button.</string>
 </resources>

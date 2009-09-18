@@ -33,7 +33,6 @@ public class Constants {
   public static final String EXTRA_SCRIPT_NAME = "com.google.ase.extra.SCRIPT_NAME";
   public static final String EXTRA_SCRIPT_CONTENT = "com.google.ase.extra.SCRIPT_CONTENT";
   public static final String EXTRA_INTERPRETER_NAME = "com.google.ase.extra.INTERPRETER_NAME";
-  public static final String EXTRA_INTERPRETER_VERSION = "com.google.ase.extra.INTERPRETER_VERSION";
   public static final String EXTRA_INPUT_PATH = "com.google.ase.extra.INPUT_PATH";
   public static final String EXTRA_OUTPUT_PATH = "com.google.ase.extra.OUTPUT_PATH";
   public static final String EXTRA_URL = "com.google.ase.extra.URL";

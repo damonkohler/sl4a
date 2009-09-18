@@ -59,8 +59,6 @@ public final class R {
         public static final int application_title=0x7f060000;
         public static final int default_value_color_preference=0x7f060016;
         public static final int default_value_controlkey_preference=0x7f060017;
-        /**  Don't localize these default values 
-         */
         public static final int default_value_fontsize_preference=0x7f060015;
         public static final int dialog_title_color_preference=0x7f060009;
         public static final int dialog_title_controlkey_preference=0x7f06000d;
@@ -75,8 +73,6 @@ public final class R {
         public static final int summary_fontsize_preference=0x7f060005;
         public static final int summary_initialcommand_preference=0x7f060013;
         public static final int summary_shell_preference=0x7f060010;
-        /**  Preference dialog 
-         */
         public static final int text_preferences=0x7f060003;
         public static final int title_color_preference=0x7f060007;
         public static final int title_controlkey_preference=0x7f06000b;

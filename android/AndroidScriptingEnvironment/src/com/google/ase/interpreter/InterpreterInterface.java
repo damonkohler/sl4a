@@ -33,6 +33,12 @@ public interface InterpreterInterface {
   String getName();
 
   /**
+   * Returns the internal ASE version of this interpreter. This version number should increase for
+   * every release that includes new interpreter packages.
+   */
+  int getVersion();
+
+  /**
    * Returns the filename extension for scripts to be run by the interpreter.
    */
   String getExtension();
@@ -59,35 +65,34 @@ public interface InterpreterInterface {
 
   /**
    * Returns the URL where the interpreter can be downloaded from.
-   *
    * @param interpreterVersion
    */
-  String getInterpreterArchiveUrl(String version);
+  String getInterpreterArchiveUrl();
 
   /**
    * Returns the URL where the interpreter extras can be downloaded from.
    */
-  String getInterpreterExtrasArchiveUrl(String version);
+  String getInterpreterExtrasArchiveUrl();
 
   /**
    * Returns the URL where the example scripts can be downloaded from.
    */
-  String getScriptsArchiveUrl(String version);
+  String getScriptsArchiveUrl();
 
   /**
    * Returns the name of the archive that contains the interpreter.
    */
-  String getInterpreterArchiveName(String version);
+  String getInterpreterArchiveName();
 
   /**
    * Returns the name of the archive that contains the interpreter extras.
    */
-  String getInterpreterExtrasArchiveName(String version);
+  String getInterpreterExtrasArchiveName();
 
   /**
    * Returns the name of the archive that contains the sample scripts.
    */
-  String getScriptsArchiveName(String version);
+  String getScriptsArchiveName();
 
   boolean hasInterpreterArchive();
 

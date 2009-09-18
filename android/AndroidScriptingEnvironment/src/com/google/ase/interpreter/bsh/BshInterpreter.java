@@ -69,4 +69,9 @@ public class BshInterpreter extends AbstractInterpreter {
     return null;
   }
 
+  @Override
+  public int getVersion() {
+    return 0;
+  }
+
 }

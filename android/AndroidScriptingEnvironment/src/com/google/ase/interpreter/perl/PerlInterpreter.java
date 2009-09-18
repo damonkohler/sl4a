@@ -75,4 +75,9 @@ public class PerlInterpreter extends AbstractInterpreter {
   public File getBinary() {
     return new File(PERL_BIN);
   }
+
+  @Override
+  public int getVersion() {
+    return 0;
+  }
 }

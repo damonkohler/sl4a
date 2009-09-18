@@ -34,7 +34,6 @@ import com.google.ase.Constants;
 public class InterpreterInstaller extends Activity {
 
   private String mName;
-  private String mVersion;
   private InterpreterInterface mInterpreter;
 
   private static enum RequestCode {
@@ -46,7 +45,6 @@ public class InterpreterInstaller extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mName = getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
-    mVersion = getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_VERSION);
     if (mName == null) {
       AseLog.e("Interpreter not specified.");
       setResult(RESULT_CANCELED);
@@ -71,21 +69,21 @@ public class InterpreterInstaller extends Activity {
 
   private void downloadInterpreter() {
     Intent intent = new Intent(this, UrlDownloader.class);
-    intent.putExtra(Constants.EXTRA_URL, mInterpreter.getInterpreterArchiveUrl(mVersion));
+    intent.putExtra(Constants.EXTRA_URL, mInterpreter.getInterpreterArchiveUrl());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.DOWNLOAD_ROOT);
     startActivityForResult(intent, RequestCode.DOWNLOAD_INTERPRETER.ordinal());
   }
 
   private void downloadInterpreterExtras() {
     Intent intent = new Intent(this, UrlDownloader.class);
-    intent.putExtra(Constants.EXTRA_URL, mInterpreter.getInterpreterExtrasArchiveUrl(mVersion));
+    intent.putExtra(Constants.EXTRA_URL, mInterpreter.getInterpreterExtrasArchiveUrl());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.DOWNLOAD_ROOT);
     startActivityForResult(intent, RequestCode.DOWNLOAD_INTERPRETER_EXTRAS.ordinal());
   }
 
   private void downloadScripts() {
     Intent intent = new Intent(this, UrlDownloader.class);
-    intent.putExtra(Constants.EXTRA_URL, mInterpreter.getScriptsArchiveUrl(mVersion));
+    intent.putExtra(Constants.EXTRA_URL, mInterpreter.getScriptsArchiveUrl());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.DOWNLOAD_ROOT);
     startActivityForResult(intent, RequestCode.DOWNLOAD_SCRIPTS.ordinal());
   }
@@ -93,7 +91,7 @@ public class InterpreterInstaller extends Activity {
   private void extractInterpreter() {
     Intent intent = new Intent(this, ZipExtractor.class);
     intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT,
-        mInterpreter.getInterpreterArchiveName(mVersion)).getAbsolutePath());
+        mInterpreter.getInterpreterArchiveName()).getAbsolutePath());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.INTERPRETER_ROOT);
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER.ordinal());
   }
@@ -101,7 +99,7 @@ public class InterpreterInstaller extends Activity {
   private void extractInterpreterExtras() {
     Intent intent = new Intent(this, ZipExtractor.class);
     intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT,
-        mInterpreter.getInterpreterExtrasArchiveName(mVersion)).getAbsolutePath());
+        mInterpreter.getInterpreterExtrasArchiveName()).getAbsolutePath());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.INTERPRETER_EXTRAS_ROOT);
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER_EXTRAS.ordinal());
   }
@@ -109,7 +107,7 @@ public class InterpreterInstaller extends Activity {
   private void extractScripts() {
     Intent intent = new Intent(this, ZipExtractor.class);
     intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT,
-        mInterpreter.getScriptsArchiveName(mVersion)).getAbsolutePath());
+        mInterpreter.getScriptsArchiveName()).getAbsolutePath());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.SCRIPTS_ROOT);
     startActivityForResult(intent, RequestCode.EXTRACT_SCRIPTS.ordinal());
   }

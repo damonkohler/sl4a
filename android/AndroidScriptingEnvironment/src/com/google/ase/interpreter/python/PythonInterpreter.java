@@ -75,4 +75,9 @@ public class PythonInterpreter extends AbstractInterpreter {
   public File getBinary() {
     return new File(PYTHON_BIN);
   }
+
+  @Override
+  public int getVersion() {
+    return 0;
+  }
 }
