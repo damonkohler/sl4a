@@ -32,17 +32,17 @@ public abstract class AbstractInterpreter implements InterpreterInterface {
 
   @Override
   public String getInterpreterArchiveName() {
-    return String.format("%s-r%s.zip", getName(), getVersion());
+    return String.format("%s_r%s.zip", getName(), getVersion());
   }
 
   @Override
   public String getInterpreterExtrasArchiveName() {
-    return String.format("%s-r%s_extras.zip", getName(), getVersion());
+    return String.format("%s_extras_r%s.zip", getName(), getVersion());
   }
 
   @Override
   public String getScriptsArchiveName() {
-    return String.format("%s-r%s_scripts.zip", getName(), getVersion());
+    return String.format("%s_scripts_r%s.zip", getName(), getVersion());
   }
 
   @Override
