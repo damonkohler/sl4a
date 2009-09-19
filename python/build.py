@@ -152,6 +152,10 @@ libs_to_remove = [
 for lib in libs_to_remove:
   rm('android/python/lib/python2.6/'+lib)
 
+# Remove any existing zip files.
+for p in glob.glob(os.path.join(pwd, '*.zip')):
+  rm(p)
+
 print 'Zipping up standard library.'
 libs = os.path.join(pwd, 'src/android/python/lib/python2.6')
 # Copy in ASE's Android module.
@@ -161,9 +165,14 @@ zipup(os.path.join(pwd, 'python_extras.zip'), libs, libs,
       exclude=['lib-dynload'], prefix='python/')
 map(rm, find(libs, exclude=['lib-dynload'])[0])
 
-print 'Zipping up python interpreter for deployment.'
+print 'Zipping up Python interpreter for deployment.'
 zipup(os.path.join(pwd, 'python.zip'),
       os.path.join(pwd, 'src', 'android', 'python'),
       os.path.join(pwd, 'src', 'android'))
+
+print 'Zipping up Python scripts.'
+zipup(os.path.join(pwd, 'python_scripts.zip'),
+      os.path.join(pwd, 'ase', 'scripts'),
+      os.path.join(pwd, 'ase', 'scripts'))
 
 print 'Done.'
