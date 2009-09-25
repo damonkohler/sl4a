@@ -1518,18 +1518,16 @@ IV
 REGEX(sv)
 	B::REGEXP	sv
     CODE:
-	RETVAL = PTR2IV(((struct xregexp *)SvANY(sv))->xrx_regexp);
+	/* FIXME - can we code this method more efficiently?  */
+	RETVAL = PTR2IV(sv);
     OUTPUT:
         RETVAL
 
 SV*
 precomp(sv)
 	B::REGEXP	sv
-	REGEXP* rx = NO_INIT
     CODE:
-	rx = ((struct xregexp *)SvANY(sv))->xrx_regexp;
-	/* FIXME - UTF-8? And the equivalent precomp methods? */
-	RETVAL = newSVpvn( RX_PRECOMP(rx), RX_PRELEN(rx) );
+	RETVAL = newSVpvn( RX_PRECOMP(sv), RX_PRELEN(sv) );
     OUTPUT:
         RETVAL
 

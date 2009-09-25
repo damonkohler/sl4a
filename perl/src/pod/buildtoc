@@ -737,6 +737,7 @@ pod/$_: pod/$Copies{$_}
 
 my $built;
 while (my ($target, $name) = each %Targets) {
+  print "Working on target $target\n" if $Verbose;
   next unless $Build{$target};
   $built++;
   if ($target eq "toc") {

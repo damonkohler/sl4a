@@ -2,12 +2,7 @@ use strict;
 use warnings;
 
 BEGIN {
-    if ($ENV{'PERL_CORE'}){
-        chdir 't';
-        unshift @INC, '../lib';
-    }
-
-    require($ENV{PERL_CORE} ? "./test.pl" : "./t/test.pl");
+    require($ENV{PERL_CORE} ? './test.pl' : './t/test.pl');
 
     use Config;
     if (! $Config{'useithreads'}) {
@@ -166,7 +161,7 @@ package main;
 
 # bugid #24165
 
-run_perl(prog => 'use threads 1.72;' .
+run_perl(prog => 'use threads 1.74;' .
                  'sub a{threads->create(shift)} $t = a sub{};' .
                  '$t->tid; $t->join; $t->tid',
          nolib => ($ENV{PERL_CORE}) ? 0 : 1,

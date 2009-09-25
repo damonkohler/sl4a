@@ -18,8 +18,8 @@ use Carp 'croak';
 # The most recent version and complete docs are available at:
 #   http://stein.cshl.org/WWW/software/CGI/
 
-$CGI::revision = '$Id: CGI.pm,v 1.263 2009/02/11 16:56:37 lstein Exp $';
-$CGI::VERSION='3.43';
+$CGI::revision = '$Id: CGI.pm,v 1.266 2009/07/30 16:32:34 lstein Exp $';
+$CGI::VERSION='3.45';
 
 # HARD-CODED LOCATION FOR FILE UPLOAD TEMPORARY FILES.
 # UNCOMMENT THIS ONLY IF YOU KNOW WHAT YOU'RE DOING.
@@ -61,8 +61,8 @@ sub initialize_globals {
 
     # Set this to 1 to enable NOSTICKY scripts
     # or: 
-    #    1) use CGI qw(-nosticky)
-    #    2) $CGI::nosticky(1)
+    #    1) use CGI '-nosticky';
+    #    2) $CGI::NOSTICKY = 1;
     $NOSTICKY = 0;
 
     # Set this to 1 to enable NPH scripts
@@ -156,12 +156,14 @@ if ($OS =~ /^MSWin/i) {
     $OS = 'EPOC';
 } elsif ($OS =~ /^cygwin/i) {
     $OS = 'CYGWIN';
+} elsif ($OS =~ /^NetWare/i) {
+    $OS = 'NETWARE';
 } else {
     $OS = 'UNIX';
 }
 
 # Some OS logic.  Binary mode enabled on DOS, NT and VMS
-$needs_binmode = $OS=~/^(WINDOWS|DOS|OS2|MSWin|CYGWIN)/;
+$needs_binmode = $OS=~/^(WINDOWS|DOS|OS2|MSWin|CYGWIN|NETWARE)/;
 
 # This is the default class for the CGI object to use when all else fails.
 $DefaultClass = 'CGI' unless defined $CGI::DefaultClass;
@@ -172,7 +174,7 @@ $AutoloadClass = $DefaultClass unless defined $CGI::AutoloadClass;
 # The path separator is a slash, backslash or semicolon, depending
 # on the paltform.
 $SL = {
-     UNIX    => '/',  OS2 => '\\', EPOC      => '/', CYGWIN => '/',
+     UNIX    => '/',  OS2 => '\\', EPOC      => '/', CYGWIN => '/', NETWARE => '/',
      WINDOWS => '\\', DOS => '\\', MACINTOSH => ':', VMS    => '/'
     }->{$OS};
 
@@ -181,8 +183,12 @@ $SL = {
 # $NPH++ if defined($ENV{'SERVER_SOFTWARE'}) && $ENV{'SERVER_SOFTWARE'}=~/IIS/;
 $IIS++ if defined($ENV{'SERVER_SOFTWARE'}) && $ENV{'SERVER_SOFTWARE'}=~/IIS/;
 
+# Turn on special checking for ActiveState's PerlEx
+$PERLEX++ if defined($ENV{'GATEWAY_INTERFACE'}) && $ENV{'GATEWAY_INTERFACE'} =~ /^CGI-PerlEx/;
+
 # Turn on special checking for Doug MacEachern's modperl
-if (exists $ENV{MOD_PERL}) {
+# PerlEx::DBI tries to fool DBI by setting MOD_PERL
+if (exists $ENV{MOD_PERL} && ! $PERLEX) {
   # mod_perl handlers may run system() on scripts using CGI.pm;
   # Make sure so we don't get fooled by inherited $ENV{MOD_PERL}
   if (exists $ENV{MOD_PERL_API_VERSION} && $ENV{MOD_PERL_API_VERSION} == 2) {
@@ -197,9 +203,6 @@ if (exists $ENV{MOD_PERL}) {
     require Apache;
   }
 }
-
-# Turn on special checking for ActiveState's PerlEx
-$PERLEX++ if defined($ENV{'GATEWAY_INTERFACE'}) && $ENV{'GATEWAY_INTERFACE'} =~ /^CGI-PerlEx/;
 
 # Define the CRLF sequence.  I can't use a simple "\r\n" because the meaning
 # of "\n" is different on different OS's (sometimes it generates CRLF, sometimes LF
@@ -644,8 +647,17 @@ sub init {
       }
 
       if ($meth eq 'POST' || $meth eq 'PUT') {
-	  $self->read_from_client(\$query_string,$content_length,0)
-	      if $content_length > 0;
+	  if ( $content_length > 0 ) {
+	    $self->read_from_client(\$query_string,$content_length,0);
+	  }
+	  else {
+	    $self->read_from_stdin(\$query_string);
+	    # should this be PUTDATA in case of PUT ?
+	    my($param) = $meth . 'DATA' ;
+	    $self->add_parameter($param) ;
+	    push (@{$self->{param}{$param}},$query_string);
+	    undef $query_string ;
+	  }
 	  # Some people want to have their cake and eat it too!
 	  # Uncomment this line to have the contents of the query string
 	  # APPENDED to the POST data.
@@ -653,7 +665,8 @@ sub init {
 	  last METHOD;
       }
 
-      # If $meth is not of GET, POST or HEAD, assume we're being debugged offline.
+      # If $meth is not of GET, POST, PUT or HEAD, assume we're
+      #   being debugged offline.
       # Check the command line and then the standard input for data.
       # We use the shellwords package in order to behave the way that
       # UN*X programmers expect.
@@ -673,10 +686,10 @@ sub init {
         && defined($ENV{'CONTENT_TYPE'})
         && $ENV{'CONTENT_TYPE'} !~ m|^application/x-www-form-urlencoded|
 	&& $ENV{'CONTENT_TYPE'} !~ m|^multipart/form-data| ) {
-        my($param) = $meth . 'DATA' ;
-        $self->add_parameter($param) ;
-      push (@{$self->{param}{$param}},$query_string);
-      undef $query_string ;
+	    my($param) = $meth . 'DATA' ;
+	    $self->add_parameter($param) ;
+	    push (@{$self->{param}{$param}},$query_string);
+	    undef $query_string ;
     }
 # YL: End Change for XML handler 10/19/2001
 
@@ -997,6 +1010,47 @@ sub read_from_client {
 }
 END_OF_FUNC
 
+'read_from_stdin' => <<'END_OF_FUNC',
+# Read data from stdin until all is read
+sub read_from_stdin {
+    my($self, $buff) = @_;
+    local $^W=0;                # prevent a warning
+
+    #
+    # TODO: loop over STDIN until all is read
+    #
+
+    my($eoffound) = 0;
+    my($localbuf) = '';
+    my($tempbuf) = '';
+    my($bufsiz) = 1024;
+    my($res);
+    while ($eoffound == 0) {
+	if ( $MOD_PERL ) {
+	    $res = $self->r->read($tempbuf, $bufsiz, 0)
+	}
+	else {
+	    $res = read(\*STDIN, $tempbuf, $bufsiz);
+	}
+
+	if ( !defined($res) ) {
+	    # TODO: how to do error reporting ?
+	    $eoffound = 1;
+	    last;
+	}
+	if ( $res == 0 ) {
+	    $eoffound = 1;
+	    last;
+	}
+	$localbuf .= $tempbuf;
+    }
+
+    $$buff = $localbuf;
+
+    return $res;
+}
+END_OF_FUNC
+
 'delete' => <<'END_OF_FUNC',
 #### Method: delete
 # Deletes the named parameter entirely.
@@ -1129,6 +1183,12 @@ END_OF_FUNC
 'MethPost' => <<'END_OF_FUNC',
 sub MethPost {
     return request_method() eq 'POST';
+}
+END_OF_FUNC
+
+'MethPut' => <<'END_OF_FUNC',
+sub MethPut {
+    return request_method() eq 'PUT';
 }
 END_OF_FUNC
 
@@ -1300,7 +1360,7 @@ sub Dump {
     push(@result,"<ul>");
     for $param ($self->param) {
 	my($name)=$self->escapeHTML($param);
-	push(@result,"<li><strong>$param</strong></li>");
+	push(@result,"<li><strong>$name</strong></li>");
 	push(@result,"<ul>");
 	for $value ($self->param($param)) {
 	    $value = $self->escapeHTML($value);
@@ -2451,7 +2511,7 @@ sub popup_menu {
 
     if (!$override && defined($self->param($name))) {
 	$selected{$self->param($name)}++;
-    } elsif ($default) {
+    } elsif (defined $default) {
 	%selected = map {$_=>1} ref($default) eq 'ARRAY' 
                                 ? @$default 
                                 : $default;
@@ -2592,14 +2652,26 @@ sub scrolling_list {
     $tabindex = $self->element_tab($tabindex);
     $result = qq/<select name="$name" $tabindex$has_size$is_multiple$other>\n/;
     for (@values) {
-	my($selectit) = $self->_selected($selected{$_});
-	my($label) = $_;
-	$label = $labels->{$_} if defined($labels) && defined($labels->{$_});
-	$label=$self->escapeHTML($label);
-	my($value)=$self->escapeHTML($_,1);
-        my $attribs = $self->_set_attributes($_, $attributes);
-        $result .= "<option ${selectit}${attribs}value=\"$value\">$label</option>\n";
+        if (/<optgroup/) {
+            for my $v (split(/\n/)) {
+                my $selectit = $XHTML ? 'selected="selected"' : 'selected';
+		for my $selected (keys %selected) {
+		    $v =~ s/(value="$selected")/$selectit $1/;
+		}
+                $result .= "$v\n";
+            }
+        }
+        else {
+          my $attribs   = $self->_set_attributes($_, $attributes);
+	  my($selectit) = $self->_selected($selected{$_});
+	  my($label)    = $_;
+	  $label        = $labels->{$_} if defined($labels) && defined($labels->{$_});
+	  my($value)    = $self->escapeHTML($_);
+	  $label        = $self->escapeHTML($label,1);
+          $result      .= "<option${attribs} ${selectit}value=\"$value\">$label</option>\n";
+        }
     }
+
     $result .= "</select>";
     $self->register_parameter($name);
     return $result;
@@ -2779,9 +2851,8 @@ sub cookie {
     # value of the cookie, if any.  For efficiency, we cache the parsed
     # cookies in our state variables.
     unless ( defined($value) ) {
-	$self->{'.cookies'} = CGI::Cookie->fetch
-	    unless $self->{'.cookies'};
-
+	$self->{'.cookies'} = CGI::Cookie->fetch;
+	
 	# If no name is supplied, then retrieve the names of all our cookies.
 	return () unless $self->{'.cookies'};
 	return keys %{$self->{'.cookies'}} unless $name;
@@ -2911,7 +2982,7 @@ END_OF_FUNC
 ####
 'request_method' => <<'END_OF_FUNC',
 sub request_method {
-    return $ENV{'REQUEST_METHOD'};
+    return (defined $ENV{'REQUEST_METHOD'}) ? $ENV{'REQUEST_METHOD'} : undef;
 }
 END_OF_FUNC
 
@@ -2920,7 +2991,7 @@ END_OF_FUNC
 ####
 'content_type' => <<'END_OF_FUNC',
 sub content_type {
-    return $ENV{'CONTENT_TYPE'};
+    return (defined $ENV{'CONTENT_TYPE'}) ? $ENV{'CONTENT_TYPE'} : undef;
 }
 END_OF_FUNC
 
@@ -2930,7 +3001,7 @@ END_OF_FUNC
 ####
 'path_translated' => <<'END_OF_FUNC',
 sub path_translated {
-    return $ENV{'PATH_TRANSLATED'};
+    return (defined $ENV{'PATH_TRANSLATED'}) ? $ENV{'PATH_TRANSLATED'} : undef;
 }
 END_OF_FUNC
 
@@ -2940,7 +3011,7 @@ END_OF_FUNC
 ####
 'request_uri' => <<'END_OF_FUNC',
 sub request_uri {
-    return $ENV{'REQUEST_URI'};
+    return (defined $ENV{'REQUEST_URI'}) ? $ENV{'REQUEST_URI'} : undef;
 }
 END_OF_FUNC
 
@@ -2954,12 +3025,12 @@ sub query_string {
     my($self) = self_or_default(@_);
     my($param,$value,@pairs);
     for $param ($self->param) {
-	my($eparam) = escape($param);
-	for $value ($self->param($param)) {
-	    $value = escape($value);
+       my($eparam) = escape($param);
+       for $value ($self->param($param)) {
+           $value = escape($value);
             next unless defined $value;
-	    push(@pairs,"$eparam=$value");
-	}
+           push(@pairs,"$eparam=$value");
+       }
     }
     for (keys %{$self->{'.fieldnames'}}) {
       push(@pairs,".cgifields=".escape("$_"));
@@ -3026,8 +3097,9 @@ END_OF_FUNC
 'user_agent' => <<'END_OF_FUNC',
 sub user_agent {
     my($self,$match)=self_or_CGI(@_);
-    return $self->http('user_agent') unless $match;
-    return $self->http('user_agent') =~ /$match/i;
+    my $user_agent = $self->http('user_agent');
+    return $user_agent unless $match && $user_agent;
+    return $user_agent =~ /$match/i;
 }
 END_OF_FUNC
 
@@ -3185,8 +3257,12 @@ END_OF_FUNC
 'http' => <<'END_OF_FUNC',
 sub http {
     my ($self,$parameter) = self_or_CGI(@_);
-    return $ENV{$parameter} if $parameter=~/^HTTP/;
-    $parameter =~ tr/-/_/;
+    if ( defined($parameter) ) {
+	if ( $parameter =~ /^HTTP/ ) {
+	    return $ENV{$parameter};
+	}
+	$parameter =~ tr/-/_/;
+    }
     return $ENV{"HTTP_\U$parameter\E"} if $parameter;
     my(@p);
     for (keys %ENV) {
@@ -3236,7 +3312,7 @@ END_OF_FUNC
 ####
 'remote_ident' => <<'END_OF_FUNC',
 sub remote_ident {
-    return $ENV{'REMOTE_IDENT'};
+    return (defined $ENV{'REMOTE_IDENT'}) ? $ENV{'REMOTE_IDENT'} : undef;
 }
 END_OF_FUNC
 
@@ -3246,7 +3322,7 @@ END_OF_FUNC
 ####
 'auth_type' => <<'END_OF_FUNC',
 sub auth_type {
-    return $ENV{'AUTH_TYPE'};
+    return (defined $ENV{'AUTH_TYPE'}) ? $ENV{'AUTH_TYPE'} : undef;
 }
 END_OF_FUNC
 
@@ -3257,7 +3333,7 @@ END_OF_FUNC
 ####
 'remote_user' => <<'END_OF_FUNC',
 sub remote_user {
-    return $ENV{'REMOTE_USER'};
+    return (defined $ENV{'REMOTE_USER'}) ? $ENV{'REMOTE_USER'} : undef;
 }
 END_OF_FUNC
 
@@ -3426,7 +3502,7 @@ sub read_multipart {
 
 	$header{'Content-Disposition'} ||= ''; # quench uninit variable warning
 
-	my($param)= $header{'Content-Disposition'}=~/ name="([^"]*)"/;
+	my($param)= $header{'Content-Disposition'}=~/[\s;]name="([^"]*)"/;
         $param .= $TAINTED;
 
         # See RFC 1867, 2183, 2045
@@ -3762,7 +3838,9 @@ sub new {
     (my $safename = $name) =~ s/([':%])/ sprintf '%%%02X', ord $1 /eg;
     my $fv = ++$FH . $safename;
     my $ref = \*{"Fh::$fv"};
-    $file =~ m!^([a-zA-Z0-9_\+ \'\":/.\$\\~-]+)$! || return;
+
+    # Note this same regex is also used elsewhere in the same file for CGITempFile::new
+    $file =~ m!^([a-zA-Z0-9_ \'\":/.\$\\\+-]+)$! || return;
     my $safe = $1;
     sysopen($ref,$safe,Fcntl::O_RDWR()|Fcntl::O_CREAT()|Fcntl::O_EXCL(),0600) || return;
     unlink($safe) if $delete;
@@ -4062,10 +4140,11 @@ sub find_tempdir {
 	   "C:${SL}system${SL}temp");
     
     if( $CGI::OS eq 'WINDOWS' ){
-       unshift @TEMP,
-           $ENV{TEMP},
-           $ENV{TMP},
-           $ENV{WINDIR} . $SL . 'TEMP';
+         # PeterH: These evars may not exist if this is invoked within a service and untainting
+         # is in effect - with 'use warnings' the undefined array entries causes Perl to die
+         unshift(@TEMP,$ENV{TEMP}) if defined $ENV{TEMP};
+         unshift(@TEMP,$ENV{TMP}) if defined $ENV{TMP};
+         unshift(@TEMP,$ENV{WINDIR} . $SL . 'TEMP') if defined $ENV{WINDIR};
     }
 
     unshift(@TEMP,$ENV{'TMPDIR'}) if defined $ENV{'TMPDIR'};
@@ -4117,7 +4196,8 @@ sub new {
 	last if ! -f ($filename = sprintf("\%s${SL}CGItemp%d", $TMPDIRECTORY, $sequence++));
     }
     # check that it is a more-or-less valid filename
-    return unless $filename =~ m!^([a-zA-Z0-9_\+ \'\":/.\$\\~-]+)$!;
+    # Note this same regex is also used elsewhere in the same file for Fh::new
+    return unless $filename =~ m!^([a-zA-Z0-9_ \'\":/.\$\\\+-]+)$!;
     # this used to untaint, now it doesn't
     # $filename = $1;
     return bless \$filename;
@@ -5135,13 +5215,13 @@ In either case, the outgoing header will be formatted as:
 
 =head2 GENERATING A REDIRECTION HEADER
 
-   print redirect('http://somewhere.else/in/movie/land');
+   print $q->redirect('http://somewhere.else/in/movie/land');
 
 Sometimes you don't want to produce a document yourself, but simply
 redirect the browser elsewhere, perhaps choosing a URL based on the
 time of day or the identity of the user.  
 
-The redirect() function redirects the browser to a different URL.  If
+The redirect() method redirects the browser to a different URL.  If
 you use redirection like this, you should B<not> print out a header as
 well.
 
@@ -5150,9 +5230,14 @@ redirection requests.  Relative URLs will not work correctly.
 
 You can also use named arguments:
 
-    print redirect(-uri=>'http://somewhere.else/in/movie/land',
-			   -nph=>1,
-                           -status=>301);
+    print $q->redirect(
+        -uri=>'http://somewhere.else/in/movie/land',
+	    -nph=>1,
+         -status=>301);
+
+All names arguments recognized by header() are also recognized by
+redirect(). However, most HTTP headers, including those generated by
+-cookie and -target, are ignored by the browser.
 
 The B<-nph> parameter, if set to a true value, will issue the correct
 headers to work with a NPH (no-parse-header) script.  This is important
@@ -5606,7 +5691,7 @@ This is extremely useful for creating tables.  For example:
 
    print table({-border=>undef},
            caption('When Should You Eat Your Vegetables?'),
-           Tr({-align=>CENTER,-valign=>TOP},
+           Tr({-align=>'CENTER',-valign=>'TOP'},
            [
               th(['Vegetable', 'Breakfast','Lunch','Dinner']),
               td(['Tomatoes' , 'no', 'yes', 'yes']),
@@ -5787,13 +5872,13 @@ default is to process the query with the current script.
 		    -action=>$action,
 		    -enctype=>$encoding);
       <... various form stuff ...>
-    print endform;
+    print end_form;
 
 	-or-
 
     print start_form($method,$action,$encoding);
       <... various form stuff ...>
-    print endform;
+    print end_form;
 
 start_form() will return a <form> tag with the optional method,
 action and form encoding that you specify.  The defaults are:
@@ -5802,14 +5887,14 @@ action and form encoding that you specify.  The defaults are:
     action: this script
     enctype: application/x-www-form-urlencoded
 
-endform() returns the closing </form> tag.  
+end_form() returns the closing </form> tag.  
 
 Start_form()'s enctype argument tells the browser how to package the various
 fields of the form before sending the form to the server.  Two
 values are possible:
 
-B<Note:> This method was previously named startform(), and startform()
-is still recognized as an alias.
+B<Note:> These methods were previously named startform() and endform(), and they
+are still recognized as aliases of start_form() and end_form().
 
 =over 4
 
@@ -5895,7 +5980,7 @@ JavaScript and DHTML.
 
 A boolean, which, if true, forces the element to take on the value
 specified by B<-value>, overriding the sticky behavior described
-earlier for the B<-no_sticky> pragma.
+earlier for the B<-nosticky> pragma.
 
 =item B<-onChange>, B<-onFocus>, B<-onBlur>, B<-onMouseOver>, B<-onMouseOut>, B<-onSelect>
 
@@ -6441,7 +6526,7 @@ list.  Otherwise, they will be strung together on a horizontal line.
 =back
 
 
-The optional B<-labels> argument is a pointer to a hash
+The optional b<-labels> argument is a pointer to a hash
 relating the checkbox values to the user-visible labels that will be
 printed next to them.  If not provided, the values will be used as the
 default.
@@ -6453,7 +6538,7 @@ checkbox group formatted with the specified number of rows and
 columns.  You can provide just the -columns parameter if you wish;
 checkbox_group will calculate the correct number of rows for you.
 
-The option B<-disabled> takes an array of checkbox values and disables
+The option b<-disabled> takes an array of checkbox values and disables
 them by greying them out (this may not be supported by all browsers).
 
 The optional B<-attributes> argument is provided to assign any of the
@@ -7507,7 +7592,7 @@ running under IIS and put itself into this mode.  You do not need to
 do this manually, although it won't hurt anything if you do.  However,
 note that if you have applied Service Pack 6, much of the
 functionality of NPH scripts, including the ability to redirect while
-setting a cookie, B<do not work at all> on IIS without a special patch
+setting a cookie, b<do not work at all> on IIS without a special patch
 from Microsoft.  See
 http://support.microsoft.com/support/kb/articles/Q280/3/41.ASP:
 Non-Parsed Headers Stripped From CGI Applications That Have nph-
@@ -7730,7 +7815,7 @@ of CGI.pm without rewriting your old scripts from scratch.
 
 =head1 AUTHOR INFORMATION
 
-The GD.pm interface is copyright 1995-2007, Lincoln D. Stein.  It is
+The CGI.pm distribution is copyright 1995-2007, Lincoln D. Stein.  It is
 distributed under GPL and the Artistic License 2.0.
 
 Address bug reports and comments to: lstein@cshl.org.  When sending
@@ -7849,7 +7934,7 @@ for suggestions and bug fixes.
 	   print "<p>",reset;
 	   print submit('Action','Shout');
 	   print submit('Action','Scream');
-	   print endform;
+	   print end_form;
 	   print "<hr>\n";
 	}
 

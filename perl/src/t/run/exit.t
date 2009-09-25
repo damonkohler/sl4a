@@ -57,7 +57,7 @@ is( ${^CHILD_ERROR_NATIVE}, $native_success,  'Normal exit ${^CHILD_ERROR_NATIVE
 if (!$vms_exit_mode) {
   my $posix_ok = eval { require POSIX; };
   my $wait_macros_ok = defined &POSIX::WIFEXITED;
-  eval { POSIX::WIFEXITED() };
+  eval { POSIX::WIFEXITED(${^CHILD_ERROR_NATIVE}) };
   $wait_macros_ok = 0 if $@;
   $exit = run('exit 42');
   is( $exit >> 8, 42,             'Non-zero exit' );

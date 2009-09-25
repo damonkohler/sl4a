@@ -429,7 +429,7 @@ Be sure to read the instructions near the top of the makefiles carefully.
 Type "dmake" (or "nmake" if you are using that make).
 
 This should build everything.  Specifically, it will create perl.exe,
-perl510.dll at the perl toplevel, and various other extension dll's
+perl511.dll at the perl toplevel, and various other extension dll's
 under the lib\auto directory.  If the build fails for any reason, make
 sure you have done the previous steps correctly.
 

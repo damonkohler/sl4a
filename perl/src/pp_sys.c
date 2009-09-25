@@ -29,6 +29,8 @@
 #include "EXTERN.h"
 #define PERL_IN_PP_SYS_C
 #include "perl.h"
+#include "time64.h"
+#include "time64.c"
 
 #ifdef I_SHADOW
 /* Shadow password support for solaris - pdo@cs.umd.edu
@@ -201,15 +203,6 @@ void endservent(void);
 
 #undef PERL_EFF_ACCESS	/* EFFective uid/gid ACCESS */
 
-/* AIX 5.2 and below use mktime for localtime, and defines the edge case
- * for time 0x7fffffff to be valid only in UTC. AIX 5.3 provides localtime64
- * available in the 32bit environment, which could warrant Configure
- * checks in the future.
- */
-#ifdef  _AIX
-#define LOCALTIME_EDGECASE_BROKEN
-#endif
-
 /* F_OK unused: if stat() cannot find it... */
 
 #if !defined(PERL_EFF_ACCESS) && defined(HAS_ACCESS) && defined(EFF_ONLY_OK) && !defined(NO_EFF_ONLY_OK)
@@ -249,7 +242,6 @@ S_emulate_eaccess(pTHX_ const char* path, Mode_t mode)
     const Gid_t egid = getegid();
     int res;
 
-    LOCK_CRED_MUTEX;
 #if !defined(HAS_SETREUID) && !defined(HAS_SETRESUID)
     Perl_croak(aTHX_ "switching effective uid is not implemented");
 #else
@@ -295,7 +287,6 @@ S_emulate_eaccess(pTHX_ const char* path, Mode_t mode)
 #endif
 #endif
 	Perl_croak(aTHX_ "leaving effective gid failed");
-    UNLOCK_CRED_MUTEX;
 
     return res;
 }
@@ -764,8 +755,12 @@ PP(pp_binmode)
 
     PUTBACK;
     {
-	const int mode = mode_from_discipline(discp);
-	const char *const d = (discp ? SvPV_nolen_const(discp) : NULL);
+	STRLEN len = 0;
+	const char *d = NULL;
+	int mode;
+	if (discp)
+	    d = SvPV_const(discp, len);
+	mode = mode_from_discipline(d, len);
 	if (PerlIO_binmode(aTHX_ fp, IoTYPE(io), mode, d)) {
 	    if (IoOFP(io) && IoOFP(io) != IoIFP(io)) {
 		if (!PerlIO_binmode(aTHX_ IoOFP(io), IoTYPE(io), mode, d)) {
@@ -805,11 +800,6 @@ PP(pp_tie)
 	    break;
 	case SVt_PVGV:
 	    if (isGV_with_GP(varsv)) {
-#ifdef GV_UNIQUE_CHECK
-		if (GvUNIQUE((const GV *)varsv)) {
-		    Perl_croak(aTHX_ "Attempt to tie unique GV");
-		}
-#endif
 		methname = "TIEHANDLE";
 		how = PERL_MAGIC_tiedscalar;
 		/* For tied filehandles, we apply tiedscalar magic to the IO
@@ -949,7 +939,7 @@ PP(pp_dbmopen)
 	PUTBACK;
 	require_pv("AnyDBM_File.pm");
 	SPAGAIN;
-	if (!(gv = gv_fetchmethod(stash, "TIEHASH")))
+	if (!stash || !(gv = gv_fetchmethod(stash, "TIEHASH")))
 	    DIE(aTHX_ "No dbm on this machine");
     }
 
@@ -1152,6 +1142,17 @@ PP(pp_sselect)
 #endif
 }
 
+/*
+=for apidoc setdefout
+
+Sets PL_defoutgv, the default file handle for output, to the passed in
+typeglob. As PL_defoutgv "owns" a reference on its typeglob, the reference
+count of the passed in typeglob is increased by one, and the reference count
+of the typeglob that PL_defoutgv points to is decreased by one.
+
+=cut
+*/
+
 void
 Perl_setdefout(pTHX_ GV *gv)
 {
@@ -1253,8 +1254,7 @@ S_doform(pTHX_ CV *cv, GV *gv, OP *retop)
     SAVETMPS;
 
     PUSHBLOCK(cx, CXt_FORMAT, PL_stack_sp);
-    PUSHFORMAT(cx);
-    cx->blk_sub.retop = retop;
+    PUSHFORMAT(cx, retop);
     SAVECOMPPAD();
     PAD_SET_CUR_NOSAVE(CvPADLIST(cv), 1);
 
@@ -1314,7 +1314,7 @@ PP(pp_enterwrite)
 PP(pp_leavewrite)
 {
     dVAR; dSP;
-    GV * const gv = cxstack[cxstack_ix].blk_sub.gv;
+    GV * const gv = cxstack[cxstack_ix].blk_format.gv;
     register IO * const io = GvIOp(gv);
     PerlIO *ofp;
     PerlIO *fp;
@@ -1919,7 +1919,7 @@ PP(pp_send)
 		    DIE(aTHX_ "Offset outside string");
 		}
 		offset += blen_chars;
-	    } else if (offset >= (IV)blen_chars && blen_chars > 0) {
+	    } else if (offset >= (IV)blen_chars) {
 		Safefree(tmpbuf);
 		DIE(aTHX_ "Offset outside string");
 	    }
@@ -2010,51 +2010,60 @@ PP(pp_eof)
 {
     dVAR; dSP;
     GV *gv;
+    IO *io;
+    MAGIC *mg;
 
-    if (MAXARG == 0) {
-	if (PL_op->op_flags & OPf_SPECIAL) {	/* eof() */
-	    IO *io;
-	    gv = PL_last_in_gv = GvEGV(PL_argvgv);
-	    io = GvIO(gv);
-	    if (io && !IoIFP(io)) {
-		if ((IoFLAGS(io) & IOf_START) && av_len(GvAVn(gv)) < 0) {
-		    IoLINES(io) = 0;
-		    IoFLAGS(io) &= ~IOf_START;
-		    do_open(gv, "-", 1, FALSE, O_RDONLY, 0, NULL);
-		    if ( GvSV(gv) ) {
-			sv_setpvs(GvSV(gv), "-");
-		    }
-		    else {
-			GvSV(gv) = newSVpvs("-");
-		    }
-		    SvSETMAGIC(GvSV(gv));
-		}
-		else if (!nextargv(gv))
-		    RETPUSHYES;
-	    }
-	}
-	else
-	    gv = PL_last_in_gv;			/* eof */
-    }
-    else
+    if (MAXARG)
 	gv = PL_last_in_gv = MUTABLE_GV(POPs);	/* eof(FH) */
+    else if (PL_op->op_flags & OPf_SPECIAL)
+	gv = PL_last_in_gv = GvEGV(PL_argvgv);	/* eof() - ARGV magic */
+    else
+	gv = PL_last_in_gv;			/* eof */
 
-    if (gv) {
-	IO * const io = GvIO(gv);
-	MAGIC * mg;
-	if (io && (mg = SvTIED_mg((const SV *)io, PERL_MAGIC_tiedscalar))) {
-	    PUSHMARK(SP);
-	    XPUSHs(SvTIED_obj(MUTABLE_SV(io), mg));
-	    PUTBACK;
-	    ENTER;
-	    call_method("EOF", G_SCALAR);
-	    LEAVE;
-	    SPAGAIN;
-	    RETURN;
+    if (!gv)
+	RETPUSHNO;
+
+    if ((io = GvIO(gv)) && (mg = SvTIED_mg((const SV *)io, PERL_MAGIC_tiedscalar))) {
+	PUSHMARK(SP);
+	XPUSHs(SvTIED_obj(MUTABLE_SV(io), mg));
+	/*
+	 * in Perl 5.12 and later, the additional paramter is a bitmask:
+	 * 0 = eof
+	 * 1 = eof(FH)
+	 * 2 = eof()  <- ARGV magic
+	 */
+	if (MAXARG)
+	    mPUSHi(1);		/* 1 = eof(FH) - simple, explicit FH */
+	else if (PL_op->op_flags & OPf_SPECIAL)
+	    mPUSHi(2);		/* 2 = eof()   - ARGV magic */
+	else
+	    mPUSHi(0);		/* 0 = eof     - simple, implicit FH */
+	PUTBACK;
+	ENTER;
+	call_method("EOF", G_SCALAR);
+	LEAVE;
+	SPAGAIN;
+	RETURN;
+    }
+
+    if (!MAXARG && (PL_op->op_flags & OPf_SPECIAL)) {	/* eof() */
+	if (io && !IoIFP(io)) {
+	    if ((IoFLAGS(io) & IOf_START) && av_len(GvAVn(gv)) < 0) {
+		IoLINES(io) = 0;
+		IoFLAGS(io) &= ~IOf_START;
+		do_open(gv, "-", 1, FALSE, O_RDONLY, 0, NULL);
+		if (GvSV(gv))
+		    sv_setpvs(GvSV(gv), "-");
+		else
+		    GvSV(gv) = newSVpvs("-");
+		SvSETMAGIC(GvSV(gv));
+	    }
+	    else if (!nextargv(gv))
+		RETPUSHYES;
 	}
     }
 
-    PUSHs(boolSV(!gv || do_eof(gv)));
+    PUSHs(boolSV(do_eof(gv)));
     RETURN;
 }
 
@@ -2965,7 +2974,18 @@ PP(pp_ftrread)
     int stat_mode = S_IRUSR;
 
     bool effective = FALSE;
+    char opchar = '?';
     dSP;
+
+    switch (PL_op->op_type) {
+    case OP_FTRREAD:	opchar = 'R'; break;
+    case OP_FTRWRITE:	opchar = 'W'; break;
+    case OP_FTREXEC:	opchar = 'X'; break;
+    case OP_FTEREAD:	opchar = 'r'; break;
+    case OP_FTEWRITE:	opchar = 'w'; break;
+    case OP_FTEEXEC:	opchar = 'x'; break;
+    }
+    tryAMAGICftest(opchar);
 
     STACKED_FTEST_CHECK;
 
@@ -2999,7 +3019,7 @@ PP(pp_ftrread)
 	access_mode = W_OK;
 #endif
 	stat_mode = S_IWUSR;
-	/* Fall through  */
+	/* fall through */
 
     case OP_FTEREAD:
 #ifndef PERL_EFF_ACCESS
@@ -3059,8 +3079,20 @@ PP(pp_ftis)
     dVAR;
     I32 result;
     const int op_type = PL_op->op_type;
+    char opchar = '?';
     dSP;
+
+    switch (op_type) {
+    case OP_FTIS:	opchar = 'e'; break;
+    case OP_FTSIZE:	opchar = 's'; break;
+    case OP_FTMTIME:	opchar = 'M'; break;
+    case OP_FTCTIME:	opchar = 'C'; break;
+    case OP_FTATIME:	opchar = 'A'; break;
+    }
+    tryAMAGICftest(opchar);
+
     STACKED_FTEST_CHECK;
+
     result = my_stat();
     SPAGAIN;
     if (result < 0)
@@ -3097,7 +3129,24 @@ PP(pp_ftrowned)
 {
     dVAR;
     I32 result;
+    char opchar = '?';
     dSP;
+
+    switch (PL_op->op_type) {
+    case OP_FTROWNED:	opchar = 'O'; break;
+    case OP_FTEOWNED:	opchar = 'o'; break;
+    case OP_FTZERO:	opchar = 'z'; break;
+    case OP_FTSOCK:	opchar = 'S'; break;
+    case OP_FTCHR:	opchar = 'c'; break;
+    case OP_FTBLK:	opchar = 'b'; break;
+    case OP_FTFILE:	opchar = 'f'; break;
+    case OP_FTDIR:	opchar = 'd'; break;
+    case OP_FTPIPE:	opchar = 'p'; break;
+    case OP_FTSUID:	opchar = 'u'; break;
+    case OP_FTSGID:	opchar = 'g'; break;
+    case OP_FTSVTX:	opchar = 'k'; break;
+    }
+    tryAMAGICftest(opchar);
 
     /* I believe that all these three are likely to be defined on most every
        system these days.  */
@@ -3115,6 +3164,7 @@ PP(pp_ftrowned)
 #endif
 
     STACKED_FTEST_CHECK;
+
     result = my_stat();
     SPAGAIN;
     if (result < 0)
@@ -3181,8 +3231,13 @@ PP(pp_ftrowned)
 PP(pp_ftlink)
 {
     dVAR;
-    I32 result = my_lstat();
     dSP;
+    I32 result;
+
+    tryAMAGICftest('l');
+    result = my_lstat();
+    SPAGAIN;
+
     if (result < 0)
 	RETPUSHUNDEF;
     if (S_ISLNK(PL_statcache.st_mode))
@@ -3197,6 +3252,8 @@ PP(pp_fttty)
     int fd;
     GV *gv;
     SV *tmpsv = NULL;
+
+    tryAMAGICftest('t');
 
     STACKED_FTEST_CHECK;
 
@@ -3246,6 +3303,8 @@ PP(pp_fttext)
     register SV *sv;
     GV *gv;
     PerlIO *fp;
+
+    tryAMAGICftest(PL_op->op_type == OP_FTTEXT ? 'T' : 'B');
 
     STACKED_FTEST_CHECK;
 
@@ -4008,7 +4067,7 @@ PP(pp_fork)
 
 PP(pp_wait)
 {
-#if (!defined(DOSISH) || defined(OS2) || defined(WIN32)) && !defined(MACOS_TRADITIONAL) && !defined(__LIBCATAMOUNT__)
+#if (!defined(DOSISH) || defined(OS2) || defined(WIN32)) && !defined(__LIBCATAMOUNT__)
     dVAR; dSP; dTARGET;
     Pid_t childpid;
     int argflags;
@@ -4036,7 +4095,7 @@ PP(pp_wait)
 
 PP(pp_waitpid)
 {
-#if (!defined(DOSISH) || defined(OS2) || defined(WIN32)) && !defined(MACOS_TRADITIONAL) && !defined(__LIBCATAMOUNT__)
+#if (!defined(DOSISH) || defined(OS2) || defined(WIN32)) && !defined(__LIBCATAMOUNT__)
     dVAR; dSP; dTARGET;
     const int optype = POPi;
     const Pid_t pid = TOPi;
@@ -4402,104 +4461,80 @@ PP(pp_tms)
 #endif /* HAS_TIMES */
 }
 
-#ifdef LOCALTIME_EDGECASE_BROKEN
-static struct tm *S_my_localtime (pTHX_ Time_t *tp)
-{
-    auto time_t     T;
-    auto struct tm *P;
-
-    /* No workarounds in the valid range */
-    if (!tp || *tp < 0x7fff573f || *tp >= 0x80000000)
-	return (localtime (tp));
-
-    /* This edge case is to workaround the undefined behaviour, where the
-     * TIMEZONE makes the time go beyond the defined range.
-     * gmtime (0x7fffffff) => 2038-01-19 03:14:07
-     * If there is a negative offset in TZ, like MET-1METDST, some broken
-     * implementations of localtime () (like AIX 5.2) barf with bogus
-     * return values:
-     * 0x7fffffff gmtime               2038-01-19 03:14:07
-     * 0x7fffffff localtime            1901-12-13 21:45:51
-     * 0x7fffffff mylocaltime          2038-01-19 04:14:07
-     * 0x3c19137f gmtime               2001-12-13 20:45:51
-     * 0x3c19137f localtime            2001-12-13 21:45:51
-     * 0x3c19137f mylocaltime          2001-12-13 21:45:51
-     * Given that legal timezones are typically between GMT-12 and GMT+12
-     * we turn back the clock 23 hours before calling the localtime
-     * function, and add those to the return value. This will never cause
-     * day wrapping problems, since the edge case is Tue Jan *19*
-     */
-    T = *tp - 82800; /* 23 hour. allows up to GMT-23 */
-    P = localtime (&T);
-    P->tm_hour += 23;
-    if (P->tm_hour >= 24) {
-	P->tm_hour -= 24;
-	P->tm_mday++;	/* 18  -> 19  */
-	P->tm_wday++;	/* Mon -> Tue */
-	P->tm_yday++;	/* 18  -> 19  */
-    }
-    return (P);
-} /* S_my_localtime */
-#endif
-
 PP(pp_gmtime)
 {
     dVAR;
     dSP;
-    Time_t when;
-    const struct tm *tmbuf;
+    Time64_T when;
+    struct TM tmbuf;
+    struct TM *err;
+    const char *opname = PL_op->op_type == OP_LOCALTIME ? "localtime" : "gmtime";
     static const char * const dayname[] =
 	{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
     static const char * const monname[] =
 	{"Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-    if (MAXARG < 1)
-	(void)time(&when);
-    else
-#ifdef BIG_TIME
-	when = (Time_t)SvNVx(POPs);
-#else
-	when = (Time_t)SvIVx(POPs);
-#endif
+    if (MAXARG < 1) {
+	time_t now;
+	(void)time(&now);
+	when = (Time64_T)now;
+    }
+    else {
+	double input = Perl_floor(POPn);
+	when = (Time64_T)input;
+	if (when != input && ckWARN(WARN_OVERFLOW)) {
+	    Perl_warner(aTHX_ packWARN(WARN_OVERFLOW),
+			"%s(%.0f) too large", opname, input);
+	}
+    }
 
     if (PL_op->op_type == OP_LOCALTIME)
-#ifdef LOCALTIME_EDGECASE_BROKEN
-	tmbuf = S_my_localtime(aTHX_ &when);
-#else
-	tmbuf = localtime(&when);
-#endif
+        err = S_localtime64_r(&when, &tmbuf);
     else
-	tmbuf = gmtime(&when);
+	err = S_gmtime64_r(&when, &tmbuf);
 
-    if (GIMME != G_ARRAY) {
+    if (err == NULL && ckWARN(WARN_OVERFLOW)) {
+	/* XXX %lld broken for quads */
+	Perl_warner(aTHX_ packWARN(WARN_OVERFLOW),
+		    "%s(%.0f) failed", opname, (double)when);
+    }
+
+    if (GIMME != G_ARRAY) {	/* scalar context */
 	SV *tsv;
+	/* XXX newSVpvf()'s %lld type is broken, so cheat with a double */
+	double year = (double)tmbuf.tm_year + 1900;
+
         EXTEND(SP, 1);
         EXTEND_MORTAL(1);
-	if (!tmbuf)
+	if (err == NULL)
 	    RETPUSHUNDEF;
-	tsv = Perl_newSVpvf(aTHX_ "%s %s %2d %02d:%02d:%02d %d",
-			    dayname[tmbuf->tm_wday],
-			    monname[tmbuf->tm_mon],
-			    tmbuf->tm_mday,
-			    tmbuf->tm_hour,
-			    tmbuf->tm_min,
-			    tmbuf->tm_sec,
-			    tmbuf->tm_year + 1900);
+
+	tsv = Perl_newSVpvf(aTHX_ "%s %s %2d %02d:%02d:%02d %.0f",
+			    dayname[tmbuf.tm_wday],
+			    monname[tmbuf.tm_mon],
+			    tmbuf.tm_mday,
+			    tmbuf.tm_hour,
+			    tmbuf.tm_min,
+			    tmbuf.tm_sec,
+			    year);
 	mPUSHs(tsv);
     }
-    else if (tmbuf) {
+    else {			/* list context */
+	if ( err == NULL )
+	    RETURN;
+
         EXTEND(SP, 9);
         EXTEND_MORTAL(9);
-        mPUSHi(tmbuf->tm_sec);
-	mPUSHi(tmbuf->tm_min);
-	mPUSHi(tmbuf->tm_hour);
-	mPUSHi(tmbuf->tm_mday);
-	mPUSHi(tmbuf->tm_mon);
-	mPUSHi(tmbuf->tm_year);
-	mPUSHi(tmbuf->tm_wday);
-	mPUSHi(tmbuf->tm_yday);
-	mPUSHi(tmbuf->tm_isdst);
+        mPUSHi(tmbuf.tm_sec);
+	mPUSHi(tmbuf.tm_min);
+	mPUSHi(tmbuf.tm_hour);
+	mPUSHi(tmbuf.tm_mday);
+	mPUSHi(tmbuf.tm_mon);
+	mPUSHn(tmbuf.tm_year);
+	mPUSHi(tmbuf.tm_wday);
+	mPUSHi(tmbuf.tm_yday);
+	mPUSHi(tmbuf.tm_isdst);
     }
     RETURN;
 }

@@ -236,6 +236,8 @@ The current hierarchy is:
        |                |
        |                +- unopened
        |
+       +- imprecision
+       |
        +- misc
        |
        +- numeric

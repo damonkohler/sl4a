@@ -300,10 +300,6 @@ Address bug reports and comments to: lstein@cshl.org
 
 Carp, CGI::Base, CGI::BasePlus, CGI::Request, CGI::MiniSvr, CGI::Form,
 CGI::Response
-    if (defined($CGI::Carp::PROGNAME)) 
-    {
-      $file = $CGI::Carp::PROGNAME;
-    }
 
 =cut
 
@@ -323,7 +319,7 @@ use File::Spec;
 
 $main::SIG{__WARN__}=\&CGI::Carp::warn;
 
-$CGI::Carp::VERSION     = '1.30_01';
+$CGI::Carp::VERSION     = '3.45';
 $CGI::Carp::CUSTOM_MSG  = undef;
 $CGI::Carp::DIE_HANDLER = undef;
 
@@ -524,7 +520,11 @@ END
     if (ref($CUSTOM_MSG) eq 'CODE') {
       print STDOUT "Content-type: text/html\n\n" 
         unless $mod_perl;
-      &$CUSTOM_MSG($msg); # nicer to perl 5.003 users
+        eval { 
+            &$CUSTOM_MSG($msg); # nicer to perl 5.003 users
+        };
+        if ($@) { print STDERR q(error while executing the error handler: $@); }
+
       return;
     } else {
       $outer_message = $CUSTOM_MSG;

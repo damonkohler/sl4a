@@ -447,7 +447,7 @@ EXPECT
 ok
 ########
 
-# TODO [perl #948] cannot meaningfully tie $,
+# [perl #948] cannot meaningfully tie $,
 package TieDollarComma;
 
 sub TIESCALAR {
@@ -463,7 +463,7 @@ sub STORE {
 
 sub FETCH {
     my $self = shift;
-    print "FETCH\n";
+    print "<FETCH>";
     return $$self;
 }
 package main;
@@ -473,9 +473,7 @@ $, = 'BOBBINS';
 print "join", "things", "up\n";
 EXPECT
 STORE set 'BOBBINS'
-FETCH
-FETCH
-joinBOBBINSthingsBOBBINSup
+join<FETCH>BOBBINSthings<FETCH>BOBBINSup
 ########
 
 # test SCALAR method

@@ -1,3 +1,24 @@
+2009-07-04  Russ Allbery  <rra@stanford.edu>
+
+	* ANSIColor.pm: Version 2.01 released.
+
+	* t/basic.t: Test error handling in color, colored, and uncolor.
+
+	* ANSIColor.pm (uncolor): When reporting errors for bad escape
+	sequences, don't include the leading \e[ or trailing m in the
+	error message.
+
+	* ANSIColor.pm: Add section headings to the DESCRIPTION section of
+	the module since it's getting rather long.
+	(colorstrip): New function to remove ANSI color codes from
+	strings.  Thanks, Paul Miller.
+	* t/basic.t: New tests for colorstrip.
+
+	* ANSIColor.pm (AUTOLOAD): Untaint $AUTOLOAD, required by Perl
+	5.10 when running in taint mode.  Thanks, Tim Bellinghausen.
+	* t/basic.t: Two new tests for AUTOLOAD error handling.  Enable
+	warnings and taint mode.
+
 2009-02-28  Russ Allbery  <rra@stanford.edu>
 
 	* ANSIColor.pm: Version 2.00 released.

@@ -430,8 +430,7 @@ SKIP: {
     # just because Errno possibly failing.
     test eval('$!{ENOENT}') ||
 	$! == 2 || # File not found
-	($Is_Dos && $! == 22) ||
-	($^O eq 'mint' && $! == 33);
+	($Is_Dos && $! == 22);
 
     test !eval { open FOO, "> $foo" }, 'open for write';
     test $@ =~ /^Insecure dependency/, $@;

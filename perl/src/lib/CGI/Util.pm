@@ -7,7 +7,7 @@ require Exporter;
 @EXPORT_OK = qw(rearrange rearrange_header make_attributes unescape escape 
 		expires ebcdic2ascii ascii2ebcdic);
 
-$VERSION = '1.5_01';
+$VERSION = '3.45';
 
 $EBCDIC = "\t" ne "\011";
 # (ord('^') == 95) for codepage 1047 as on os390, vmesa

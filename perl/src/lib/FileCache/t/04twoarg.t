@@ -1,12 +1,14 @@
 #!./perl
-BEGIN {
-    use FileCache;
-    chdir 't' if -d 't';
 
-    #For tests within the perl distribution
-    @INC = '../lib' if -d '../lib';
-    END;
+BEGIN {
+   if( $ENV{PERL_CORE} ) {
+        chdir 't' if -d 't';
+        @INC = qw(../lib);
+    }
 }
+
+use FileCache;
+
 END{
   unlink('foo');
 }

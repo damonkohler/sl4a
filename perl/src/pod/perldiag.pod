@@ -306,7 +306,21 @@ of an array and later assigning through that reference. For example
 used as an lvalue, which is pretty strange.  Perhaps you forgot to
 dereference it first.  See L<perlfunc/substr>.
 
-=item Bad arg length for %s, is %d, should be %s
+=item Attribute "locked" is deprecated
+
+(D deprecated) You have used the attributes pragam to modify the "locked"
+attribute on a code reference. The :locked attribute is obsolete, has had no
+effect since 5005 threads were removed, and will be removed in the next major
+release of Perl 5.
+
+=item Attribute "unique" is deprecated
+
+(D deprecated) You have used the attributes pragam to modify the "unique"
+attribute on an array, hash or scalar reference. The :unique attribute has
+had no effect since Perl 5.8.8, and will be removed in the next major
+release of Perl 5.
+
+=item Bad arg length for %s, is %d, should be %d
 
 (F) You passed a buffer of the wrong size to one of msgctl(), semctl()
 or shmctl().  In C parlance, the correct sizes are, respectively,
@@ -651,24 +665,6 @@ inplace editing with the B<-i> switch.  The file was ignored.
 regexp to match something 0 times, just put {0}. The <-- HERE shows in the
 regular expression about where the problem was discovered. See L<perlre>.
 
-=item Can't do setegid!
-
-(P) The setegid() call failed for some reason in the setuid emulator of
-suidperl.
-
-=item Can't do seteuid!
-
-(P) The setuid emulator of suidperl failed for some reason.
-
-=item Can't do setuid
-
-(F) This typically means that ordinary perl tried to exec suidperl to do
-setuid emulation, but couldn't exec it.  It looks for a name of the form
-sperl5.000 in the same directory that the perl executable resides under
-the name perl5.000, typically /usr/local/bin on Unix machines.  If the
-file is there, check the execute permissions.  If it isn't, ask your
-sysadmin why he and/or she removed it.
-
 =item Can't do waitpid with flags
 
 (F) This machine doesn't have either waitpid() or wait4(), so only
@@ -757,10 +753,15 @@ If you didn't mean to use a Unicode property, escape the C<\p>, either
 by C<\\p> (just the C<\p>) or by C<\Q\p> (the rest of the string, until
 possible C<\E>).
 
-=item Can't fork
+=item Can't fork: %s
 
 (F) A fatal error occurred while trying to fork while opening a
 pipeline.
+
+=item Can't fork, trying again in 5 seconds
+
+(W pipe) A fork in a piped open failed with EAGAIN and will be retried
+after five seconds.
 
 =item Can't get filespec - stale stat buffer?
 
@@ -828,6 +829,12 @@ signal will interfere with proper determination of exit status of child
 processes, Perl has reset the signal to its default value.  This
 situation typically indicates that the parent program under which Perl
 may be running (e.g. cron) is being very careless.
+
+=item Can't kill a non-numeric process ID
+
+(F) Process identifiers must be (signed) integers.  It is a fatal error to
+attempt to kill() an undefined, empty-string or otherwise non-numeric
+process identifier.
 
 =item Can't "last" outside a loop block
 
@@ -1031,16 +1038,11 @@ probably because you don't have write permission to the directory.
 (P) An error peculiar to VMS.  Perl thought stdin was a pipe, and tried
 to reopen it to accept binary data.  Alas, it failed.
 
-=item Can't resolve method `%s' overloading `%s' in package `%s'
+=item Can't resolve method "%s" overloading "%s" in package "%s"
 
 (F|P) Error resolving overloading specified by a method name (as opposed
 to a subroutine reference): no such method callable via the package. If
 method name is C<???>, this is an internal error.
-
-=item Can't reswap uid and euid
-
-(P) The setreuid() call failed for some reason in the setuid emulator of
-suidperl.
 
 =item Can't return %s from lvalue subroutine
 
@@ -1065,11 +1067,6 @@ list context.
 
 (P) For some reason you can't fstat() the script even though you have it
 open already.  Bizarre.
-
-=item Can't swap uid and euid
-
-(P) The setreuid() call failed for some reason in the setuid emulator of
-suidperl.
 
 =item Can't take log of %g
 
@@ -1149,6 +1146,11 @@ weren't.
 that is already inside a group with a byte-order modifier.
 For example you cannot force little-endianness on a type that
 is inside a big-endian group.
+
+=item Can't use keyword '%s' as a label
+
+(F) You attempted to use a reserved keyword, such as C<print> or C<BEGIN>,
+as a statement label. This is disallowed since Perl 5.11.0.
 
 =item Can't use "my %s" in sort comparison
 
@@ -1627,7 +1629,7 @@ variable and glob that.
 
 (F) The C<exec> function is not implemented in MacPerl. See L<perlport>.
 
-=item Execution of %s aborted due to compilation errors
+=item Execution of %s aborted due to compilation errors.
 
 (F) The final summary message when a Perl compilation fails.
 
@@ -1851,7 +1853,7 @@ unspecified destination.  See L<perlfunc/goto>.
 supposed to follow something: a template character or a ()-group.
  See L<perlfunc/pack>.
 
-=item %s had compilation errors
+=item %s had compilation errors.
 
 (F) The final summary message when a C<perl -c> fails.
 
@@ -1954,7 +1956,7 @@ two from 1 to 32 (or 64, if your platform supports that).
 (W digit) You may have tried to use an 8 or 9 in an octal number.
 Interpretation of the octal number stopped before the 8 or 9.
 
-=item Illegal switch in PERL5OPT: %s
+=item Illegal switch in PERL5OPT: -%c
 
 (X) The PERL5OPT environment variable may only be used to set the
 following switches: B<-[CDIMUdmtw]>.
@@ -2176,7 +2178,7 @@ strange for a machine that supports C.
 (W unopened) You tried ioctl() on a filehandle that was never opened.
 Check you control flow and number of arguments.
 
-=item IO layers (like "%s") unavailable
+=item IO layers (like '%s') unavailable
 
 (F) Your Perl has not been configured to have PerlIO, and therefore
 you cannot use IO layers.  To have PerlIO Perl must be configured
@@ -2258,6 +2260,15 @@ L<perlfunc/listen>.
 (F) There is currently a limit on the length of string which lookbehind can
 handle. This restriction may be eased in a future release. 
 
+=item Lost precision when %s %f by 1
+
+(W) The value you attempted to increment or decrement by one is too large
+for the underlying floating point representation to store accurately,
+hence the target of C<++> or C<--> is unchanged. Perl issues this warning
+because it has already switched from integers to floating point when values
+are too large for integers, and now even floating point is insufficient.
+You may wish to switch to using L<Math::BigInt> explicitly.
+
 =item lstat() on filehandle %s
 
 (W io) You tried to do an lstat on a filehandle.  What did you mean
@@ -2337,9 +2348,9 @@ rules and perl was unable to guess how to make more progress.
 (F) You tried to unpack something that didn't comply with UTF-8 encoding
 rules and perl was unable to guess how to make more progress.
 
-=item Maximal count of pending signals (%s) exceeded
+=item Maximal count of pending signals (%d) exceeded
 
-(F) Perl aborted due to a too important number of signals pending. This
+(F) Perl aborted due to a too high number of signals pending. This
 usually indicates that your operating system tried to deliver signals
 too fast (with a very high priority), starving the perl process from
 resources it would need to reach a point where it can process signals
@@ -2482,7 +2493,7 @@ couldn't be created for some peculiar reason.
 you omitted the name of the module.  Consult L<perlrun> for full details
 about C<-M> and C<-m>.
 
-=item More than one argument to open
+=item More than one argument to '%s' open
 
 (F) The C<open> function has been asked to open multiple files. This
 can happen if you are trying to open a pipe to a command that takes a
@@ -3290,10 +3301,6 @@ the problem, however, you will get the same error message each time
 you run Perl.  How to really fix the problem can be found in
 L<perllocale> section B<LOCALE PROBLEMS>.
 
-=item Permission denied
-
-(F) The setuid emulator in suidperl decided you were up to no good.
-
 =item pid %x not a child
 
 (W exec) A warning peculiar to VMS.  Waitpid() was asked to wait for a
@@ -3303,11 +3310,6 @@ fine from VMS' perspective, it's probably not what you intended.
 =item 'P' must have an explicit size in unpack
 
 (F) The unpack format P must have an explicit size, not "*".
-
-=item B<-P> not allowed for setuid/setgid script
-
-(F) The script would have to be opened by the C preprocessor by name,
-which provides a race condition that breaks security.
 
 =item POSIX class [:%s:] unknown in regex; marked by <-- HERE in m/%s/
 
@@ -3420,23 +3422,19 @@ but there was no array C<@foo> in scope at the time. If you wanted a
 literal @foo, then write it as \@foo; otherwise find out what happened
 to the array you apparently lost track of.
 
-=item pragma "attrs" is deprecated, use "sub NAME : ATTRS" instead
+=item Possible unintended interpolation of $\ in regex
 
-(D deprecated) You have written something like this:
+(W ambiguous) You said something like C<m/$\/> in a regex.
+The regex C<m/foo$\s+bar/m> translates to: match the word 'foo', the output
+record separator (see L<perlvar/$\>) and the letter 's' (one time or more)
+followed by the word 'bar'.
 
-    sub doit
-    {
-        use attrs qw(locked);
-    }
+If this is what you intended then you can silence the warning by using 
+C<m/${\}/> (for example: C<m/foo${\}s+bar/>).
 
-You should use the new declaration syntax instead.
-
-    sub doit : locked
-    {
-        ...
-
-The C<use attrs> pragma is now obsolete, and is only provided for
-backward-compatibility. See L<perlsub/"Subroutine Attributes">.
+If instead you intended to match the word 'foo' at the end of the line
+followed by whitespace and the word 'bar' on the next line then you can use
+C<m/$(?)\/> (for example: C<m/foo$(?)\s+bar/>).
 
 =item Precedence problem: open %s should be open(%s)
 
@@ -3474,6 +3472,11 @@ applications die in silence.  It is considered a feature of the OS/2
 port.  One can easily disable this by appropriate sighandlers, see
 L<perlipc/"Signals">.  See also "Process terminated by SIGTERM/SIGINT"
 in L<perlos2>.
+
+=item Prototype after '%c' for %s : %s
+
+(W syntax) A character follows % or @ in a prototype. This is useless,
+since % and @ gobble the rest of the subroutine arguments.
 
 =item Prototype mismatch: %s vs %s
 
@@ -3643,6 +3646,12 @@ earlier.
 numeric field that will never go blank so that the repetition never
 terminates. You might use ^# instead.  See L<perlform>.
 
+=item Replacement list is longer than search list
+
+(W misc) You have used a replacement list that is longer than the
+search list. So the additional elements in the replacement list
+are meaningless.
+
 =item Reversed %s= operator
 
 (W syntax) You wrote your assignment operator backwards.  The = must
@@ -3697,11 +3706,6 @@ On the other hand, if you were actually hoping to treat the hash element
 as a list, you need to look into how references work, because Perl will
 not magically convert between scalars and lists for you.  See
 L<perlref>.
-
-=item Script is not setuid/setgid in suidperl
-
-(F) Oddly, the suidperl program was invoked on a script without a setuid
-or setgid bit set.  This doesn't make much sense.
 
 =item Search pattern not terminated
 
@@ -3954,7 +3958,7 @@ a block by itself.
 (W unopened) You tried to use the stat() function on a filehandle that
 was either never opened or has since been closed.
 
-=item Stub found while resolving method "%s" overloading "%s"
+=item Stub found while resolving method "%s" overloading "%s" in package "%s"
 
 (P) Overloading resolution over @ISA tree may be broken by importation
 stubs.  Stubs should never be implicitly created, but explicit calls to
@@ -3995,11 +3999,6 @@ a string.  That is, the absolute value of the offset was larger than the
 length of the string.  See L<perlfunc/substr>.  This warning is fatal if
 substr is used in an lvalue context (as the left hand side of an
 assignment or as a subroutine argument for example).
-
-=item suidperl is no longer needed since %s
-
-(F) Your Perl was compiled with B<-D>SETUID_SCRIPTS_ARE_SECURE_NOW, but
-a version of the setuid emulator somehow got run anyway.
 
 =item sv_upgrade from type %d down to type %d
 
@@ -4170,18 +4169,18 @@ suspect you're not running on Unix.
 =item "-T" is on the #! line, it must also be used on the command line
 
 (X) The #! line (or local equivalent) in a Perl script contains the
-B<-T> option, but Perl was not invoked with B<-T> in its command line.
+B<-T> option (or the B<-t> option), but Perl was not invoked with B<-T> in its command line.
 This is an error because, by the time Perl discovers a B<-T> in a
 script, it's too late to properly taint everything from the environment.
 So Perl gives up.
 
 If the Perl script is being executed as a command using the #!
 mechanism (or its local equivalent), this error can usually be fixed by
-editing the #! line so that the B<-T> option is a part of Perl's first
-argument: e.g. change C<perl -n -T> to C<perl -T -n>.
+editing the #! line so that the B<-%c> option is a part of Perl's first
+argument: e.g. change C<perl -n -%c> to C<perl -%c -n>.
 
 If the Perl script is being executed as C<perl scriptname>, then the
-B<-T> option must appear on the command line: C<perl -T scriptname>.
+B<-%c> option must appear on the command line: C<perl -%c scriptname>.
 
 =item To%s: illegal mapping '%s'
 
@@ -4449,10 +4448,10 @@ reserved word.  It's best to put such a word in quotes, or capitalize it
 somehow, or insert an underbar into it.  You might also declare it as a
 subroutine.
 
-=item Unrecognized character %s in column %d
+=item Unrecognized character %s; marked by <-- HERE after %s near column %d
 
 (F) The Perl parser has no idea what to do with the specified character
-in your Perl script (or eval) at the specified column.  Perhaps you tried 
+in your Perl script (or eval) near the specified column.  Perhaps you tried 
 to run a compressed script, a binary program, or a directory as a Perl program.
 
 =item Unrecognized escape \\%c in character class passed through in regex; marked by <-- HERE in m/%s/
@@ -4611,6 +4610,12 @@ must be written as
 The <-- HERE shows in the regular expression about
 where the problem was discovered. See L<perlre>.
 
+=item Useless use of /d modifier in transliteration operator
+
+(W misc) You have used the /d modifier where the searchlist has the
+same length as the replacelist. See L<perlop> for more information
+about the /d modifier.
+
 =item Useless use of %s in void context
 
 (W void) You did something without a side effect in a context that does
@@ -4676,6 +4681,11 @@ you can write it as C<push(@tied_array,())> to avoid this warning.
 
 (F) The "use" keyword is recognized and executed at compile time, and
 returns no useful value.  See L<perlmod>.
+
+=item Use of assignment to $[ is deprecated
+
+(D deprecated) The C<$[> variable (index of the first element in an array)
+is deprecated. See L<perlvar/"$[">.
 
 =item Use of bare << to mean <<"" is deprecated
 
@@ -4761,6 +4771,15 @@ startup.
 In code that currently says C<use AutoLoader; @ISA = qw(AutoLoader);>
 you should remove AutoLoader from @ISA and change C<use AutoLoader;> to
 C<use AutoLoader 'AUTOLOAD';>.
+
+=item Use of octal value above 377 is deprecated
+
+(D deprecated, W regexp) There is a constant in the regular expression whose
+value is interpeted by Perl as octal and larger than 377 (255 decimal, 0xFF
+hex).  Perl may take this to mean different things depending on the rest of
+the regular expression.  If you meant such an octal value, convert it to
+hexadecimal and use C<\xHH> or C<\x{HH}> instead.  If you meant to have
+part of it mean a backreference, use C<\g> for that.  See L<perlre>.
 
 =item Use of %s in printf format not supported
 

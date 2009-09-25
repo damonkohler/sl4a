@@ -38,7 +38,6 @@ Here are some examples:
  "\n" =~  /(?s:.)/  # Match (local 'single line' modifier)
  "ab" =~  /^.$/     # No match (dot matches one character)
 
-
 =head2 Backslashed sequences
 
 Perl regular expressions contain many backslashed sequences that
@@ -59,6 +58,7 @@ more detail below.
  \S             Match a non-white space character.
  \h             Match a horizontal white space character.
  \H             Match a character that isn't horizontal white space.
+ \N             Match a character that isn't newline.
  \v             Match a vertical white space character.
  \V             Match a character that isn't vertical white space.
  \pP, \p{Prop}  Match a character matching a Unicode property.
@@ -94,7 +94,7 @@ Any character that isn't matched by C<\w> will be matched by C<\W>.
 
 =head3 White space
 
-C<\s> matches any single character that is consider white space. In the
+C<\s> matches any single character that is considered white space. In the
 ASCII range, C<\s> matches the horizontal tab (C<\t>), the new line
 (C<\n>), the form feed (C<\f>), the carriage return (C<\r>), and the
 space (the vertical tab, C<\cK> is not matched by C<\s>).  The exact set
@@ -112,6 +112,12 @@ Any character that isn't matched by C<\s> will be matched by C<\S>.
 C<\h> will match any character that is considered horizontal white space;
 this includes the space and the tab characters. C<\H> will match any character
 that is not considered horizontal white space.
+
+C<\N>, like the dot, will match any character that is not a newline. The
+difference is that C<\N> will not be influenced by the single line C</s>
+regular expression modifier. (Note that, since C<\N{}> is also used for
+Unicode named characters, if C<\N> is followed by an opening brace and
+by a letter, perl will assume that a Unicode character name is coming.)
 
 C<\v> will match any character that is considered vertical white space;
 this includes the carriage return and line feed characters (newline).

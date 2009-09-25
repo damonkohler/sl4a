@@ -13,7 +13,7 @@
 #
 # This script is normally invoked from regen.pl.
 
-$VERSION = '1.02_02';
+$VERSION = '1.02_03';
 
 BEGIN {
     require 'regen_lib.pl';
@@ -75,6 +75,7 @@ my $tree = {
        	'pack'		=> [ 5.008, DEFAULT_OFF],
        	'unpack'	=> [ 5.008, DEFAULT_OFF],
        	'threads'	=> [ 5.008, DEFAULT_OFF],
+       	'imprecision'	=> [ 5.011, DEFAULT_OFF],
 
        	 #'default'	=> [ 5.008, DEFAULT_ON ],
   	}],
@@ -448,7 +449,7 @@ __END__
 
 package warnings;
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 # Verify that we're called correctly so that warnings will work.
 # see also strict.pm.
@@ -586,7 +587,7 @@ $All = "" ; vec($All, $Offsets{'all'}, 2) = 3 ;
 
 sub Croaker
 {
-    require Carp::Heavy; # this initializes %CarpInternal
+    require Carp; # this initializes %CarpInternal
     local $Carp::CarpInternal{'warnings'};
     delete $Carp::CarpInternal{'warnings'};
     Carp::croak(@_);
@@ -737,7 +738,7 @@ sub __chk
 }
 
 sub _error_loc {
-    require Carp::Heavy;
+    require Carp;
     goto &Carp::short_error_loc; # don't introduce another stack frame
 }                                                             
 

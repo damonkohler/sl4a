@@ -196,7 +196,7 @@ package Maintainers;
     'Attribute::Handlers' =>
 	{
 	'MAINTAINER'	=> 'rgarcia',
-	'DISTRIBUTION'	=> 'SMUELLER/Attribute-Handlers-0.85.tar.gz',
+	'DISTRIBUTION'	=> 'SMUELLER/Attribute-Handlers-0.86.tar.gz',
 	'FILES'		=> q[ext/Attribute-Handlers],
 	'CPAN'		=> 1,
 	'UPSTREAM'	=> "blead",
@@ -233,7 +233,7 @@ package Maintainers;
     'AutoLoader' =>
 	{
 	'MAINTAINER'	=> 'smueller',
-	'DISTRIBUTION'	=> 'SMUELLER/AutoLoader-5.68.tar.gz',
+	'DISTRIBUTION'	=> 'SMUELLER/AutoLoader-5.69.tar.gz',
 	'FILES'		=> q[lib/AutoLoader.pm lib/AutoSplit.pm lib/AutoLoader],
 	'EXCLUDED'	=> [ qw( t/00pod.t ) ],
 	'CPAN'		=> 1,
@@ -314,7 +314,7 @@ package Maintainers;
     'CGI' =>
 	{
 	'MAINTAINER'	=> 'lstein',
-	'DISTRIBUTION'	=> 'LDS/CGI.pm-3.43.tar.gz',
+	'DISTRIBUTION'	=> 'LDS/CGI.pm-3.45.tar.gz',
 	'FILES'		=> q[lib/CGI.pm lib/CGI],
 	'EXCLUDED'	=> [ qr{^t/lib/Test},
 				qw( cgi-lib_porting.html
@@ -324,8 +324,7 @@ package Maintainers;
 				)
 			   ],
 	'MAP'		=> { 'examples/' => 'lib/CGI/eg/',
-			     'CGI/'	 => 'lib/CGI/',
-			     'CGI.pm'	 => 'lib/CGI.pm',
+			     'lib/'	 => 'lib/',
 			     ''		 => 'lib/CGI/',
 			   },
 	'CPAN'		=> 1,
@@ -395,7 +394,7 @@ package Maintainers;
 			     't/'   => 'lib/',
 			   },
 	'CPAN'		=> 1,
-	'UPSTREAM'	=> undef,
+	'UPSTREAM'	=> 'blead',
 	},
 
     'CPAN' =>
@@ -493,7 +492,7 @@ package Maintainers;
     'CPANPLUS::Dist::Build' =>
 	{
 	'MAINTAINER'	=> 'bingos',
-	'DISTRIBUTION'	=> 'BINGOS/CPANPLUS-Dist-Build-0.36.tar.gz',
+	'DISTRIBUTION'	=> 'BINGOS/CPANPLUS-Dist-Build-0.38.tar.gz',
 	'FILES'		=> q[lib/CPANPLUS/Dist/Build.pm
 			     lib/CPANPLUS/Dist/Build
 			    ],
@@ -509,7 +508,7 @@ package Maintainers;
     'Data::Dumper' =>
 	{
 	'MAINTAINER'	=> 'p5p', # Not gsar. Not ilyam
-	'DISTRIBUTION'	=> 'SMUELLER/Data-Dumper-2.124.tar.gz',
+	'DISTRIBUTION'	=> 'SMUELLER/Data-Dumper-2.125.tar.gz',
 	'FILES'		=> q[ext/Data-Dumper],
 	'CPAN'		=> 1,
 	'UPSTREAM'	=> 'blead',
@@ -695,7 +694,7 @@ package Maintainers;
     'ExtUtils::MakeMaker' =>
 	{
 	'MAINTAINER'	=> 'mschwern',
-	'DISTRIBUTION'	=> 'MSCHWERN/ExtUtils-MakeMaker-6.55_01.tar.gz',
+	'DISTRIBUTION'	=> 'MSCHWERN/ExtUtils-MakeMaker-6.55_02.tar.gz',
 			    # note that t/lib/TieOut.pm is included in
 			    # more than one distro
 	'FILES'		=> q[lib/ExtUtils/{Liblist,MakeMaker,Mkbootstrap,Mksymlists,MM*,MY,testlib}.pm
@@ -893,12 +892,12 @@ package Maintainers;
 
     'IO' =>
 	{
-	'MAINTAINER'	=> 'gbarr',
+	'MAINTAINER'	=> 'p5p',
 	'DISTRIBUTION'	=> 'GBARR/IO-1.25.tar.gz',
 	'FILES'		=> q[ext/IO/],
 	'EXCLUDED'	=> [ qw{t/test.pl}, ],
 	'CPAN'		=> 1,
-	'UPSTREAM'	=> undef,
+	'UPSTREAM'	=> 'blead',
 	},
 
     'IO-Compress' =>
@@ -1186,7 +1185,7 @@ package Maintainers;
     'Module::Build' =>
 	{
 	'MAINTAINER'	=> 'kwilliams',
-	'DISTRIBUTION'	=> 'DAGOLDEN/Module-Build-0.34_02.tar.gz',
+	'DISTRIBUTION'	=> 'DAGOLDEN/Module-Build-0.340201.tar.gz',
 	'FILES'		=> q[lib/Module/Build lib/Module/Build.pm],
 	'EXCLUDED'	=> [ qw{ t/par.t t/signature.t scripts/bundle.pl}, ],
 	'CPAN'		=> 1,
@@ -1508,7 +1507,7 @@ package Maintainers;
     'Pod::Perldoc' =>
 	{
 	'MAINTAINER'	=> 'ferreira',
-	'DISTRIBUTION'	=> 'FERREIRA/Pod-Perldoc-3.14_04.tar.gz',
+	'DISTRIBUTION'	=> 'FERREIRA/Pod-Perldoc-3.15.tar.gz',
 	'FILES'		=> q[lib/Pod/Perldoc.pm
 			     lib/Pod/Perldoc
 			     pod/perldoc.pod
@@ -1649,13 +1648,13 @@ package Maintainers;
 			       },
 			   ],
 	'CPAN'		=> 1,
-	'UPSTREAM'	=> undef,
+	'UPSTREAM'	=> 'cpan',
 	},
 
     'Term::ANSIColor' =>
 	{
 	'MAINTAINER'	=> 'rra',
-	'DISTRIBUTION'	=> 'RRA/ANSIColor-2.00.tar.gz',
+	'DISTRIBUTION'	=> 'RRA/ANSIColor-2.01.tar.gz',
 	'FILES'		=> q{lib/Term/ANSIColor.pm lib/Term/ANSIColor},
 	'EXCLUDED'	=> [ qr{^tests/},
 			     qw(t/pod-spelling.t t/pod.t)
@@ -1845,7 +1844,7 @@ package Maintainers;
     'threads' =>
 	{
 	'MAINTAINER'	=> 'jdhedden',
-	'DISTRIBUTION'	=> 'JDHEDDEN/threads-1.72.tar.gz',
+	'DISTRIBUTION'	=> 'JDHEDDEN/threads-1.74.tar.gz',
 	'FILES'		=> q[ext/threads],
 	'EXCLUDED'	=> [ qw(examples/pool.pl
 				t/pod.t
@@ -1859,7 +1858,7 @@ package Maintainers;
     'threads::shared' =>
 	{
 	'MAINTAINER'	=> 'jdhedden',
-	'DISTRIBUTION'	=> 'JDHEDDEN/threads-shared-1.29.tar.gz',
+	'DISTRIBUTION'	=> 'JDHEDDEN/threads-shared-1.31.tar.gz',
 	'FILES'		=> q[ext/threads-shared],
 	'EXCLUDED'	=> [ qw(examples/class.pl
 				shared.h
@@ -2031,7 +2030,7 @@ package Maintainers;
 				XSLoader.pm}, # we use XSLoader_pm.PL
 			   ],
 	'CPAN'		=> 1,
-	'UPSTREAM'	=> undef,
+	'UPSTREAM'	=> 'blead',
 	},
 
     's2p' =>
@@ -2111,7 +2110,6 @@ package Maintainers;
 				ext/Sys-Hostname/
 				ext/XS-APItest/
 				ext/XS-Typemap/
-				ext/attrs/
 				ext/attributes/
 				ext/mro/
 				ext/re/
@@ -2195,7 +2193,6 @@ package Maintainers;
 				lib/User/pwent.{pm,t}
 				lib/abbrev.pl
 				lib/assert.pl
-				lib/attributes.pm
 				lib/autouse.{pm,t}
 				lib/bigfloat{.pl,pl.t}
 				lib/bigint{.pl,pl.t}

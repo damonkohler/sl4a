@@ -231,20 +231,6 @@ anomalies:
 
 A message of the form:
 
- comp/cpp.............ERROR CBC3191 ./.301989890.c:1     The character $ is not a
-  valid C source character.
- FSUM3065 The COMPILE step ended with return code 12.
- FSUM3017 Could not compile .301989890.c. Correct the errors and try again.
- ok
-
-indicates that the t/comp/cpp.t test of Perl's -P command line switch has
-passed but that the particular invocation of c89 -E in the cpp script does
-not suppress the C compiler check of source code validity.
-
-=item *
-
-A message of the form:
-
  io/openpid...........CEE5210S The signal SIGHUP was received.
  CEE5210S The signal SIGHUP was received.
  CEE5210S The signal SIGHUP was received.

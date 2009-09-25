@@ -583,7 +583,7 @@ Perl_av_pop(pTHX_ register AV *av)
 
     if (SvREADONLY(av))
 	Perl_croak(aTHX_ "%s", PL_no_modify);
-    if ((mg = SvTIED_mg((const SV*)av, PERL_MAGIC_tied))) {
+    if ((mg = SvTIED_mg((const SV *)av, PERL_MAGIC_tied))) {
 	dSP;    
 	PUSHSTACKi(PERLSI_MAGIC);
 	PUSHMARK(SP);
@@ -725,7 +725,7 @@ Perl_av_shift(pTHX_ register AV *av)
 
     if (SvREADONLY(av))
 	Perl_croak(aTHX_ "%s", PL_no_modify);
-    if ((mg = SvTIED_mg((const SV*)av, PERL_MAGIC_tied))) {
+    if ((mg = SvTIED_mg((const SV *)av, PERL_MAGIC_tied))) {
 	dSP;
 	PUSHSTACKi(PERLSI_MAGIC);
 	PUSHMARK(SP);
@@ -764,7 +764,7 @@ array is C<av_len(av) + 1>.  Returns -1 if the array is empty.
 */
 
 I32
-Perl_av_len(pTHX_ register const AV *av)
+Perl_av_len(pTHX_ AV *av)
 {
     PERL_ARGS_ASSERT_AV_LEN;
     assert(SvTYPE(av) == SVt_PVAV);
@@ -992,12 +992,12 @@ Perl_av_exists(pTHX_ AV *av, I32 key)
 	return FALSE;
 }
 
-SV **
-Perl_av_arylen_p(pTHX_ AV *av) {
+static MAGIC *
+S_get_aux_mg(pTHX_ AV *av) {
     dVAR;
     MAGIC *mg;
 
-    PERL_ARGS_ASSERT_AV_ARYLEN_P;
+    PERL_ARGS_ASSERT_GET_AUX_MG;
     assert(SvTYPE(av) == SVt_PVAV);
 
     mg = mg_find((const SV *)av, PERL_MAGIC_arylen_p);
@@ -1009,7 +1009,37 @@ Perl_av_arylen_p(pTHX_ AV *av) {
 	/* sv_magicext won't set this for us because we pass in a NULL obj  */
 	mg->mg_flags |= MGf_REFCOUNTED;
     }
+    return mg;
+}
+
+SV **
+Perl_av_arylen_p(pTHX_ AV *av) {
+    MAGIC *const mg = get_aux_mg(av);
+
+    PERL_ARGS_ASSERT_AV_ARYLEN_P;
+    assert(SvTYPE(av) == SVt_PVAV);
+
     return &(mg->mg_obj);
+}
+
+IV *
+Perl_av_iter_p(pTHX_ AV *av) {
+    MAGIC *const mg = get_aux_mg(av);
+
+    PERL_ARGS_ASSERT_AV_ITER_P;
+    assert(SvTYPE(av) == SVt_PVAV);
+
+#if IVSIZE == I32SIZE
+    return (IV *)&(mg->mg_len);
+#else
+    if (!mg->mg_ptr) {
+	IV *temp;
+	mg->mg_len = IVSIZE;
+	Newxz(temp, 1, IV);
+	mg->mg_ptr = (char *) temp;
+    }
+    return (IV *)mg->mg_ptr;
+#endif
 }
 
 /*

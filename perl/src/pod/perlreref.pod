@@ -125,6 +125,7 @@ and L<perlunicode> for details.
    \S      A non-whitespace character
    \h      An horizontal white space
    \H      A non horizontal white space
+   \N      A non newline (like . without /s)
    \v      A vertical white space
    \V      A non vertical white space
    \R      A generic newline           (?>\v|\x0D\x0A)

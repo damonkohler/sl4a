@@ -3,12 +3,8 @@
 BEGIN {
     if ($ENV{PERL_CORE}){
 	chdir('t') if -d 't';
-	if ($^O eq 'MacOS') {
-	    @INC = qw(: ::lib ::macos:lib);
-	} else {
-	    @INC = '.';
-	    push @INC, '../lib';
-	}
+	@INC = '.';
+	push @INC, '../lib';
     } else {
 	unshift @INC, 't';
     }
@@ -27,7 +23,7 @@ BEGIN {
     require feature;
     feature->import(':5.10');
 }
-use Test::More tests => 77;
+use Test::More tests => 78;
 use Config ();
 
 use B::Deparse;
@@ -112,14 +108,9 @@ my $val = (eval $string)->() or diag $string;
 is(ref($val), 'ARRAY');
 is($val->[0], 'hello');
 
-my $Is_VMS = $^O eq 'VMS';
-my $Is_MacOS = $^O eq 'MacOS';
-
 my $path = join " ", map { qq["-I$_"] } @INC;
-$path .= " -MMac::err=unix" if $Is_MacOS;
-my $redir = $Is_MacOS ? "" : "2>&1";
 
-$a = `$^X $path "-MO=Deparse" -anlwi.bak -e 1 $redir`;
+$a = `$^X $path "-MO=Deparse" -anlwi.bak -e 1 2>&1`;
 $a =~ s/-e syntax OK\n//g;
 $a =~ s/.*possible typo.*\n//;	   # Remove warning line
 $a =~ s{\\340\\242}{\\s} if (ord("\\") == 224); # EBCDIC, cp 1047 or 037
@@ -134,13 +125,12 @@ LINE: while (defined($_ = <ARGV>)) {
     '???';
 }
 EOF
-$b =~ s/(LINE:)/sub BEGIN {
-    'MacPerl'->bootstrap;
-    'OSA'->bootstrap;
-    'XL'->bootstrap;
-}
-$1/ if $Is_MacOS;
 is($a, $b);
+
+$a = `$^X $path "-MO=Deparse" -e "use constant PI => 4" 2>&1`;
+$a =~ s/-e syntax OK\n//g;
+is($a, "use constant ('PI', 4);\n",
+   "Proxy Constant Subroutines must not show up as (incorrect) prototypes");
 
 #Re: perlbug #35857, patch #24505
 #handle warnings::register-ed packages properly.
@@ -220,12 +210,8 @@ $test /= 2 if ++$test;
 }
 ####
 # 8
-{
-    my $test = sub : locked method {
-	my $x;
-    }
-    ;
-}
+# Was sub : locked method { ... }
+# This number could be re-used.
 ####
 # 9
 {
@@ -448,11 +434,60 @@ use constant H => { "#" => 1 }; H->{"#"}
 # 57  (cpan-bug #33708)
 foreach my $i (@_) { 0 }
 ####
-# 58 placeholder for skipped edbe35ea95
-1;
+# 58 tests with not, not optimized
+my $c;
+x() unless $a;
+x() if not $a and $b;
+x() if $a and not $b;
+x() unless not $a and $b;
+x() unless $a and not $b;
+x() if not $a or $b;
+x() if $a or not $b;
+x() unless not $a or $b;
+x() unless $a or not $b;
+x() if $a and not $b and $c;
+x() if not $a and $b and not $c;
+x() unless $a and not $b and $c;
+x() unless not $a and $b and not $c;
+x() if $a or not $b or $c;
+x() if not $a or $b or not $c;
+x() unless $a or not $b or $c;
+x() unless not $a or $b or not $c;
 ####
-# 59 placeholder for skipped edbe35ea95
-1;
+# 59 tests with not, optimized
+my $c;
+x() if not $a;
+x() unless not $a;
+x() if not $a and not $b;
+x() unless not $a and not $b;
+x() if not $a or not $b;
+x() unless not $a or not $b;
+x() if not $a and not $b and $c;
+x() unless not $a and not $b and $c;
+x() if not $a or not $b or $c;
+x() unless not $a or not $b or $c;
+x() if not $a and not $b and not $c;
+x() unless not $a and not $b and not $c;
+x() if not $a or not $b or not $c;
+x() unless not $a or not $b or not $c;
+x() unless not $a or not $b or not $c;
+>>>>
+my $c;
+x() unless $a;
+x() if $a;
+x() unless $a or $b;
+x() if $a or $b;
+x() unless $a and $b;
+x() if $a and $b;
+x() if not $a || $b and $c;
+x() unless not $a || $b and $c;
+x() if not $a && $b or $c;
+x() unless not $a && $b or $c;
+x() unless $a or $b or $c;
+x() if $a or $b or $c;
+x() unless $a and $b and $c;
+x() if $a and $b and $c;
+x() unless not $a && $b && $c;
 ####
 # 60 tests that should be constant folded
 x() if 1;

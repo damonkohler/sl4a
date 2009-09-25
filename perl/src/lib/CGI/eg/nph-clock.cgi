@@ -5,7 +5,7 @@ use CGI::Push qw(:standard :html3);
 do_push(-next_page=>\&draw_time,-delay=>1);
 
 sub draw_time {
-    my $time = `/bin/date`;
+    my $time = localtime();
     return start_html('Tick Tock'),
            div({-align=>CENTER},
 	       h1('Virtual Clock'),

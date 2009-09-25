@@ -22,7 +22,7 @@ use B qw(class main_root main_start main_cv svref_2object opnumber perlstring
 	 PMf_MULTILINE PMf_SINGLELINE PMf_FOLD PMf_EXTENDED),
 	 ($] < 5.009 ? 'PMf_SKIPWHITE' : 'RXf_SKIPWHITE'),
 	 ($] < 5.011 ? 'CVf_LOCKED' : ());
-$VERSION = 0.89;
+$VERSION = 0.90;
 use strict;
 use vars qw/$AUTOLOAD/;
 use warnings ();
@@ -487,8 +487,11 @@ sub stash_subs {
 		next unless $AF eq $0 || exists $self->{'files'}{$AF};
 	    }
 	    push @{$self->{'protos_todo'}}, [$pack . $key, $val->PV];
-	} elsif ($class eq "IV") {
+	} elsif ($class eq "IV" && !($val->FLAGS & SVf_ROK)) {
 	    # Just a name. As above.
+	    # But skip proxy constant subroutines, as some form of perl-space
+	    # visible code must have created them, be it a use statement, or
+	    # some direct symbol-table manipulation code that we will Deparse
 	    my $A = $stash{"AUTOLOAD"};
 	    if (defined ($A) && class($A) eq "GV" && defined($A->CV)
 		&& class($A->CV) eq "CV") {
@@ -570,7 +573,6 @@ sub new {
     $self->{'ambient_warnings'} = undef; # Assume no lexical warnings
     $self->{'ambient_hints'} = 0;
     $self->{'ambient_hinthash'} = undef;
-    $self->{'inlined_constants'} = $self->scan_for_constants;
     $self->init();
 
     while (my $arg = shift @_) {
@@ -3655,10 +3657,16 @@ sub const {
     if (class($sv) eq "SPECIAL") {
 	# sv_undef, sv_yes, sv_no
 	return ('undef', '1', $self->maybe_parens("!1", $cx, 21))[$$sv-1];
-    } elsif (class($sv) eq "NULL") {
+    }
+    if (class($sv) eq "NULL") {
        return 'undef';
-    } elsif ($cx and my $const = $self->{'inlined_constants'}->{ 0 + $sv->object_2svref }) {
-        return $const;
+    }
+    if ($cx) {
+	unless ($self->{'inlined_constants'}) {
+	    $self->{'inlined_constants'} = $self->scan_for_constants;
+	}
+	my $const = $self->{'inlined_constants'}->{ 0 + $sv->object_2svref };
+        return $const if $const;
     }
     # convert a version object into the "v1.2.3" string in its V magic
     if ($sv->FLAGS & SVs_RMG) {

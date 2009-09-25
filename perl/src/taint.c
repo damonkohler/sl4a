@@ -24,7 +24,7 @@
 #include "perl.h"
 
 void
-Perl_taint_proper(pTHX_ const char *f, const char *s)
+Perl_taint_proper(pTHX_ const char *f, const char *const s)
 {
 #if defined(HAS_SETEUID) && defined(DEBUGGING)
     dVAR;

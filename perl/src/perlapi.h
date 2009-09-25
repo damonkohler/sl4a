@@ -178,8 +178,6 @@ END_EXTERN_C
 #define PL_beginav		(*Perl_Ibeginav_ptr(aTHX))
 #undef  PL_beginav_save
 #define PL_beginav_save		(*Perl_Ibeginav_save_ptr(aTHX))
-#undef  PL_bitcount
-#define PL_bitcount		(*Perl_Ibitcount_ptr(aTHX))
 #undef  PL_body_arenas
 #define PL_body_arenas		(*Perl_Ibody_arenas_ptr(aTHX))
 #undef  PL_body_roots
@@ -460,14 +458,16 @@ END_EXTERN_C
 #define PL_numeric_radix_sv	(*Perl_Inumeric_radix_sv_ptr(aTHX))
 #undef  PL_numeric_standard
 #define PL_numeric_standard	(*Perl_Inumeric_standard_ptr(aTHX))
-#undef  PL_ofs_sv
-#define PL_ofs_sv		(*Perl_Iofs_sv_ptr(aTHX))
+#undef  PL_ofsgv
+#define PL_ofsgv		(*Perl_Iofsgv_ptr(aTHX))
 #undef  PL_oldname
 #define PL_oldname		(*Perl_Ioldname_ptr(aTHX))
 #undef  PL_op
 #define PL_op			(*Perl_Iop_ptr(aTHX))
 #undef  PL_op_mask
 #define PL_op_mask		(*Perl_Iop_mask_ptr(aTHX))
+#undef  PL_opfreehook
+#define PL_opfreehook		(*Perl_Iopfreehook_ptr(aTHX))
 #undef  PL_opsave
 #define PL_opsave		(*Perl_Iopsave_ptr(aTHX))
 #undef  PL_origalen
@@ -508,8 +508,6 @@ END_EXTERN_C
 #define PL_ppid			(*Perl_Ippid_ptr(aTHX))
 #undef  PL_preambleav
 #define PL_preambleav		(*Perl_Ipreambleav_ptr(aTHX))
-#undef  PL_preprocess
-#define PL_preprocess		(*Perl_Ipreprocess_ptr(aTHX))
 #undef  PL_profiledata
 #define PL_profiledata		(*Perl_Iprofiledata_ptr(aTHX))
 #undef  PL_psig_name

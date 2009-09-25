@@ -6,6 +6,12 @@ looks something close to the existing perldeltas". So if it's unclear how
 do to do something, see if it's been done before, and if the approach works
 there, steal it.
 
+=head2 Template
+
+Note there is a file F<Porting/perldelta_template> which contains a
+skeleton version of a perldelta.pod file, which should normally be copied
+in at the start of a new release.
+
 =head2 Style
 
 Pod is more a physical markup language, rather than a logical markup language.

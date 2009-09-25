@@ -10,7 +10,7 @@ package CGI::Pretty;
 use strict;
 use CGI ();
 
-$CGI::Pretty::VERSION = '1.08';
+$CGI::Pretty::VERSION = '3.44';
 $CGI::DefaultClass = __PACKAGE__;
 $CGI::Pretty::AutoloadClass = 'CGI';
 @CGI::Pretty::ISA = qw( CGI );
@@ -105,7 +105,7 @@ sub _make_tag_func {
                       
   	              \$args[0] .= \$" if \$args[0] !~ /\$CGI::Pretty::LINEBREAK\$/ && 1;
 		  }
-                  chop \$args[0];
+                  chop \$args[0] unless \$" eq "";
 	      }
             }
             else {
@@ -127,8 +127,11 @@ sub _make_tag_func {
                     \$untag . \$CGI::Pretty::LINEBREAK
                 } \@args;
 	    }
-	    local \$" = "" if \$CGI::Pretty::LINEBREAK || \$CGI::Pretty::INDENT;
-	    return "\@result";
+            if (\$CGI::Pretty::LINEBREAK || \$CGI::Pretty::INDENT) {
+                return join ("", \@result);
+            } else {
+                return "\@result";
+            }
 	}#;
     }    
 

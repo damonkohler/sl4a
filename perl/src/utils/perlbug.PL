@@ -41,6 +41,8 @@ my @patches;
 while (<PATCH_LEVEL>) {
     last if /^\s*}/;
     next if /^\s*#/;  # preprocessor stuff
+    next if /PERL_GIT_UNPUSHED_COMMITS/;    # XXX expand instead
+    next if /PERL_GIT_UNCOMMITTED_CHANGES/; # XXX expand instead
     chomp;
     s/^\s+,?\s*"?//;
     s/"?\s*,?$//;
@@ -603,6 +605,12 @@ its name correctly. If it is correct, quit this program, try searching
 for $entry on http://rt.cpan.org, and report your issue there.
 EOF
 
+            $entry = '';
+	} elsif (my $bug_tracker = $Module::CoreList::bug_tracker{$entry}) {
+		paraprint <<"EOF";
+$entry included with core Perl is copied directly from the CPAN distribution.
+Please report bugs in $entry directly to its maintainers using $bug_tracker
+EOF
             $entry = '';
         } elsif ($entry) {
 	        $category ||= 'library';

@@ -639,7 +639,7 @@ BOOT:
      */
     PUSHSTACKi(PERLSI_MAGIC);
     SPAGAIN;
-    if (!get_cv(OUR_DEFAULT_FB, 0)) {
+    if (!get_cvs(OUR_DEFAULT_FB, 0)) {
 #if 0
 	/* This would just be an irritant now loading works */
 	Perl_warner(aTHX_ packWARN(WARN_IO), ":encoding without 'use Encode'");

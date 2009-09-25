@@ -1,6 +1,6 @@
 package overload;
 
-our $VERSION = '1.07';
+our $VERSION = '1.08';
 
 sub nil {}
 
@@ -104,6 +104,10 @@ sub AddrRef {
 sub mycan {				# Real can would leave stubs.
   my ($package, $meth) = @_;
 
+  local $@;
+  local $!;
+  require mro;
+
   my $mro = mro::get_linear_isa($package);
   foreach my $p (@$mro) {
     my $fqmeth = $p . q{::} . $meth;
@@ -132,6 +136,7 @@ sub mycan {				# Real can would leave stubs.
 	 func		  => "atan2 cos sin exp abs log sqrt int",
 	 conversion	  => 'bool "" 0+',
 	 iterators	  => '<>',
+         filetest         => "-X",
 	 dereferencing	  => '${} @{} %{} &{} *{}',
 	 matching	  => '~~',
 	 special	  => 'nomethod fallback =');
@@ -421,10 +426,59 @@ I<globbing> syntax C<E<lt>${var}E<gt>>.
 B<BUGS> Even in list context, the iterator is currently called only
 once and with scalar context.
 
+=item * I<File tests>
+
+    "-X"
+
+This overload is used for all the filetest operators (C<-f>, C<-x> and
+so on: see L<perlfunc/-X> for the full list). Even though these are
+unary operators, the method will be called with a second argument which
+is a single letter indicating which test was performed. Note that the
+overload key is the literal string C<"-X">: you can't provide separate
+overloads for the different tests.
+
+Calling an overloaded filetest operator does not affect the stat value
+associated with the special filehandle C<_>. It still refers to the
+result of the last C<stat>, C<lstat> or unoverloaded filetest.
+
+If not overloaded, these operators will fall back to the default
+behaviour even without C<< fallback => 1 >>. This means that if the
+object is a blessed glob or blessed IO ref it will be treated as a
+filehandle, otherwise string overloading will be invoked and the result
+treated as a filename.
+
+This overload was introduced in perl 5.12.
+
 =item * I<Matching>
 
-The key C<"~~"> allows you to override the smart matching used by
-the switch construct. See L<feature>.
+The key C<"~~"> allows you to override the smart matching logic used by
+the C<~~> operator and the switch construct (C<given>/C<when>).  See
+L<perlsyn/switch> and L<feature>.
+
+Unusually, overloading of the smart match operator does not automatically
+take precedence over normal smart match behaviour. In particular, in the
+following code:
+
+    package Foo;
+    use overload '~~' => 'match';
+
+    my $obj =  Foo->new();
+    $obj ~~ [ 1,2,3 ];
+
+the smart match does I<not> invoke the method call like this:
+
+    $obj->match([1,2,3],0);
+
+rather, the smart match distributive rule takes precedence, so $obj is
+smart matched against each array element in turn until a match is found,
+so you may see between one and three of these calls instead:
+
+    $obj->match(1,0);
+    $obj->match(2,0);
+    $obj->match(3,0);
+
+Consult the match table in  L<perlsyn/"Smart matching in detail"> for
+details of when overloading is invoked.
 
 =item * I<Dereferencing>
 
@@ -465,6 +519,7 @@ A computer-readable form of the above table is available in the hash
  func		  => 'atan2 cos sin exp abs log sqrt',
  conversion	  => 'bool "" 0+',
  iterators	  => '<>',
+ filetest         => '-X',
  dereferencing	  => '${} @{} %{} &{} *{}',
  matching	  => '~~',
  special	  => 'nomethod fallback ='

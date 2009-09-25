@@ -123,12 +123,13 @@ static int		do_spawn2(pTHX_ const char *cmd, int exectype);
 static BOOL		has_shell_metachars(const char *ptr);
 static long		filetime_to_clock(PFILETIME ft);
 static BOOL		filetime_from_time(PFILETIME ft, time_t t);
-static char *		get_emd_part(SV **leading, char *trailing, ...);
+static char *		get_emd_part(SV **leading, STRLEN *const len,
+				     char *trailing, ...);
 static void		remove_dead_process(long deceased);
 static long		find_pid(int pid);
 static char *		qualified_path(const char *cmd);
 static char *		win32_get_xlib(const char *pl, const char *xlib,
-				       const char *libname);
+				       const char *libname, STRLEN *const len);
 static LRESULT  win32_process_message(HWND hwnd, UINT msg,
                        WPARAM wParam, LPARAM lParam);
 
@@ -225,11 +226,23 @@ set_w32_module_name(void)
         WCHAR fullname[MAX_PATH];
         char *ansi;
 
+        DWORD (__stdcall *pfnGetLongPathNameW)(LPCWSTR, LPWSTR, DWORD) =
+            (DWORD (__stdcall *)(LPCWSTR, LPWSTR, DWORD))
+            GetProcAddress(GetModuleHandle("kernel32.dll"), "GetLongPathNameW");
+
         GetModuleFileNameW(module, modulename, sizeof(modulename)/sizeof(WCHAR));
 
         /* Make sure we get an absolute pathname in case the module was loaded
          * explicitly by LoadLibrary() with a relative path. */
         GetFullPathNameW(modulename, sizeof(fullname)/sizeof(WCHAR), fullname, NULL);
+
+        /* Make sure we start with the long path name of the module because we
+         * later scan for pathname components to match "5.xx" to locate
+         * compatible sitelib directories, and the short pathname might mangle
+         * this path segment (e.g. by removing the dot on NTFS to something
+         * like "5xx~1.yy") */
+        if (pfnGetLongPathNameW)
+            pfnGetLongPathNameW(fullname, fullname, sizeof(fullname)/sizeof(WCHAR));
 
         /* remove \\?\ prefix */
         if (memcmp(fullname, L"\\\\?\\", 4*sizeof(WCHAR)) == 0)
@@ -308,7 +321,7 @@ get_regstr(const char *valuename, SV **svp)
 
 /* *prev_pathp (if non-NULL) is expected to be POK (valid allocated SvPVX(sv)) */
 static char *
-get_emd_part(SV **prev_pathp, char *trailing_path, ...)
+get_emd_part(SV **prev_pathp, STRLEN *const len, char *trailing_path, ...)
 {
     char base[10];
     va_list ap;
@@ -365,6 +378,8 @@ get_emd_part(SV **prev_pathp, char *trailing_path, ...)
 	else if (SvPVX(*prev_pathp))
 	    sv_catpvn(*prev_pathp, ";", 1);
 	sv_catpv(*prev_pathp, mod_name);
+	if(len)
+	    *len = SvCUR(*prev_pathp);
 	return SvPVX(*prev_pathp);
     }
 
@@ -372,7 +387,7 @@ get_emd_part(SV **prev_pathp, char *trailing_path, ...)
 }
 
 char *
-win32_get_privlib(const char *pl)
+win32_get_privlib(const char *pl, STRLEN *const len)
 {
     dTHX;
     char *stdlib = "lib";
@@ -385,11 +400,12 @@ win32_get_privlib(const char *pl)
 	(void)get_regstr(stdlib, &sv);
 
     /* $stdlib .= ";$EMD/../../lib" */
-    return get_emd_part(&sv, stdlib, ARCHNAME, "bin", NULL);
+    return get_emd_part(&sv, len, stdlib, ARCHNAME, "bin", NULL);
 }
 
 static char *
-win32_get_xlib(const char *pl, const char *xlib, const char *libname)
+win32_get_xlib(const char *pl, const char *xlib, const char *libname,
+	       STRLEN *const len)
 {
     dTHX;
     char regstr[40];
@@ -404,7 +420,7 @@ win32_get_xlib(const char *pl, const char *xlib, const char *libname)
     /* $xlib .=
      * ";$EMD/" . ((-d $EMD/../../../$]) ? "../../.." : "../.."). "/$libname/$]/lib";  */
     sprintf(pathstr, "%s/%s/lib", libname, pl);
-    (void)get_emd_part(&sv1, pathstr, ARCHNAME, "bin", pl, NULL);
+    (void)get_emd_part(&sv1, NULL, pathstr, ARCHNAME, "bin", pl, NULL);
 
     /* $HKCU{$xlib} || $HKLM{$xlib} . ---; */
     (void)get_regstr(xlib, &sv2);
@@ -412,25 +428,26 @@ win32_get_xlib(const char *pl, const char *xlib, const char *libname)
     /* $xlib .=
      * ";$EMD/" . ((-d $EMD/../../../$]) ? "../../.." : "../.."). "/$libname/lib";  */
     sprintf(pathstr, "%s/lib", libname);
-    (void)get_emd_part(&sv2, pathstr, ARCHNAME, "bin", pl, NULL);
+    (void)get_emd_part(&sv2, NULL, pathstr, ARCHNAME, "bin", pl, NULL);
 
     if (!sv1 && !sv2)
 	return NULL;
-    if (!sv1)
-	return SvPVX(sv2);
-    if (!sv2)
-	return SvPVX(sv1);
+    if (!sv1) {
+	sv1 = sv2;
+    } else if (sv2) {
+	sv_catpvn(sv1, ";", 1);
+	sv_catsv(sv1, sv2);
+    }
 
-    sv_catpvn(sv1, ";", 1);
-    sv_catsv(sv1, sv2);
-
+    if (len)
+	*len = SvCUR(sv1);
     return SvPVX(sv1);
 }
 
 char *
-win32_get_sitelib(const char *pl)
+win32_get_sitelib(const char *pl, STRLEN *const len)
 {
-    return win32_get_xlib(pl, "sitelib", "site");
+    return win32_get_xlib(pl, "sitelib", "site", len);
 }
 
 #ifndef PERL_VENDORLIB_NAME
@@ -438,9 +455,9 @@ win32_get_sitelib(const char *pl)
 #endif
 
 char *
-win32_get_vendorlib(const char *pl)
+win32_get_vendorlib(const char *pl, STRLEN *const len)
 {
-    return win32_get_xlib(pl, "vendorlib", PERL_VENDORLIB_NAME);
+    return win32_get_xlib(pl, "vendorlib", PERL_VENDORLIB_NAME, len);
 }
 
 static BOOL
@@ -3070,9 +3087,7 @@ win32_popen(const char *command, const char *mode)
 	    lock_held = 0;
 	}
 
-	LOCK_FDPID_MUTEX;
 	sv_setiv(*av_fetch(w32_fdpid, p[parent], TRUE), childpid);
-	UNLOCK_FDPID_MUTEX;
 
 	/* set process id so that it can be returned by perl's open() */
 	PL_forkprocess = childpid;
@@ -3113,7 +3128,6 @@ win32_pclose(PerlIO *pf)
     int childpid, status;
     SV *sv;
 
-    LOCK_FDPID_MUTEX;
     sv = *av_fetch(w32_fdpid, PerlIO_fileno(pf), TRUE);
 
     if (SvIOK(sv))
@@ -3122,7 +3136,6 @@ win32_pclose(PerlIO *pf)
 	childpid = 0;
 
     if (!childpid) {
-        UNLOCK_FDPID_MUTEX;
 	errno = EBADF;
         return -1;
     }
@@ -3133,7 +3146,6 @@ win32_pclose(PerlIO *pf)
     fclose(pf);
 #endif
     SvIVX(sv) = 0;
-    UNLOCK_FDPID_MUTEX;
 
     if (win32_waitpid(childpid, &status, 0) == -1)
         return -1;

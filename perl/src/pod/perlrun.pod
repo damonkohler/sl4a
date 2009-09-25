@@ -10,7 +10,6 @@ B<perl>	S<[ B<-sTtuUWX> ]>
 	S<[ B<-pna> ] [ B<-F>I<pattern> ] [ B<-l>[I<octal>] ] [ B<-0>[I<octal/hexadecimal>] ]>
 	S<[ B<-I>I<dir> ] [ B<-m>[B<->]I<module> ] [ B<-M>[B<->]I<'module...'> ] [ B<-f> ]>
 	S<[ B<-C [I<number/list>] >]>
-	S<[ B<-P> ]>
 	S<[ B<-S> ]>
 	S<[ B<-x>[I<dir>] ]>
 	S<[ B<-i>[I<extension>] ]>
@@ -401,7 +400,7 @@ B<-D14> is equivalent to B<-Dtls>):
         8  t  Trace execution
        16  o  Method and overloading resolution
        32  c  String/numeric conversions
-       64  P  Print profiling info, preprocessor command for -P, source file input state
+       64  P  Print profiling info, source file input state
       128  m  Memory and SV allocation
       256  f  Format processing
       512  r  Regular expression parsing and execution
@@ -411,7 +410,6 @@ B<-D14> is equivalent to B<-Dtls>):
      8192  H  Hash dump -- usurps values()
     16384  X  Scratchpad allocation
     32768  D  Cleaning up
-    65536  S  Thread synchronization
    131072  T  Tokenising
    262144  R  Include reference counts of dumped variables (eg when using -Ds)
    524288  J  Do not s,t,P-debug (Jump over) opcodes within package DB
@@ -419,6 +417,7 @@ B<-D14> is equivalent to B<-Dtls>):
   2097152  C  Copy On Write
   4194304  A  Consistency checks on internal structures
   8388608  q  quiet - currently only suppresses the "EXECUTING" message
+ 16777216  M  trace smart match resolution
 
 All these flags require B<-DDEBUGGING> when you compile the Perl
 executable (but see L<Devel::Peek>, L<re> which may change this).
@@ -594,9 +593,7 @@ proceeds from STDIN to STDOUT as might be expected.
 X<-I> X<@INC>
 
 Directories specified by B<-I> are prepended to the search path for
-modules (C<@INC>), and also tells the C preprocessor where to search for
-include files.  The C preprocessor is invoked with B<-P>; by default it
-searches /usr/include and /usr/lib/perl.
+modules (C<@INC>).
 
 =item B<-l>[I<octnum>]
 X<-l> X<$/> X<$\>
@@ -704,73 +701,6 @@ overrides a B<-n> switch.
 
 C<BEGIN> and C<END> blocks may be used to capture control before or after
 the implicit loop, just as in B<awk>.
-
-=item B<-P>
-X<-P>
-
-B<NOTE: Use of -P is strongly discouraged because of its inherent
-problems, including poor portability. It is deprecated and will be
-removed in a future version of Perl.>
-
-This option causes your program to be run through the C preprocessor before
-compilation by Perl.  Because both comments and B<cpp> directives begin
-with the # character, you should avoid starting comments with any words
-recognized by the C preprocessor such as C<"if">, C<"else">, or C<"define">.
-
-If you're considering using C<-P>, you might also want to look at the
-Filter::cpp module from CPAN.
-
-The problems of -P include, but are not limited to:
-
-=over 10
-
-=item *
-
-The C<#!> line is stripped, so any switches there don't apply.
-
-=item *
-
-A C<-P> on a C<#!> line doesn't work.
-
-=item *
-
-B<All> lines that begin with (whitespace and) a C<#> but
-do not look like cpp commands, are stripped, including anything
-inside Perl strings, regular expressions, and here-docs .
-
-=item *
-
-In some platforms the C preprocessor knows too much: it knows about
-the C++ -style until-end-of-line comments starting with C<"//">.
-This will cause problems with common Perl constructs like
-
-    s/foo//;
-
-because after -P this will became illegal code
-
-    s/foo
-
-The workaround is to use some other quoting separator than C<"/">,
-like for example C<"!">:
-
-    s!foo!!;
-
-
-
-=item *
-
-It requires not only a working C preprocessor but also a working
-F<sed>.  If not on UNIX, you are probably out of luck on this.
-
-=item *
-
-Script line numbers are not preserved.
-
-=item *
-
-The C<-x> does not work with C<-P>.
-
-=back
 
 =item B<-s>
 X<-s>
@@ -1045,7 +975,7 @@ is used. The program should instead say:
 X<PERL5OPT>
 
 Command-line options (switches).  Switches in this variable are taken
-as if they were on every Perl command line.  Only the B<-[CDIMUdmtw]>
+as if they were on every Perl command line.  Only the B<-[CDIMUdmtwW]>
 switches are allowed.  When running taint checks (because the program
 was running setuid or setgid, or the B<-T> switch was used), this
 variable is ignored.  If PERL5OPT begins with B<-T>, tainting will be

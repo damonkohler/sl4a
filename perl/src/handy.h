@@ -19,23 +19,25 @@
 #endif
 #endif
 
-#define Null(type) ((type)NULL)
+#ifndef PERL_CORE
+#  define Null(type) ((type)NULL)
 
 /*
 =head1 Handy Values
 
 =for apidoc AmU||Nullch
-Null character pointer.
+Null character pointer. (No longer available when C<PERL_CORE> is defined.)
 
 =for apidoc AmU||Nullsv
-Null SV pointer.
+Null SV pointer. (No longer available when C<PERL_CORE> is defined.)
 
 =cut
 */
 
-#define Nullch Null(char*)
-#define Nullfp Null(PerlIO*)
-#define Nullsv Null(SV*)
+#  define Nullch Null(char*)
+#  define Nullfp Null(PerlIO*)
+#  define Nullsv Null(SV*)
+#endif
 
 #ifdef TRUE
 #undef TRUE
@@ -55,9 +57,7 @@ Null SV pointer.
  * AV *av2 = MUTABLE_AV(sv); <== GOOD: it may warn
  */
 
-/* For 5.10.x, disable the const cast checking that MUTABLE_PTR does in
- * blead */
-#if 0 && defined(__GNUC__) && !defined(PERL_GCC_BRACE_GROUPS_FORBIDDEN)
+#if defined(__GNUC__) && !defined(PERL_GCC_BRACE_GROUPS_FORBIDDEN)
 #  define MUTABLE_PTR(p) ({ void *_p = (p); _p; })
 #else
 #  define MUTABLE_PTR(p) ((void *) (p))
@@ -333,6 +333,8 @@ and omits the hash parameter.
   ((SV **)Perl_hv_common(aTHX_ (hv), NULL, STR_WITH_LEN(key), 0,	\
 			 (HV_FETCH_ISSTORE|HV_FETCH_JUST_SV), (val), 0))
 
+#define get_cvs(str, flags)					\
+	Perl_get_cvn_flags(aTHX_ STR_WITH_LEN(str), (flags))
 
 /*
 =head1 Miscellaneous Functions
@@ -759,7 +761,7 @@ PoisonWith(0xEF) for catching access to freed memory.
  * which more importantly get the immediate calling environment (file and
  * line number, and C function name if available) passed in.  This info can
  * then be used for logging the calls, for which one gets a sample
- * implementation if PERL_MEM_LOG_STDERR is defined.
+ * implementation unless -DPERL_MEM_LOG_NOIMPL is also defined.
  *
  * Known problems:
  * - all memory allocs do not get logged, only those
@@ -781,6 +783,8 @@ PoisonWith(0xEF) for catching access to freed memory.
  *   (keyed by the allocation address?), and maintain that
  *   through reallocs and frees, but how to do that without
  *   any News() happening...?
+ * - lots of -Ddefines to get useful/controllable output
+ * - lots of ENV reads
  */
 
 PERL_EXPORT_C Malloc_t Perl_mem_log_alloc(const UV n, const UV typesize, const char *type_name, Malloc_t newalloc, const char *filename, const int linenumber, const char *funcname);
@@ -790,7 +794,7 @@ PERL_EXPORT_C Malloc_t Perl_mem_log_realloc(const UV n, const UV typesize, const
 PERL_EXPORT_C Malloc_t Perl_mem_log_free(Malloc_t oldalloc, const char *filename, const int linenumber, const char *funcname);
 
 # ifdef PERL_CORE
-#  ifdef PERL_MEM_LOG_STDERR
+#  ifndef PERL_MEM_LOG_NOIMPL
 enum mem_log_type {
   MLT_ALLOC,
   MLT_REALLOC,

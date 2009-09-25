@@ -2,7 +2,7 @@ package Module::Build::Platform::VMS;
 
 use strict;
 use vars qw($VERSION);
-$VERSION = '0.34_02';
+$VERSION = '0.340201';
 $VERSION = eval $VERSION;
 use Module::Build::Base;
 

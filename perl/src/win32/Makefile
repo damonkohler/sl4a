@@ -5,7 +5,7 @@
 #	MS Platform SDK 64-bit compiler and tools
 #
 # This is set up to build a perl.exe that runs off a shared library
-# (perl510.dll).  Also makes individual DLLs for the XS extensions.
+# (perl511.dll).  Also makes individual DLLs for the XS extensions.
 #
 
 ##
@@ -32,7 +32,7 @@ INST_TOP	= $(INST_DRV)\perl
 # versioned installation can be obtained by setting INST_TOP above to a
 # path that includes an arbitrary version string.
 #
-#INST_VER	= \5.10.1
+#INST_VER	= \5.11.0
 
 #
 # Comment this out if you DON'T want your perl installation to have
@@ -170,7 +170,7 @@ CRYPT_SRC	= fcrypt.c
 # set this to additionally provide a statically linked perl-static.exe.
 # Note that dynamic loading will not work with this perl, so you must
 # include required modules statically using the STATIC_EXT or ALL_STATIC
-# variables below. A static library perl510s.lib will also be created.
+# variables below. A static library perl511s.lib will also be created.
 # Ordinary perl.exe is not affected by this option.
 #
 #BUILD_STATIC	= define
@@ -543,9 +543,9 @@ $(o).dll:
 
 # makedef.pl must be updated if this changes, and this should normally
 # only change when there is an incompatible revision of the public API.
-PERLIMPLIB	= ..\perl510.lib
-PERLSTATICLIB	= ..\perl510s.lib
-PERLDLL		= ..\perl510.dll
+PERLIMPLIB	= ..\perl511.lib
+PERLSTATICLIB	= ..\perl511s.lib
+PERLDLL		= ..\perl511.dll
 
 MINIPERL	= ..\miniperl.exe
 MINIDIR		= .\mini
@@ -688,8 +688,7 @@ MICROCORE_SRC	=		\
 		..\toke.c	\
 		..\universal.c	\
 		..\utf8.c	\
-		..\util.c	\
-		..\xsutils.c
+		..\util.c
 
 EXTRACORE_SRC	= $(EXTRACORE_SRC) perllib.c
 
@@ -766,6 +765,7 @@ CORE_NOCFG_H	=		\
 CORE_H		= $(CORE_NOCFG_H) .\config.h ..\git_version.h
 
 UUDMAP_H	= ..\uudmap.h
+BITCOUNT_H	= ..\bitcount.h
 
 MICROCORE_OBJ	= $(MICROCORE_SRC:.c=.obj)
 CORE_OBJ	= $(MICROCORE_OBJ) $(EXTRACORE_SRC:.c=.obj)
@@ -998,10 +998,10 @@ $(X2P) : $(MINIPERL) $(X2P_OBJ)
 <<
 	$(EMBED_EXE_MANI)
 
-$(MINIDIR)\globals$(o) : $(UUDMAP_H)
+$(MINIDIR)\globals$(o) : $(UUDMAP_H) $(BITCOUNT_H)
 
-$(UUDMAP_H) : $(GENUUDMAP)
-	$(GENUUDMAP) >$(UUDMAP_H)
+$(UUDMAP_H) $(BITCOUNT_H) : $(GENUUDMAP)
+	$(GENUUDMAP) $(UUDMAP_H) $(BITCOUNT_H)
 
 $(GENUUDMAP) : $(GENUUDMAP_OBJ)
 	$(LINK32) -subsystem:console -out:$@ @<<
@@ -1110,10 +1110,8 @@ utils: $(PERLEXE) $(X2P)
 	copy ..\README.jp       ..\pod\perljp.pod
 	copy ..\README.ko       ..\pod\perlko.pod
 	copy ..\README.linux    ..\pod\perllinux.pod
-	copy ..\README.machten  ..\pod\perlmachten.pod
 	copy ..\README.macos    ..\pod\perlmacos.pod
 	copy ..\README.macosx   ..\pod\perlmacosx.pod
-	copy ..\README.mint     ..\pod\perlmint.pod
 	copy ..\README.mpeix    ..\pod\perlmpeix.pod
 	copy ..\README.netware  ..\pod\perlnetware.pod
 	copy ..\README.openbsd  ..\pod\perlopenbsd.pod
@@ -1131,7 +1129,7 @@ utils: $(PERLEXE) $(X2P)
 	copy ..\README.vmesa    ..\pod\perlvmesa.pod
 	copy ..\README.vos      ..\pod\perlvos.pod
 	copy ..\README.win32    ..\pod\perlwin32.pod
-	copy ..\pod\perl5101delta.pod ..\pod\perldelta.pod
+	copy ..\pod\perl5110delta.pod ..\pod\perldelta.pod
 	$(MAKE) -f ..\win32\pod.mak converters
 	cd ..\lib
 	$(PERLEXE) lib_pm.PL
@@ -1155,7 +1153,7 @@ distclean: realclean
 	-del /f $(EXTDIR)\DynaLoader\XSLoader.pm
 	-del /f $(LIBDIR)\Encode.pm $(LIBDIR)\encoding.pm $(LIBDIR)\Errno.pm
 	-del /f $(LIBDIR)\Config.pod $(LIBDIR)\POSIX.pod $(LIBDIR)\threads.pm
-	-del /f $(LIBDIR)\.exists $(LIBDIR)\attrs.pm $(LIBDIR)\DynaLoader.pm
+	-del /f $(LIBDIR)\.exists $(LIBDIR)\attributes.pm $(LIBDIR)\DynaLoader.pm
 	-del /f $(LIBDIR)\XSLoader.pm $(LIBDIR)\lib.pm
 	-del /f $(LIBDIR)\Fcntl.pm $(LIBDIR)\IO.pm $(LIBDIR)\Opcode.pm
 	-del /f $(LIBDIR)\ops.pm $(LIBDIR)\Safe.pm
@@ -1206,12 +1204,12 @@ distclean: realclean
 	    perlcygwin.pod perldelta.pod perldgux.pod perldos.pod \
 	    perlepoc.pod perlfreebsd.pod perlhaiku.pod perlhpux.pod \
 	    perlhurd.pod perlintern.pod perlirix.pod perljp.pod perlko.pod \
-	    perllinux.pod perlmachten.pod perlmacos.pod perlmacosx.pod \
-	    perlmint.pod perlmodlib.pod perlmpeix.pod perlnetware.pod \
-	    perlopenbsd.pod perlos2.pod perlos390.pod perlos400.pod \
-	    perlplan9.pod perlqnx.pod perlriscos.pod perlsolaris.pod \
-	    perlsymbian.pod perltoc.pod perltru64.pod perltw.pod \
-	    perluts.pod perlvmesa.pod perlvos.pod perlwin32.pod \
+	    perllinux.pod perlmacos.pod perlmacosx.pod perlmodlib.pod \
+	    perlmpeix.pod perlnetware.pod perlopenbsd.pod perlos2.pod \
+	    perlos390.pod perlos400.pod perlplan9.pod perlqnx.pod \
+	    perlriscos.pod perlsolaris.pod perlsymbian.pod perltoc.pod \
+	    perltru64.pod perltw.pod perluts.pod perlvmesa.pod perlvos.pod \
+	    perlwin32.pod \
 	    pod2html pod2latex pod2man pod2text pod2usage \
 	    podchecker podselect
 	-cd ..\utils && del /f h2ph splain perlbug pl2pm c2ph pstruct h2xs \
@@ -1325,7 +1323,7 @@ _clean :
 	-@$(DEL) $(PERLSTATICLIB)
 	-@$(DEL) $(PERLDLL)
 	-@$(DEL) $(CORE_OBJ)
-	-@$(DEL) $(GENUUDMAP) $(GENUUDMAP_OBJ) $(UUDMAP_H)
+	-@$(DEL) $(GENUUDMAP) $(GENUUDMAP_OBJ) $(UUDMAP_H) $(BITCOUNT_H)
 	-if exist $(MINIDIR) rmdir /s /q $(MINIDIR)
 	-if exist $(UNIDATADIR1) rmdir /s /q $(UNIDATADIR1)
 	-if exist $(UNIDATADIR2) rmdir /s /q $(UNIDATADIR2)

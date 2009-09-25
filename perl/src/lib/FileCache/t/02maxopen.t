@@ -1,4 +1,12 @@
 #!./perl
+
+BEGIN {
+   if( $ENV{PERL_CORE} ) {
+        chdir 't' if -d 't';
+        @INC = qw(../lib);
+    }
+}
+
 use FileCache maxopen=>2;
 use Test;
 use vars qw(@files);

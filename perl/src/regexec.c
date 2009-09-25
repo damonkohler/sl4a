@@ -379,10 +379,11 @@ Perl_pregexec(pTHX_ REGEXP * const prog, char* stringarg, register char *strend,
    deleted from the finite automaton. */
 
 char *
-Perl_re_intuit_start(pTHX_ REGEXP * const prog, SV *sv, char *strpos,
+Perl_re_intuit_start(pTHX_ REGEXP * const rx, SV *sv, char *strpos,
 		     char *strend, const U32 flags, re_scream_pos_data *data)
 {
     dVAR;
+    struct regexp *const prog = (struct regexp *)SvANY(rx);
     register I32 start_shift = 0;
     /* Should be nonnegative! */
     register I32 end_shift   = 0;
@@ -403,13 +404,13 @@ Perl_re_intuit_start(pTHX_ REGEXP * const prog, SV *sv, char *strpos,
 
     PERL_ARGS_ASSERT_RE_INTUIT_START;
 
-    RX_MATCH_UTF8_set(prog,do_utf8);
+    RX_MATCH_UTF8_set(rx,do_utf8);
 
-    if (RX_UTF8(prog)) {
+    if (RX_UTF8(rx)) {
 	PL_reg_flags |= RF_utf8;
     }
     DEBUG_EXECUTE_r( 
-        debug_start_match(prog, do_utf8, strpos, strend, 
+        debug_start_match(rx, do_utf8, strpos, strend, 
             sv ? "Guessing start of match in sv for"
                : "Guessing start of match in string for");
 	      );
@@ -1733,34 +1734,12 @@ S_find_byclass(pTHX_ regexp * prog, const regnode *c, char *s,
 	return s;
 }
 
-static void 
-S_swap_match_buff (pTHX_ regexp *prog)
-{
-    regexp_paren_pair *t;
-
-    PERL_ARGS_ASSERT_SWAP_MATCH_BUFF;
-
-    if (!prog->swap) {
-    /* We have to be careful. If the previous successful match
-       was from this regex we don't want a subsequent paritally
-       successful match to clobber the old results. 
-       So when we detect this possibility we add a swap buffer
-       to the re, and switch the buffer each match. If we fail
-       we switch it back, otherwise we leave it swapped.
-    */
-        Newxz(prog->swap, (prog->nparens + 1), regexp_paren_pair);
-    }
-    t = prog->swap;
-    prog->swap = prog->offs;
-    prog->offs = t;
-}    
-
 
 /*
  - regexec_flags - match a regexp against a string
  */
 I32
-Perl_regexec_flags(pTHX_ REGEXP * const prog, char *stringarg, register char *strend,
+Perl_regexec_flags(pTHX_ REGEXP * const rx, char *stringarg, register char *strend,
 	      char *strbeg, I32 minend, SV *sv, void *data, U32 flags)
 /* strend: pointer to null at end of string */
 /* strbeg: real beginning of string */
@@ -1771,6 +1750,7 @@ Perl_regexec_flags(pTHX_ REGEXP * const prog, char *stringarg, register char *st
 /* nosave: For optimizations. */
 {
     dVAR;
+    struct regexp *const prog = (struct regexp *)SvANY(rx);
     /*register*/ char *s;
     register regnode *c;
     /*register*/ char *startpos = stringarg;
@@ -1783,7 +1763,7 @@ Perl_regexec_flags(pTHX_ REGEXP * const prog, char *stringarg, register char *st
     I32 multiline;
     RXi_GET_DECL(prog,progi);
     regmatch_info reginfo;  /* create some info to pass to regtry etc */
-    bool swap_on_fail = 0;
+    regexp_paren_pair *swap = NULL;
     GET_RE_DEBUG_FLAGS_DECL;
 
     PERL_ARGS_ASSERT_REGEXEC_FLAGS;
@@ -1796,11 +1776,11 @@ Perl_regexec_flags(pTHX_ REGEXP * const prog, char *stringarg, register char *st
     }
 
     multiline = prog->extflags & RXf_PMf_MULTILINE;
-    reginfo.prog = prog;
+    reginfo.prog = rx;	 /* Yes, sorry that this is confusing.  */
 
-    RX_MATCH_UTF8_set(prog, do_utf8);
+    RX_MATCH_UTF8_set(rx, do_utf8);
     DEBUG_EXECUTE_r( 
-        debug_start_match(prog, do_utf8, startpos, strend, 
+        debug_start_match(rx, do_utf8, startpos, strend, 
         "Matching");
     );
 
@@ -1822,7 +1802,7 @@ Perl_regexec_flags(pTHX_ REGEXP * const prog, char *stringarg, register char *st
     PL_reg_eval_set = 0;
     PL_reg_maxiter = 0;
 
-    if (RX_UTF8(prog))
+    if (RX_UTF8(rx))
 	PL_reg_flags |= RF_utf8;
 
     /* Mark beginning of line for ^ and lookbehind. */
@@ -1860,17 +1840,24 @@ Perl_regexec_flags(pTHX_ REGEXP * const prog, char *stringarg, register char *st
 	} else				/* pos() not defined */
 	    reginfo.ganch = strbeg;
     }
-    if (PL_curpm && (PM_GETRE(PL_curpm) == prog)) {
-        swap_on_fail = 1;
-        swap_match_buff(prog); /* do we need a save destructor here for
-                                  eval dies? */
+    if (PL_curpm && (PM_GETRE(PL_curpm) == rx)) {
+        /* We have to be careful. If the previous successful match
+           was from this regex we don't want a subsequent partially
+           successful match to clobber the old results.
+           So when we detect this possibility we add a swap buffer
+           to the re, and switch the buffer each match. If we fail
+           we switch it back, otherwise we leave it swapped.
+        */
+        swap = prog->offs;
+        /* do we need a save destructor here for eval dies? */
+        Newxz(prog->offs, (prog->nparens + 1), regexp_paren_pair);
     }
     if (!(flags & REXEC_CHECKED) && (prog->check_substr != NULL || prog->check_utf8 != NULL)) {
 	re_scream_pos_data d;
 
 	d.scream_olds = &scream_olds;
 	d.scream_pos = &scream_pos;
-	s = re_intuit_start(prog, sv, s, strend, flags, &d);
+	s = re_intuit_start(rx, sv, s, strend, flags, &d);
 	if (!s) {
 	    DEBUG_EXECUTE_r(PerlIO_printf(Perl_debug_log, "Not present...\n"));
 	    goto phooey;	/* not present */
@@ -1903,7 +1890,7 @@ Perl_regexec_flags(pTHX_ REGEXP * const prog, char *stringarg, register char *st
 		    if (s > end)
 			goto phooey;
 		    if (prog->extflags & RXf_USE_INTUIT) {
-			s = re_intuit_start(prog, sv, s + 1, strend, flags, NULL);
+			s = re_intuit_start(rx, sv, s + 1, strend, flags, NULL);
 			if (!s)
 			    goto phooey;
 		    }
@@ -2162,7 +2149,8 @@ Perl_regexec_flags(pTHX_ REGEXP * const prog, char *stringarg, register char *st
     goto phooey;
 
 got_it:
-    RX_MATCH_TAINTED_set(prog, PL_reg_flags & RF_tainted);
+    Safefree(swap);
+    RX_MATCH_TAINTED_set(rx, PL_reg_flags & RF_tainted);
 
     if (PL_reg_eval_set)
 	restore_pos(aTHX_ prog);
@@ -2171,7 +2159,7 @@ got_it:
 
     /* make sure $`, $&, $', and $digit will work later */
     if ( !(flags & REXEC_NOT_FIRST) ) {
-	RX_MATCH_COPY_FREE(prog);
+	RX_MATCH_COPY_FREE(rx);
 	if (flags & REXEC_COPY_STR) {
 	    const I32 i = PL_regeol - startpos + (stringarg - strbeg);
 #ifdef PERL_OLD_COPY_ON_WRITE
@@ -2188,7 +2176,7 @@ got_it:
 	    } else
 #endif
 	    {
-		RX_MATCH_COPIED_on(prog);
+		RX_MATCH_COPIED_on(rx);
 		s = savepvn(strbeg, i);
 		prog->subbeg = s;
 	    }
@@ -2207,10 +2195,12 @@ phooey:
 			  PL_colors[4], PL_colors[5]));
     if (PL_reg_eval_set)
 	restore_pos(aTHX_ prog);
-    if (swap_on_fail) 
+    if (swap) {
         /* we failed :-( roll it back */
-        swap_match_buff(prog);
-    
+        Safefree(prog->offs);
+        prog->offs = swap;
+    }
+
     return 0;
 }
 
@@ -2223,7 +2213,8 @@ S_regtry(pTHX_ regmatch_info *reginfo, char **startpos)
 {
     dVAR;
     CHECKPOINT lastcp;
-    regexp *prog = reginfo->prog;
+    REGEXP *const rx = reginfo->prog;
+    regexp *const prog = (struct regexp *)SvANY(rx);
     RXi_GET_DECL(prog,progi);
     GET_RE_DEBUG_FLAGS_DECL;
 
@@ -2273,10 +2264,10 @@ S_regtry(pTHX_ regmatch_info *reginfo, char **startpos)
 	    Newxz(PL_reg_curpm, 1, PMOP);
 #ifdef USE_ITHREADS
             {
-		SV* const repointer = newSViv(0);
+		SV* const repointer = &PL_sv_undef;
                 /* this regexp is also owned by the new PL_reg_curpm, which
 		   will try to free it.  */
-                av_push(PL_regex_padav,repointer);
+                av_push(PL_regex_padav, repointer);
                 PL_reg_curpm->op_pmoffset = av_len(PL_regex_padav);
                 PL_regex_pad = AvARRAY(PL_regex_padav);
             }
@@ -2289,9 +2280,9 @@ S_regtry(pTHX_ regmatch_info *reginfo, char **startpos)
 	/* This is safe against NULLs: */
 	ReREFCNT_dec(PM_GETRE(PL_reg_curpm));
 	/* PM_reg_curpm owns a reference to this regexp.  */
-	ReREFCNT_inc(prog);
+	ReREFCNT_inc(rx);
 #endif
-	PM_SETRE(PL_reg_curpm, prog);
+	PM_SETRE(PL_reg_curpm, rx);
 	PL_reg_oldcurpm = PL_curpm;
 	PL_curpm = PL_reg_curpm;
 	if (RXp_MATCH_COPIED(prog)) {
@@ -2734,7 +2725,8 @@ S_regmatch(pTHX_ regmatch_info *reginfo, regnode *prog)
     dVAR;
     register const bool do_utf8 = PL_reg_match_utf8;
     const U32 uniflags = UTF8_ALLOW_DEFAULT;
-    regexp *rex = reginfo->prog;
+    REGEXP *rex_sv = reginfo->prog;
+    regexp *rex = (struct regexp *)SvANY(rex_sv);
     RXi_GET_DECL(rex,rexi);
     I32	oldsave;
     /* the current state. This is a cached copy of PL_regmatch_state */
@@ -3668,6 +3660,7 @@ S_regmatch(pTHX_ regmatch_info *reginfo, regnode *prog)
 #define ST st->u.eval
 	{
 	    SV *ret;
+	    REGEXP *re_sv;
             regexp *re;
             regexp_internal *rei;
             regnode *startpoint;
@@ -3684,9 +3677,10 @@ S_regmatch(pTHX_ regmatch_info *reginfo, regnode *prog)
             } else {
                 nochange_depth = 0;
             }
+	    re_sv = rex_sv;
             re = rex;
             rei = rexi;
-            (void)ReREFCNT_inc(rex);
+            (void)ReREFCNT_inc(rex_sv);
             if (OP(scan)==GOSUB) {
                 startpoint = scan + ARG2L(scan);
                 ST.close_paren = ARG(scan);
@@ -3710,6 +3704,7 @@ S_regmatch(pTHX_ regmatch_info *reginfo, regnode *prog)
 		OP_4tree * const oop = PL_op;
 		COP * const ocurcop = PL_curcop;
 		PAD *old_comppad;
+		char *saved_regeol = PL_regeol;
 	    
 		n = ARG(scan);
 		PL_op = (OP_4tree*)rexi->data->data[n];
@@ -3735,6 +3730,7 @@ S_regmatch(pTHX_ regmatch_info *reginfo, regnode *prog)
 		PL_op = oop;
 		PAD_RESTORE_LOCAL(old_comppad);
 		PL_curcop = ocurcop;
+		PL_regeol = saved_regeol;
 		if (!logical) {
 		    /* /(?{...})/ */
 		    sv_setsv(save_scalar(PL_replgv), ret);
@@ -3746,41 +3742,80 @@ S_regmatch(pTHX_ regmatch_info *reginfo, regnode *prog)
 		{
 		    /* extract RE object from returned value; compiling if
 		     * necessary */
-
 		    MAGIC *mg = NULL;
-		    const SV *sv;
-		    if(SvROK(ret) && SvSMAGICAL(sv = SvRV(ret)))
-			mg = mg_find(sv, PERL_MAGIC_qr);
-		    else if (SvSMAGICAL(ret)) {
-			if (SvGMAGICAL(ret))
+		    REGEXP *rx = NULL;
+
+		    if (SvROK(ret)) {
+			SV *const sv = SvRV(ret);
+
+			if (SvTYPE(sv) == SVt_REGEXP) {
+			    rx = (REGEXP*) sv;
+			} else if (SvSMAGICAL(sv)) {
+			    mg = mg_find(sv, PERL_MAGIC_qr);
+			    assert(mg);
+			}
+		    } else if (SvTYPE(ret) == SVt_REGEXP) {
+			rx = (REGEXP*) ret;
+		    } else if (SvSMAGICAL(ret)) {
+			if (SvGMAGICAL(ret)) {
+			    /* I don't believe that there is ever qr magic
+			       here.  */
+			    assert(!mg_find(ret, PERL_MAGIC_qr));
 			    sv_unmagic(ret, PERL_MAGIC_qr);
-			else
+			}
+			else {
 			    mg = mg_find(ret, PERL_MAGIC_qr);
+			    /* testing suggests mg only ends up non-NULL for
+			       scalars who were upgraded and compiled in the
+			       else block below. In turn, this is only
+			       triggered in the "postponed utf8 string" tests
+			       in t/op/pat.t  */
+			}
 		    }
 
 		    if (mg) {
-			re = reg_temp_copy((regexp *)mg->mg_obj); /*XXX:dmq*/
+			rx = (REGEXP *) mg->mg_obj; /*XXX:dmq*/
+			assert(rx);
+		    }
+		    if (rx) {
+			rx = reg_temp_copy(rx);
 		    }
 		    else {
 			U32 pm_flags = 0;
 			const I32 osize = PL_regsize;
 
-			if (DO_UTF8(ret)) pm_flags |= RXf_UTF8;
-			re = CALLREGCOMP(ret, pm_flags);
+			if (DO_UTF8(ret)) {
+			    assert (SvUTF8(ret));
+			} else if (SvUTF8(ret)) {
+			    /* Not doing UTF-8, despite what the SV says. Is
+			       this only if we're trapped in use 'bytes'?  */
+			    /* Make a copy of the octet sequence, but without
+			       the flag on, as the compiler now honours the
+			       SvUTF8 flag on ret.  */
+			    STRLEN len;
+			    const char *const p = SvPV(ret, len);
+			    ret = newSVpvn_flags(p, len, SVs_TEMP);
+			}
+			rx = CALLREGCOMP(ret, pm_flags);
 			if (!(SvFLAGS(ret)
 			      & (SVs_TEMP | SVs_PADTMP | SVf_READONLY
-				| SVs_GMG)))
-			    sv_magic(ret,MUTABLE_SV(ReREFCNT_inc(re)),
-					PERL_MAGIC_qr,0,0);
+				 | SVs_GMG))) {
+			    /* This isn't a first class regexp. Instead, it's
+			       caching a regexp onto an existing, Perl visible
+			       scalar.  */
+			    sv_magic(ret, MUTABLE_SV(rx), PERL_MAGIC_qr, 0, 0);
+			}
 			PL_regsize = osize;
 		    }
+		    re_sv = rx;
+		    re = (struct regexp *)SvANY(rx);
 		}
                 RXp_MATCH_COPIED_off(re);
                 re->subbeg = rex->subbeg;
                 re->sublen = rex->sublen;
 		rei = RXi_GET(re);
                 DEBUG_EXECUTE_r(
-                    debug_start_match(re, do_utf8, locinput, PL_regeol, 
+                    debug_start_match(re_sv, do_utf8, locinput, PL_regeol, 
                         "Matching embedded");
 		);		
 		startpoint = rei->program + 1;
@@ -3814,15 +3849,16 @@ S_regmatch(pTHX_ regmatch_info *reginfo, regnode *prog)
 		PL_reg_maxiter = 0;
 
 		ST.toggle_reg_flags = PL_reg_flags;
-		if (RX_UTF8(re))
+		if (RX_UTF8(re_sv))
 		    PL_reg_flags |= RF_utf8;
 		else
 		    PL_reg_flags &= ~RF_utf8;
 		ST.toggle_reg_flags ^= PL_reg_flags; /* diff of old and new */
 
-		ST.prev_rex = rex;
+		ST.prev_rex = rex_sv;
 		ST.prev_curlyx = cur_curlyx;
-		SETREX(rex,re);
+		SETREX(rex_sv,re_sv);
+		rex = re;
 		rexi = rei;
 		cur_curlyx = NULL;
 		ST.B = next;
@@ -3841,8 +3877,9 @@ S_regmatch(pTHX_ regmatch_info *reginfo, regnode *prog)
 	case EVAL_AB: /* cleanup after a successful (??{A})B */
 	    /* note: this is called twice; first after popping B, then A */
 	    PL_reg_flags ^= ST.toggle_reg_flags; 
-	    ReREFCNT_dec(rex);
-	    SETREX(rex,ST.prev_rex);
+	    ReREFCNT_dec(rex_sv);
+	    SETREX(rex_sv,ST.prev_rex);
+	    rex = (struct regexp *)SvANY(rex_sv);
 	    rexi = RXi_GET(rex);
 	    regcpblow(ST.cp);
 	    cur_eval = ST.prev_eval;
@@ -3864,8 +3901,9 @@ S_regmatch(pTHX_ regmatch_info *reginfo, regnode *prog)
 	case EVAL_AB_fail: /* unsuccessfully ran A or B in (??{A})B */
 	    /* note: this is called twice; first after popping B, then A */
 	    PL_reg_flags ^= ST.toggle_reg_flags; 
-	    ReREFCNT_dec(rex);
-	    SETREX(rex,ST.prev_rex);
+	    ReREFCNT_dec(rex_sv);
+	    SETREX(rex_sv,ST.prev_rex);
+	    rex = (struct regexp *)SvANY(rex_sv);
 	    rexi = RXi_GET(rex); 
 	    /* rex was changed so update the pointer in PL_reglastparen and PL_reglastcloseparen */
 	    PL_reglastparen = &rex->lastparen;
@@ -4867,11 +4905,12 @@ NULL
 			    = cur_eval->u.eval.toggle_reg_flags;
 		PL_reg_flags ^= st->u.eval.toggle_reg_flags; 
 
-		st->u.eval.prev_rex = rex;		/* inner */
-		SETREX(rex,cur_eval->u.eval.prev_rex);
+		st->u.eval.prev_rex = rex_sv;		/* inner */
+		SETREX(rex_sv,cur_eval->u.eval.prev_rex);
+		rex = (struct regexp *)SvANY(rex_sv);
 		rexi = RXi_GET(rex);
 		cur_curlyx = cur_eval->u.eval.prev_curlyx;
-		ReREFCNT_inc(rex);
+		ReREFCNT_inc(rex_sv);
 		st->u.eval.cp = regcppush(0);	/* Save *all* the positions. */
 
 		/* rex was changed so update the pointer in PL_reglastparen and PL_reglastcloseparen */

@@ -271,6 +271,7 @@ X<word> X<whitespace> X<character class> X<backreference>
     \g{name} Named backreference
     \k<name> Named backreference
     \K       Keep the stuff left of the \K, don't include it in $&
+    \N       Any character but \n
     \v       Vertical whitespace
     \V       Not vertical whitespace
     \h       Horizontal whitespace

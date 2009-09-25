@@ -31,6 +31,12 @@ ab*bc	abbbbc	y	$+[0]	6
 .{3,4}	abbbbc	y	$&	abbb
 .{3,4}	abbbbc	y	$-[0]	0
 .{3,4}	abbbbc	y	$+[0]	4
+\N{1}	abbbbc	y	$&	a
+\N{1}	abbbbc	y	$-[0]	0
+\N{1}	abbbbc	y	$+[0]	1
+\N{3,4}	abbbbc	y	$&	abbb
+\N{3,4}	abbbbc	y	$-[0]	0
+\N{3,4}	abbbbc	y	$+[0]	4
 ab{0,}bc	abbbbc	y	$&	abbbbc
 ab{0,}bc	abbbbc	y	$-[0]	0
 ab{0,}bc	abbbbc	y	$+[0]	6
@@ -69,8 +75,11 @@ abc$	aabcd	n	-	-
 $	abc	y	$&	
 a.c	abc	y	$&	abc
 a.c	axc	y	$&	axc
+a\Nc	abc	y	$&	abc
 a.*c	axyzc	y	$&	axyzc
+a\N*c	axyzc	y	$&	axyzc
 a.*c	axyzd	n	-	-
+a\N*c	axyzd	n	-	-
 a[bc]d	abc	n	-	-
 a[bc]d	abd	y	$&	abd
 a[b]d	abd	y	$&	abd
@@ -78,6 +87,7 @@ a[b]d	abd	y	$&	abd
 .[b].	abd	y	$&	abd
 .[b].	aBd	n	-	-
 (?i:.[b].)	abd	y	$&	abd
+(?i:\N[b]\N)	abd	y	$&	abd
 a[b-d]e	abd	n	-	-
 a[b-d]e	ace	y	$&	ace
 a[b-d]	aac	y	$&	ac
@@ -315,6 +325,7 @@ a[-]?c	ac	y	$&	ac
 '$'i	ABC	y	$&	
 'a.c'i	ABC	y	$&	ABC
 'a.c'i	AXC	y	$&	AXC
+'a\Nc'i	ABC	y	$&	ABC
 'a.*?c'i	AXYZC	y	$&	AXYZC
 'a.*c'i	AXYZD	n	-	-
 'a[bc]d'i	ABC	n	-	-
@@ -497,8 +508,11 @@ a(?:b|(c|e){1,2}?|d)+?(.)	ace	y	$1$2	ce
 '(?-i:a)b'i	AB	n	-	-
 '((?-i:a))b'i	AB	n	-	-
 '((?-i:a.))b'i	a\nB	n	-	-
+'((?-i:a\N))b'i	a\nB	n	-	-
 '((?s-i:a.))b'i	a\nB	y	$1	a\n
+'((?s-i:a\N))b'i	a\nB	n	-	-
 '((?s-i:a.))b'i	B\nB	n	-	-
+'((?s-i:a\N))b'i	B\nB	n	-	-
 (?:c|d)(?:)(?:a(?:)(?:b)(?:b(?:))(?:b(?:)(?:b)))	cabbbb	y	$&	cabbbb
 (?:c|d)(?:)(?:aaaaaaaa(?:)(?:bbbbbbbb)(?:bbbbbbbb(?:))(?:bbbbbbbb(?:)(?:bbbbbbbb)))	caaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb	y	$&	caaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 '(ab)\d\1'i	Ab4ab	y	$1	Ab
@@ -531,6 +545,8 @@ x(~~)*(?:(?:F)?)?	x~~	y	-	-
 ((?s).)c(?!.)	a\nb\nc\n	y	$1:$&	\n:\nc
 ((?s)b.)c(?!.)	a\nb\nc\n	y	$1	b\n
 ((?s)b.)c(?!.)	a\nb\nc\n	y	$1:$&	b\n:b\nc
+((?s)b.)c(?!\N)	a\nb\nc\n	y	$1:$&	b\n:b\nc
+'(b.)c(?!\N)'s	a\nb\nc\n	y	$1:$&	b\n:b\nc
 ^b	a\nb\nc\n	n	-	-
 ()^b	a\nb\nc\n	n	-	-
 ((?m)^b)	a\nb\nc\n	y	$1	b
@@ -1295,6 +1311,7 @@ X(\w+)(?=\s)|X(\w+)	Xab	y	[$1-$2]	[-ab]
 (?|(?|(a)|(b))|(?|(c)|(d)))	c	y	$1	c
 (?|(?|(a)|(b))|(?|(c)|(d)))	d	y	$1	d
 (.)(?|(.)(.)x|(.)d)(.)	abcde	y	$1-$2-$3-$4-$5-	b-c--e--
+(\N)(?|(\N)(\N)x|(\N)d)(\N)	abcde	y	$1-$2-$3-$4-$5-	b-c--e--
 (?|(?<foo>x))	x	y	$+{foo}	x
 (?|(?<foo>x)|(?<bar>y))	x	y	$+{foo}	x
 (?|(?<bar>y)|(?<foo>x))	x	y	$+{foo}	x
@@ -1346,7 +1363,10 @@ foo(\h)bar	foo\tbar	y	$1	\t
 (\H)(\h)	foo\tbar	y	$1-$2	o-\t
 (\h)(\H)	foo\tbar	y	$1-$2	\t-b
 
-.*\z	foo\n	y	-	-
+.*\z	foo\n	y	-$&-	--
+\N*\z	foo\n	y	-$&-	--
+.*\Z	foo\n	y	-$&-	-foo-
+\N*\Z	foo\n	y	-$&-	-foo-
 ^(?:(\d)x)?\d$	1	y	${\(defined($1)?1:0)}	0	
 .*?(?:(\w)|(\w))x	abx	y	$1-$2	b-
 

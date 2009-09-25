@@ -55,19 +55,6 @@ sub _populate_hash {
     return map {$_, 1} split /\s+/, $_[0];
 }
 
-# Generate T::H schedule rules that run the contents of each directory
-# sequentially.
-sub _seq_dir_rules {
-    my @tests = @_;
-    my %dir;
-    for (@tests) {
-        s{[^/]+$}{\*};
-        $dir{$_}++;
-    }
-
-    return { par => [ map { { seq => $_ } } sort keys %dir ] };
-}
-
 sub _extract_tests;
 sub _extract_tests {
     # This can probably be done more tersely with a map, but I doubt that it
@@ -145,9 +132,10 @@ if (@ARGV) {
     unless (@tests) {
 	my @seq = <base/*.t>;
 
-	my @next = qw(comp cmd run io op uni mro lib);
+	my @next = qw(comp cmd run io op uni mro lib porting);
 	push @next, 'japh' if $torture;
 	push @next, 'win32' if $^O eq 'MSWin32';
+	push @next, 'benchmark' if $ENV{PERL_BENCHMARK};
 	# Hopefully TAP::Parser::Scheduler will support this syntax soon.
 	# my $next = { par => '{' . join (',', @next) . '}/*.t' };
 	my $next = { par => [
@@ -212,9 +200,34 @@ if (@ARGV) {
 	push @last, <pod/*.t>;
 	push @last, <x2p/*.t>;
 
+	my %times;
+	if ($state) {
+	    # Where known, collate the elapsed times by test name
+	    foreach ($state->results->tests()) {
+		$times{$_->name} = $_->elapsed();
+	    }
+	}
+
+	my %dir;
+	my %total_time;
+
+	for (@last) {
+	    if ($^O eq 'MSWin32') {
+		s,\\,/,g; # canonicalize path
+	    };
+	    m!(.*[/])! or die "'$_'";
+	    push @{$dir{$1}}, $_;
+	    $total_time{$1} += $times{$_} || 0;
+	}
+
 	push @tests, @last;
 
-	push @seq, _seq_dir_rules @last;
+	# Generate T::H schedule rules that run the contents of each directory
+	# sequentially.
+	push @seq, { par => [ map { { seq => "$_*" } } sort {
+	    # Directories, ordered by total time descending then name ascending
+	    $total_time{$b} <=> $total_time{$a} || $a cmp $b
+	} keys %dir ] };
 
 	$rules = { seq => \@seq };
     }

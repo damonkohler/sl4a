@@ -364,17 +364,9 @@ changed, especially if you have symbolic links on your system.
 Fortunately, sometimes this kernel "feature" can be disabled.
 Unfortunately, there are two ways to disable it.  The system can simply
 outlaw scripts with any set-id bit set, which doesn't help much.
-Alternately, it can simply ignore the set-id bits on scripts.  If the
-latter is true, Perl can emulate the setuid and setgid mechanism when it
-notices the otherwise useless setuid/gid bits on Perl scripts.  It does
-this via a special executable called F<suidperl> that is automatically
-invoked for you if it's needed.
+Alternately, it can simply ignore the set-id bits on scripts.
 
-B<The use of suidperl is considered deprecated>, and will be removed
-in Perl 5.12.0.  It is I<strongly> recommended that all code uses
-the simplier and more secure C-wrappers described below.
-
-If the kernel set-id script feature isn't disabled, Perl will
+However, if the kernel set-id script feature isn't disabled, Perl will
 complain loudly that your set-id script is insecure.  You'll need to
 either disable the kernel set-id script feature, or put a C wrapper around
 the script.  A C wrapper is just a compiled program that does nothing
@@ -402,10 +394,6 @@ compiled with C<-DSETUID_SCRIPTS_ARE_SECURE_NOW>.  The F<Configure>
 program that builds Perl tries to figure this out for itself, so you
 should never have to specify this yourself.  Most modern releases of
 SysVr4 and BSD 4.4 use this approach to avoid the kernel race condition.
-
-Prior to release 5.6.1 of Perl, bugs in the code of F<suidperl> could
-introduce a security hole.  The use of F<suidperl> is considered
-deprecated, and will be removed in Perl 5.12.0.
 
 =head2 Protecting Your Programs
 

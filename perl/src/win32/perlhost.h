@@ -26,9 +26,10 @@
 #endif
 
 START_EXTERN_C
-extern char *		g_win32_get_privlib(const char *pl);
-extern char *		g_win32_get_sitelib(const char *pl);
-extern char *		g_win32_get_vendorlib(const char *pl);
+extern char *		g_win32_get_privlib(const char *pl, STRLEN *const len);
+extern char *		g_win32_get_sitelib(const char *pl, STRLEN *const len);
+extern char *		g_win32_get_vendorlib(const char *pl,
+					      STRLEN *const len);
 extern char *		g_getlogin(void);
 END_EXTERN_C
 
@@ -517,21 +518,22 @@ PerlEnvOsId(struct IPerlEnv* piPerl)
 }
 
 char*
-PerlEnvLibPath(struct IPerlEnv* piPerl, const char *pl)
+PerlEnvLibPath(struct IPerlEnv* piPerl, const char *pl, STRLEN *const len)
 {
-    return g_win32_get_privlib(pl);
+    return g_win32_get_privlib(pl, len);
 }
 
 char*
-PerlEnvSiteLibPath(struct IPerlEnv* piPerl, const char *pl)
+PerlEnvSiteLibPath(struct IPerlEnv* piPerl, const char *pl, STRLEN *const len)
 {
-    return g_win32_get_sitelib(pl);
+    return g_win32_get_sitelib(pl, len);
 }
 
 char*
-PerlEnvVendorLibPath(struct IPerlEnv* piPerl, const char *pl)
+PerlEnvVendorLibPath(struct IPerlEnv* piPerl, const char *pl,
+		     STRLEN *const len)
 {
-    return g_win32_get_vendorlib(pl);
+    return g_win32_get_vendorlib(pl, len);
 }
 
 void
@@ -1833,7 +1835,8 @@ PerlProcFork(struct IPerlProc* piPerl)
 	return -1;
     }
     h = new CPerlHost(*(CPerlHost*)w32_internal_host);
-    PerlInterpreter *new_perl = perl_clone_using((PerlInterpreter*)aTHX, 1,
+    PerlInterpreter *new_perl = perl_clone_using((PerlInterpreter*)aTHX,
+						 CLONEf_COPY_STACKS,
 						 h->m_pHostperlMem,
 						 h->m_pHostperlMemShared,
 						 h->m_pHostperlMemParse,

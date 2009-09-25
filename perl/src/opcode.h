@@ -163,6 +163,9 @@ EXTCONST char* const PL_op_name[] = {
 	"aelemfast",
 	"aelem",
 	"aslice",
+	"aeach",
+	"akeys",
+	"avalues",
 	"each",
 	"values",
 	"keys",
@@ -227,7 +230,6 @@ EXTCONST char* const PL_op_name[] = {
 	"dump",
 	"goto",
 	"exit",
-	"setstate",
 	"method_named",
 	"entergiven",
 	"leavegiven",
@@ -259,8 +261,6 @@ EXTCONST char* const PL_op_name[] = {
 	"sysseek",
 	"sysread",
 	"syswrite",
-	"send",
-	"recv",
 	"eof",
 	"tell",
 	"seek",
@@ -268,6 +268,8 @@ EXTCONST char* const PL_op_name[] = {
 	"fcntl",
 	"ioctl",
 	"flock",
+	"send",
+	"recv",
 	"socket",
 	"sockpair",
 	"bind",
@@ -356,6 +358,7 @@ EXTCONST char* const PL_op_name[] = {
 	"semctl",
 	"require",
 	"dofile",
+	"hintseval",
 	"entereval",
 	"leaveeval",
 	"entertry",
@@ -532,6 +535,9 @@ EXTCONST char* const PL_op_desc[] = {
 	"constant array element",
 	"array element",
 	"array slice",
+	"each on array",
+	"keys on array",
+	"values on array",
 	"each",
 	"values",
 	"keys",
@@ -596,7 +602,6 @@ EXTCONST char* const PL_op_desc[] = {
 	"dump",
 	"goto",
 	"exit",
-	"set statement info",
 	"method with known name",
 	"given()",
 	"leave given block",
@@ -628,8 +633,6 @@ EXTCONST char* const PL_op_desc[] = {
 	"sysseek",
 	"sysread",
 	"syswrite",
-	"send",
-	"recv",
 	"eof",
 	"tell",
 	"seek",
@@ -637,6 +640,8 @@ EXTCONST char* const PL_op_desc[] = {
 	"fcntl",
 	"ioctl",
 	"flock",
+	"send",
+	"recv",
 	"socket",
 	"socketpair",
 	"bind",
@@ -725,6 +730,7 @@ EXTCONST char* const PL_op_desc[] = {
 	"semctl",
 	"require",
 	"do \"file\"",
+	"eval hints",
 	"eval \"string\"",
 	"eval \"string\" exit",
 	"eval {block}",
@@ -915,6 +921,9 @@ EXT Perl_ppaddr_t PL_ppaddr[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_pp_aelemfast),
 	MEMBER_TO_FPTR(Perl_pp_aelem),
 	MEMBER_TO_FPTR(Perl_pp_aslice),
+	MEMBER_TO_FPTR(Perl_pp_aeach),
+	MEMBER_TO_FPTR(Perl_pp_akeys),
+	MEMBER_TO_FPTR(Perl_pp_akeys),	/* Perl_pp_avalues */
 	MEMBER_TO_FPTR(Perl_pp_each),
 	MEMBER_TO_FPTR(Perl_do_kv),	/* Perl_pp_values */
 	MEMBER_TO_FPTR(Perl_do_kv),	/* Perl_pp_keys */
@@ -979,7 +988,6 @@ EXT Perl_ppaddr_t PL_ppaddr[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_pp_goto),	/* Perl_pp_dump */
 	MEMBER_TO_FPTR(Perl_pp_goto),
 	MEMBER_TO_FPTR(Perl_pp_exit),
-	MEMBER_TO_FPTR(Perl_pp_setstate),
 	MEMBER_TO_FPTR(Perl_pp_method_named),
 	MEMBER_TO_FPTR(Perl_pp_entergiven),
 	MEMBER_TO_FPTR(Perl_pp_leavegiven),
@@ -1011,8 +1019,6 @@ EXT Perl_ppaddr_t PL_ppaddr[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_pp_sysseek),
 	MEMBER_TO_FPTR(Perl_pp_sysread),
 	MEMBER_TO_FPTR(Perl_pp_send),	/* Perl_pp_syswrite */
-	MEMBER_TO_FPTR(Perl_pp_send),
-	MEMBER_TO_FPTR(Perl_pp_sysread),	/* Perl_pp_recv */
 	MEMBER_TO_FPTR(Perl_pp_eof),
 	MEMBER_TO_FPTR(Perl_pp_tell),
 	MEMBER_TO_FPTR(Perl_pp_sysseek),	/* Perl_pp_seek */
@@ -1020,6 +1026,8 @@ EXT Perl_ppaddr_t PL_ppaddr[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_pp_ioctl),	/* Perl_pp_fcntl */
 	MEMBER_TO_FPTR(Perl_pp_ioctl),
 	MEMBER_TO_FPTR(Perl_pp_flock),
+	MEMBER_TO_FPTR(Perl_pp_send),
+	MEMBER_TO_FPTR(Perl_pp_sysread),	/* Perl_pp_recv */
 	MEMBER_TO_FPTR(Perl_pp_socket),
 	MEMBER_TO_FPTR(Perl_pp_sockpair),
 	MEMBER_TO_FPTR(Perl_pp_bind),
@@ -1108,6 +1116,7 @@ EXT Perl_ppaddr_t PL_ppaddr[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_pp_semctl),
 	MEMBER_TO_FPTR(Perl_pp_require),
 	MEMBER_TO_FPTR(Perl_pp_require),	/* Perl_pp_dofile */
+	MEMBER_TO_FPTR(Perl_pp_hintseval),
 	MEMBER_TO_FPTR(Perl_pp_entereval),
 	MEMBER_TO_FPTR(Perl_pp_leaveeval),
 	MEMBER_TO_FPTR(Perl_pp_entertry),
@@ -1276,7 +1285,7 @@ EXT Perl_check_t PL_check[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* hex */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* oct */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* abs */
-	MEMBER_TO_FPTR(Perl_ck_lengthconst),	/* length */
+	MEMBER_TO_FPTR(Perl_ck_fun),	/* length */
 	MEMBER_TO_FPTR(Perl_ck_substr),	/* substr */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* vec */
 	MEMBER_TO_FPTR(Perl_ck_index),	/* index */
@@ -1295,9 +1304,12 @@ EXT Perl_check_t PL_check[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_ck_null),	/* aelemfast */
 	MEMBER_TO_FPTR(Perl_ck_null),	/* aelem */
 	MEMBER_TO_FPTR(Perl_ck_null),	/* aslice */
-	MEMBER_TO_FPTR(Perl_ck_fun),	/* each */
-	MEMBER_TO_FPTR(Perl_ck_fun),	/* values */
-	MEMBER_TO_FPTR(Perl_ck_fun),	/* keys */
+	MEMBER_TO_FPTR(Perl_ck_each),	/* aeach */
+	MEMBER_TO_FPTR(Perl_ck_each),	/* akeys */
+	MEMBER_TO_FPTR(Perl_ck_each),	/* avalues */
+	MEMBER_TO_FPTR(Perl_ck_each),	/* each */
+	MEMBER_TO_FPTR(Perl_ck_each),	/* values */
+	MEMBER_TO_FPTR(Perl_ck_each),	/* keys */
 	MEMBER_TO_FPTR(Perl_ck_delete),	/* delete */
 	MEMBER_TO_FPTR(Perl_ck_exists),	/* exists */
 	MEMBER_TO_FPTR(Perl_ck_rvconst),	/* rv2hv */
@@ -1359,7 +1371,6 @@ EXT Perl_check_t PL_check[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_ck_null),	/* dump */
 	MEMBER_TO_FPTR(Perl_ck_null),	/* goto */
 	MEMBER_TO_FPTR(Perl_ck_exit),	/* exit */
-	MEMBER_TO_FPTR(Perl_ck_null),	/* setstate */
 	MEMBER_TO_FPTR(Perl_ck_null),	/* method_named */
 	MEMBER_TO_FPTR(Perl_ck_null),	/* entergiven */
 	MEMBER_TO_FPTR(Perl_ck_null),	/* leavegiven */
@@ -1391,8 +1402,6 @@ EXT Perl_check_t PL_check[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* sysseek */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* sysread */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* syswrite */
-	MEMBER_TO_FPTR(Perl_ck_fun),	/* send */
-	MEMBER_TO_FPTR(Perl_ck_fun),	/* recv */
 	MEMBER_TO_FPTR(Perl_ck_eof),	/* eof */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* tell */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* seek */
@@ -1400,6 +1409,8 @@ EXT Perl_check_t PL_check[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* fcntl */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* ioctl */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* flock */
+	MEMBER_TO_FPTR(Perl_ck_fun),	/* send */
+	MEMBER_TO_FPTR(Perl_ck_fun),	/* recv */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* socket */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* sockpair */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* bind */
@@ -1488,6 +1499,7 @@ EXT Perl_check_t PL_check[] /* or perlvars.h */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* semctl */
 	MEMBER_TO_FPTR(Perl_ck_require),	/* require */
 	MEMBER_TO_FPTR(Perl_ck_fun),	/* dofile */
+	MEMBER_TO_FPTR(Perl_ck_svconst),	/* hintseval */
 	MEMBER_TO_FPTR(Perl_ck_eval),	/* entereval */
 	MEMBER_TO_FPTR(Perl_ck_null),	/* leaveeval */
 	MEMBER_TO_FPTR(Perl_ck_null),	/* entertry */
@@ -1669,6 +1681,9 @@ EXTCONST U32 PL_opargs[] = {
 	0x00026c04,	/* aelemfast */
 	0x00026404,	/* aelem */
 	0x00046801,	/* aslice */
+	0x00007600,	/* aeach */
+	0x00007608,	/* akeys */
+	0x00007608,	/* avalues */
 	0x00009600,	/* each */
 	0x00009608,	/* values */
 	0x00009608,	/* keys */
@@ -1733,7 +1748,6 @@ EXTCONST U32 PL_opargs[] = {
 	0x00001a44,	/* dump */
 	0x00001a44,	/* goto */
 	0x00013644,	/* exit */
-	0x00001404,	/* setstate */
 	0x00000c40,	/* method_named */
 	0x00000640,	/* entergiven */
 	0x00000200,	/* leavegiven */
@@ -1765,8 +1779,6 @@ EXTCONST U32 PL_opargs[] = {
 	0x0022c804,	/* sysseek */
 	0x122ec81d,	/* sysread */
 	0x1322c81d,	/* syswrite */
-	0x1222c81d,	/* send */
-	0x022ec81d,	/* recv */
 	0x0001d614,	/* eof */
 	0x0001d60c,	/* tell */
 	0x0022c804,	/* seek */
@@ -1774,6 +1786,8 @@ EXTCONST U32 PL_opargs[] = {
 	0x0022c80c,	/* fcntl */
 	0x0022c80c,	/* ioctl */
 	0x0002c91c,	/* flock */
+	0x1222c81d,	/* send */
+	0x022ec81d,	/* recv */
 	0x0222c814,	/* socket */
 	0x222cc814,	/* sockpair */
 	0x0002c814,	/* bind */
@@ -1862,6 +1876,7 @@ EXTCONST U32 PL_opargs[] = {
 	0x0222281d,	/* semctl */
 	0x000136c0,	/* require */
 	0x00002240,	/* dofile */
+	0x00000c04,	/* hintseval */
 	0x00003640,	/* entereval */
 	0x00002200,	/* leaveeval */
 	0x00000600,	/* entertry */

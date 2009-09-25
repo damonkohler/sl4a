@@ -75,6 +75,9 @@ typedef struct _ithread {
     IV stack_size;
     SV *err;                    /* Error from abnormally terminated thread */
     char *err_class;            /* Error object's classname if applicable */
+#ifndef WIN32
+    sigset_t initial_sigmask;   /* Thread wakes up with signals blocked */
+#endif
 } ithread;
 
 
@@ -114,6 +117,45 @@ typedef struct {
 
 #define MY_POOL (*my_poolp)
 
+#ifndef WIN32
+/* Block most signals for calling thread, setting the old signal mask to
+ * oldmask, if it is not NULL */
+STATIC int
+S_block_most_signals(sigset_t *oldmask)
+{
+    sigset_t newmask;
+
+    sigfillset(&newmask);
+    /* Don't block certain "important" signals (stolen from mg.c) */
+#ifdef SIGILL
+    sigdelset(&newmask, SIGILL);
+#endif
+#ifdef SIGBUS
+    sigdelset(&newmask, SIGBUS);
+#endif
+#ifdef SIGSEGV
+    sigdelset(&newmask, SIGSEGV);
+#endif
+
+#if defined(VMS)
+    /* no per-thread blocking available */
+    return sigprocmask(SIG_BLOCK, &newmask, oldmask);
+#else
+    return pthread_sigmask(SIG_BLOCK, &newmask, oldmask);
+#endif /* VMS */
+}
+
+/* Set the signal mask for this thread to newmask */
+STATIC int
+S_set_sigmask(sigset_t *newmask)
+{
+#if defined(VMS)
+    return sigprocmask(SIG_SETMASK, newmask, NULL);
+#else
+    return pthread_sigmask(SIG_SETMASK, newmask, NULL);
+#endif /* VMS */
+}
+#endif /* WIN32 */
 
 /* Used by Perl interpreter for thread context switching */
 STATIC void
@@ -142,11 +184,22 @@ STATIC void
 S_ithread_clear(pTHX_ ithread *thread)
 {
     PerlInterpreter *interp;
+#ifndef WIN32
+    sigset_t origmask;
+#endif
 
     assert(((thread->state & PERL_ITHR_FINISHED) &&
             (thread->state & PERL_ITHR_UNCALLABLE))
                 ||
            (thread->state & PERL_ITHR_NONVIABLE));
+
+#ifndef WIN32
+    /* We temporarily set the interpreter context to the interpreter being
+     * destroyed.  It's in no condition to handle signals while it's being
+     * taken apart.
+     */
+    S_block_most_signals(&origmask);
+#endif
 
     interp = thread->interp;
     if (interp) {
@@ -169,6 +222,9 @@ S_ithread_clear(pTHX_ ithread *thread)
     }
 
     PERL_SET_CONTEXT(aTHX);
+#ifndef WIN32
+    S_set_sigmask(&origmask);
+#endif
 }
 
 
@@ -415,6 +471,13 @@ S_ithread_run(void * arg)
     PERL_SET_CONTEXT(thread->interp);
     S_ithread_set(aTHX_ thread);
 
+#ifndef WIN32
+    /* Thread starts with most signals blocked - restore the signal mask from
+     * the ithread struct.
+     */
+    S_set_sigmask(&thread->initial_sigmask);
+#endif
+
     PL_perl_destruct_level = 2;
 
     {
@@ -447,6 +510,14 @@ S_ithread_run(void * arg)
             }
         }
         JMPENV_POP;
+
+#ifndef WIN32
+        /* The interpreter is finished, so this thread can stop receiving
+         * signals.  This way, our signal handler doesn't get called in the
+         * middle of our parent thread calling perl_destruct()...
+         */
+        S_block_most_signals(NULL);
+#endif
 
         /* Remove args from stack and put back in params array */
         SPAGAIN;
@@ -660,6 +731,27 @@ S_ithread_create(
     PL_srand_called = FALSE;   /* Set it to false so we can detect if it gets
                                   set during the clone */
 
+#ifndef WIN32
+    /* perl_clone() will leave us the new interpreter's context.  This poses
+     * two problems for our signal handler.  First, it sets the new context
+     * before the new interpreter struct is fully initialized, so our signal
+     * handler might find bogus data in the interpreter struct it gets.
+     * Second, even if the interpreter is initialized before a signal comes in,
+     * we would like to avoid that interpreter receiving notifications for
+     * signals (especially when they ought to be for the one running in this
+     * thread), until it is running in its own thread.  Another problem is that
+     * the new thread will not have set the context until some time after it
+     * has started, so it won't be safe for our signal handler to run until
+     * that time.
+     *
+     * So we block most signals here, so the new thread will inherit the signal
+     * mask, and unblock them right after the thread creation.  The original
+     * mask is saved in the thread struct so that the new thread can restore
+     * the original mask.
+     */
+    S_block_most_signals(&thread->initial_sigmask);
+#endif
+
 #ifdef WIN32
     thread->interp = perl_clone(aTHX, CLONEf_KEEP_PTR_TABLE | CLONEf_CLONE_HOST);
 #else
@@ -773,6 +865,13 @@ S_ithread_create(
                                               (void *)thread);
 #  endif
         }
+
+#ifndef WIN32
+    /* Now it's safe to accept signals, since we're in our own interpreter's
+     * context and we have created the thread.
+     */
+    S_set_sigmask(&thread->initial_sigmask);
+#endif
 
 #  ifdef _POSIX_THREAD_ATTR_STACKSIZE
         /* Try to get thread's actual stack size */

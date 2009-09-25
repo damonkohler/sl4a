@@ -203,10 +203,6 @@ S_do_trans_complex(pTHX_ SV * const sv)
 	if (complement && !del)
 	    rlen = tbl[0x100];
 
-#ifdef MACOS_TRADITIONAL
-#define comp CoMP   /* "comp" is a keyword in some compilers ... */
-#endif
-
 	if (PL_op->op_private & OPpTRANS_SQUASH) {
 	    UV pch = 0xfeedface;
 	    while (s < send) {

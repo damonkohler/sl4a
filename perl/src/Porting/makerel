@@ -208,10 +208,12 @@ if ($opts{b}) {
 
 print "\n";
 
-if (`which sha1`) {
-    system("sha1 $perl*.tar.*");
-} elsif (`which shasum`) {
-    system("shasum $perl*.tar.*");
-} else {
-    system("ls -ld $perl*");
+system("ls -ld $perl*");
+print "\n";
+
+for my $sha (qw(sha1 shasum sha1sum)) {
+    if (`which $sha 2>/dev/null`) {
+	system("$sha $perl*.tar.*");
+	last;
+    }
 }

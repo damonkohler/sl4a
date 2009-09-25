@@ -8,7 +8,7 @@ BEGIN {
 }
 
 
-BEGIN { print "1..17\n"; }
+BEGIN { print "1..32\n"; }
 BEGIN {
     print "not " if exists $^H{foo};
     print "ok 1 - \$^H{foo} doesn't exist initially\n";
@@ -38,7 +38,7 @@ BEGIN {
     }
     BEGIN {
 	print "not " if $^H{foo} ne "a";
-	print "ok 6 - \$H^{foo} restored to 'a'\n";
+	print "ok 6 - \$^H{foo} restored to 'a'\n";
     }
     # The pragma settings disappear after compilation
     # (test at CHECK-time and at run-time)
@@ -95,14 +95,52 @@ print "# got: $result\n" if length $result;
 
 {
     BEGIN{$^H{x}=1};
-    for(1..2) {
+    for my $tno (16..17) {
         eval q(
-            print $^H{x}==1 && !$^H{y} ? "ok\n" : "not ok\n";
+            print $^H{x}==1 && !$^H{y} ? "ok $tno\n" : "not ok $tno\n";
             $^H{y} = 1;
         );
         if ($@) {
             (my $str = $@)=~s/^/# /gm;
-            print "not ok\n$str\n";
+            print "not ok $tno\n$str\n";
         }
     }
+}
+
+{
+    $[ = 11;
+    print +($[ == 11 ? "" : "not "), "ok 18 - setting \$[ affects \$[\n";
+    our $t11; BEGIN { $t11 = $^H{'$['} }
+    print +($t11 == 11 ? "" : "not "), "ok 19 - setting \$[ affects \$^H{'\$['}\n";
+
+    BEGIN { $^H{'$['} = 22 }
+    print +($[ == 22 ? "" : "not "), "ok 20 - setting \$^H{'\$['} affects \$[\n";
+    our $t22; BEGIN { $t22 = $^H{'$['} }
+    print +($t22 == 22 ? "" : "not "), "ok 21 - setting \$^H{'\$['} affects \$^H{'\$['}\n";
+
+    BEGIN { %^H = () }
+    print +($[ == 0 ? "" : "not "), "ok 22 - clearing \%^H affects \$[\n";
+    our $t0; BEGIN { $t0 = $^H{'$['} }
+    print +($t0 == 0 ? "" : "not "), "ok 23 - clearing \%^H affects \$^H{'\$['}\n";
+}
+
+{
+    $[ = 13;
+    BEGIN { $^H |= 0x04000000; $^H{foo} = "z"; }
+
+    our($ri0, $rf0); BEGIN { $ri0 = $^H; $rf0 = $^H{foo}; }
+    print +($[ == 13 ? "" : "not "), "ok 24 - \$[ correct before require\n";
+    print +($ri0 & 0x04000000 ? "" : "not "), "ok 25 - \$^H correct before require\n";
+    print +($rf0 eq "z" ? "" : "not "), "ok 26 - \$^H{foo} correct before require\n";
+
+    our($ra1, $ri1, $rf1, $rfe1);
+    BEGIN { require "comp/hints.aux"; }
+    print +($ra1 == 0 ? "" : "not "), "ok 27 - \$[ cleared for require\n";
+    print +(!($ri1 & 0x04000000) ? "" : "not "), "ok 28 - \$^H cleared for require\n";
+    print +(!defined($rf1) && !$rfe1 ? "" : "not "), "ok 29 - \$^H{foo} cleared for require\n";
+
+    our($ri2, $rf2); BEGIN { $ri2 = $^H; $rf2 = $^H{foo}; }
+    print +($[ == 13 ? "" : "not "), "ok 30 - \$[ correct after require\n";
+    print +($ri2 & 0x04000000 ? "" : "not "), "ok 31 - \$^H correct after require\n";
+    print +($rf2 eq "z" ? "" : "not "), "ok 32 - \$^H{foo} correct after require\n";
 }

@@ -1,11 +1,13 @@
 #!./perl
+
 BEGIN {
-    chdir 't' if -d 't';
+   if( $ENV{PERL_CORE} ) {
+        chdir 't' if -d 't';
+        @INC = qw(../lib);
+    }
+}
 
-    #For tests within the perl distribution
-    @INC = '../lib' if -d '../lib';
-    END;
-
+BEGIN {
     # Functions exported by FileCache;
     @funcs  = qw[cacheout cacheout_close];
     $i      = 0;

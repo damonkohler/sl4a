@@ -77,7 +77,7 @@
 %token <i_tkval> FORMAT SUB ANONSUB PACKAGE USE
 %token <i_tkval> WHILE UNTIL IF UNLESS ELSE ELSIF CONTINUE FOR
 %token <i_tkval> GIVEN WHEN DEFAULT
-%token <i_tkval> LOOPEX DOTDOT
+%token <i_tkval> LOOPEX DOTDOT YADAYADA
 %token <i_tkval> FUNC0 FUNC1 FUNC UNIOP LSTOP
 %token <i_tkval> RELOP EQOP MULOP ADDOP
 %token <i_tkval> DOLSHARP DO HASHBRACK NOAMP
@@ -111,7 +111,7 @@
 %left <i_tkval> ','
 %right <i_tkval> ASSIGNOP
 %right <i_tkval> '?' ':'
-%nonassoc DOTDOT
+%nonassoc DOTDOT YADAYADA
 %left <i_tkval> OROR DORDOR
 %left <i_tkval> ANDAND
 %left <i_tkval> BITOROP
@@ -269,6 +269,8 @@ sideff	:	error
 					(OP*)NULL, $3, $1, (OP*)NULL);
 			  TOKEN_GETMAD($2,((LISTOP*)$$)->op_first->op_sibling,'w');
 			}
+	|	expr WHEN expr
+			{ $$ = newWHENOP($3, scope($1)); }
 	;
 
 /* else and elsif blocks */
@@ -1232,6 +1234,11 @@ term	:	termbinop
 			}
 	|	WORD
 	|	listop
+	|	YADAYADA
+			{
+			  $$ = newLISTOP(OP_DIE, 0, newOP(OP_PUSHMARK, 0),
+				newSVOP(OP_CONST, 0, newSVpvs("Unimplemented")));
+			}
 	;
 
 /* "my" declarations, with optional attributes */

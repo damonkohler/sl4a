@@ -1234,6 +1234,10 @@ lookup:
     delete $ref->[$x][$y][$index];
     delete @{$ref->[$x][$y]}[$index1, $index2, @moreindices];
 
+The C<delete local EXPR> construct can also be used to localize the deletion
+of array/hash elements to the current block.
+See L<perlsub/"Localized deletion of elements of composite types">.
+
 =item die LIST
 X<die> X<throw> X<exception> X<raise> X<$@> X<abort>
 
@@ -1419,25 +1423,30 @@ typo.
 =item each HASH
 X<each> X<hash, iterator>
 
-When called in list context, returns a 2-element list consisting of the
-key and value for the next element of a hash, so that you can iterate over
-it.  When called in scalar context, returns only the key for the next
-element in the hash.
+=item each ARRAY
+X<array, iterator>
 
-Entries are returned in an apparently random order.  The actual random
+When called in list context, returns a 2-element list consisting of the
+key and value for the next element of a hash, or the index and value for
+the next element of an array, so that you can iterate over it.  When called
+in scalar context, returns only the key for the next element in the hash
+(or the index for an array).
+
+Hash entries are returned in an apparently random order.  The actual random
 order is subject to change in future versions of perl, but it is
 guaranteed to be in the same order as either the C<keys> or C<values>
 function would produce on the same (unmodified) hash.  Since Perl
 5.8.2 the ordering can be different even between different runs of Perl
 for security reasons (see L<perlsec/"Algorithmic Complexity Attacks">).
 
-When the hash is entirely read, a null array is returned in list context
-(which when assigned produces a false (C<0>) value), and C<undef> in
+When the hash or array is entirely read, a null array is returned in list
+context (which when assigned produces a false (C<0>) value), and C<undef> in
 scalar context.  The next call to C<each> after that will start iterating
-again.  There is a single iterator for each hash, shared by all C<each>,
-C<keys>, and C<values> function calls in the program; it can be reset by
-reading all the elements from the hash, or by evaluating C<keys HASH> or
-C<values HASH>.  If you add or delete elements of a hash while you're
+again.  There is a single iterator for each hash or array, shared by all
+C<each>, C<keys>, and C<values> function calls in the program; it can be
+reset by reading all the elements from the hash or array, or by evaluating
+C<keys HASH>, C<values HASH>, C<keys ARRAY>, or C<values ARRAY>.  If you add
+or delete elements of a hash while you're
 iterating over it, you may get entries skipped or duplicated, so
 don't.  Exception: It is always safe to delete the item most recently
 returned by C<each()>, which means that the following code will work:
@@ -2550,10 +2559,12 @@ first argument.  Compare L</split>.
 =item keys HASH
 X<keys> X<key>
 
-Returns a list consisting of all the keys of the named hash.
-(In scalar context, returns the number of keys.)
+=item keys ARRAY
 
-The keys are returned in an apparently random order.  The actual
+Returns a list consisting of all the keys of the named hash, or the indices
+of an array. (In scalar context, returns the number of keys or indices.)
+
+The keys of a hash are returned in an apparently random order.  The actual
 random order is subject to change in future versions of perl, but it
 is guaranteed to be the same order as either the C<values> or C<each>
 function produces (given that the hash has not been modified).  Since
@@ -2561,7 +2572,7 @@ Perl 5.8.1 the ordering is different even between different runs of
 Perl for security reasons (see L<perlsec/"Algorithmic Complexity
 Attacks">).
 
-As a side effect, calling keys() resets the HASH's internal iterator
+As a side effect, calling keys() resets the HASH or ARRAY's internal iterator
 (see L</each>).  In particular, calling keys() in void context resets
 the iterator with no other overhead.
 
@@ -2602,7 +2613,8 @@ buckets will be retained even if you do C<%hash = ()>, use C<undef
 %hash> if you want to free the storage while C<%hash> is still in scope.
 You can't shrink the number of buckets allocated for the hash using
 C<keys> in this way (but you needn't worry about doing this by accident,
-as trying has no effect).
+as trying has no effect). C<keys @array> in an lvalue context is a syntax
+error.
 
 See also C<each>, C<values> and C<sort>.
 
@@ -2623,11 +2635,13 @@ the super-user).  This is a useful way to check that a child process is
 alive (even if only as a zombie) and hasn't changed its UID.  See
 L<perlport> for notes on the portability of this construct.
 
-Unlike in the shell, if SIGNAL is negative, it kills
-process groups instead of processes.  (On System V, a negative I<PROCESS>
-number will also kill process groups, but that's not portable.)  That
-means you usually want to use positive not negative signals.  You may also
-use a signal name in quotes.
+Unlike in the shell, if SIGNAL is negative, it kills process groups instead
+of processes. That means you usually want to use positive not negative signals.
+You may also use a signal name in quotes.
+
+The behavior of kill when a I<PROCESS> number is zero or negative depends on
+the operating system.  For example, on POSIX-conforming systems, zero will
+signal the current process group and -1 will signal all processes.
 
 See L<perlipc/"Signals"> for more details.
 
@@ -2688,9 +2702,10 @@ X<length> X<size>
 =item length
 
 Returns the length in I<characters> of the value of EXPR.  If EXPR is
-omitted, returns length of C<$_>.  Note that this cannot be used on
-an entire array or hash to find out how many elements these have.
-For that, use C<scalar @array> and C<scalar keys %hash> respectively.
+omitted, returns length of C<$_>.  If EXPR is undefined, returns C<undef>.
+Note that this cannot be used on an entire array or hash to find out how
+many elements these have. For that, use C<scalar @array> and C<scalar keys
+%hash> respectively.
 
 Note the I<characters>: if the EXPR is in Unicode, you will get the
 number of characters, not the number of bytes.  To get the length
@@ -2724,6 +2739,10 @@ A local modifies the listed variables to be local to the enclosing
 block, file, or eval.  If more than one value is listed, the list must
 be placed in parentheses.  See L<perlsub/"Temporary Values via local()">
 for details, including issues with tied arrays and hashes.
+
+The C<delete local EXPR> construct can also be used to localize the deletion
+of array/hash elements to the current block.
+See L<perlsub/"Localized deletion of elements of composite types">.
 
 =item localtime EXPR
 X<localtime> X<ctime>
@@ -5454,9 +5473,10 @@ Splits the string EXPR into a list of strings and returns that list.  By
 default, empty leading fields are preserved, and empty trailing ones are
 deleted.  (If all fields are empty, they are considered to be trailing.)
 
-In scalar context, returns the number of fields found and splits into
-the C<@_> array.  Use of split in scalar context is deprecated, however,
-because it clobbers your subroutine arguments.
+In scalar context, returns the number of fields found. In scalar and void
+context it splits into the C<@_> array.  Use of split in scalar and void
+context is deprecated, however, because it clobbers your subroutine
+arguments.
 
 If EXPR is omitted, splits the C<$_> string.  If PATTERN is also omitted,
 splits on whitespace (after skipping any leading whitespace).  Anything
@@ -6941,6 +6961,9 @@ C<use>ing library modules that won't work with older versions of Perl.
 Also, if the specified perl version is greater than or equal to 5.9.5,
 C<use VERSION> will also load the C<feature> pragma and enable all
 features available in the requested version.  See L<feature>.
+Similarly, if the specified perl version is greater than or equal to
+5.11.0, strictures are enabled lexically as with C<use strict> (except
+that the F<strict.pm> file is not actually loaded).
 
 The C<BEGIN> forces the C<require> and C<import> to happen at compile time.  The
 C<require> makes sure the module is loaded into memory if it hasn't been
@@ -7046,8 +7069,10 @@ file names.
 =item values HASH
 X<values>
 
-Returns a list consisting of all the values of the named hash.
-(In a scalar context, returns the number of values.)
+=item values ARRAY
+
+Returns a list consisting of all the values of the named hash, or the values
+of an array. (In a scalar context, returns the number of values.)
 
 The values are returned in an apparently random order.  The actual
 random order is subject to change in future versions of perl, but it
@@ -7056,9 +7081,15 @@ function would produce on the same (unmodified) hash.  Since Perl
 5.8.1 the ordering is different even between different runs of Perl
 for security reasons (see L<perlsec/"Algorithmic Complexity Attacks">).
 
-As a side effect, calling values() resets the HASH's internal iterator,
+As a side effect, calling values() resets the HASH or ARRAY's internal
+iterator,
 see L</each>. (In particular, calling values() in void context resets
-the iterator with no other overhead.)
+the iterator with no other overhead. Apart from resetting the iterator,
+C<values @array> in list context is no different to plain C<@array>.
+We recommend that you use void context C<keys @array> for this, but reasoned
+that it taking C<values @array> out would require more documentation than
+leaving it in.)
+
 
 Note that the values are not copied, which means modifying them will
 modify the contents of the hash:

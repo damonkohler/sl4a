@@ -6,7 +6,7 @@ BEGIN {
     @INC = '../lib';
 }
 
-plan (tests => 22);
+plan (tests => 28);
 
 print "not " unless length("")    == 0;
 print "ok 1\n";
@@ -161,3 +161,38 @@ tie $u, 'Tie::StdScalar', chr 256;
 is(length $u, 1, "Length of a UTF-8 scalar returned from tie");
 is(length $u, 1, "Again! Again!");
 
+$^W = 1;
+
+my $warnings = 0;
+
+$SIG{__WARN__} = sub {
+    $warnings++;
+    warn @_;
+};
+
+is(length(undef), undef, "Length of literal undef");
+
+my $u;
+
+is(length($u), undef, "Length of regular scalar");
+
+$u = "Gotcha!";
+
+tie $u, 'Tie::StdScalar';
+
+is(length($u), undef, "Length of tied scalar (MAGIC)");
+
+is($u, undef);
+
+{
+    package U;
+    use overload '""' => sub {return undef;};
+}
+
+my $uo = bless [], 'U';
+
+is(length($uo), undef, "Length of overloaded reference");
+
+# ok(!defined $uo); Turns you can't test this. FIXME for pp_defined?
+
+is($warnings, 0, "There were no warnings");

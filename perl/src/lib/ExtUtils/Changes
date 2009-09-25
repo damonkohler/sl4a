@@ -1,3 +1,13 @@
+6.55_02  Wed Aug  5 00:36:36 PDT 2009
+    Feature Changes
+    * PREFIX now applies to relative directories.  This is a change since
+      6.20 when they were ignored.  Its necessary for relocatable Perls.
+
+    VMS
+    * Refactoring of "MakeMaker Parameters" section in 6.55_01 broke VMS.
+      (Craig Berry)
+
+
 6.55_01  Tue Jul 14 15:53:30 PDT 2009
     Test Fixes
     * The tests got a bit overzealous and removed the LIB environment variable
@@ -1038,7 +1048,7 @@
       causing warnings when generating the Makefile.
 
 6.06_03 Sat Mar 29 19:44:53 PST 2003
-    - Added AUTHOR and ABSTRACT_FROM info for ppd generation.
+    - Added AUTHOR and ABSTRACT_FROM info to Makefile.PL for ppd generation.
     - Added echo() method to portably echo text to a file.
     - Worked around 5.8.0 eval 'require Foo::Bar' bug causing MakeMaker
       to think modules weren't installed.

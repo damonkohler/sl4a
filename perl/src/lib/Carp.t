@@ -55,11 +55,11 @@ sub_6;
 ok(1);
 
 # test for caller_info API
-my $eval = "use Carp::Heavy; return Carp::caller_info(0);";
+my $eval = "use Carp; return Carp::caller_info(0);";
 my %info = eval($eval);
 is($info{sub_name}, "eval '$eval'", 'caller_info API');
 
-# test for '...::CARP_NOT used only once' warning from Carp::Heavy
+# test for '...::CARP_NOT used only once' warning from Carp
 my $warning;
 eval {
     BEGIN {
@@ -70,7 +70,7 @@ eval {
     package Z;
     BEGIN { eval { Carp::croak() } }
 };
-ok !$warning, q/'...::CARP_NOT used only once' warning from Carp::Heavy/;
+ok !$warning, q/'...::CARP_NOT used only once' warning from Carp/;
 
 # Test the location of error messages.
 like(A::short(), qr/^Error at C/, "Short messages skip carped package");

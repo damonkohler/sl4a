@@ -25,6 +25,7 @@ our $show_elapsed_time = $ENV{HARNESS_TIMER} || 0;
     my @argv = ();
     foreach my $idx (0..$#ARGV) {
 	push( @argv, $ARGV[$idx] ), next unless $ARGV[$idx] =~ /^-(\S+)$/;
+	$::benchmark = 1 if $1 eq 'benchmark';
 	$::core    = 1 if $1 eq 'core';
 	$::verbose = 1 if $1 eq 'v';
 	$::torture = 1 if $1 eq 'torture';
@@ -168,7 +169,9 @@ unless (@ARGV) {
     unless ($::core) {
 	_find_tests('pod');
 	_find_tests('x2p');
+	_find_tests('porting');
 	_find_tests('japh') if $::torture;
+	_find_tests('t/benchmark') if $::benchmark or $ENV{PERL_BENCHMARK};
     }
 }
 

@@ -9,7 +9,7 @@
 
 package Data::Dumper;
 
-$VERSION = '2.124'; # Don't forget to set version and release date in POD!
+$VERSION = '2.125'; # Don't forget to set version and release date in POD!
 
 #$| = 1;
 
@@ -382,7 +382,7 @@ sub _dump {
 	$out .= '\\' . $s->_dump($$val, "*{$name}");
     }
     elsif ($realtype eq 'ARRAY') {
-      my($v, $pad, $mname);
+      my($pad, $mname);
       my($i) = 0;
       $out .= ($name =~ /^\@/) ? '(' : '[';
       $pad = $s->{sep} . $s->{pad} . $s->{apad};
@@ -391,7 +391,7 @@ sub _dump {
 	($name =~ /^\\?[\%\@\*\$][^{].*[]}]$/) ? ($mname = $name) :
 	  ($mname = $name . '->');
       $mname .= '->' if $mname =~ /^\*.+\{[A-Z]+\}$/;
-      for $v (@$val) {
+      for my $v (@$val) {
 	$sname = $mname . '[' . $i . ']';
 	$out .= $pad . $ipad . '#' . $i if $s->{indent} >= 3;
 	$out .= $pad . $ipad . $s->_dump($v, $sname);
@@ -754,7 +754,7 @@ Data::Dumper - stringified perl data structures, suitable for both printing and 
 =head1 DESCRIPTION
 
 Given a list of scalars or reference variables, writes out their contents in
-perl syntax. The references can also be objects.  The contents of each
+perl syntax. The references can also be objects.  The content of each
 variable is output in a single Perl statement.  Handles self-referential
 structures correctly.
 
@@ -1017,7 +1017,7 @@ Default is: C< =E<gt> >.
 $Data::Dumper::Maxdepth  I<or>  $I<OBJ>->Maxdepth(I<[NEWVAL]>)
 
 Can be set to a positive integer that specifies the depth beyond which
-which we don't venture into a structure.  Has no effect when
+we don't venture into a structure.  Has no effect when
 C<Data::Dumper::Purity> is set.  (Useful in debugger when we often don't
 want to see more than enough).  Default is 0, which means there is 
 no maximum depth. 
@@ -1297,7 +1297,7 @@ modify it under the same terms as Perl itself.
 
 =head1 VERSION
 
-Version 2.124  (Jun 13 2009)
+Version 2.125  (Aug  8 2009)
 
 =head1 SEE ALSO
 

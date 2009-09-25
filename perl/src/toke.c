@@ -124,16 +124,14 @@ static I32 utf16rev_textfilter(pTHX_ int idx, SV *sv, int maxlen);
 #   define UTF ((PL_linestr && DO_UTF8(PL_linestr)) || (PL_hints & HINT_UTF8))
 #endif
 
+/* The maximum number of characters preceding the unrecognized one to display */
+#define UNRECOGNIZED_PRECEDE_COUNT 10
+
 /* In variables named $^X, these are the legal values for X.
  * 1999-02-27 mjd-perl-patch@plover.com */
 #define isCONTROLVAR(x) (isUPPER(x) || strchr("[\\]^_?", (x)))
 
-/* On MacOS, respect nonbreaking spaces */
-#ifdef MACOS_TRADITIONAL
-#define SPACE_OR_TAB(c) ((c)==' '||(c)=='\312'||(c)=='\t')
-#else
 #define SPACE_OR_TAB(c) ((c)==' '||(c)=='\t')
-#endif
 
 /* LEX_* are values for PL_lex_state, the state of the lexer.
  * They are arranged oddly so that the guard on the switch statement
@@ -370,6 +368,7 @@ static struct debug_tokens {
     { WHEN,		TOKENTYPE_IVAL,		"WHEN" },
     { WHILE,		TOKENTYPE_IVAL,		"WHILE" },
     { WORD,		TOKENTYPE_OPVAL,	"WORD" },
+    { YADAYADA,		TOKENTYPE_IVAL,		"YADAYADA" },
     { 0,		TOKENTYPE_NONE,		NULL }
 };
 
@@ -440,7 +439,7 @@ S_tokereport(pTHX_ I32 rv, const YYSTYPE* lvalp)
 /* print the buffer with suitable escapes */
 
 STATIC void
-S_printbuf(pTHX_ const char* fmt, const char* s)
+S_printbuf(pTHX_ const char *const fmt, const char *const s)
 {
     SV* const tmp = newSVpvs("");
 
@@ -490,7 +489,7 @@ S_ao(pTHX_ int toketype)
  */
 
 STATIC void
-S_no_op(pTHX_ const char *what, char *s)
+S_no_op(pTHX_ const char *const what, char *s)
 {
     dVAR;
     char * const oldbp = PL_bufptr;
@@ -571,7 +570,7 @@ S_missingterm(pTHX_ char *s)
  * Check whether the named feature is enabled.
  */
 STATIC bool
-S_feature_is_enabled(pTHX_ const char *name, STRLEN namelen)
+S_feature_is_enabled(pTHX_ const char *const name, STRLEN namelen)
 {
     dVAR;
     HV * const hinthv = GvHV(PL_hintgv);
@@ -590,7 +589,7 @@ S_feature_is_enabled(pTHX_ const char *name, STRLEN namelen)
  */
 
 void
-Perl_deprecate(pTHX_ const char *s)
+Perl_deprecate(pTHX_ const char *const s)
 {
     PERL_ARGS_ASSERT_DEPRECATE;
 
@@ -599,7 +598,7 @@ Perl_deprecate(pTHX_ const char *s)
 }
 
 void
-Perl_deprecate_old(pTHX_ const char *s)
+Perl_deprecate_old(pTHX_ const char *const s)
 {
     /* This function should NOT be called for any new deprecated warnings */
     /* Use Perl_deprecate instead                                         */
@@ -823,6 +822,8 @@ S_incline(pTHX_ const char *s)
     n = s;
     while (isDIGIT(*s))
 	s++;
+    if (!SPACE_OR_TAB(*s) && *s != '\r' && *s != '\n' && *s != '\0')
+	return;
     while (SPACE_OR_TAB(*s))
 	s++;
     if (*s == '"' && (t = strchr(s+1, '"'))) {
@@ -995,7 +996,7 @@ S_skipspace2(pTHX_ register char *s, SV **svp)
 #endif
 
 STATIC void
-S_update_debugger_info(pTHX_ SV *orig_sv, const char *buf, STRLEN len)
+S_update_debugger_info(pTHX_ SV *orig_sv, const char *const buf, STRLEN len)
 {
     AV *av = CopFILEAVx(PL_curcop);
     if (av) {
@@ -1137,16 +1138,14 @@ S_skipspace(pTHX_ register char *s)
 	    PL_bufend = SvPVX(PL_linestr) + SvCUR(PL_linestr);
 	    PL_last_lop = PL_last_uni = NULL;
 
-	    /* Close the filehandle.  Could be from -P preprocessor,
+	    /* Close the filehandle.  Could be from
 	     * STDIN, or a regular file.  If we were reading code from
 	     * STDIN (because the commandline held no -e or filename)
 	     * then we don't close it, we reset it so the code can
 	     * read from STDIN too.
 	     */
 
-	    if (PL_preprocess && !PL_in_eval)
-		(void)PerlProc_pclose(PL_rsfp);
-	    else if ((PerlIO*)PL_rsfp == PerlIO_stdin())
+	    if ((PerlIO*)PL_rsfp == PerlIO_stdin())
 		PerlIO_clearerr(PL_rsfp);
 	    else
 		(void)PerlIO_close(PL_rsfp);
@@ -1381,7 +1380,7 @@ S_force_next(pTHX_ I32 type)
 }
 
 STATIC SV *
-S_newSV_maybe_utf8(pTHX_ const char *start, STRLEN len)
+S_newSV_maybe_utf8(pTHX_ const char *const start, STRLEN len)
 {
     dVAR;
     SV * const sv = newSVpvn_utf8(start, len,
@@ -2191,8 +2190,13 @@ S_scan_const(pTHX_ char *start)
 	else if (*s == '$') {
 	    if (!PL_lex_inpat)	/* not a regexp, so $ must be var */
 		break;
-	    if (s + 1 < send && !strchr("()| \r\n\t", s[1]))
+	    if (s + 1 < send && !strchr("()| \r\n\t", s[1])) {
+		if (s[1] == '\\' && ckWARN(WARN_AMBIGUOUS)) {
+		    Perl_warner(aTHX_ packWARN(WARN_AMBIGUOUS),
+				"Possible unintended interpolation of $\\ in regex");
+		}
 		break;		/* in regexp, $ might be tail anchor */
+            }
 	}
 
 	/* End of else if chain - OP_TRANS rejoin rest */
@@ -2300,9 +2304,10 @@ S_scan_const(pTHX_ char *start)
 			SvCUR_set(sv, d - SvPVX_const(sv));
 			SvPOK_on(sv);
 			*d = '\0';
-			sv_utf8_upgrade(sv);
 			/* See Note on sizing above.  */
-			SvGROW(sv, SvCUR(sv) + UNISKIP(uv) + (STRLEN)(send - s) + 1);
+			sv_utf8_upgrade_flags_grow(sv,
+					SV_GMAGIC|SV_FORCE_UTF8_UPGRADE,
+					UNISKIP(uv) + (STRLEN)(send - s) + 1);
 			d = SvPVX(sv) + SvCUR(sv);
 			has_utf8 = TRUE;
                     }
@@ -2390,9 +2395,10 @@ S_scan_const(pTHX_ char *start)
 			SvCUR_set(sv, d - SvPVX_const(sv));
 			SvPOK_on(sv);
 			*d = '\0';
-			sv_utf8_upgrade(sv);
 			/* See Note on sizing above.  */
-			SvGROW(sv, SvCUR(sv) + len + (STRLEN)(send - s) + 1);
+			sv_utf8_upgrade_flags_grow(sv,
+					    SV_GMAGIC|SV_FORCE_UTF8_UPGRADE,
+					    len + (STRLEN)(send - s) + 1);
 			d = SvPVX(sv) + SvCUR(sv);
 			has_utf8 = TRUE;
 		    } else if (len > (STRLEN)(e - s + 4)) { /* I _guess_ 4 is \N{} --jhi */
@@ -2484,10 +2490,10 @@ S_scan_const(pTHX_ char *start)
 		SvCUR_set(sv, d - SvPVX_const(sv));
 		SvPOK_on(sv);
 		*d = '\0';
-		sv_utf8_upgrade(sv);
-
 		/* See Note on sizing above.  */
-		SvGROW(sv, SvCUR(sv) + need + (STRLEN)(send - s) + 1);
+		sv_utf8_upgrade_flags_grow(sv,
+					SV_GMAGIC|SV_FORCE_UTF8_UPGRADE,
+					need + (STRLEN)(send - s) + 1);
 		d = SvPVX(sv) + SvCUR(sv);
 		has_utf8 = TRUE;
 	    } else if (need > len) {
@@ -3649,8 +3655,17 @@ Perl_yylex(pTHX)
     default:
 	if (isIDFIRST_lazy_if(s,UTF))
 	    goto keylookup;
-	len = UTF ? Perl_utf8_length(aTHX_ (U8 *) PL_linestart, (U8 *) s) : (STRLEN) (s - PL_linestart);
-	Perl_croak(aTHX_ "Unrecognized character \\x%02X in column %d", *s & 255, (int) len + 1);
+	{
+        unsigned char c = *s;
+        len = UTF ? Perl_utf8_length(aTHX_ (U8 *) PL_linestart, (U8 *) s) : (STRLEN) (s - PL_linestart);
+        if (len > UNRECOGNIZED_PRECEDE_COUNT) {
+            d = UTF ? (char *) Perl_utf8_hop(aTHX_ (U8 *) s, -UNRECOGNIZED_PRECEDE_COUNT) : s - UNRECOGNIZED_PRECEDE_COUNT;
+        } else {
+            d = PL_linestart;
+        }	
+        *s = '\0';
+        Perl_croak(aTHX_ "Unrecognized character \\x%02X; marked by <-- HERE after %s<-- HERE near column %d", c, d, (int) len + 1);
+    }
     case 4:
     case 26:
 	goto fake_eof;			/* emulate EOF on ^D or ^Z */
@@ -3760,9 +3775,7 @@ Perl_yylex(pTHX)
 		PL_realtokenstart = -1;
 #endif
 		if (PL_rsfp) {
-		    if (PL_preprocess && !PL_in_eval)
-			(void)PerlProc_pclose(PL_rsfp);
-		    else if ((PerlIO *)PL_rsfp == PerlIO_stdin())
+		    if ((PerlIO *)PL_rsfp == PerlIO_stdin())
 			PerlIO_clearerr(PL_rsfp);
 		    else
 			(void)PerlIO_close(PL_rsfp);
@@ -3809,16 +3822,7 @@ Perl_yylex(pTHX)
 #    endif
 #  endif
 #endif
-#ifdef FTELL_FOR_PIPE_IS_BROKEN
-		/* This loses the possibility to detect the bof
-		 * situation on perl -P when the libc5 is being used.
-		 * Workaround?  Maybe attach some extra state to PL_rsfp?
-		 */
-		if (!PL_preprocess)
-		    bof = PerlIO_tell(PL_rsfp) == SvCUR(PL_linestr);
-#else
 		bof = PerlIO_tell(PL_rsfp) == (Off_t)SvCUR(PL_linestr);
-#endif
 		if (bof) {
 		    PL_bufend = SvPVX(PL_linestr) + SvCUR(PL_linestr);
 		    s = swallow_bom((U8*)s);
@@ -3951,7 +3955,6 @@ Perl_yylex(pTHX)
 			*s = '#';	/* Don't try to parse shebang line */
 		}
 #endif /* ALTERNATE_SHEBANG */
-#ifndef MACOS_TRADITIONAL
 		if (!d &&
 		    *s == '#' &&
 		    ipathend > ipath &&
@@ -3967,7 +3970,7 @@ Perl_yylex(pTHX)
 		    while (s < PL_bufend && isSPACE(*s))
 			s++;
 		    if (s < PL_bufend) {
-			Newxz(newargv,PL_origargc+3,char*);
+			Newx(newargv,PL_origargc+3,char*);
 			newargv[1] = s;
 			while (s < PL_bufend && !isSPACE(*s))
 			    s++;
@@ -3982,7 +3985,6 @@ Perl_yylex(pTHX)
 		    PERL_FPU_POST_EXEC
 		    Perl_croak(aTHX_ "Can't exec %s", ipath);
 		}
-#endif
 		if (d) {
 		    while (*d && !isSPACE(*d))
 			d++;
@@ -4052,9 +4054,6 @@ Perl_yylex(pTHX)
       "\t(Maybe you didn't strip carriage returns after a network transfer?)\n");
 #endif
     case ' ': case '\t': case '\f': case 013:
-#ifdef MACOS_TRADITIONAL
-    case '\312':
-#endif
 #ifdef PERL_MAD
 	PL_realtokenstart = -1;
 	if (!PL_thiswhite)
@@ -4350,6 +4349,7 @@ Perl_yylex(pTHX)
 		    case KEY_or:
 		    case KEY_and:
 		    case KEY_for:
+		    case KEY_foreach:
 		    case KEY_unless:
 		    case KEY_if:
 		    case KEY_while:
@@ -4385,11 +4385,6 @@ Perl_yylex(pTHX)
 		    if (len == 6 && strnEQ(SvPVX(sv), "unique", len)) {
 			sv_free(sv);
 			if (PL_in_my == KEY_our) {
-#ifdef USE_ITHREADS
-			    GvUNIQUE_on(cGVOPx_gv(pl_yylval.opval));
-#else
-			    /* skip to avoid loading attributes.pm */
-#endif
 			    deprecate(":unique");
 			}
 			else
@@ -4404,7 +4399,7 @@ Perl_yylex(pTHX)
 		    }
 		    else if (!PL_in_my && len == 6 && strnEQ(SvPVX(sv), "locked", len)) {
 			sv_free(sv);
-			CvLOCKED_on(PL_compcv);
+			deprecate(":locked");
 		    }
 		    else if (!PL_in_my && len == 6 && strnEQ(SvPVX(sv), "method", len)) {
 			sv_free(sv);
@@ -5068,10 +5063,10 @@ Perl_yylex(pTHX)
 	    AOPERATOR(DORDOR);
 	}
      case '?':			/* may either be conditional or pattern */
-	 if(PL_expect == XOPERATOR) {
+	if (PL_expect == XOPERATOR) {
 	     char tmp = *s++;
 	     if(tmp == '?') {
-    	          OPERATOR('?');
+		OPERATOR('?');
 	     }
              else {
 	         tmp = *s++;
@@ -5109,6 +5104,10 @@ Perl_yylex(pTHX)
 	    PL_lex_formbrack = 0;
 	    PL_expect = XSTATE;
 	    goto rightbracket;
+	}
+	if (PL_expect == XSTATE && s[1] == '.' && s[2] == '.') {
+	    s += 3;
+	    OPERATOR(YADAYADA);
 	}
 	if (PL_expect == XOPERATOR || !isDIGIT(s[1])) {
 	    char tmp = *s++;
@@ -5279,14 +5278,17 @@ Perl_yylex(pTHX)
 	/* Is this a label? */
 	if (!tmp && PL_expect == XSTATE
 	      && d < PL_bufend && *d == ':' && *(d + 1) != ':') {
+	    tmp = keyword(PL_tokenbuf, len, 0);
+	    if (tmp)
+		Perl_croak(aTHX_ "Can't use keyword '%s' as a label", PL_tokenbuf);
 	    s = d + 1;
 	    pl_yylval.pval = CopLABEL_alloc(PL_tokenbuf);
 	    CLINE;
 	    TOKEN(LABEL);
 	}
-
-	/* Check for keywords */
-	tmp = keyword(PL_tokenbuf, len, 0);
+	else
+	    /* Check for keywords */
+	    tmp = keyword(PL_tokenbuf, len, 0);
 
 	/* Is this a word before a => operator? */
 	if (*d == '=' && d[1] == '>') {
@@ -5697,10 +5699,22 @@ Perl_yylex(pTHX)
 
 		/* Call it a bare word */
 
-		bareword:
 		if (PL_hints & HINT_STRICT_SUBS)
 		    pl_yylval.opval->op_private |= OPpCONST_STRICT;
 		else {
+		bareword:
+		    /* after "print" and similar functions (corresponding to
+		     * "F? L" in opcode.pl), whatever wasn't already parsed as
+		     * a filehandle should be subject to "strict subs".
+		     * Likewise for the optional indirect-object argument to system
+		     * or exec, which can't be a bareword */
+		    if ((PL_last_lop_op == OP_PRINT
+			    || PL_last_lop_op == OP_PRTF
+			    || PL_last_lop_op == OP_SAY
+			    || PL_last_lop_op == OP_SYSTEM
+			    || PL_last_lop_op == OP_EXEC)
+			    && (PL_hints & HINT_STRICT_SUBS))
+			pl_yylval.opval->op_private |= OPpCONST_STRICT;
 		    if (lastchar != '-') {
 			if (ckWARN(WARN_RESERVED)) {
 			    d = PL_tokenbuf;
@@ -5764,9 +5778,7 @@ Perl_yylex(pTHX)
 #endif
 		/* Mark this internal pseudo-handle as clean */
 		IoFLAGS(GvIOp(gv)) |= IOf_UNTAINT;
-		if (PL_preprocess)
-		    IoTYPE(GvIOp(gv)) = IoTYPE_PIPE;
-		else if ((PerlIO*)PL_rsfp == PerlIO_stdin())
+		if ((PerlIO*)PL_rsfp == PerlIO_stdin())
 		    IoTYPE(GvIOp(gv)) = IoTYPE_STD;
 		else
 		    IoTYPE(GvIOp(gv)) = IoTYPE_RDONLY;
@@ -6776,6 +6788,12 @@ Perl_yylex(pTHX)
 		if (*s == '(') {
 		    char *p;
 		    bool bad_proto = FALSE;
+		    bool in_brackets = FALSE;
+		    char greedy_proto = ' ';
+		    bool proto_after_greedy_proto = FALSE;
+		    bool must_be_last = FALSE;
+		    bool underscore = FALSE;
+		    bool seen_underscore = FALSE;
 		    const bool warnsyntax = ckWARN(WARN_SYNTAX);
 
 		    s = scan_str(s,!!PL_madskills,FALSE);
@@ -6787,14 +6805,47 @@ Perl_yylex(pTHX)
 		    for (p = d; *p; ++p) {
 			if (!isSPACE(*p)) {
 			    d[tmp++] = *p;
-			    if (warnsyntax && !strchr("$@%*;[]&\\_", *p))
-				bad_proto = TRUE;
+
+			    if (warnsyntax) {
+				if (must_be_last)
+				    proto_after_greedy_proto = TRUE;
+				if (!strchr("$@%*;[]&\\_", *p)) {
+				    bad_proto = TRUE;
+				}
+				else {
+				    if ( underscore ) {
+					if ( *p != ';' )
+					    bad_proto = TRUE;
+					underscore = FALSE;
+				    }
+				    if ( *p == '[' ) {
+					in_brackets = TRUE;
+				    }
+				    else if ( *p == ']' ) {
+					in_brackets = FALSE;
+				    }
+				    else if ( (*p == '@' || *p == '%') &&
+					 ( tmp < 2 || d[tmp-2] != '\\' ) &&
+					 !in_brackets ) {
+					must_be_last = TRUE;
+					greedy_proto = *p;
+				    }
+				    else if ( *p == '_' ) {
+					underscore = seen_underscore = TRUE;
+				    }
+				}
+			    }
 			}
 		    }
 		    d[tmp] = '\0';
+		    if (proto_after_greedy_proto)
+			Perl_warner(aTHX_ packWARN(WARN_SYNTAX),
+				    "Prototype after '%c' for %"SVf" : %s",
+				    greedy_proto, SVfARG(PL_subname), d);
 		    if (bad_proto)
 			Perl_warner(aTHX_ packWARN(WARN_SYNTAX),
-				    "Illegal character in prototype for %"SVf" : %s",
+				    "Illegal character %sin prototype for %"SVf" : %s",
+				    seen_underscore ? "after '_' " : "",
 				    SVfARG(PL_subname), d);
 		    SvCUR_set(PL_lex_stuff, tmp);
 		    have_proto = TRUE;
@@ -10925,7 +10976,7 @@ Perl_pmflag(pTHX_ U32* pmfl, int ch)
 
     PERL_UNUSED_CONTEXT;
     if (ch<256) {
-        char c = (char)ch;
+        const char c = (char)ch;
         switch (c) {
             CASE_STD_PMMOD_FLAGS_PARSE_SET(pmfl);
             case GLOBAL_PAT_MOD:    *pmfl |= PMf_GLOBAL; break;
@@ -12567,8 +12618,8 @@ Perl_start_subparse(pTHX_ I32 is_format, U32 flags)
 #ifdef __SC__
 #pragma segment Perl_yylex
 #endif
-int
-Perl_yywarn(pTHX_ const char *s)
+static int
+S_yywarn(pTHX_ const char *const s)
 {
     dVAR;
 
@@ -12581,7 +12632,7 @@ Perl_yywarn(pTHX_ const char *s)
 }
 
 int
-Perl_yyerror(pTHX_ const char *s)
+Perl_yyerror(pTHX_ const char *const s)
 {
     dVAR;
     const char *where = NULL;
@@ -12866,7 +12917,7 @@ passed in, for performance reasons.
 */
 
 char *
-Perl_scan_vstring(pTHX_ const char *s, const char *e, SV *sv)
+Perl_scan_vstring(pTHX_ const char *s, const char *const e, SV *sv)
 {
     dVAR;
     const char *pos = s;

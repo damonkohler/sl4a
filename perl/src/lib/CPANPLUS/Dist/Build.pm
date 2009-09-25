@@ -30,7 +30,7 @@ use Locale::Maketext::Simple    Class => 'CPANPLUS', Style => 'gettext';
 
 local $Params::Check::VERBOSE = 1;
 
-$VERSION = '0.36';
+$VERSION = '0.38';
 
 =pod
 
@@ -636,7 +636,8 @@ sub create {
 
             } 
             else {
-                msg( $test_output, 0 );
+                msg( loc( "MAKE TEST passed:\n%1", $test_output ), 0 );
+                #msg( $test_output, 0 );
                 $dist->status->test(1);
             }
         } 

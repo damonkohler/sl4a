@@ -3,7 +3,7 @@ package Safe;
 use 5.003_11;
 use strict;
 
-$Safe::VERSION = "2.17";
+$Safe::VERSION = "2.18";
 
 # *** Don't declare any lexicals above this point ***
 #
@@ -243,13 +243,15 @@ sub share_from {
 	my ($var, $type);
 	$type = $1 if ($var = $arg) =~ s/^(\W)//;
 	# warn "share_from $pkg $type $var";
-	*{$root."::$var"} = (!$type)       ? \&{$pkg."::$var"}
+	for (1..2) { # assign twice to avoid any 'used once' warnings
+	    *{$root."::$var"} = (!$type)       ? \&{$pkg."::$var"}
 			  : ($type eq '&') ? \&{$pkg."::$var"}
 			  : ($type eq '$') ? \${$pkg."::$var"}
 			  : ($type eq '@') ? \@{$pkg."::$var"}
 			  : ($type eq '%') ? \%{$pkg."::$var"}
 			  : ($type eq '*') ?  *{$pkg."::$var"}
 			  : croak(qq(Can't share "$type$var" of unknown type));
+	}
     }
     $obj->share_record($pkg, $vars) unless $no_record or !$vars;
 }

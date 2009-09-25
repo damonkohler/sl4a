@@ -122,6 +122,9 @@ L<Tk::Pod>, L<Pod::Perldoc>
 
 =head1 AUTHOR
 
+Current maintainer: Adriano R. Ferreira <ferreira@cpan.org>
+
+Past contributions from:
 Sean M. Burke C<sburke@cpan.org>, with significant portions copied from
 F<tkpod> in the Tk::Pod dist, by Nick Ing-Simmons, Slaven Rezic, et al.
 

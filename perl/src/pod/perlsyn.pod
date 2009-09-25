@@ -117,7 +117,7 @@ is treated as 0.
 
 =head2 Statement Modifiers
 X<statement modifier> X<modifier> X<if> X<unless> X<while>
-X<until> X<foreach> X<for>
+X<until> X<when> X<foreach> X<for>
 
 Any simple statement may optionally be followed by a I<SINGLE> modifier,
 just before the terminating semicolon (or block ending).  The possible
@@ -127,6 +127,8 @@ modifiers are:
     unless EXPR
     while EXPR
     until EXPR
+    when EXPR
+    for LIST
     foreach LIST
 
 The C<EXPR> following the modifier is referred to as the "condition".
@@ -138,6 +140,22 @@ the condition is true (i.e., if the condition is false).
 
     print "Basset hounds got long ears" if length $ear >= 10;
     go_outside() and play() unless $is_raining;
+
+C<when> executes the statement I<when> C<$_> smart matches C<EXPR>, and
+then either C<break>s out if it's enclosed in a C<given> scope or skips
+to the C<next> element when it lies directly inside a C<for> loop.
+See also L</"Switch statements">.
+
+    given ($something) {
+        $abc    = 1 when /^abc/;
+        $just_a = 1 when /^a/;
+        $other  = 1;
+    }
+
+    for (@names) {
+	admin($_)   when [ qw/Alice Bob/ ];
+	regular($_) when [ qw/Chris David Ellen/ ];
+    }
 
 The C<foreach> modifier is an iterator: it executes the statement once
 for each item in the LIST (with C<$_> aliased to each item in turn).
@@ -550,8 +568,10 @@ is exactly equivalent to
 
 	when($_ ~~ $foo)
 
-In fact C<when(EXPR)> is treated as an implicit smart match most of the
-time. The exceptions are that when EXPR is:
+Most of the time, C<when(EXPR)> is treated as an implicit smart match of
+C<$_>, i.e. C<$_ ~~ EXPR>. (See L</"Smart matching in detail"> for more
+information on smart matching.) But when EXPR is one of the below
+exceptional cases, it is used directly as a boolean:
 
 =over 4
 
@@ -622,9 +642,6 @@ for example.
 C<default> behaves exactly like C<when(1 == 1)>, which is
 to say that it always matches.
 
-See L</"Smart matching in detail"> for more information
-on smart matching.
-
 =head3 Breaking out
 
 You can use the C<break> keyword to break out of the enclosing
@@ -672,6 +689,10 @@ implicitly dereferences any non-blessed hash or array ref, so the "Hash"
 and "Array" entries apply in those cases. (For blessed references, the
 "Object" entries apply.)
 
+Note that the "Matching Code" column is not always an exact rendition.  For
+example, the smart match operator short-circuits whenever possible, but
+C<grep> does not.
+
     $a      $b        Type of Match Implied    Matching Code
     ======  =====     =====================    =============
     Any     undef     undefined                !defined $a
@@ -711,26 +732,33 @@ and "Array" entries apply in those cases. (For blessed references, the
  3 - If a circular reference is found, we fall back to referential equality.
  4 - either a real number, or a string that looks like a number
 
-The "matching code" doesn't represent the I<real> matching code,
-of course: it's just there to explain the intended meaning. Unlike
-C<grep>, the smart match operator will short-circuit whenever it can.
-
 =head3 Custom matching via overloading
 
 You can change the way that an object is matched by overloading
-the C<~~> operator. This trumps the usual smart match semantics.
-See L<overload>.
+the C<~~> operator. This may alter the usual smart match semantics.
 
 It should be noted that C<~~> will refuse to work on objects that
 don't overload it (in order to avoid relying on the object's
 underlying structure).
+
+Note also that smart match's matching rules take precedence over
+overloading, so if C<$obj> has smart match overloading, then
+
+    $obj ~~ X
+
+will not automatically invoke the overload method with X as an argument;
+instead the table above is consulted as normal, and based in the type of X,
+overloading may or may not be invoked.
+
+See L<overload>.
 
 =head3 Differences from Perl 6
 
 The Perl 5 smart match and C<given>/C<when> constructs are not
 absolutely identical to their Perl 6 analogues. The most visible
 difference is that, in Perl 5, parentheses are required around
-the argument to C<given()> and C<when()>. Parentheses in Perl 6
+the argument to C<given()> and C<when()> (except when this last
+one is used as a statement modifier). Parentheses in Perl 6
 are always optional in a control construct such as C<if()>,
 C<while()>, or C<when()>; they can't be made optional in Perl
 5 without a great deal of potential confusion, because Perl 5

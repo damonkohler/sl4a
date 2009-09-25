@@ -4,8 +4,10 @@ use strict;
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '2.14';
+use if $] >= 5.011, 'deprecate';
 
+$VERSION = '2.14_01';
+  
 
 # LOAD FILTERING MODULE...
 use Filter::Util::Call;

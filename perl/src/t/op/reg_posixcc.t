@@ -3,11 +3,13 @@
 BEGIN {
     chdir 't' if -d 't';
     @INC = '../lib';
+    require './test.pl';
 }
 
 use strict;
 use warnings;
-use Test::More 'no_plan'; # otherwise it would 38401 tests, which is, uh, a lot. :-)
+plan "no_plan";
+
 my @pats=(
             "\\w",
 	    "\\W",
@@ -40,7 +42,7 @@ my @pats=(
 	    "[:blank:]",
 	    "[:^blank:]" );
 if (not $ENV{REAL_POSIX_CC}) {
-    $TODO = "Only works under PERL_LEGACY_UNICODE_CHARCLASS_MAPPINGS = 0";
+    $::TODO = "Only works under PERL_LEGACY_UNICODE_CHARCLASS_MAPPINGS = 0";
 }
 
 sub rangify {

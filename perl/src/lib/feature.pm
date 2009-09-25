@@ -13,7 +13,7 @@ my %feature = (
 
 my %feature_bundle = (
     "5.10" => [qw(switch say state)],
-### "5.11" => [qw(switch say state)],
+    "5.11" => [qw(switch say state)],
 );
 
 # special case

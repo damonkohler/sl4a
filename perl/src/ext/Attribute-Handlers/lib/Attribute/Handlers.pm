@@ -4,7 +4,7 @@ use Carp;
 use warnings;
 use strict;
 use vars qw($VERSION $AUTOLOAD);
-$VERSION = '0.85'; # remember to update version in POD!
+$VERSION = '0.86'; # remember to update version in POD!
 # $DB::single=1;
 
 my %symcache;
@@ -233,8 +233,8 @@ Attribute::Handlers - Simpler definition of attribute handlers
 
 =head1 VERSION
 
-This document describes version 0.85 of Attribute::Handlers,
-released June 11, 2009.
+This document describes version 0.86 of Attribute::Handlers,
+released August  8, 2009.
 
 =head1 SYNOPSIS
 

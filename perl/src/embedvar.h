@@ -71,7 +71,6 @@
 #define PL_basetime		(vTHX->Ibasetime)
 #define PL_beginav		(vTHX->Ibeginav)
 #define PL_beginav_save		(vTHX->Ibeginav_save)
-#define PL_bitcount		(vTHX->Ibitcount)
 #define PL_body_arenas		(vTHX->Ibody_arenas)
 #define PL_body_roots		(vTHX->Ibody_roots)
 #define PL_bodytarget		(vTHX->Ibodytarget)
@@ -212,10 +211,11 @@
 #define PL_numeric_name		(vTHX->Inumeric_name)
 #define PL_numeric_radix_sv	(vTHX->Inumeric_radix_sv)
 #define PL_numeric_standard	(vTHX->Inumeric_standard)
-#define PL_ofs_sv		(vTHX->Iofs_sv)
+#define PL_ofsgv		(vTHX->Iofsgv)
 #define PL_oldname		(vTHX->Ioldname)
 #define PL_op			(vTHX->Iop)
 #define PL_op_mask		(vTHX->Iop_mask)
+#define PL_opfreehook		(vTHX->Iopfreehook)
 #define PL_opsave		(vTHX->Iopsave)
 #define PL_origalen		(vTHX->Iorigalen)
 #define PL_origargc		(vTHX->Iorigargc)
@@ -236,7 +236,6 @@
 #define PL_pidstatus		(vTHX->Ipidstatus)
 #define PL_ppid			(vTHX->Ippid)
 #define PL_preambleav		(vTHX->Ipreambleav)
-#define PL_preprocess		(vTHX->Ipreprocess)
 #define PL_profiledata		(vTHX->Iprofiledata)
 #define PL_psig_name		(vTHX->Ipsig_name)
 #define PL_psig_pend		(vTHX->Ipsig_pend)
@@ -386,7 +385,6 @@
 #define PL_Ibasetime		PL_basetime
 #define PL_Ibeginav		PL_beginav
 #define PL_Ibeginav_save	PL_beginav_save
-#define PL_Ibitcount		PL_bitcount
 #define PL_Ibody_arenas		PL_body_arenas
 #define PL_Ibody_roots		PL_body_roots
 #define PL_Ibodytarget		PL_bodytarget
@@ -527,10 +525,11 @@
 #define PL_Inumeric_name	PL_numeric_name
 #define PL_Inumeric_radix_sv	PL_numeric_radix_sv
 #define PL_Inumeric_standard	PL_numeric_standard
-#define PL_Iofs_sv		PL_ofs_sv
+#define PL_Iofsgv		PL_ofsgv
 #define PL_Ioldname		PL_oldname
 #define PL_Iop			PL_op
 #define PL_Iop_mask		PL_op_mask
+#define PL_Iopfreehook		PL_opfreehook
 #define PL_Iopsave		PL_opsave
 #define PL_Iorigalen		PL_origalen
 #define PL_Iorigargc		PL_origargc
@@ -551,7 +550,6 @@
 #define PL_Ipidstatus		PL_pidstatus
 #define PL_Ippid		PL_ppid
 #define PL_Ipreambleav		PL_preambleav
-#define PL_Ipreprocess		PL_preprocess
 #define PL_Iprofiledata		PL_profiledata
 #define PL_Ipsig_name		PL_psig_name
 #define PL_Ipsig_pend		PL_psig_pend

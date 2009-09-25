@@ -6,7 +6,7 @@ BEGIN {
     $INC{"feature.pm"} = 1; # so we don't attempt to load feature.pm
 }
 
-print "1..63\n";
+print "1..68\n";
 
 # Can't require test.pl, as we're testing the use/require mechanism here.
 
@@ -89,6 +89,9 @@ like ($@, qr/Perl v5\.900\.0 required \(did you mean v5\.9\.0\?\)--this is only 
 eval "use 5.10;";
 like ($@, qr/Perl v5\.100\.0 required \(did you mean v5\.10\.0\?\)--this is only \Q$^V\E, stopped/);
 
+eval "use 5.11;";
+like ($@, qr/Perl v5\.110\.0 required \(did you mean v5\.11\.0\?\)--this is only \Q$^V\E, stopped/);
+
 eval sprintf "use %.6f;", $];
 is ($@, '');
 
@@ -101,6 +104,19 @@ like ($@, qr/Perl v6.\d+.\d+ required--this is only \Q$^V\E, stopped/);
 
 eval sprintf "use %.6f;", $] + 0.00001;
 like ($@, qr/Perl v5.\d+.\d+ required--this is only \Q$^V\E, stopped/);
+
+# check that "use 5.11.0" (and higher) loads strictures
+eval 'use 5.11.0; ${"foo"} = "bar";';
+like ($@, qr/Can't use string \("foo"\) as a SCALAR ref while "strict refs" in use/);
+# but that they can be disabled
+eval 'use 5.11.0; no strict "refs"; ${"foo"} = "bar";';
+is ($@, "");
+# and they are properly scoped
+eval '{use 5.11.0;} ${"foo"} = "bar";';
+is ($@, "");
+# and this doesn't happen with require
+eval 'require 5.11.0; ${"foo"} = "bar";';
+is ($@, "");
 
 { use lib }	# check that subparse saves pending tokens
 

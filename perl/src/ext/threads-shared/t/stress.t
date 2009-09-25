@@ -39,7 +39,11 @@ use threads::shared;
     my $mutex = 1;
     share($mutex);
 
+    my $warning;
+    $SIG{__WARN__} = sub { $warning = shift; };
+
     my @threads;
+
     for (reverse(1..$cnt)) {
         $threads[$_] = threads->create(sub {
                             my $tnum = shift;
@@ -71,10 +75,26 @@ use threads::shared;
                             cond_broadcast($mutex);
                             return ('okay');
                       }, $_);
+
+        # Handle thread creation failures
+        if ($warning) {
+            my $printit = 1;
+            if ($warning =~ /returned 11/) {
+                $warning = "Thread creation failed due to 'No more processes'\n";
+                $printit = (! $ENV{'PERL_CORE'});
+            } elsif ($warning =~ /returned 12/) {
+                $warning = "Thread creation failed due to 'No more memory'\n";
+                $printit = (! $ENV{'PERL_CORE'});
+            }
+            print(STDERR "# Warning: $warning") if ($printit);
+            lock($mutex);
+            $mutex = $_ + 1;
+            last;
+        }
     }
 
     # Gather thread results
-    my ($okay, $failures, $timeouts, $unknown) = (0, 0, 0, 0);
+    my ($okay, $failures, $timeouts, $unknown) = (0, 0, 0, 0, 0);
     for (1..$cnt) {
         if (! $threads[$_]) {
             $failures++;
@@ -92,10 +112,10 @@ use threads::shared;
             }
         }
     }
+
     if ($failures) {
-        # Most likely due to running out of memory
-        print(STDERR "# Warning: $failures threads failed\n");
-        print(STDERR "# Note: errno 12 = ENOMEM\n");
+        my $only = $cnt - $failures;
+        print(STDERR "# Warning: Intended to use $cnt threads, but could only muster $only\n");
         $cnt -= $failures;
     }
 

@@ -1,3 +1,48 @@
+Version 3.45
+  [BUG FIXES]
+  1. Prevent warnings about "uninitialized values" for REQUEST_URI, HTTP_USER_AGENT and other environment variables.
+     Patches by Callum Gibson, heiko and Mark Stosberg. (RT#24684, RT#29065)
+  2. Avoid death in some cases when running under Taint mode on Windows. 
+     Patch by Peter Hancock (RT#43796)
+  3. Allow 0 to be used as a default value in popup_menu(). This was broken starting in 3.37.
+     Thanks to Haze, who was the first to report this and supply a patch, and pfschill, who pinpointed
+     when the bug was introduced. A regression test for this was also added. (RT#37908)
+  4. Allow "+" as a valid character in file names, which fixes temp file creation on OS X Leopard.  
+     Thanks to Andy Armstrong, and alech for patches. (RT#30504) 
+  5. Set binmode() on the Netware platform, thanks to Guenter Knauf (RT#27455)
+  6. Don't allow a CGI::Carp error handler to die recursively. Print a warning and exit instead. 
+     Thanks to Marc Chantreux. (RT#45956)
+  7. The Dump() method now is fixed to escape HTML properly. Thanks to Mark Stosberg (RT#21341)
+  8. Support for <optgroup> with scrolling_list() now works the same way as it does for popup_menu().
+     Thanks to Stuart Johnston (RT#30097)
+  9. CGI::Pretty now works properly when $" is set to ''. Thanks to Jim Keenan (RT#12401)
+ 10. Fix crash when used in combination with PerlEx::DBI. Thanks to Burak Gürsoy (RT#19902)
+
+  [DOCUMENTATION]
+  1. Several typos were fixed, Thanks to ambs. (RT#41105)
+  2. A typo related to the nosticky pragma was fixed, thanks to Britton Kerin. (RT#43220)
+  3. examples/nph-clock.cgi is now more portable, by calling localtime() rather than `/bin/date`,
+     thanks to Guenter Knauf. (RT#27456).
+  4. In CGI::Carp, the SEE ALSO section was cleaned up, thanks to Slaven Rezic. (RT#32769)
+  5. The docs for redirect() were updated to reflect that most headers are
+     ignored during redirection. Thanks to Mark Stosberg (RT#44911)
+
+  [INTERNALS]  
+  1. New t/unescapeHTML.t test script has been added. It includes a TODO test for a pre-existing
+     bug which could use a patch. Thanks to Pete Gamache and Mark Stosberg (RT#39122)
+  2. New test scripts have been added for user_agent(), popup_menu() and query_string(), scrolling_list() and Dump()
+     Thanks to Mark Stosberg and Stuart Johnston. (RT#37908, RT#43006, RT#21341, RT#30097)
+  3. CGI::Carp and CGI::Util have been updated to have non-developer version numbers. 
+     Thanks to Slaven Rezic. (RT#48425)
+  4. CGI::Switch and CGI::Apache now properly set their VERSION in their own name space.  
+     Thanks to Alexey Tourbin (RT#11941,RT#11942)
+
+  Version 3.44
+  1. Patch from Kurt Jaeger to allow HTTP PUT even if the content length is unknown.
+  2. Patch from Pavel merdin to fix a problem for one of the FireFox addons.
+  3. Fixed issue in mod_perl & fastCGI environment of cookies returned from 
+     CGI->cookie() leaking from one session to another.
+
   Version 3.43
   1. Documentation patch from MARKSTOS@cpan.org to replace all occurrences of
   "new CGI" with CGI->new()" to reflect best perl practices.

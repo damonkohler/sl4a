@@ -588,9 +588,10 @@ ok (!eval { $rpvbm->foo }, 'PVBM is not an object');
 is( runperl(stderr => 1, prog => 'map eval qq(exit),1 for 1'), "");
 is( runperl(stderr => 1, prog => 'eval { for (1) { map { die } 2 } };'), "");
 is( runperl(stderr => 1, prog => 'for (125) { map { exit } (213)}'), "");
-is( runperl(stderr => 1, prog => 'map die,4 for 3'), "Died at -e line 1.\n");
-is( runperl(stderr => 1, prog => 'grep die,4 for 3'), "Died at -e line 1.\n");
-is( runperl(stderr => 1, prog => 'for $a (3) {@b=sort {die} 4,5}'), "Died at -e line 1.\n");
+my $hushed = $^O eq 'VMS' ? 'use vmsish qw(hushed);' : '';
+is( runperl(stderr => 1, prog => $hushed . 'map die,4 for 3'), "Died at -e line 1.\n");
+is( runperl(stderr => 1, prog => $hushed . 'grep die,4 for 3'), "Died at -e line 1.\n");
+is( runperl(stderr => 1, prog => $hushed . 'for $a (3) {@b=sort {die} 4,5}'), "Died at -e line 1.\n");
 
 # bug 57564
 is( runperl(stderr => 1, prog => 'my $i;for $i (1) { for $i (2) { } }'), "");

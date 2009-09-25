@@ -104,3 +104,45 @@ sub getopts {
 
 1;
 
+__END__
+
+=head1 NAME
+
+Pod::Perldoc::GetOptsOO - Customized option parser for Pod::Perldoc
+
+=head1 SYNOPSIS
+
+    use Pod::Perldoc::GetOptsOO ();
+
+    Pod::Perldoc::GetOptsOO::getopts( $obj, \@args, $truth )
+       or die "wrong usage";
+
+
+=head1 DESCRIPTION
+
+Implements a customized option parser used for
+L<Pod::Perldoc>.
+
+=head1 SEE ALSO
+
+    Pod::Perldoc
+
+=head1 COPYRIGHT AND DISCLAIMERS
+
+Copyright (c) 2002-2007 Sean M. Burke.
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
+
+=head1 AUTHOR
+
+Current maintainer: Adriano R. Ferreira <ferreira@cpan.org>
+
+Past contributions from:
+Sean M. Burke <sburke@cpan.org>
+
+=cut

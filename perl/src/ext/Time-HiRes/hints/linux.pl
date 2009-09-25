@@ -1,4 +1,2 @@
-use Config;
-unless ($Config{ccflags} =~ /-DANDROID/) {
-    $self->{LIBS} = ['-lrt'];
-}
+# needs to explicitly link against librt to pull in clock_nanosleep
+$self->{LIBS} = ['-lrt'];

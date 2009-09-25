@@ -17,7 +17,7 @@
 package Term::ANSIColor;
 require 5.001;
 
-$VERSION = '2.00';
+$VERSION = '2.01';
 
 use strict;
 use vars qw($AUTOLOAD $AUTOLOCAL $AUTORESET @COLORLIST @COLORSTACK $EACHLINE
@@ -32,7 +32,7 @@ BEGIN {
                       ON_CYAN ON_WHITE);
     @ISA         = qw(Exporter);
     @EXPORT      = qw(color colored);
-    @EXPORT_OK   = qw(uncolor);
+    @EXPORT_OK   = qw(uncolor colorstrip);
     %EXPORT_TAGS = (constants => \@COLORLIST,
                     pushpop   => [ @COLORLIST,
                                    qw(PUSHCOLOR POPCOLOR LOCALCOLOR) ]);
@@ -98,11 +98,9 @@ sub AUTOLOAD {
     if (defined $ENV{ANSI_COLORS_DISABLED}) {
         return join ('', @_);
     }
-    my $sub;
-    ($sub = $AUTOLOAD) =~ s/^.*:://;
-    my $attr = $ATTRIBUTES{lc $sub};
-    if ($sub =~ /^[A-Z_]+$/ && defined $attr) {
-        $attr = "\e[" . $attr . 'm';
+    if ($AUTOLOAD =~ /^([\w:]*::([A-Z_]+))$/ and defined $ATTRIBUTES{lc $2}) {
+        $AUTOLOAD = $1;
+        my $attr = "\e[" . $ATTRIBUTES{lc $2} . 'm';
         eval qq {
             sub $AUTOLOAD {
                 if (\$AUTORESET && \@_) {
@@ -181,7 +179,7 @@ sub uncolor {
         $escape =~ s/m$//;
         unless ($escape =~ /^((?:\d+;)*\d*)$/) {
             require Carp;
-            Carp::croak ("Bad escape sequence $_");
+            Carp::croak ("Bad escape sequence $escape");
         }
         push (@nums, split (/;/, $1));
     }
@@ -226,6 +224,17 @@ sub colored {
     }
 }
 
+# Given a string, strip the ANSI color codes out of that string and return the
+# result.  This removes only ANSI color codes, not movement codes and other
+# escape sequences.
+sub colorstrip {
+    my (@string) = @_;
+    for my $string (@string) {
+        $string =~ s/\e\[[\d;]*m//g;
+    }
+    return wantarray ? @string : join ('', @string);
+}
+
 ##############################################################################
 # Module return value and documentation
 ##############################################################################
@@ -256,7 +265,10 @@ reimplemented Allbery PUSHCOLOR POPCOLOR LOCALCOLOR openmethods.com
     print "\n";
 
     use Term::ANSIColor qw(uncolor);
-    print uncolor '01;31', "\n";
+    print uncolor ('01;31'), "\n";
+
+    use Term::ANSIColor qw(colorstrip);
+    print colorstrip '\e[1mThis is bold\e[0m', "\n";
 
     use Term::ANSIColor qw(:constants);
     print BOLD, BLUE, "This text is in bold blue.\n", RESET;
@@ -285,8 +297,11 @@ reimplemented Allbery PUSHCOLOR POPCOLOR LOCALCOLOR openmethods.com
 =head1 DESCRIPTION
 
 This module has two interfaces, one through color() and colored() and the
-other through constants.  It also offers the utility function uncolor(),
-which has to be explicitly imported to be used (see L</SYNOPSIS>).
+other through constants.  It also offers the utility functions uncolor()
+and colorstrip(), which have to be explicitly imported to be used (see
+L</SYNOPSIS>).
+
+=head2 Function Interface
 
 color() takes any number of strings as arguments and considers them to be
 space-separated lists of attributes.  It then forms and returns the escape
@@ -297,6 +312,10 @@ handle, or do anything else with it that you might care to).
 
 uncolor() performs the opposite translation, turning escape sequences
 into a list of strings.
+
+colorstrip() removes all color escape sequences from the provided strings,
+returning the modified strings separately in array context or joined
+together in scalar context.  Its arguments are not modified.
 
 The recognized non-color attributes are clear, reset, bold, dark, faint,
 underline, underscore, blink, reverse, and concealed.  Clear and reset
@@ -334,6 +353,8 @@ across a newline is often interpreted by the terminal as providing the
 default background color for the next line.  Programs like pagers can also
 be confused by attributes that span lines.  Normally you'll want to set
 $Term::ANSIColor::EACHLINE to C<"\n"> to use this feature.
+
+=head2 Constant Interface
 
 Alternately, if you import C<:constants>, you can use the constants CLEAR,
 RESET, BOLD, DARK, UNDERLINE, UNDERSCORE, BLINK, REVERSE, CONCEALED,
@@ -376,6 +397,8 @@ won't be caught until runtime whereas misspelled names of constants will
 be caught at compile time.  So, pollute your namespace with almost two
 dozen subroutines that you may not even use that often, or risk a silly
 bug by mistyping an attribute.  Your choice, TMTOWTDI after all.
+
+=head2 The Color Stack
 
 As of Term::ANSIColor 2.0, you can import C<:pushpop> and maintain a stack
 of colors using PUSHCOLOR, POPCOLOR, and LOCALCOLOR.  PUSHCOLOR takes the

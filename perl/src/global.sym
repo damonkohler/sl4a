@@ -51,6 +51,7 @@ Perl_av_store
 Perl_av_undef
 Perl_av_unshift
 Perl_av_arylen_p
+Perl_av_iter_p
 Perl_block_gimme
 Perl_call_list
 Perl_cast_ulong
@@ -76,7 +77,6 @@ Perl_sv_catpvf_mg_nocontext
 Perl_sv_setpvf_mg_nocontext
 Perl_fprintf_nocontext
 Perl_printf_nocontext
-Perl_cv_ckproto
 Perl_gv_const_sv
 Perl_cv_const_sv
 Perl_cv_undef
@@ -126,6 +126,7 @@ Perl_vform
 Perl_free_tmps
 Perl_gp_free
 Perl_gp_ref
+Perl_gv_add_by_type
 Perl_gv_AVadd
 Perl_gv_HVadd
 Perl_gv_IOadd
@@ -140,6 +141,7 @@ Perl_gv_fetchmeth
 Perl_gv_fetchmeth_autoload
 Perl_gv_fetchmethod
 Perl_gv_fetchmethod_autoload
+Perl_gv_fetchmethod_flags
 Perl_gv_fetchpv
 Perl_gv_fullname
 Perl_gv_fullname3
@@ -399,9 +401,9 @@ Perl_regdump
 Perl_regclass_swash
 Perl_pregexec
 Perl_pregfree
+Perl_pregfree2
 Perl_reg_temp_copy
 Perl_regfree_internal
-Perl_reg_stringify
 Perl_regdupe_internal
 Perl_pregcomp
 Perl_re_compile
@@ -432,13 +434,15 @@ Perl_savesharedpvn
 Perl_savesvpv
 Perl_savestack_grow
 Perl_savestack_grow_cnt
-Perl_save_aelem
+Perl_save_aelem_flags
 Perl_save_alloc
 Perl_save_aptr
 Perl_save_ary
 Perl_save_bool
 Perl_save_clearsv
 Perl_save_delete
+Perl_save_hdelete
+Perl_save_adelete
 Perl_save_destructor
 Perl_save_destructor_x
 Perl_save_freesv
@@ -449,7 +453,7 @@ Perl_save_generic_pvref
 Perl_save_shared_pvref
 Perl_save_gp
 Perl_save_hash
-Perl_save_helem
+Perl_save_helem_flags
 Perl_save_hptr
 Perl_save_I16
 Perl_save_I32
@@ -466,7 +470,6 @@ Perl_save_scalar
 Perl_save_pptr
 Perl_save_vptr
 Perl_save_re_context
-Perl_save_padsv
 Perl_save_padsv_and_mortalize
 Perl_save_sptr
 Perl_save_svref
@@ -679,7 +682,7 @@ Perl_ss_dup
 Perl_any_dup
 Perl_he_dup
 Perl_hek_dup
-Perl_re_dup
+Perl_re_dup_guts
 Perl_fp_dup
 Perl_dirp_dup
 Perl_gp_dup
@@ -708,7 +711,7 @@ Perl_Slab_Free
 Perl_sv_setsv_flags
 Perl_sv_catpvn_flags
 Perl_sv_catsv_flags
-Perl_sv_utf8_upgrade_flags
+Perl_sv_utf8_upgrade_flags_grow
 Perl_sv_pvn_force_flags
 Perl_sv_copypv
 Perl_my_atof2
@@ -780,4 +783,5 @@ Perl_mro_method_changed_in
 Perl_sys_init
 Perl_sys_init3
 Perl_sys_term
+Perl_fetch_cop_label
 # ex: set ro:

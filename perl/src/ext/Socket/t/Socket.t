@@ -14,7 +14,7 @@ BEGIN {
 	
 use Socket qw(:all);
 
-print "1..17\n";
+print "1..20\n";
 
 $has_echo = $^O ne 'MSWin32';
 $alarmed = 0;
@@ -166,4 +166,13 @@ if ($^O eq 'linux') {
 } else {
     # doesn't have abstract socket support
     print "ok 17 - skipped on this platform\n";
+}
+
+if($Config{d_inetntop} && $Config{d_inetaton}){
+    print ((inet_ntop(AF_INET, inet_pton(AF_INET, "10.20.30.40")) eq "10.20.30.40") ? "ok 18\n" : "not ok 18\n");
+    print ((inet_ntop(AF_INET, inet_aton("10.20.30.40")) eq "10.20.30.40") ? "ok 19\n" : "not ok 19\n");
+    print (lc(inet_ntop(AF_INET6, inet_pton(AF_INET6, "2001:503:BA3E::2:30")) eq "2001:503:ba3e::2:30") ? "ok 20\n" : "not ok 20\n");
+} else {
+    # no IPv6 
+    print "ok $_ - skipped on this platform\n" for 18 .. 20;
 }

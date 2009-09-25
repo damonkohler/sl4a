@@ -128,3 +128,7 @@ Revision history for Perl extension Attribute-Handlers
 0.85	Thu Jun 11 09:31:00 CET 2009
         - Document findsym for the sake of mod_perl. (David Wheeler)
         - Remove unused variable. (David Wheeler)
+
+0.86	Sat Aug  8 12:41:00 CET 2009
+        - Add resources (bugtracker, ...) section to META.yml
+

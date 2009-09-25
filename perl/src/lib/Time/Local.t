@@ -26,10 +26,10 @@ my @time =
    # leap day
    [2020,  2, 29, 12, 59, 59],
    [2030,  7,  4, 17, 07, 06],
-# The following test fails on a surprising number of systems
-# so it is commented out. The end of the Epoch for a 32-bit signed
-# implementation of time_t should be Jan 19, 2038  03:14:07 UTC.
-#  [2038,  1, 17, 23, 59, 59],     # last full day in any tz
+   [2038,  1, 17, 23, 59, 59],     # last full day in any tz
+
+   # more than 2**31 time_t
+   [2258,  8, 11,  1, 49, 17],
   );
 
 my @bad_time =
@@ -89,41 +89,38 @@ for (@time, @neg_time) {
     $year -= 1900;
     $mon--;
 
- SKIP: {
-        skip '1970 test on VOS fails.', 12
-            if $^O eq 'vos' && $year == 70;
-        skip 'this platform does not support negative epochs.', 12
-            if $year < 70 && ! $neg_epoch_ok;
+    # Test timelocal()
+    {
+        my $year_in = $year < 70 ? $year + 1900 : $year;
+        my $time = timelocal($sec,$min,$hour,$mday,$mon,$year_in);
 
-        {
-            my $year_in = $year < 70 ? $year + 1900 : $year;
-            my $time = timelocal($sec,$min,$hour,$mday,$mon,$year_in);
+        my($s,$m,$h,$D,$M,$Y) = localtime($time);
 
-            my($s,$m,$h,$D,$M,$Y) = localtime($time);
+        is($s, $sec, "timelocal second for @$_");
+        is($m, $min, "timelocal minute for @$_");
+        is($h, $hour, "timelocal hour for @$_");
+        is($D, $mday, "timelocal day for @$_");
+        is($M, $mon, "timelocal month for @$_");
+        is($Y, $year, "timelocal year for @$_");
+    }
 
-            is($s, $sec, "timelocal second for @$_");
-            is($m, $min, "timelocal minute for @$_");
-            is($h, $hour, "timelocal hour for @$_");
-            is($D, $mday, "timelocal day for @$_");
-            is($M, $mon, "timelocal month for @$_");
-            is($Y, $year, "timelocal year for @$_");
-        }
 
-        {
-            my $year_in = $year < 70 ? $year + 1900 : $year;
-            my $time = timegm($sec,$min,$hour,$mday,$mon,$year_in);
+    # Test timegm()
+    {
+        my $year_in = $year < 70 ? $year + 1900 : $year;
+        my $time = timegm($sec,$min,$hour,$mday,$mon,$year_in);
 
-            my($s,$m,$h,$D,$M,$Y) = gmtime($time);
+        my($s,$m,$h,$D,$M,$Y) = gmtime($time);
 
-            is($s, $sec, "timegm second for @$_");
-            is($m, $min, "timegm minute for @$_");
-            is($h, $hour, "timegm hour for @$_");
-            is($D, $mday, "timegm day for @$_");
-            is($M, $mon, "timegm month for @$_");
-            is($Y, $year, "timegm year for @$_");
-        }
+        is($s, $sec, "timegm second for @$_");
+        is($m, $min, "timegm minute for @$_");
+        is($h, $hour, "timegm hour for @$_");
+        is($D, $mday, "timegm day for @$_");
+        is($M, $mon, "timegm month for @$_");
+        is($Y, $year, "timegm year for @$_");
     }
 }
+
 
 for (@bad_time) {
     my($year, $mon, $mday, $hour, $min, $sec) = @$_;
@@ -167,11 +164,7 @@ for my $p (@years) {
         "$year $string a leap year" );
 }
 
-SKIP:
 {
-    skip 'this platform does not support negative epochs.', 6
-        unless $neg_epoch_ok;
-
     eval { timegm(0,0,0,29,1,1900) };
     like($@, qr/Day '29' out of range 1\.\.28/,
          'does not accept leap day in 1900');

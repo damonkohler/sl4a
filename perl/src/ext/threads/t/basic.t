@@ -2,10 +2,6 @@ use strict;
 use warnings;
 
 BEGIN {
-    if ($ENV{'PERL_CORE'}){
-        chdir 't';
-        unshift @INC, '../lib';
-    }
     use Config;
     if (! $Config{'useithreads'}) {
         print("1..0 # SKIP Perl not compiled with 'useithreads'\n");
@@ -36,7 +32,7 @@ BEGIN {
 
 use threads;
 
-if ($threads::VERSION && ! exists($ENV{'PERL_CORE'})) {
+if ($threads::VERSION && ! $ENV{'PERL_CORE'}) {
     print(STDERR "# Testing threads $threads::VERSION\n");
 }
 

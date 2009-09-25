@@ -1,4 +1,4 @@
-                       Term::ANSIColor version 2.00
+                       Term::ANSIColor version 2.01
               (A simple ANSI text attribute control module)
 
   Copyright 1996, 1997, 1998, 2000, 2001, 2002, 2005, 2006, 2007, 2009
@@ -147,5 +147,9 @@ THANKS
 
   To openmethods.com voice solutions for contributing PUSHCOLOR, POPCOLOR,
   and LOCALCOLOR support.
+
+  To Tim Bellinghausen for the AUTOLOAD taint fix for Perl 5.10.
+
+  To Paul Miller for the idea and initial implementation of colorstrip.
 
   To Larry Wall, as always, for Perl.

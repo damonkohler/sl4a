@@ -180,7 +180,7 @@ Perl_pad_new(pTHX_ int flags)
 	    SAVEI32(PL_max_intro_pending);
 	    SAVEBOOL(PL_cv_has_eval);
 	    if (flags & padnew_SAVESUB) {
-		SAVEI32(PL_pad_reset_pending);
+		SAVEBOOL(PL_pad_reset_pending);
 	    }
 	}
     }
@@ -1150,8 +1150,8 @@ Mark all the current temporaries for reuse
  * to  a shared TARG.  Such an alias will change randomly and unpredictably.
  * We avoid doing this until we can think of a Better Way.
  * GSAR 97-10-29 */
-void
-Perl_pad_reset(pTHX)
+static void
+S_pad_reset(pTHX)
 {
     dVAR;
 #ifdef USE_BROKEN_PAD_RESET

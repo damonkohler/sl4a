@@ -51,6 +51,7 @@ END_EXTERN_C
 
 /* Native character to iso-8859-1 */
 #define NATIVE_TO_ASCII(ch)      (ch)
+#define NATIVE8_TO_UNI(ch)        (ch)
 #define ASCII_TO_NATIVE(ch)      (ch)
 /* Transform after encoding */
 #define NATIVE_TO_UTF(ch)        (ch)
@@ -117,8 +118,8 @@ encoded character.
 #define UTF8_IS_CONTINUED(c) 		(((U8)c) &  0x80)
 #define UTF8_IS_DOWNGRADEABLE_START(c)	(((U8)c & 0xfc) == 0xc0)
 
-#define UTF_START_MARK(len) ((len >  7) ? 0xFF : (0xFE << (7-len)))
-#define UTF_START_MASK(len) ((len >= 7) ? 0x00 : (0x1F >> (len-2)))
+#define UTF_START_MARK(len) (((len) >  7) ? 0xFF : (0xFE << (7-(len))))
+#define UTF_START_MASK(len) (((len) >= 7) ? 0x00 : (0x1F >> ((len)-2)))
 
 #define UTF_CONTINUATION_MARK		0x80
 #define UTF_ACCUMULATION_SHIFT		6
@@ -213,7 +214,7 @@ encoded character.
 #define UNICODE_ILLEGAL			0xFFFF
 
 /* Though our UTF-8 encoding can go beyond this,
- * let's be conservative and do as Unicode 3.2 says. */
+ * let's be conservative and do as Unicode 5.1 says. */
 #define PERL_UNICODE_MAX	0x10FFFF
 
 #define UNICODE_ALLOW_SURROGATE 0x0001	/* Allow UTF-16 surrogates (EVIL) */

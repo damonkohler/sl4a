@@ -598,7 +598,7 @@ engine should use something else.
 
 =head2 C<swap>
 
-TODO: document
+Unused. Left in for compatibility with perl 5.10.0.
 
 =head2 C<offs>
 

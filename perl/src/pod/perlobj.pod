@@ -460,6 +460,15 @@ object destruction, or for ensuring that destructors in the base classes
 of your choosing get called.  Explicitly calling DESTROY is also possible,
 but is usually never needed.
 
+DESTROY is subject to AUTOLOAD lookup, just like any other method. Hence, if
+your class has an AUTOLOAD method, but does not need any DESTROY actions,
+you probably want to provide a DESTROY method anyway, to prevent an
+expensive call to AUTOLOAD each time an object is freed. As this technique
+makes empty DESTROY methods common, the implementation is optimised so that
+a DESTROY method that is an empty or constant subroutine, and hence could
+have no side effects anyway, is not actually called.
+X<AUTOLOAD> X<DESTROY>
+
 Do not confuse the previous discussion with how objects I<CONTAINED> in the current
 one are destroyed.  Such objects will be freed and destroyed automatically
 when the current object is freed, provided no other references to them exist

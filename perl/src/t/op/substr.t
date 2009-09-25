@@ -1,4 +1,4 @@
-#!./perl -w
+#!./perl
 
 #P = start of string  Q = start of substr  R = end of substr  S = end of string
 
@@ -7,6 +7,7 @@ BEGIN {
     @INC = '../lib';
 }
 use warnings ;
+no warnings 'deprecated';
 
 $a = 'abcdefxyz';
 $SIG{__WARN__} = sub {

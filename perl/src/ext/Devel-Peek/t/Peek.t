@@ -644,7 +644,7 @@ do_test(26,
   SV = PVFM\\($ADDR\\) at $ADDR
     REFCNT = 2
     FLAGS = \\(\\)
-    IV = 0
+    IV = 0					# $] < 5.009
     NV = 0					# $] < 5.009
 (?:    PV = 0
 )?    COMP_STASH = 0x0

@@ -70,9 +70,6 @@
 #ifdef I_UNISTD
 #include <unistd.h>
 #endif
-#ifdef MACOS_TRADITIONAL
-#undef fdopen
-#endif
 #include <fcntl.h>
 
 #ifdef HAS_TZNAME
@@ -196,7 +193,7 @@ char *tzname[] = { "" , "" };
 #else
 
 #  ifndef HAS_MKFIFO
-#    if defined(OS2) || defined(MACOS_TRADITIONAL)
+#    if defined(OS2)
 #      define mkfifo(a,b) not_here("mkfifo")
 #    else	/* !( defined OS2 ) */
 #      ifndef mkfifo
@@ -205,19 +202,14 @@ char *tzname[] = { "" , "" };
 #    endif
 #  endif /* !HAS_MKFIFO */
 
-#  ifdef MACOS_TRADITIONAL
-#    define ttyname(a) (char*)not_here("ttyname")
-#    define tzset() not_here("tzset")
-#  else
-#    ifdef I_GRP
-#      include <grp.h>
-#    endif
-#    include <sys/times.h>
-#    ifdef HAS_UNAME
-#      include <sys/utsname.h>
-#    endif
-#    include <sys/wait.h>
+#  ifdef I_GRP
+#    include <grp.h>
 #  endif
+#  include <sys/times.h>
+#  ifdef HAS_UNAME
+#    include <sys/utsname.h>
+#  endif
+#  include <sys/wait.h>
 #  ifdef I_UTIME
 #    include <utime.h>
 #  endif

@@ -979,7 +979,7 @@ routine types:
     int  (*svt_clear)(SV* sv, MAGIC* mg);
     int  (*svt_free)(SV* sv, MAGIC* mg);
 
-    int  (*svt_copy)(SV *sv, MAGIC* mg, SV *nsv, const char *name, int namlen);
+    int  (*svt_copy)(SV *sv, MAGIC* mg, SV *nsv, const char *name, I32 namlen);
     int  (*svt_dup)(MAGIC *mg, CLONE_PARAMS *param);
     int  (*svt_local)(SV *nsv, MAGIC *mg);
 
@@ -1038,7 +1038,7 @@ The current kinds of Magic Virtual Tables are:
     e  PERL_MAGIC_envelem        vtbl_envelem    %ENV hash element
     f  PERL_MAGIC_fm             vtbl_fm         Formline ('compiled' format)
     g  PERL_MAGIC_regex_global   vtbl_mglob      m//g target / study()ed string
-    H  PERL_MAGIC_hints          vtbl_sig        %^H hash
+    H  PERL_MAGIC_hints          vtbl_hints      %^H hash
     h  PERL_MAGIC_hintselem      vtbl_hintselem  %^H hash element
     I  PERL_MAGIC_isa            vtbl_isa        @ISA array
     i  PERL_MAGIC_isaelem        vtbl_isaelem    @ISA array element

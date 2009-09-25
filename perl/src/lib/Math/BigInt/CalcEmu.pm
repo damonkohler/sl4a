@@ -295,7 +295,7 @@ Math::BigInt::CalcEmu - Emulate low-level math with BigInt code
 =head1 DESCRIPTION
 
 Contains routines that emulate low-level math functions in BigInt, e.g.
-optional routines the low-level math package does not provide on it's own.
+optional routines the low-level math package does not provide on its own.
 
 Will be loaded on demand and called automatically by BigInt.
 

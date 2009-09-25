@@ -442,7 +442,7 @@ Perl_ninstr(pTHX_ const char *big, const char *bigend, const char *little, const
     if (little >= lend)
         return (char*)big;
     {
-        char first = *little;
+        const char first = *little;
         const char *s, *x;
         bigend -= lend - little++;
     OUTER:
@@ -1356,17 +1356,14 @@ S_vdie_croak_common(pTHX_ const char* pat, va_list* args, STRLEN* msglen,
 	message = NULL;
     }
 
-    DEBUG_S(PerlIO_printf(Perl_debug_log,
-			  "%p: die/croak: message = %s\ndiehook = %p\n",
-			  (void*)thr, message, (void*)PL_diehook));
     if (PL_diehook) {
 	S_vdie_common(aTHX_ message, *msglen, *utf8, FALSE);
     }
     return message;
 }
 
-OP *
-Perl_vdie(pTHX_ const char* pat, va_list *args)
+static OP *
+S_vdie(pTHX_ const char* pat, va_list *args)
 {
     dVAR;
     const char *message;
@@ -1374,17 +1371,10 @@ Perl_vdie(pTHX_ const char* pat, va_list *args)
     STRLEN msglen;
     I32 utf8 = 0;
 
-    DEBUG_S(PerlIO_printf(Perl_debug_log,
-			  "%p: die: curstack = %p, mainstack = %p\n",
-			  (void*)thr, (void*)PL_curstack, (void*)PL_mainstack));
-
     message = vdie_croak_common(pat, args, &msglen, &utf8);
 
     PL_restartop = die_where(message, msglen);
     SvFLAGS(ERRSV) |= utf8;
-    DEBUG_S(PerlIO_printf(Perl_debug_log,
-	  "%p: die: restartop = %p, was_in_eval = %d, top_env = %p\n",
-	  (void*)thr, (void*)PL_restartop, was_in_eval, (void*)PL_top_env));
     if ((!PL_restartop && was_in_eval) || PL_top_env->je_prev)
 	JMPENV_JUMP(3);
     return PL_restartop;
@@ -1397,7 +1387,6 @@ Perl_die_nocontext(const char* pat, ...)
     dTHX;
     OP *o;
     va_list args;
-    PERL_ARGS_ASSERT_DIE_NOCONTEXT;
     va_start(args, pat);
     o = vdie(pat, &args);
     va_end(args);
@@ -1677,8 +1666,15 @@ Perl_my_setenv(pTHX_ const char *nam, const char *val)
 #ifndef PERL_USE_SAFE_PUTENV
     if (!PL_use_safe_putenv) {
     /* most putenv()s leak, so we manipulate environ directly */
-    register I32 i=setenv_getix(nam);          /* where does it go? */
+    register I32 i;
+    register const I32 len = strlen(nam);
     int nlen, vlen;
+
+    /* where does it go? */
+    for (i = 0; environ[i]; i++) {
+        if (strnEQ(environ[i],nam,len) && environ[i][len] == '=')
+            break;
+    }
 
     if (environ == PL_origenviron) {   /* need we copy environment? */
        I32 j;
@@ -1782,30 +1778,6 @@ Perl_my_setenv(pTHX_ const char *nam, const char *val)
 }
 
 #endif /* WIN32 || NETWARE */
-
-#ifndef PERL_MICRO
-I32
-Perl_setenv_getix(pTHX_ const char *nam)
-{
-    register I32 i;
-    register const I32 len = strlen(nam);
-
-    PERL_ARGS_ASSERT_SETENV_GETIX;
-    PERL_UNUSED_CONTEXT;
-
-    for (i = 0; environ[i]; i++) {
-	if (
-#ifdef WIN32
-	    strnicmp(environ[i],nam,len) == 0
-#else
-	    strnEQ(environ[i],nam,len)
-#endif
-	    && environ[i][len] == '=')
-	    break;			/* strnEQ must come first to avoid */
-    }					/* potential SEGV's */
-    return i;
-}
-#endif /* !PERL_MICRO */
 
 #endif /* !VMS && !EPOC*/
 
@@ -2280,9 +2252,9 @@ Perl_my_swabn(void *ptr, int n)
 }
 
 PerlIO *
-Perl_my_popen_list(pTHX_ char *mode, int n, SV **args)
+Perl_my_popen_list(pTHX_ const char *mode, int n, SV **args)
 {
-#if (!defined(DOSISH) || defined(HAS_FORK) || defined(AMIGAOS)) && !defined(OS2) && !defined(VMS) && !defined(__OPEN_VM) && !defined(EPOC) && !defined(MACOS_TRADITIONAL) && !defined(NETWARE) && !defined(__LIBCATAMOUNT__)
+#if (!defined(DOSISH) || defined(HAS_FORK) || defined(AMIGAOS)) && !defined(OS2) && !defined(VMS) && !defined(__OPEN_VM) && !defined(EPOC) && !defined(NETWARE) && !defined(__LIBCATAMOUNT__)
     dVAR;
     int p[2];
     register I32 This, that;
@@ -2315,6 +2287,8 @@ Perl_my_popen_list(pTHX_ char *mode, int n, SV **args)
 	    }
 	    return NULL;
 	}
+	if (ckWARN(WARN_PIPE))
+	    Perl_warner(aTHX_ packWARN(WARN_PIPE), "Can't fork, trying again in 5 seconds");
 	sleep(5);
     }
     if (pid == 0) {
@@ -2372,9 +2346,7 @@ Perl_my_popen_list(pTHX_ char *mode, int n, SV **args)
     else
 	PerlLIO_close(p[that]);		/* close child's end of pipe */
 
-    LOCK_FDPID_MUTEX;
     sv = *av_fetch(PL_fdpid,p[This],TRUE);
-    UNLOCK_FDPID_MUTEX;
     SvUPGRADE(sv,SVt_IV);
     SvIV_set(sv, pid);
     PL_forkprocess = pid;
@@ -2420,7 +2392,7 @@ Perl_my_popen_list(pTHX_ char *mode, int n, SV **args)
 }
 
     /* VMS' my_popen() is in VMS.c, same with OS/2. */
-#if (!defined(DOSISH) || defined(HAS_FORK) || defined(AMIGAOS)) && !defined(VMS) && !defined(__OPEN_VM) && !defined(EPOC) && !defined(MACOS_TRADITIONAL) && !defined(__LIBCATAMOUNT__)
+#if (!defined(DOSISH) || defined(HAS_FORK) || defined(AMIGAOS)) && !defined(VMS) && !defined(__OPEN_VM) && !defined(EPOC) && !defined(__LIBCATAMOUNT__)
 PerlIO *
 Perl_my_popen(pTHX_ const char *cmd, const char *mode)
 {
@@ -2460,9 +2432,11 @@ Perl_my_popen(pTHX_ const char *cmd, const char *mode)
 		PerlLIO_close(pp[1]);
 	    }
 	    if (!doexec)
-		Perl_croak(aTHX_ "Can't fork");
+		Perl_croak(aTHX_ "Can't fork: %s", Strerror(errno));
 	    return NULL;
 	}
+	if (ckWARN(WARN_PIPE))
+	    Perl_warner(aTHX_ packWARN(WARN_PIPE), "Can't fork, trying again in 5 seconds");
 	sleep(5);
     }
     if (pid == 0) {
@@ -2540,9 +2514,7 @@ Perl_my_popen(pTHX_ const char *cmd, const char *mode)
     else
 	PerlLIO_close(p[that]);
 
-    LOCK_FDPID_MUTEX;
     sv = *av_fetch(PL_fdpid,p[This],TRUE);
-    UNLOCK_FDPID_MUTEX;
     SvUPGRADE(sv,SVt_IV);
     SvIV_set(sv, pid);
     PL_forkprocess = pid;
@@ -2669,7 +2641,7 @@ Perl_my_fork(void)
 
 #ifdef DUMP_FDS
 void
-Perl_dump_fds(pTHX_ char *s)
+Perl_dump_fds(pTHX_ const char *const s)
 {
     int fd;
     Stat_t tmpstatbuf;
@@ -2722,11 +2694,6 @@ dup2(int oldfd, int newfd)
 
 #ifndef PERL_MICRO
 #ifdef HAS_SIGACTION
-
-#ifdef MACOS_TRADITIONAL
-/* We don't want restart behavior on MacOS */
-#undef SA_RESTART
-#endif
 
 Sighandler_t
 Perl_rsignal(pTHX_ int signo, Sighandler_t handler)
@@ -2878,7 +2845,7 @@ Perl_rsignal_restore(pTHX_ int signo, Sigsave_t *save)
 #endif /* !PERL_MICRO */
 
     /* VMS' my_pclose() is in VMS.c; same with OS/2 */
-#if (!defined(DOSISH) || defined(HAS_FORK) || defined(AMIGAOS)) && !defined(VMS) && !defined(__OPEN_VM) && !defined(EPOC) && !defined(MACOS_TRADITIONAL) && !defined(__LIBCATAMOUNT__)
+#if (!defined(DOSISH) || defined(HAS_FORK) || defined(AMIGAOS)) && !defined(VMS) && !defined(__OPEN_VM) && !defined(EPOC) && !defined(__LIBCATAMOUNT__)
 I32
 Perl_my_pclose(pTHX_ PerlIO *ptr)
 {
@@ -2891,9 +2858,7 @@ Perl_my_pclose(pTHX_ PerlIO *ptr)
     bool close_failed;
     dSAVEDERRNO;
 
-    LOCK_FDPID_MUTEX;
     svp = av_fetch(PL_fdpid,PerlIO_fileno(ptr),TRUE);
-    UNLOCK_FDPID_MUTEX;
     pid = (SvTYPE(*svp) == SVt_IV) ? SvIVX(*svp) : -1;
     SvREFCNT_dec(*svp);
     *svp = &PL_sv_undef;
@@ -2936,7 +2901,7 @@ Perl_my_pclose(pTHX_ PerlIO *ptr)
 #endif
 #endif /* !DOSISH */
 
-#if  (!defined(DOSISH) || defined(OS2) || defined(WIN32) || defined(NETWARE)) && !defined(MACOS_TRADITIONAL) && !defined(__LIBCATAMOUNT__)
+#if  (!defined(DOSISH) || defined(OS2) || defined(WIN32) || defined(NETWARE)) && !defined(__LIBCATAMOUNT__)
 I32
 Perl_wait4pid(pTHX_ Pid_t pid, int *statusp, int flags)
 {
@@ -3023,7 +2988,7 @@ Perl_wait4pid(pTHX_ Pid_t pid, int *statusp, int flags)
 
 #ifdef PERL_USES_PL_PIDSTATUS
 void
-Perl_pidgone(pTHX_ Pid_t pid, int status)
+S_pidgone(pTHX_ Pid_t pid, int status)
 {
     register SV *sv;
 
@@ -3254,26 +3219,16 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
     }
 #endif
 
-#ifdef MACOS_TRADITIONAL
-    if (dosearch && !strchr(scriptname, ':') &&
-	(s = PerlEnv_getenv("Commands")))
-#else
     if (dosearch && !strchr(scriptname, '/')
 #ifdef DOSISH
 		 && !strchr(scriptname, '\\')
 #endif
 		 && (s = PerlEnv_getenv("PATH")))
-#endif
     {
 	bool seen_dot = 0;
 
 	bufend = s + strlen(s);
 	while (s < bufend) {
-#ifdef MACOS_TRADITIONAL
-	    s = delimcpy(tmpbuf, tmpbuf + sizeof tmpbuf, s, bufend,
-			',',
-			&len);
-#else
 #if defined(atarist) || defined(DOSISH)
 	    for (len = 0; *s
 #  ifdef atarist
@@ -3290,17 +3245,12 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
 			':',
 			&len);
 #endif /* ! (atarist || DOSISH) */
-#endif /* MACOS_TRADITIONAL */
 	    if (s < bufend)
 		s++;
 	    if (len + 1 + strlen(scriptname) + MAX_EXT_LEN >= sizeof tmpbuf)
 		continue;	/* don't search dir with too-long name */
-#ifdef MACOS_TRADITIONAL
-	    if (len && tmpbuf[len - 1] != ':')
-	    	tmpbuf[len++] = ':';
-#else
 	    if (len
-#  if defined(atarist) || defined(__MINT__) || defined(DOSISH)
+#  if defined(atarist) || defined(DOSISH)
 		&& tmpbuf[len - 1] != '/'
 		&& tmpbuf[len - 1] != '\\'
 #  endif
@@ -3308,7 +3258,6 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
 		tmpbuf[len++] = '/';
 	    if (len == 2 && tmpbuf[0] == '.')
 		seen_dot = 1;
-#endif
 	    (void)my_strlcpy(tmpbuf + len, scriptname, sizeof(tmpbuf) - len);
 #endif  /* !VMS */
 
@@ -3333,7 +3282,7 @@ Perl_find_script(pTHX_ const char *scriptname, bool dosearch,
 		continue;
 	    if (S_ISREG(PL_statbuf.st_mode)
 		&& cando(S_IRUSR,TRUE,&PL_statbuf)
-#if !defined(DOSISH) && !defined(MACOS_TRADITIONAL)
+#if !defined(DOSISH)
 		&& cando(S_IXUSR,TRUE,&PL_statbuf)
 #endif
 		)
@@ -4828,7 +4777,6 @@ the original version contained 1 or more dots, respectively
 SV *
 Perl_vstringify(pTHX_ SV *vs)
 {
-
     PERL_ARGS_ASSERT_VSTRINGIFY;
 
     if ( SvROK(vs) )
@@ -5530,38 +5478,35 @@ Perl_free_global_struct(pTHX_ struct perl_vars *plvarsp)
 
 #ifdef PERL_MEM_LOG
 
-/*
- * PERL_MEM_LOG: the Perl_mem_log_..() will be compiled.
+/* -DPERL_MEM_LOG: the Perl_mem_log_..() is compiled, including the
+ * the default implementation, unless -DPERL_MEM_LOG_NOIMPL is also
+ * given, and you supply your own implementation.
  *
- * PERL_MEM_LOG_ENV: if defined, during run time the environment
- * variables PERL_MEM_LOG and PERL_SV_LOG will be consulted, and
- * if the integer value of that is true, the logging will happen.
- * (The default is to always log if the PERL_MEM_LOG define was
- * in effect.)
+ * The default implementation reads a single env var, PERL_MEM_LOG,
+ * expecting one or more of the following:
  *
- * PERL_MEM_LOG_TIMESTAMP: if defined, a timestamp will be logged
- * before every memory logging entry. This can be turned off at run
- * time by setting the environment variable PERL_MEM_LOG_TIMESTAMP
- * to zero.
+ *    \d+ - fd		fd to write to		: must be 1st (atoi)
+ *    'm' - memlog	was PERL_MEM_LOG=1
+ *    's' - svlog	was PERL_SV_LOG=1
+ *    't' - timestamp	was PERL_MEM_LOG_TIMESTAMP=1
+ *
+ * This makes the logger controllable enough that it can reasonably be
+ * added to the system perl.
  */
 
-/*
- * PERL_MEM_LOG_SPRINTF_BUF_SIZE: size of a (stack-allocated) buffer
+/* -DPERL_MEM_LOG_SPRINTF_BUF_SIZE=X: size of a (stack-allocated) buffer
  * the Perl_mem_log_...() will use (either via sprintf or snprintf).
  */
 #define PERL_MEM_LOG_SPRINTF_BUF_SIZE 128
 
-/*
- * PERL_MEM_LOG_FD: the file descriptor the Perl_mem_log_...() will
- * log to.  You can also define in compile time PERL_MEM_LOG_ENV_FD,
- * in which case the environment variable PERL_MEM_LOG_FD will be
- * consulted for the file descriptor number to use.
+/* -DPERL_MEM_LOG_FD=N: the file descriptor the Perl_mem_log_...()
+ * writes to.  In the default logger, this is settable at runtime.
  */
 #ifndef PERL_MEM_LOG_FD
 #  define PERL_MEM_LOG_FD 2 /* If STDERR is too boring for you. */
 #endif
 
-#ifdef PERL_MEM_LOG_STDERR
+#ifndef PERL_MEM_LOG_NOIMPL
 
 # ifdef DEBUG_LEAKING_SCALARS
 #   define SV_LOG_SERIAL_FMT	    " [%lu]"
@@ -5572,23 +5517,25 @@ Perl_free_global_struct(pTHX_ struct perl_vars *plvarsp)
 # endif
 
 static void
-S_mem_log_common(enum mem_log_type mlt, const UV n, const UV typesize, const char *type_name, const SV *sv, Malloc_t oldalloc, Malloc_t newalloc, const char *filename, const int linenumber, const char *funcname)
+S_mem_log_common(enum mem_log_type mlt, const UV n, 
+		 const UV typesize, const char *type_name, const SV *sv,
+		 Malloc_t oldalloc, Malloc_t newalloc,
+		 const char *filename, const int linenumber,
+		 const char *funcname)
 {
-# if defined(PERL_MEM_LOG_ENV) || defined(PERL_MEM_LOG_ENV_FD)
-    const char *s;
-# endif
+    const char *pmlenv;
 
     PERL_ARGS_ASSERT_MEM_LOG_COMMON;
 
-# ifdef PERL_MEM_LOG_ENV
-    s = PerlEnv_getenv(mlt < MLT_NEW_SV ? "PERL_MEM_LOG" : "PERL_SV_LOG");
-    if (s ? atoi(s) : 0)
-# endif
+    pmlenv = PerlEnv_getenv("PERL_MEM_LOG");
+    if (!pmlenv)
+	return;
+    if (mlt < MLT_NEW_SV ? strchr(pmlenv,'m') : strchr(pmlenv,'s'))
     {
 	/* We can't use SVs or PerlIO for obvious reasons,
 	 * so we'll use stdio and low-level IO instead. */
 	char buf[PERL_MEM_LOG_SPRINTF_BUF_SIZE];
-# ifdef PERL_MEM_LOG_TIMESTAMP
+
 #   ifdef HAS_GETTIMEOFDAY
 #     define MEM_LOG_TIME_FMT	"%10d.%06d: "
 #     define MEM_LOG_TIME_ARG	(int)tv.tv_sec, (int)tv.tv_usec
@@ -5604,24 +5551,17 @@ S_mem_log_common(enum mem_log_type mlt, const UV n, const UV typesize, const cha
 	 * gettimeofday() (see ext/Time-HiRes), the easiest way is
 	 * probably that they would be used to fill in the struct
 	 * timeval. */
-# endif
 	{
-	    int fd = PERL_MEM_LOG_FD;
 	    STRLEN len;
+	    int fd = atoi(pmlenv);
+	    if (!fd)
+		fd = PERL_MEM_LOG_FD;
 
-# ifdef PERL_MEM_LOG_ENV_FD
-	    if ((s = PerlEnv_getenv("PERL_MEM_LOG_FD"))) {
-		fd = atoi(s);
-	    }
-# endif
-# ifdef PERL_MEM_LOG_TIMESTAMP
-	    s = PerlEnv_getenv("PERL_MEM_LOG_TIMESTAMP");
-	    if (!s || atoi(s)) {
+	    if (strchr(pmlenv, 't')) {
 		len = my_snprintf(buf, sizeof(buf),
 				MEM_LOG_TIME_FMT, MEM_LOG_TIME_ARG);
 		PerlLIO_write(fd, buf, len);
 	    }
-# endif
 	    switch (mlt) {
 	    case MLT_ALLOC:
 		len = my_snprintf(buf, sizeof(buf),
@@ -5652,54 +5592,78 @@ S_mem_log_common(enum mem_log_type mlt, const UV n, const UV typesize, const cha
 			filename, linenumber, funcname,
 			PTR2UV(sv) _SV_LOG_SERIAL_ARG(sv));
 		break;
+	    default:
+		len = 0;
 	    }
 	    PerlLIO_write(fd, buf, len);
 	}
     }
 }
+#endif /* !PERL_MEM_LOG_NOIMPL */
+
+#ifndef PERL_MEM_LOG_NOIMPL
+# define \
+    mem_log_common_if(alty, num, tysz, tynm, sv, oal, nal, flnm, ln, fnnm) \
+    mem_log_common   (alty, num, tysz, tynm, sv, oal, nal, flnm, ln, fnnm)
+#else
+/* this is suboptimal, but bug compatible.  User is providing their
+   own implemenation, but is getting these functions anyway, and they
+   do nothing. But _NOIMPL users should be able to cope or fix */
+# define \
+    mem_log_common_if(alty, num, tysz, tynm, u, oal, nal, flnm, ln, fnnm) \
+    /* mem_log_common_if_PERL_MEM_LOG_NOIMPL */
 #endif
 
 Malloc_t
-Perl_mem_log_alloc(const UV n, const UV typesize, const char *type_name, Malloc_t newalloc, const char *filename, const int linenumber, const char *funcname)
+Perl_mem_log_alloc(const UV n, const UV typesize, const char *type_name,
+		   Malloc_t newalloc, 
+		   const char *filename, const int linenumber,
+		   const char *funcname)
 {
-#ifdef PERL_MEM_LOG_STDERR
-    mem_log_common(MLT_ALLOC, n, typesize, type_name, NULL, NULL, newalloc, filename, linenumber, funcname);
-#endif
+    mem_log_common_if(MLT_ALLOC, n, typesize, type_name,
+		      NULL, NULL, newalloc,
+		      filename, linenumber, funcname);
     return newalloc;
 }
 
 Malloc_t
-Perl_mem_log_realloc(const UV n, const UV typesize, const char *type_name, Malloc_t oldalloc, Malloc_t newalloc, const char *filename, const int linenumber, const char *funcname)
+Perl_mem_log_realloc(const UV n, const UV typesize, const char *type_name,
+		     Malloc_t oldalloc, Malloc_t newalloc, 
+		     const char *filename, const int linenumber, 
+		     const char *funcname)
 {
-#ifdef PERL_MEM_LOG_STDERR
-    mem_log_common(MLT_REALLOC, n, typesize, type_name, NULL, oldalloc, newalloc, filename, linenumber, funcname);
-#endif
+    mem_log_common_if(MLT_REALLOC, n, typesize, type_name,
+		      NULL, oldalloc, newalloc, 
+		      filename, linenumber, funcname);
     return newalloc;
 }
 
 Malloc_t
-Perl_mem_log_free(Malloc_t oldalloc, const char *filename, const int linenumber, const char *funcname)
+Perl_mem_log_free(Malloc_t oldalloc, 
+		  const char *filename, const int linenumber, 
+		  const char *funcname)
 {
-#ifdef PERL_MEM_LOG_STDERR
-    mem_log_common(MLT_FREE, 0, 0, "", NULL, oldalloc, NULL, filename, linenumber, funcname);
-#endif
+    mem_log_common_if(MLT_FREE, 0, 0, "", NULL, oldalloc, NULL, 
+		      filename, linenumber, funcname);
     return oldalloc;
 }
 
 void
-Perl_mem_log_new_sv(const SV *sv, const char *filename, const int linenumber, const char *funcname)
+Perl_mem_log_new_sv(const SV *sv, 
+		    const char *filename, const int linenumber,
+		    const char *funcname)
 {
-#ifdef PERL_MEM_LOG_STDERR
-    mem_log_common(MLT_NEW_SV, 0, 0, "", sv, NULL, NULL, filename, linenumber, funcname);
-#endif
+    mem_log_common_if(MLT_NEW_SV, 0, 0, "", sv, NULL, NULL,
+		      filename, linenumber, funcname);
 }
 
 void
-Perl_mem_log_del_sv(const SV *sv, const char *filename, const int linenumber, const char *funcname)
+Perl_mem_log_del_sv(const SV *sv,
+		    const char *filename, const int linenumber, 
+		    const char *funcname)
 {
-#ifdef PERL_MEM_LOG_STDERR
-    mem_log_common(MLT_DEL_SV, 0, 0, "", sv, NULL, NULL, filename, linenumber, funcname);
-#endif
+    mem_log_common_if(MLT_DEL_SV, 0, 0, "", sv, NULL, NULL, 
+		      filename, linenumber, funcname);
 }
 
 #endif /* PERL_MEM_LOG */
@@ -6061,17 +6025,15 @@ Perl_my_dirfd(pTHX_ DIR * dir) {
 REGEXP *
 Perl_get_re_arg(pTHX_ SV *sv) {
     SV    *tmpsv;
-    MAGIC *mg;
 
     if (sv) {
         if (SvMAGICAL(sv))
             mg_get(sv);
         if (SvROK(sv) &&
             (tmpsv = MUTABLE_SV(SvRV(sv))) &&            /* assign deliberate */
-            SvTYPE(tmpsv) == SVt_PVMG &&
-            (mg = mg_find(tmpsv, PERL_MAGIC_qr))) /* assign deliberate */
+            SvTYPE(tmpsv) == SVt_REGEXP)
         {
-            return (REGEXP *)mg->mg_obj;
+            return (REGEXP*) tmpsv;
         }
     }
  

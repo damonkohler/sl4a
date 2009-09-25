@@ -1,5 +1,10 @@
 Revision history for Perl extension Module::Build.
 
+0.340201 - Sun Aug  9 22:11:04 EDT 2009
+
+ Other:
+ - Version bump for Perl core for 5.10.1 release; no other changes
+
 0.34_02 - Sun Jul 26 22:50:40 EDT 2009
 
  Bug-fixes:

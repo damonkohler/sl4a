@@ -1,8 +1,10 @@
 #!./perl -w
 
 BEGIN {
-    chdir 't';
-    @INC = '../lib';
+   if( $ENV{PERL_CORE} ) {
+        chdir 't' if -d 't';
+        @INC = qw(../lib);
+    }
 }
 
 require './test.pl';

@@ -568,7 +568,7 @@ right operand is true, I<AFTER> which the range operator becomes false
 again.  It doesn't become false till the next time the range operator is
 evaluated.  It can test the right operand and become false on the same
 evaluation it became true (as in B<awk>), but it still returns true once.
-If you don't want it to test the right operand till the next
+If you don't want it to test the right operand until the next
 evaluation, as in B<sed>, just use three dots ("...") instead of
 two.  In all other regards, "..." behaves just like ".." does.
 
@@ -602,10 +602,10 @@ Examples:
 As a scalar operator:
 
     if (101 .. 200) { print; } # print 2nd hundred lines, short for
-                               #   if ($. == 101 .. $. == 200) ...
+                               #   if ($. == 101 .. $. == 200) { print; }
 
     next LINE if (1 .. /^$/);  # skip header lines, short for
-                               #   ... if ($. == 1 .. /^$/);
+                               #   next LINE if ($. == 1 .. /^$/);
                                # (typically in a loop labeled LINE)
 
     s/^/> / if (/^$/ .. eof());  # quote body
@@ -615,9 +615,9 @@ As a scalar operator:
         $in_header =   1  .. /^$/;
         $in_body   = /^$/ .. eof;
         if ($in_header) {
-            # ...
+            # do something
         } else { # in body
-            # ...
+            # do something else
         }
     } continue {
         close ARGV if eof;             # reset $. each file
@@ -812,6 +812,20 @@ between keys and values in hashes, and other paired elements in lists.
 
         %hash = ( $key => $value );
         login( $username => $password );
+
+=head2 Yada Yada Operator
+X<...> X<... operator> X<yada yada operator>
+
+The yada yada operator (noted C<...>) is a placeholder for code.
+It parses without error, but when executed it throws an exception
+with the text C<Unimplemented>:
+
+    sub foo { ... }
+    foo();
+
+    Unimplemented at <file> line <line number>.
+
+It takes no argument.
 
 =head2 List Operators (Rightward)
 X<operator, list, rightward> X<list operator>

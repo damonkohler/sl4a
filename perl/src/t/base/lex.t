@@ -265,7 +265,7 @@ sub foo::::::bar { print "ok $test\n"; $test++ }
 foo::::::bar;
 
 eval "\$x =\xE2foo";
-if ($@ =~ /Unrecognized character \\xE2 in column 5/) { print "ok $test\n"; } else { print "not ok $test\n"; }
+if ($@ =~ /Unrecognized character \\xE2; marked by <-- HERE after \$x =<-- HERE near column 5/) { print "ok $test\n"; } else { print "not ok $test\n"; }
 $test++;
 
 # Is "[~" scanned correctly?

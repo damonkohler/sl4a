@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -Tw
 #
 # t/basic.t -- Test suite for the Term::ANSIColor Perl module.
 #
@@ -9,11 +9,11 @@
 # under the same terms as Perl itself.
 
 use strict;
-use Test::More tests => 29;
+use Test::More tests => 43;
 
 BEGIN {
     delete $ENV{ANSI_COLORS_DISABLED};
-    use_ok ('Term::ANSIColor', qw/:pushpop color colored uncolor/);
+    use_ok ('Term::ANSIColor', qw/:pushpop color colored uncolor colorstrip/);
 }
 
 # Various basic tests.
@@ -84,3 +84,39 @@ is (POPCOLOR . "text", "\e[31m\e[42mtext",
 is (LOCALCOLOR(GREEN . ON_BLUE . "text"), "\e[32m\e[44mtext\e[31m\e[42m",
     'LOCALCOLOR with two arguments');
 is (POPCOLOR . "text", "\e[0mtext", 'POPCOLOR with no arguments');
+
+# Test colorstrip.
+is (colorstrip ("\e[1mBold \e[31;42mon green\e[0m\e[m"), 'Bold on green',
+    'Basic color stripping');
+is (colorstrip ("\e[1m", 'bold', "\e[0m"), 'bold',
+    'Color stripping across multiple strings');
+is_deeply ([ colorstrip ("\e[1m", 'bold', "\e[0m") ],
+           [ '', 'bold', '' ], '...and in an array context');
+is (colorstrip ("\e[2cSome other code\e and stray [0m stuff"),
+    "\e[2cSome other code\e and stray [0m stuff",
+    'colorstrip does not remove non-color stuff');
+
+# Test error handling.
+my $output = eval { color 'chartreuse' };
+is ($output, undef, 'color on unknown color name fails');
+like ($@, qr/^Invalid attribute name chartreuse at /,
+      '...with the right error');
+$output = eval { colored "Stuff", 'chartreuse' };
+is ($output, undef, 'colored on unknown color name fails');
+like ($@, qr/^Invalid attribute name chartreuse at /,
+      '...with the right error');
+$output = eval { uncolor "\e[28m" };
+is ($output, undef, 'uncolor on unknown color code fails');
+like ($@, qr/^No name for escape sequence 28 at /, '...with the right error');
+$output = eval { uncolor "\e[foom" };
+is ($output, undef, 'uncolor on bad escape sequence fails');
+like ($@, qr/^Bad escape sequence foo at /, '...with the right error');
+
+# Test error reporting when calling unrecognized Term::ANSIColor subs that go
+# through AUTOLOAD.
+eval { Term::ANSIColor::RSET () };
+like ($@, qr/^undefined subroutine \&Term::ANSIColor::RSET called at /,
+      'Correct error from an attribute that is not defined');
+eval { Term::ANSIColor::reset () };
+like ($@, qr/^undefined subroutine \&Term::ANSIColor::reset called at /,
+      'Correct error from a lowercase attribute');

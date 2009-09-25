@@ -2,10 +2,6 @@ use strict;
 use warnings;
 
 BEGIN {
-    if ($ENV{'PERL_CORE'}){
-        chdir 't';
-        unshift @INC, '../lib';
-    }
     use Config;
     if (! $Config{'useithreads'}) {
         print("1..0 # SKIP Perl not compiled with 'useithreads'\n");
@@ -51,7 +47,7 @@ sub ok {
     } else {
         print("not ok $id - $name\n");
         printf("# Failed test at line %d\n", (caller)[2]);
-        print(STDERR "# FAIL: $name\n") if (! exists($ENV{'PERL_CORE'}));
+        print(STDERR "# FAIL: $name\n") if (! $ENV{'PERL_CORE'});
     }
 
     return ($ok);

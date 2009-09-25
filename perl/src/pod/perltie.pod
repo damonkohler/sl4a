@@ -952,6 +952,19 @@ This method will be called when the C<getc> function is called.
 
     sub GETC { print "Don't GETC, Get Perl"; return "a"; }
 
+=item EOF this
+X<EOF>
+
+This method will be called when the C<eof> function is called.
+
+Starting with Perl 5.12, an additional integer parameter will be passed.  It
+will be zero if C<eof> is called without parameter; C<1> if C<eof> is given
+a filehandle as a parameter, e.g. C<eof(FH)>; and C<2> in the very special
+case that the tied filehandle is C<ARGV> and C<eof> is called with an empty
+parameter list, e.g. C<eof()>.
+
+    sub EOF { not length $stringbuf }
+
 =item CLOSE this
 X<CLOSE>
 

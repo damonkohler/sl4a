@@ -138,14 +138,14 @@ PerlIOVia_pushed(pTHX_ PerlIO * f, const char *mode, SV * arg,
 	else {
 	    STRLEN pkglen = 0;
 	    const char *pkg = SvPV(arg, pkglen);
-	    s->obj = SvREFCNT_inc(arg);
-	    s->stash = gv_stashpvn(pkg, pkglen, 0);
+	    s->obj =
+		newSVpvn(Perl_form(aTHX_ "PerlIO::via::%s", pkg),
+			 pkglen + 13);
+	    s->stash = gv_stashpvn(SvPVX_const(s->obj), pkglen + 13, 0);
 	    if (!s->stash) {
 		SvREFCNT_dec(s->obj);
-		s->obj =
-		    newSVpvn(Perl_form(aTHX_ "PerlIO::via::%s", pkg),
-			     pkglen + 13);
-		s->stash = gv_stashpvn(SvPVX_const(s->obj), pkglen + 13, 0);
+		s->obj = SvREFCNT_inc(arg);
+		s->stash = gv_stashpvn(pkg, pkglen, 0);
 	    }
 	    if (s->stash) {
 		char lmode[8];

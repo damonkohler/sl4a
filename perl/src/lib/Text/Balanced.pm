@@ -1237,7 +1237,7 @@ pattern C<'\s*'> - optional whitespace - is used. If the delimiter set
 is also not specified, the set C</["'`]/> is used. If the text to be processed
 is not specified either, C<$_> is used.
 
-In list context, C<extract_delimited> returns a array of three
+In list context, C<extract_delimited> returns an array of three
 elements, the extracted substring (I<including the surrounding
 delimiters>), the remainder of the text, and the skipped prefix (if
 any). If a suitable delimited substring is not found, the first

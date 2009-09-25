@@ -1,10 +1,6 @@
 #!/usr/local/bin/perl -w
 
-# Due to a bug in older versions of MakeMaker & Test::Harness, we must
-# ensure the blib's are in @INC, else we might use the core CGI.pm
-use lib qw(. ./blib/lib ./blib/arch);
-
-use Test::More tests => 19;
+use Test::More tests => 22;
 
 BEGIN { use_ok('CGI'); };
 use CGI (':standard','-no_debug','-tabindex');
@@ -133,4 +129,49 @@ is(checkbox_group(-name   => 'game',
 		 -disabled => ['checkers']),
    qq(<label><input type="checkbox" name="game" value="checkers" checked="checked" tabindex="23" disabled='1'/><span style="color:gray">checkers</span></label> <label><input type="checkbox" name="game" value="chess" checked="checked" tabindex="24" />chess</label> <label><input type="checkbox" name="game" value="cribbage" tabindex="25" />cribbage</label>),
    'checkbox_group()');
+
+my $optgroup = optgroup(-name=>'optgroup_name',
+                        -Values => ['moe','catch'],
+                        -attributes=>{'catch'=>{'class'=>'red'}});
+
+is($optgroup, 
+    qq(<optgroup label="optgroup_name">
+<option value="moe">moe</option>
+<option class="red" value="catch">catch</option>
+</optgroup>),
+    'optgroup()');
+
+is(popup_menu(-name=>'menu_name',
+              -Values=>[qw/eenie meenie minie/, $optgroup],
+              -labels=>{'eenie'=>'one',
+                        'meenie'=>'two',
+                        'minie'=>'three'},
+              -default=>'meenie'),
+    qq(<select name="menu_name" tabindex="26" >
+<option value="eenie">one</option>
+<option selected="selected" value="meenie">two</option>
+<option value="minie">three</option>
+<optgroup label="optgroup_name">
+<option value="moe">moe</option>
+<option class="red" value="catch">catch</option>
+</optgroup>
+</select>),
+    'popup_menu() + optgroup()');
+
+is(scrolling_list(-name=>'menu_name',
+              -Values=>[qw/eenie meenie minie/, $optgroup],
+              -labels=>{'eenie'=>'one',
+                        'meenie'=>'two',
+                        'minie'=>'three'},
+              -default=>'meenie'),
+    qq(<select name="menu_name" tabindex="27"  size="4">
+<option value="eenie">one</option>
+<option selected="selected" value="meenie">two</option>
+<option value="minie">three</option>
+<optgroup label="optgroup_name">
+<option value="moe">moe</option>
+<option class="red" value="catch">catch</option>
+</optgroup>
+</select>),
+    'scrolling_list() + optgroup()');
 

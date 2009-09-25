@@ -3,11 +3,11 @@
 BEGIN {
     chdir 't' if -d 't';
     @INC = '../lib';
+    require './test.pl';
 }
 
 use strict;
 use warnings;
-use Test::More;
 my $count=1;
 my @tests;
 
@@ -32,7 +32,7 @@ while (<$fh>) {
         my $t=($cpv > 256 || $str=~/^do/) ? "unicode" : "latin";
         push @tests,
             qq[ok($expr,'$chr=~/@fc/ix - $comment ($t string)')];
-        $tests[-1]="TODO: { local \$TODO='[13:41] <BinGOs> cue *It is all Greek to me* joke.';\n$tests[-1] }"
+        $tests[-1]="TODO: { local \$::TODO='[13:41] <BinGOs> cue *It is all Greek to me* joke.';\n$tests[-1] }"
             if $cp eq '0390' or $cp eq '03B0';
         $count++;
     }

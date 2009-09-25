@@ -2,11 +2,6 @@ use strict;
 use warnings;
 
 BEGIN {
-    if ($ENV{'PERL_CORE'}){
-        chdir 't';
-        unshift @INC, '../lib';
-    }
-
     # Import test.pl into its own package
     {
         package Test;

@@ -312,6 +312,7 @@ Perl_do_openn(pTHX_ GV *gv, register const char *oname, I32 len, int as_raw,
 		else {
 		    PerlIO *that_fp = NULL;
 		    if (num_svs > 1) {
+			/* diag_listed_as: More than one argument to '%s' open */
 			Perl_croak(aTHX_ "More than one argument to '%c&' open",IoTYPE(io));
 		    }
 		    while (isSPACE(*type))
@@ -398,6 +399,7 @@ Perl_do_openn(pTHX_ GV *gv, register const char *oname, I32 len, int as_raw,
 		    fp = PerlIO_stdout();
 		    IoTYPE(io) = IoTYPE_STD;
 		    if (num_svs > 1) {
+			/* diag_listed_as: More than one argument to '%s' open */
 			Perl_croak(aTHX_ "More than one argument to '>%c' open",IoTYPE_STD);
 		    }
 		}
@@ -431,6 +433,7 @@ Perl_do_openn(pTHX_ GV *gv, register const char *oname, I32 len, int as_raw,
 		fp = PerlIO_stdin();
 		IoTYPE(io) = IoTYPE_STD;
 		if (num_svs > 1) {
+		    /* diag_listed_as: More than one argument to '%s' open */
 		    Perl_croak(aTHX_ "More than one argument to '<%c' open",IoTYPE_STD);
 		}
 	    }
@@ -626,7 +629,6 @@ Perl_do_openn(pTHX_ GV *gv, register const char *oname, I32 len, int as_raw,
                 Pid_t pid;
                 SV *sv;
 
-                LOCK_FDPID_MUTEX;
                 sv = *av_fetch(PL_fdpid,fd,TRUE);
                 SvUPGRADE(sv, SVt_IV);
                 pid = SvIVX(sv);
@@ -634,7 +636,6 @@ Perl_do_openn(pTHX_ GV *gv, register const char *oname, I32 len, int as_raw,
                 sv = *av_fetch(PL_fdpid,savefd,TRUE);
                 SvUPGRADE(sv, SVt_IV);
                 SvIV_set(sv, pid);
-                UNLOCK_FDPID_MUTEX;
             }
 #endif
 
@@ -1095,12 +1096,10 @@ Perl_do_sysseek(pTHX_ GV *gv, Off_t pos, int whence)
 }
 
 int
-Perl_mode_from_discipline(pTHX_ SV *discp)
+Perl_mode_from_discipline(pTHX_ const char *s, STRLEN len)
 {
     int mode = O_BINARY;
-    if (discp) {
-	STRLEN len;
-	const char *s = SvPV_const(discp,len);
+    if (s) {
 	while (*s) {
 	    if (*s == ':') {
 		switch (s[1]) {
@@ -1397,7 +1396,7 @@ Perl_do_aexec5(pTHX_ SV *really, register SV **mark, register SV **sp,
 {
     dVAR;
     PERL_ARGS_ASSERT_DO_AEXEC5;
-#if defined(MACOS_TRADITIONAL) || defined(__SYMBIAN32__) || defined(__LIBCATAMOUNT__)
+#if defined(__SYMBIAN32__) || defined(__LIBCATAMOUNT__)
     Perl_croak(aTHX_ "exec? I'm not *that* kind of operating system");
 #else
     if (sp > mark) {
@@ -1727,8 +1726,11 @@ nothing in the core.
 	     * CRTL's emulation of Unix-style signals and kill()
 	     */
 	    while (++mark <= sp) {
-		I32 proc = SvIV(*mark);
+		I32 proc;
 		register unsigned long int __vmssts;
+		if (!(SvIOK(*mark) || SvNOK(*mark) || looks_like_number(*mark)))
+		    Perl_croak(aTHX_ "Can't kill a non-numeric process ID");
+		proc = SvIV(*mark);
 		APPLY_TAINT_PROPER();
 		if (!((__vmssts = sys$delprc(&proc,0)) & 1)) {
 		    tot--;
@@ -1751,7 +1753,10 @@ nothing in the core.
 	if (val < 0) {
 	    val = -val;
 	    while (++mark <= sp) {
-		const I32 proc = SvIV(*mark);
+		I32 proc;
+		if (!(SvIOK(*mark) || SvNOK(*mark) || looks_like_number(*mark)))
+		    Perl_croak(aTHX_ "Can't kill a non-numeric process ID");
+		proc = SvIV(*mark);
 		APPLY_TAINT_PROPER();
 #ifdef HAS_KILLPG
 		if (PerlProc_killpg(proc,val))	/* BSD */
@@ -1763,7 +1768,10 @@ nothing in the core.
 	}
 	else {
 	    while (++mark <= sp) {
-		const I32 proc = SvIV(*mark);
+		I32 proc;
+		if (!(SvIOK(*mark) || SvNOK(*mark) || looks_like_number(*mark)))
+		    Perl_croak(aTHX_ "Can't kill a non-numeric process ID");
+		proc = SvIV(*mark);
 		APPLY_TAINT_PROPER();
 		if (PerlProc_kill(proc, val))
 		    tot--;
@@ -1942,13 +1950,9 @@ Perl_cando(pTHX_ Mode_t mode, bool effective, register const Stat_t *statbufp)
 }
 #endif /* ! VMS */
 
-bool
-Perl_ingroup(pTHX_ Gid_t testgid, bool effective)
+static bool
+S_ingroup(pTHX_ Gid_t testgid, bool effective)
 {
-#ifdef MACOS_TRADITIONAL
-    /* This is simply not correct for AppleShare, but fix it yerself. */
-    return TRUE;
-#else
     dVAR;
     if (testgid == (effective ? PL_egid : PL_gid))
 	return TRUE;
@@ -1972,7 +1976,6 @@ Perl_ingroup(pTHX_ Gid_t testgid, bool effective)
     }
 #else
     return FALSE;
-#endif
 #endif
 }
 
@@ -2006,6 +2009,7 @@ Perl_do_ipcget(pTHX_ I32 optype, SV **mark, SV **sp)
 #endif
 #if !defined(HAS_MSG) || !defined(HAS_SEM) || !defined(HAS_SHM)
     default:
+        /* diag_listed_as: msg%s not implemented */
 	Perl_croak(aTHX_ "%s not implemented", PL_op_desc[optype]);
 #endif
     }
@@ -2066,12 +2070,14 @@ Perl_do_ipcctl(pTHX_ I32 optype, SV **mark, SV **sp)
 		   than guessing about u_?short(_t)? */
 	}
 #else
+        /* diag_listed_as: sem%s not implemented */
 	Perl_croak(aTHX_ "%s not implemented", PL_op_desc[optype]);
 #endif
 	break;
 #endif
 #if !defined(HAS_MSG) || !defined(HAS_SEM) || !defined(HAS_SHM)
     default:
+        /* diag_listed_as: shm%s not implemented */
 	Perl_croak(aTHX_ "%s not implemented", PL_op_desc[optype]);
 #endif
     }
@@ -2119,6 +2125,7 @@ Perl_do_ipcctl(pTHX_ I32 optype, SV **mark, SV **sp)
 #endif
 	    ret = Semctl(id, n, cmd, unsemds);
 #else
+	    /* diag_listed_as: sem%s not implemented */
 	    Perl_croak(aTHX_ "%s not implemented", PL_op_desc[optype]);
 #endif
         }
@@ -2160,6 +2167,7 @@ Perl_do_msgsnd(pTHX_ SV **mark, SV **sp)
 #else
     PERL_UNUSED_ARG(sp);
     PERL_UNUSED_ARG(mark);
+    /* diag_listed_as: msg%s not implemented */
     Perl_croak(aTHX_ "msgsnd not implemented");
 #endif
 }
@@ -2201,6 +2209,7 @@ Perl_do_msgrcv(pTHX_ SV **mark, SV **sp)
 #else
     PERL_UNUSED_ARG(sp);
     PERL_UNUSED_ARG(mark);
+    /* diag_listed_as: msg%s not implemented */
     Perl_croak(aTHX_ "msgrcv not implemented");
 #endif
 }
@@ -2255,6 +2264,7 @@ Perl_do_semop(pTHX_ SV **mark, SV **sp)
         return result;
     }
 #else
+    /* diag_listed_as: sem%s not implemented */
     Perl_croak(aTHX_ "semop not implemented");
 #endif
 }
@@ -2313,6 +2323,7 @@ Perl_do_shmio(pTHX_ I32 optype, SV **mark, SV **sp)
     }
     return shmdt(shm);
 #else
+    /* diag_listed_as: shm%s not implemented */
     Perl_croak(aTHX_ "shm I/O not implemented");
 #endif
 }
@@ -2354,11 +2365,6 @@ Perl_vms_start_glob
     fp = Perl_vms_start_glob(aTHX_ tmpglob, io);
 
 #else /* !VMS */
-#ifdef MACOS_TRADITIONAL
-    sv_setpv(tmpcmd, "glob ");
-    sv_catsv(tmpcmd, tmpglob);
-    sv_catpv(tmpcmd, " |");
-#else
 #ifdef DOSISH
 #ifdef OS2
     sv_setpv(tmpcmd, "for a in ");
@@ -2390,7 +2396,6 @@ Perl_vms_start_glob
 #endif
 #endif /* !CSH */
 #endif /* !DOSISH */
-#endif /* MACOS_TRADITIONAL */
     (void)do_open(PL_last_in_gv, (char*)SvPVX_const(tmpcmd), SvCUR(tmpcmd),
 		  FALSE, O_RDONLY, 0, NULL);
     fp = IoIFP(io);

@@ -47,7 +47,7 @@ sub numify { 0 + "${$_[0]}" }	# Not needed, additional overhead
 package main;
 
 $| = 1;
-use Test::More tests => 561;
+use Test::More tests => 577;
 
 
 $a = new Oscalar "087";
@@ -1132,7 +1132,7 @@ like ($@, qr/zap/);
     like(overload::StrVal(sub{1}),    qr/^CODE\(0x[0-9a-f]+\)$/);
     like(overload::StrVal(\*GLOB),    qr/^GLOB\(0x[0-9a-f]+\)$/);
     like(overload::StrVal(\$o),       qr/^REF\(0x[0-9a-f]+\)$/);
-    like(overload::StrVal(qr/a/),     qr/^Regexp=SCALAR\(0x[0-9a-f]+\)$/);
+    like(overload::StrVal(qr/a/),     qr/^Regexp=REGEXP\(0x[0-9a-f]+\)$/);
     like(overload::StrVal($o),        qr/^perl31793=ARRAY\(0x[0-9a-f]+\)$/);
     like(overload::StrVal($of),       qr/^perl31793_fb=ARRAY\(0x[0-9a-f]+\)$/);
     like(overload::StrVal($no),       qr/^no_overload=ARRAY\(0x[0-9a-f]+\)$/);
@@ -1232,6 +1232,46 @@ foreach my $op (qw(<=> == != < <= > >=)) {
     ok(!$b, "Expect overloaded boolean");
     ok(!$a, "Expect overloaded boolean");
 }
+
+{
+    package Flrbbbbb;
+    use overload
+	bool	 => sub { shift->{truth} eq 'yes' },
+	'0+'	 => sub { shift->{truth} eq 'yes' ? '1' : '0' },
+	'!'	 => sub { shift->{truth} eq 'no' },
+	fallback => 1;
+
+    sub new { my $class = shift; bless { truth => shift }, $class }
+
+    package main;
+
+    my $yes = Flrbbbbb->new('yes');
+    my $x;
+    $x = 1 if $yes;			is($x, 1);
+    $x = 2 unless $yes;			is($x, 1);
+    $x = 3 if !$yes;			is($x, 1);
+    $x = 4 unless !$yes;		is($x, 4);
+
+    my $no = Flrbbbbb->new('no');
+    $x = 0;
+    $x = 1 if $no;			is($x, 0);
+    $x = 2 unless $no;			is($x, 2);
+    $x = 3 if !$no;			is($x, 3);
+    $x = 4 unless !$no;			is($x, 3);
+
+    $x = 0;
+    $x = 1 if !$no && $yes;		is($x, 1);
+    $x = 2 unless !$no && $yes;		is($x, 1);
+    $x = 3 if $no || !$yes;		is($x, 1);
+    $x = 4 unless $no || !$yes;		is($x, 4);
+
+    $x = 0;
+    $x = 1 if !$no || !$yes;		is($x, 1);
+    $x = 2 unless !$no || !$yes;	is($x, 1);
+    $x = 3 if !$no && !$yes;		is($x, 1);
+    $x = 4 unless !$no && !$yes;	is($x, 4);
+}
+
 {
     use Scalar::Util 'weaken';
 

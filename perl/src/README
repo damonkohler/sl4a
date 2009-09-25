@@ -22,7 +22,7 @@ third-party modules.
 For an introduction to the language's features, see pod/perlintro.pod.
 
 For a discussion of the important changes in this release, see
-pod/perl5101delta.pod.  (This will also be installed as perldelta.pod).
+pod/perl5100delta.pod.  (This will also be installed as perldelta.pod).
 
 There are also many Perl books available, covering a wide variety of topics,
 from various publishers.  See pod/perlbook.pod for more information.

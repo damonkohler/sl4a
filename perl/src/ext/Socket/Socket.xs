@@ -442,3 +442,54 @@ unpack_sockaddr_in(sin_sv)
 	PUSHs(sv_2mortal(newSViv((IV) port)));
 	PUSHs(sv_2mortal(newSVpvn((char *)&ip_address, sizeof ip_address)));
 	}
+
+void
+inet_ntop(af, ip_address_sv)
+        int     af
+        SV *    ip_address_sv
+        CODE:
+#ifdef HAS_INETNTOP
+	STRLEN addrlen, struct_size;
+	struct in6_addr addr;
+	char str[INET6_ADDRSTRLEN];
+	char *ip_address = SvPV(ip_address_sv, addrlen);
+
+        if(af == AF_INET) {
+            struct_size = sizeof(struct in_addr);
+        } else if(af == AF_INET6) {
+            struct_size = sizeof(struct in6_addr);
+        } else {
+           croak("Bad address family for Socket::inet_ntop, got %d, should be either AF_INET or AF_INET6",
+               af);
+        }
+
+	Copy( ip_address, &addr, sizeof addr, char );
+	inet_ntop(af, &addr, str, INET6_ADDRSTRLEN);
+
+	ST(0) = sv_2mortal(newSVpv(str, strlen(str)));
+#else
+        ST(0) = (SV *)not_here("inet_ntop");
+#endif
+
+void
+inet_pton(af, host)
+        int           af
+        const char *  host
+        CODE:
+#ifdef HAS_INETPTON
+        int ok;
+        struct in6_addr ip_address;
+        if(af != AF_INET && af != AF_INET6) {
+           croak("Bad address family for %s, got %d, should be either AF_INET or AF_INET6",
+                        "Socket::inet_pton",
+                        af);
+        }
+        ok = (*host != '\0') && inet_pton(af, host, &ip_address);
+
+        ST(0) = sv_newmortal();
+        if (ok) {
+                sv_setpvn( ST(0), (char *)&ip_address, sizeof ip_address );
+        }
+#else
+        ST(0) = (SV *)not_here("inet_pton");
+#endif

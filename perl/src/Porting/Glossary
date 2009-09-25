@@ -150,6 +150,11 @@ bin (bin.U):
 	is most often a local directory such as /usr/local/bin. Programs using
 	this variable must be prepared to deal with ~name substitution.
 
+bin_ELF (dlsrc.U):
+	This variable saves the result from configure if generated binaries
+	are in ELF format. Only set to defined when the test has actually
+	been performed, and the result was positive.
+
 binexp (bin.U):
 	This is the same as the bin variable, but is filename expanded at
 	configuration time, for use in your makefiles.

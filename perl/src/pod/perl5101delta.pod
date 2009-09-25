@@ -1,6 +1,6 @@
 =head1 NAME
 
-perldelta - what is new for perl v5.10.1
+perl5101delta - what is new for perl v5.10.1
 
 =head1 DESCRIPTION
 
@@ -35,7 +35,9 @@ However, contrary to 5.10.0, evaluating the flip-flop operators in boolean
 context ensures it can now be useful in a C<when()>, notably for
 implementing bistable conditions, like in:
 
-    when (/^=begin/ .. /^=end/) { ... }
+    when (/^=begin/ .. /^=end/) {
+      # do something
+    }
 
 =item defined-or operator
 
@@ -189,7 +191,7 @@ in a change of behaviour between 5.8.x and 5.10.0:
 
 The copy of the Unicode Character Database included in Perl 5.10.1 has
 been updated to 5.1.0 from 5.0.0. See
-L<http://www.unicode.org/versions/Unicode5.1.0/#NotableChanges> for the
+L<http://www.unicode.org/versions/Unicode5.1.0/#Notable_Changes> for the
 notable changes.
 
 =head2 A proper interface for pluggable Method Resolution Orders
@@ -225,7 +227,7 @@ again sequentially and see if the failures go away.
 
 =head2 DTrace support
 
-Some support for DTrace has been added. See L<INSTALL/"DTrace support">.
+Some support for DTrace has been added. See "DTrace support" in F<INSTALL>.
 
 =head2 Support for C<configure_requires> in CPAN module metadata
 
@@ -396,6 +398,7 @@ Upgraded from version 1.08 to 1.11.
 =item C<CGI>
 
 Upgraded from version 3.29 to 3.43.
+(also includes the "default_value for popup_menu()" fix from 3.45).
 
 =item C<Compress::Zlib>
 
@@ -403,7 +406,8 @@ Upgraded from version 2.008 to 2.020.
 
 =item C<CPAN>
 
-Upgraded from version 1.9205 to 1.9402.
+Upgraded from version 1.9205 to 1.9402. C<CPAN::FTP> has a local fix to
+stop it being too verbose on download failure.
 
 =item C<CPANPLUS>
 
@@ -484,11 +488,11 @@ Upgraded from version 1.27 to 1.28.
 
 =item C<ExtUtils::Install>
 
-Upgraded from version 1.44 to 1.52_03.
+Upgraded from version 1.44 to 1.54.
 
 =item C<ExtUtils::MakeMaker>
 
-Upgraded from version 6.42 to 6.55_01.
+Upgraded from version 6.42 to 6.55_02.
 
 Note that C<ExtUtils::MakeMaker::bytes> and C<ExtUtils::MakeMaker::vmsish>
 have been removed from this distribution.
@@ -740,7 +744,7 @@ Upgraded from version 1.13 to 1.17.
 
 =item C<Safe>
 
-Upgraded from 2.12 to 2.17.
+Upgraded from 2.12 to 2.18.
 
 =item C<Scalar::Util>
 
@@ -987,12 +991,12 @@ Empty C<DESTROY> methods are no longer called.
 
 The layout of directories in F<ext> has been revised. Specifically, all
 extensions are now flat, and at the top level, with C</> in pathnames
-replaced by C<->, so that F<ext/Data/Dumper/> is now F<ext/Data-Dumper>,
+replaced by C<->, so that F<ext/Data/Dumper/> is now F<ext/Data-Dumper/>,
 etc.  The names of the extensions as specified to F<Configure>, and as
 reported by C<%Config::Config> under the keys C<dynamic_ext>,
 C<known_extensions>, C<nonxs_ext> and C<static_ext> have not changed, and
 still use C</>. Hence this change will not have any affect once perl is
-installed. However, C<Attributes::Handlers>, C<Safe> and C<mro> have now
+installed. However, C<Attribute::Handlers>, C<Safe> and C<mro> have now
 become extensions in their own right, so if you run F<Configure> with
 options to specify an exact list of extensions to build, you will need to
 change it to account for this.
@@ -1004,7 +1008,7 @@ extensions to build.
 
 =head2 Configuration improvements
 
-if C<vendorlib> and C<vendorarch> are the same, then they are only added to
+If C<vendorlib> and C<vendorarch> are the same, then they are only added to
 C<@INC> once.
 
 C<$Config{usedevel}> and the C-level C<PERL_USE_DEVEL> are now defined if
@@ -1036,8 +1040,6 @@ F<win32/buildext.pl>.
 
 =item AIX
 
-=over 0
-
 Removed F<libbsd> for AIX 5L and 6.1. Only flock() was used from F<libbsd>.
 
 Removed F<libgdbm> for AIX 5L and 6.1. The F<libgdbm> is delivered as an
@@ -1045,8 +1047,6 @@ optional package with the AIX Toolbox. Unfortunately the 64 bit version
 is broken.
 
 Hints changes mean that AIX 4.2 should work again.
-
-=back
 
 =item Cygwin
 
@@ -1092,8 +1092,6 @@ will no longer be dropped under race conditions.
 
 =item VMS
 
-=over 0
-
 Reads from the in-memory temporary files of C<PerlIO::scalar> used to fail
 if C<$/> was set to a numeric reference (to indicate record-style reads).
 This is now fixed.
@@ -1107,8 +1105,6 @@ Enabling the C<PERL_VMS_POSIX_EXIT> logical name now encodes a POSIX exit
 status in a VMS condition value for better interaction with GNV's bash
 shell and other utilities that depend on POSIX exit values.  See
 L<perlvms/"$?"> for details.
-
-=back
 
 =back
 
@@ -1206,8 +1202,7 @@ greater than 255 [RT #59908].
 
 C<B::Deparse> failed to correctly deparse various constructs:
 C<readpipe STRING> [RT #62428], C<CORE::require(STRING)> [RT #62488],
-C<sub foo(_)> [RT #62484]. Also, constant subroutines were deparsed as
-their values.
+C<sub foo(_)> [RT #62484].
 
 =item *
 
@@ -1492,7 +1487,7 @@ as it is freed.
 =item *
 
 Under ithreads, the regex in C<PL_reg_curpm> is now reference counted. This
-eliminates a lot of hackish work-arounds to cope with it not being reference
+eliminates a lot of hackish workarounds to cope with it not being reference
 counted.
 
 =item *
@@ -1502,7 +1497,7 @@ This has been fixed.
 
 =item *
 
-The B<public> IV and NV flags are now not set if the string value has
+The I<public> IV and NV flags are now not set if the string value has
 trailing "garbage". This behaviour is consistent with not setting the
 public IV or NV flags if the value is out of range for the type.
 
@@ -1656,7 +1651,45 @@ Check that Unicode and C<tie> work.
 
 =head1 Known Problems
 
-XXX
+This is a list of some significant unfixed bugs, which are regressions
+from either 5.10.0 or 5.8.x.
+
+=over 4
+
+=item *
+
+C<List::Util::first> misbehaves in the presence of a lexical C<$_>
+(typically introduced by C<my $_> or implicitly by C<given>). The variable
+which gets set for each iteration is the package variable C<$_>, not the
+lexical C<$_> [RT #67694].
+
+A similar issue may occur in other modules that provide functions which
+take a block as their first argument, like
+
+    foo { ... $_ ...} list
+
+=item *
+
+The C<charnames> pragma may generate a run-time error when a regex is
+interpolated [RT #56444]:
+
+    use charnames ':full';
+    my $r1 = qr/\N{THAI CHARACTER SARA I}/;
+    "foo" =~ $r1;    # okay
+    "foo" =~ /$r1+/; # runtime error
+
+A workaround is to generate the character outside of the regex:
+
+    my $a = "\N{THAI CHARACTER SARA I}";
+    my $r1 = qr/$a/;
+
+=item *
+
+Some regexes may run much more slowly when run in a child thread compared
+with the thread the pattern was compiled into [RT #55600].
+
+
+=back
 
 =head1 Deprecations
 

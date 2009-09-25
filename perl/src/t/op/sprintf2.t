@@ -8,6 +8,9 @@ BEGIN {
 
 plan tests => 1368;
 
+use strict;
+use Config;
+
 is(
     sprintf("%.40g ",0.01),
     sprintf("%.40g", 0.01)." ",
@@ -140,8 +143,26 @@ foreach my $n (2**1e100, -2**1e100, 2**1e100/2**1e100) { # +Inf, -Inf, NaN
     is $@, "", "sprintf(\"%f\", $n)";
 }
 
-SKIP: {
-    skip "placeholder for tests not merged from 53f65a9ef4", 24;
+# test %ll formats with and without HAS_QUAD
+eval { my $q = pack "q", 0 };
+my $Q = $@ eq '';
+
+my @tests = (
+  [ '%lld' => [qw( 4294967296 -100000000000000 )] ],
+  [ '%lli' => [qw( 4294967296 -100000000000000 )] ],
+  [ '%llu' => [qw( 4294967296  100000000000000 )] ],
+  [ '%Ld'  => [qw( 4294967296 -100000000000000 )] ],
+  [ '%Li'  => [qw( 4294967296 -100000000000000 )] ],
+  [ '%Lu'  => [qw( 4294967296  100000000000000 )] ],
+);
+
+for my $t (@tests) {
+  my($fmt, $nums) = @$t;
+  for my $num (@$nums) {
+    my $w; local $SIG{__WARN__} = sub { $w = shift };
+    is(sprintf($fmt, $num), $Q ? $num : $fmt, "quad: $fmt -> $num");
+    like($w, $Q ? '' : qr/Invalid conversion in sprintf: "$fmt"/, "warning: $fmt");
+  }
 }
 
 # Check unicode vs byte length

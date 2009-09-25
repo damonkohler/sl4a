@@ -10,7 +10,7 @@ BEGIN {
 
 use strict;
 
-plan (tests => 57);
+plan (tests => 65);
 
 $^P = 0xA;
 
@@ -67,11 +67,8 @@ for my $sep (' ', "\0") {
   is (eval "$name()", "This is $name", "Subroutine was compiled, despite error")
     or diag $@;
 
-  my @after = grep { /eval/ } keys %::;
-
-  is (@after, 0 + keys %seen,
-      "current behaviour is that errors in eval trump subroutine definitions");
-
+  check_retained_lines($prog,
+		       'eval that defines subroutine but has syntax error');
   $name++;
 }
 
@@ -95,10 +92,7 @@ foreach my $flags (0x0, 0x800, 0x1000, 0x1800) {
     is (eval $fail, undef, 'Failed string eval fails');
 
     if ($flags & 0x1000) {
-    TODO: {
-	    todo_skip "Can't yet retain lines for evals with syntax errors", 6;
-	    check_retained_lines($fail, sprintf "%#X", $^P);
-	}
+	check_retained_lines($fail, sprintf "%#X", $^P);
     } else {
 	my @after = grep { /eval/ } keys %::;
 

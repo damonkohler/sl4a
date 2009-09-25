@@ -593,25 +593,6 @@ If you are compiling Perl on a remotely-mounted NFS filesystem, the test
 io/fs.t may fail on test #18.  This appears to be a bug in HP-UX and no
 fix is currently available.
 
-=head2 perl -P and // and HP-UX
-
-If HP-UX Perl is compiled with flags that will cause problems if the
--P flag of Perl (preprocess Perl code with the C preprocessor before
-perl sees it) is used.  The problem is that C<//>, being a C++-style
-until-end-of-line comment, will disappear along with the remainder
-of the line.  This means that common Perl constructs like
-
-  s/foo//;
-
-will turn into illegal code
-
-  s/foo
-
-The workaround is to use some other quoting separator than C<"/">,
-like for example C<"!">:
-
-  s!foo!!;
-
 =head2 HP-UX Kernel Parameters (maxdsiz) for Compiling Perl
 
 By default, HP-UX comes configured with a maximum data segment size of

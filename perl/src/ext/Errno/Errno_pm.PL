@@ -120,17 +120,6 @@ sub default_cpp {
 
 sub get_files {
     my %file = ();
-    if (defined $Config{crosscompile}) {
-	# If we are crosscompiling, the files might be wherever
-	# the appropriate SDK puts them, and we should not try to
-	# guess based on $^O because that is most probably the *host*
-	# platform.  Add any needed tricks cross compilation things
-	# here to fill in the %file right.  And remember, the GNU
-	# cross-compilation toolchain is just one of the many, and
-	# even that is probably used differently between different
-	# targets and projects.
-	return keys %file;
-    }
     # VMS keeps its include files in system libraries (well, except for Gcc)
     if ($^O eq 'VMS') {
 	if ($Config{vms_cc_type} eq 'decc') {
@@ -157,8 +146,8 @@ sub get_files {
 	}
     } elsif ($^O eq 'linux' &&
 	      $Config{gccversion} ne '' && 
+	      $Config{gccversion} !~ /intel/i
 	      # might be using, say, Intel's icc
-	      $Config{gccversion} !~ /intel/i &&
 	     ) {
 	# Some Linuxes have weird errno.hs which generate
 	# no #file or #line directives

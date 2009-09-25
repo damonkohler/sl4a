@@ -1477,20 +1477,6 @@ S_unpack_rec(pTHX_ tempsym_t* symptr, const char *s, const char *strbeg, const c
 	    if (howlen == e_star || len > (strend - s) * 8)
 		len = (strend - s) * 8;
 	    if (checksum) {
-		if (!PL_bitcount) {
-		    int bits;
-		    Newxz(PL_bitcount, 256, char);
-		    for (bits = 1; bits < 256; bits++) {
-			if (bits & 1)	PL_bitcount[bits]++;
-			if (bits & 2)	PL_bitcount[bits]++;
-			if (bits & 4)	PL_bitcount[bits]++;
-			if (bits & 8)	PL_bitcount[bits]++;
-			if (bits & 16)	PL_bitcount[bits]++;
-			if (bits & 32)	PL_bitcount[bits]++;
-			if (bits & 64)	PL_bitcount[bits]++;
-			if (bits & 128)	PL_bitcount[bits]++;
-		    }
-		}
 		if (utf8)
 		    while (len >= 8 && s < strend) {
 			cuv += PL_bitcount[uni_to_byte(aTHX_ &s, strend, datumtype)];

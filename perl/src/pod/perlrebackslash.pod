@@ -83,6 +83,7 @@ quoted constructs>.
  \l                Lowercase next character.
  \L                Lowercase till \E.
  \n                (Logical) newline character.
+ \N                Any character but newline.
  \N{}              Named (Unicode) character.
  \p{}, \pP         Character with a Unicode property.
  \P{}, \PP         Character without a Unicode property.

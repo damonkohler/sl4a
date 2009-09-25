@@ -7,7 +7,7 @@ BEGIN {
 
 BEGIN { require "./test.pl"; }
 
-plan( tests => 13 );
+plan( tests => 31 );
 
 # Used to segfault (bug #15479)
 fresh_perl_is(
@@ -58,6 +58,110 @@ ok( !eval q{ defined %schoenmaker:: }, 'works in eval("")' );
 
 # now tests with strictures
 
-use strict;
-ok( !defined %pig::, q(referencing a non-existent stash doesn't produce stricture errors) );
-ok( !exists $pig::{bodine}, q(referencing a non-existent stash element doesn't produce stricture errors) );
+{
+    use strict;
+    ok( !defined %pig::, q(referencing a non-existent stash doesn't produce stricture errors) );
+    ok( !exists $pig::{bodine}, q(referencing a non-existent stash element doesn't produce stricture errors) );
+}
+
+SKIP: {
+    eval { require B; 1 } or skip "no B", 18;
+
+    *b = \&B::svref_2object;
+    my $CVf_ANON = B::CVf_ANON();
+
+    my $sub = do {
+        package one;
+        \&{"one"};
+    };
+    delete $one::{one};
+    my $gv = b($sub)->GV;
+
+    isa_ok( $gv, "B::GV", "deleted stash entry leaves CV with valid GV");
+    is( b($sub)->CvFLAGS & $CVf_ANON, $CVf_ANON, "...and CVf_ANON set");
+    is( eval { $gv->NAME }, "__ANON__", "...and an __ANON__ name");
+    is( eval { $gv->STASH->NAME }, "one", "...but leaves stash intact");
+
+    $sub = do {
+        package two;
+        \&{"two"};
+    };
+    %two:: = ();
+    $gv = b($sub)->GV;
+
+    isa_ok( $gv, "B::GV", "cleared stash leaves CV with valid GV");
+    is( b($sub)->CvFLAGS & $CVf_ANON, $CVf_ANON, "...and CVf_ANON set");
+    is( eval { $gv->NAME }, "__ANON__", "...and an __ANON__ name");
+    is( eval { $gv->STASH->NAME }, "__ANON__", "...and an __ANON__ stash");
+
+    $sub = do {
+        package three;
+        \&{"three"};
+    };
+    undef %three::;
+    $gv = b($sub)->GV;
+
+    isa_ok( $gv, "B::GV", "undefed stash leaves CV with valid GV");
+    is( b($sub)->CvFLAGS & $CVf_ANON, $CVf_ANON, "...and CVf_ANON set");
+    is( eval { $gv->NAME }, "__ANON__", "...and an __ANON__ name");
+    is( eval { $gv->STASH->NAME }, "__ANON__", "...and an __ANON__ stash");
+
+    TODO: {
+        local $TODO = "anon CVs not accounted for yet";
+
+        my @results = split "\n", runperl(
+            switches    => [ "-MB", "-l" ],
+            prog        => q{
+                my $sub = do {
+                    package four;
+                    sub { 1 };
+                };
+                %four:: = ();
+
+                my $gv = B::svref_2object($sub)->GV;
+                print $gv->isa(q/B::GV/) ? q/ok/ : q/not ok/;
+
+                my $st = eval { $gv->STASH->NAME };
+                print $st eq q/__ANON__/ ? q/ok/ : q/not ok/;
+
+                my $sub = do {
+                    package five;
+                    sub { 1 };
+                };
+                undef %five::;
+
+                $gv = B::svref_2object($sub)->GV;
+                print $gv->isa(q/B::GV/) ? q/ok/ : q/not ok/;
+
+                $st = eval { $gv->STASH->NAME };
+                print $st eq q/__ANON__/ ? q/ok/ : q/not ok/;
+
+                print q/done/;
+            },
+            ($^O eq 'VMS') ? (stderr => 1) : ()
+        );
+
+        ok( @results == 5 && $results[4] eq "done",
+            "anon CVs in undefed stash don't segfault" )
+            or todo_skip $TODO, 4;
+
+        ok( $results[0] eq "ok", 
+            "cleared stash leaves anon CV with valid GV");
+        ok( $results[1] eq "ok",
+            "...and an __ANON__ stash");
+            
+        ok( $results[2] eq "ok", 
+            "undefed stash leaves anon CV with valid GV");
+        ok( $results[3] eq "ok",
+            "...and an __ANON__ stash");
+    }
+    
+    # [perl #58530]
+    fresh_perl_is(
+        'sub foo { 1 }; use overload q/""/ => \&foo;' .
+            'delete $main::{foo}; bless []',
+        "",
+        {},
+        "no segfault with overload/deleted stash entry [#58530]",
+    );
+}

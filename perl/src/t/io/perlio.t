@@ -6,15 +6,17 @@ BEGIN {
 	    print "1..0 # Skip: PerlIO not used\n";
 	    exit 0;
 	}
+	require './test.pl';
 }
 
-use Test::More tests => 37;
+plan tests => 39;
 
 use_ok('PerlIO');
 
 my $txt = "txt$$";
 my $bin = "bin$$";
 my $utf = "utf$$";
+my $nonexistent = "nex$$";
 
 my $txtfh;
 my $binfh;
@@ -89,6 +91,17 @@ ok(close($utffh));
     # report after STDOUT is restored
     ok($status, '       re-open STDOUT');
     close OLDOUT;
+
+    SKIP: {
+      skip("TMPDIR not honored on this platform", 2)
+        if !$Config{d_mkstemp}
+        || $^O eq 'VMS' || $^O eq 'MSwin32' || $^O eq 'os2';
+      local $ENV{TMPDIR} = $nonexistent;
+      ok( open(my $x,"+<",undef), 'TMPDIR honored by magic temp file via 3 arg open with undef - works if TMPDIR points to a non-existent dir');
+
+      mkdir $ENV{TMPDIR};
+      ok(open(my $x,"+<",undef), 'TMPDIR honored by magic temp file via 3 arg open with undef - works if TMPDIR points to an existent dir');
+    }
 }
 
 # in-memory open
@@ -136,5 +149,6 @@ END {
     1 while unlink $txt;
     1 while unlink $bin;
     1 while unlink $utf;
+    rmdir $nonexistent;
 }
 

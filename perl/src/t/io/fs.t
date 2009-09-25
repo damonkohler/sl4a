@@ -27,9 +27,8 @@ my $has_link            = $Config{d_link};
 my $accurate_timestamps =
     !($^O eq 'MSWin32' || $^O eq 'NetWare' ||
       $^O eq 'dos'     || $^O eq 'os2'     ||
-      $^O eq 'mint'    || $^O eq 'cygwin'  ||
-      $^O eq 'amigaos' || $wd =~ m#$Config{afsroot}/# ||
-      $Is_MacOS
+      $^O eq 'cygwin'  || $^O eq 'amigaos' ||
+	  $wd =~ m#$Config{afsroot}/# || $Is_MacOS
      );
 
 if (defined &Win32::IsWinNT && Win32::IsWinNT()) {

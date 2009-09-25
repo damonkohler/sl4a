@@ -21,7 +21,7 @@ $| = 1;
   is (DPeek ($/),    'PVMG("\n"\0)',		'$/');
   is (DPeek ($\),    'PVMG()',			'$\\');
   is (DPeek ($.),    'PVMG()',			'$.');
-  is (DPeek ($,),    'PVMG()',			'$,');
+  is (DPeek ($,),    'UNDEF',			'$,');
   is (DPeek ($;),    'PV("\34"\0)',		'$;');
   is (DPeek ($"),    'PV(" "\0)',		'$"');
   is (DPeek ($:),    'PVMG(" \n-"\0)',		'$:');

@@ -181,7 +181,10 @@ merchantability or fitness for a particular purpose.
 
 =head1 AUTHOR
 
-Sean M. Burke C<sburke@cpan.org>
+Current maintainer: Adriano R. Ferreira <ferreira@cpan.org>
+
+Past contributions from:
+Sean M. Burke <sburke@cpan.org>
 
 =cut
 

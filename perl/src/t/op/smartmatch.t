@@ -11,7 +11,7 @@ no warnings 'uninitialized';
 
 use Tie::Array;
 use Tie::Hash;
-use Tie::RefHash;
+use if !$ENV{PERL_CORE_MINITEST}, "Tie::RefHash";
 
 # Predeclare vars used in the tests:
 my @empty;
@@ -61,8 +61,11 @@ our $ov_obj_2 = Test::Object::WithOverload->new("object");
 our $obj = Test::Object::NoOverload->new;
 our $str_obj = Test::Object::StringOverload->new;
 
-tie my %refh, 'Tie::RefHash';
-$refh{$ov_obj} = 1;
+my %refh;
+if (!$ENV{PERL_CORE_MINITEST}) {
+    tie %refh, 'Tie::RefHash';
+    $refh{$ov_obj} = 1;
+}
 
 my @keyandmore = qw(key and more);
 my @fooormore = qw(foo or more);
@@ -73,6 +76,7 @@ my %fooormore = map { $_ => 0 } @fooormore;
 plan tests => 322;
 
 while (<DATA>) {
+  SKIP: {
     next if /^#/ || !/\S/;
     chomp;
     my ($yn, $left, $right, $note) = split /\t+/;
@@ -87,6 +91,9 @@ while (<DATA>) {
     my $res;
     if ($note =~ /NOWARNINGS/) {
 	$res = eval "no warnings; $tstr";
+    }
+    elsif ($note =~ /MINISKIP/ && $ENV{PERL_CORE_MINITEST}) {
+	skip("Doesn't work with miniperl", $yn =~ /=/ ? 2 : 1);
     }
     else {
 	$res = eval $tstr;
@@ -111,6 +118,7 @@ while (<DATA>) {
 	$tstr = "$right ~~ $left";
 	goto test_again;
     }
+  }
 }
 
 sub foo {}
@@ -302,11 +310,11 @@ __DATA__
 =	%hash		%tied_hash
 	%tied_hash	%tied_hash
 !=	{"a"=>"b"}	%tied_hash
-	$ov_obj		%refh
-!	"$ov_obj"	%refh
-	[$ov_obj]	%refh
-!	["$ov_obj"]	%refh
-	%refh		%refh
+	$ov_obj		%refh		MINISKIP
+!	"$ov_obj"	%refh		MINISKIP
+	[$ov_obj]	%refh		MINISKIP
+!	["$ov_obj"]	%refh		MINISKIP
+	%refh		%refh		MINISKIP
 
 #  - an array ref
 #  (since this is symmetrical, tests as well hash~~array)

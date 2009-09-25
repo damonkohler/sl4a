@@ -1037,8 +1037,9 @@ subscripting and when evaluating the index() and substr() functions.
 
 As of release 5 of Perl, assignment to C<$[> is treated as a compiler
 directive, and cannot influence the behavior of any other file.
-(That's why you can only assign compile-time constants to it.)
-Its use is highly discouraged.
+(That's why you can only assign compile-time constants to it.)  Its
+use is deprecated, and will trigger a warning (if the deprecation
+L<warnings> category is enabled.  You did C<use warnings>, right?)
 
 Note that, unlike other compile-time directives (such as L<strict>),
 assignment to C<$[> can be seen from outer lexical scopes in the same file.

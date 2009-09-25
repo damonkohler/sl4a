@@ -1,5 +1,7 @@
 package B::Lint::Debug;
 
+our $VERSION = '0.01';
+
 =head1 NAME
 
 B::Lint::Debug - Adds debugging stringification to B::

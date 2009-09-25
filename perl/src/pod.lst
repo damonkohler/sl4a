@@ -77,7 +77,6 @@ h Reference Manual
   perlnumber		Perl number semantics
 
   perlthrtut		Perl threads tutorial
-2 perlothrtut		Old Perl threads tutorial
 
   perlport		Perl portability guide
   perllocale		Perl locale support
@@ -135,7 +134,8 @@ h Miscellaneous
 
   perlhist		Perl history records
 d perldelta		Perl changes since previous version
-D perl5101delta		Perl changes in version 5.10.1
+D perl5110delta		Perl changes in version 5.11.0
+  perl5101delta		Perl changes in version 5.10.1
   perl5100delta		Perl changes in version 5.10.0
   perl595delta		Perl changes in version 5.9.5
   perl594delta		Perl changes in version 5.9.4
@@ -143,8 +143,8 @@ D perl5101delta		Perl changes in version 5.10.1
   perl592delta		Perl changes in version 5.9.2
   perl591delta		Perl changes in version 5.9.1
   perl590delta		Perl changes in version 5.9.0
-  perl588delta		Perl changes in version 5.8.8
   perl589delta		Perl changes in version 5.8.9
+  perl588delta		Perl changes in version 5.8.8
   perl587delta		Perl changes in version 5.8.7
   perl586delta		Perl changes in version 5.8.6
   perl585delta		Perl changes in version 5.8.5
@@ -190,10 +190,8 @@ r perlhpux		Perl notes for HP-UX
 r perlhurd		Perl notes for Hurd
 r perlirix		Perl notes for Irix
 r perllinux		Perl notes for Linux
-r perlmachten		Perl notes for Power MachTen
 r perlmacos		Perl notes for Mac OS (Classic)
 r perlmacosx		Perl notes for Mac OS X
-r perlmint		Perl notes for MiNT
 r perlmpeix		Perl notes for MPE/iX
 r perlnetware		Perl notes for NetWare
 r perlopenbsd		Perl notes for OpenBSD

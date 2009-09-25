@@ -6,6 +6,10 @@ HISTORY - public release history for Data::Dumper
 
 =over 8
 
+=item 2.125 (Aug  8 2009)
+
+CPAN distribution fixes (meta information for META.yml).
+
 =item 2.124 (Jun 13 2009)
 
 Add three missing test files.

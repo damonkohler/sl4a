@@ -169,6 +169,7 @@ threads->new(\&matchit, "Pie", qr/pie/i)->join();
 # tests in threads don't get counted, so
 curr_test(curr_test() + 2);
 
+
 # the seen_evals field of a regexp was getting zeroed on clone, so
 # within a thread it didn't  know that a regex object contrained a 'safe'
 # re_eval expression, so it later died with 'Eval-group not allowed' when

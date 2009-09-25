@@ -25,7 +25,7 @@
 
 # $Id: Head.U 6 2006-08-25 22:21:46Z rmanfredi $
 #
-# Generated on Tue Jun 30 00:49:36 CEST 2009 [metaconfig 3.5 PL0]
+# Generated on Tue Aug 18 19:22:01 CEST 2009 [metaconfig 3.5 PL0]
 # (with additional metaconfig patches by perlbug@perl.org)
 
 cat >c1$$ <<EOF
@@ -824,6 +824,7 @@ d_wcstombs=''
 d_wctomb=''
 d_writev=''
 dlext=''
+bin_ELF=''
 cccdlflags=''
 ccdlflags=''
 dlsrc=''
@@ -7926,6 +7927,7 @@ esac
 rp="Do you wish to use dynamic loading?"
 . ./myread
 usedl="$ans"
+bin_ELF="$undef"
 case "$ans" in
 y*) usedl="$define"
 	case "$dlsrc" in
@@ -8022,6 +8024,7 @@ EOM
 You appear to have ELF support.  I'll use $cc to build dynamic libraries.
 EOM
 			dflt="$cc"
+			bin_ELF="$define"
 		else
 			echo "I'll use ld to build dynamic libraries."
 			dflt='ld'
@@ -8190,6 +8193,13 @@ esac
 
 case "$useshrplib" in
 true)
+	case "$userelocatableinc" in
+	true|define)
+		echo "Cannot build with both -Duserelocatableinc and -Duseshrplib" >&4
+		echo "See INSTALL for an explanation why that won't work." >&4
+		exit 4
+		;;
+	esac
 	case "$libperl" in
 	'')
 		# Figure out a good name for libperl.so.  Since it gets stored in
@@ -21375,7 +21385,7 @@ $eunicefix Cppsym.try
 ./Cppsym < Cppsym.know > Cppsym.true
 : Add in any linux cpp "predefined macros":
 case "$osname::$gccversion" in
-  *linux*::*.*)
+  *linux*::*.*|*gnukfreebsd*::*.*)
     tHdrH=_tmpHdr
     rm -f $tHdrH'.h' $tHdrH
     touch $tHdrH'.h'
@@ -21635,6 +21645,10 @@ nonxs_extensions=''
 
 : Function to recursively find available extensions, ignoring DynaLoader
 : NOTE: recursion limit of 10 to prevent runaway in case of symlink madness
+: In 5.10.1 and later, extensions are stored in directories
+: like File-Glob instead of the older File/Glob/.  In this scheme,
+: IO-Compress does not appear to be an XS extension, but we want
+: to install it as one.  A.D.  8/2009.
 find_extensions='
     for xxx in *; do
 	case "$xxx" in
@@ -21644,9 +21658,11 @@ find_extensions='
 	    leaf=`echo $xxx | $sed -e s/.*-//`;
 	    if $test -d File-Glob; then
 		$ls -1 $xxx > $$.tmp;
-		if $contains "\.xs$" $$.tmp > /dev/null 2>&1; then
+		if   $contains "\.xs$" $$.tmp > /dev/null 2>&1; then
 		    known_extensions="$known_extensions $this_ext";
-		elif $contains "\.c$" $$.tmp > /dev/null 2>&1; then
+		elif $contains "\.c$"  $$.tmp > /dev/null 2>&1; then
+		    known_extensions="$known_extensions $this_ext";
+		elif $test "$this_ext" = "IO/Compress"; then
 		    known_extensions="$known_extensions $this_ext";
 		elif $test -d $xxx; then
 		    nonxs_extensions="$nonxs_extensions $this_ext";
@@ -21719,7 +21735,7 @@ for xxx in $known_extensions ; do
 		esac
 		;;
 	NDBM_File|ndbm_fil)
-		case "$i_ndbm" in
+		case "$d_ndbm" in
 		$define)
 		    case "$osname-$use64bitint" in
 		    hpux-define)
@@ -22122,7 +22138,9 @@ $startsh
 # Target system     : $myuname
 
 EOT
+: Add in command line options if available
 $test -f UU/cmdline.opt && $cat UU/cmdline.opt >> config.sh
+
 $spitshell <<EOT >>config.sh
 
 Author='$Author'
@@ -22158,6 +22176,7 @@ awk='$awk'
 baserev='$baserev'
 bash='$bash'
 bin='$bin'
+bin_ELF='$bin_ELF'
 binexp='$binexp'
 bison='$bison'
 byacc='$byacc'
@@ -23190,9 +23209,6 @@ yaccflags='$yaccflags'
 zcat='$zcat'
 zip='$zip'
 EOT
-
-: Add in command line options if available
-$test -f UU/cmdline.opt && $cat UU/cmdline.opt >> config.sh
 
 : add special variables
 $test -f $src/patchlevel.h && \

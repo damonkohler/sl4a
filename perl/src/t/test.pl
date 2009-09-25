@@ -681,7 +681,7 @@ sub _fresh_perl {
     my $status = $?;
 
     # Clean up the results into something a bit more predictable.
-    $results =~ s/\n+$//;
+    $results  =~ s/\n+$//;
     $results =~ s/at\s+$::tempfile_regexp\s+line/at - line/g;
     $results =~ s/of\s+$::tempfile_regexp\s+aborted/of - aborted/g;
 
@@ -722,6 +722,11 @@ sub _fresh_perl {
 
 sub fresh_perl_is {
     my($prog, $expected, $runperl_args, $name) = @_;
+
+    # _fresh_perl() is going to clip the trailing newlines off the result.
+    # This will make it so the test author doesn't have to know that.
+    $expected =~ s/\n+$//;
+
     local $Level = 2;
     _fresh_perl($prog,
 		sub { @_ ? $_[0] eq $expected : $expected },

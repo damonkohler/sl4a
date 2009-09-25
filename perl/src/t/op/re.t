@@ -1,14 +1,14 @@
 #!./perl
 
 BEGIN {
-	chdir 't' if -d 't';
-	@INC = '../lib';
+    chdir 't' if -d 't';
+    @INC = '../lib';
+    require './test.pl';
 }
 
 use strict;
 use warnings;
 
-use Test::More; # test count at bottom of file
 use re qw(is_regexp regexp_pattern
           regname regnames regnames_count);
 {
@@ -42,5 +42,5 @@ if ('1234'=~/(?:(?<A>\d)|(?<C>!))(?<B>\d)(?<A>\d)(?<B>\d)/){
     is(regnames_count(),3);
 }
 # New tests above this line, don't forget to update the test count below!
-use Test::More tests => 14;
+BEGIN { plan tests => 14 }
 # No tests here!

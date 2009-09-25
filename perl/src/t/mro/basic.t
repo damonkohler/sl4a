@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-require q(./test.pl); plan(tests => 42);
+require q(./test.pl); plan(tests => 44);
 
 require mro;
 
@@ -247,4 +247,21 @@ is(eval { MRO_N->testfunc() }, 123);
   no warnings 'once';  # otherwise it'll bark about P1::bark used only once
   *{P1::bark} = sub { "[bark]" };
   is(scalar eval { $foo->bark }, "[bark]", "can bark now");
+}
+
+{
+    # test mro::method_changed_in
+    my $count = mro::get_pkg_gen("MRO_A");
+    mro::method_changed_in("MRO_A");
+    my $count_new = mro::get_pkg_gen("MRO_A");
+
+    is($count_new, $count + 1);
+}
+
+{
+    # test if we can call mro::invalidate_all_method_caches;
+    eval {
+        mro::invalidate_all_method_caches();
+    };
+    is($@, "");
 }

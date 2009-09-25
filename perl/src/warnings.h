@@ -76,6 +76,10 @@
 #define WARN_UTF8		44
 #define WARN_VOID		45
 
+/* Warnings Categories added in Perl 5.011 */
+
+#define WARN_IMPRECISION	46
+
 #define WARNsize		12
 #define WARN_ALLstring		"\125\125\125\125\125\125\125\125\125\125\125\125"
 #define WARN_NONEstring		"\0\0\0\0\0\0\0\0\0\0\0\0"

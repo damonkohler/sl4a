@@ -32,7 +32,7 @@ like DBD::Oracle, it is better to use the _r version of the compiler.
 This will not build a threaded Perl, but a thread-enabled Perl. See
 also L<Threaded Perl> later on.
 
-As of writing (2009-07) only the IBM XL C for AIX or XL C/C++ for AIX
+As of writing (2009-08) only the IBM XL C for AIX or XL C/C++ for AIX
 compiler is supported by IBM on AIX 5L/6.1.
 
 The following compiler versions are supported by IBM:
@@ -41,28 +41,29 @@ XL C and XL C/C++ V7, V8, V9, V10
 
 The XL C for AIX is integrated in the XL C/C++ for AIX compiler.
 
-If you choose XL C/C++ V9 you need APAR IZ35785 installed 
-otherwise the integrated SDBM_File do not compile correctly due 
-to an optimization bug. You can circumvent this problem by 
-adding -qipa to the optimization flags (-Doptimize='-O -qipa'). 
-The PTF for APAR IZ35785 which solves this problem is available 
+If you choose XL C/C++ V9 you need APAR IZ35785 installed
+otherwise the integrated SDBM_File do not compile correctly due
+to an optimization bug. You can circumvent this problem by
+adding -qipa to the optimization flags (-Doptimize='-O -qipa').
+The PTF for APAR IZ35785 which solves this problem is available
 from IBM (April 2009 PTF for XL C/C++ Enterprise Edition for AIX, V9.0).
 
-Perl can be compiled with either IBM's ANSI C compiler or with gcc. 
-The former is recommended, as not only it can compile Perl with no 
-difficulty, but also can take advantage of features listed later 
+Perl can be compiled with either IBM's ANSI C compiler or with gcc.
+The former is recommended, as not only it can compile Perl with no
+difficulty, but also can take advantage of features listed later
 that require the use of IBM compiler-specific command-line flags.
 
-If you decide to use gcc, make sure your installation is recent and 
-complete, and be sure to read the Perl INSTALL file for more gcc-specific 
-details. Please report any hoops you had to jump through to the 
+If you decide to use gcc, make sure your installation is recent and
+complete, and be sure to read the Perl INSTALL file for more gcc-specific
+details. Please report any hoops you had to jump through to the
 development team.
 
 =head2 Incompatibility with AIX Toolbox lib gdbm
 
-If the AIX Toolbox version of lib gdbm 1.8.x ist installed on the 
-system then Perl will not work. This library contains a defect version 
-of the dbm_store() function.
+If the AIX Toolbox version of lib gdbm 1.8.x is installed on the
+system then Perl will not work. This library contains a defect version
+of the dbm_store() function. The lib gdbm will be automatically removed
+from the wanted libraries.
 
 =head2 Perl 5.10 was successfully compiled and tested on:
 
@@ -82,11 +83,10 @@ of the dbm_store() function.
 
     w th   = with thread
     w/o th = without thread
-    nyt    = not yet tested
     OK     = tested
 
-Successfully tested means that all make test runs with an result of 100% OK.
-All tests were conducted with -Duseshrplib set.
+Successfully tested means that all "make test" runs finish with an 
+result of 100% OK. All tests were conducted with -Duseshrplib set.
 
 =head2 Building Dynamic Extensions on AIX
 
@@ -136,7 +136,8 @@ can set:
         data = -1               (default is 262144 * 512 byte)
 
 With the default setting the size is limited to 128MB.
-The -1 removes this limit.
+The -1 removes this limit. If the "make test" fails please change 
+your /etc/security/limits as stated above.
 
 =head2 Recommended Options AIX 5.1/5.2/5.3 and 6.1 (threaded/32-bit)
 
@@ -204,8 +205,8 @@ make tests in 64-bit mode.
 The -Dprefix option will install Perl in a directory parallel to the 
 IBM AIX system Perl installation.
 
-If you choose gcc to compile 64-bit Perl then you need to use the 
-following options:
+If you choose gcc to compile 64-bit Perl then you need to add the 
+following option:
 
     -Dcc='gcc -maix64'
 
@@ -469,6 +470,6 @@ Rainer Tammer <tammer@tammer.net>
 
 =head1 DATE
 
-Version 0.0.9: 08 Jul 2009
+Version 0.0.10: 07 Aug 2009
 
 =cut

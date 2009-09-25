@@ -171,12 +171,12 @@ compatability qualifier.  Instead, use a command like the following:
 
 or:
 
-    vmstar -xvf perl-5^.10^.1.tar
+    vmstar -xvf perl-5^.10^.0.tar
 
 Then rename the top-level source directory like so:
 
-    set security/protection=(o:rwed) perl-5^.10^.1.dir
-    rename perl-5^.10^.1.dir perl-5_10_1.dir
+    set security/protection=(o:rwed) perl-5^.10^.0.dir
+    rename perl-5^.10^.0.dir perl-5_10_0.dir
 
 The reason for this last step is that while filenames with multiple dots
 are generally supported by Perl on VMS, I<directory> names with multiple

@@ -10,7 +10,6 @@ B<perl>	S<[ B<-sTtuUWX> ]>
 	S<[ B<-pna> ] [ B<-F>I<pattern> ] [ B<-l>[I<octal>] ] [ B<-0>[I<octal/hexadecimal>] ]>
 	S<[ B<-I>I<dir> ] [ B<-m>[B<->]I<module> ] [ B<-M>[B<->]I<'module...'> ] [ B<-f> ]>
 	S<[ B<-C [I<number/list>] >]>
-	S<[ B<-P> ]>
 	S<[ B<-S> ]>
 	S<[ B<-x>[I<dir>] ]>
 	S<[ B<-i>[I<extension>] ]>
@@ -92,7 +91,6 @@ For ease of access, the Perl manual has been split up into several sections.
     perlnumber		Perl number semantics
 
     perlthrtut		Perl threads tutorial
-      perlothrtut	Old Perl threads tutorial
 
     perlport		Perl portability guide
     perllocale		Perl locale support
@@ -150,6 +148,7 @@ For ease of access, the Perl manual has been split up into several sections.
 
     perlhist		Perl history records
     perldelta		Perl changes since previous version
+    perl5101delta	Perl changes in version 5.10.1
     perl5100delta	Perl changes in version 5.10.0
     perl595delta	Perl changes in version 5.9.5
     perl594delta	Perl changes in version 5.9.4
@@ -157,8 +156,8 @@ For ease of access, the Perl manual has been split up into several sections.
     perl592delta	Perl changes in version 5.9.2
     perl591delta	Perl changes in version 5.9.1
     perl590delta	Perl changes in version 5.9.0
-    perl588delta	Perl changes in version 5.8.8
     perl589delta	Perl changes in version 5.8.9
+    perl588delta	Perl changes in version 5.8.8
     perl587delta	Perl changes in version 5.8.7
     perl586delta	Perl changes in version 5.8.6
     perl585delta	Perl changes in version 5.8.5
@@ -204,10 +203,8 @@ For ease of access, the Perl manual has been split up into several sections.
     perlhurd		Perl notes for Hurd
     perlirix		Perl notes for Irix
     perllinux		Perl notes for Linux
-    perlmachten 	Perl notes for Power MachTen
     perlmacos		Perl notes for Mac OS (Classic)
     perlmacosx		Perl notes for Mac OS X
-    perlmint		Perl notes for MiNT
     perlmpeix		Perl notes for MPE/iX
     perlnetware 	Perl notes for NetWare
     perlopenbsd 	Perl notes for OpenBSD

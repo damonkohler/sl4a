@@ -321,12 +321,12 @@ might start to make sense - don't worry if it doesn't yet, because the
 best way to study it is to read it in conjunction with poking at Perl
 source, and we'll do that later on.
 
-Gisle Aas's illustrated perlguts (aka: illguts) is wonderful, although
-a little out of date wrt some size details; the various SV structures
-have since been reworked for smaller memory footprint.  The
-fundamentals are right however, and the pictures are very helpful.
+Gisle Aas's illustrated perlguts (also known as I<illguts>) is wonderful,
+although a little out of date with regard to some size details; the
+various SV structures have since been reworked for smaller memory footprint.
+The fundamentals are right however, and the pictures are very helpful.
 
-http://www.perl.org/tpc/1998/Perl_Language_and_Modules/Perl%20Illustrated/ 
+L<http://www.perl.org/tpc/1998/Perl_Language_and_Modules/Perl%20Illustrated/>
 
 =item L<perlxstut> and L<perlxs>
 
@@ -2945,27 +2945,29 @@ by C<-DPERL_MEM_LOG> instead.
 
 =head2 PERL_MEM_LOG
 
-If compiled with C<-DPERL_MEM_LOG>, all Newx() and Renew() allocations
-and Safefree() in the Perl core go through logging functions, which is
-handy for breakpoint setting.  If also compiled with C<-DPERL_MEM_LOG_STDERR>,
-the allocations and frees are logged to STDERR (or more precisely, to the
-file descriptor 2) in these logging functions, with the calling source code
-file and line number (and C function name, if supported by the C compiler).
+If compiled with C<-DPERL_MEM_LOG>, both memory and SV allocations go
+through logging functions, which is handy for breakpoint setting.
 
-This logging is somewhat similar to C<-Dm> but independent of C<-DDEBUGGING>,
-and at a higher level (the C<-Dm> is directly at the point of C<malloc()>,
-while the C<PERL_MEM_LOG> is at the level of C<New()>).
+Unless C<-DPERL_MEM_LOG_NOIMPL> is also compiled, the logging
+functions read $ENV{PERL_MEM_LOG} to determine whether to log the
+event, and if so how:
 
-In addition to memory allocations, SV allocations will be logged, just as
-with C<-Dm>. However, since the logging doesn't use PerlIO, all SV allocations
-are logged and no extra SV allocations are introduced by enabling the logging.
-If compiled with C<-DDEBUG_LEAKING_SCALARS>, the serial number for each SV
-allocation is also logged.
+    $ENV{PERL_MEM_LOG} =~ /m/		Log all memory ops
+    $ENV{PERL_MEM_LOG} =~ /s/		Log all SV ops
+    $ENV{PERL_MEM_LOG} =~ /t/		include timestamp in Log
+    $ENV{PERL_MEM_LOG} =~ /^(\d+)/	write to FD given (default is 2)
 
-You can control the logging from your environment if you compile with
-C<-DPERL_MEM_LOG_ENV>. Then you need to explicitly set C<PERL_MEM_LOG> and/or
-C<PERL_SV_LOG> to a non-zero value to enable logging of memory and/or SV
-allocations.
+Memory logging is somewhat similar to C<-Dm> but is independent of
+C<-DDEBUGGING>, and at a higher level; all uses of Newx(), Renew(),
+and Safefree() are logged with the caller's source code file and line
+number (and C function name, if supported by the C compiler).  In
+contrast, C<-Dm> is directly at the point of C<malloc()>.  SV logging
+is similar.
+
+Since the logging doesn't use PerlIO, all SV allocations are logged
+and no extra SV allocations are introduced by enabling the logging.
+If compiled with C<-DDEBUG_LEAKING_SCALARS>, the serial number for
+each SV allocation is also logged.
 
 =head2 Profiling
 

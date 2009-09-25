@@ -9,7 +9,7 @@ BEGIN {
 }
 
 BEGIN { require "./test.pl"; }
-plan( tests => 110 );
+plan( tests => 112 );
 
 eval '%@x=0;';
 like( $@, qr/^Can't modify hash dereference in repeat \(x\)/, '%@x=0' );
@@ -329,6 +329,9 @@ check(qr/^"BBFRPRAFPGHPP$/, 43, "actually missing a quote is still valid");
 
 #line 47 bang eth
 check(qr/^"BBFRPRAFPGHPP$/, 46, "but spaces aren't allowed without quotes");
+
+#line 77sevenseven
+check(qr/^"BBFRPRAFPGHPP$/, 49, "need a space after the line number");
 
 eval <<'EOSTANZA'; die $@ if $@;
 #line 51 "With wonderful deathless ditties|We build up the world's great cities,|And out of a fabulous story|We fashion an empire's glory:|One man with a dream, at pleasure,|Shall go forth and conquer a crown;|And three with a new song's measure|Can trample a kingdom down."

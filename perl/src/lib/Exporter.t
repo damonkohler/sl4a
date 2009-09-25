@@ -220,6 +220,7 @@ my $val = eval { wibble() };
 
 # Check that Carp recognizes Exporter as internal to Perl 
 require Carp;
+eval { Carp::croak() };
 ::ok($Carp::Internal{Exporter}, "Carp recognizes Exporter");
 ::ok($Carp::Internal{'Exporter::Heavy'}, "Carp recognizes Exporter::Heavy");
 
