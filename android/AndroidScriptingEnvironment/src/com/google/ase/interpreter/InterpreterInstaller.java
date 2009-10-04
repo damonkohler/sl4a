@@ -184,8 +184,9 @@ public class InterpreterInstaller extends Activity {
       case EXTRACT_INTERPRETER:
         // After extracting the interpreter, we need to mark the binary (if there is one) as
         // executable.
-        if (mInterpreter.getBinary() != null) {
-          chmod(mInterpreter.getBinary(), "700");
+        if (mInterpreter.getBinary() != null && !chmod(mInterpreter.getBinary(), "700")) {
+          abort();
+          return;
         }
         extractInterpreterExtras();
         break;
@@ -204,8 +205,15 @@ public class InterpreterInstaller extends Activity {
     }
   }
 
-  private void chmod(File path, String permissions) {
-    Exec.createSubprocess("/system/bin/chmod", permissions, path.getAbsolutePath());
+  private boolean chmod(File path, String permissions) {
+    AseLog.v("chmod " + permissions + " " + path.getAbsolutePath());
+    int[] pid = new int[1];
+    Exec.createSubprocess("/system/bin/chmod", permissions, path.getAbsolutePath(), pid);
+    if (Exec.waitFor(pid[0]) != 0) {
+      AseLog.e("chmod " + permissions + " " + path.getAbsolutePath() + " failed!");
+      return false;
+    }
+    return true;
   }
 
   private void abort() {
