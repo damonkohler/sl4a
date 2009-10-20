@@ -1,11 +1,13 @@
 package com.google.ase.interpreter;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
+import org.apache.commons.io.IOUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -58,8 +60,8 @@ public class UrlDownloader extends Activity {
       public void run() {
         try {
           if (!mOutput.exists()) {
-            InputStream in = mUrlConnection.getInputStream();
-            int bytesCopied = StreamUtils.copyInputStream(in, mOutput);
+            int bytesCopied = IOUtils.copy(mUrlConnection.getInputStream(),
+                new FileOutputStream(mOutput));
             int size = mUrlConnection.getContentLength();
             if (bytesCopied != size && size != -1 /* -1 indicates no ContentLength */) {
               throw new IOException("Download incomplete: " + bytesCopied + " != " + size);

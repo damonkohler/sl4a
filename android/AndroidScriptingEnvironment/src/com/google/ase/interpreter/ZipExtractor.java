@@ -17,11 +17,14 @@
 package com.google.ase.interpreter;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
+import org.apache.commons.io.IOUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -97,8 +100,7 @@ public class ZipExtractor extends Activity {
       if (!destination.getParentFile().exists()) {
         destination.getParentFile().mkdirs();
       }
-
-      StreamUtils.copyInputStream(zip.getInputStream(entry), destination);
+      IOUtils.copy(zip.getInputStream(entry), new FileOutputStream(destination));
       AseLog.v("Extracted entry \"" + entry.getName() + "\".");
     }
     zip.close();
