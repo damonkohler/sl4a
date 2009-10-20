@@ -31,6 +31,9 @@ import com.google.ase.terminal.Terminal;
 
 public class InterpreterManager extends ListActivity {
 
+  private static final String NAME = "NAME";
+  private static final String NICE_NAME = "NICE_NAME";
+
   private static enum RequestCode {
     INSTALL_INTERPRETER, UNINSTALL_INTERPRETER
   }
@@ -65,34 +68,22 @@ public class InterpreterManager extends ListActivity {
    * Populates the list view with all available interpreters.
    */
   private void listInterpreters() {
-    // Get all of the rows from the database and create the item list
     List<Interpreter> interpreters = InterpreterUtils.getInstalledInterpreters();
-
-    // Build up a simple list of maps. Just one attribute we care about
-    // currently.
     List<Map<String, String>> data = new ArrayList<Map<String, String>>();
     for (Interpreter interpreter : interpreters) {
       Map<String, String> map = new HashMap<String, String>();
-      map.put(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
+      map.put(NAME, interpreter.getName());
+      map.put(NICE_NAME, interpreter.getNiceName());
       data.add(map);
     }
-
     Collections.sort(data, new Comparator<Map<String, String>>() {
       public int compare(Map<String, String> m1, Map<String, String> m2) {
-        return m1.get(Constants.EXTRA_INTERPRETER_NAME).compareTo(
-            m2.get(Constants.EXTRA_INTERPRETER_NAME));
+        return m1.get(NICE_NAME).compareTo(m2.get(NICE_NAME));
       }
     });
 
-    // Create an array to specify the fields we want to display in the list
-    // (only TITLE)
-    String[] from = new String[] { Constants.EXTRA_INTERPRETER_NAME };
-
-    // and an array of the fields we want to bind those fields to (in this case
-    // just text1)
+    String[] from = new String[] { NICE_NAME };
     int[] to = new int[] { R.id.text1 };
-
-    // Now create a simple cursor adapter and set it to display
     SimpleAdapter scripts = new SimpleAdapter(this, data, R.layout.row, from, to);
     setListAdapter(scripts);
   }
@@ -161,7 +152,7 @@ public class InterpreterManager extends ListActivity {
   protected void onListItemClick(ListView list, View view, int position, long id) {
     super.onListItemClick(list, view, position, id);
     Map<String, String> item = (Map<String, String>) list.getItemAtPosition(position);
-    String interpreterName = item.get(Constants.EXTRA_INTERPRETER_NAME);
+    String interpreterName = item.get(NAME);
     launchTerminal(InterpreterUtils.getInterpreterByName(interpreterName));
   }
 
@@ -188,16 +179,16 @@ public class InterpreterManager extends ListActivity {
       return false;
     }
 
-    String interpreterName = interpreterItem.get(Constants.EXTRA_INTERPRETER_NAME);
-    if (!InterpreterUtils.getInterpreterByName(interpreterName).isUninstallable()) {
-      AseLog.v(this, "Cannot uninstall " + interpreterName);
+    String name = interpreterItem.get(NAME);
+    if (!InterpreterUtils.getInterpreterByName(name).isUninstallable()) {
+      AseLog.v(this, "Cannot uninstall " + interpreterItem.get(NICE_NAME));
       return true;
     }
 
     int itemId = item.getItemId();
     if (itemId == MenuId.DELETE.getId()) {
       Intent intent = new Intent(this, InterpreterUninstaller.class);
-      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreterName);
+      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, name);
       startActivityForResult(intent, RequestCode.UNINSTALL_INTERPRETER.ordinal());
     }
     return true;

@@ -46,7 +46,7 @@ public class InterpreterUninstaller extends Activity {
 
   private void uninstall() {
     final ProgressDialog dialog = new ProgressDialog(this);
-    dialog.setMessage("Uninstalling " + mName);
+    dialog.setMessage("Uninstalling " + mInterpreter.getNiceName());
     dialog.setIndeterminate(true);
     dialog.setCancelable(false);
     dialog.show();
