@@ -312,8 +312,6 @@ public class ScriptManager extends ListActivity {
     RequestCode request = RequestCode.values()[requestCode];
     if (resultCode == RESULT_OK) {
       switch (request) {
-        case INSTALL_INTERPETER:
-          break;
         case QRCODE_ADD:
           String contents[] = data.getStringExtra("SCAN_RESULT").split("\n", 2);
           String title = contents[0];
@@ -325,7 +323,7 @@ public class ScriptManager extends ListActivity {
       }
     } else {
       switch (request) {
-        case INSTALL_INTERPETER:
+        case QRCODE_ADD:
           break;
         default:
           break;

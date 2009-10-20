@@ -73,4 +73,9 @@ public class ShInterpreter extends Interpreter {
   public int getVersion() {
     return 0;
   }
+
+  @Override
+  public boolean isUninstallable() {
+    return false;
+  }
 }

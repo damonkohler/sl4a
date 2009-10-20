@@ -25,19 +25,20 @@ import android.widget.SimpleAdapter;
 
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterInstaller;
+import com.google.ase.interpreter.InterpreterUninstaller;
 import com.google.ase.interpreter.InterpreterUtils;
 import com.google.ase.terminal.Terminal;
 
 public class InterpreterManager extends ListActivity {
 
   private static enum RequestCode {
-    INSTALL_INTERPETER
+    INSTALL_INTERPRETER, UNINSTALL_INTERPRETER
   }
 
   private HashMap<Integer, Interpreter> installerMenuIds;
 
   private static enum MenuId {
-    HELP, ADD;
+    HELP, ADD, DELETE;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -99,8 +100,6 @@ public class InterpreterManager extends ListActivity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
-    // TODO(damonkohler): Would be nice if this were lazier and not done every time the menu
-    // button is pressed.
     menu.clear();
     buildMenuIdMaps();
     buildInstallLanguagesMenu(menu);
@@ -137,19 +136,17 @@ public class InterpreterManager extends ListActivity {
       intent.setData(Uri.parse(getString(R.string.wiki_url)));
       startActivity(intent);
     } else if (installerMenuIds.containsKey(itemId)) {
+      // Install selected interpreter.
       Interpreter interpreter = installerMenuIds.get(itemId);
       installInterpreter(interpreter);
     }
     return super.onOptionsItemSelected(item);
   }
 
-  /**
-   * Install given interpreter.
-   */
   private void installInterpreter(Interpreter interpreter) {
     Intent intent = new Intent(this, InterpreterInstaller.class);
     intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
-    startActivityForResult(intent, RequestCode.INSTALL_INTERPETER.ordinal());
+    startActivityForResult(intent, RequestCode.INSTALL_INTERPRETER.ordinal());
   }
 
   private void launchTerminal(Interpreter interpreter) {
@@ -170,7 +167,7 @@ public class InterpreterManager extends ListActivity {
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-    // menu.add(Menu.NONE, MenuId.START_SERVICE.getId(), Menu.NONE, "Start Service");
+    menu.add(Menu.NONE, MenuId.DELETE.getId(), Menu.NONE, "Uninstall");
   }
 
   @SuppressWarnings("unchecked")
@@ -184,18 +181,25 @@ public class InterpreterManager extends ListActivity {
       return false;
     }
 
-    Map<String, String> scriptItem = (Map<String, String>) getListAdapter().getItem(info.position);
-    if (scriptItem == null) {
+    Map<String, String> interpreterItem =
+        (Map<String, String>) getListAdapter().getItem(info.position);
+    if (interpreterItem == null) {
       AseLog.v(this, "No interpreter selected.");
       return false;
     }
 
-    final String interpreterName = scriptItem.get(Constants.EXTRA_INTERPRETER_NAME);
+    String interpreterName = interpreterItem.get(Constants.EXTRA_INTERPRETER_NAME);
+    if (!InterpreterUtils.getInterpreterByName(interpreterName).isUninstallable()) {
+      AseLog.v(this, "Cannot uninstall " + interpreterName);
+      return true;
+    }
 
     int itemId = item.getItemId();
-    // if (itemId == MenuId.DELETE.getId()) {
-    // deleteScript(scriptName);
-    // }
+    if (itemId == MenuId.DELETE.getId()) {
+      Intent intent = new Intent(this, InterpreterUninstaller.class);
+      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreterName);
+      startActivityForResult(intent, RequestCode.UNINSTALL_INTERPRETER.ordinal());
+    }
     return true;
   }
 
@@ -205,14 +209,20 @@ public class InterpreterManager extends ListActivity {
     RequestCode request = RequestCode.values()[requestCode];
     if (resultCode == RESULT_OK) {
       switch (request) {
-        case INSTALL_INTERPETER:
+        case INSTALL_INTERPRETER:
+          break;
+        case UNINSTALL_INTERPRETER:
+          AseLog.v(this, "Uninstallation successful.");
           break;
         default:
           break;
       }
     } else {
       switch (request) {
-        case INSTALL_INTERPETER:
+        case INSTALL_INTERPRETER:
+          break;
+        case UNINSTALL_INTERPRETER:
+          AseLog.v(this, "Uninstallation failed.");
           break;
         default:
           break;

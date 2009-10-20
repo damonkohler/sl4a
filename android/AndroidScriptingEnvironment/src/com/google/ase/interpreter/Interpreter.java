@@ -73,4 +73,8 @@ public abstract class Interpreter {
 
   public abstract boolean hasScriptsArchive();
 
+  public boolean isUninstallable() {
+    return true;
+  }
+
 }

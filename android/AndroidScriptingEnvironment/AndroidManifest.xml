@@ -48,6 +48,7 @@
     </intent-filter>
     </activity>
     <activity android:name=".interpreter.InterpreterInstaller" />
+    <activity android:name=".interpreter.InterpreterUninstaller" />
     <activity android:name=".interpreter.UrlDownloader" />
     <activity android:name=".interpreter.ZipExtractor" />
     <activity android:name="ScriptKiller" />
