@@ -351,6 +351,10 @@ public class AndroidFacade {
     return startActivityForResult(intent);
   }
 
+  public Intent pick(String uri) {
+    return startActivityForResult(Intent.ACTION_PICK, uri);
+  }
+
   public void startActivity(final Intent intent) {
     if (!(mContext instanceof Activity)) {
       AseLog.e("Invalid context. Activity required.");
@@ -381,6 +385,17 @@ public class AndroidFacade {
     if (uri != null) {
       intent.setData(Uri.parse(uri));
     }
+    startActivity(intent);
+  }
+
+  public void view(String uri) {
+    startActivity(Intent.ACTION_VIEW, uri);
+  }
+
+  public void launch(String className) {
+    Intent intent = new Intent(Intent.ACTION_MAIN);
+    String packageName = className.substring(0, className.lastIndexOf("."));
+    intent.setClassName(packageName, className);
     startActivity(intent);
   }
 
@@ -486,10 +501,6 @@ public class AndroidFacade {
     call("tel:" + number);
   }
 
-  public void view(String uri) {
-    startActivity(Intent.ACTION_VIEW, uri);
-  }
-
   public void map(String query) {
     view("geo:0,0?q=" + query);
   }
@@ -500,10 +511,6 @@ public class AndroidFacade {
 
   public void email() {
     view("mailto://");
-  }
-
-  public Intent pick(String uri) {
-    return startActivityForResult(Intent.ACTION_PICK, uri);
   }
 
   public void pickContact() {

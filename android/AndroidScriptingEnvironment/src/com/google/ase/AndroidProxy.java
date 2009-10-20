@@ -429,7 +429,22 @@ public class AndroidProxy {
   }
 
   @Rpc(
-      description = "Open a view by URI (i.e. browser, contacts, etc.).",
+      description = "Start activity with view action by URI (i.e. browser, contacts, etc.).",
+      params = "String class name"
+  )
+  public JSONObject launch(JSONArray params) {
+    String className;
+    try {
+      className = params.getString(0);
+    } catch (JSONException e) {
+      return JsonRpcResult.error("Package and class names must be specified.", e);
+    }
+    mAndroidFacade.launch(className);
+    return JsonRpcResult.empty();
+  }
+
+  @Rpc(
+      description = "Start activity with view action by URI (i.e. browser, contacts, etc.).",
       params = "String uri"
   )
   public JSONObject view(JSONArray params) {
