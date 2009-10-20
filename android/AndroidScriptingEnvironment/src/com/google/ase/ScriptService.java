@@ -26,8 +26,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import com.google.ase.interpreter.InterpreterManager;
-import com.google.ase.interpreter.InterpreterProcessInterface;
+import com.google.ase.interpreter.InterpreterUtils;
+import com.google.ase.interpreter.InterpreterProcess;
 
 /**
  * A service that allows scripts to run in the background.
@@ -37,7 +37,7 @@ import com.google.ase.interpreter.InterpreterProcessInterface;
 public class ScriptService extends Service {
 
   private AndroidFacade mAndroidFacade;
-  private InterpreterProcessInterface mProcess;
+  private InterpreterProcess mProcess;
   private String mScriptName;
   private NotificationManager mNotificationManager;
 
@@ -62,11 +62,11 @@ public class ScriptService extends Service {
     notification.flags = Notification.FLAG_NO_CLEAR;
     mNotificationManager.notify(0, notification);
 
-    String interpreterName = InterpreterManager.getInterpreterForScript(mScriptName).getName();
+    String interpreterName = InterpreterUtils.getInterpreterForScript(mScriptName).getName();
     String scriptPath = ScriptStorageAdapter.getScript(mScriptName).getAbsolutePath();
 
     mAndroidFacade = new AndroidFacade(this, new Handler(), intent);
-    mProcess = InterpreterManager.getInterpreterByName(interpreterName).buildProcess(
+    mProcess = InterpreterUtils.getInterpreterByName(interpreterName).buildProcess(
         mAndroidFacade, scriptPath);
     mProcess.start();
     Toast.makeText(this, mScriptName + " service started.", Toast.LENGTH_SHORT).show();

@@ -19,15 +19,15 @@ package com.google.ase.interpreter.lua;
 import java.io.File;
 
 import com.google.ase.AndroidFacade;
-import com.google.ase.interpreter.AbstractInterpreter;
-import com.google.ase.interpreter.InterpreterProcessInterface;
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterProcess;
 
 /**
  * Represents the Lua interpreter.
  *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class LuaInterpreter extends AbstractInterpreter {
+public class LuaInterpreter extends Interpreter {
 
   private final static String LUA_BIN = "/data/data/com.google.ase/lua/bin/lua";
 
@@ -52,7 +52,7 @@ public class LuaInterpreter extends AbstractInterpreter {
   }
 
   @Override
-  public InterpreterProcessInterface buildProcess(AndroidFacade facade, String scriptName) {
+  public InterpreterProcess buildProcess(AndroidFacade facade, String scriptName) {
     return new LuaInterpreterProcess(facade, scriptName);
   }
 

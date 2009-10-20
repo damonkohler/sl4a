@@ -19,15 +19,15 @@ package com.google.ase.interpreter.perl;
 import java.io.File;
 
 import com.google.ase.AndroidFacade;
-import com.google.ase.interpreter.AbstractInterpreter;
-import com.google.ase.interpreter.InterpreterProcessInterface;
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterProcess;
 
 /**
  * Represents the Python interpreter.
  *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class PerlInterpreter extends AbstractInterpreter {
+public class PerlInterpreter extends Interpreter {
 
   private final static String PERL_BIN = "/data/data/com.google.ase/perl/perl";
 
@@ -42,7 +42,7 @@ public class PerlInterpreter extends AbstractInterpreter {
   }
 
   @Override
-  public InterpreterProcessInterface buildProcess(AndroidFacade facade, String scriptName) {
+  public InterpreterProcess buildProcess(AndroidFacade facade, String scriptName) {
     return new PerlInterpreterProcess(facade, scriptName);
   }
 

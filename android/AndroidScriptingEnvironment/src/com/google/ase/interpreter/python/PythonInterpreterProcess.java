@@ -19,10 +19,10 @@ package com.google.ase.interpreter.python;
 import com.google.ase.AndroidFacade;
 import com.google.ase.AndroidProxy;
 import com.google.ase.Constants;
-import com.google.ase.interpreter.AbstractInterpreterProcess;
+import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
-public class PythonInterpreterProcess extends AbstractInterpreterProcess {
+public class PythonInterpreterProcess extends InterpreterProcess {
 
   private final static String PYTHON_HOME = "/data/data/com.google.ase/python";
   private final static String PYTHON_EXTRAS = Constants.SDCARD_ASE_ROOT + "extras/python/";

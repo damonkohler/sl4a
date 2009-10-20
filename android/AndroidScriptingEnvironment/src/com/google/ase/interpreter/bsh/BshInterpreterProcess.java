@@ -21,10 +21,10 @@ import java.io.File;
 import com.google.ase.AndroidFacade;
 import com.google.ase.AndroidProxy;
 import com.google.ase.Constants;
-import com.google.ase.interpreter.AbstractInterpreterProcess;
+import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
-public class BshInterpreterProcess extends AbstractInterpreterProcess {
+public class BshInterpreterProcess extends InterpreterProcess {
 
   private final static String BSH_BIN =
       "dalvikvm -classpath /sdcard/ase/extras/bsh/bsh-2.0b4-dx.jar bsh.Interpreter";

@@ -19,15 +19,15 @@ package com.google.ase.interpreter.python;
 import java.io.File;
 
 import com.google.ase.AndroidFacade;
-import com.google.ase.interpreter.AbstractInterpreter;
-import com.google.ase.interpreter.InterpreterProcessInterface;
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterProcess;
 
 /**
  * Represents the Python interpreter.
  *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class PythonInterpreter extends AbstractInterpreter {
+public class PythonInterpreter extends Interpreter {
 
   private final static String PYTHON_BIN = "/data/data/com.google.ase/python/bin/python";
 
@@ -42,7 +42,7 @@ public class PythonInterpreter extends AbstractInterpreter {
   }
 
   @Override
-  public InterpreterProcessInterface buildProcess(AndroidFacade facade, String scriptName) {
+  public InterpreterProcess buildProcess(AndroidFacade facade, String scriptName) {
     return new PythonInterpreterProcess(facade, scriptName);
   }
 

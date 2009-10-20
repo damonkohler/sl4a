@@ -34,7 +34,7 @@ import com.google.ase.Constants;
 public class InterpreterInstaller extends Activity {
 
   private String mName;
-  private InterpreterInterface mInterpreter;
+  private Interpreter mInterpreter;
 
   private static enum RequestCode {
     DOWNLOAD_INTERPRETER, DOWNLOAD_INTERPRETER_EXTRAS, DOWNLOAD_SCRIPTS,
@@ -51,13 +51,13 @@ public class InterpreterInstaller extends Activity {
       finish();
       return;
     }
-    if (InterpreterManager.checkInstalled(mName)) {
+    if (InterpreterUtils.checkInstalled(mName)) {
       AseLog.e("Interpreter already installed.");
       setResult(RESULT_CANCELED);
       finish();
       return;
     }
-    mInterpreter = InterpreterManager.getInterpreterByName(mName);
+    mInterpreter = InterpreterUtils.getInterpreterByName(mName);
     if (mInterpreter == null) {
       AseLog.e("No matching interpreter found for name: " + mName);
       setResult(RESULT_CANCELED);

@@ -42,7 +42,7 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.ase.R;
-import com.google.ase.interpreter.InterpreterProcessInterface;
+import com.google.ase.interpreter.InterpreterProcess;
 
 /**
  * A view on a transcript and a terminal emulator. Displays the text of the transcript and the
@@ -249,7 +249,7 @@ class EmulatorView extends View implements OnGestureListener {
   /**
    * Configures the view to use the supplied interpreter process.
    */
-  public void attachInterpreterProcess(InterpreterProcessInterface interpreter) {
+  public void attachInterpreterProcess(InterpreterProcess interpreter) {
     mTermOut = interpreter.getOut();
     mTermIn = interpreter.getIn();
     mTermFd = interpreter.getFd();

@@ -21,10 +21,10 @@ import java.io.File;
 import com.google.ase.AndroidFacade;
 import com.google.ase.AndroidProxy;
 import com.google.ase.Constants;
-import com.google.ase.interpreter.AbstractInterpreterProcess;
+import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
-public class JRubyInterpreterProcess extends AbstractInterpreterProcess {
+public class JRubyInterpreterProcess extends InterpreterProcess {
 
   private final static String JRUBY_BIN = "dalvikvm -Xss128k " +
       "-classpath /sdcard/ase/extras/jruby/jruby-complete-1.2.0RC1-dex.jar org.jruby.Main -X-C";

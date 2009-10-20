@@ -18,10 +18,10 @@ package com.google.ase.interpreter.sh;
 
 import com.google.ase.AndroidFacade;
 import com.google.ase.AndroidProxy;
-import com.google.ase.interpreter.AbstractInterpreterProcess;
+import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
-public class ShInterpreterProcess extends AbstractInterpreterProcess {
+public class ShInterpreterProcess extends InterpreterProcess {
 
   private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;

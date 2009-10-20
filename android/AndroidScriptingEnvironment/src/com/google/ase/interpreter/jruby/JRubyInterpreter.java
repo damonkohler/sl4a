@@ -19,10 +19,10 @@ package com.google.ase.interpreter.jruby;
 import java.io.File;
 
 import com.google.ase.AndroidFacade;
-import com.google.ase.interpreter.AbstractInterpreter;
-import com.google.ase.interpreter.InterpreterProcessInterface;
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterProcess;
 
-public class JRubyInterpreter extends AbstractInterpreter {
+public class JRubyInterpreter extends Interpreter {
 
   @Override
   public String getExtension() {
@@ -41,7 +41,7 @@ public class JRubyInterpreter extends AbstractInterpreter {
   }
 
   @Override
-  public InterpreterProcessInterface buildProcess(AndroidFacade facade, String scriptName) {
+  public InterpreterProcess buildProcess(AndroidFacade facade, String scriptName) {
     return new JRubyInterpreterProcess(facade, scriptName);
   }
 

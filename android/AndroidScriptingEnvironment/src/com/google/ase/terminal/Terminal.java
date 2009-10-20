@@ -39,9 +39,9 @@ import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
-import com.google.ase.interpreter.InterpreterInterface;
-import com.google.ase.interpreter.InterpreterManager;
-import com.google.ase.interpreter.InterpreterProcessInterface;
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterProcess;
+import com.google.ase.interpreter.InterpreterUtils;
 
 /**
  * A terminal emulator activity.
@@ -114,7 +114,7 @@ public class Terminal extends Activity {
   private SharedPreferences mPrefs;
 
   private String mScriptPath;
-  private InterpreterProcessInterface mInterpreterProcess;
+  private InterpreterProcess mInterpreterProcess;
   private AndroidFacade mAndroidFacade;
   private String mInterpreterName;
 
@@ -137,7 +137,7 @@ public class Terminal extends Activity {
       File script = ScriptStorageAdapter.getScript(scriptName);
       if (script != null) {
         mScriptPath = script.getAbsolutePath();
-        InterpreterInterface interpreter = InterpreterManager.getInterpreterForScript(scriptName);
+        Interpreter interpreter = InterpreterUtils.getInterpreterForScript(scriptName);
         if (interpreter != null) {
           mInterpreterName = interpreter.getName();
         }
@@ -166,7 +166,7 @@ public class Terminal extends Activity {
   private void startInterpreter() {
     AseLog.v("Starting interpreter.");
     mAndroidFacade = new AndroidFacade(this, new Handler(), getIntent());
-    InterpreterInterface interpreter = InterpreterManager.getInterpreterByName(mInterpreterName);
+    Interpreter interpreter = InterpreterUtils.getInterpreterByName(mInterpreterName);
     if (interpreter != null) {
       mInterpreterProcess = interpreter.buildProcess(mAndroidFacade, mScriptPath);
     } else {

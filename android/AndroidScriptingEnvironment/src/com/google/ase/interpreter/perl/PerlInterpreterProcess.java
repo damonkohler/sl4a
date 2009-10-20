@@ -18,10 +18,10 @@ package com.google.ase.interpreter.perl;
 
 import com.google.ase.AndroidFacade;
 import com.google.ase.AndroidProxy;
-import com.google.ase.interpreter.AbstractInterpreterProcess;
+import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
-public class PerlInterpreterProcess extends AbstractInterpreterProcess {
+public class PerlInterpreterProcess extends InterpreterProcess {
 
   private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;

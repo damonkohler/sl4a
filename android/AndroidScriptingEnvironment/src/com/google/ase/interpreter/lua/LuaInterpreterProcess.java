@@ -18,10 +18,10 @@ package com.google.ase.interpreter.lua;
 
 import com.google.ase.AndroidFacade;
 import com.google.ase.AndroidProxy;
-import com.google.ase.interpreter.AbstractInterpreterProcess;
+import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
-public class LuaInterpreterProcess extends AbstractInterpreterProcess {
+public class LuaInterpreterProcess extends InterpreterProcess {
 
   private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;

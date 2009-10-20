@@ -19,15 +19,15 @@ package com.google.ase.interpreter.sh;
 import java.io.File;
 
 import com.google.ase.AndroidFacade;
-import com.google.ase.interpreter.AbstractInterpreter;
-import com.google.ase.interpreter.InterpreterProcessInterface;
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterProcess;
 
 /**
  * Represents the shell.
  *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class ShInterpreter extends AbstractInterpreter {
+public class ShInterpreter extends Interpreter {
 
   @Override
   public String getExtension() {
@@ -40,7 +40,7 @@ public class ShInterpreter extends AbstractInterpreter {
   }
 
   @Override
-  public InterpreterProcessInterface buildProcess(AndroidFacade facade, String scriptName) {
+  public InterpreterProcess buildProcess(AndroidFacade facade, String scriptName) {
     return new ShInterpreterProcess(facade, scriptName);
   }
 

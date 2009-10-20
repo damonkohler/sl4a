@@ -36,7 +36,6 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -45,10 +44,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.google.ase.interpreter.InterpreterInstaller;
-import com.google.ase.interpreter.InterpreterInterface;
-import com.google.ase.interpreter.InterpreterManager;
-import com.google.ase.terminal.Terminal;
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterUtils;
 
 /**
  * Manages creation, deletion, and execution of stored scripts.
@@ -63,12 +60,10 @@ public class ScriptManager extends ListActivity {
     INSTALL_INTERPETER, QRCODE_ADD
   }
 
-  private HashMap<Integer, InterpreterInterface> addMenuIds;
-  private HashMap<Integer, InterpreterInterface> termMenuIds;
-  private HashMap<Integer, InterpreterInterface> installerMenuIds;
+  private HashMap<Integer, Interpreter> addMenuIds;
 
   private static enum MenuId {
-    DELETE, EDIT, ADD_SHORTCUT, START_SERVICE, HELP, QRCODE_ADD;
+    DELETE, EDIT, ADD_SHORTCUT, START_SERVICE, HELP, QRCODE_ADD, INTERPRETER_MANAGER;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -134,53 +129,27 @@ public class ScriptManager extends ListActivity {
     menu.clear();
     buildMenuIdMaps();
     buildAddMenu(menu);
-    buildTerminalMenu(menu);
-    buildInstallLanguagesMenu(menu);
+    menu.add(Menu.NONE, MenuId.INTERPRETER_MANAGER.getId(), Menu.NONE, "Interpreters");
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help");
     return true;
   }
 
   private void buildMenuIdMaps() {
-    addMenuIds = new HashMap<Integer, InterpreterInterface>();
-    termMenuIds = new HashMap<Integer, InterpreterInterface>();
-    installerMenuIds = new HashMap<Integer, InterpreterInterface>();
+    addMenuIds = new HashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
-    List<InterpreterInterface> installed = InterpreterManager.getInstalledInterpreters();
-    List<InterpreterInterface> notInstalled = InterpreterManager.getNotInstalledInterpreters();
-    for (InterpreterInterface interpreter : installed) {
+    List<Interpreter> installed = InterpreterUtils.getInstalledInterpreters();
+    for (Interpreter interpreter : installed) {
       addMenuIds.put(i, interpreter);
       ++i;
-      termMenuIds.put(i, interpreter);
-      ++i;
-    }
-    for (InterpreterInterface interpreter : notInstalled) {
-      installerMenuIds.put(i, interpreter);
-      ++i;
-    }
-  }
-
-  private void buildTerminalMenu(Menu menu) {
-    Menu termMenu = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Terminal");
-    for (Entry<Integer, InterpreterInterface> entry : termMenuIds.entrySet()) {
-      termMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
     }
   }
 
   private void buildAddMenu(Menu menu) {
     Menu addMenu = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add Script");
-    for (Entry<Integer, InterpreterInterface> entry : addMenuIds.entrySet()) {
+    for (Entry<Integer, Interpreter> entry : addMenuIds.entrySet()) {
       addMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
     }
     addMenu.add(Menu.NONE, MenuId.QRCODE_ADD.getId(), Menu.NONE, "Scan Barcode");
-  }
-
-  private void buildInstallLanguagesMenu(Menu menu) {
-    if (InterpreterManager.getNotInstalledInterpreters().size() > 0) {
-      SubMenu installMenu = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add Interpreter");
-      for (Entry<Integer, InterpreterInterface> entry : installerMenuIds.entrySet()) {
-        installMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
-      }
-    }
   }
 
   @Override
@@ -192,41 +161,22 @@ public class ScriptManager extends ListActivity {
       intent.setAction(Intent.ACTION_VIEW);
       intent.setData(Uri.parse(getString(R.string.wiki_url)));
       startActivity(intent);
+    } else if (itemId == MenuId.INTERPRETER_MANAGER.getId()) {
+      // Show interpreter manger.
+      Intent i = new Intent(this, InterpreterManager.class);
+      startActivity(i);
     } else if (addMenuIds.containsKey(itemId)) {
       // Add a new script.
       Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
-      InterpreterInterface interpreter = addMenuIds.get(itemId);
+      Interpreter interpreter = addMenuIds.get(itemId);
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, interpreter.getExtension());
       intent.putExtra(Constants.EXTRA_SCRIPT_CONTENT, interpreter.getContentTemplate());
       startActivity(intent);
-    } else if (termMenuIds.containsKey(itemId)) {
-      // Launch an interactive terminal.
-      InterpreterInterface interpreter = termMenuIds.get(itemId);
-      launchTerminal(interpreter);
-    } else if (installerMenuIds.containsKey(itemId)) {
-      InterpreterInterface interpreter = installerMenuIds.get(itemId);
-      installInterpreter(interpreter);
     } else if (itemId == MenuId.QRCODE_ADD.getId()) {
       Intent intent = new Intent("com.google.zxing.client.android.SCAN");
       startActivityForResult(intent, RequestCode.QRCODE_ADD.ordinal());
     }
     return super.onOptionsItemSelected(item);
-  }
-
-  /**
-   * Install given interpreter.
-   */
-  private void installInterpreter(InterpreterInterface interpreter) {
-    Intent intent = new Intent(this, InterpreterInstaller.class);
-    intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
-    startActivityForResult(intent, RequestCode.INSTALL_INTERPETER.ordinal());
-  }
-
-  private void launchTerminal(InterpreterInterface interpreter) {
-    Intent i = new Intent(this, Terminal.class);
-    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK & Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-    i.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
-    startActivity(i);
   }
 
   @SuppressWarnings("unchecked")
