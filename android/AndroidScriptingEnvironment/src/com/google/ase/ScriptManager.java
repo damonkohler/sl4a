@@ -145,7 +145,7 @@ public class ScriptManager extends ListActivity {
   }
 
   private void buildAddMenu(Menu menu) {
-    Menu addMenu = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add Script");
+    Menu addMenu = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add");
     for (Entry<Integer, Interpreter> entry : addMenuIds.entrySet()) {
       addMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
     }

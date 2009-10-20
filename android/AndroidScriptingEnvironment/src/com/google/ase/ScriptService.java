@@ -26,8 +26,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import com.google.ase.interpreter.InterpreterUtils;
 import com.google.ase.interpreter.InterpreterProcess;
+import com.google.ase.interpreter.InterpreterUtils;
 
 /**
  * A service that allows scripts to run in the background.
@@ -57,7 +57,7 @@ public class ScriptService extends Service {
     Intent notificationIntent = new Intent(this, ScriptKiller.class);
     notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
     PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-    String message = "Running " + mScriptName + ". Click to stop.";
+    String message = "Running " + mScriptName + ". Tap to stop.";
     notification.setLatestEventInfo(this, "ASE Script Service", message, contentIntent);
     notification.flags = Notification.FLAG_NO_CLEAR;
     mNotificationManager.notify(0, notification);

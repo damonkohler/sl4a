@@ -23,8 +23,14 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.Enumeration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,36 +45,71 @@ import android.util.Log;
  */
 public class JsonRpcServer {
   static final String TAG = "JsonRpcServer";
-  private final Object receiver;
-  private ServerSocket server;
+  private final Object mReceiver;
+  private ServerSocket mServer;
 
   /**
    * Builds a JSON RPC server which forwards RPC calls to a receiver object.
    */
   public JsonRpcServer(Object receiver) {
-    this.receiver = receiver;
+    mReceiver = receiver;
+  }
+
+  private InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {
+    Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+    for (NetworkInterface netint : Collections.list(nets)) {
+      Enumeration<InetAddress> addresses = netint.getInetAddresses();
+      for (InetAddress address : Collections.list(addresses)) {
+        if (!address.getHostAddress().equals("127.0.0.1")) {
+          return address;
+        }
+      }
+    }
+    return InetAddress.getLocalHost();
   }
 
   /**
-   * Starts the RPC server.
+   * Starts the RPC server bound to the localhost address.
    *
    * @return the port that was allocated by the OS
    */
-  public int start() {
+  public int startLocal() {
+    InetAddress address;
     try {
-      InetAddress localhost = InetAddress.getLocalHost();
-      server = new ServerSocket(0 /* port */, 5 /* backlog */, localhost);
+      address = InetAddress.getLocalHost();
+      mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
     } catch (Exception e) {
       Log.e(TAG, "Failed to start server.", e);
       return 0;
     }
+    return start(address);
+  }
 
+  /**
+   * Starts the RPC server bound to the public facing address.
+   *
+   * @return the port that was allocated by the OS
+   */
+  public InetSocketAddress startPublic() {
+    InetAddress address;
+    try {
+      address = getPublicInetAddress();
+      mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
+    } catch (Exception e) {
+      Log.e(TAG, "Failed to start server.", e);
+      return null;
+    }
+    int port = start(address);
+    return new InetSocketAddress(address, port);
+  }
+
+  private int start(InetAddress address) {
     new Thread() {
       @Override
       public void run() {
         while (true) {
           try {
-            Socket sock = server.accept();
+            Socket sock = mServer.accept();
             Log.v(TAG, "Connected!");
             startConnectionThread(sock);
           } catch (IOException e) {
@@ -78,8 +119,8 @@ public class JsonRpcServer {
       }
     }.start();
 
-    Log.v(TAG, "Listening on port: " + server.getLocalPort());
-    return server.getLocalPort();
+    Log.v(TAG, "Bound to " + address.getHostAddress() + ":" + mServer.getLocalPort());
+    return mServer.getLocalPort();
   }
 
   private void startConnectionThread(final Socket sock) {
@@ -126,7 +167,7 @@ public class JsonRpcServer {
       String methodName = params.optString(0);
       if (!methodName.equals("")) {
         // Lookup help for a specific method.
-        Method m = receiver.getClass().getMethod(methodName, new Class[] { JSONArray.class });
+        Method m = mReceiver.getClass().getMethod(methodName, new Class[] { JSONArray.class });
         Rpc annotation = m.getAnnotation(Rpc.class);
         if (annotation != null) {
           methods.put(m.getName() + "\n\t" + annotation.description() + "\n\targs: "
@@ -134,7 +175,7 @@ public class JsonRpcServer {
         }
       } else {
         // Lookup help for all available RPC methods.
-        for (Method m : receiver.getClass().getMethods()) {
+        for (Method m : mReceiver.getClass().getMethods()) {
           Rpc annotation = m.getAnnotation(Rpc.class);
           if (annotation != null) {
             methods.put(m.getName() + "\n\t" + annotation.description() + "\n\targs: "
@@ -151,9 +192,9 @@ public class JsonRpcServer {
   private JSONObject dispatch(int id, String methodName, JSONArray params) throws JSONException {
     JSONObject result;
     try {
-      Method m = receiver.getClass().getMethod(methodName, new Class[] { JSONArray.class });
+      Method m = mReceiver.getClass().getMethod(methodName, new Class[] { JSONArray.class });
       if (m.isAnnotationPresent(Rpc.class)) {
-        result = (JSONObject) m.invoke(receiver, new Object[] { params });
+        result = (JSONObject) m.invoke(mReceiver, new Object[] { params });
       } else {
         throw new Exception();
       }

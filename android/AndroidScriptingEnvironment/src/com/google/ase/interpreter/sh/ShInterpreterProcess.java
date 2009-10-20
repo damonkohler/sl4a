@@ -29,7 +29,7 @@ public class ShInterpreterProcess extends InterpreterProcess {
   public ShInterpreterProcess(AndroidFacade facade, String launchScript) {
     super(facade, launchScript);
     mAndroidProxy = new AndroidProxy(facade);
-    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).start();
+    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).startLocal();
     buildEnvironment();
   }
 

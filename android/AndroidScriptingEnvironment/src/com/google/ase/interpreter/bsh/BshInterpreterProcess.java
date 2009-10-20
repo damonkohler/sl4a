@@ -34,7 +34,7 @@ public class BshInterpreterProcess extends InterpreterProcess {
   public BshInterpreterProcess(AndroidFacade facade, String launchScript) {
     super(facade, launchScript);
     mAndroidProxy = new AndroidProxy(facade);
-    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).start();
+    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).startLocal();
     buildEnvironment();
   }
 

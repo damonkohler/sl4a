@@ -41,7 +41,7 @@ public class InterpreterManager extends ListActivity {
   private HashMap<Integer, Interpreter> installerMenuIds;
 
   private static enum MenuId {
-    HELP, ADD, DELETE;
+    HELP, ADD, DELETE, NETWORK;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -94,6 +94,7 @@ public class InterpreterManager extends ListActivity {
     menu.clear();
     buildMenuIdMaps();
     buildInstallLanguagesMenu(menu);
+    menu.add(Menu.NONE, MenuId.NETWORK.getId(), Menu.NONE, "Start Network");
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help");
     return true;
   }
@@ -110,7 +111,7 @@ public class InterpreterManager extends ListActivity {
 
   private void buildInstallLanguagesMenu(Menu menu) {
     if (InterpreterUtils.getNotInstalledInterpreters().size() > 0) {
-      SubMenu installMenu = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add Interpreter");
+      SubMenu installMenu = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add");
       for (Entry<Integer, Interpreter> entry : installerMenuIds.entrySet()) {
         installMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
       }
@@ -126,6 +127,8 @@ public class InterpreterManager extends ListActivity {
       intent.setAction(Intent.ACTION_VIEW);
       intent.setData(Uri.parse(getString(R.string.wiki_url)));
       startActivity(intent);
+    } else if (itemId == MenuId.NETWORK.getId()) {
+      startService(new Intent(this, AndroidProxyService.class));
     } else if (installerMenuIds.containsKey(itemId)) {
       // Install selected interpreter.
       Interpreter interpreter = installerMenuIds.get(itemId);

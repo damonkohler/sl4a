@@ -27,6 +27,7 @@ public class ScriptKiller extends Activity {
     super.onCreate(savedInstanceState);
     if (getIntent().getAction().equals(Constants.ACTION_KILL_SERVICE)) {
       stopService(new Intent(this, ScriptService.class));
+      stopService(new Intent(this, AndroidProxyService.class));
     }
     finish();
   }

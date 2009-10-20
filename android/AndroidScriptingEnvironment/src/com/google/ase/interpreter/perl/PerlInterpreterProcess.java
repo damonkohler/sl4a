@@ -29,7 +29,7 @@ public class PerlInterpreterProcess extends InterpreterProcess {
   public PerlInterpreterProcess(AndroidFacade facade, String launchScript) {
     super(facade, launchScript);
     mAndroidProxy = new AndroidProxy(facade);
-    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).start();
+    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).startLocal();
     mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
   }
 

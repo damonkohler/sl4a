@@ -35,7 +35,7 @@ public class JRubyInterpreterProcess extends InterpreterProcess {
   public JRubyInterpreterProcess(AndroidFacade facade, String launchScript) {
     super(facade, launchScript);
     mAndroidProxy = new AndroidProxy(facade);
-    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).start();
+    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).startLocal();
     buildEnvironment();
   }
 

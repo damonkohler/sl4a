@@ -53,6 +53,7 @@
     <activity android:name=".interpreter.ZipExtractor" />
     <activity android:name="ScriptKiller" />
     <service  android:name="ScriptService" android:process=":remote" />
+    <service  android:name="AndroidProxyService" android:process=":remote" />
     <activity android:name="InterpreterManager"></activity>
   </application>
 
