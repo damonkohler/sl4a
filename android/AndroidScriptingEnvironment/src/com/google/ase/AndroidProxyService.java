@@ -23,7 +23,7 @@ public class AndroidProxyService extends Service {
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
 
-    boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_PUBLIC_IP, false);
+    boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
     mAndroidFacade = new AndroidFacade(this, new Handler(), intent);
     AndroidProxy proxy = new AndroidProxy(mAndroidFacade);
     InetSocketAddress address;

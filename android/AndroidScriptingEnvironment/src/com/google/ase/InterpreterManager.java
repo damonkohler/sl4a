@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -128,13 +131,26 @@ public class InterpreterManager extends ListActivity {
       intent.setData(Uri.parse(getString(R.string.wiki_url)));
       startActivity(intent);
     } else if (itemId == MenuId.NETWORK.getId()) {
-      startService(new Intent(this, AndroidProxyService.class));
+      AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+      dialog.setItems(new CharSequence[] { "Public", "Private" }, new OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          launchService(which == 0);
+        }
+      });
+      dialog.show();
     } else if (installerMenuIds.containsKey(itemId)) {
       // Install selected interpreter.
       Interpreter interpreter = installerMenuIds.get(itemId);
       installInterpreter(interpreter);
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  private void launchService(boolean usePublicIp) {
+    Intent intent = new Intent(this, AndroidProxyService.class);
+    intent.putExtra(Constants.EXTRA_USE_EXTERNAL_IP, usePublicIp);
+    startService(intent);
   }
 
   private void installInterpreter(Interpreter interpreter) {
