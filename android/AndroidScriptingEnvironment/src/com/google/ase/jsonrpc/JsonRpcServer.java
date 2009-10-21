@@ -73,16 +73,17 @@ public class JsonRpcServer {
    *
    * @return the port that was allocated by the OS
    */
-  public int startLocal() {
+  public InetSocketAddress startLocal() {
     InetAddress address;
     try {
       address = InetAddress.getLocalHost();
       mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
     } catch (Exception e) {
       Log.e(TAG, "Failed to start server.", e);
-      return 0;
+      return null;
     }
-    return start(address);
+    int port = start(address);
+    return new InetSocketAddress(address, port);
   }
 
   /**

@@ -36,6 +36,7 @@ public class Constants {
   public static final String EXTRA_INPUT_PATH = "com.google.ase.extra.INPUT_PATH";
   public static final String EXTRA_OUTPUT_PATH = "com.google.ase.extra.OUTPUT_PATH";
   public static final String EXTRA_URL = "com.google.ase.extra.URL";
+  public static final String EXTRA_USE_PUBLIC_IP = "com.google.ase.extra.USE_PUBLIC_IP";
 
   public static final String SDCARD_ROOT = "/sdcard/";
   public static final String DOWNLOAD_ROOT = SDCARD_ROOT;

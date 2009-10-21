@@ -29,7 +29,7 @@ public class LuaInterpreterProcess extends InterpreterProcess {
   public LuaInterpreterProcess(AndroidFacade facade, String launchScript) {
     super(facade, launchScript);
     mAndroidProxy = new AndroidProxy(facade);
-    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).startLocal();
+    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).startLocal().getPort();
     mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
   }
 
