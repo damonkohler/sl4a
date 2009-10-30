@@ -97,7 +97,7 @@ public class InterpreterManager extends ListActivity {
     menu.clear();
     buildMenuIdMaps();
     buildInstallLanguagesMenu(menu);
-    menu.add(Menu.NONE, MenuId.NETWORK.getId(), Menu.NONE, "Start Network");
+    menu.add(Menu.NONE, MenuId.NETWORK.getId(), Menu.NONE, "Start Server");
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help");
     return true;
   }

@@ -3,8 +3,8 @@
 	<classpathentry excluding="**/.svn*|doc" kind="src" path="src"/>
 	<classpathentry excluding="**/.svn*|doc" kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="lib/locale_platform.jar"/>
-	<classpathentry kind="lib" path="lib/TTS_library_stub_1.4_market.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="libs/locale_platform.jar"/>
+	<classpathentry kind="lib" path="libs/TTS_library_stub_1.4_market.jar"/>
+	<classpathentry kind="lib" path="libs/commons-io-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

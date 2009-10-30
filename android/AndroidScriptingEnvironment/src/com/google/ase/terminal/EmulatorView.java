@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Exec;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -41,6 +40,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.ase.Exec;
 import com.google.ase.R;
 import com.google.ase.interpreter.InterpreterProcess;
 

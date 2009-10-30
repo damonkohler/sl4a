@@ -28,13 +28,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import android.os.Exec;
 import android.os.Process;
 import android.util.Log;
 
 import com.google.ase.AndroidFacade;
 import com.google.ase.AndroidProxy;
 import com.google.ase.AseLog;
+import com.google.ase.Exec;
 import com.google.ase.interpreter.lua.LuaInterpreterProcess;
 
 /**
