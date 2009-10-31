@@ -31,8 +31,7 @@
 #define LOG_TAG "Exec"
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-static int CreateSubprocess(const char* cmd, const char* arg0, const char* arg1,
-                            pid_t* pid) {
+int CreateSubprocess(const char* cmd, const char* arg0, const char* arg1, pid_t* pid) {
   char* devname;
   int ptm = open("/dev/ptmx", O_RDWR);
   if(ptm < 0){
@@ -113,8 +112,7 @@ char* JNU_GetStringNativeChars(JNIEnv* env, jstring jstr) {
 
 int JNU_GetFdFromFileDescriptor(JNIEnv* env, jobject fileDescriptor) {
   jclass Class_java_io_FileDescriptor = env->FindClass("java/io/FileDescriptor");
-  jfieldID descriptor = env->GetFieldID(Class_java_io_FileDescriptor,
-                                        "descriptor", "I");
+  jfieldID descriptor = env->GetFieldID(Class_java_io_FileDescriptor, "descriptor", "I");
   return env->GetIntField(fileDescriptor, descriptor);
 }
 
@@ -129,8 +127,7 @@ JNIEXPORT jobject JNICALL Java_com_google_ase_Exec_createSubprocess(
   if (processIdArray) {
     if (env->GetArrayLength(processIdArray) > 0) {
       jboolean isCopy;
-      int* proccessId = (int*) env->GetPrimitiveArrayCritical(processIdArray,
-                                                              &isCopy);
+      int* proccessId = (int*) env->GetPrimitiveArrayCritical(processIdArray, &isCopy);
       if (proccessId) {
         *proccessId = (int) pid;
         env->ReleasePrimitiveArrayCritical(processIdArray, proccessId, 0);
@@ -140,23 +137,21 @@ JNIEXPORT jobject JNICALL Java_com_google_ase_Exec_createSubprocess(
 
   jclass Class_java_io_FileDescriptor =
       env->FindClass("java/io/FileDescriptor");
-  jmethodID init = env->GetMethodID(Class_java_io_FileDescriptor,
-                                    "<init>", "()V");
+  jmethodID init = env->GetMethodID(Class_java_io_FileDescriptor, "<init>", "()V");
   jobject result = env->NewObject(Class_java_io_FileDescriptor, init);
 
   if (!result) {
     LOGE("Couldn't create a FileDescriptor.");
   } else {
-    jfieldID descriptor = env->GetFieldID(Class_java_io_FileDescriptor,
-                                        "descriptor", "I");
+    jfieldID descriptor = env->GetFieldID(Class_java_io_FileDescriptor, "descriptor", "I");
     env->SetIntField(result, descriptor, ptm);
   }
   return result;
 }
 
 JNIEXPORT void Java_com_google_ase_Exec_setPtyWindowSize(
-    JNIEnv* env, jclass clazz, jobject fileDescriptor, jint row, jint col,
-    jint xpixel, jint ypixel) {
+    JNIEnv* env, jclass clazz, jobject fileDescriptor, jint row, jint col, jint xpixel,
+    jint ypixel) {
   struct winsize sz;
   int fd = JNU_GetFdFromFileDescriptor(env, fileDescriptor);
   if (env->ExceptionOccurred() != NULL) {
@@ -169,8 +164,7 @@ JNIEXPORT void Java_com_google_ase_Exec_setPtyWindowSize(
   ioctl(fd, TIOCSWINSZ, &sz);
 }
 
-JNIEXPORT jint Java_com_google_ase_Exec_waitFor(JNIEnv* env, jclass clazz,
-                                                jint procId) {
+JNIEXPORT jint Java_com_google_ase_Exec_waitFor(JNIEnv* env, jclass clazz, jint procId) {
   int status;
   waitpid(procId, &status, 0);
   int result = 0;
