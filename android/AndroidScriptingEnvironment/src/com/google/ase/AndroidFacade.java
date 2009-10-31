@@ -51,15 +51,13 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.speech.tts.TextToSpeech;
 import android.telephony.PhoneStateListener;
+import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
-import android.telephony.gsm.SmsManager;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.tts.ConfigurationManager;
-import com.google.tts.TTS;
 
 public class AndroidFacade {
 
@@ -86,7 +84,7 @@ public class AndroidFacade {
   private CountDownLatch mLatch;
   private Intent mStartActivityResult; // The result from a call to startActivityForResult().
 
-  private TTS mTts;
+  private TextToSpeech mTts;
 
   private Bundle mSensorReadings;
   private final SensorManager mSensorManager;
@@ -209,20 +207,20 @@ public class AndroidFacade {
    * @throws AseException
    */
   public void speak(String message) throws AseException {
-    // We can't prompt to install here because we don't have a looper.
-    if (!ConfigurationManager.allFilesExist()) {
-      throw new AseException("TTS not installed.");
-    }
+    // // We can't prompt to install here because we don't have a looper.
+    // if (!ConfigurationManager.allFilesExist()) {
+    // throw new AseException("TTS not installed.");
+    // }
     // Lazily initialize TTS since it's pretty slow. Also, it gives us a chance to prompt the user
     // if TTS isn't installed yet without disrupting scripts which don't use it.
     if (mTts == null) {
       final CountDownLatch lock = new CountDownLatch(1);
-      TTS.InitListener ttsInitListener = new TTS.InitListener() {
+      TextToSpeech.OnInitListener ttsInitListener = new TextToSpeech.OnInitListener() {
         public void onInit(int version) {
           lock.countDown();
         }
       };
-      mTts = new TTS(mContext, ttsInitListener, false);
+      mTts = new TextToSpeech(mContext, ttsInitListener);
       try {
         if (!lock.await(10, TimeUnit.SECONDS)) {
           throw new AseException("TTS initialization timed out.");

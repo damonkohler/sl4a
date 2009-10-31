@@ -23,7 +23,7 @@ import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 
 /**
- * Represents the Python interpreter.
+ * Represents the Perl interpreter.
  *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
@@ -78,6 +78,6 @@ public class PerlInterpreter extends Interpreter {
 
   @Override
   public int getVersion() {
-    return 0;
+    return 1;
   }
 }
