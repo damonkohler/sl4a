@@ -1,8 +1,11 @@
 com.google.ase
 com.google.ase.interpreter
 com.google.ase.interpreter.bsh
+com.google.ase.interpreter.jruby
 com.google.ase.interpreter.lua
+com.google.ase.interpreter.perl
 com.google.ase.interpreter.python
+com.google.ase.interpreter.rhino
 com.google.ase.interpreter.sh
 com.google.ase.jsonrpc
 com.google.ase.locale
