@@ -18,9 +18,9 @@ Android() {
   String AP_PORT = System.getenv().get("AP_PORT");
   Socket conn = new Socket("127.0.0.1", Integer.decode(AP_PORT));
   BufferedReader in = new BufferedReader(
-      new InputStreamReader(conn.getInputStream(), "8859_1"));
+      new InputStreamReader(conn.getInputStream(), "8859_1"), 1 << 13);
   OutputStream out_stream = new BufferedOutputStream(
-      conn.getOutputStream());
+      conn.getOutputStream(), 1 << 13);
   PrintWriter out = new PrintWriter(
       new OutputStreamWriter(out_stream, "8859_1"), true);
   int id = 0;
