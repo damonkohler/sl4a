@@ -19,14 +19,11 @@
 
 from __future__ import with_statement  # for Python < 2.6
 
-"""Modifies the Android SDK to build Android Scripting Environment.
+"""Makes Android sources browsable in Eclipse.
 
-This script compiles android.os.Exec from the Android source and adds the
-class to the Android SDK android.jar. In addition, it copies the source files
-into the SDK so that they can be browsed from Eclipse.
-
-In order to use this script, you must have download the Android source and
-installed the Android SDK.
+This script copies the source files into the SDK so that they can be browsed from
+Eclipse. In order to use this script, you must have download the Android source
+and installed the Android SDK.
 """
 
 __author__ = 'Damon Kohler <damonkohler@gmail.com>'
@@ -80,26 +77,6 @@ def copy_sources(src_location, sdk_location):
               shutil.copy(source, destination)
             break
 
-def add_android_os_exec(src_location, sdk_location):
-  print 'Adding android.os.Exec to android.jar'
-  sdk = validate_source_and_sdk_locations(
-      src_location, sdk_location)
-  sources = os.path.join(sdk, 'sources')
-  package_path = os.path.join(sdk, 'sources', 'android', 'os')
-  print 'Compiling android.os.Exec to %s' % package_path
-  android_os_exec = os.path.join(src_location, 'frameworks', 'base', 'core',
-                                 'java', 'android', 'os', 'Exec.java')
-  cmd = 'javac -d %s %s' % (sources, android_os_exec)
-  if subprocess.call(cmd.split()) != 0:
-    print 'Compilation failed.'
-    sys.exit(1)
-  android_jar = os.path.join(sdk, 'android.jar')
-  exec_class = os.path.join(package_path, 'Exec.class')
-  print 'Adding %s to %s' % (exec_class, android_jar)
-  zip = zipfile.ZipFile(android_jar, 'a')
-  zip.write(exec_class, 'android/os/Exec.class')
-  zip.close()
-
 
 if __name__ == '__main__':
   if len(sys.argv) == 3:
@@ -109,7 +86,6 @@ if __name__ == '__main__':
     sys.exit(1)
   try:
     copy_sources(src_location, sdk_location)
-    add_android_os_exec(src_location, sdk_location)
   except KeyboardInterrupt:
     print '\nAborted.'
   else:
