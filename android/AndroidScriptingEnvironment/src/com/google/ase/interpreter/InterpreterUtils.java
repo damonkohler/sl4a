@@ -27,6 +27,7 @@ import com.google.ase.interpreter.jruby.JRubyInterpreter;
 import com.google.ase.interpreter.lua.LuaInterpreter;
 import com.google.ase.interpreter.perl.PerlInterpreter;
 import com.google.ase.interpreter.python.PythonInterpreter;
+import com.google.ase.interpreter.rhino.RhinoInterpreter;
 import com.google.ase.interpreter.sh.ShInterpreter;
 
 /**
@@ -42,7 +43,8 @@ public class InterpreterUtils {
 
   private final static List<? extends Interpreter> mSupportedInterpreters =
       Arrays.asList(new LuaInterpreter(), new BshInterpreter(), new PythonInterpreter(),
-          new ShInterpreter(), new JRubyInterpreter(), new PerlInterpreter());
+          new ShInterpreter(), new JRubyInterpreter(), new PerlInterpreter(),
+          new RhinoInterpreter());
 
   public static boolean checkInstalled(final String interpreterName) {
     if (interpreterName.equals("sh")) {

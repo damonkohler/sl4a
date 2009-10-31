@@ -1,0 +1,7 @@
+This directory contains resources related to Rhino.
+
+rhino1_7R2.jar is the original Rhino JAR.
+rhino_extras.zip contains the dexed Rhino JAR.
+rhino_scripts.zip contains example Rhino scripts for use with ASE.
+ase/ contains Rhino code written for ASE.
+src/ contains the Rhino source. It is also available here: http://www.mozilla.org/rhino/download.html
