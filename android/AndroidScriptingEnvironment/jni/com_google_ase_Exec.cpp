@@ -48,12 +48,12 @@ static int CreateSubprocess(const char* cmd, const char* arg0, const char* arg1,
   }
 
   *pid = fork();
-  if(pid < 0) {
+  if(*pid < 0) {
     LOGE("Fork failed: %s\n", strerror(errno));
     return -1;
   }
 
-  if(pid == 0){
+  if(*pid == 0){
     int pts;
     setsid();
     pts = open(devname, O_RDWR);
