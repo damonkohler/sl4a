@@ -429,7 +429,7 @@ public class AndroidProxy {
   }
 
   @Rpc(
-      description = "Start activity with view action by URI (i.e. browser, contacts, etc.).",
+      description = "Start activity (i.e. browser, contacts, etc.) by class name.",
       params = "String class name"
   )
   public JSONObject launch(JSONArray params) {
