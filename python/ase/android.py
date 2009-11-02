@@ -24,8 +24,10 @@ PORT = os.environ.get('AP_PORT')
 
 class Android(object):
 
-  def __init__(self):
-    self.conn = socket.create_connection(('localhost', PORT))
+  def __init__(self, addr=None):
+    if addr is None:
+      addr = 'localhost', PORT
+    self.conn = socket.create_connection(addr)
     self.client = self.conn.makefile()
     self.id = 0
 
