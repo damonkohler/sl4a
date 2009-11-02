@@ -151,19 +151,19 @@ sub get_files {
         if ($Config{cc} eq 'agcc') {
            # For the Android SDK we must find out the right errno.h
            # by looking at the PATH.
-           my @host_bin = grep { m{/host/} } split(/:/, $ENV{PATH});
-           for my $host_bin (@host_bin) {
-               # print STDERR "host_bin: $host_bin\n";
-               if (-f "$host_bin/adb") {
-                  my $host_inc = $host_bin;
-                  $host_inc =~ s{/out/host/.+?/bin$}{/bionic/libc/include};
-                  # print STDERR "host_inc: $host_inc\n";
-                  my $errno_h = "$host_inc/errno.h";
-                  if (-f $errno_h) {
-                      $file{$errno_h} = 1;
-                      last;
-                  }
-               }
+           my @bin = grep { m{/(?:host|prebuilt)/} } split(/:/, $ENV{PATH});
+           my $bionic = "/bionic/libc/include";
+           for my $bin (@bin) {
+               # print STDERR "bin: $bin\n";
+             my $inc = $bin;
+             $inc =~ s{/out/host/.+?/bin$}{$bionic} or
+               $inc =~ s{/prebuilt/linux-x86/.+$}{$bionic};
+             # print STDERR "inc: $inc\n";
+             my $errno_h = "$inc/errno.h";
+             if (-f $errno_h) {
+                $file{$errno_h} = 1;
+                last;
+             }
            }
         } else {
             # Some Linuxes have weird errno.hs which generate
