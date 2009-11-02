@@ -78,7 +78,7 @@ my $nop3 = *File::Spec::catfile;
 # without changing it, and then I'd always forget to change it before a
 # release. Sorry, Edward :)
 
-sub try_compile_and_link {
+sub try_compile_and_link_and_run {
     my ($c, %args) = @_;
 
     my ($ok) = 0;
@@ -144,7 +144,11 @@ __EOD__
 	    print CMDFILE "\$ $cccmd\n";
 	    print CMDFILE "\$ IF \$SEVERITY .NE. 1 THEN EXIT 44\n"; # escalate
 	    close CMDFILE;
-	    system("\@ $tmp.com");
+            if ($Config{usecrosscompile}) {
+              print STDERR "Crosscompiling: not running the executable $tmp.com\n";
+              return 1;
+            }
+            system("\@ $tmp.com");
 	    $ok = $?==0;
 	    for ("$tmp.c", "$tmp$obj_ext", "$tmp.com", "$tmp$Config{exe_ext}") {
 		1 while unlink $_;
@@ -160,6 +164,10 @@ __EOD__
 	    if ( $ok && exists $args{run} && $args{run}) {
 		my $tmp_exe =
 		    File::Spec->catfile(File::Spec->curdir, $tmp_exe);
+                if ($Config{usecrosscompile}) {
+                  print STDERR "Crosscompiling: not running the executable $tmp_exe\n";
+                  return 1;
+                }
 		printf "Running $tmp_exe..." if $VERBOSE;
 		if (system($tmp_exe) == 0) {
 		    $ok = 1;
@@ -200,7 +208,7 @@ EOH
 sub has_gettimeofday {
     # confusing but true (if condition true ==> -DHAS_GETTIMEOFDAY already)
     return 0 if $Config{d_gettimeod};
-    return 1 if try_compile_and_link(<<EOM);
+    return 1 if try_compile_and_link_and_run(<<EOM);
 $TIME_HEADERS
 static int foo()
 {
@@ -219,7 +227,7 @@ sub has_x {
     my ($x, %args) = @_;
 
     return 1 if
-    try_compile_and_link(<<EOM, %args);
+    try_compile_and_link_and_run(<<EOM, %args);
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -247,7 +255,7 @@ EOM
 sub has_nanosleep {
     print "testing... ";
     return 1 if
-    try_compile_and_link(<<EOM, run => 1);
+    try_compile_and_link_and_run(<<EOM, run => 1);
 #include <time.h>
 #include <sys/time.h>
 #include <stdio.h>
@@ -273,7 +281,7 @@ EOM
 sub has_include {
     my ($inc) = @_;
     return 1 if
-    try_compile_and_link(<<EOM);
+    try_compile_and_link_and_run(<<EOM);
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -291,7 +299,7 @@ sub has_clock_xxx_syscall {
     my $x = shift;
     return 0 unless defined $SYSCALL_H;
     return 1 if
-    try_compile_and_link(<<EOM, run => 1);
+    try_compile_and_link_and_run(<<EOM, run => 1);
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -310,7 +318,7 @@ EOM
 sub has_clock_xxx {
     my $xxx = shift;
     return 1 if
-    try_compile_and_link(<<EOM, run => 1);
+    try_compile_and_link_and_run(<<EOM, run => 1);
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -326,7 +334,7 @@ EOM
 
 sub has_clock {
     return 1 if
-    try_compile_and_link(<<EOM, run => 1);
+    try_compile_and_link_and_run(<<EOM, run => 1);
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -341,7 +349,7 @@ EOM
 
 sub has_clock_nanosleep {
     return 1 if
-    try_compile_and_link(<<EOM, run => 1);
+    try_compile_and_link_and_run(<<EOM, run => 1);
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
@@ -617,7 +625,7 @@ EOD
 
     print "Trying struct stat st_atimespec.tv_nsec...";
     my $has_stat_st_xtimespec;
-    if (try_compile_and_link(<<EOM)) {
+    if (try_compile_and_link_and_run(<<EOM)) {
 $TIME_HEADERS
 #include <sys/stat.h>
 int main(int argc, char** argv) {
@@ -637,7 +645,7 @@ EOM
 
     print "Trying struct stat st_atimensec...";
     my $has_stat_st_xtimensec;
-    if (try_compile_and_link(<<EOM)) {
+    if (try_compile_and_link_and_run(<<EOM)) {
 $TIME_HEADERS
 #include <sys/stat.h>
 int main(int argc, char** argv) {
@@ -657,7 +665,7 @@ EOM
 
     print "Trying struct stat st_atime_n...";
     my $has_stat_st_xtime_n;
-    if (try_compile_and_link(<<EOM)) {
+    if (try_compile_and_link_and_run(<<EOM)) {
 $TIME_HEADERS
 #include <sys/stat.h>
 int main(int argc, char** argv) {
@@ -677,7 +685,7 @@ EOM
 
     print "Trying struct stat st_atim.tv_nsec...";
     my $has_stat_st_xtim;
-    if (try_compile_and_link(<<EOM)) {
+    if (try_compile_and_link_and_run(<<EOM)) {
 $TIME_HEADERS
 #include <sys/stat.h>
 int main(int argc, char** argv) {
@@ -697,7 +705,7 @@ EOM
 
     print "Trying struct stat st_uatime...";
     my $has_stat_st_uxtime;
-    if (try_compile_and_link(<<EOM)) {
+    if (try_compile_and_link_and_run(<<EOM)) {
 $TIME_HEADERS
 #include <sys/stat.h>
 int main(int argc, char** argv) {
