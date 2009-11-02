@@ -143,5 +143,5 @@ ls -l perl.${CROSS_NAME}
 echo
 echo "[android build done]"
 echo
-echo "[you can try next package-android-sh]"
+echo "[next you can try running package-android-sh]"
 echo

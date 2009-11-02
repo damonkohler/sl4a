@@ -147,13 +147,31 @@ sub get_files {
     } elsif ($^O eq 'linux' &&
 	      $Config{gccversion} ne '' && 
 	      $Config{gccversion} !~ /intel/i
-	      # might be using, say, Intel's icc
 	     ) {
-	# Some Linuxes have weird errno.hs which generate
-	# no #file or #line directives
-	my $linux_errno_h = -e '/usr/include/errno.h' ?
-	    '/usr/include/errno.h' : '/usr/local/include/errno.h';
-	$file{$linux_errno_h} = 1;
+        if ($Config{cc} eq 'agcc') {
+           # For the Android SDK we must find out the right errno.h
+           # by looking at the PATH.
+           my @host_bin = grep { m{/host/} } split(/:/, $ENV{PATH});
+           for my $host_bin (@host_bin) {
+               # print STDERR "host_bin: $host_bin\n";
+               if (-f "$host_bin/adb") {
+                  my $host_inc = $host_bin;
+                  $host_inc =~ s{/out/host/.+?/bin$}{/bionic/libc/include};
+                  # print STDERR "host_inc: $host_inc\n";
+                  my $errno_h = "$host_inc/errno.h";
+                  if (-f $errno_h) {
+                      $file{$errno_h} = 1;
+                      last;
+                  }
+               }
+           }
+        } else {
+            # Some Linuxes have weird errno.hs which generate
+            # no #file or #line directives
+            my $linux_errno_h = -e '/usr/include/errno.h' ?
+              '/usr/include/errno.h' : '/usr/local/include/errno.h';
+            $file{$linux_errno_h} = 1;
+        }
     } elsif ($^O eq 'MacOS') {
 	# note that we are only getting the GUSI errno's here ...
 	# we might miss out on compiler-specific ones
@@ -217,6 +235,11 @@ sub get_files {
 	}
 	close(CPPO);
     }
+    
+    for my $f (sort keys %file) {
+      print STDERR "File: $f\n";
+    }
+
     return keys %file;
 }
 
@@ -257,23 +280,23 @@ sub write_errno_pm {
     unless ($^O eq 'MacOS' || $^O eq 'beos') {	# trust what we have / get later
     # invoke CPP and read the output
 
+        my $cpp;
+
 	if ($^O eq 'VMS') {
-	    my $cpp = "$Config{cppstdin} $Config{cppflags} $Config{cppminus}";
+            $cpp = "$Config{cppstdin} $Config{cppflags} $Config{cppminus}";
 	    $cpp =~ s/sys\$input//i;
-	    open(CPPO,"$cpp  errno.c |") or
-		die "Cannot exec $Config{cppstdin}";
+            $cpp = "$cpp errno.c";
 	} elsif ($IsMSWin32 || $^O eq 'NetWare') {
-	    open(CPPO,"$Config{cpprun} $Config{cppflags} errno.c |") or
-		die "Cannot run '$Config{cpprun} $Config{cppflags} errno.c'";
+            $cpp = "$Config{cpprun} $Config{cppflags} errno.c";
 	} elsif ($IsSymbian) {
-            my $cpp = "gcc -E -I$ENV{SDK}\\epoc32\\include\\libc -";
-	    open(CPPO,"$cpp < errno.c |")
-		or die "Cannot exec $cpp";
+            $cpp = "gcc -E -I$ENV{SDK}\\epoc32\\include\\libc - < errno.c";
         } else {
-	    my $cpp = default_cpp();
-	    open(CPPO,"$cpp < errno.c |")
-		or die "Cannot exec $cpp";
+            $cpp = default_cpp();
+            $cpp = "$cpp < errno.c";
 	}
+
+        print STDERR "Running: $cpp errno.c\n";
+	open(CPPO,"$cpp |") or die qq[Cannot run: "$cpp": $!\n];
 
 	%err = ();
 

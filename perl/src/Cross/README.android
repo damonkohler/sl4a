@@ -52,12 +52,9 @@ NOTE1: the android patch(es) are *too* well-integrated with the rest
 of the Cross/*, in fact, with a high probability they broke something
 else, most likely the N770 cross-build.
 
-NOTE2: in case some active perl5-porter walks by: the changes made for
-getting Android are very, very far from being clean enough for merging
-with the offical repository.
-
-NOTE3: the initial port done at this patch level (.patch):
-maint-5.10 2009-08-03.22:35:06 83f7cfe400060c20aff210f572a35d80532a56ac GitLive-maint-5.10-1712-g83f7cfe
+NOTE2: in case some perl5-porter walks by: the changes made for getting
+Android are very, very far from being clean enough for merging with the
+offical repository.
 
 -- 
 jhi@google.com

@@ -53,7 +53,7 @@ stage () {
     then
       case "$2" in
       android/*)
-        echo "\t$1 -> $2"
+        echo "  $1 -> $2"
         mkdir -p $(dirname $2)
         cp -f $1 $2
         ;;

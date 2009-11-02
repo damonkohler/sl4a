@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
   int bits;
 
   if (argc < 3 || argv[1][0] == '\0' || argv[2][0] == '\0') {
-    fprintf(stderr, "Usage: %s uudemap.h bitcount.h\n", argv[0]);
+    fprintf(stderr, "Usage: %s uudmap.h bitcount.h\n", argv[0]);
     return 1;
   }
 
