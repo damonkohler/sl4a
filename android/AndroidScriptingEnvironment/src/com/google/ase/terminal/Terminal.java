@@ -35,6 +35,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.google.ase.AndroidFacade;
+import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
@@ -161,6 +162,8 @@ public class Terminal extends Activity {
     mKeyListener = new TermKeyListener();
     updatePreferences();
     startInterpreter();
+
+    AseAnalytics.trackActivity(this, mInterpreterName);
   }
 
   private void startInterpreter() {

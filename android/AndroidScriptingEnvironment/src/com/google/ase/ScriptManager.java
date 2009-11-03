@@ -78,6 +78,8 @@ public class ScriptManager extends ListActivity {
 
     listScripts();
     registerForContextMenu(getListView());
+
+    AseAnalytics.trackActivity(this);
   }
 
   @Override

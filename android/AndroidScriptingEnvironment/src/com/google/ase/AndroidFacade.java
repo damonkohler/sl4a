@@ -207,12 +207,6 @@ public class AndroidFacade {
    * @throws AseException
    */
   public void speak(String message) throws AseException {
-    // // We can't prompt to install here because we don't have a looper.
-    // if (!ConfigurationManager.allFilesExist()) {
-    // throw new AseException("TTS not installed.");
-    // }
-    // Lazily initialize TTS since it's pretty slow. Also, it gives us a chance to prompt the user
-    // if TTS isn't installed yet without disrupting scripts which don't use it.
     if (mTts == null) {
       final CountDownLatch lock = new CountDownLatch(1);
       TextToSpeech.OnInitListener ttsInitListener = new TextToSpeech.OnInitListener() {

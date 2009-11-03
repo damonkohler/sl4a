@@ -3,7 +3,7 @@
   package="com.google.ase" android:versionCode="14" android:versionName="14">
   <application android:debuggable="true"
     android:icon="@drawable/ase_logo_48"
-    android:label="@string/application_title">
+    android:label="@string/application_title" android:name="AseApplication">
     <activity android:name="ScriptManager">
     <intent-filter>
       <action android:name="android.intent.action.MAIN" />

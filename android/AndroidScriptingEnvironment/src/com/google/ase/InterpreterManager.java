@@ -59,6 +59,8 @@ public class InterpreterManager extends ListActivity {
 
     listInterpreters();
     registerForContextMenu(getListView());
+
+    AseAnalytics.trackActivity(this);
   }
 
   @Override
