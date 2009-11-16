@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -51,7 +50,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.speech.tts.TextToSpeech;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -84,7 +82,7 @@ public class AndroidFacade {
   private CountDownLatch mLatch;
   private Intent mStartActivityResult; // The result from a call to startActivityForResult().
 
-  private TextToSpeech mTts;
+  private final TextToSpeechFacade mTts;
 
   private Bundle mSensorReadings;
   private final SensorManager mSensorManager;
@@ -197,6 +195,7 @@ public class AndroidFacade {
     mGeocoder = new Geocoder(mContext);
     mTelephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
     mEventBuffer = new CircularBuffer<Bundle>(EVENT_BUFFER_LIMIT);
+    mTts = new TextToSpeechFacade(context);
   }
 
   /**
@@ -207,23 +206,7 @@ public class AndroidFacade {
    * @throws AseException
    */
   public void speak(String message) throws AseException {
-    if (mTts == null) {
-      final CountDownLatch lock = new CountDownLatch(1);
-      TextToSpeech.OnInitListener ttsInitListener = new TextToSpeech.OnInitListener() {
-        public void onInit(int version) {
-          lock.countDown();
-        }
-      };
-      mTts = new TextToSpeech(mContext, ttsInitListener);
-      try {
-        if (!lock.await(10, TimeUnit.SECONDS)) {
-          throw new AseException("TTS initialization timed out.");
-        }
-      } catch (InterruptedException e) {
-        throw new AseException("TTS initialization interrupted.");
-      }
-    }
-    mTts.speak(message, 1, null);
+    mTts.speak(message);
   }
 
   public void startTrackingPhoneState() {
@@ -593,10 +576,7 @@ public class AndroidFacade {
     stopSensing();
     stopLocating();
     stopTrackingPhoneState();
-    // TTS is lazily initialized so it could still be null.
-    if (mTts != null) {
-      mTts.shutdown();
-    }
+    mTts.shutdown();
   }
 
   public Bundle getRunningPackages() {

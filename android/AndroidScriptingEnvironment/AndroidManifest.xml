@@ -70,7 +70,7 @@
   <uses-permission android:name="android.permission.PERSISTENT_ACTIVITY"></uses-permission>
   <uses-permission android:name="android.permission.RESTART_PACKAGES"></uses-permission>
   <uses-permission android:name="android.permission.GET_TASKS"></uses-permission>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
   
-  <uses-sdk android:minSdkVersion="4"></uses-sdk>
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+  <uses-sdk android:minSdkVersion="3"></uses-sdk>
 </manifest>
