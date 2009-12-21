@@ -53,21 +53,24 @@ BEGIN {
 
 # server() is run if --server is given to Android.pm.
 sub server {
-  my $proto = getprotobyname('tcp');
+  # getprotobyname() is still a fatally unimplemented stub in Android 2.0.1.
+  my $proto = eval { getprotobyname('tcp') } || 6;
   my $server = IO::Socket::INET->new(Proto     => 'tcp',
                                      LocalPort => $Opt{port},
                                      Listen    => SOMAXCONN,
                                      Reuse     => 1);
   die "$0: Cannot start server: $!\n" unless defined $server;
-  print STDERR "$0: server: accepting in port $Opt{port}\n" if $Opt{trace};
+  if ($Opt{trace}) {
+      show_trace(qq[$0: server: accepting in port $Opt{port}]);
+  }
   while (defined(my $client = $server->accept())) {
-      print STDERR "$0: server: client $client\n" if $Opt{trace};
+      show_trace(qq[$0: server: client $client]) if $Opt{trace};
       $client->autoflush(1);
       my $json = readline($client);
       chomp($json);
-      print STDERR qq[server: rcvd <<$json>>\n] if $Opt{trace};
+      show_trace(qq[server: rcvd: "$json"]) if $Opt{trace};
       print $client $json, "\n";  # We just echo back what they said to us.
-      print STDERR qq[server: sent <<$json>>\n] if $Opt{trace};
+      show_trace(qq[server: sent: "$json"]) if $Opt{trace};
       close($client);
   }
 }
@@ -82,6 +85,9 @@ sub new {
                                    PeerPort => $Opt{port})
         or die "$0: Cannot connect to server port $Opt{port} on localhost\n";
     $fh->autoflush(1);
+    if ($Opt{trace}) {
+        show_trace(qq[Android: server in port $Opt{port}]);
+    }
     bless {
         conn => $fh,
         id   => 0,
@@ -100,6 +106,11 @@ sub trace {
     }
 }
 
+# Utility function for showing traces.
+sub show_trace {
+  print STDERR "<<@_>>\n";
+}
+
 # The connection is implicitly closed when the proxy object goes out
 # of scope, but one can use the close() method to explicitly terminate
 # the connection.  This is also used internally by the do_rpc() in
@@ -112,7 +123,8 @@ sub _close {
     }
 }
 sub close {
-    $_[0]->_close();
+    my $self = shift;
+    $self->_close();
     print STDERR "$0: client: connection closed\n";
 }
 
@@ -121,27 +133,34 @@ sub close {
 # looks to be dead, close the connection and return undef.
 sub do_rpc {
     my $self = shift;
+    if ($self->trace) {
+        show_trace(qq[do_rpc: $self: @_]);
+    }
     my $method = pop;
     my $request = to_json({ id => $self->{id},
                             method => $method,
                             params => [ @_ ] });
     if (defined $self->{conn}) {
         print { $self->{conn} } $request, "\n";
-        if ($self->trace) { print STDERR qq[client: sent: <<$request>>\n] }
+        if ($self->trace) {
+            show_trace(qq[client: sent: "$request"]);
+        }
         $self->{id}++;
         my $response = readline($self->{conn});
         chomp $response;
-        if ($self->trace) { print STDERR qq[client: rcvd: <<$response>>\n] }
+        if ($self->trace) {
+            show_trace(qq[client: rcvd: "$response"]);
+        }
         if (defined $response && length $response) {
             my $result = from_json($response);
             my $success = 0;
             my $error;
             if (defined $result) {
                 if (ref $result eq 'HASH') {
-                    unless (exists $result->{error}) {
-                        $success = 1;
-                    } elsif (defined $result->{error}) {
+                    if (defined $result->{error}) {
                         $error = to_json($result->{error});
+                    } else {
+                        $success = 1;
                     }
                 } else {
                     $error = "illegal JSON reply: $result";
@@ -165,6 +184,9 @@ sub do_rpc {
 
 # Return stubs that call do_rpc() with the method name smuggled in.
 sub rpc_maker {
+    if ($Opt{trace}) {
+        show_trace(qq[rpc_maker: @_]);
+    }
     my $method = shift;
     sub {
         push @_, $method;
@@ -186,9 +208,11 @@ sub help {
 
 # AUTOLOAD installs RPC proxies for all unknown methods.
 sub AUTOLOAD {
+    if ($Opt{trace}) {
+        show_trace(qq[AUTOLOAD=$AUTOLOAD, @_]);
+    }
     my ($method) = ($AUTOLOAD =~ /::(\w+)$/);
     return if $method eq 'DESTROY';
-    # print STDERR "$0: installing proxy method '$method'\n";
     my $rpc = rpc_maker($method);
     {
         # Install the RPC proxy method, we will not came here
@@ -206,7 +230,7 @@ sub DESTROY {
 # This BEGIN block either invokes server() or sends a client request,
 # or does nothing (the case of using Android.pm as a client library).
 sub BEGIN {
-    if ($Opt{server}) {
+    if (defined $Opt{server}) {
         &server;
     } elsif (defined $Opt{request}) {
         my $android = Android->new();
