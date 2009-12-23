@@ -3,6 +3,7 @@ syntax: glob
 *.dex
 *.swp
 android/AndroidScriptingEnvironment/bin/*
+android/AndroidScriptingEnvironment/gen/*
 python/src/build/*
 python/gdata/build/*
 python/xmpppy/build/*
