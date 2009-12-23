@@ -75,10 +75,9 @@ public class ScriptManager extends ListActivity {
     requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
     setContentView(R.layout.list);
     CustomWindowTitle.buildWindowTitle(this);
-
+    UsageTrackingConfirmation.show(this);
     listScripts();
     registerForContextMenu(getListView());
-
     AseAnalytics.trackActivity(this);
   }
 

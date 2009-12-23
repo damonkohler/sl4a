@@ -164,7 +164,7 @@ public class Terminal extends Activity {
     updatePreferences();
     startInterpreter();
 
-    AseAnalytics.trackActivity(this, mInterpreterName);
+    AseAnalytics.track(mInterpreterName);
   }
 
   private void startInterpreter() {
