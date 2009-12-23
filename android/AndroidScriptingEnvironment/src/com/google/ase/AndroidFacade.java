@@ -599,4 +599,21 @@ public class AndroidFacade {
   public void forceStopPackage(String packageName) {
     mActivityManager.restartPackage(packageName);
   }
+  
+  
+  /**
+   * Launches an activity that sends an e-mail message to a given recipient.
+   * 
+   * @param recipientAddress recipient's e-mail address
+   * @param subject message subject
+   * @param body message body
+   */
+  public void sendMail(final String recipientAddress, final String subject, final String body) {
+	final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+	emailIntent.setType("plain/text");
+	emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] { recipientAddress } );
+	emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+	emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+	mContext.startActivity(emailIntent);
+  }
 }

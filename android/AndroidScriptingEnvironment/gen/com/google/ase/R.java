@@ -12,8 +12,14 @@ public final class R {
         public static final int entries_color_preference=0x7f050002;
         public static final int entries_controlkey_preference=0x7f050004;
         public static final int entries_fontsize_preference=0x7f050000;
+        /**  Do not localize entryvalues 
+         */
         public static final int entryvalues_color_preference=0x7f050003;
+        /**  Do not localize entryvalues 
+         */
         public static final int entryvalues_controlkey_preference=0x7f050005;
+        /**  Do not localize entryvalues 
+         */
         public static final int entryvalues_fontsize_preference=0x7f050001;
     }
     public static final class attr {

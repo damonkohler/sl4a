@@ -713,4 +713,15 @@ public class AndroidProxy {
   public void onDestroy() {
     mAndroidFacade.onDestroy();
   }
+
+  @Rpc(description = "Opens an intent to send an e-mail message with the preset data.",
+      params = "String recipientAddress, String subject, String body")
+  public JSONObject sendMail(JSONArray params) {
+    try {
+      mAndroidFacade.sendMail(params.getString(0), params.getString(1), params.getString(2));
+    } catch (JSONException e) {
+      return JsonRpcResult.error("Message must be specified.", e);
+    }
+    return JsonRpcResult.empty();
+  }
 }
