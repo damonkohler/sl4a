@@ -494,12 +494,6 @@ public class AndroidProxy {
     return JsonRpcResult.empty();
   }
 
-  @Rpc(description = "Display the email activity.")
-  public JSONObject email(JSONArray params) {
-    mAndroidFacade.view("mailto://");
-    return JsonRpcResult.empty();
-  }
-
   @Rpc(
       description = "Display content to be picked by URI (e.g. contacts)",
       params = "String uri",
@@ -714,13 +708,15 @@ public class AndroidProxy {
     mAndroidFacade.onDestroy();
   }
 
-  @Rpc(description = "Opens an intent to send an e-mail message with the preset data.",
-      params = "String recipientAddress, String subject, String body")
-  public JSONObject sendMail(JSONArray params) {
+  @Rpc(
+      description = "Opens the email activity with recipient, subject, and body filled in.",
+      params = "String recipientAddress, String subject, String body"
+  )
+  public JSONObject sendEmail(JSONArray params) {
     try {
-      mAndroidFacade.sendMail(params.getString(0), params.getString(1), params.getString(2));
+      mAndroidFacade.sendEmail(params.getString(0), params.getString(1), params.getString(2));
     } catch (JSONException e) {
-      return JsonRpcResult.error("Message must be specified.", e);
+      return JsonRpcResult.error("Must specify recipient, subject, and body.", e);
     }
     return JsonRpcResult.empty();
   }
