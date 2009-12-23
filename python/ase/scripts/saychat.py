@@ -9,6 +9,10 @@ import xmpp
 
 _SERVER = 'talk.google.com', 5223
 
+def log(droid, message):
+  print message
+  self.droid.speak(message)
+
 
 class SayChat(object):
 
@@ -21,11 +25,11 @@ class SayChat(object):
     self.client.connect(server=_SERVER)
     self.client.RegisterHandler('message', self.message_cb)
     if not self.client:
-      print 'Connection failed!'
+      log('Connection failed!')
       return
     auth = self.client.auth(jid.getNode(), password, 'botty')
     if not auth:
-      print 'Authentication failed!'
+      log('Authentication failed!')
       return
     self.client.sendInitPresence()
 
