@@ -90,7 +90,7 @@ def test_get_last_known_location():
   return result['error'] is None
 
 
-def test_gecode():
+def test_geocode():
   result = droid.geocode(0, 0, 1)
   return result['error'] is None
 
