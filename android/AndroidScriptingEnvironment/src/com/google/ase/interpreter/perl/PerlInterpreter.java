@@ -78,6 +78,6 @@ public class PerlInterpreter extends Interpreter {
 
   @Override
   public int getVersion() {
-    return 1;
+    return 2;
   }
 }
