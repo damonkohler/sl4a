@@ -40,6 +40,7 @@ import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
+import com.google.ase.AsePreferences;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.interpreter.InterpreterUtils;
@@ -342,7 +343,7 @@ public class Terminal extends Activity {
   }
 
   private void doPreferences() {
-    startActivity(new Intent(this, TerminalPreferences.class));
+    startActivity(new Intent(this, AsePreferences.class));
   }
 
   private void doResetTerminal() {

@@ -63,7 +63,7 @@ public class ScriptManager extends ListActivity {
   private HashMap<Integer, Interpreter> addMenuIds;
 
   private static enum MenuId {
-    DELETE, EDIT, ADD_SHORTCUT, START_SERVICE, HELP, QRCODE_ADD, INTERPRETER_MANAGER;
+    DELETE, EDIT, ADD_SHORTCUT, START_SERVICE, HELP, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -132,6 +132,7 @@ public class ScriptManager extends ListActivity {
     buildMenuIdMaps();
     buildAddMenu(menu);
     menu.add(Menu.NONE, MenuId.INTERPRETER_MANAGER.getId(), Menu.NONE, "Interpreters");
+    menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences");
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help");
     return true;
   }
@@ -177,6 +178,8 @@ public class ScriptManager extends ListActivity {
     } else if (itemId == MenuId.QRCODE_ADD.getId()) {
       Intent intent = new Intent("com.google.zxing.client.android.SCAN");
       startActivityForResult(intent, RequestCode.QRCODE_ADD.ordinal());
+    } else if (itemId == MenuId.PREFERENCES.getId()) {
+      startActivity(new Intent(this, AsePreferences.class));
     }
     return super.onOptionsItemSelected(item);
   }

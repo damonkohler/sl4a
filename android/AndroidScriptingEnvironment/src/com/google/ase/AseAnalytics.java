@@ -8,7 +8,6 @@ public class AseAnalytics {
   }
 
   public static void trackActivity(Activity activity, String name) {
-    AseLog.v("Tracked " + name);
     ((AseApplication) activity.getApplication()).track(name);
   }
 
