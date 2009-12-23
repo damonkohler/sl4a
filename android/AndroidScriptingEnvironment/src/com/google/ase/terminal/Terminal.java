@@ -37,10 +37,10 @@ import android.widget.Toast;
 import com.google.ase.AndroidFacade;
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
+import com.google.ase.AsePreferences;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
-import com.google.ase.AsePreferences;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.interpreter.InterpreterUtils;
@@ -188,7 +188,7 @@ public class Terminal extends Activity {
   }
 
   private void updatePreferences() {
-    mEmulatorView.setTextSize(readIntPref(FONTSIZE_KEY, DEFAULT_FONT_SIZE, 20));
+    mEmulatorView.setTextSize(readIntPref(FONTSIZE_KEY, DEFAULT_FONT_SIZE, 30));
     int[] scheme =
         COLOR_SCHEMES[readIntPref(COLOR_KEY, DEFAULT_COLOR_SCHEME, COLOR_SCHEMES.length - 1)];
     mEmulatorView.setColors(scheme[0], scheme[1]);
