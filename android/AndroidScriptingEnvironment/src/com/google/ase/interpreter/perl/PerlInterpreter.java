@@ -48,7 +48,7 @@ public class PerlInterpreter extends Interpreter {
 
   @Override
   public String getNiceName() {
-    return "Perl 5.10.0";
+    return "Perl 5.10.1";
   }
 
   @Override
