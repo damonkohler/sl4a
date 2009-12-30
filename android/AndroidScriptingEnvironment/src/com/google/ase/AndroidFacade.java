@@ -57,8 +57,12 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.ase.jsonrpc.OptionalParameter;
 import com.google.ase.jsonrpc.Rpc;
+import com.google.ase.jsonrpc.RpcDefaultBoolean;
+import com.google.ase.jsonrpc.RpcDefaultInteger;
+import com.google.ase.jsonrpc.RpcDefaultString;
+import com.google.ase.jsonrpc.RpcOptionalObject;
+import com.google.ase.jsonrpc.RpcOptionalString;
 import com.google.ase.jsonrpc.RpcParameter;
 
 public class AndroidFacade implements RpcFacade {
@@ -258,13 +262,10 @@ public class AndroidFacade implements RpcFacade {
 
   @Rpc(description = "Starts collecting location data.")
   public void startLocating(
-      @RpcParameter("String accuracy (\"fine\", \"coards\")") OptionalParameter<String> optAccuracy,
-      @RpcParameter("minimum time between updates (milli-seconds)") OptionalParameter<Integer> optMinUpdateTimeMs,
-      @RpcParameter("minimum distance between updates (meters)") OptionalParameter<Integer> optMinUpdateDistanceM) {
+      @RpcDefaultString(description = "String accuracy (\"fine\", \"coards\")", defaultValue = "coarse") String accuracy,
+      @RpcDefaultInteger(description = "minimum time between updates (milli-seconds)", defaultValue = 60000) Integer minUpdateTimeMs,
+      @RpcDefaultInteger(description = "minimum distance between updates (meters)", defaultValue = 30) Integer minUpdateDistanceM) {
     Criteria criteria = new Criteria();
-    final String accuracy = optAccuracy.get("coarse");
-    final Integer minUpdateTimeMs = optMinUpdateTimeMs.get(60000);
-    final Integer minUpdateDistanceM = optMinUpdateDistanceM.get(30);
     if (accuracy == "coarse") {
       criteria.setAccuracy(Criteria.ACCURACY_COARSE);
     } else if (accuracy == "fine") {
@@ -298,11 +299,12 @@ public class AndroidFacade implements RpcFacade {
   }
 
   @Rpc(description = "Returns a list of addresses for the given latitude and longitude.", returns = "A list of addresses.")
-  public List<Address> geocode(@RpcParameter("latitude") Double latitude,
+  public List<Address> geocode(
+      @RpcParameter("latitude") Double latitude,
       @RpcParameter("longitude") Double longitude,
-      @RpcParameter("max. no. of results (default 1)") OptionalParameter<Integer> maxResults)
+      @RpcDefaultInteger(description = "max. no. of results (default 1)", defaultValue = 1) Integer maxResults)
       throws IOException {
-    return mGeocoder.getFromLocation(latitude, longitude, maxResults.get(1));
+    return mGeocoder.getFromLocation(latitude, longitude, maxResults);
   }
 
   @Rpc(description = "Returns the current ringer volume.", returns = "The current volume as an Integer.")
@@ -319,10 +321,10 @@ public class AndroidFacade implements RpcFacade {
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
   public Intent startActivityForResult(@RpcParameter("action") final String action,
-      @RpcParameter("uri") final OptionalParameter<String> uri) {
+      @RpcOptionalString("uri") final String uri) {
     final Intent intent = new Intent(action);
-    if (uri.isSet()) {
-      intent.setData(Uri.parse(uri.get(null)));
+    if (uri != null) {
+      intent.setData(Uri.parse(uri));
     }
 
     if (!(mContext instanceof Activity)) {
@@ -361,7 +363,7 @@ public class AndroidFacade implements RpcFacade {
 
   @Rpc(description = "Display content to be picked by URI (e.g. contacts)", returns = "A map of result values.")
   public Intent pick(@RpcParameter("uri") String uri) {
-    return startActivityForResult(Intent.ACTION_PICK, OptionalParameter.create(uri));
+    return startActivityForResult(Intent.ACTION_PICK, uri);
   }
 
   public void startActivity(final Intent intent) {
@@ -391,17 +393,17 @@ public class AndroidFacade implements RpcFacade {
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
   public void startActivity(@RpcParameter("action") final String action,
-      @RpcParameter("uri") final OptionalParameter<String> uri) {
+      @RpcOptionalString("uri") final String uri) {
     Intent intent = new Intent(action);
-    if (uri.isSet()) {
-      intent.setData(Uri.parse(uri.get(null)));
+    if (uri != null) {
+      intent.setData(Uri.parse(uri));
     }
     startActivity(intent);
   }
 
   @Rpc(description = "Start activity with view action by URI (i.e. browser, contacts, etc.).")
   public void view(@RpcParameter("uri") String uri) {
-    startActivity(Intent.ACTION_VIEW, OptionalParameter.create(uri));
+    startActivity(Intent.ACTION_VIEW, uri);
   }
 
   public void launch(String className) {
@@ -419,14 +421,14 @@ public class AndroidFacade implements RpcFacade {
 
   @Rpc(description = "Vibrates the phone or a specified duration in milliseconds.")
   public void vibrate(
-      @RpcParameter("duration in milliseconds (default 300)") OptionalParameter<Integer> duration) {
-    mVibrator.vibrate(duration.get(300));
+      @RpcDefaultInteger(description = "duration in milliseconds", defaultValue = 300) Integer duration) {
+    mVibrator.vibrate(300);
   }
 
   @Rpc(description = "Sets whether or not the ringer should be silent.")
   public void setRingerSilent(
-      @RpcParameter("Boolean silent (default: true)") OptionalParameter<Boolean> enabled) {
-    if (enabled.get(true)) {
+      @RpcDefaultBoolean(description = "Boolean silent", defaultValue = true) Boolean enabled) {
+    if (enabled) {
       mAudio.setRingerMode(AudioManager.RINGER_MODE_SILENT);
     } else {
       mAudio.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
@@ -435,8 +437,8 @@ public class AndroidFacade implements RpcFacade {
 
   @Rpc(description = "Enables or disables Wifi according to the supplied boolean.")
   public void setWifiEnabled(
-      @RpcParameter("enabled (default true)") OptionalParameter<Boolean> enabled) {
-    mWifi.setWifiEnabled(enabled.get(true));
+      @RpcDefaultBoolean(description = "enabled", defaultValue = true) Boolean enabled) {
+    mWifi.setWifiEnabled(enabled);
   }
 
   @Rpc(description = "Displays a short-duration Toast notification.")
@@ -470,15 +472,16 @@ public class AndroidFacade implements RpcFacade {
   }
 
   @Rpc(description = "Queries the user for a text input.")
-  public String getInput(@RpcParameter("title of the input box") final OptionalParameter<String> title,
-      @RpcParameter("message to display above the input box") final OptionalParameter<String> message) {
+  public String getInput(
+      @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Input") final String title,
+      @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter value:") final String message) {
     mLatch = new CountDownLatch(1);
     final EditText input = new EditText(mContext);
     mHandler.post(new Runnable() {
       public void run() {
         AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-        alert.setTitle(title.get("ASE Input"));
-        alert.setMessage(message.get("Please enter value."));
+        alert.setTitle(title);
+        alert.setMessage(message);
         alert.setView(input);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int whichButton) {
@@ -498,26 +501,25 @@ public class AndroidFacade implements RpcFacade {
 
 
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")
-  public void notify(@RpcParameter("message") String message,
-      @RpcParameter("title (default \"ASE Notification\")") OptionalParameter<String> title,
-      @RpcParameter("ticker (default \"ASE Notification\")") OptionalParameter<String> ticker) {
+  public void notify(
+      @RpcParameter("message") String message,
+      @RpcDefaultString(description = "title", defaultValue = "ASE Notification") final String title,
+      @RpcDefaultString(description = "ticker", defaultValue = "ASE Notification") final String ticker) {
     Notification notification =
-        new Notification(R.drawable.ase_logo_48, ticker.get("ASE Notification"), System
-            .currentTimeMillis());
+        new Notification(R.drawable.ase_logo_48, ticker, System.currentTimeMillis());
     // This is pretty dumb. You _have_ to specify a PendingIntent to be
     // triggered when the
     // notification is clicked on. You cannot specify null.
     Intent notificationIntent = new Intent();
     PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
-    notification
-        .setLatestEventInfo(mContext, title.get("ASE Notification"), message, contentIntent);
+    notification.setLatestEventInfo(mContext, title, message, contentIntent);
     notification.flags = Notification.FLAG_AUTO_CANCEL;
     mNotificationManager.notify(0, notification);
   }
 
   @Rpc(description = "Dials a contact/phone number by URI.")
   public void dial(@RpcParameter("uri") final String uri) {
-    startActivity(Intent.ACTION_DIAL, OptionalParameter.create(uri));
+    startActivity(Intent.ACTION_DIAL, uri);
   }
 
   @Rpc(description = "Dials a phone number.")
@@ -527,7 +529,7 @@ public class AndroidFacade implements RpcFacade {
 
   @Rpc(description = "Calls a contact/phone number by URI.")
   public void call(@RpcParameter("uri") final String uri) {
-    startActivity(Intent.ACTION_CALL, OptionalParameter.create(uri));
+    startActivity(Intent.ACTION_CALL, uri);
   }
 
   @Rpc(description = "Calls a phone number.")
@@ -557,14 +559,12 @@ public class AndroidFacade implements RpcFacade {
 
   @Rpc(description = "Starts the barcode scanner.", returns = "A map of result values.")
   public Intent scanBarcode() {
-    return startActivityForResult("com.google.zxing.client.android.SCAN",
-        OptionalParameter.<String>createAbsent());
+    return startActivityForResult("com.google.zxing.client.android.SCAN", null);
   }
 
   @Rpc(description = "Starts image capture.", returns = "A map of result values.")
   public Intent captureImage() {
-    return startActivityForResult("android.media.action.IMAGE_CAPTURE",
-        OptionalParameter.<String>createAbsent());
+    return startActivityForResult("android.media.action.IMAGE_CAPTURE", null);
   }
 
   @Rpc(description = "Opens a web search for the given query.")
@@ -615,16 +615,15 @@ public class AndroidFacade implements RpcFacade {
 
   @Rpc(description = "Returns an extra value that was specified in the launch intent.", returns = "The extra value.")
   public Object getExtra(@RpcParameter("name") String name,
-      @RpcParameter("default (Integer/Double/Boolean)") OptionalParameter<Object> defaultValue) {
-    Object def = defaultValue.get(null);
+      @RpcOptionalObject("default") final Object defaultValue) {
     if (defaultValue == null) {
       return mIntent.getStringExtra(name);
-    } else if (def instanceof Integer) {
-      return mIntent.getDoubleExtra(name, (Integer) def);
-    } else if (def instanceof Double) {
-      return mIntent.getDoubleExtra(name, (Double) def);
-    } else if (def instanceof Boolean) {
-      return mIntent.getBooleanExtra(name, (Boolean) def);
+    } else if (defaultValue instanceof Integer) {
+      return mIntent.getDoubleExtra(name, (Integer) defaultValue);
+    } else if (defaultValue instanceof Double) {
+      return mIntent.getDoubleExtra(name, (Double) defaultValue);
+    } else if (defaultValue instanceof Boolean) {
+      return mIntent.getBooleanExtra(name, (Boolean) defaultValue);
     } else {
       throw new RuntimeException("Unknown parameter type: defaultValue.");
     }

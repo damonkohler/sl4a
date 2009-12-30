@@ -1,7 +1,23 @@
+/*
+ * Copyright (C) 2009 Google Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.google.ase.jsonrpc;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -92,13 +108,17 @@ public class RpcInvokerFactory {
       @Override
       public JSONObject invoke(final Method m, final Object receiver, final JSONArray parameters)
           throws JSONException {
-        Object[] args = new Object[parameterTypes.length];
+        final Object[] args = new Object[parameterTypes.length];
+        final Annotation annotations[][] = m.getParameterAnnotations();
 
         for (int i = 0; i < args.length; i++) {
           final Type parameterType = parameterTypes[i];
 
-          if (parameterType instanceof Class<?>) {
-            // Required parameter.
+          Object defaultValue = RpcAnnotationHelper.getDefaultValue(annotations[i]);
+
+          if (i < parameters.length()) {
+            // Parameter is specified.
+            // NOTE (Felix Arends): we have to add code to deal with generic types here.
             try {
               args[i] = ((Class <?>)parameterType).cast(parameters.get(i));
             } catch (ClassCastException e) {
@@ -106,32 +126,8 @@ public class RpcInvokerFactory {
                   ((Class<?>)parameterType).getSimpleName() + ".");
             }
           } else {
-            // Optional parameter.
-            final ParameterizedType parameterizedType = (ParameterizedType) parameterType;
-            final Class<?> rawClass = (Class<?>) parameterizedType.getRawType();
-
-            if (rawClass.equals(OptionalParameter.class)) {
-              // NOTE (Felix Arends): Technically, this could be another
-              // ParameterizedType.
-              Class<?> actualType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-              if (i >= parameters.length()) {
-                try {
-                  args[i] = rawClass.newInstance();
-                } catch (IllegalAccessException e) {
-                  // This should never happen: the constructor is public.
-                  throw new RuntimeException(e);
-                } catch (InstantiationException e) {
-                  throw new RuntimeException(e);
-                }
-              } else {
-                try {
-                  args[i] = OptionalParameter.create(actualType.cast(parameters.get(i)));
-                } catch (ClassCastException e) {
-                  return JsonRpcResult.error("Argument " + (i + 1) + " should be of type " +
-                      actualType.getSimpleName() + ".");
-                }
-              }
-            }
+            // Use default value of optional parameter.
+            args[i] = defaultValue;
           }
         }
 

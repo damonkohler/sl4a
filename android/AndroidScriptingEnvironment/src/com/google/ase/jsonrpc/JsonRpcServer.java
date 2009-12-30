@@ -126,40 +126,21 @@ public class JsonRpcServer {
      * @param annotation {@link RpcParameter} annotation of the type, may be null
      * @return string describing the parameter based on source code annotaitons
      */
-    private String getHelpForParameter(Type parameterType, RpcParameter annotation) {
+    private String getHelpForParameter(Type parameterType, Annotation[] annotations) {
       StringBuilder result = new StringBuilder();
 
-      if (parameterType instanceof Class<?>) {
-        // This is a simple class.  Just output its name.
-        result.append(((Class<?>) parameterType).getSimpleName());
-        result.append(": ");
-        if (annotation == null) {
-          result.append("-");
-        } else {
-          result.append(annotation.value());
-        }
-      } else {
-        // This is a parameterized generic type.
-        final ParameterizedType parameterizedType = (ParameterizedType) parameterType;
-        final Class<?> rawClass = (Class<?>) parameterizedType.getRawType();
+      Object defaultValue = RpcAnnotationHelper.getDefaultValue(annotations);
+      String description = RpcAnnotationHelper.getRPCDescription(annotations);
+      boolean isOptionalParameter = RpcAnnotationHelper.isOptionalParameter(annotations);
 
-        if (rawClass.equals(OptionalParameter.class)) {
-          // This is an optional parameter.
-          appendTypeName(result, parameterizedType.getActualTypeArguments()[0]);
-          result.append(" [optional]: ");
-        } else {
-          // This is any other usual generic type.
-          appendTypeName(result, parameterType);
-          result.append(": ");
-        }
+      appendTypeName(result, parameterType);
+      if (isOptionalParameter) {
+        result.append("[optional, default " + defaultValue + "]: ");
+      } else {
+        result.append(":");
       }
 
-      // Append description of the parameter, if there is any.
-      if (annotation == null) {
-        result.append("-");
-      } else {
-        result.append(annotation.value());
-      }
+      result.append(description);
 
       return result.toString();
     }
@@ -187,16 +168,7 @@ public class JsonRpcServer {
           helpBuilder.append(",\n  ");
         }
 
-        // Find the RpcParameter annotation for this parameter.
-        RpcParameter parameterAnnotation = null;
-        for (int j = 0; j < annotations[i].length; j++) {
-          if (annotations[i][j] instanceof RpcParameter) {
-            parameterAnnotation = (RpcParameter) annotations[i][j];
-            break;
-          }
-        }
-
-        helpBuilder.append(getHelpForParameter(genericParameterTypes[i], parameterAnnotation));
+        helpBuilder.append(getHelpForParameter(genericParameterTypes[i], annotations[i]));
       }
       helpBuilder.append("):\n");
       helpBuilder.append(rpcAnnotation.description());
