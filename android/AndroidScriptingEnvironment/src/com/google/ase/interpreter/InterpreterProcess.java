@@ -31,18 +31,15 @@ import java.util.Map.Entry;
 import android.os.Process;
 import android.util.Log;
 
-import com.google.ase.AndroidFacade;
-import com.google.ase.AndroidProxy;
 import com.google.ase.AseLog;
 import com.google.ase.Exec;
-import com.google.ase.interpreter.lua.LuaInterpreterProcess;
 
 /**
  * This is a skeletal implementation of an interpreter process.
  *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class InterpreterProcess {
+public abstract class InterpreterProcess {
 
   protected final static String SHELL_BIN = "/system/bin/sh";
   protected static final String TAG = "InterpreterInterface";
@@ -59,13 +56,13 @@ public class InterpreterProcess {
   protected Reader mIn;
 
   /**
-   * Creates a new {@link LuaInterpreterProcess}.
+   * Creates a new {@link InterpreterProcess}.
    *
    * @param ap an instance of {@link AndroidProxy} for the script to connect to
    * @param launchScript the absolute path to a script that should be launched
    *        with the interpreter
    */
-  public InterpreterProcess(AndroidFacade facade, String launchScript) {
+  public InterpreterProcess(String launchScript) {
     mLaunchScript = launchScript;
   }
 
@@ -138,6 +135,8 @@ public class InterpreterProcess {
   }
 
   public void kill() {
+    shutdown();
+
     if (mShellPid != null) {
       Process.killProcess(mShellPid);
     }
@@ -155,4 +154,9 @@ public class InterpreterProcess {
   protected void writeInterpreterCommand() {
     // Should normally be overridden. As is, just the shell will pop up.
   }
+  
+  /**
+   * Called just before the interpreter process is shut down.
+   */
+  abstract protected void shutdown();
 }

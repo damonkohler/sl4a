@@ -18,9 +18,8 @@ package com.google.ase.interpreter.jruby;
 
 import java.io.File;
 
-import com.google.ase.AndroidFacade;
-import com.google.ase.AndroidProxy;
 import com.google.ase.Constants;
+import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
@@ -29,13 +28,14 @@ public class JRubyInterpreterProcess extends InterpreterProcess {
   private final static String JRUBY_BIN = "dalvikvm -Xss128k " +
       "-classpath /sdcard/ase/extras/jruby/jruby-complete-1.2.0RC1-dex.jar org.jruby.Main -X-C";
 
-  private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;
 
-  public JRubyInterpreterProcess(AndroidFacade facade, String launchScript) {
-    super(facade, launchScript);
-    mAndroidProxy = new AndroidProxy(facade);
-    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).startLocal().getPort();
+  private final JsonRpcServer mRpcServer;
+
+  public JRubyInterpreterProcess(String launchScript, RpcFacade... facades) {
+    super(launchScript);
+    mRpcServer = JsonRpcServer.create(facades);
+    mAndroidProxyPort = mRpcServer.startLocal().getPort();
     buildEnvironment();
   }
 
@@ -58,6 +58,11 @@ public class JRubyInterpreterProcess extends InterpreterProcess {
       print(" -e \"require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start\"");
     }
     print("\n");
+  }
+
+  @Override
+  protected void shutdown() {
+    mRpcServer.shutdown();
   }
 
 }

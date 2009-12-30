@@ -16,9 +16,8 @@
 
 package com.google.ase.interpreter.python;
 
-import com.google.ase.AndroidFacade;
-import com.google.ase.AndroidProxy;
 import com.google.ase.Constants;
+import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
@@ -27,13 +26,14 @@ public class PythonInterpreterProcess extends InterpreterProcess {
   private final static String PYTHON_HOME = "/data/data/com.google.ase/python";
   private final static String PYTHON_EXTRAS = Constants.SDCARD_ASE_ROOT + "extras/python/";
 
-  private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;
+  
+  private final JsonRpcServer mRpcServer;
 
-  public PythonInterpreterProcess(AndroidFacade facade, String launchScript) {
-    super(facade, launchScript);
-    mAndroidProxy = new AndroidProxy(facade);
-    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).startLocal().getPort();
+  public PythonInterpreterProcess(String launchScript, RpcFacade... facades) {
+    super(launchScript);
+    mRpcServer = JsonRpcServer.create(facades);
+    mAndroidProxyPort = mRpcServer.startLocal().getPort();
     mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
     mEnvironment.put("PYTHONHOME", PYTHON_HOME);
     mEnvironment.put("PYTHONPATH", PYTHON_EXTRAS + ":" + Constants.SCRIPTS_ROOT);
@@ -48,5 +48,10 @@ public class PythonInterpreterProcess extends InterpreterProcess {
       print(" " + mLaunchScript);
     }
     print("\n");
+  }
+
+  @Override
+  protected void shutdown() {
+    mRpcServer.shutdown();    
   }
 }

@@ -18,7 +18,7 @@ package com.google.ase.interpreter.python;
 
 import java.io.File;
 
-import com.google.ase.AndroidFacade;
+import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -42,8 +42,8 @@ public class PythonInterpreter extends Interpreter {
   }
 
   @Override
-  public InterpreterProcess buildProcess(AndroidFacade facade, String scriptName) {
-    return new PythonInterpreterProcess(facade, scriptName);
+  public InterpreterProcess buildProcess(String scriptName, RpcFacade... facades) {
+    return new PythonInterpreterProcess(scriptName, facades);
   }
 
   @Override

@@ -18,7 +18,7 @@ package com.google.ase.interpreter.perl;
 
 import java.io.File;
 
-import com.google.ase.AndroidFacade;
+import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -42,8 +42,8 @@ public class PerlInterpreter extends Interpreter {
   }
 
   @Override
-  public InterpreterProcess buildProcess(AndroidFacade facade, String scriptName) {
-    return new PerlInterpreterProcess(facade, scriptName);
+  public InterpreterProcess buildProcess(String scriptName, RpcFacade... facades) {
+    return new PerlInterpreterProcess(scriptName, facades);
   }
 
   @Override

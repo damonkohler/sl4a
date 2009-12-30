@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2009 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -57,7 +57,11 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class AndroidFacade {
+import com.google.ase.jsonrpc.OptionalParameter;
+import com.google.ase.jsonrpc.Rpc;
+import com.google.ase.jsonrpc.RpcParameter;
+
+public class AndroidFacade implements RpcFacade {
 
   private static final String TAG = "AndroidFacade";
 
@@ -80,7 +84,8 @@ public class AndroidFacade {
   private final Geocoder mGeocoder;
 
   private CountDownLatch mLatch;
-  private Intent mStartActivityResult; // The result from a call to startActivityForResult().
+  // The result from a call to startActivityForResult().
+  private Intent mStartActivityResult;
 
   private final TextToSpeechFacade mTts;
 
@@ -121,6 +126,18 @@ public class AndroidFacade {
       postEvent("sensors", mSensorReadings);
     }
   };
+
+  @Override
+  public void initialize() {
+  }
+
+  @Override
+  public void shutdown() {
+    stopSensing();
+    stopLocating();
+    stopTrackingPhoneState();
+    mTts.shutdown();
+  }
 
   private Bundle buildLocationBundle(Location location) {
     Bundle bundle = new Bundle();
@@ -198,17 +215,12 @@ public class AndroidFacade {
     mTts = new TextToSpeechFacade(context);
   }
 
-  /**
-   * Speaks the provided message via TTS.
-   *
-   * @param message
-   *          message to speak
-   * @throws AseException
-   */
-  public void speak(String message) throws AseException {
+  @Rpc(description = "Speaks the provided message via TTS")
+  public void speak(@RpcParameter("message to speak") String message) throws AseException {
     mTts.speak(message);
   }
 
+  @Rpc(description = "Starts tracking phone state.")
   public void startTrackingPhoneState() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
   }
@@ -216,40 +228,53 @@ public class AndroidFacade {
   /**
    * Returns the current phone state and incoming number.
    */
+  @Rpc(description = "Returns the current phone state.", returns = "A map of \"state\" and \"incomingNumber\"")
   public Bundle readPhoneState() {
     return mPhoneState;
   }
 
+  @Rpc(description = "Stops tracking phone state.")
   public void stopTrackingPhoneState() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
   }
 
+  @Rpc(description = "Starts recording sensor data to be available for polling.")
   public void startSensing() {
     for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_ALL)) {
       mSensorManager.registerListener(mSensorListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
   }
 
+  @Rpc(description = "Starts recording sensor data to be available for polling.")
   public Bundle readSensors() {
     return mSensorReadings;
   }
 
+  @Rpc(description = "Stops collecting sensor data.")
   public void stopSensing() {
     mSensorManager.unregisterListener(mSensorListener);
     mSensorReadings = null;
   }
 
-  public void startLocating(String accuracy, int minUpdateTime, int minUpdateDistance) {
+  @Rpc(description = "Starts collecting location data.")
+  public void startLocating(
+      @RpcParameter("String accuracy (\"fine\", \"coards\")") OptionalParameter<String> optAccuracy,
+      @RpcParameter("minimum time between updates (milli-seconds)") OptionalParameter<Integer> optMinUpdateTimeMs,
+      @RpcParameter("minimum distance between updates (meters)") OptionalParameter<Integer> optMinUpdateDistanceM) {
     Criteria criteria = new Criteria();
+    final String accuracy = optAccuracy.get("coarse");
+    final Integer minUpdateTimeMs = optMinUpdateTimeMs.get(60000);
+    final Integer minUpdateDistanceM = optMinUpdateDistanceM.get(30);
     if (accuracy == "coarse") {
       criteria.setAccuracy(Criteria.ACCURACY_COARSE);
     } else if (accuracy == "fine") {
       criteria.setAccuracy(Criteria.ACCURACY_FINE);
     }
     mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(criteria, true),
-        minUpdateTime, minUpdateDistance, mLocationListener, mContext.getMainLooper());
+        minUpdateTimeMs, minUpdateDistanceM, mLocationListener, mContext.getMainLooper());
   }
 
+  @Rpc(description = "Returns the current location.", returns = "A map of location information.")
   // TODO(damonkohler): It might be nice to have a version of this method that
   // automatically starts locating and keeps locating until no more requests are
   // received for before some time out.
@@ -257,11 +282,14 @@ public class AndroidFacade {
     return mLocation;
   }
 
+  @Rpc(description = "Stops collecting location data.")
   public void stopLocating() {
     mLocationManager.removeUpdates(mLocationListener);
     mLocation = null;
   }
 
+  @Rpc(description = "Returns the last known location of the device.",
+       returns = "A map of location information.")
   public Bundle getLastKnownLocation() {
     Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     if (location == null) {
@@ -270,18 +298,30 @@ public class AndroidFacade {
     return buildLocationBundle(location);
   }
 
-  public List<Address> geocode(double latitude, double longitude, int maxResults)
+  @Rpc(
+      description = "Returns a list of addresses for the given latitude and longitude.",
+      returns = "A list of addresses."
+  )
+  public List<Address> geocode(
+      @RpcParameter("latitude") Double latitude,
+      @RpcParameter("longitude") Double longitude,
+      @RpcParameter("max. no. of results (default 1)") OptionalParameter<Integer> maxResults)
       throws IOException {
-    return mGeocoder.getFromLocation(latitude, longitude, maxResults);
+    return mGeocoder.getFromLocation(latitude, longitude, maxResults.get(1));
   }
 
+  @Rpc(
+      description = "Returns the current ringer volume.",
+      returns = "The current volume as an Integer."
+  )
   public int getRingerVolume() {
     // TODO(damonkohler): We may want to pass in the stream type and rename
     // the method to getVolume().
     return mAudio.getStreamVolume(AudioManager.STREAM_RING);
   }
 
-  public void setRingerVolume(int volume) {
+  @Rpc(description = "Sets the ringer volume.")
+  public void setRingerVolume(@RpcParameter("volume") Integer volume) {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
   }
 
@@ -292,7 +332,8 @@ public class AndroidFacade {
       return null;
     }
 
-    // TODO(damonkohler): Make it possible for either ASE or user scripts to save and restore state.
+    // TODO(damonkohler): Make it possible for either ASE or user scripts to
+    // save and restore state.
     // This prevents ASE from being closed when the new activity is launched.
     ((Activity) mContext).setPersistent(true);
 
@@ -313,21 +354,31 @@ public class AndroidFacade {
       AseLog.e("Interrupted while waiting for handler to complete.", e);
     }
 
-    // Restore the default behavior of ASE being closed when additional resources are required.
+    // Restore the default behavior of ASE being closed when additional
+    // resources are required.
     ((Activity) mContext).setPersistent(false);
     return mStartActivityResult;
   }
 
-  public Intent startActivityForResult(final String action, final String uri) {
+  @Rpc(
+      description = "Starts an activity for result and returns the result.",
+      returns = "A map of result values."
+  )
+  public Intent startActivityForResult(@RpcParameter("action") final String action,
+      @RpcParameter("uri") final OptionalParameter<String> uri) {
     Intent intent = new Intent(action);
-    if (uri != null) {
-      intent.setData(Uri.parse(uri));
+    if (uri.isSet()) {
+      intent.setData(Uri.parse(uri.get(null)));
     }
     return startActivityForResult(intent);
   }
 
-  public Intent pick(String uri) {
-    return startActivityForResult(Intent.ACTION_PICK, uri);
+  @Rpc(
+    description = "Display content to be picked by URI (e.g. contacts)",
+    returns = "A map of result values."
+  )
+  public Intent pick(@RpcParameter("uri") String uri) {
+    return startActivityForResult(Intent.ACTION_PICK, OptionalParameter.create(uri));
   }
 
   public void startActivity(final Intent intent) {
@@ -355,16 +406,22 @@ public class AndroidFacade {
     }
   }
 
-  public void startActivity(final String action, final String uri) {
+  @Rpc(
+      description = "Starts an activity for result and returns the result.",
+      returns = "A map of result values."
+  )
+  public void startActivity(@RpcParameter("action") final String action,
+      @RpcParameter("uri") final OptionalParameter<String> uri) {
     Intent intent = new Intent(action);
-    if (uri != null) {
-      intent.setData(Uri.parse(uri));
+    if (uri.isSet()) {
+      intent.setData(Uri.parse(uri.get(null)));
     }
     startActivity(intent);
   }
 
-  public void view(String uri) {
-    startActivity(Intent.ACTION_VIEW, uri);
+  @Rpc(description = "Start activity with view action by URI (i.e. browser, contacts, etc.).")
+  public void view(@RpcParameter("uri") String uri) {
+    startActivity(Intent.ACTION_VIEW, OptionalParameter.create(uri));
   }
 
   public void launch(String className) {
@@ -382,7 +439,8 @@ public class AndroidFacade {
     mVibrator.vibrate(duration);
   }
 
-  public void setRingerSilent(boolean enabled) {
+  @Rpc(description = "Sets whether or not the ringer should be silent.")
+  public void setRingerSilent(@RpcParameter("Boolean silent") Boolean enabled) {
     if (enabled) {
       mAudio.setRingerMode(AudioManager.RINGER_MODE_SILENT);
     } else {
@@ -390,11 +448,13 @@ public class AndroidFacade {
     }
   }
 
-  public void setWifiEnabled(boolean enabled) {
-    mWifi.setWifiEnabled(enabled);
+  @Rpc(description = "Enables or disables Wifi according to the supplied boolean.")
+  public void setWifiEnabled(@RpcParameter("enabled (default true)") OptionalParameter<Boolean> enabled) {
+    mWifi.setWifiEnabled(enabled.get(true));
   }
 
-  public void makeToast(final String message) {
+  @Rpc(description = "Displays a short-duration Toast notification.")
+  public void makeToast(@RpcParameter("message") final String message) {
     mLatch = new CountDownLatch(1);
     mHandler.post(new Runnable() {
       public void run() {
@@ -423,7 +483,9 @@ public class AndroidFacade {
     }
   }
 
-  public String getInput(final String title, final String message) {
+  @Rpc(description = "Queries the user for a text input.")
+  public String getInput(@RpcParameter("title of the input box") final String title,
+      @RpcParameter("message to display above the input box") final String message) {
     mLatch = new CountDownLatch(1);
     final EditText input = new EditText(mContext);
     mHandler.post(new Runnable() {
@@ -448,66 +510,92 @@ public class AndroidFacade {
     return input.getText().toString();
   }
 
-  public void notify(String ticker, String title, String message) {
+  
+  @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")
+  public void notify(@RpcParameter("message") String message,
+      @RpcParameter("title (default \"ASE Notification\")") OptionalParameter<String> title,
+      @RpcParameter("ticker (default \"ASE Notification\")") OptionalParameter<String> ticker) {
     Notification notification =
-        new Notification(R.drawable.ase_logo_48, ticker, System.currentTimeMillis());
-    // This is pretty dumb. You _have_ to specify a PendingIntent to be triggered when the
+        new Notification(R.drawable.ase_logo_48, ticker.get("ASE Notification"),
+            System.currentTimeMillis());
+    // This is pretty dumb. You _have_ to specify a PendingIntent to be
+    // triggered when the
     // notification is clicked on. You cannot specify null.
     Intent notificationIntent = new Intent();
     PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
-    notification.setLatestEventInfo(mContext, title, message, contentIntent);
+    notification.setLatestEventInfo(mContext, title.get("ASE Notification"), message,
+        contentIntent);
     notification.flags = Notification.FLAG_AUTO_CANCEL;
     mNotificationManager.notify(0, notification);
   }
 
-  public void dial(String uri) {
-    startActivity(Intent.ACTION_DIAL, uri);
+  @Rpc(description = "Dials a contact/phone number by URI.")
+  public void dial(@RpcParameter("uri") final String uri) {
+    startActivity(Intent.ACTION_DIAL, OptionalParameter.create(uri));
   }
 
-  public void dialNumber(String number) {
+  @Rpc(description = "Dials a phone number.")
+  public void dialNumber(@RpcParameter("phone number") final String number) {
     dial("tel:" + number);
   }
 
-  public void call(String uri) {
-    startActivity(Intent.ACTION_CALL, uri);
+  @Rpc(description = "Calls a contact/phone number by URI.")
+  public void call(@RpcParameter("uri") final String uri) {
+    startActivity(Intent.ACTION_CALL, OptionalParameter.create(uri));
   }
 
-  public void callNumber(String number) {
+  @Rpc(description = "Calls a phone number.")
+  public void callNumber(@RpcParameter("phone number") final String number) {
     call("tel:" + number);
   }
 
-  public void map(String query) {
+  @Rpc(description = "Opens a map search for query (e.g. pizza, 123 My Street).")
+  public void map(@RpcParameter("query, e.g. pizza, 123 My Street") String query) {
     view("geo:0,0?q=" + query);
   }
 
+  @Rpc(description = "Displays the contacts activity.")
   public void showContacts() {
     view("content://contacts/people");
   }
 
+  @Rpc(description = "Displays the email activity.")
   public void email() {
     view("mailto://");
   }
 
+  @Rpc(
+    description = "Displays a list of contacts to pick from.",
+    returns = "A map of result values."
+  )
   public void pickContact() {
     pick("content://contacts/people");
   }
 
+  @Rpc(
+    description = "Displays a list of phone numbers to pick from.",
+    returns = "A map of result values."
+  )
   public void pickPhone() {
     pick("content://contacts/phones");
   }
 
+  @Rpc(description = "Starts the barcode scanner.", returns = "A map of result values.")
   public Intent scanBarcode() {
     return startActivityForResult("com.google.zxing.client.android.SCAN", null);
   }
 
+  @Rpc(description = "Starts image capture.", returns = "A map of result values.")
   public Intent captureImage() {
     return startActivityForResult("android.media.action.IMAGE_CAPTURE", null);
   }
 
-  public void webSearch(String query) {
+  @Rpc(description = "Opens a web search for the given query.")
+  public void webSearch(@RpcParameter("query") String query) {
     view("http://www.google.com/search?q=" + query);
   }
 
+  @Rpc(description = "Exits the activity or service running the script.")
   public void exit() {
     if (mContext instanceof Activity) {
       ((Activity) mContext).finish();
@@ -516,6 +604,7 @@ public class AndroidFacade {
     }
   }
 
+  @Rpc(description = "Exits the activity or service running the script with RESULT_OK.")
   public void exitWithResultOk() {
     if (mContext instanceof Activity) {
       ((Activity) mContext).setResult(Activity.RESULT_OK, mActivityResult);
@@ -523,6 +612,7 @@ public class AndroidFacade {
     exit();
   }
 
+  @Rpc(description = "Exits the activity or service running the script with RESULT_CANCELED.")
   public void exitWithResultCanceled() {
     if (mContext instanceof Activity) {
       ((Activity) mContext).setResult(Activity.RESULT_CANCELED, mActivityResult);
@@ -530,36 +620,40 @@ public class AndroidFacade {
     exit();
   }
 
-  public void putResultExtra(String name, String value) {
-    mActivityResult.putExtra(name, value);
+  @Rpc(description = "Adds an extra value to the result of this script.")
+  public void putResultExtra(@RpcParameter("name") String name,
+      @RpcParameter("value (String/Integer/Double/Boolean)") Object value) {
+    if (value instanceof String) {
+      mActivityResult.putExtra(name, (String) value);
+    } else if (value instanceof Integer) {
+      mActivityResult.putExtra(name, (Integer) value);
+    } else if (value instanceof Double) {
+      mActivityResult.putExtra(name, (Double) value);
+    } else if (value instanceof Boolean) {
+      mActivityResult.putExtra(name, (Boolean) value);
+    } else {
+      throw new RuntimeException("Unknown parameter type: value.");
+    }
   }
 
-  public void putResultExtra(String name, int value) {
-    mActivityResult.putExtra(name, value);
-  }
-
-  public void putResultExtra(String name, double value) {
-    mActivityResult.putExtra(name, value);
-  }
-
-  public void putResultExtra(String name, boolean value) {
-    mActivityResult.putExtra(name, value);
-  }
-
-  public String getStringExtra(String name) {
-    return mIntent.getStringExtra(name);
-  }
-
-  public int getIntExtra(String name, int defaultValue) {
-    return mIntent.getIntExtra(name, defaultValue);
-  }
-
-  public double getDoubleExtra(String name, double defaultValue) {
-    return mIntent.getDoubleExtra(name, defaultValue);
-  }
-
-  public boolean getBooleanExtra(String name, boolean defaultValue) {
-    return mIntent.getBooleanExtra(name, defaultValue);
+  @Rpc(
+    description = "Returns an extra value that was specified in the launch intent.",
+    returns = "The extra value."
+  )
+  public Object getExtra(@RpcParameter("name") String name,
+      @RpcParameter("default (Integer/Double/Boolean)") OptionalParameter<Object> defaultValue) {
+    Object def = defaultValue.get(null);
+    if (defaultValue == null) {
+      return mIntent.getStringExtra(name);
+    } else if (def instanceof Integer) {
+      return mIntent.getDoubleExtra(name, (Integer)def);
+    } else if (def instanceof Double) {
+      return mIntent.getDoubleExtra(name, (Double)def);
+    } else if (def instanceof Boolean) {
+      return mIntent.getBooleanExtra(name, (Boolean)def);
+    } else {
+      throw new RuntimeException("Unknown parameter type: defaultValue.");
+    }
   }
 
   private void postEvent(String name, Bundle bundle) {
@@ -568,17 +662,18 @@ public class AndroidFacade {
     mEventBuffer.add(event);
   }
 
+  @Rpc(
+    description = "Receives the most recent event (i.e. location or sensor update, etc.",
+    returns = "Map of event properties."
+  )
   public Bundle receiveEvent() {
     return mEventBuffer.get();
   }
 
-  public void onDestroy() {
-    stopSensing();
-    stopLocating();
-    stopTrackingPhoneState();
-    mTts.shutdown();
-  }
-
+  @Rpc(
+    description = "Returns a list of packages running activities or services.",
+    returns = "List of packages running activities."
+  )
   public Bundle getRunningPackages() {
     Set<String> runningPackages = new HashSet<String>();
     List<ActivityManager.RunningAppProcessInfo> appProcesses =
@@ -596,24 +691,21 @@ public class AndroidFacade {
     return result;
   }
 
-  public void forceStopPackage(String packageName) {
+  @Rpc(description = "Force stops a package.")
+  public void forceStopPackage(@RpcParameter("package name") String packageName) {
     mActivityManager.restartPackage(packageName);
   }
-  
-  
-  /**
-   * Launches an activity that sends an e-mail message to a given recipient.
-   * 
-   * @param recipientAddress recipient's e-mail address
-   * @param subject message subject
-   * @param body message body
-   */
-  public void sendMail(final String recipientAddress, final String subject, final String body) {
-	final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-	emailIntent.setType("plain/text");
-	emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] { recipientAddress } );
-	emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
-	emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
-	mContext.startActivity(emailIntent);
+
+  @Rpc(description = "Launches an activity that sends an e-mail message to a given recipient.")
+  public void sendMail(
+      @RpcParameter("the recipient's e-mail address") final String recipientAddress,
+      @RpcParameter("subject of the e-mail") final String subject,
+      @RpcParameter("message body") final String body) {
+    final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+    emailIntent.setType("plain/text");
+    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] {recipientAddress});
+    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+    emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+    mContext.startActivity(emailIntent);
   }
 }
