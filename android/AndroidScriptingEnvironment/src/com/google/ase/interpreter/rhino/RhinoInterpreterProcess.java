@@ -21,33 +21,22 @@ import java.io.File;
 import com.google.ase.Constants;
 import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
-import com.google.ase.jsonrpc.JsonRpcServer;
 
 public class RhinoInterpreterProcess extends InterpreterProcess {
   private final static String RHINO_BIN =
       "dalvikvm -Xss128k "
           + "-classpath /sdcard/ase/extras/rhino/rhino1_7R2-dex.jar org.mozilla.javascript.tools.shell.Main -O -1";
 
-  private final int mAndroidProxyPort;
-  
-  private final JsonRpcServer mRpcServer;
-
   public RhinoInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript);
-    
-    mRpcServer = JsonRpcServer.create(facades);
-    mAndroidProxyPort = mRpcServer.startLocal().getPort();
-
+    super(launchScript, facades);
     buildEnvironment();
   }
 
   private void buildEnvironment() {
     File dalvikCache = new File(Constants.ASE_DALVIK_CACHE_ROOT);
-
     if (!dalvikCache.exists()) {
       dalvikCache.mkdirs();
     }
-
     mEnvironment.put("ANDROID_DATA", Constants.SDCARD_ASE_ROOT);
     mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
   }
@@ -55,16 +44,9 @@ public class RhinoInterpreterProcess extends InterpreterProcess {
   @Override
   protected void writeInterpreterCommand() {
     print(RHINO_BIN);
-
     if (mLaunchScript != null) {
       print(" " + mLaunchScript);
     }
-
     print("\n");
-  }
-
-  @Override
-  protected void shutdown() {
-    mRpcServer.shutdown();
   }
 }

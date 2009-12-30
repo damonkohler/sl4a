@@ -21,21 +21,14 @@ import java.io.File;
 import com.google.ase.Constants;
 import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
-import com.google.ase.jsonrpc.JsonRpcServer;
 
 public class JRubyInterpreterProcess extends InterpreterProcess {
 
   private final static String JRUBY_BIN = "dalvikvm -Xss128k " +
       "-classpath /sdcard/ase/extras/jruby/jruby-complete-1.2.0RC1-dex.jar org.jruby.Main -X-C";
 
-  private final int mAndroidProxyPort;
-
-  private final JsonRpcServer mRpcServer;
-
   public JRubyInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript);
-    mRpcServer = JsonRpcServer.create(facades);
-    mAndroidProxyPort = mRpcServer.startLocal().getPort();
+    super(launchScript, facades);
     buildEnvironment();
   }
 
@@ -45,7 +38,6 @@ public class JRubyInterpreterProcess extends InterpreterProcess {
       dalvikCache.mkdirs();
     }
     mEnvironment.put("ANDROID_DATA", Constants.SDCARD_ASE_ROOT);
-    mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
   }
 
   @Override
@@ -59,10 +51,4 @@ public class JRubyInterpreterProcess extends InterpreterProcess {
     }
     print("\n");
   }
-
-  @Override
-  protected void shutdown() {
-    mRpcServer.shutdown();
-  }
-
 }
