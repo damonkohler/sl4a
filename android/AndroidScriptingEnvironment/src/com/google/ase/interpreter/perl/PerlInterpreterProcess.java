@@ -18,19 +18,11 @@ package com.google.ase.interpreter.perl;
 
 import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
-import com.google.ase.jsonrpc.JsonRpcServer;
 
 public class PerlInterpreterProcess extends InterpreterProcess {
 
-  private final int mAndroidProxyPort;
-  
-  private final JsonRpcServer mRpcServer;
-
   public PerlInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript);
-    mRpcServer = JsonRpcServer.create(facades);
-    mAndroidProxyPort = mRpcServer.startLocal().getPort();
-    mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
+    super(launchScript, facades);
   }
 
   @Override
@@ -43,10 +35,5 @@ public class PerlInterpreterProcess extends InterpreterProcess {
       print(" -de 1");
     }
     print("\n");
-  }
-
-  @Override
-  protected void shutdown() {
-    mRpcServer.shutdown();
   }
 }

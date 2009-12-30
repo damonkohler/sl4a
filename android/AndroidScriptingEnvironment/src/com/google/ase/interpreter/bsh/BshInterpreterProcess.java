@@ -1,12 +1,12 @@
 /*
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,20 +21,14 @@ import java.io.File;
 import com.google.ase.Constants;
 import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
-import com.google.ase.jsonrpc.JsonRpcServer;
 
 public class BshInterpreterProcess extends InterpreterProcess {
 
   private final static String BSH_BIN =
       "dalvikvm -classpath /sdcard/ase/extras/bsh/bsh-2.0b4-dx.jar bsh.Interpreter";
-  private final int mAndroidProxyPort;
-  
-  private final JsonRpcServer mRpcServer;
 
   public BshInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript);
-    mRpcServer = JsonRpcServer.create(facades);
-    mAndroidProxyPort = mRpcServer.startLocal().getPort();
+    super(launchScript, facades);
     buildEnvironment();
   }
 
@@ -44,7 +38,6 @@ public class BshInterpreterProcess extends InterpreterProcess {
       dalvikCache.mkdirs();
     }
     mEnvironment.put("ANDROID_DATA", Constants.SDCARD_ASE_ROOT);
-    mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
   }
 
   @Override
@@ -54,10 +47,5 @@ public class BshInterpreterProcess extends InterpreterProcess {
       print(" " + mLaunchScript);
     }
     print("\n");
-  }
-
-  @Override
-  protected void shutdown() {
-    mRpcServer.shutdown();
   }
 }

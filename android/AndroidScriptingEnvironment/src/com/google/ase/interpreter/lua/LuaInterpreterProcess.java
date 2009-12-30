@@ -18,19 +18,11 @@ package com.google.ase.interpreter.lua;
 
 import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
-import com.google.ase.jsonrpc.JsonRpcServer;
 
 public class LuaInterpreterProcess extends InterpreterProcess {
 
-  private final int mAndroidProxyPort;
-  
-  private final JsonRpcServer mRpcServer;
-
   public LuaInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript);
-    mRpcServer = JsonRpcServer.create(facades);
-    mAndroidProxyPort = mRpcServer.startLocal().getPort();
-    mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
+    super(launchScript, facades);
   }
 
   @Override
@@ -41,10 +33,5 @@ public class LuaInterpreterProcess extends InterpreterProcess {
       print(" " + mLaunchScript);
     }
     print("\n");
-  }
-
-  @Override
-  protected void shutdown() {
-    mRpcServer.shutdown();
   }
 }

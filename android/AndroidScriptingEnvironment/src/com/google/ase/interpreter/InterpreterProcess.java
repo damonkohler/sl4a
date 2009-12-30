@@ -33,6 +33,8 @@ import android.util.Log;
 
 import com.google.ase.AseLog;
 import com.google.ase.Exec;
+import com.google.ase.RpcFacade;
+import com.google.ase.jsonrpc.JsonRpcServer;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -55,6 +57,9 @@ public abstract class InterpreterProcess {
   protected PrintStream mOut;
   protected Reader mIn;
 
+  protected final int mAndroidProxyPort;
+  private final JsonRpcServer mRpcServer;
+
   /**
    * Creates a new {@link InterpreterProcess}.
    *
@@ -62,8 +67,11 @@ public abstract class InterpreterProcess {
    * @param launchScript the absolute path to a script that should be launched
    *        with the interpreter
    */
-  public InterpreterProcess(String launchScript) {
+  public InterpreterProcess(String launchScript, RpcFacade... facades) {
     mLaunchScript = launchScript;
+    mRpcServer = JsonRpcServer.create(facades);
+    mAndroidProxyPort = mRpcServer.startLocal().getPort();
+    mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
   }
 
   public Integer getPid() {
@@ -154,9 +162,11 @@ public abstract class InterpreterProcess {
   protected void writeInterpreterCommand() {
     // Should normally be overridden. As is, just the shell will pop up.
   }
-  
+
   /**
    * Called just before the interpreter process is shut down.
    */
-  abstract protected void shutdown();
+  private void shutdown() {
+    mRpcServer.shutdown();
+  }
 }
