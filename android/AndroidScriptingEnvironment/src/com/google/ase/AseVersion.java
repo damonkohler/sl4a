@@ -1,6 +1,6 @@
 package com.google.ase;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
@@ -10,9 +10,9 @@ public class AseVersion {
     // Utility class.
   }
 
-  public static String getVersion(Activity activity) {
+  public static String getVersion(Context context) {
     try {
-      PackageInfo info = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
+      PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
       return info.versionName;
     } catch (PackageManager.NameNotFoundException e) {
       AseLog.e("Package name not found", e);
