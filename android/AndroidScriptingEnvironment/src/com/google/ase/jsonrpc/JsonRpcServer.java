@@ -46,7 +46,6 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.google.ase.AseLog;
 import com.google.ase.RpcFacade;
 
 /**
@@ -397,7 +396,6 @@ public class JsonRpcServer {
     int id = jsonRequest.getInt("id");
     String methodName = jsonRequest.getString("method");
     JSONArray params = jsonRequest.getJSONArray("params");
-    AseLog.e(methodName);
     if (methodName.equals("_help")) {
       return help(id, params);
     }
