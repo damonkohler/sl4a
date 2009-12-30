@@ -18,7 +18,7 @@ package com.google.ase.interpreter.sh;
 
 import java.io.File;
 
-import com.google.ase.AndroidFacade;
+import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -40,8 +40,8 @@ public class ShInterpreter extends Interpreter {
   }
 
   @Override
-  public InterpreterProcess buildProcess(AndroidFacade facade, String scriptName) {
-    return new ShInterpreterProcess(facade, scriptName);
+  public InterpreterProcess buildProcess(String scriptName, RpcFacade... facades) {
+    return new ShInterpreterProcess(scriptName, facades);
   }
 
   @Override

@@ -16,20 +16,20 @@
 
 package com.google.ase.interpreter.sh;
 
-import com.google.ase.AndroidFacade;
-import com.google.ase.AndroidProxy;
+import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
 public class ShInterpreterProcess extends InterpreterProcess {
 
-  private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;
+  
+  private final JsonRpcServer mRpcServer;
 
-  public ShInterpreterProcess(AndroidFacade facade, String launchScript) {
-    super(facade, launchScript);
-    mAndroidProxy = new AndroidProxy(facade);
-    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).startLocal().getPort();
+  public ShInterpreterProcess(String launchScript, RpcFacade... facades) {
+    super(launchScript);
+    mRpcServer = JsonRpcServer.create(facades);
+    mAndroidProxyPort = mRpcServer.startLocal().getPort();
     buildEnvironment();
   }
 
@@ -44,4 +44,8 @@ public class ShInterpreterProcess extends InterpreterProcess {
     }
   }
 
+  @Override
+  protected void shutdown() {
+    mRpcServer.shutdown();
+  }
 }

@@ -18,7 +18,7 @@ package com.google.ase.interpreter.rhino;
 
 import java.io.File;
 
-import com.google.ase.AndroidFacade;
+import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -44,9 +44,8 @@ public class RhinoInterpreter extends Interpreter {
 	}
 
 	@Override
-	public InterpreterProcess buildProcess(AndroidFacade facade,
-			String scriptName) {
-		return new RhinoInterpreterProcess(facade, scriptName);
+	public InterpreterProcess buildProcess(String scriptName, RpcFacade... facades) {
+		return new RhinoInterpreterProcess(scriptName, facades);
 	}
 
 	@Override

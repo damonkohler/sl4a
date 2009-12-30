@@ -37,6 +37,7 @@ import com.google.ase.interpreter.InterpreterUtils;
 public class ScriptService extends Service {
 
   private AndroidFacade mAndroidFacade;
+  private AndroidMediaFacade mAndroidMediaFacade;
   private InterpreterProcess mProcess;
   private String mScriptName;
   private NotificationManager mNotificationManager;
@@ -66,8 +67,9 @@ public class ScriptService extends Service {
     String scriptPath = ScriptStorageAdapter.getScript(mScriptName).getAbsolutePath();
 
     mAndroidFacade = new AndroidFacade(this, new Handler(), intent);
+    mAndroidMediaFacade = new AndroidMediaFacade();
     mProcess = InterpreterUtils.getInterpreterByName(interpreterName).buildProcess(
-        mAndroidFacade, scriptPath);
+        scriptPath, mAndroidFacade, mAndroidMediaFacade);
     mProcess.start();
     Toast.makeText(this, mScriptName + " service started.", Toast.LENGTH_SHORT).show();
   }
@@ -75,7 +77,6 @@ public class ScriptService extends Service {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    mAndroidFacade.onDestroy();
     mProcess.kill();
     mNotificationManager.cancelAll();
     Toast.makeText(this, mScriptName + " service stopped.", Toast.LENGTH_SHORT).show();

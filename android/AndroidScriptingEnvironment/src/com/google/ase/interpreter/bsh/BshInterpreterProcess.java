@@ -1,12 +1,12 @@
 /*
-
- *
+ * 
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -18,9 +18,8 @@ package com.google.ase.interpreter.bsh;
 
 import java.io.File;
 
-import com.google.ase.AndroidFacade;
-import com.google.ase.AndroidProxy;
 import com.google.ase.Constants;
+import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
@@ -28,13 +27,14 @@ public class BshInterpreterProcess extends InterpreterProcess {
 
   private final static String BSH_BIN =
       "dalvikvm -classpath /sdcard/ase/extras/bsh/bsh-2.0b4-dx.jar bsh.Interpreter";
-  private final AndroidProxy mAndroidProxy;
   private final int mAndroidProxyPort;
+  
+  private final JsonRpcServer mRpcServer;
 
-  public BshInterpreterProcess(AndroidFacade facade, String launchScript) {
-    super(facade, launchScript);
-    mAndroidProxy = new AndroidProxy(facade);
-    mAndroidProxyPort = new JsonRpcServer(mAndroidProxy).startLocal().getPort();
+  public BshInterpreterProcess(String launchScript, RpcFacade... facades) {
+    super(launchScript);
+    mRpcServer = JsonRpcServer.create(facades);
+    mAndroidProxyPort = mRpcServer.startLocal().getPort();
     buildEnvironment();
   }
 
@@ -56,4 +56,8 @@ public class BshInterpreterProcess extends InterpreterProcess {
     print("\n");
   }
 
+  @Override
+  protected void shutdown() {
+    mRpcServer.shutdown();
+  }
 }
