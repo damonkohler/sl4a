@@ -1,11 +1,35 @@
+/*
+ * Copyright (C) 2009 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.google.ase.jsonrpc;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * A helper class that helps extract descriptions and default values from
+ * parameter annotations.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ * 
+ */
 public class RpcAnnotationHelper {
-  /** This is a utility class.  We don't want instances of it */
-  private RpcAnnotationHelper() {}
-  
+  /** This is a utility class. We don't want instances of it */
+  private RpcAnnotationHelper() {
+  }
+
   /**
    * Extracts the parameter description from its annotations.
    * 
@@ -28,10 +52,10 @@ public class RpcAnnotationHelper {
         return ((RpcOptionalString) a).value();
       }
     }
-    
+
     return "-";
   }
-  
+
   /**
    * Returns the default value for a specific parameter.
    * 
@@ -53,10 +77,10 @@ public class RpcAnnotationHelper {
         return null;
       }
     }
-    
+
     return null;
   }
-  
+
   /**
    * Determines whether or not this parameter is optional.
    * 
@@ -78,7 +102,7 @@ public class RpcAnnotationHelper {
         return true;
       }
     }
-    
+
     return false;
   }
 }
