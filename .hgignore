@@ -1,6 +1,7 @@
 syntax: glob
 *.class
 *.dex
+*.orig
 *.swp
 android/AndroidScriptingEnvironment/bin/*
 android/AndroidScriptingEnvironment/gen/*
