@@ -16,19 +16,18 @@
 
 package com.google.ase.interpreter.sh;
 
-import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.interpreter.InterpreterUtils;
 
 public class ShInterpreterProcess extends InterpreterProcess {
 
-  public ShInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript, facades);
-    buildEnvironment();
+  public ShInterpreterProcess(String launchScript, int port) {
+    super(launchScript, port);
   }
 
-  private void buildEnvironment() {
+  @Override
+  protected void buildEnvironment() {
     // Add bin directories for all interpreters to the path.
     StringBuilder path = new StringBuilder();
     for (Interpreter interpreter : InterpreterUtils.getInstalledInterpreters()) {

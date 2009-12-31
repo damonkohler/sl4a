@@ -22,7 +22,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 
@@ -36,8 +35,7 @@ import com.google.ase.interpreter.InterpreterUtils;
  */
 public class ScriptService extends Service {
 
-  private AndroidFacade mAndroidFacade;
-  private AndroidMediaFacade mAndroidMediaFacade;
+  private AndroidProxy mAndroidProxy;
   private InterpreterProcess mProcess;
   private String mScriptName;
   private NotificationManager mNotificationManager;
@@ -66,10 +64,10 @@ public class ScriptService extends Service {
     String interpreterName = InterpreterUtils.getInterpreterForScript(mScriptName).getName();
     String scriptPath = ScriptStorageAdapter.getScript(mScriptName).getAbsolutePath();
 
-    mAndroidFacade = new AndroidFacade(this, new Handler(), intent);
-    mAndroidMediaFacade = new AndroidMediaFacade();
-    mProcess = InterpreterUtils.getInterpreterByName(interpreterName).buildProcess(
-        scriptPath, mAndroidFacade, mAndroidMediaFacade);
+    mAndroidProxy = new AndroidProxy(this, intent);
+    int port = mAndroidProxy.startLocal().getPort();
+    mProcess =
+        InterpreterUtils.getInterpreterByName(interpreterName).buildProcess(scriptPath, port);
     mProcess.start();
     Toast.makeText(this, mScriptName + " service started.", Toast.LENGTH_SHORT).show();
   }
@@ -77,8 +75,15 @@ public class ScriptService extends Service {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    mProcess.kill();
-    mNotificationManager.cancelAll();
+    if (mProcess != null) {
+      mProcess.kill();
+    }
+    if (mAndroidProxy != null) {
+      mAndroidProxy.shutdown();
+    }
+    if (mNotificationManager != null) {
+      mNotificationManager.cancelAll();
+    }
     Toast.makeText(this, mScriptName + " service stopped.", Toast.LENGTH_SHORT).show();
   }
 

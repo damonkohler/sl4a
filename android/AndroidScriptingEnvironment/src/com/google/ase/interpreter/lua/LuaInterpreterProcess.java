@@ -16,13 +16,12 @@
 
 package com.google.ase.interpreter.lua;
 
-import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
 
 public class LuaInterpreterProcess extends InterpreterProcess {
 
-  public LuaInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript, facades);
+  public LuaInterpreterProcess(String launchScript, int port) {
+    super(launchScript, port);
   }
 
   @Override

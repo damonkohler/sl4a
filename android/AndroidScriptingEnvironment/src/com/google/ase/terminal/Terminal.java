@@ -26,7 +26,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -34,8 +33,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.google.ase.AndroidFacade;
-import com.google.ase.AndroidMediaFacade;
+import com.google.ase.AndroidProxy;
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.AsePreferences;
@@ -118,9 +116,9 @@ public class Terminal extends Activity {
 
   private String mScriptPath;
   private InterpreterProcess mInterpreterProcess;
-  private AndroidFacade mAndroidFacade;
-  private AndroidMediaFacade mAndroidMediaFacade;
   private String mInterpreterName;
+
+  private AndroidProxy mAndroidProxy;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -171,12 +169,11 @@ public class Terminal extends Activity {
 
   private void startInterpreter() {
     AseLog.v("Starting interpreter.");
-    mAndroidFacade = new AndroidFacade(this, new Handler(), getIntent());
-    mAndroidMediaFacade = new AndroidMediaFacade();
     Interpreter interpreter = InterpreterUtils.getInterpreterByName(mInterpreterName);
     if (interpreter != null) {
-      mInterpreterProcess = interpreter.buildProcess(mScriptPath, mAndroidFacade,
-          mAndroidMediaFacade);
+      mAndroidProxy = new AndroidProxy(this, getIntent());
+      int port = mAndroidProxy.startLocal().getPort();
+      mInterpreterProcess = interpreter.buildProcess(mScriptPath, port);
     } else {
       Toast.makeText(this, "InterpreterInterface not found.", Toast.LENGTH_SHORT).show();
       finish();
@@ -375,7 +372,7 @@ public class Terminal extends Activity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    mAndroidFacade.onActivityResult(requestCode, resultCode, data);
+    mAndroidProxy.onActivityResult(requestCode, resultCode, data);
   }
 
   @Override
@@ -383,6 +380,9 @@ public class Terminal extends Activity {
     super.onDestroy();
     if (mInterpreterProcess != null) {
       mInterpreterProcess.kill();
+    }
+    if (mAndroidProxy != null) {
+      mAndroidProxy.shutdown();
     }
     Toast.makeText(this, "Terminal killed.", Toast.LENGTH_SHORT).show();
   }

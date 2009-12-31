@@ -19,7 +19,6 @@ package com.google.ase.interpreter.jruby;
 import java.io.File;
 
 import com.google.ase.Constants;
-import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
 
 public class JRubyInterpreterProcess extends InterpreterProcess {
@@ -27,12 +26,12 @@ public class JRubyInterpreterProcess extends InterpreterProcess {
   private final static String JRUBY_BIN = "dalvikvm -Xss128k " +
       "-classpath /sdcard/ase/extras/jruby/jruby-complete-1.2.0RC1-dex.jar org.jruby.Main -X-C";
 
-  public JRubyInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript, facades);
-    buildEnvironment();
+  public JRubyInterpreterProcess(String launchScript, int port) {
+    super(launchScript, port);
   }
 
-  private void buildEnvironment() {
+  @Override
+  protected void buildEnvironment() {
     File dalvikCache = new File(Constants.ASE_DALVIK_CACHE_ROOT);
     if (!dalvikCache.exists()) {
       dalvikCache.mkdirs();

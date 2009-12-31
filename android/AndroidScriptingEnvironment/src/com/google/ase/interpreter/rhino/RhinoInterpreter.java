@@ -1,10 +1,10 @@
 /*
  * Copyright 2009 Brice Lambson
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -18,7 +18,6 @@ package com.google.ase.interpreter.rhino;
 
 import java.io.File;
 
-import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -44,8 +43,8 @@ public class RhinoInterpreter extends Interpreter {
 	}
 
 	@Override
-	public InterpreterProcess buildProcess(String scriptName, RpcFacade... facades) {
-		return new RhinoInterpreterProcess(scriptName, facades);
+  public InterpreterProcess buildProcess(String scriptName, int port) {
+    return new RhinoInterpreterProcess(scriptName, port);
 	}
 
 	@Override
