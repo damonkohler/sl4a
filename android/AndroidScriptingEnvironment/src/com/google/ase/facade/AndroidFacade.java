@@ -57,7 +57,6 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.ase.AseException;
 import com.google.ase.AseLog;
 import com.google.ase.CircularBuffer;
 import com.google.ase.R;
@@ -228,11 +227,6 @@ public class AndroidFacade implements RpcReceiver {
     mTelephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
     mEventBuffer = new CircularBuffer<Bundle>(EVENT_BUFFER_LIMIT);
     mTts = new TextToSpeechFacade(context);
-  }
-
-  @Rpc(description = "Speaks the provided message via TTS")
-  public void speak(@RpcParameter("message to speak") String message) throws AseException {
-    mTts.speak(message);
   }
 
   @Rpc(description = "Starts tracking phone state.")
