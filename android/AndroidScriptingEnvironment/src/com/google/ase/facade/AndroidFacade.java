@@ -267,7 +267,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Starts collecting location data.")
   public void startLocating(
-      @RpcDefaultString(description = "String accuracy (\"fine\", \"coards\")", defaultValue = "coarse") String accuracy,
+      @RpcDefaultString(description = "String accuracy (\"fine\", \"coarse\")", defaultValue = "coarse") String accuracy,
       @RpcDefaultInteger(description = "minimum time between updates (milli-seconds)", defaultValue = 60000) Integer minUpdateTimeMs,
       @RpcDefaultInteger(description = "minimum distance between updates (meters)", defaultValue = 30) Integer minUpdateDistanceM) {
     Criteria criteria = new Criteria();

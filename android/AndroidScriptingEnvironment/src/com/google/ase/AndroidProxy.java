@@ -17,6 +17,7 @@
 package com.google.ase;
 
 import java.net.InetSocketAddress;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import com.google.ase.facade.AndroidFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.TextToSpeechFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
+import com.google.ase.jsonrpc.RpcInfo;
 
 public class AndroidProxy {
 
@@ -36,7 +38,7 @@ public class AndroidProxy {
     mAndroidFacade = new AndroidFacade(context, new Handler(), intent);
     MediaFacade mediaFacade = new MediaFacade();
     TextToSpeechFacade ttsFacade = new TextToSpeechFacade(context);
-    mJsonRpcServer = JsonRpcServer.create(mAndroidFacade, mediaFacade, ttsFacade);
+    mJsonRpcServer = new JsonRpcServer(mAndroidFacade, mediaFacade, ttsFacade);
   }
 
   public InetSocketAddress startLocal() {
@@ -49,6 +51,10 @@ public class AndroidProxy {
 
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     mAndroidFacade.onActivityResult(requestCode, resultCode, data);
+  }
+
+  public Map<String, RpcInfo> getKnownRpcs() {
+    return mJsonRpcServer.getKnownRpcs();
   }
 
   public void shutdown() {

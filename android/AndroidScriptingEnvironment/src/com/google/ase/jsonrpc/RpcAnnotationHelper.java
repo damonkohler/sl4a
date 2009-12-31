@@ -21,9 +21,9 @@ import java.lang.annotation.Annotation;
 /**
  * A helper class that helps extract descriptions and default values from
  * parameter annotations.
- * 
+ *
  * @author Felix Arends (felix.arends@gmail.com)
- * 
+ *
  */
 public class RpcAnnotationHelper {
   /** This is a utility class. We don't want instances of it */
@@ -32,11 +32,11 @@ public class RpcAnnotationHelper {
 
   /**
    * Extracts the parameter description from its annotations.
-   * 
+   *
    * @param annotations the annotations of the parameter
    * @return the description of the parameter
    */
-  public static String getRPCDescription(Annotation[] annotations) {
+  public static String getDescription(Annotation[] annotations) {
     for (Annotation a : annotations) {
       if (a instanceof RpcParameter) {
         return ((RpcParameter) a).value();
@@ -52,13 +52,12 @@ public class RpcAnnotationHelper {
         return ((RpcOptionalString) a).value();
       }
     }
-
-    return "-";
+    return "(no description)";
   }
 
   /**
    * Returns the default value for a specific parameter.
-   * 
+   *
    * @param annotations annotations of the parameter
    */
   public static Object getDefaultValue(Annotation[] annotations) {
@@ -77,13 +76,12 @@ public class RpcAnnotationHelper {
         return null;
       }
     }
-
     return null;
   }
 
   /**
    * Determines whether or not this parameter is optional.
-   * 
+   *
    * @param annotations annotations of the parameter
    */
   public static boolean isOptionalParameter(Annotation[] annotations) {
@@ -102,7 +100,6 @@ public class RpcAnnotationHelper {
         return true;
       }
     }
-
     return false;
   }
 }

@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -94,9 +93,7 @@ public class ScriptEditor extends Activity {
       startActivity(IntentBuilders.buildLaunchIntent(mNameText.getText().toString()));
       finish();
     } else if (item.getItemId() == MenuId.HELP.getId()) {
-      Intent intent = new Intent();
-      intent.setAction(Intent.ACTION_VIEW);
-      intent.setData(Uri.parse(getString(R.string.wiki_url)));
+      Intent intent = new Intent(this, ApiBrowser.class);
       startActivity(intent);
     }
     return super.onOptionsItemSelected(item);

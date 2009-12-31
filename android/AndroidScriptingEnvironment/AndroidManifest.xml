@@ -72,6 +72,8 @@
       </intent-filter>
     </activity>
     <activity
+      android:name=".ApiBrowser" />
+    <activity
       android:name=".interpreter.InterpreterInstaller" />
     <activity
       android:name=".interpreter.InterpreterUninstaller" />
