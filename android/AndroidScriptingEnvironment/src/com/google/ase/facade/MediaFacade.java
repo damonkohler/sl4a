@@ -20,9 +20,9 @@ import java.io.IOException;
 
 import android.media.MediaRecorder;
 
-import com.google.ase.RpcFacade;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcParameter;
+import com.google.ase.jsonrpc.RpcReceiver;
 
 /**
  * A facade for media related RPCs.
@@ -30,7 +30,7 @@ import com.google.ase.jsonrpc.RpcParameter;
  * @author Felix Arends (felix.arends@gmail.com)
  *
  */
-public class MediaFacade implements RpcFacade {
+public class MediaFacade implements RpcReceiver {
   private final MediaRecorder mAudioRecorder = new MediaRecorder();
 
   @Rpc(description = "Records an audio snippet and saves it to the given location.")

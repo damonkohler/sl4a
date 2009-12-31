@@ -46,7 +46,6 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.google.ase.RpcFacade;
 
 /**
  * A JSON RPC server that forwards RPC calls to a specified receiver object.
@@ -191,7 +190,7 @@ public class JsonRpcServer {
   /**
    * The list of RPC receiving objects.
    */
-  private final List<RpcFacade> mReceivers = new ArrayList<RpcFacade>();
+  private final List<RpcReceiver> mReceivers = new ArrayList<RpcReceiver>();
 
   /**
    * The network thread that receives RPCs. 
@@ -208,9 +207,9 @@ public class JsonRpcServer {
   /**
    * Builds a JSON RPC server which forwards RPC calls to the receiving objects.
    */
-  public static JsonRpcServer create(final RpcFacade... receivers) {
+  public static JsonRpcServer create(final RpcReceiver... receivers) {
     JsonRpcServer result = new JsonRpcServer();
-    for (RpcFacade receiver : receivers) {
+    for (RpcReceiver receiver : receivers) {
       result.registerRpcReceiver(receiver);
     }
     return result;
@@ -220,7 +219,7 @@ public class JsonRpcServer {
    * Registers an RPC receiving object with this {@link JsonRpcServer} object.
    * @param receiver the receiving object
    */
-  private void registerRpcReceiver(final RpcFacade receiver) {
+  private void registerRpcReceiver(final RpcReceiver receiver) {
     final Class<?> clazz = receiver.getClass();
     for (Method m : clazz.getMethods()) {
       if (m.getAnnotation(Rpc.class) != null) {
@@ -303,7 +302,7 @@ public class JsonRpcServer {
 
     // Notify all RPC receiving objects.  They may have to clean up some of
     // their state.
-    for (RpcFacade receiver : mReceivers) {
+    for (RpcReceiver receiver : mReceivers) {
       receiver.shutdown();
     }
   }

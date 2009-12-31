@@ -61,7 +61,6 @@ import com.google.ase.AseException;
 import com.google.ase.AseLog;
 import com.google.ase.CircularBuffer;
 import com.google.ase.R;
-import com.google.ase.RpcFacade;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
@@ -69,8 +68,9 @@ import com.google.ase.jsonrpc.RpcDefaultString;
 import com.google.ase.jsonrpc.RpcOptionalObject;
 import com.google.ase.jsonrpc.RpcOptionalString;
 import com.google.ase.jsonrpc.RpcParameter;
+import com.google.ase.jsonrpc.RpcReceiver;
 
-public class AndroidFacade implements RpcFacade {
+public class AndroidFacade implements RpcReceiver {
 
   private static final String TAG = "AndroidFacade";
 

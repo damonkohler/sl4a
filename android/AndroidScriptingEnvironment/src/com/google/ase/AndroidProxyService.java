@@ -27,19 +27,17 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import com.google.ase.jsonrpc.JsonRpcServer;
-
 public class AndroidProxyService extends Service {
   private NotificationManager mNotificationManager;
-  private JsonRpcServer mRpcServer;
+  private AndroidProxy mAndroidProxy;
 
   @Override
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
     boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
-    mRpcServer = AndroidProxyFactory.create(this, intent);
+    mAndroidProxy = new AndroidProxy(this, intent);
     final InetSocketAddress address = usePublicIp ?
-        mRpcServer.startPublic() : mRpcServer.startLocal();
+        mAndroidProxy.startPublic() : mAndroidProxy.startLocal();
 
     mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     String ticker = String.format("ASE running on %s:%d", address.getHostName(), address.getPort());
@@ -58,7 +56,7 @@ public class AndroidProxyService extends Service {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    mRpcServer.shutdown();
+    mAndroidProxy.shutdown();
     mNotificationManager.cancelAll();
     Toast.makeText(this, "ASE network service stopped.", Toast.LENGTH_SHORT).show();
   }

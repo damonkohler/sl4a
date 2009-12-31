@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.interpreter.InterpreterUtils;
-import com.google.ase.jsonrpc.JsonRpcServer;
 
 /**
  * A service that allows scripts to run in the background.
@@ -36,7 +35,7 @@ import com.google.ase.jsonrpc.JsonRpcServer;
  */
 public class ScriptService extends Service {
 
-  private JsonRpcServer mAndroidProxy;
+  private AndroidProxy mAndroidProxy;
   private InterpreterProcess mProcess;
   private String mScriptName;
   private NotificationManager mNotificationManager;
@@ -65,7 +64,7 @@ public class ScriptService extends Service {
     String interpreterName = InterpreterUtils.getInterpreterForScript(mScriptName).getName();
     String scriptPath = ScriptStorageAdapter.getScript(mScriptName).getAbsolutePath();
 
-    mAndroidProxy = AndroidProxyFactory.create(this, intent);
+    mAndroidProxy = new AndroidProxy(this, intent);
     int port = mAndroidProxy.startLocal().getPort();
     mProcess =
         InterpreterUtils.getInterpreterByName(interpreterName).buildProcess(scriptPath, port);
@@ -76,9 +75,15 @@ public class ScriptService extends Service {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    mProcess.kill();
-    mAndroidProxy.shutdown();
-    mNotificationManager.cancelAll();
+    if (mProcess != null) {
+      mProcess.kill();
+    }
+    if (mAndroidProxy != null) {
+      mAndroidProxy.shutdown();
+    }
+    if (mNotificationManager != null) {
+      mNotificationManager.cancelAll();
+    }
     Toast.makeText(this, mScriptName + " service stopped.", Toast.LENGTH_SHORT).show();
   }
 

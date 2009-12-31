@@ -29,11 +29,11 @@ import android.content.Intent;
 
 import com.google.ase.AseException;
 import com.google.ase.AseLog;
-import com.google.ase.RpcFacade;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcParameter;
+import com.google.ase.jsonrpc.RpcReceiver;
 
-public class TextToSpeechFacade implements RpcFacade {
+public class TextToSpeechFacade implements RpcReceiver {
 
   private final Context mContext;
   private final CountDownLatch mLock;
