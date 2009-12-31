@@ -210,11 +210,9 @@ public class JsonRpcServer {
    */
   public static JsonRpcServer create(final RpcFacade... receivers) {
     JsonRpcServer result = new JsonRpcServer();
-
     for (RpcFacade receiver : receivers) {
       result.registerRpcReceiver(receiver);
     }
-    
     return result;
   }
   
@@ -234,9 +232,7 @@ public class JsonRpcServer {
             .createInvoker(m.getGenericParameterTypes())));
       }
     }
-    
     mReceivers.add(receiver);
-    receiver.initialize();
   }
 
   private InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {

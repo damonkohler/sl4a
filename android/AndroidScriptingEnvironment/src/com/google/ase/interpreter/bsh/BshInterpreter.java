@@ -18,7 +18,6 @@ package com.google.ase.interpreter.bsh;
 
 import java.io.File;
 
-import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -45,8 +44,8 @@ public class BshInterpreter extends Interpreter {
   }
 
   @Override
-  public InterpreterProcess buildProcess(String scriptName, RpcFacade... facades) {
-    return new BshInterpreterProcess(scriptName, facades);
+  public InterpreterProcess buildProcess(String scriptName, int port) {
+    return new BshInterpreterProcess(scriptName, port);
   }
 
   @Override

@@ -22,12 +22,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.interpreter.InterpreterUtils;
+import com.google.ase.jsonrpc.JsonRpcServer;
 
 /**
  * A service that allows scripts to run in the background.
@@ -36,8 +36,7 @@ import com.google.ase.interpreter.InterpreterUtils;
  */
 public class ScriptService extends Service {
 
-  private AndroidFacade mAndroidFacade;
-  private AndroidMediaFacade mAndroidMediaFacade;
+  private JsonRpcServer mAndroidProxy;
   private InterpreterProcess mProcess;
   private String mScriptName;
   private NotificationManager mNotificationManager;
@@ -66,10 +65,10 @@ public class ScriptService extends Service {
     String interpreterName = InterpreterUtils.getInterpreterForScript(mScriptName).getName();
     String scriptPath = ScriptStorageAdapter.getScript(mScriptName).getAbsolutePath();
 
-    mAndroidFacade = new AndroidFacade(this, new Handler(), intent);
-    mAndroidMediaFacade = new AndroidMediaFacade();
-    mProcess = InterpreterUtils.getInterpreterByName(interpreterName).buildProcess(
-        scriptPath, mAndroidFacade, mAndroidMediaFacade);
+    mAndroidProxy = AndroidProxyFactory.create(this, intent);
+    int port = mAndroidProxy.startLocal().getPort();
+    mProcess =
+        InterpreterUtils.getInterpreterByName(interpreterName).buildProcess(scriptPath, port);
     mProcess.start();
     Toast.makeText(this, mScriptName + " service started.", Toast.LENGTH_SHORT).show();
   }
@@ -78,6 +77,7 @@ public class ScriptService extends Service {
   public void onDestroy() {
     super.onDestroy();
     mProcess.kill();
+    mAndroidProxy.shutdown();
     mNotificationManager.cancelAll();
     Toast.makeText(this, mScriptName + " service stopped.", Toast.LENGTH_SHORT).show();
   }

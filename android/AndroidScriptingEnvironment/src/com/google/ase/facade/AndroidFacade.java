@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2009 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.facade;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +57,11 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.ase.AseException;
+import com.google.ase.AseLog;
+import com.google.ase.CircularBuffer;
+import com.google.ase.R;
+import com.google.ase.RpcFacade;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
@@ -132,10 +137,6 @@ public class AndroidFacade implements RpcFacade {
   };
 
   @Override
-  public void initialize() {
-  }
-
-  @Override
   public void shutdown() {
     stopSensing();
     stopLocating();
@@ -199,6 +200,16 @@ public class AndroidFacade implements RpcFacade {
     }
   };
 
+  /**
+   * Creates a new AndroidFacade that simplifies the interface to various Android APIs.
+   *
+   * @param context
+   *          is the {@link Context} the APIs will run under
+   * @param handler
+   *          is the {@link Handler} the APIs will use to communicate with the UI thread
+   * @param intent
+   *          is the {@link Intent} that was used to start the {@link Activity}
+   */
   public AndroidFacade(Context context, Handler handler, Intent intent) {
     mContext = context;
     mHandler = handler;
@@ -499,7 +510,6 @@ public class AndroidFacade implements RpcFacade {
     return input.getText().toString();
   }
 
-
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")
   public void notify(
       @RpcParameter("message") String message,
@@ -665,10 +675,13 @@ public class AndroidFacade implements RpcFacade {
 
   /**
    * Launches an activity that sends an e-mail message to a given recipient.
-   * 
-   * @param recipientAddress recipient's e-mail address
-   * @param subject message subject
-   * @param body message body
+   *
+   * @param recipientAddress
+   *          recipient's e-mail address
+   * @param subject
+   *          message subject
+   * @param body
+   *          message body
    */
   @Rpc(description = "Launches an activity that sends an e-mail message to a given recipient.")
   public void sendEmail(
@@ -677,7 +690,7 @@ public class AndroidFacade implements RpcFacade {
       @RpcParameter("message body") final String body) {
     final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
     emailIntent.setType("plain/text");
-    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] {recipientAddress});
+    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] { recipientAddress });
     emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
     emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
     mContext.startActivity(emailIntent);

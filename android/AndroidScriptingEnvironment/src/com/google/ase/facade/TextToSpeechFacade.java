@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2009 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.facade;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -27,7 +27,13 @@ import java.util.concurrent.TimeUnit;
 import android.content.Context;
 import android.content.Intent;
 
-public class TextToSpeechFacade {
+import com.google.ase.AseException;
+import com.google.ase.AseLog;
+import com.google.ase.RpcFacade;
+import com.google.ase.jsonrpc.Rpc;
+import com.google.ase.jsonrpc.RpcParameter;
+
+public class TextToSpeechFacade implements RpcFacade {
 
   private final Context mContext;
   private final CountDownLatch mLock;
@@ -119,7 +125,6 @@ public class TextToSpeechFacade {
       mLock.countDown();
       return null;
     }
-
   }
 
   public TextToSpeechFacade(Context context) {
@@ -134,7 +139,8 @@ public class TextToSpeechFacade {
     }
   }
 
-  public void speak(String message) throws AseException {
+  @Rpc(description = "Speaks the provided message via TTS")
+  public void speak(@RpcParameter("message to speak") String message) throws AseException {
     try {
       if (!mLock.await(10, TimeUnit.SECONDS)) {
         throw new AseException("TTS initialization timed out.");
@@ -145,6 +151,7 @@ public class TextToSpeechFacade {
     mTts.speak(message);
   }
 
+  @Override
   public void shutdown() {
     mTts.shutdown();
   }

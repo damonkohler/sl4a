@@ -19,7 +19,6 @@ package com.google.ase.interpreter;
 import java.io.File;
 
 import com.google.ase.Constants;
-import com.google.ase.RpcFacade;
 
 public abstract class Interpreter {
 
@@ -55,7 +54,7 @@ public abstract class Interpreter {
     return Constants.BASE_INSTALL_URL + getInterpreterExtrasArchiveName();
   }
 
-  public abstract InterpreterProcess buildProcess(String launchScript, RpcFacade... facades);
+  public abstract InterpreterProcess buildProcess(String launchScript, int port);
 
   public abstract File getBinary();
 

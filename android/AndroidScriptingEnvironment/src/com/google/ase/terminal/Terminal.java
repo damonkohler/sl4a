@@ -34,14 +34,14 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.google.ase.AndroidFacade;
-import com.google.ase.AndroidMediaFacade;
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.AsePreferences;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
+import com.google.ase.facade.AndroidFacade;
+import com.google.ase.facade.MediaFacade;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.interpreter.InterpreterUtils;
@@ -119,7 +119,7 @@ public class Terminal extends Activity {
   private String mScriptPath;
   private InterpreterProcess mInterpreterProcess;
   private AndroidFacade mAndroidFacade;
-  private AndroidMediaFacade mAndroidMediaFacade;
+  private MediaFacade mAndroidMediaFacade;
   private String mInterpreterName;
 
   @Override
@@ -172,7 +172,7 @@ public class Terminal extends Activity {
   private void startInterpreter() {
     AseLog.v("Starting interpreter.");
     mAndroidFacade = new AndroidFacade(this, new Handler(), getIntent());
-    mAndroidMediaFacade = new AndroidMediaFacade();
+    mAndroidMediaFacade = new MediaFacade();
     Interpreter interpreter = InterpreterUtils.getInterpreterByName(mInterpreterName);
     if (interpreter != null) {
       mInterpreterProcess = interpreter.buildProcess(mScriptPath, mAndroidFacade,

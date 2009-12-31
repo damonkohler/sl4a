@@ -18,7 +18,6 @@ package com.google.ase.interpreter.jruby;
 
 import java.io.File;
 
-import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -41,8 +40,8 @@ public class JRubyInterpreter extends Interpreter {
   }
 
   @Override
-  public InterpreterProcess buildProcess(String scriptName, RpcFacade... facades) {
-    return new JRubyInterpreterProcess(scriptName, facades);
+  public InterpreterProcess buildProcess(String scriptName, int port) {
+    return new JRubyInterpreterProcess(scriptName, port);
   }
 
   @Override

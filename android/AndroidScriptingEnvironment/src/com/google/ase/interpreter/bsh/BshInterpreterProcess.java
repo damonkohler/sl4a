@@ -19,7 +19,6 @@ package com.google.ase.interpreter.bsh;
 import java.io.File;
 
 import com.google.ase.Constants;
-import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
 
 public class BshInterpreterProcess extends InterpreterProcess {
@@ -27,12 +26,12 @@ public class BshInterpreterProcess extends InterpreterProcess {
   private final static String BSH_BIN =
       "dalvikvm -classpath /sdcard/ase/extras/bsh/bsh-2.0b4-dx.jar bsh.Interpreter";
 
-  public BshInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript, facades);
-    buildEnvironment();
+  public BshInterpreterProcess(String launchScript, int port) {
+    super(launchScript, port);
   }
 
-  private void buildEnvironment() {
+  @Override
+  protected void buildEnvironment() {
     File dalvikCache = new File(Constants.ASE_DALVIK_CACHE_ROOT);
     if (!dalvikCache.exists()) {
       dalvikCache.mkdirs();

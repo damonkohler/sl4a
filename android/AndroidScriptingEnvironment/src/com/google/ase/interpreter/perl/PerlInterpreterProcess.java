@@ -16,13 +16,12 @@
 
 package com.google.ase.interpreter.perl;
 
-import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
 
 public class PerlInterpreterProcess extends InterpreterProcess {
 
-  public PerlInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript, facades);
+  public PerlInterpreterProcess(String launchScript, int port) {
+    super(launchScript, port);
   }
 
   @Override

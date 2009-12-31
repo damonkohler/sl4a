@@ -33,8 +33,6 @@ import android.util.Log;
 
 import com.google.ase.AseLog;
 import com.google.ase.Exec;
-import com.google.ase.RpcFacade;
-import com.google.ase.jsonrpc.JsonRpcServer;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -57,21 +55,17 @@ public abstract class InterpreterProcess {
   protected PrintStream mOut;
   protected Reader mIn;
 
-  protected final int mAndroidProxyPort;
-  private final JsonRpcServer mRpcServer;
-
   /**
    * Creates a new {@link InterpreterProcess}.
    *
-   * @param ap an instance of {@link AndroidProxy} for the script to connect to
-   * @param launchScript the absolute path to a script that should be launched
-   *        with the interpreter
+   * @param launchScript
+   *          the absolute path to a script that should be launched with the interpreter
+   * @param port
+   *          the port that the AndroidProxy is listening on
    */
-  public InterpreterProcess(String launchScript, RpcFacade... facades) {
+  public InterpreterProcess(String launchScript, int port) {
     mLaunchScript = launchScript;
-    mRpcServer = JsonRpcServer.create(facades);
-    mAndroidProxyPort = mRpcServer.startLocal().getPort();
-    mEnvironment.put("AP_PORT", Integer.toString(mAndroidProxyPort));
+    mEnvironment.put("AP_PORT", Integer.toString(port));
   }
 
   public Integer getPid() {
@@ -143,14 +137,13 @@ public abstract class InterpreterProcess {
   }
 
   public void kill() {
-    shutdown();
-
     if (mShellPid != null) {
       Process.killProcess(mShellPid);
     }
   }
 
   protected void exportEnvironment() {
+    buildEnvironment();
     for (Entry<String, String> e : mEnvironment.entrySet()) {
       println(String.format("export %s=\"%s\"", e.getKey(), e.getValue()));
     }
@@ -164,9 +157,9 @@ public abstract class InterpreterProcess {
   }
 
   /**
-   * Called just before the interpreter process is shut down.
+   * Called before execution to allow interpreters to modify the environment map as necessary.
    */
-  private void shutdown() {
-    mRpcServer.shutdown();
+  protected void buildEnvironment() {
+    // Should normally be overridden. As is, the only environment variable will be the AP_PORT.
   }
 }

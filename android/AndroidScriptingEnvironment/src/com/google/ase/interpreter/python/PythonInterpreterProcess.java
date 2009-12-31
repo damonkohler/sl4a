@@ -17,7 +17,6 @@
 package com.google.ase.interpreter.python;
 
 import com.google.ase.Constants;
-import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.InterpreterProcess;
 
 public class PythonInterpreterProcess extends InterpreterProcess {
@@ -25,8 +24,12 @@ public class PythonInterpreterProcess extends InterpreterProcess {
   private final static String PYTHON_HOME = "/data/data/com.google.ase/python";
   private final static String PYTHON_EXTRAS = Constants.SDCARD_ASE_ROOT + "extras/python/";
 
-  public PythonInterpreterProcess(String launchScript, RpcFacade... facades) {
-    super(launchScript, facades);
+  public PythonInterpreterProcess(String launchScript, int port) {
+    super(launchScript, port);
+  }
+
+  @Override
+  protected void buildEnvironment() {
     mEnvironment.put("PYTHONHOME", PYTHON_HOME);
     mEnvironment.put("PYTHONPATH", PYTHON_EXTRAS + ":" + Constants.SCRIPTS_ROOT);
     mEnvironment.put("TEMP", PYTHON_EXTRAS + "tmp/");

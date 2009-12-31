@@ -18,7 +18,6 @@ package com.google.ase.interpreter.sh;
 
 import java.io.File;
 
-import com.google.ase.RpcFacade;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -40,8 +39,8 @@ public class ShInterpreter extends Interpreter {
   }
 
   @Override
-  public InterpreterProcess buildProcess(String scriptName, RpcFacade... facades) {
-    return new ShInterpreterProcess(scriptName, facades);
+  public InterpreterProcess buildProcess(String scriptName, int port) {
+    return new ShInterpreterProcess(scriptName, port);
   }
 
   @Override
