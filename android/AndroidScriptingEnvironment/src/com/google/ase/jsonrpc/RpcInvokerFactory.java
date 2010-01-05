@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2009 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -33,9 +33,9 @@ import com.google.ase.AseLog;
 
 /**
  * A factory for {@link RpcInvoker} objects.
- * 
+ *
  * @author Felix Arends (felix.arends@gmail.com)
- * 
+ *
  */
 public class RpcInvokerFactory {
   private static JSONObject buildJsonBundle(Bundle bundle) throws JSONException {
@@ -82,7 +82,7 @@ public class RpcInvokerFactory {
     }
     return result;
   }
-  
+
   private static <T> JSONObject buildJsonList(final List<T> list) {
     JSONArray result = new JSONArray();
     for (T item : list) {
@@ -97,7 +97,7 @@ public class RpcInvokerFactory {
 
   /**
    * Produces an RpcInvoker implementation for a given list of parameter types.
-   * 
+   *
    * @param parameterTypes an array of the (possibly generic) types of the
    *        parameters
    * @return an {@link RpcInvoker} object that can invoke methods with the given
@@ -120,8 +120,18 @@ public class RpcInvokerFactory {
             // Parameter is specified.
             // NOTE (Felix Arends): we have to add code to deal with generic types here.
             try {
-              args[i] = ((Class <?>)parameterType).cast(parameters.get(i));
-            } catch (ClassCastException e) {
+              // We must handle numbers explicitly because we cannot magically cast between them.
+              if (parameterType == Long.class) {
+                args[i] = parameters.getLong(i);
+              } else if (parameterType == Double.class) {
+                args[i] = parameters.getDouble(i);
+              } else if (parameterType == Integer.class) {
+                args[i] = parameters.getInt(i);
+              } else {
+                // Magically cast the parameter to the right Java type.
+                args[i] = ((Class<?>) parameterType).cast(parameters.get(i));
+              }
+            } catch (Exception e) {
               return JsonRpcResult.error("Argument " + (i + 1) + " should be of type " +
                   ((Class<?>)parameterType).getSimpleName() + ".");
             }
