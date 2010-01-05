@@ -124,9 +124,21 @@ shutil.copytree(os.path.join(gdata_result_path, 'gdata'),
 shutil.copytree(os.path.join(gdata_result_path, 'atom'),
                 'android/python/lib/python2.6/atom')
 
+print 'Installing python-twitter.'
+twitter_path = os.path.join(pwd, 'python-twitter')
+compileall.compile_dir(twitter_path)
+shutil.copy(os.path.join(twitter_path, 'twitter.pyc'),
+            'android/python/lib/python2.6/twitter.pyc')
+
+print 'Installing simplejson.'
+simplejson_path = os.path.join(pwd, 'python-twitter', 'simplejson')
+compileall.compile_dir(simplejson_path)
+shutil.copytree(simplejson_path, 'android/python/lib/python2.6/simplejson')
+
 print 'Removing unecessary files and directories from installation.'
 map(rm, find('android/python/bin', 'python$')[1])
 map(rm, find('android', '\.py$')[0])
+map(rm, find('android', '\.c$')[0])
 map(rm, find('android', 'test')[0])
 
 rm('android/python/share')
