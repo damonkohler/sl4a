@@ -1,4 +1,5 @@
 com.google.ase
+com.google.ase.facade
 com.google.ase.interpreter
 com.google.ase.interpreter.bsh
 com.google.ase.interpreter.jruby
