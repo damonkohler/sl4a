@@ -16,6 +16,8 @@
 
 package com.google.ase.interpreter.python;
 
+import java.io.File;
+
 import com.google.ase.Constants;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -32,7 +34,11 @@ public class PythonInterpreterProcess extends InterpreterProcess {
   protected void buildEnvironment() {
     mEnvironment.put("PYTHONHOME", PYTHON_HOME);
     mEnvironment.put("PYTHONPATH", PYTHON_EXTRAS + ":" + Constants.SCRIPTS_ROOT);
-    mEnvironment.put("TEMP", PYTHON_EXTRAS + "tmp/");
+    File tmp = new File(PYTHON_EXTRAS + "tmp/");
+    if (!tmp.isDirectory()) {
+      tmp.mkdir();
+    }
+    mEnvironment.put("TEMP", tmp.getAbsolutePath());
   }
 
   @Override
