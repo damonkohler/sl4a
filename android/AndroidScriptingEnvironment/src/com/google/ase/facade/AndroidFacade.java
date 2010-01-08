@@ -552,13 +552,13 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Displays a list of contacts to pick from.", returns = "A map of result values.")
-  public void pickContact() {
-    pick("content://contacts/people");
+  public Intent pickContact() {
+    return pick("content://contacts/people");
   }
 
   @Rpc(description = "Displays a list of phone numbers to pick from.", returns = "A map of result values.")
-  public void pickPhone() {
-    pick("content://contacts/phones");
+  public Intent pickPhone() {
+    return pick("content://contacts/phones");
   }
 
   @Rpc(description = "Starts the barcode scanner.", returns = "A map of result values.")
