@@ -19,12 +19,14 @@ package com.google.ase;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
 import com.google.ase.facade.AndroidFacade;
 import com.google.ase.facade.MediaFacade;
+import com.google.ase.facade.SpeechRecognitionFacade;
 import com.google.ase.facade.TextToSpeechFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcInfo;
@@ -33,12 +35,25 @@ public class AndroidProxy {
 
   private final JsonRpcServer mJsonRpcServer;
   private final AndroidFacade mAndroidFacade;
+  private final ActivityLauncher mActivityLauncher;
+
+  /**
+   * The request code used by the ActivityLauncher instance. Arbitrarily chosen. Must not clash with
+   * other request codes used.
+   */
+  private final int LAUNCHER_ACTIVITY_REQUEST_CODE = 43223;
 
   public AndroidProxy(Context context, Intent intent) {
     mAndroidFacade = new AndroidFacade(context, new Handler(), intent);
+    mActivityLauncher = new ActivityLauncher((Activity) context, LAUNCHER_ACTIVITY_REQUEST_CODE);
     MediaFacade mediaFacade = new MediaFacade();
     TextToSpeechFacade ttsFacade = new TextToSpeechFacade(context);
-    mJsonRpcServer = new JsonRpcServer(mAndroidFacade, mediaFacade, ttsFacade);
+    SpeechRecognitionFacade srFacade = new SpeechRecognitionFacade(mActivityLauncher);
+    mJsonRpcServer = new JsonRpcServer(
+        mAndroidFacade,
+        mediaFacade,
+        ttsFacade,
+        srFacade);
   }
 
   public InetSocketAddress startLocal() {
@@ -51,6 +66,7 @@ public class AndroidProxy {
 
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     mAndroidFacade.onActivityResult(requestCode, resultCode, data);
+    mActivityLauncher.onActivityResult(requestCode, resultCode, data);
   }
 
   public Map<String, RpcInfo> getKnownRpcs() {
