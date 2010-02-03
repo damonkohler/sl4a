@@ -28,6 +28,7 @@ import com.google.ase.facade.AndroidFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
 import com.google.ase.facade.TextToSpeechFacade;
+import com.google.ase.facade.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcInfo;
 
@@ -49,11 +50,8 @@ public class AndroidProxy {
     MediaFacade mediaFacade = new MediaFacade();
     TextToSpeechFacade ttsFacade = new TextToSpeechFacade(context);
     SpeechRecognitionFacade srFacade = new SpeechRecognitionFacade(mActivityLauncher);
-    mJsonRpcServer = new JsonRpcServer(
-        mAndroidFacade,
-        mediaFacade,
-        ttsFacade,
-        srFacade);
+    UiFacade uiFacade = new UiFacade(context);
+    mJsonRpcServer = new JsonRpcServer(mAndroidFacade, mediaFacade, ttsFacade, srFacade, uiFacade);
   }
 
   public InetSocketAddress startLocal() {
