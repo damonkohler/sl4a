@@ -165,22 +165,18 @@ public class UiFacade implements RpcReceiver {
   @Rpc(description = "Dismiss dialog with specified ID")
   public void dialogDismiss(@RpcParameter("id") String id) {
     Object dialog = getObjectById(id);
-
     if (dialog != null) {
       // Progress dialog.
       if (dialog instanceof ProgressDialog) {
         ((ProgressDialog) dialog).dismiss();
       } else
-
       // Alert dialog.
       if (dialog instanceof AlertDialog) {
         ((AlertDialog) dialog).dismiss();
       }
-
       // Remove objects from maps so GC can deal with them.
       mObjectMap.remove(id);
       mLockMap.remove(id);
-
       AseLog.v("Dismissed dialog with id: " + id);
     }
   }
@@ -188,12 +184,10 @@ public class UiFacade implements RpcReceiver {
   @Rpc(description = "Allow selected dialog to be shown")
   public void dialogShow(@RpcParameter("id") String id) {
     CountDownLatch show_latch;
-
     if (mLockMap.containsKey(id)) {
       show_latch = mLockMap.get(id);
       show_latch.countDown();
     }
-
     AseLog.v("Allowed dialog ID: " + id + " to show himself");
   }
 
@@ -224,7 +218,6 @@ public class UiFacade implements RpcReceiver {
       if (dialog instanceof ProgressDialog) {
         ((ProgressDialog) dialog).setTitle(title);
       } else
-
       // Alert dialog.
       if (dialog instanceof AlertDialog) {
         ((AlertDialog) dialog).setTitle(title);
@@ -236,13 +229,11 @@ public class UiFacade implements RpcReceiver {
   public void dialogSetMessage(@RpcParameter("id") String id,
       @RpcParameter("message") String message) {
     Object dialog = getObjectById(id);
-
     if (dialog != null) {
       // Progress dialog.
       if (dialog instanceof ProgressDialog) {
         ((ProgressDialog) dialog).setMessage(message);
       } else
-
       // Alert dialog.
       if (dialog instanceof AlertDialog) {
         ((AlertDialog) dialog).setMessage(message);
@@ -329,22 +320,17 @@ class RunnableProgressDialog implements Runnable {
   @Override
   public void run() {
     mDialog = new ProgressDialog(mContext);
-
     mDialog.setProgressStyle(mType);
     mDialog.setCancelable(mCancelable);
-
     mDialog.setTitle(mTitle);
     mDialog.setMessage(mMessage);
-
     // Allow main thread to continue and wait for show signal.
     mLatch.countDown();
-
     try {
       mShowLatch.await();
     } catch (InterruptedException e) {
       AseLog.e("Interrupted while waiting for handler to complete.", e);
     }
-
     mDialog.show();
   }
 }
@@ -360,7 +346,6 @@ class RunnableAlertDialog implements Runnable {
   private final OnClickListener mListener;
   private final CountDownLatch mLatch;
   private final CountDownLatch mShowLatch;
-
   private final String mTitle;
   private final String mMessage;
   private final Boolean mCancelable;
@@ -388,9 +373,7 @@ class RunnableAlertDialog implements Runnable {
   }
 
   /**
-   * Returns created dialog
-   *
-   * @return Object
+   * Returns created dialog.
    */
   public Object getDialog() {
     return mDialog;
@@ -398,21 +381,20 @@ class RunnableAlertDialog implements Runnable {
 
   /**
    * Set button text
-   *
+   * 
    * @param num
+   *          button number
    * @param text
+   *          button text
    */
   public void setButton(Integer num, String text) {
-
     switch (num) {
       case 0:
         mDialog.setButton(text, mListener);
         break;
-
       case 1:
         mDialog.setButton2(text, mListener);
         break;
-
       case 2:
         mDialog.setButton3(text, mListener);
         break;
@@ -425,16 +407,13 @@ class RunnableAlertDialog implements Runnable {
     mDialog.setCancelable(mCancelable);
     mDialog.setTitle(mTitle);
     mDialog.setMessage(mMessage);
-
     // Allow main thread to continue and wait for show signal.
     mLatch.countDown();
-
     try {
       mShowLatch.await();
     } catch (InterruptedException e) {
       AseLog.e("Interrupted while waiting for handler to complete.", e);
     }
-
     mDialog.show();
   }
 }
