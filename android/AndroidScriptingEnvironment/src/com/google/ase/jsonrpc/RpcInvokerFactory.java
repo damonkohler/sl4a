@@ -113,12 +113,9 @@ public class RpcInvokerFactory {
 
         for (int i = 0; i < args.length; i++) {
           final Type parameterType = parameterTypes[i];
-
           Object defaultValue = RpcAnnotationHelper.getDefaultValue(annotations[i]);
-
           if (i < parameters.length()) {
             // Parameter is specified.
-            // NOTE (Felix Arends): we have to add code to deal with generic types here.
             try {
               // We must handle numbers explicitly because we cannot magically cast between them.
               if (parameterType == Long.class) {
@@ -161,7 +158,7 @@ public class RpcInvokerFactory {
     };
   }
 
-  // This static class is not to be instantiated.
   private RpcInvokerFactory() {
+    // This static class is not to be instantiated.
   }
 }
