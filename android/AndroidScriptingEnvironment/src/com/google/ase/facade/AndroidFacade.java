@@ -53,6 +53,7 @@ import android.os.Vibrator;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.SmsManager;
+import android.text.ClipboardManager;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -229,15 +230,26 @@ public class AndroidFacade implements RpcReceiver {
     mTts = new TextToSpeechFacade(context);
   }
 
+  @Rpc(description = "Put text in the clipboard.")
+  public void setClipboard(@RpcParameter("text") String text) {
+    ClipboardManager clipboard =
+        (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+    clipboard.setText(text);
+  }
+
+  @Rpc(description = "Read text from the clipboard.", returns = "The text in the clipboard.")
+  public String getClipboard() {
+    ClipboardManager clipboard =
+        (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+    return clipboard.getText().toString();
+  }
+
   @Rpc(description = "Starts tracking phone state.")
   public void startTrackingPhoneState() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
   }
 
-  /**
-   * Returns the current phone state and incoming number.
-   */
-  @Rpc(description = "Returns the current phone state.", returns = "A map of \"state\" and \"incomingNumber\"")
+  @Rpc(description = "Returns the current phone state and incoming number.", returns = "A map of \"state\" and \"incomingNumber\"")
   public Bundle readPhoneState() {
     return mPhoneState;
   }

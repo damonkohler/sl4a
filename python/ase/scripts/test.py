@@ -22,6 +22,15 @@ def event_loop():
   return False
 
 
+def test_clipboard():
+  previous = droid.getClipboard()['result']
+  msg = 'Hello, world!'
+  droid.setClipboard(msg)
+  echo = droid.getClipboard()['result']
+  droid.setClipboard(previous)
+  return echo == msg
+
+
 def test_gdata():
   # Create a client class which will make HTTP requests with Google Docs server.
   client = gdata.docs.service.DocsService()
