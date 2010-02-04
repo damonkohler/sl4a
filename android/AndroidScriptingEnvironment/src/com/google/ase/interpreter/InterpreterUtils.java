@@ -29,6 +29,7 @@ import com.google.ase.interpreter.perl.PerlInterpreter;
 import com.google.ase.interpreter.python.PythonInterpreter;
 import com.google.ase.interpreter.rhino.RhinoInterpreter;
 import com.google.ase.interpreter.sh.ShInterpreter;
+import com.google.ase.interpreter.tcl.TclInterpreter;
 
 /**
  * Manages and provides access to the set of available interpreters.
@@ -44,7 +45,7 @@ public class InterpreterUtils {
   private final static List<? extends Interpreter> mSupportedInterpreters =
       Arrays.asList(new LuaInterpreter(), new BshInterpreter(), new PythonInterpreter(),
           new ShInterpreter(), new JRubyInterpreter(), new PerlInterpreter(),
-          new RhinoInterpreter());
+          new RhinoInterpreter(), new TclInterpreter());
 
   public static boolean checkInstalled(final String interpreterName) {
     if (interpreterName.equals("sh")) {
