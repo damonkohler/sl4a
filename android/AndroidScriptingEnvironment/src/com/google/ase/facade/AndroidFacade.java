@@ -54,6 +54,8 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.SmsManager;
 import android.text.ClipboardManager;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -488,12 +490,9 @@ public class AndroidFacade implements RpcReceiver {
     }
   }
 
-  @Rpc(description = "Queries the user for a text input.")
-  public String getInput(
-      @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Input") final String title,
-      @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter value:") final String message) {
+  private String getInputFromAlertDialog(final EditText input, final String title,
+      final String message) {
     mLatch = new CountDownLatch(1);
-    final EditText input = new EditText(mContext);
     mHandler.post(new Runnable() {
       public void run() {
         AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
@@ -514,6 +513,24 @@ public class AndroidFacade implements RpcReceiver {
       Log.e(TAG, "Interrupted while waiting for handler to complete.", e);
     }
     return input.getText().toString();
+  }
+
+  @Rpc(description = "Queries the user for a text input.")
+  public String getInput(
+      @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Input") final String title,
+      @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter value:") final String message) {
+    EditText input = new EditText(mContext);
+    return getInputFromAlertDialog(input, title, message);
+  }
+
+  @Rpc(description = "Queries the user for a password.")
+  public String getPassword(
+      @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Password Input") final String title,
+      @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter password:") final String message) {
+    final EditText input = new EditText(mContext);
+    input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+    input.setTransformationMethod(new PasswordTransformationMethod());
+    return getInputFromAlertDialog(input, title, message);
   }
 
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")

@@ -37,7 +37,7 @@ def test_gdata():
 
   # Authenticate using your Google Docs email address and password.
   username = droid.getInput('Username')['result']
-  password = droid.getInput('Password')['result']
+  password = droid.getPassword('Password', 'For ' + username)['result']
   client.ClientLogin(username, password)
 
   # Query the server for an Atom feed containing a list of your documents.
