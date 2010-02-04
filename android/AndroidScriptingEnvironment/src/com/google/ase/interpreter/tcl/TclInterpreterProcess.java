@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2009 Google Inc.
  * Copyright (C) 2010 Pat Thoyts
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
@@ -33,7 +33,7 @@ public class TclInterpreterProcess extends InterpreterProcess {
 
   @Override
   protected void buildEnvironment() {
-    //mEnvironment.put("TCL_LIBRARY", TCL_HOME);
+    mEnvironment.put("TCL_LIBRARY", TCL_HOME);
     mEnvironment.put("TCLLIBPATH", TCL_EXTRAS);
     mEnvironment.put("TCL_SCRIPTS", Constants.SCRIPTS_ROOT);
     mEnvironment.put("HOME", Constants.SDCARD_ROOT);
