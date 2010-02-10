@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2010 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,16 +20,24 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class ScriptKiller extends Activity {
-
+public class ServiceHelper extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (getIntent().getAction().equals(Constants.ACTION_KILL_SERVICE)) {
-      stopService(new Intent(this, ScriptService.class));
-      stopService(new Intent(this, AndroidProxyService.class));
-    }
-    finish();
+    Intent launchIntent = getIntent().getParcelableExtra("launchIntent");
+    startActivityForResult(launchIntent, getIntent().getIntExtra("requestCode", 0));
   }
 
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == 0) {
+      Intent intent = new Intent(this, AseService.class);
+      intent.putExtra("requestCode", requestCode);
+      intent.putExtra("resultCode", resultCode);
+      intent.putExtra("data", data);
+      startService(intent);
+      finish();
+    }
+  }
 }

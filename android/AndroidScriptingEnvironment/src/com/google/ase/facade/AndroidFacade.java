@@ -63,6 +63,7 @@ import android.widget.Toast;
 import com.google.ase.AseLog;
 import com.google.ase.CircularBuffer;
 import com.google.ase.R;
+import com.google.ase.ServiceHelper;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
@@ -347,9 +348,27 @@ public class AndroidFacade implements RpcReceiver {
     }
 
     if (!(mContext instanceof Activity)) {
-      AseLog.e("Invalid context. Activity required.");
-      // TODO(damonkohler): Exception instead?
-      return null;
+      mLatch = new CountDownLatch(1);
+      mHandler.post(new Runnable() {
+        public void run() {
+          try {
+            Intent helper = new Intent(mContext, ServiceHelper.class);
+            helper.putExtra("launchIntent", intent);
+            helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ((Service) mContext).startActivity(helper);
+          } catch (Exception e) {
+            AseLog.e("Failed to launch intent.", e);
+          }
+        }
+      });
+
+      try {
+        mLatch.await();
+      } catch (InterruptedException e) {
+        AseLog.e("Interrupted while waiting for handler to complete.", e);
+      }
+
+      return mStartActivityResult;
     }
 
     // TODO(damonkohler): Make it possible for either ASE or user scripts to

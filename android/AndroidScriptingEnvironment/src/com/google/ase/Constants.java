@@ -17,11 +17,13 @@
 package com.google.ase;
 
 public class Constants {
+
   private Constants() {
     // Utitlity class.
   }
 
   public static final String ACTION_LAUNCH_SCRIPT = "com.google.ase.action.LAUNCH_SCRIPT";
+  public static final String ACTION_LAUNCH_TERMINAL = "com.google.ase.action.LAUNCH_TERMINAL";
   public static final String ACTION_EDIT_SCRIPT = "com.google.ase.action.EDIT_SCRIPT";
   public static final String ACTION_SAVE_SCRIPT = "com.google.ase.action.SAVE_SCRIPT";
   public static final String ACTION_SAVE_AND_RUN_SCRIPT =
@@ -29,6 +31,7 @@ public class Constants {
   public static final String ACTION_KILL_SERVICE = "com.google.ase.action.KILL_SERVICE";
   public static final String ACTION_CANCEL_NOTIFICATION =
       "com.google.ase.action.CANCEL_NOTIFICAITON";
+  public static final String ACTION_ACTIVITY_RESULT = "com.google.ase.action.ACTIVITY_RESULT";
 
   public static final String EXTRA_SCRIPT_NAME = "com.google.ase.extra.SCRIPT_NAME";
   public static final String EXTRA_SCRIPT_CONTENT = "com.google.ase.extra.SCRIPT_CONTENT";
@@ -37,6 +40,7 @@ public class Constants {
   public static final String EXTRA_OUTPUT_PATH = "com.google.ase.extra.OUTPUT_PATH";
   public static final String EXTRA_URL = "com.google.ase.extra.URL";
   public static final String EXTRA_USE_EXTERNAL_IP = "com.google.ase.extra.USE_PUBLIC_IP";
+  public static final String EXTRA_PROXY_PORT = "com.google.ase.extra.PROXY_PORT";
 
   public static final String SDCARD_ROOT = "/sdcard/";
   public static final String DOWNLOAD_ROOT = SDCARD_ROOT;

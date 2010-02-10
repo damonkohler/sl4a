@@ -32,7 +32,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,8 +52,6 @@ import com.google.ase.interpreter.InterpreterUtils;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ScriptManager extends ListActivity {
-
-  private static final String TAG = "ScriptManager";
 
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
@@ -255,18 +252,18 @@ public class ScriptManager extends ListActivity {
     try {
       info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     } catch (ClassCastException e) {
-      Log.e(TAG, "bad menuInfo", e);
+      AseLog.e("Bad menuInfo", e);
       return false;
     }
 
     Map<String, String> scriptItem = (Map<String, String>) getListAdapter().getItem(info.position);
     if (scriptItem == null) {
-      Log.v(TAG, "No script selected.");
+      AseLog.v("No script selected.");
       return false;
     }
 
     final String scriptName = scriptItem.get(Constants.EXTRA_SCRIPT_NAME);
-    Log.v(TAG, "Selected: " + scriptName);
+    AseLog.v("Selected: " + scriptName);
 
     int itemId = item.getItemId();
     if (itemId == MenuId.DELETE.getId()) {
@@ -285,7 +282,8 @@ public class ScriptManager extends ListActivity {
         Toast.makeText(this, "Could not find script.", Toast.LENGTH_SHORT).show();
       }
     } else if (itemId == MenuId.START_SERVICE.getId()) {
-      Intent i = new Intent(this, ScriptService.class);
+      Intent i = new Intent(this, AseService.class);
+      i.setAction(Constants.ACTION_LAUNCH_SCRIPT);
       i.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
       startService(i);
     }
