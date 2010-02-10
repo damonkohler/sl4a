@@ -33,7 +33,6 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.google.ase.AndroidProxy;
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseException;
 import com.google.ase.AseLog;
@@ -114,7 +113,6 @@ public class Terminal extends Activity {
   private SharedPreferences mPrefs;
 
   private InterpreterProcess mInterpreterProcess; // Convenience member.
-  private AndroidProxy mAndroidProxy;
   private ScriptLauncher mLauncher;
 
   @Override
@@ -346,19 +344,10 @@ public class Terminal extends Activity {
   }
 
   @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    mAndroidProxy.onActivityResult(requestCode, resultCode, data);
-  }
-
-  @Override
   protected void onDestroy() {
     super.onDestroy();
     if (mInterpreterProcess != null) {
       mInterpreterProcess.kill();
-    }
-    if (mAndroidProxy != null) {
-      mAndroidProxy.shutdown();
     }
     Toast.makeText(this, "Terminal killed.", Toast.LENGTH_SHORT).show();
   }

@@ -197,7 +197,9 @@ public class ScriptManager extends ListActivity {
       }
       finish();
       return;
-    } else if (Intent.ACTION_PICK.equals(getIntent().getAction())) {
+    }
+
+    if (Intent.ACTION_PICK.equals(getIntent().getAction())) {
       Intent intent = IntentBuilders.buildLaunchIntent(scriptName);
       if (intent != null) {
         setResult(RESULT_OK, intent);
@@ -206,7 +208,9 @@ public class ScriptManager extends ListActivity {
       }
       finish();
       return;
-    } else if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
+    }
+
+    if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
       Intent intent = new Intent();
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
       // Set the description of the action.
@@ -222,7 +226,12 @@ public class ScriptManager extends ListActivity {
       return;
     }
 
-    startActivity(IntentBuilders.buildLaunchIntent(scriptName));
+    // TODO(damonkohler): This isn't ideal. To continue support for Locale plugin, will need to have
+    // a helper activity to launch the service.
+    Intent i = new Intent(this, AseService.class);
+    i.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+    i.setAction(Constants.ACTION_LAUNCH_TERMINAL);
+    startService(i);
   }
 
   /**

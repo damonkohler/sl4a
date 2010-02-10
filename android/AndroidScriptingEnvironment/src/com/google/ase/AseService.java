@@ -89,9 +89,10 @@ public class AseService extends Service {
         new Notification(R.drawable.ase_logo_48, ticker, System.currentTimeMillis());
     Intent notificationIntent = new Intent(this, AseService.class);
     notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
-    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+    PendingIntent contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
     notification.setLatestEventInfo(this, title, message, contentIntent);
     notification.flags = Notification.FLAG_NO_CLEAR;
+    notification.flags = Notification.FLAG_ONGOING_EVENT;
     mNotificationManager.notify(0, notification);
   }
 
