@@ -349,7 +349,7 @@ public class AndroidFacade implements RpcReceiver {
     }
   }
 
-  private Intent startActivityForResult(final Intent intent) {
+  public Intent startActivityForResult(final Intent intent) {
     // Help ensure the service isn't killed to free up memory.
     ((Service) mContext).setForeground(true);
     post(new Runnable() {

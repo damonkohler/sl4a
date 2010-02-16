@@ -28,19 +28,19 @@ import com.google.ase.jsonrpc.RpcReceiver;
 /**
  * A facade containing RPC implementations related to the speech-to-text
  * functionality of Android.
- * 
+ *
  * @author Felix Arends (felix.arends@gmail.com)
- * 
+ *
  */
 public class SpeechRecognitionFacade implements RpcReceiver {
-  private final ActivityLauncher mActivityLauncher;
+  private final AndroidFacade mAndroidFacade;
 
   /**
    * @param activityLauncher
    *          a helper object that launches activities in a blocking manner
    */
-  public SpeechRecognitionFacade(final ActivityLauncher activityLauncher) {
-    this.mActivityLauncher = activityLauncher;
+  public SpeechRecognitionFacade(final AndroidFacade facade) {
+    this.mAndroidFacade = facade;
   }
 
   @Rpc(description = "Recognizes user's speech and returns the most likely result.", returns = "An empty string in case the speech cannot be recongnized.")
@@ -63,7 +63,7 @@ public class SpeechRecognitionFacade implements RpcReceiver {
     }
 
     // Run the activity an retrieve the result.
-    final Intent data = mActivityLauncher.getActivityResult(recognitionIntent);
+    final Intent data = mAndroidFacade.startActivityForResult(recognitionIntent);
 
     // The result consists of an array-list containing one entry for each
     // possible result. The most likely result is the first entry.
