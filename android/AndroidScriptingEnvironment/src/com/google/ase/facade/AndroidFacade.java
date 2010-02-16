@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
+import android.R;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -62,7 +63,6 @@ import android.widget.Toast;
 
 import com.google.ase.AseLog;
 import com.google.ase.CircularBuffer;
-import com.google.ase.R;
 import com.google.ase.ServiceHelper;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
@@ -339,63 +339,42 @@ public class AndroidFacade implements RpcReceiver {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
   }
 
-  @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
-  public Intent startActivityForResult(@RpcParameter("action") final String action,
-      @RpcOptionalString("uri") final String uri) {
-    final Intent intent = new Intent(action);
-    if (uri != null) {
-      intent.setData(Uri.parse(uri));
-    }
-
-    if (!(mContext instanceof Activity)) {
-      mLatch = new CountDownLatch(1);
-      mHandler.post(new Runnable() {
-        public void run() {
-          try {
-            Intent helper = new Intent(mContext, ServiceHelper.class);
-            helper.putExtra("launchIntent", intent);
-            helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ((Service) mContext).startActivity(helper);
-          } catch (Exception e) {
-            AseLog.e("Failed to launch intent.", e);
-          }
-        }
-      });
-
-      try {
-        mLatch.await();
-      } catch (InterruptedException e) {
-        AseLog.e("Interrupted while waiting for handler to complete.", e);
-      }
-
-      return mStartActivityResult;
-    }
-
-    // TODO(damonkohler): Make it possible for either ASE or user scripts to
-    // save and restore state.
-    // This prevents ASE from being closed when the new activity is launched.
-    ((Activity) mContext).setPersistent(true);
-
+  private synchronized void post(Runnable runnable) {
     mLatch = new CountDownLatch(1);
-    mHandler.post(new Runnable() {
-      public void run() {
-        try {
-          ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
-        } catch (Exception e) {
-          AseLog.e("Failed to launch intent.", e);
-        }
-      }
-    });
-
+    mHandler.post(runnable);
     try {
       mLatch.await();
     } catch (InterruptedException e) {
       AseLog.e("Interrupted while waiting for handler to complete.", e);
     }
+  }
 
-    // Restore the default behavior of ASE being closed when additional
-    // resources are required.
-    ((Activity) mContext).setPersistent(false);
+  private void startActivityForResult(final Intent intent) {
+    // Help ensure the service isn't killed to free up memory.
+    ((Service) mContext).setForeground(true);
+    post(new Runnable() {
+      public void run() {
+        try {
+          Intent helper = new Intent(mContext, ServiceHelper.class);
+          helper.putExtra("launchIntent", intent);
+          helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+          ((Service) mContext).startActivity(helper);
+        } catch (Exception e) {
+          AseLog.e("Failed to launch intent.", e);
+        }
+      }
+    });
+    ((Service) mContext).setForeground(false);
+  }
+
+  @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
+  public Intent startActivityForResult(@RpcParameter("action") final String action,
+      @RpcOptionalString("uri") final String uri) {
+    Intent intent = new Intent(action);
+    if (uri != null) {
+      intent.setData(Uri.parse(uri));
+    }
+    startActivityForResult(intent);
     return mStartActivityResult;
   }
 
@@ -405,13 +384,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   public void startActivity(final Intent intent) {
-    if (!(mContext instanceof Activity)) {
-      AseLog.e("Invalid context. Activity required.");
-      // TODO(damonkohler): Exception instead?
-      return;
-    }
-    mLatch = new CountDownLatch(1);
-    mHandler.post(new Runnable() {
+    post(new Runnable() {
       public void run() {
         try {
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -422,11 +395,6 @@ public class AndroidFacade implements RpcReceiver {
         mLatch.countDown();
       }
     });
-    try {
-      mLatch.await();
-    } catch (InterruptedException e) {
-      Log.e(TAG, "Interrupted while waiting for handler to complete.", e);
-    }
   }
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
@@ -444,7 +412,8 @@ public class AndroidFacade implements RpcReceiver {
     startActivity(Intent.ACTION_VIEW, uri);
   }
 
-  public void launch(String className) {
+  @Rpc(description = "Start activity with the given class name (i.e. Browser, Maps, etc.).")
+  public void launch(@RpcParameter("className") String className) {
     Intent intent = new Intent(Intent.ACTION_MAIN);
     String packageName = className.substring(0, className.lastIndexOf("."));
     intent.setClassName(packageName, className);
@@ -481,18 +450,12 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Displays a short-duration Toast notification.")
   public void makeToast(@RpcParameter("message") final String message) {
-    mLatch = new CountDownLatch(1);
-    mHandler.post(new Runnable() {
+    post(new Runnable() {
       public void run() {
         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
         mLatch.countDown();
       }
     });
-    try {
-      mLatch.await();
-    } catch (InterruptedException e) {
-      Log.e(TAG, "Interrupted while waiting for handler to complete.", e);
-    }
   }
 
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -511,8 +474,7 @@ public class AndroidFacade implements RpcReceiver {
 
   private String getInputFromAlertDialog(final EditText input, final String title,
       final String message) {
-    mLatch = new CountDownLatch(1);
-    mHandler.post(new Runnable() {
+    post(new Runnable() {
       public void run() {
         AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
         alert.setTitle(title);
@@ -526,11 +488,6 @@ public class AndroidFacade implements RpcReceiver {
         alert.show();
       }
     });
-    try {
-      mLatch.await();
-    } catch (InterruptedException e) {
-      Log.e(TAG, "Interrupted while waiting for handler to complete.", e);
-    }
     return input.getText().toString();
   }
 
@@ -560,8 +517,7 @@ public class AndroidFacade implements RpcReceiver {
     Notification notification =
         new Notification(R.drawable.ase_logo_48, ticker, System.currentTimeMillis());
     // This is pretty dumb. You _have_ to specify a PendingIntent to be
-    // triggered when the
-    // notification is clicked on. You cannot specify null.
+    // triggered when the notification is clicked on. You cannot specify null.
     Intent notificationIntent = new Intent();
     PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
     notification.setLatestEventInfo(mContext, title, message, contentIntent);
