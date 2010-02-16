@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 
-import com.google.ase.ActivityLauncher;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcOptionalString;
 import com.google.ase.jsonrpc.RpcReceiver;

@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
-import android.R;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -63,6 +62,7 @@ import android.widget.Toast;
 
 import com.google.ase.AseLog;
 import com.google.ase.CircularBuffer;
+import com.google.ase.R;
 import com.google.ase.ServiceHelper;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
@@ -349,7 +349,7 @@ public class AndroidFacade implements RpcReceiver {
     }
   }
 
-  private void startActivityForResult(final Intent intent) {
+  private Intent startActivityForResult(final Intent intent) {
     // Help ensure the service isn't killed to free up memory.
     ((Service) mContext).setForeground(true);
     post(new Runnable() {
@@ -365,6 +365,7 @@ public class AndroidFacade implements RpcReceiver {
       }
     });
     ((Service) mContext).setForeground(false);
+    return mStartActivityResult;
   }
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
@@ -374,8 +375,7 @@ public class AndroidFacade implements RpcReceiver {
     if (uri != null) {
       intent.setData(Uri.parse(uri));
     }
-    startActivityForResult(intent);
-    return mStartActivityResult;
+    return startActivityForResult(intent);
   }
 
   @Rpc(description = "Display content to be picked by URI (e.g. contacts)", returns = "A map of result values.")

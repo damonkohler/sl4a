@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.facade;
 
 import java.util.concurrent.CountDownLatch;
 
