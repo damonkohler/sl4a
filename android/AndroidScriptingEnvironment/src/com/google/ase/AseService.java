@@ -45,27 +45,25 @@ public class AseService extends Service {
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
     // Handle onStart events that should only occur if the service was already started.
-    if (mAndroidProxy != null) {
-      if (intent.getAction().equals(Constants.ACTION_ACTIVITY_RESULT)) {
-        mAndroidProxy.onActivityResult(intent.getIntExtra("requestCode", 0), intent.getIntExtra(
-            "resultCode", Activity.RESULT_CANCELED), intent.<Intent> getParcelableExtra("data"));
-      }
-      if (intent.getAction().equals(Constants.ACTION_KILL_SERVICE)) {
-        stopSelf();
-      }
+    if (intent.getAction().equals(Constants.ACTION_ACTIVITY_RESULT)) {
+      mAndroidProxy.onActivityResult(intent.getIntExtra("requestCode", 0), intent.getIntExtra(
+          "resultCode", Activity.RESULT_CANCELED), intent.<Intent> getParcelableExtra("data"));
+      return;
+    }
+    if (intent.getAction().equals(Constants.ACTION_KILL_SERVICE)) {
+      stopSelf();
       return;
     }
 
     // Handle initial onStart events.
-    StringBuilder message = new StringBuilder();
-
+    StringBuilder notificationMessage = new StringBuilder();
     // Start proxy.
     mAndroidProxy = new AndroidProxy(this, intent);
     boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
     InetSocketAddress address =
         usePublicIp ? mAndroidProxy.startPublic() : mAndroidProxy.startLocal();
-    message.append(String.format("Running network service on: %s:%d", address.getHostName(),
-        address.getPort()));
+    notificationMessage.append(String.format("Running network service on: %s:%d",
+        address.getHostName(), address.getPort()));
 
     // Launch script in the background.
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)) {
@@ -77,10 +75,10 @@ public class AseService extends Service {
         stopSelf();
         return;
       }
-      message.append("\nRunning script service: " + mLauncher.getScriptName());
+      notificationMessage.append("\nRunning script service: " + mLauncher.getScriptName());
     }
 
-    showNotification("ASE Running", "ASE Service", message.toString());
+    showNotification("ASE is running...", "ASE Service", notificationMessage.toString());
 
     // Launch script in a terminal.
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
