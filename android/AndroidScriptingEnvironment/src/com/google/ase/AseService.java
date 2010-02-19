@@ -26,6 +26,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.widget.RemoteViews;
 
 import com.google.ase.terminal.Terminal;
 
@@ -56,12 +57,17 @@ public class AseService extends Service {
     }
 
     // Handle initial onStart events.
+    StringBuilder message = new StringBuilder();
+
+    // Start proxy.
     mAndroidProxy = new AndroidProxy(this, intent);
     boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
     InetSocketAddress address =
         usePublicIp ? mAndroidProxy.startPublic() : mAndroidProxy.startLocal();
-    showNetworkNotification(address);
+    message.append(String.format("Running network service on: %s:%d", address.getHostName(),
+        address.getPort()));
 
+    // Launch script in the background.
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)) {
       mLauncher = new ScriptLauncher(intent, address);
       try {
@@ -71,9 +77,12 @@ public class AseService extends Service {
         stopSelf();
         return;
       }
-      showScriptNotification(mLauncher.getScriptName());
+      message.append("\nRunning script service: " + mLauncher.getScriptName());
     }
 
+    showNotification("ASE Running", "ASE Service", message.toString());
+
+    // Launch script in a terminal.
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
       Intent i = new Intent(this, Terminal.class);
       i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -87,28 +96,17 @@ public class AseService extends Service {
     mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     Notification notification =
         new Notification(R.drawable.ase_logo_48, ticker, System.currentTimeMillis());
+    notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
+    notification.contentView.setTextViewText(R.id.notification_title, title);
+    notification.contentView.setTextViewText(R.id.notification_message, message);
+
     Intent notificationIntent = new Intent(this, AseService.class);
     notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
-    PendingIntent contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
-    notification.setLatestEventInfo(this, title, message, contentIntent);
+    notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+
     notification.flags = Notification.FLAG_NO_CLEAR;
     notification.flags = Notification.FLAG_ONGOING_EVENT;
     mNotificationManager.notify(0, notification);
-  }
-
-  private void showNetworkNotification(InetSocketAddress address) {
-    String ticker = String.format("ASE running on %s:%d", address.getHostName(), address.getPort());
-    String title = "ASE Network Service";
-    String message =
-        String.format("%s:%d - Tap to stop.", address.getHostName(), address.getPort());
-    showNotification(ticker, title, message);
-  }
-
-  private void showScriptNotification(String name) {
-    String ticker = "Running " + name;
-    String title = "ASE Script Service";
-    String message = "Running " + name + " - Tap to stop.";
-    showNotification(ticker, title, message);
   }
 
   @Override
