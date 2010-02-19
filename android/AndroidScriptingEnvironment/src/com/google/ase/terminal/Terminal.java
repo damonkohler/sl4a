@@ -31,12 +31,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseException;
 import com.google.ase.AseLog;
 import com.google.ase.AsePreferences;
+import com.google.ase.AseService;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
@@ -349,6 +349,8 @@ public class Terminal extends Activity {
     if (mInterpreterProcess != null) {
       mInterpreterProcess.kill();
     }
-    Toast.makeText(this, "Terminal killed.", Toast.LENGTH_SHORT).show();
+    Intent intent = new Intent(this, AseService.class);
+    intent.setAction(Constants.ACTION_KILL_SERVICE);
+    startService(intent);
   }
 }
