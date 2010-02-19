@@ -17,7 +17,7 @@
 
 package com.google.ase.terminal;
 
-import java.io.File;
+import java.net.InetSocketAddress;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,16 +33,14 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.google.ase.AndroidProxy;
 import com.google.ase.AseAnalytics;
+import com.google.ase.AseException;
 import com.google.ase.AseLog;
 import com.google.ase.AsePreferences;
 import com.google.ase.Constants;
 import com.google.ase.R;
-import com.google.ase.ScriptStorageAdapter;
-import com.google.ase.interpreter.Interpreter;
+import com.google.ase.ScriptLauncher;
 import com.google.ase.interpreter.InterpreterProcess;
-import com.google.ase.interpreter.InterpreterUtils;
 
 /**
  * A terminal emulator activity.
@@ -114,11 +112,8 @@ public class Terminal extends Activity {
 
   private SharedPreferences mPrefs;
 
-  private String mScriptPath;
-  private InterpreterProcess mInterpreterProcess;
-  private String mInterpreterName;
-
-  private AndroidProxy mAndroidProxy;
+  private InterpreterProcess mInterpreterProcess; // Convenience member.
+  private ScriptLauncher mLauncher;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -134,29 +129,13 @@ public class Terminal extends Activity {
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(R.layout.term);
 
-    String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    if (scriptName != null) {
-      File script = ScriptStorageAdapter.getScript(scriptName);
-      if (script != null) {
-        mScriptPath = script.getAbsolutePath();
-        Interpreter interpreter = InterpreterUtils.getInterpreterForScript(scriptName);
-        if (interpreter != null) {
-          mInterpreterName = interpreter.getName();
-        }
-      } else {
-        Toast.makeText(this, "Script not found.", Toast.LENGTH_SHORT);
-        finish();
-        return;
-      }
-    } else {
-      mInterpreterName = getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
-    }
-
-    if (mInterpreterName == null) {
-      Toast.makeText(this, "No interpreter specified.", Toast.LENGTH_SHORT).show();
+    int port = getIntent().getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
+    if (port == 0) {
+      AseLog.e(this, "No proxy port specified.");
       finish();
       return;
     }
+    mLauncher = new ScriptLauncher(getIntent(), new InetSocketAddress(port));
 
     mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
     mEmulatorView = (EmulatorView) findViewById(EMULATOR_VIEW);
@@ -164,22 +143,18 @@ public class Terminal extends Activity {
     updatePreferences();
     startInterpreter();
 
-    AseAnalytics.track(mInterpreterName);
+    AseAnalytics.track(mLauncher.getInterpreterName());
   }
 
   private void startInterpreter() {
-    AseLog.v("Starting interpreter.");
-    Interpreter interpreter = InterpreterUtils.getInterpreterByName(mInterpreterName);
-    if (interpreter != null) {
-      mAndroidProxy = new AndroidProxy(this, getIntent());
-      int port = mAndroidProxy.startLocal().getPort();
-      mInterpreterProcess = interpreter.buildProcess(mScriptPath, port);
-    } else {
-      Toast.makeText(this, "InterpreterInterface not found.", Toast.LENGTH_SHORT).show();
+    try {
+      mLauncher.launch();
+    } catch (AseException e) {
+      AseLog.e(this, "Failed to launch script.", e);
       finish();
       return;
     }
-    mInterpreterProcess.start();
+    mInterpreterProcess = mLauncher.getProcess();
     mEmulatorView.attachInterpreterProcess(mInterpreterProcess);
   }
 
@@ -311,7 +286,7 @@ public class Terminal extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.terminal, menu);
-    if (mScriptPath == null) {
+    if (mLauncher.getScriptName() == null) {
       menu.removeItem(R.id.terminal_menu_exit_and_edit);
     }
     return true;
@@ -334,8 +309,7 @@ public class Terminal extends Activity {
         break;
       case R.id.terminal_menu_exit_and_edit:
         Intent i = new Intent(Constants.ACTION_EDIT_SCRIPT);
-        // TODO(damonkohler): This is a hacky way of getting the script name.
-        i.putExtra(Constants.EXTRA_SCRIPT_NAME, new File(mScriptPath).getName());
+        i.putExtra(Constants.EXTRA_SCRIPT_NAME, mLauncher.getScriptName());
         startActivity(i);
         finish();
         break;
@@ -370,19 +344,10 @@ public class Terminal extends Activity {
   }
 
   @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    mAndroidProxy.onActivityResult(requestCode, resultCode, data);
-  }
-
-  @Override
   protected void onDestroy() {
     super.onDestroy();
     if (mInterpreterProcess != null) {
       mInterpreterProcess.kill();
-    }
-    if (mAndroidProxy != null) {
-      mAndroidProxy.shutdown();
     }
     Toast.makeText(this, "Terminal killed.", Toast.LENGTH_SHORT).show();
   }

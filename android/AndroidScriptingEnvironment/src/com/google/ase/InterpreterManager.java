@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2009 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -46,7 +46,6 @@ import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterInstaller;
 import com.google.ase.interpreter.InterpreterUninstaller;
 import com.google.ase.interpreter.InterpreterUtils;
-import com.google.ase.terminal.Terminal;
 
 public class InterpreterManager extends ListActivity {
 
@@ -166,7 +165,7 @@ public class InterpreterManager extends ListActivity {
   }
 
   private void launchService(boolean usePublicIp) {
-    Intent intent = new Intent(this, AndroidProxyService.class);
+    Intent intent = new Intent(this, AseService.class);
     intent.putExtra(Constants.EXTRA_USE_EXTERNAL_IP, usePublicIp);
     startService(intent);
   }
@@ -178,10 +177,10 @@ public class InterpreterManager extends ListActivity {
   }
 
   private void launchTerminal(Interpreter interpreter) {
-    Intent i = new Intent(this, Terminal.class);
-    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK & Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+    Intent i = new Intent(this, AseService.class);
+    i.setAction(Constants.ACTION_LAUNCH_TERMINAL);
     i.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
-    startActivity(i);
+    startService(i);
   }
 
   @SuppressWarnings("unchecked")

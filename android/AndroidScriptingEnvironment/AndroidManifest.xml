@@ -2,7 +2,8 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.google.ase"
-  android:versionName="16" android:versionCode="16">
+  android:versionName="16"
+  android:versionCode="16">
   <application
     android:debuggable="true"
     android:icon="@drawable/ase_logo_48"
@@ -55,12 +56,6 @@
       android:name=".terminal.Terminal"
       android:windowSoftInputMode="adjustResize"
       android:configChanges="keyboardHidden|orientation">
-      <intent-filter>
-        <action
-          android:name="com.google.ase.action.LAUNCH_SCRIPT" />
-        <category
-          android:name="android.intent.category.DEFAULT" />
-      </intent-filter>
     </activity>
     <activity
       android:name="ScriptEditor">
@@ -82,13 +77,10 @@
     <activity
       android:name=".interpreter.ZipExtractor" />
     <activity
-      android:name="ScriptKiller" />
+      android:name="ServiceHelper" />
     <service
-      android:name="ScriptService"
-      android:process=":remote" />
-    <service
-      android:name="AndroidProxyService"
-      android:process=":remote" />
+      android:name="AseService">
+    </service>
     <activity
       android:name="InterpreterManager"></activity>
   </application>
@@ -120,10 +112,10 @@
     android:name="android.permission.GET_TASKS"></uses-permission>
   <uses-permission
     android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-  <uses-sdk
-    android:minSdkVersion="3"></uses-sdk>
   <uses-permission
     android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-<uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
-
+  <uses-permission
+    android:name="android.permission.RECORD_AUDIO"></uses-permission>
+  <uses-sdk
+    android:minSdkVersion="3"></uses-sdk>
 </manifest>

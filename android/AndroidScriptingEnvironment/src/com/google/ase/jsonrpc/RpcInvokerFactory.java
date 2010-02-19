@@ -56,8 +56,7 @@ public class RpcInvokerFactory {
     Bundle extras = data.getExtras(); // Add any result data extras.
     if (extras != null) {
       for (String key : extras.keySet()) {
-        // TODO(damonkohler): Extras may not be strings.
-        result.put(key, data.getStringExtra(key));
+        result.put(key, extras.get(key));
       }
     }
     return result;

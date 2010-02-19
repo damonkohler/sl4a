@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2009 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -21,11 +21,13 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.google.ase.AseLog;
+
 /**
  * Represents a JSON RPC result.
- * 
+ *
  * @see http://json-rpc.org/wiki/specification
- * 
+ *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class JsonRpcResult {
@@ -37,7 +39,7 @@ public class JsonRpcResult {
 
   /**
    * Sets the result object. Object must be marshalable to JSON.
-   * 
+   *
    * @see http://www.json.org/javadoc/org/json/JSONObject.html
    */
   public void setResult(Object result) {
@@ -46,7 +48,7 @@ public class JsonRpcResult {
 
   /**
    * Sets the error object. Object must be marshalable to JSON.
-   * 
+   *
    * @see http://www.json.org/javadoc/org/json/JSONObject.html
    */
   public void setError(Object error) {
@@ -62,7 +64,7 @@ public class JsonRpcResult {
       json.put("result", result == null ? JSONObject.NULL : result);
       json.put("error", error == null ? JSONObject.NULL : error);
     } catch (JSONException e) {
-      Log.e(JsonRpcServer.TAG, "Failed to build JSON result object.", e);
+      AseLog.e("Failed to build JSON result object.", e);
     }
     Log.v(TAG, json.toString());
     return json;
