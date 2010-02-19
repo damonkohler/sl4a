@@ -24,15 +24,19 @@ import java.util.List;
 import java.util.Set;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.View.OnLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterUtils;
 import com.google.ase.jsonrpc.RpcInfo;
 
 public class ApiBrowser extends ListActivity {
@@ -52,6 +56,7 @@ public class ApiBrowser extends ListActivity {
     mAdapter = new ApiBrowserAdapter();
     setListAdapter(mAdapter);
     AseAnalytics.trackActivity(this);
+    setResult(RESULT_CANCELED);
   }
 
   private List<RpcInfo> buildRpcInfoList() {
@@ -74,6 +79,19 @@ public class ApiBrowser extends ListActivity {
     }
     mAdapter.notifyDataSetInvalidated();
   }
+  
+  protected boolean onListItemLongClick(View v, int position) {
+    String scriptText = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_TEXT);
+    Interpreter interpreter = InterpreterUtils.getInterpreterByName(
+        getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));
+    String rpcHelpText = interpreter.getRpcText(scriptText, mRpcInfoList.get(position));
+
+    Intent intent = new Intent();
+    intent.putExtra(Constants.EXTRA_RPC_HELP_TEXT, rpcHelpText);
+    setResult(RESULT_OK, intent);
+    finish();
+    return true;
+  }
 
   private class ApiBrowserAdapter extends BaseAdapter {
 
@@ -93,9 +111,17 @@ public class ApiBrowser extends ListActivity {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
       TextView view = new TextView(ApiBrowser.this);
       view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+      view.setLongClickable(true);
+      view.setOnLongClickListener(new OnLongClickListener() {
+        
+        @Override
+        public boolean onLongClick(View v) {
+          return onListItemLongClick(v, position);
+        }
+      });
       if (mExpandedPositions.contains(position)) {
         view.setText(mRpcInfoList.get(position).getHelp());
       } else {
