@@ -30,6 +30,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.View.OnLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -77,7 +78,9 @@ public class ApiBrowser extends ListActivity {
       mExpandedPositions.add(position);
     }
     mAdapter.notifyDataSetInvalidated();
-    
+  }
+  
+  protected boolean onListItemLongClick(View v, int position) {
     String scriptText = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_TEXT);
     Interpreter interpreter = InterpreterUtils.getInterpreterByName(
         getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));
@@ -87,6 +90,7 @@ public class ApiBrowser extends ListActivity {
     intent.putExtra(Constants.EXTRA_RPC_HELP_TEXT, rpcHelpText);
     setResult(RESULT_OK, intent);
     finish();
+    return true;
   }
 
   private class ApiBrowserAdapter extends BaseAdapter {
@@ -107,9 +111,17 @@ public class ApiBrowser extends ListActivity {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
       TextView view = new TextView(ApiBrowser.this);
       view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+      view.setLongClickable(true);
+      view.setOnLongClickListener(new OnLongClickListener() {
+        
+        @Override
+        public boolean onLongClick(View v) {
+          return onListItemLongClick(v, position);
+        }
+      });
       if (mExpandedPositions.contains(position)) {
         view.setText(mRpcInfoList.get(position).getHelp());
       } else {
