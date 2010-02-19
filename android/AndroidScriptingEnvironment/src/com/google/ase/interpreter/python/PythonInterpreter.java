@@ -20,6 +20,7 @@ import java.io.File;
 
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
+import com.google.ase.language.PythonLanguage;
 
 /**
  * Represents the Python interpreter.
@@ -29,6 +30,10 @@ import com.google.ase.interpreter.InterpreterProcess;
 public class PythonInterpreter extends Interpreter {
 
   private final static String PYTHON_BIN = "/data/data/com.google.ase/python/bin/python";
+  
+  public PythonInterpreter() {
+    super(new PythonLanguage());
+  }
 
   @Override
   public String getExtension() {
@@ -48,11 +53,6 @@ public class PythonInterpreter extends Interpreter {
   @Override
   public String getNiceName() {
     return "Python 2.6.2";
-  }
-
-  @Override
-  public String getContentTemplate() {
-    return "import android\n\ndroid = android.Android()";
   }
 
   @Override

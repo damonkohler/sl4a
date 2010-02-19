@@ -20,6 +20,7 @@ import java.io.File;
 
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
+import com.google.ase.language.LuaLanguage;
 
 /**
  * Represents the Lua interpreter.
@@ -29,6 +30,10 @@ import com.google.ase.interpreter.InterpreterProcess;
 public class LuaInterpreter extends Interpreter {
 
   private final static String LUA_BIN = "/data/data/com.google.ase/lua/bin/lua";
+  
+  public LuaInterpreter() {
+    super(new LuaLanguage());
+  }
 
   @Override
   public String getExtension() {
@@ -43,11 +48,6 @@ public class LuaInterpreter extends Interpreter {
   @Override
   public String getNiceName() {
     return "Lua 5.1.4";
-  }
-
-  @Override
-  public String getContentTemplate() {
-    return "require 'android'\n\n";
   }
 
   @Override

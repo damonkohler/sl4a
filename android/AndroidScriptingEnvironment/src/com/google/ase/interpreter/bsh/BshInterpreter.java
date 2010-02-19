@@ -20,8 +20,13 @@ import java.io.File;
 
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
+import com.google.ase.language.BeanShellLanguage;
 
 public class BshInterpreter extends Interpreter {
+  
+  public BshInterpreter() {
+    super(new BeanShellLanguage());
+  }
 
   @Override
   public String getExtension() {
@@ -36,11 +41,6 @@ public class BshInterpreter extends Interpreter {
   @Override
   public String getNiceName() {
     return "BeanShell 2.0b4";
-  }
-
-  @Override
-  public String getContentTemplate() {
-    return "source(\"/sdcard/ase/extras/bsh/android.bsh\");\ndroid = Android();\n";
   }
 
   @Override

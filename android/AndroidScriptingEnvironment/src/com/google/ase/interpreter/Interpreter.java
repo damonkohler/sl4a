@@ -20,41 +20,36 @@ import java.io.File;
 
 import com.google.ase.Constants;
 import com.google.ase.jsonrpc.RpcInfo;
+import com.google.ase.language.Language;
 
 public abstract class Interpreter {
+  
+  private final Language language;
+  
+  public Interpreter(Language language) {
+    this.language = language;
+  }
 
+  public final Language getLanguage() {
+    return language;
+  }
+
+  public final String getContentTemplate() {
+    return getLanguage().getContentTemplate();
+  }
+  
+  public final String getRpcText(String content, RpcInfo rpc) {
+    return getLanguage().getRpcText(content, rpc);
+  }
+  
+  public final String getRpcText(String content, RpcInfo rpc, String[] parameters) {
+    return getLanguage().getRpcText(content, rpc, parameters);
+  }
+  
   public boolean isInstalled() {
     return InterpreterUtils.checkInstalled(getName());
   }
 
-  public String getContentTemplate() {
-    return "";
-  }
-  
-  public final String getRpcText(String content, RpcInfo rpc) {
-    return getRpcText(content, rpc, rpc.getDefaultParameterValues());
-  }
-  
-  public final String getRpcText(String content, RpcInfo rpc, String[] parameters) {
-    return getApplyText(getRpcReceiverName(content), rpc.getName(), parameters);
-  }
-  
-  public String getRpcReceiverName(String content) {
-    return "droid";
-  }
-  
-  public String getApplyText(String receiver, String method, String[] parameters) {
-    StringBuilder result = new StringBuilder(receiver).append('.').append(method).append('(');
-    String separator = "";
-    for (String parameter : parameters) {
-      result.append(separator).append(parameter);
-      separator = ",";
-    }
-    result.append(')');
-    
-    return result.toString();
-  }
-  
   public String getInterpreterArchiveName() {
     return String.format("%s_r%s.zip", getName(), getVersion());
   }
@@ -78,7 +73,7 @@ public abstract class Interpreter {
   public String getInterpreterExtrasArchiveUrl() {
     return Constants.BASE_INSTALL_URL + getInterpreterExtrasArchiveName();
   }
-
+  
   public abstract InterpreterProcess buildProcess(String launchScript, int port);
 
   public abstract File getBinary();
