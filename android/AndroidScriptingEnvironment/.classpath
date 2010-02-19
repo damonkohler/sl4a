@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry excluding="**/.svn*|doc" kind="src" path="src"/>
 	<classpathentry excluding="**/.svn*|doc" kind="src" path="gen"/>
+	<classpathentry excluding="**/.svn*|doc" kind="src" path="test"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="libs/locale_platform.jar"/>
 	<classpathentry kind="lib" path="libs/commons-io-1.4.jar"/>
