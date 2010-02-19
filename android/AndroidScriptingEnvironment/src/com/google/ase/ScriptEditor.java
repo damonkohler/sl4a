@@ -108,11 +108,6 @@ public class ScriptEditor extends Activity {
     return super.onOptionsItemSelected(item);
   }
 
-  private void save() {
-    ScriptStorageAdapter.writeScript(mNameText.getText().toString(),
-        mContentText.getText().toString());
-  }
-  
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
@@ -121,7 +116,7 @@ public class ScriptEditor extends Activity {
       switch (request) {
         case RPC_HELP:
           String rpcText = data.getStringExtra(Constants.EXTRA_RPC_HELP_TEXT);
-          mContentText.append(rpcText);
+          insertContent(rpcText);
           break;
         default:
           break;
@@ -136,4 +131,15 @@ public class ScriptEditor extends Activity {
     }
   }
 
+  private void save() {
+    ScriptStorageAdapter.writeScript(mNameText.getText().toString(),
+        mContentText.getText().toString());
+  }
+  
+  private void insertContent(String text) {
+    int selectionStart = Math.min(mContentText.getSelectionStart(), mContentText.getSelectionEnd());
+    int selectionEnd = Math.max(mContentText.getSelectionStart(), mContentText.getSelectionEnd());
+    mContentText.getEditableText().replace(selectionStart, selectionEnd, text);
+  }
+  
 }
