@@ -153,4 +153,23 @@ public class RpcInfo {
 
     return helpBuilder.toString();
   }
+
+  /**
+   * Returns parameter values suitable for the RPC call text representation.
+   * 
+   * <p>Uses parameter name or default value if it is more meaningful.
+   * 
+   * @return an array of parameter values
+   */
+  public String[] getDefaultParameterValues() {
+    final Annotation[][] parametersAnnotations = mMethod.getParameterAnnotations();
+    final String[] parameters = new String[parametersAnnotations.length];
+    int index = 0;
+    for (Annotation[] parameterAnnotations : parametersAnnotations) {
+      parameters[index] = RpcAnnotationHelper.hasDefaultValue(parameterAnnotations) ?
+          String.valueOf(RpcAnnotationHelper.getDefaultValue(parameterAnnotations)) :
+          RpcAnnotationHelper.getDescription(parameterAnnotations);
+    }
+    return parameters;
+  }
 }

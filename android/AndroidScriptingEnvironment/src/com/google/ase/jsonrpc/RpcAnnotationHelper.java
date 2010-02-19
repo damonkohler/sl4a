@@ -80,6 +80,31 @@ public class RpcAnnotationHelper {
   }
 
   /**
+   * Returns whether the default value is specified
+   * for a specific parameter.
+   *
+   * @param annotations annotations of the parameter
+   */
+  public static boolean hasDefaultValue(Annotation[] annotations) {
+    for (Annotation a : annotations) {
+      if (a instanceof RpcParameter) {
+        return false;
+      } else if (a instanceof RpcDefaultInteger) {
+        return true;
+      } else if (a instanceof RpcDefaultString) {
+        return true;
+      } else if (a instanceof RpcDefaultBoolean) {
+        return true;
+      } else if (a instanceof RpcOptionalObject) {
+        return false;
+      } else if (a instanceof RpcOptionalString) {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Determines whether or not this parameter is optional.
    *
    * @param annotations annotations of the parameter

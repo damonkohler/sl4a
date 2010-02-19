@@ -19,6 +19,7 @@ package com.google.ase.interpreter;
 import java.io.File;
 
 import com.google.ase.Constants;
+import com.google.ase.jsonrpc.RpcInfo;
 
 public abstract class Interpreter {
 
@@ -29,7 +30,31 @@ public abstract class Interpreter {
   public String getContentTemplate() {
     return "";
   }
-
+  
+  public final String getRpcText(String content, RpcInfo rpc) {
+    return getRpcText(content, rpc, rpc.getDefaultParameterValues());
+  }
+  
+  public final String getRpcText(String content, RpcInfo rpc, String[] parameters) {
+    return getApplyText(getRpcReceiverName(content), rpc.getName(), parameters);
+  }
+  
+  public String getRpcReceiverName(String content) {
+    return "droid";
+  }
+  
+  public String getApplyText(String receiver, String method, String[] parameters) {
+    StringBuilder result = new StringBuilder(receiver).append('.').append(method).append('(');
+    String separator = "";
+    for (String parameter : parameters) {
+      result.append(separator).append(parameter);
+      separator = ",";
+    }
+    result.append(')');
+    
+    return result.toString();
+  }
+  
   public String getInterpreterArchiveName() {
     return String.format("%s_r%s.zip", getName(), getVersion());
   }

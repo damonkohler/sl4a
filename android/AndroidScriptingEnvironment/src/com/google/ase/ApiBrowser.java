@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -33,6 +34,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterUtils;
 import com.google.ase.jsonrpc.RpcInfo;
 
 public class ApiBrowser extends ListActivity {
@@ -52,6 +55,7 @@ public class ApiBrowser extends ListActivity {
     mAdapter = new ApiBrowserAdapter();
     setListAdapter(mAdapter);
     AseAnalytics.trackActivity(this);
+    setResult(RESULT_CANCELED);
   }
 
   private List<RpcInfo> buildRpcInfoList() {
@@ -73,6 +77,16 @@ public class ApiBrowser extends ListActivity {
       mExpandedPositions.add(position);
     }
     mAdapter.notifyDataSetInvalidated();
+    
+    String scriptText = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_TEXT);
+    Interpreter interpreter = InterpreterUtils.getInterpreterByName(
+        getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));
+    String rpcHelpText = interpreter.getRpcText(scriptText, mRpcInfoList.get(position));
+
+    Intent intent = new Intent();
+    intent.putExtra(Constants.EXTRA_RPC_HELP_TEXT, rpcHelpText);
+    setResult(RESULT_OK, intent);
+    finish();
   }
 
   private class ApiBrowserAdapter extends BaseAdapter {

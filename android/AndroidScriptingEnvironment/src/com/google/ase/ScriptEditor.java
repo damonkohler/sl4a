@@ -18,6 +18,8 @@ package com.google.ase;
 
 import java.io.IOException;
 
+import com.google.ase.interpreter.InterpreterUtils;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +45,10 @@ public class ScriptEditor extends Activity {
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
+  }
+
+  private static enum RequestCode {
+    RPC_HELP
   }
 
   @Override
@@ -94,7 +100,10 @@ public class ScriptEditor extends Activity {
       finish();
     } else if (item.getItemId() == MenuId.HELP.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
-      startActivity(intent);
+      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME,
+          InterpreterUtils.getInterpreterForScript(mNameText.getText().toString()).getName());
+      intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());
+      startActivityForResult(intent, RequestCode.RPC_HELP.ordinal());
     }
     return super.onOptionsItemSelected(item);
   }
@@ -102,6 +111,29 @@ public class ScriptEditor extends Activity {
   private void save() {
     ScriptStorageAdapter.writeScript(mNameText.getText().toString(),
         mContentText.getText().toString());
+  }
+  
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    RequestCode request = RequestCode.values()[requestCode];
+    if (resultCode == RESULT_OK) {
+      switch (request) {
+        case RPC_HELP:
+          String rpcText = data.getStringExtra(Constants.EXTRA_RPC_HELP_TEXT);
+          mContentText.append(rpcText);
+          break;
+        default:
+          break;
+      }
+    } else {
+      switch (request) {
+        case RPC_HELP:
+          break;
+        default:
+          break;
+      }
+    }
   }
 
 }
