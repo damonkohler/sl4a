@@ -19,8 +19,6 @@ package com.google.ase.jsonrpc;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 import com.google.ase.AseLog;
 
 /**
@@ -31,7 +29,6 @@ import com.google.ase.AseLog;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class JsonRpcResult {
-  private final static String TAG = "JsonRpcResult";
   private Object result;
   private Object error;
   // ID is left out because the current implementation of the server assumes
@@ -66,7 +63,6 @@ public class JsonRpcResult {
     } catch (JSONException e) {
       AseLog.e("Failed to build JSON result object.", e);
     }
-    Log.v(TAG, json.toString());
     return json;
   }
 
@@ -92,11 +88,6 @@ public class JsonRpcResult {
   }
 
   public static JSONObject error(String message, Throwable e) {
-    if (e == null) {
-      Log.e(TAG, message);
-    } else {
-      Log.e(TAG, message, e);
-    }
     JsonRpcResult rpcResult = new JsonRpcResult();
     rpcResult.setError(message);
     return rpcResult.toJson();

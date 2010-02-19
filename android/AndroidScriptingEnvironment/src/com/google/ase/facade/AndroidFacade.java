@@ -61,6 +61,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.ase.AseLog;
+import com.google.ase.AseRuntimeException;
 import com.google.ase.CircularBuffer;
 import com.google.ase.R;
 import com.google.ase.ServiceHelper;
@@ -345,7 +346,9 @@ public class AndroidFacade implements RpcReceiver {
     try {
       mLatch.await();
     } catch (InterruptedException e) {
-      AseLog.e("Interrupted while waiting for handler to complete.", e);
+      String message = "Interrupted while waiting for handler to complete.";
+      AseLog.e(message, e);
+      throw new AseRuntimeException(message);
     }
   }
 

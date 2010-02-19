@@ -30,6 +30,7 @@ import android.location.Address;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
+import com.google.ase.AseRuntimeException;
 
 /**
  * A factory for {@link RpcInvoker} objects.
@@ -48,7 +49,6 @@ public class RpcInvokerFactory {
     }
     return result;
   }
-
 
   private static JSONObject buildJsonIntent(Intent data) throws JSONException {
     JSONObject result = new JSONObject();
@@ -97,10 +97,9 @@ public class RpcInvokerFactory {
   /**
    * Produces an RpcInvoker implementation for a given list of parameter types.
    *
-   * @param parameterTypes an array of the (possibly generic) types of the
-   *        parameters
-   * @return an {@link RpcInvoker} object that can invoke methods with the given
-   *         parameter types
+   * @param parameterTypes
+   *          an array of the (possibly generic) types of the parameters
+   * @return an {@link RpcInvoker} object that can invoke methods with the given parameter types
    */
   public static RpcInvoker createInvoker(final Type[] parameterTypes) {
     return new RpcInvoker() {
@@ -127,7 +126,7 @@ public class RpcInvokerFactory {
                 // Magically cast the parameter to the right Java type.
                 args[i] = ((Class<?>) parameterType).cast(parameters.get(i));
               }
-            } catch (Exception e) {
+            } catch (ClassCastException e) {
               return JsonRpcResult.error("Argument " + (i + 1) + " should be of type " +
                   ((Class<?>)parameterType).getSimpleName() + ".");
             }
@@ -138,20 +137,18 @@ public class RpcInvokerFactory {
         }
 
         try {
-          final Object result = m.invoke(receiver, args);
+          Object result = m.invoke(receiver, args);
           if (result instanceof Bundle) {
             return JsonRpcResult.result(buildJsonBundle((Bundle) result));
           } else if (result instanceof Intent) {
             return JsonRpcResult.result(buildJsonIntent((Intent) result));
           } else if (result instanceof List<?>) {
-            return JsonRpcResult.result(buildJsonList((List <?>)result));
+            return JsonRpcResult.result(buildJsonList((List<?>) result));
           } else {
             return JsonRpcResult.result(result);
           }
-        } catch (Throwable t) {
-          // All other exceptions are passed back to the client.
-          AseLog.e("Server Exception", t);
-          return JsonRpcResult.error("Exception", t);
+        } catch (Exception e) {
+          throw new AseRuntimeException("Server error.");
         }
       }
     };

@@ -199,20 +199,29 @@ public class JsonRpcServer {
     final Thread networkThread = new Thread() {
       @Override
       public void run() {
+        AseLog.v("RPC thread " + getId() + " started.");
         try {
           BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
           PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
           String data;
           while ((data = in.readLine()) != null) {
             AseLog.v("Received: " + data.toString());
-            JSONObject result = call(data);
-            out.write(result.toString() + "\n");
-            out.flush();
+            JSONObject result = JsonRpcResult.empty();
+            try {
+              result = call(data);
+            } catch (Exception e) {
+              result = JsonRpcResult.error(e.getMessage());
+              throw e;
+            } finally {
+              out.write(result.toString() + "\n");
+              out.flush();
+            }
           }
         } catch (Exception e) {
-          AseLog.e("Communication with client failed.", e);
+          AseLog.e("Server error.", e);
         } finally {
           mNetworkThreads.remove(this);
+          AseLog.v("RPC thread " + getId() + " died.");
         }
       }
     };
@@ -268,13 +277,11 @@ public class JsonRpcServer {
       throws JSONException {
     JSONObject result = null;
     final RpcInfo rpcInfo = mKnownRpcs.get(methodName);
-
     if (rpcInfo == null) {
       result = JsonRpcResult.error("Unknown RPC.");
     } else {
       result = rpcInfo.invoke(params);
     }
-
     result.put("id", id);
     AseLog.v("Sending reply " + result.toString());
     return result;
