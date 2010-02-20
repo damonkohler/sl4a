@@ -166,6 +166,7 @@ public class InterpreterManager extends ListActivity {
 
   private void launchService(boolean usePublicIp) {
     Intent intent = new Intent(this, AseService.class);
+    intent.setAction(Constants.ACTION_LAUNCH_SERVER);
     intent.putExtra(Constants.EXTRA_USE_EXTERNAL_IP, usePublicIp);
     startService(intent);
   }
@@ -177,10 +178,10 @@ public class InterpreterManager extends ListActivity {
   }
 
   private void launchTerminal(Interpreter interpreter) {
-    Intent i = new Intent(this, AseService.class);
-    i.setAction(Constants.ACTION_LAUNCH_TERMINAL);
-    i.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
-    startService(i);
+    Intent intent = new Intent(this, AseService.class);
+    intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
+    intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
+    startService(intent);
   }
 
   @SuppressWarnings("unchecked")

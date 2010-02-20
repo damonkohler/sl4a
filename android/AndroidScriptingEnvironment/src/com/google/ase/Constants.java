@@ -32,6 +32,7 @@ public class Constants {
   public static final String ACTION_CANCEL_NOTIFICATION =
       "com.google.ase.action.CANCEL_NOTIFICAITON";
   public static final String ACTION_ACTIVITY_RESULT = "com.google.ase.action.ACTIVITY_RESULT";
+  public static final String ACTION_LAUNCH_SERVER = "com.google.ase.action.LAUNCH_SERVER";
 
   public static final String EXTRA_SCRIPT_NAME = "com.google.ase.extra.SCRIPT_NAME";
   public static final String EXTRA_SCRIPT_CONTENT = "com.google.ase.extra.SCRIPT_CONTENT";

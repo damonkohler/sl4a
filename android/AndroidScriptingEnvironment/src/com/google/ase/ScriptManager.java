@@ -229,10 +229,10 @@ public class ScriptManager extends ListActivity {
     }
 
     // TODO(damonkohler): This isn't ideal and should be extracted.
-    Intent i = new Intent(this, AseService.class);
-    i.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
-    i.setAction(Constants.ACTION_LAUNCH_TERMINAL);
-    startService(i);
+    Intent intent = new Intent(this, AseService.class);
+    intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
+    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+    startService(intent);
   }
 
   /**
@@ -292,10 +292,10 @@ public class ScriptManager extends ListActivity {
         Toast.makeText(this, "Could not find script.", Toast.LENGTH_SHORT).show();
       }
     } else if (itemId == MenuId.START_SERVICE.getId()) {
-      Intent i = new Intent(this, AseService.class);
-      i.setAction(Constants.ACTION_LAUNCH_SCRIPT);
-      i.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
-      startService(i);
+      Intent intent = new Intent(this, AseService.class);
+      intent.setAction(Constants.ACTION_LAUNCH_SCRIPT);
+      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+      startService(intent);
     }
     return true;
   }

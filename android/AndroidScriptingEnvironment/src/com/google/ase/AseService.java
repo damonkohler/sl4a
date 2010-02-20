@@ -39,69 +39,80 @@ public class AseService extends Service {
 
   private AndroidProxy mAndroidProxy;
   private ScriptLauncher mLauncher;
-  private NotificationManager mNotificationManager;
+  private final NotificationManager mNotificationManager;
+  private final StringBuilder mNotificationMessage;
+
+  public AseService() {
+    mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    mNotificationMessage = new StringBuilder();
+  }
 
   @Override
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
-    // Handle onStart events that should only occur if the service was already started.
-    if (intent.getAction().equals(Constants.ACTION_ACTIVITY_RESULT)) {
+    if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
+      launchServer(intent);
+      showNotification();
+    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)) {
+      launchServer(intent);
+      launchInterpreter(intent);
+      showNotification();
+    } else if (intent.getAction().equals(Constants.ACTION_ACTIVITY_RESULT)) {
       mAndroidProxy.onActivityResult(intent.getIntExtra("requestCode", 0), intent.getIntExtra(
           "resultCode", Activity.RESULT_CANCELED), intent.<Intent> getParcelableExtra("data"));
-      return;
-    }
-    if (intent.getAction().equals(Constants.ACTION_KILL_SERVICE)) {
-      stopSelf();
-      return;
-    }
-
-    // Handle initial onStart events.
-    StringBuilder notificationMessage = new StringBuilder();
-    // Start proxy.
-    mAndroidProxy = new AndroidProxy(this, intent);
-    boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
-    InetSocketAddress address =
-        usePublicIp ? mAndroidProxy.startPublic() : mAndroidProxy.startLocal();
-    notificationMessage.append(String.format("Running network service on: %s:%d",
-        address.getHostName(), address.getPort()));
-
-    // Launch script in the background.
-    if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)) {
-      mLauncher = new ScriptLauncher(intent, address);
-      try {
-        mLauncher.launch();
-      } catch (AseException e) {
-        AseLog.e(this, e.getMessage(), e);
-        stopSelf();
-        return;
-      }
-      notificationMessage.append("\nRunning script service: " + mLauncher.getScriptName());
-    }
-
-    showNotification("ASE is running...", "ASE Service", notificationMessage.toString());
-
-    // Launch script in a terminal.
-    if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
+    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
       Intent i = new Intent(this, Terminal.class);
       i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       i.putExtras(intent);
       i.putExtra(Constants.EXTRA_PROXY_PORT, mAndroidProxy.getAddress().getPort());
       startActivity(i);
+    } else if (intent.getAction().equals(Constants.ACTION_KILL_SERVICE)) {
+      stopSelf();
     }
   }
 
-  private void showNotification(String ticker, String title, String message) {
-    mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    Notification notification =
-        new Notification(R.drawable.ase_logo_48, ticker, System.currentTimeMillis());
-    notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
-    notification.contentView.setTextViewText(R.id.notification_title, title);
-    notification.contentView.setTextViewText(R.id.notification_message, message);
+  private void launchInterpreter(Intent intent) {
+    if (mLauncher != null) {
+      return;
+    }
+    InetSocketAddress address = mAndroidProxy.getAddress();
+    mLauncher = new ScriptLauncher(intent, address);
+    try {
+      mLauncher.launch();
+    } catch (AseException e) {
+      AseLog.e(this, e.getMessage(), e);
+      stopSelf();
+      return;
+    }
+    mNotificationMessage.append("\nRunning script service: " + mLauncher.getScriptName());
+  }
 
+  private void launchServer(Intent intent) {
+    if (mAndroidProxy != null) {
+      return;
+    }
+    mAndroidProxy = new AndroidProxy(this, intent);
+    boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
+    if (usePublicIp) {
+      mAndroidProxy.startPublic();
+    } else {
+      mAndroidProxy.startLocal();
+    }
+    InetSocketAddress address = mAndroidProxy.getAddress();
+    mNotificationMessage.append(String.format("Running network service on: %s:%d", address
+        .getHostName(), address.getPort()));
+  }
+
+  private void showNotification() {
+    Notification notification =
+        new Notification(R.drawable.ase_logo_48, "ASE is running...", System.currentTimeMillis());
+    notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
+    notification.contentView.setTextViewText(R.id.notification_title, "ASE Service");
+    notification.contentView.setTextViewText(R.id.notification_message, mNotificationMessage
+        .toString());
     Intent notificationIntent = new Intent(this, AseService.class);
     notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
     notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
-
     notification.flags = Notification.FLAG_NO_CLEAR;
     notification.flags = Notification.FLAG_ONGOING_EVENT;
     mNotificationManager.notify(0, notification);
@@ -116,9 +127,7 @@ public class AseService extends Service {
     if (mAndroidProxy != null) {
       mAndroidProxy.shutdown();
     }
-    if (mNotificationManager != null) {
-      mNotificationManager.cancelAll();
-    }
+    mNotificationManager.cancelAll();
   }
 
   @Override

@@ -25,6 +25,7 @@ public class ServiceHelper extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Intent launchIntent = getIntent().getParcelableExtra("launchIntent");
+    setPersistent(true);
     startActivityForResult(launchIntent, getIntent().getIntExtra("requestCode", 0));
   }
 
@@ -33,10 +34,12 @@ public class ServiceHelper extends Activity {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == 0) {
       Intent intent = new Intent(this, AseService.class);
+      intent.setAction(Constants.ACTION_ACTIVITY_RESULT);
       intent.putExtra("requestCode", requestCode);
       intent.putExtra("resultCode", resultCode);
       intent.putExtra("data", data);
       startService(intent);
+      setPersistent(false);
       finish();
     }
   }
