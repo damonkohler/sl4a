@@ -52,7 +52,6 @@ public class UiFacade implements RpcReceiver {
   public UiFacade(Context context) {
     mContext = context;
     mHandler = new Handler();
-
     AseLog.v("UI Facade started!");
   }
 
@@ -381,7 +380,7 @@ class RunnableAlertDialog implements Runnable {
 
   /**
    * Set button text
-   * 
+   *
    * @param num
    *          button number
    * @param text
@@ -403,7 +402,7 @@ class RunnableAlertDialog implements Runnable {
 
   @Override
   public void run() {
-    this.mDialog = new AlertDialog.Builder(mContext).create();
+    mDialog = new AlertDialog.Builder(mContext).create();
     mDialog.setCancelable(mCancelable);
     mDialog.setTitle(mTitle);
     mDialog.setMessage(mMessage);

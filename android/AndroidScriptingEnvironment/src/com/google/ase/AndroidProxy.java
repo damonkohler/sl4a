@@ -19,7 +19,7 @@ package com.google.ase;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-import android.content.Context;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 
@@ -37,12 +37,12 @@ public class AndroidProxy {
   private final JsonRpcServer mJsonRpcServer;
   private final AndroidFacade mAndroidFacade;
 
-  public AndroidProxy(Context context, Intent intent) {
-    mAndroidFacade = new AndroidFacade(context, new Handler(), intent);
+  public AndroidProxy(Service service, Intent intent) {
+    mAndroidFacade = new AndroidFacade(service, new Handler(), intent);
     MediaFacade mediaFacade = new MediaFacade();
-    TextToSpeechFacade ttsFacade = new TextToSpeechFacade(context);
+    TextToSpeechFacade ttsFacade = new TextToSpeechFacade(service);
     SpeechRecognitionFacade srFacade = new SpeechRecognitionFacade(mAndroidFacade);
-    UiFacade uiFacade = new UiFacade(context);
+    UiFacade uiFacade = new UiFacade(service);
     mJsonRpcServer = new JsonRpcServer(mAndroidFacade, mediaFacade, ttsFacade, srFacade, uiFacade);
   }
 

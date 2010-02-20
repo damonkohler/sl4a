@@ -74,7 +74,8 @@ public class JsonRpcServer {
 
   public JsonRpcServer(final RpcReceiver... receivers) {
     for (RpcReceiver receiver : receivers) {
-      registerRpcReceiver(receiver);
+      mKnownRpcs.putAll(buildRpcInfoMap(receiver.getClass()));
+      mReceivers.add(receiver);
     }
   }
 
@@ -83,24 +84,20 @@ public class JsonRpcServer {
   }
 
   /**
-   * Registers an RPC receiving object with this {@link JsonRpcServer} object.
-   *
+   * Builds a map of method names to {@link RpcInfo} objects.
+   * 
    * @param receiver
-   *          the receiving object
+   *          the {@link RpcReceiver} class to inspect
    */
-  private void registerRpcReceiver(final RpcReceiver receiver) {
-    final Class<?> clazz = receiver.getClass();
-    for (Method m : clazz.getMethods()) {
+  public static Map<String, RpcInfo> buildRpcInfoMap(final Class<? extends RpcReceiver> receiver) {
+    Map<String, RpcInfo> rpcs = new ConcurrentHashMap<String, RpcInfo>();
+    for (Method m : receiver.getMethods()) {
       if (m.getAnnotation(Rpc.class) != null) {
-        if (mKnownRpcs.containsKey(m.getName())) {
-          // We already know an RPC of the same name.
-          throw new RuntimeException("An RPC with the name " + m.getName() + " is already known.");
-        }
-        mKnownRpcs.put(m.getName(), new RpcInfo(receiver, m, RpcInvokerFactory.createInvoker(m
+        rpcs.put(m.getName(), new RpcInfo(receiver, m, RpcInvokerFactory.createInvoker(m
             .getGenericParameterTypes())));
       }
     }
-    mReceivers.add(receiver);
+    return rpcs;
   }
 
   private InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {

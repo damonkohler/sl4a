@@ -33,6 +33,12 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.ase.facade.AndroidFacade;
+import com.google.ase.facade.MediaFacade;
+import com.google.ase.facade.SpeechRecognitionFacade;
+import com.google.ase.facade.TextToSpeechFacade;
+import com.google.ase.facade.UiFacade;
+import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcInfo;
 
 public class ApiBrowser extends ListActivity {
@@ -55,8 +61,14 @@ public class ApiBrowser extends ListActivity {
   }
 
   private List<RpcInfo> buildRpcInfoList() {
-    AndroidProxy proxy = new AndroidProxy(ApiBrowser.this, null);
-    List<RpcInfo> list = new ArrayList<RpcInfo>(proxy.getKnownRpcs().values());
+    List<RpcInfo> list = new ArrayList<RpcInfo>();
+    // TODO(damonkohler): Factor out this list of facades so that it's not duplicated between here
+    // and the AndroidProxy.
+    list.addAll(JsonRpcServer.buildRpcInfoMap(AndroidFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(MediaFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(SpeechRecognitionFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(TextToSpeechFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(UiFacade.class).values());
     Collections.sort(list, new Comparator<RpcInfo>() {
       public int compare(RpcInfo info1, RpcInfo info2) {
         return info1.getName().compareTo(info2.getName());
