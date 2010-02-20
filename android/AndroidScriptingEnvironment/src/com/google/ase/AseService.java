@@ -39,11 +39,9 @@ public class AseService extends Service {
 
   private AndroidProxy mAndroidProxy;
   private ScriptLauncher mLauncher;
-  private final NotificationManager mNotificationManager;
   private final StringBuilder mNotificationMessage;
 
   public AseService() {
-    mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     mNotificationMessage = new StringBuilder();
   }
 
@@ -57,18 +55,23 @@ public class AseService extends Service {
       launchServer(intent);
       launchInterpreter(intent);
       showNotification();
+    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
+      launchServer(intent);
+      launchTerminal(intent);
     } else if (intent.getAction().equals(Constants.ACTION_ACTIVITY_RESULT)) {
       mAndroidProxy.onActivityResult(intent.getIntExtra("requestCode", 0), intent.getIntExtra(
           "resultCode", Activity.RESULT_CANCELED), intent.<Intent> getParcelableExtra("data"));
-    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
-      Intent i = new Intent(this, Terminal.class);
-      i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      i.putExtras(intent);
-      i.putExtra(Constants.EXTRA_PROXY_PORT, mAndroidProxy.getAddress().getPort());
-      startActivity(i);
     } else if (intent.getAction().equals(Constants.ACTION_KILL_SERVICE)) {
       stopSelf();
     }
+  }
+
+  private void launchTerminal(Intent intent) {
+    Intent i = new Intent(this, Terminal.class);
+    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    i.putExtras(intent);
+    i.putExtra(Constants.EXTRA_PROXY_PORT, mAndroidProxy.getAddress().getPort());
+    startActivity(i);
   }
 
   private void launchInterpreter(Intent intent) {
@@ -115,7 +118,9 @@ public class AseService extends Service {
     notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
     notification.flags = Notification.FLAG_NO_CLEAR;
     notification.flags = Notification.FLAG_ONGOING_EVENT;
-    mNotificationManager.notify(0, notification);
+    NotificationManager manager =
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    manager.notify(0, notification);
   }
 
   @Override
@@ -127,7 +132,9 @@ public class AseService extends Service {
     if (mAndroidProxy != null) {
       mAndroidProxy.shutdown();
     }
-    mNotificationManager.cancelAll();
+    NotificationManager manager =
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    manager.cancelAll();
   }
 
   @Override
