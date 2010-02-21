@@ -346,20 +346,20 @@ public class AndroidFacade implements RpcReceiver {
 
   public Intent startActivityForResult(final Intent intent) {
     // Help ensure the service isn't killed to free up memory.
-    (mService).setForeground(true);
+    mService.setForeground(true);
     post(new Runnable() {
       public void run() {
         try {
           Intent helper = new Intent(mService, ServiceHelper.class);
           helper.putExtra("launchIntent", intent);
           helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          (mService).startActivity(helper);
+          mService.startActivity(helper);
         } catch (Exception e) {
           AseLog.e("Failed to launch intent.", e);
         }
       }
     });
-    (mService).setForeground(false);
+    mService.setForeground(false);
     return mStartActivityResult;
   }
 

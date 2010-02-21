@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Handler;
@@ -44,13 +44,13 @@ import com.google.ase.jsonrpc.RpcReceiver;
  * @version 1.0
  */
 public class UiFacade implements RpcReceiver {
-  private final Context mContext;
+  private final Service mService;
   private final Handler mHandler;
   private final Map<String, Object> mObjectMap = new HashMap<String, Object>();
   private final Map<String, CountDownLatch> mLockMap = new HashMap<String, CountDownLatch>();
 
-  public UiFacade(Context context) {
-    mContext = context;
+  public UiFacade(Service service) {
+    mService = service;
     mHandler = new Handler();
     AseLog.v("UI Facade started!");
   }
@@ -114,7 +114,7 @@ public class UiFacade implements RpcReceiver {
 
     // Create new thread and register dialog.
     thread_obj =
-        new RunnableProgressDialog(mContext, latch, show_latch, dialog_type, title, message,
+        new RunnableProgressDialog(mService, latch, show_latch, dialog_type, title, message,
             cancelable);
 
     addObject(id, thread_obj);
@@ -145,7 +145,7 @@ public class UiFacade implements RpcReceiver {
     mLockMap.put(id, show_latch);
 
     // Create new thread and register dialog.
-    thread_obj = new RunnableAlertDialog(mContext, latch, show_latch, title, message, cancelable);
+    thread_obj = new RunnableAlertDialog(mService, latch, show_latch, title, message, cancelable);
 
     addObject(id, thread_obj);
     mHandler.post(thread_obj);
@@ -284,7 +284,7 @@ public class UiFacade implements RpcReceiver {
  */
 class RunnableProgressDialog implements Runnable {
   private ProgressDialog mDialog;
-  private final Context mContext;
+  private final Service mService;
   private final CountDownLatch mLatch;
   private final CountDownLatch mShowLatch;
 
@@ -293,12 +293,12 @@ class RunnableProgressDialog implements Runnable {
   private final String mMessage;
   private final Boolean mCancelable;
 
-  public RunnableProgressDialog(final Context context, final CountDownLatch latch,
+  public RunnableProgressDialog(final Service service, final CountDownLatch latch,
       final CountDownLatch show_latch, final Integer dialog_type, final String title,
       final String message, final Boolean cancelable) {
     // Set local variables.
     mType = dialog_type;
-    mContext = context;
+    mService = service;
     mLatch = latch;
     mShowLatch = show_latch;
     mDialog = null;
@@ -318,7 +318,7 @@ class RunnableProgressDialog implements Runnable {
 
   @Override
   public void run() {
-    mDialog = new ProgressDialog(mContext);
+    mDialog = new ProgressDialog(mService);
     mDialog.setProgressStyle(mType);
     mDialog.setCancelable(mCancelable);
     mDialog.setTitle(mTitle);
@@ -341,7 +341,7 @@ class RunnableProgressDialog implements Runnable {
  */
 class RunnableAlertDialog implements Runnable {
   private AlertDialog mDialog;
-  private final Context mContext;
+  private final Service mService;
   private final OnClickListener mListener;
   private final CountDownLatch mLatch;
   private final CountDownLatch mShowLatch;
@@ -350,11 +350,11 @@ class RunnableAlertDialog implements Runnable {
   private final Boolean mCancelable;
   public int mResponse = 0;
 
-  public RunnableAlertDialog(final Context context, final CountDownLatch latch,
+  public RunnableAlertDialog(final Service context, final CountDownLatch latch,
       final CountDownLatch show_latch, final String title, final String message,
       final Boolean cancelable) {
     // Set local variables
-    mContext = context;
+    mService = context;
     mLatch = latch;
     mShowLatch = show_latch;
     mDialog = null;
@@ -402,7 +402,7 @@ class RunnableAlertDialog implements Runnable {
 
   @Override
   public void run() {
-    mDialog = new AlertDialog.Builder(mContext).create();
+    mDialog = new AlertDialog.Builder(mService).create();
     mDialog.setCancelable(mCancelable);
     mDialog.setTitle(mTitle);
     mDialog.setMessage(mMessage);
