@@ -46,12 +46,8 @@ public class AseServiceHelper extends Activity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == 0) {
-      Intent intent = new Intent(this, AseService.class);
-      intent.setAction(Constants.ACTION_ACTIVITY_RESULT);
-      intent.putExtra("requestCode", requestCode);
-      intent.putExtra("resultCode", resultCode);
-      intent.putExtra("data", data);
-      mResult.set(intent);
+      // TODO(damonkohler): Also return resultCode if necessary.
+      mResult.set(data);
       finish();
     }
   }

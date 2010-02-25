@@ -337,9 +337,7 @@ public class AndroidFacade implements RpcReceiver {
       }
     });
     try {
-      Intent helper = new Intent(mService, AseServiceHelper.class);
-      helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      mService.startActivity(helper);
+      launchHelper();
     } catch (Exception e) {
       AseLog.e("Failed to launch intent.", e);
     }
@@ -348,6 +346,12 @@ public class AndroidFacade implements RpcReceiver {
     } catch (Exception e) {
       throw new AseRuntimeException(e);
     }
+  }
+
+  private void launchHelper() {
+    Intent helper = new Intent(mService, AseServiceHelper.class);
+    helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    mService.startActivity(helper);
   }
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
@@ -460,9 +464,7 @@ public class AndroidFacade implements RpcReceiver {
       }
     });
     try {
-      Intent helper = new Intent(mService, AseServiceHelper.class);
-      helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      mService.startActivity(helper);
+      launchHelper();
     } catch (Exception e) {
       AseLog.e("Failed to launch intent.", e);
     }
