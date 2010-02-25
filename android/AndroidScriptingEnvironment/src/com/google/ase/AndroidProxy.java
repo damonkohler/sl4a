@@ -60,11 +60,6 @@ public class AndroidProxy {
     return mAddress;
   }
 
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    mAndroidFacade.onActivityResult(requestCode, resultCode, data);
-    // mActivityLauncher.onActivityResult(requestCode, resultCode, data);
-  }
-
   public Map<String, RpcInfo> getKnownRpcs() {
     return mJsonRpcServer.getKnownRpcs();
   }
