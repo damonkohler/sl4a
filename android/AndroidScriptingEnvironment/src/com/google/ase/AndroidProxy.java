@@ -27,7 +27,7 @@ import com.google.ase.facade.AndroidFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
 import com.google.ase.facade.TextToSpeechFacade;
-import com.google.ase.facade.UiFacade;
+import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcInfo;
 

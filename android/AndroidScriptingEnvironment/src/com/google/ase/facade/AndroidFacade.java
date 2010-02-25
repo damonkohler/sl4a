@@ -63,7 +63,7 @@ import com.google.ase.AseLog;
 import com.google.ase.AseRuntimeException;
 import com.google.ase.CircularBuffer;
 import com.google.ase.R;
-import com.google.ase.ServiceHelper;
+import com.google.ase.AseServiceHelper;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
@@ -350,7 +350,7 @@ public class AndroidFacade implements RpcReceiver {
     post(new Runnable() {
       public void run() {
         try {
-          Intent helper = new Intent(mService, ServiceHelper.class);
+          Intent helper = new Intent(mService, AseServiceHelper.class);
           helper.putExtra("launchIntent", intent);
           helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
           mService.startActivity(helper);
