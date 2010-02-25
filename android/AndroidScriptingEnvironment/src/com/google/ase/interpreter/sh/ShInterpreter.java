@@ -20,6 +20,7 @@ import java.io.File;
 
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
+import com.google.ase.language.ShellLanguage;
 
 /**
  * Represents the shell.
@@ -27,6 +28,10 @@ import com.google.ase.interpreter.InterpreterProcess;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ShInterpreter extends Interpreter {
+  
+  public ShInterpreter() {
+    super(new ShellLanguage());
+  }
 
   @Override
   public String getExtension() {

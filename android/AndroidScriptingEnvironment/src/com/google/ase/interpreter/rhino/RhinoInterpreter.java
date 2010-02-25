@@ -20,8 +20,14 @@ import java.io.File;
 
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
+import com.google.ase.language.JavaScriptLanguage;
 
 public class RhinoInterpreter extends Interpreter {
+
+  public RhinoInterpreter() {
+    super(new JavaScriptLanguage());
+  }
+  
 	@Override
 	public String getExtension() {
 		return ".js";
@@ -35,11 +41,6 @@ public class RhinoInterpreter extends Interpreter {
 	@Override
 	public String getNiceName() {
 		return "Rhino 1.7R2";
-	}
-
-	@Override
-	public String getContentTemplate() {
-		return "load(\"/sdcard/ase/extras/rhino/android.js\");\nvar droid = new Android();\n";
 	}
 
 	@Override

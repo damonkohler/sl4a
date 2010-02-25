@@ -21,6 +21,7 @@ import java.io.File;
 
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
+import com.google.ase.language.TclLanguage;
 
 /**
  * Represents the Tcl interpreter.
@@ -30,6 +31,10 @@ import com.google.ase.interpreter.InterpreterProcess;
 public class TclInterpreter extends Interpreter {
 
   private final static String TCL_BINARY = "/data/data/com.google.ase/tclsh/tclsh";
+  
+  public TclInterpreter() {
+    super(new TclLanguage());
+  }
 
   @Override
   public String getExtension() {
@@ -49,11 +54,6 @@ public class TclInterpreter extends Interpreter {
   @Override
   public String getNiceName() {
     return "Tcl 8.6b2";
-  }
-
-  @Override
-  public String getContentTemplate() {
-    return "package require android\n\nset android [android new]\n";
   }
 
   @Override

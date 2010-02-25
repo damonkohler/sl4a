@@ -20,6 +20,7 @@ import java.io.File;
 
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
+import com.google.ase.language.PerlLanguage;
 
 /**
  * Represents the Perl interpreter.
@@ -29,6 +30,10 @@ import com.google.ase.interpreter.InterpreterProcess;
 public class PerlInterpreter extends Interpreter {
 
   private final static String PERL_BIN = "/data/data/com.google.ase/perl/perl";
+  
+  public PerlInterpreter() {
+    super(new PerlLanguage());
+  }
 
   @Override
   public String getExtension() {
@@ -48,11 +53,6 @@ public class PerlInterpreter extends Interpreter {
   @Override
   public String getNiceName() {
     return "Perl 5.10.1";
-  }
-
-  @Override
-  public String getContentTemplate() {
-    return "use Android;\n\nmy $droid = Android->new();";
   }
 
   @Override

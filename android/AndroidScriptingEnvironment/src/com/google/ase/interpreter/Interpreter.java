@@ -19,15 +19,35 @@ package com.google.ase.interpreter;
 import java.io.File;
 
 import com.google.ase.Constants;
+import com.google.ase.jsonrpc.RpcInfo;
+import com.google.ase.language.Language;
 
 public abstract class Interpreter {
-
-  public boolean isInstalled() {
-    return InterpreterUtils.checkInstalled(getName());
+  
+  private final Language language;
+  
+  public Interpreter(Language language) {
+    this.language = language;
   }
 
-  public String getContentTemplate() {
-    return "";
+  public final Language getLanguage() {
+    return language;
+  }
+
+  public final String getContentTemplate() {
+    return getLanguage().getContentTemplate();
+  }
+  
+  public final String getRpcText(String content, RpcInfo rpc) {
+    return getLanguage().getRpcText(content, rpc);
+  }
+  
+  public final String getRpcText(String content, RpcInfo rpc, String[] parameters) {
+    return getLanguage().getRpcText(content, rpc, parameters);
+  }
+  
+  public boolean isInstalled() {
+    return InterpreterUtils.checkInstalled(getName());
   }
 
   public String getInterpreterArchiveName() {
@@ -53,7 +73,7 @@ public abstract class Interpreter {
   public String getInterpreterExtrasArchiveUrl() {
     return Constants.BASE_INSTALL_URL + getInterpreterExtrasArchiveName();
   }
-
+  
   public abstract InterpreterProcess buildProcess(String launchScript, int port);
 
   public abstract File getBinary();
