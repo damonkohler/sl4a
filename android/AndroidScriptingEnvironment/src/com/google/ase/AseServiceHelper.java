@@ -35,6 +35,7 @@ public class AseServiceHelper extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setPersistent(true);
     AseApplication application = (AseApplication) getApplication();
     ActivityRunnable task = application.pollTaskQueue();
     mResult = task.getFutureResult();
@@ -44,7 +45,6 @@ public class AseServiceHelper extends Activity {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == 0) {
       Intent intent = new Intent(this, AseService.class);
       intent.setAction(Constants.ACTION_ACTIVITY_RESULT);
@@ -52,6 +52,7 @@ public class AseServiceHelper extends Activity {
       intent.putExtra("resultCode", resultCode);
       intent.putExtra("data", data);
       mResult.set(intent);
+      finish();
     }
   }
 }

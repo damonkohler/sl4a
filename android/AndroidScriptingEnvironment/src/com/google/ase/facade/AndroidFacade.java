@@ -333,14 +333,7 @@ public class AndroidFacade implements RpcReceiver {
     FutureIntent result = mApplication.offerTask(new ActivityRunnable() {
       @Override
       public void run(Activity activity, FutureIntent result) {
-        activity.setPersistent(true);
-        activity.startActivityForResult(intent, intent.getIntExtra("requestCode", 0));
-        try {
-          result.get();
-        } catch (Exception e) {
-          throw new AseRuntimeException(e);
-        }
-        activity.finish();
+        activity.startActivityForResult(intent, 0);
       }
     });
     try {
