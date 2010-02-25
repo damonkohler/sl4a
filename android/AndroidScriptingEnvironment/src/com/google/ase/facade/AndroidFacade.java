@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -77,8 +76,6 @@ import com.google.ase.jsonrpc.RpcReceiver;
 
 public class AndroidFacade implements RpcReceiver {
 
-  private static final int REQUEST_CODE = 0;
-
   private final Service mService;
   private final Handler mHandler;
   private final AseApplication mApplication;
@@ -93,11 +90,6 @@ public class AndroidFacade implements RpcReceiver {
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
   private final Geocoder mGeocoder;
-
-  private CountDownLatch mLatch;
-  // The result from a call to startActivityForResult().
-  private Intent mStartActivityResult;
-
   private final TextToSpeechFacade mTts;
 
   private Bundle mSensorReadings;
@@ -447,20 +439,6 @@ public class AndroidFacade implements RpcReceiver {
         Toast.makeText(mService, message, Toast.LENGTH_SHORT).show();
       }
     });
-  }
-
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == REQUEST_CODE) {
-      if (resultCode == Activity.RESULT_OK) {
-        AseLog.v("Request completed. Received intent: " + data);
-        mStartActivityResult = data;
-      } else if (requestCode == Activity.RESULT_CANCELED) {
-        AseLog.v("Request canceled.");
-      }
-      if (mLatch != null) {
-        mLatch.countDown();
-      }
-    }
   }
 
   private String getInputFromAlertDialog(final String title, final String message,
