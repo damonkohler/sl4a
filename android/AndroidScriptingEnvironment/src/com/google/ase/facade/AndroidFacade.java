@@ -472,43 +472,24 @@ public class AndroidFacade implements RpcReceiver {
     }
   }
 
-  private String getInputFromAlertDialog(final EditText input, final String title,
-      final String message) {
-    post(new Runnable() {
-      public void run() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(mService);
-        alert.setTitle(title);
-        alert.setMessage(message);
-        alert.setView(input);
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int whichButton) {
-            mLatch.countDown();
-          }
-        });
-        alert.show();
-      }
-    }, mHandler);
-    return input.getText().toString();
-  }
-
-  @Rpc(description = "Queries the user for a text input.")
-  public String getInput(
-      @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Input") final String title,
-      @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter value:") final String message) {
-    final FutureIntent result = new FutureIntent();
-    mApplication.offerTask(new ActivityRunnable() {
+  private String getInputFromAlertDialog(final String title, final String message,
+      final boolean password) {
+    FutureIntent result = mApplication.offerTask(new ActivityRunnable() {
       @Override
-      public void run(final Activity activity) {
+      public void run(final Activity activity, final FutureIntent result) {
         final EditText input = new EditText(activity);
+        if (password) {
+          input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+          input.setTransformationMethod(new PasswordTransformationMethod());
+        }
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle(title);
         alert.setMessage(message);
         alert.setView(input);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int whichButton) {
-            String text = input.getText().toString();
             Intent intent = new Intent();
-            intent.putExtra("result", text);
+            intent.putExtra("result", input.getText().toString());
             result.set(intent);
             activity.finish();
           }
@@ -531,14 +512,18 @@ public class AndroidFacade implements RpcReceiver {
     }
   }
 
+  @Rpc(description = "Queries the user for a text input.")
+  public String getInput(
+      @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Input") final String title,
+      @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter value:") final String message) {
+    return getInputFromAlertDialog(title, message, false);
+  }
+
   @Rpc(description = "Queries the user for a password.")
   public String getPassword(
       @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Password Input") final String title,
       @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter password:") final String message) {
-    final EditText input = new EditText(mService);
-    input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-    input.setTransformationMethod(new PasswordTransformationMethod());
-    return getInputFromAlertDialog(input, title, message);
+    return getInputFromAlertDialog(title, message, true);
   }
 
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")

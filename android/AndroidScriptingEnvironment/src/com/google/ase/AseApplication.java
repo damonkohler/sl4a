@@ -46,8 +46,9 @@ public class AseApplication extends Application {
     return mHelperHandler;
   }
 
-  public void offerTask(ActivityRunnable task) {
+  public FutureIntent offerTask(ActivityRunnable task) {
     mTaskQueue.offer(task);
+    return task.getFutureResult();
   }
 
   public ActivityRunnable pollTaskQueue() {

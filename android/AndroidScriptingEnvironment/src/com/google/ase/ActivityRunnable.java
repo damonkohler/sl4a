@@ -19,14 +19,20 @@ package com.google.ase;
 import android.app.Activity;
 
 public abstract class ActivityRunnable {
-  public abstract void run(Activity activity);
+  private final FutureIntent mResult = new FutureIntent();
+
+  public abstract void run(Activity activity, FutureIntent result);
 
   public Runnable getRunnable(final Activity activity) {
     return new Runnable() {
       @Override
       public void run() {
-        ActivityRunnable.this.run(activity);
+        ActivityRunnable.this.run(activity, mResult);
       }
     };
+  }
+
+  public FutureIntent getFutureResult() {
+    return mResult;
   }
 }

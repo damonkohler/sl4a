@@ -58,6 +58,7 @@ public class AseService extends Service {
     } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
       launchServer(intent);
       launchTerminal(intent);
+      showNotification();
     } else if (intent.getAction().equals(Constants.ACTION_ACTIVITY_RESULT)) {
       mAndroidProxy.onActivityResult(intent.getIntExtra("requestCode", 0), intent.getIntExtra(
           "resultCode", Activity.RESULT_CANCELED), intent.<Intent> getParcelableExtra("data"));
