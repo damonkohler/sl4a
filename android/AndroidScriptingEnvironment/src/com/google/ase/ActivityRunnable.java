@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2010 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,18 +16,17 @@
 
 package com.google.ase;
 
-@SuppressWarnings("serial")
-public class AseRuntimeException extends RuntimeException {
+import android.app.Activity;
 
-  public AseRuntimeException(String message) {
-    super(message);
-  }
+public abstract class ActivityRunnable {
+  public abstract void run(Activity activity);
 
-  public AseRuntimeException(String message, Exception wrapped_exception) {
-    super(message + "\n" + wrapped_exception.toString());
-  }
-
-  public AseRuntimeException(Exception wrapped_exception) {
-    super(wrapped_exception.toString());
+  public Runnable getRunnable(final Activity activity) {
+    return new Runnable() {
+      @Override
+      public void run() {
+        ActivityRunnable.this.run(activity);
+      }
+    };
   }
 }

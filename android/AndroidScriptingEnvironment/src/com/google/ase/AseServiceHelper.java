@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 /**
  * This {@link Activity} is launched by the {@link AseService} in order to perform operations that a
@@ -29,12 +30,17 @@ import android.os.Bundle;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class AseServiceHelper extends Activity {
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Intent launchIntent = getIntent().getParcelableExtra("launchIntent");
-    setPersistent(true);
-    startActivityForResult(launchIntent, getIntent().getIntExtra("requestCode", 0));
+    AseApplication application = (AseApplication) getApplication();
+    ActivityRunnable task = application.pollTaskQueue();
+    Handler handler = new Handler();
+    handler.post(task.getRunnable(this));
+    // Intent launchIntent = getIntent().getParcelableExtra("launchIntent");
+    // setPersistent(true);
+    // startActivityForResult(launchIntent, getIntent().getIntExtra("requestCode", 0));
   }
 
   @Override
