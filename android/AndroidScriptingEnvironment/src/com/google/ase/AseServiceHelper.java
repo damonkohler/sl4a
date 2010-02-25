@@ -30,17 +30,16 @@ import android.os.Handler;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class AseServiceHelper extends Activity {
+  FutureIntent mResult;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     AseApplication application = (AseApplication) getApplication();
     ActivityRunnable task = application.pollTaskQueue();
+    mResult = task.getFutureResult();
     Handler handler = new Handler();
     handler.post(task.getRunnable(this));
-    // Intent launchIntent = getIntent().getParcelableExtra("launchIntent");
-    // setPersistent(true);
-    // startActivityForResult(launchIntent, getIntent().getIntExtra("requestCode", 0));
   }
 
   @Override
@@ -52,9 +51,7 @@ public class AseServiceHelper extends Activity {
       intent.putExtra("requestCode", requestCode);
       intent.putExtra("resultCode", resultCode);
       intent.putExtra("data", data);
-      startService(intent);
-      setPersistent(false);
-      finish();
+      mResult.set(intent);
     }
   }
 }

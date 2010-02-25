@@ -337,35 +337,32 @@ public class AndroidFacade implements RpcReceiver {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
   }
 
-  private synchronized void post(Runnable runnable, Handler handler) {
-    mLatch = new CountDownLatch(1);
-    handler.post(runnable);
-    try {
-      mLatch.await();
-    } catch (InterruptedException e) {
-      String message = "Interrupted while waiting for handler to complete.";
-      AseLog.e(message, e);
-      throw new AseRuntimeException(message);
-    }
-  }
-
   public Intent startActivityForResult(final Intent intent) {
-    // Help ensure the service isn't killed to free up memory.
-    mService.setForeground(true);
-    post(new Runnable() {
-      public void run() {
+    FutureIntent result = mApplication.offerTask(new ActivityRunnable() {
+      @Override
+      public void run(Activity activity, FutureIntent result) {
+        activity.setPersistent(true);
+        activity.startActivityForResult(intent, intent.getIntExtra("requestCode", 0));
         try {
-          Intent helper = new Intent(mService, AseServiceHelper.class);
-          helper.putExtra("launchIntent", intent);
-          helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          mService.startActivity(helper);
+          result.get();
         } catch (Exception e) {
-          AseLog.e("Failed to launch intent.", e);
+          throw new AseRuntimeException(e);
         }
+        activity.finish();
       }
-    }, mHandler);
-    mService.setForeground(false);
-    return mStartActivityResult;
+    });
+    try {
+      Intent helper = new Intent(mService, AseServiceHelper.class);
+      helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      mService.startActivity(helper);
+    } catch (Exception e) {
+      AseLog.e("Failed to launch intent.", e);
+    }
+    try {
+      return result.get();
+    } catch (Exception e) {
+      throw new AseRuntimeException(e);
+    }
   }
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
@@ -383,18 +380,13 @@ public class AndroidFacade implements RpcReceiver {
     return startActivityForResult(Intent.ACTION_PICK, uri);
   }
 
-  public void startActivity(final Intent intent) {
-    post(new Runnable() {
-      public void run() {
-        try {
-          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          mService.startActivity(intent);
-        } catch (Exception e) {
-          AseLog.e("Failed to launch intent.", e);
-        }
-        mLatch.countDown();
-      }
-    }, mHandler);
+  private void startActivity(final Intent intent) {
+    try {
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      mService.startActivity(intent);
+    } catch (Exception e) {
+      AseLog.e("Failed to launch intent.", e);
+    }
   }
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
@@ -450,12 +442,11 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Displays a short-duration Toast notification.")
   public void makeToast(@RpcParameter("message") final String message) {
-    post(new Runnable() {
+    mHandler.post(new Runnable() {
       public void run() {
         Toast.makeText(mService, message, Toast.LENGTH_SHORT).show();
-        mLatch.countDown();
       }
-    }, mHandler);
+    });
   }
 
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
