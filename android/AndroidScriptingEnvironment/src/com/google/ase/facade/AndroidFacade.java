@@ -577,11 +577,6 @@ public class AndroidFacade implements RpcReceiver {
     mEventBuffer.add(event);
   }
 
-  @Rpc(description = "Receives the most recent event (i.e. location or sensor update, etc.", returns = "Map of event properties.")
-  public Bundle receiveEvent() {
-    return mEventBuffer.get();
-  }
-
   @Rpc(description = "Returns a list of packages running activities or services.", returns = "List of packages running activities.")
   public Bundle getRunningPackages() {
     Set<String> runningPackages = new HashSet<String>();

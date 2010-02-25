@@ -30,6 +30,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -38,6 +39,7 @@ import android.widget.TextView;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterUtils;
 import com.google.ase.facade.AndroidFacade;
+import com.google.ase.facade.EventFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
 import com.google.ase.facade.TextToSpeechFacade;
@@ -74,6 +76,7 @@ public class ApiBrowser extends ListActivity {
     list.addAll(JsonRpcServer.buildRpcInfoMap(SpeechRecognitionFacade.class).values());
     list.addAll(JsonRpcServer.buildRpcInfoMap(TextToSpeechFacade.class).values());
     list.addAll(JsonRpcServer.buildRpcInfoMap(UiFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(EventFacade.class).values());
     Collections.sort(list, new Comparator<RpcInfo>() {
       public int compare(RpcInfo info1, RpcInfo info2) {
         return info1.getName().compareTo(info2.getName());
@@ -127,11 +130,17 @@ public class ApiBrowser extends ListActivity {
       TextView view = new TextView(ApiBrowser.this);
       view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
       view.setLongClickable(true);
+      view.setClickable(true);
       view.setOnLongClickListener(new OnLongClickListener() {
-        
         @Override
         public boolean onLongClick(View v) {
           return onListItemLongClick(v, position);
+        }
+      });
+      view.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          onListItemClick(null, v, position, 0);
         }
       });
       if (mExpandedPositions.contains(position)) {
