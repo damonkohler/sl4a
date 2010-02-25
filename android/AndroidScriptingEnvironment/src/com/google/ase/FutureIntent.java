@@ -24,6 +24,11 @@ import java.util.concurrent.TimeoutException;
 
 import android.content.Intent;
 
+/**
+ * FutureIntent represents an eventual Intent result object for asynchronous operations.
+ *
+ * @author Damon Kohler (damonkohler@gmail.com)
+ */
 public class FutureIntent implements Future<Intent> {
 
   private final CountDownLatch mLatch = new CountDownLatch(1);

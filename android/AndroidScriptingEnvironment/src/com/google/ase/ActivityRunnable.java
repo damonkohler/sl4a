@@ -18,6 +18,11 @@ package com.google.ase;
 
 import android.app.Activity;
 
+/**
+ * A {@link Runnable} that encapsulates an {@link Activity} and a {@link FutureIntent}.
+ *
+ * @author Damon Kohler (damonkohler@gmail.com)
+ */
 public abstract class ActivityRunnable {
   private final FutureIntent mResult = new FutureIntent();
 
