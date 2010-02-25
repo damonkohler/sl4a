@@ -96,7 +96,7 @@ public class ScriptEditor extends Activity {
       finish();
     } else if (item.getItemId() == MenuId.SAVE_AND_RUN.getId()) {
       save();
-      startActivity(IntentBuilders.buildLaunchIntent(mNameText.getText().toString()));
+      startService(IntentBuilders.buildLaunchWithTerminalIntent(mNameText.getText().toString()));
       finish();
     } else if (item.getItemId() == MenuId.HELP.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
