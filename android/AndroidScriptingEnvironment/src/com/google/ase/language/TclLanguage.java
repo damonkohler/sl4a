@@ -51,4 +51,9 @@ public class TclLanguage extends Language {
   protected String getRightParametersText() {
     return "";
   }
+
+  @Override
+  protected String getParameterSeparator() {
+    return " ";
+  }
 }

@@ -33,6 +33,7 @@ public class PythonLanguage extends Language {
     return rpcReceiver + " = android.Android()\n";
   }
 
+  @Override
   protected String getQuote() {
     return "'";
   }

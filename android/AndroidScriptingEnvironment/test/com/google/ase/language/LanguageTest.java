@@ -60,7 +60,7 @@ public class LanguageTest extends TestCase {
     checkMethodCall("droid.method(1, 'abc', null)", python, params);
     checkMethodCall("droid.method(1, \"abc\", null)", ruby, params);
     checkMethodCall("droid.method(1, \"abc\", null)", shell, params);
-    checkMethodCall("$droid method 1, \"abc\", null", tcl, params);
+    checkMethodCall("$droid method 1 \"abc\" null", tcl, params);
   }
 
   private void checkContentTemplate(String expectedContent, Language language) {

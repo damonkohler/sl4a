@@ -74,13 +74,13 @@ public abstract class Language {
     String separator = "";
     for (ParameterDescriptor parameter : parameters) {
       result.append(separator).append(maybeQuote(parameter));
-      separator = ", ";
+      separator = getParameterSeparator();
     }
     result.append(getRightParametersText());
     
     return result.toString();
   }
-  
+
   /** Returns the apply receiver text. */
   protected String getApplyReceiverText(String receiver) {
     return receiver;
@@ -101,6 +101,16 @@ public abstract class Language {
     return ")";
   }
 
+  /** Returns the parameter separator text. */
+  protected String getParameterSeparator() {
+    return ", ";
+  }
+  
+  /** Returns the text of the quotation. */
+  protected String getQuote() {
+    return "\"";
+  }
+
   /** Returns the parameter value, quoted if needed. */
   private String maybeQuote(ParameterDescriptor parameter) {
     return parameter.getType().equals(String.class) ? quote(parameter.getValue()) : parameter.getValue();
@@ -109,11 +119,6 @@ public abstract class Language {
   /** Returns the quoted value. */
   private String quote(String value) {
     return getQuote() + value + getQuote();
-  }
-
-  /** Returns the text of the quotation. */
-  protected String getQuote() {
-    return "\"";
   }
 
 }
