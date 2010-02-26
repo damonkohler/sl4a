@@ -67,15 +67,36 @@ public abstract class Language {
   
   /** Returns the method call text in the language.*/
   protected String getMethodCallText(String receiver, String method, String[] parameters) {
-    StringBuilder result = new StringBuilder(receiver).append('.').append(method).append('(');
+    StringBuilder result = new StringBuilder().append(getApplyReceiverText(receiver))
+        .append(getApplyOperatorText()).append(method).append(getLeftParametersText());
     String separator = "";
     for (String parameter : parameters) {
       result.append(separator).append(parameter);
-      separator = ",";
+      separator = ", ";
     }
-    result.append(')');
+    result.append(getRightParametersText());
     
     return result.toString();
+  }
+  
+  /** Returns the apply receiver text. */
+  protected String getApplyReceiverText(String receiver) {
+    return receiver;
+  }
+
+  /** Returns the apply operator text. */
+  protected String getApplyOperatorText() {
+    return ".";
+  }
+
+  /** Returns the text to the left of the parameters. */
+  protected String getLeftParametersText() {
+    return "(";
+  }
+
+  /** Returns the text to the right of the parameters. */
+  protected String getRightParametersText() {
+    return ")";
   }
 
 }

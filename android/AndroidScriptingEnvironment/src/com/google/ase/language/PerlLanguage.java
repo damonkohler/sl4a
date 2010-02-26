@@ -33,7 +33,13 @@ public class PerlLanguage extends Language {
     return "my " + rpcReceiver + " = Android()->new();\n";
   }
 
+  @Override
   protected String getDefaultRpcReceiver() {
     return "$droid";
+  }
+
+  @Override
+  protected String getApplyOperatorText() {
+    return "->";
   }
 }

@@ -45,7 +45,23 @@ public class LanguageTest extends TestCase {
     checkContentTemplate("package require android\n\nset droid [android new]\n", tcl);
   }
 
+  public void testMethodCall() {
+    checkMethodCall("droid.method(1, b, 'c')", beanShell, "1", "b", "'c'");
+    checkMethodCall("droid.method(1, b, 'c')", javaScript, "1", "b", "'c'");
+    checkMethodCall("android.method(1, b, 'c')", lua, "1", "b", "'c'");
+    checkMethodCall("$droid->method(1, b, 'c')", perl, "1", "b", "'c'");
+    checkMethodCall("droid.method(1, b, 'c')", python, "1", "b", "'c'");
+    checkMethodCall("droid.method(1, b, 'c')", ruby, "1", "b", "'c'");
+    checkMethodCall("droid.method(1, b, 'c')", shell, "1", "b", "'c'");
+    checkMethodCall("$droid method 1, b, 'c'", tcl, "1", "b", "'c'");
+  }
+
   private void checkContentTemplate(String expectedContent, Language language) {
     assertEquals(expectedContent, language.getContentTemplate());
+  }
+
+  private void checkMethodCall(String expectedContent, Language language, String... params) {
+    assertEquals(expectedContent, language.getMethodCallText(language.getDefaultRpcReceiver(),
+        "method", params));
   }
 }

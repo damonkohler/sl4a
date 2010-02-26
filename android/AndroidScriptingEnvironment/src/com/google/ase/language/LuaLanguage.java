@@ -28,7 +28,8 @@ public class LuaLanguage extends Language {
     return "require \"android\"\n";
   }
 
+  @Override
   protected String getDefaultRpcReceiver() {
-    return "andriod";
+    return "android";
   }
 }
