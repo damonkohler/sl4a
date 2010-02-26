@@ -113,7 +113,9 @@ public abstract class Language {
 
   /** Returns the parameter value, quoted if needed. */
   private String maybeQuote(ParameterDescriptor parameter) {
-    return parameter.getType().equals(String.class) ? quote(parameter.getValue()) : parameter.getValue();
+    return parameter.getType().equals(String.class) && parameter.getValue() != null
+        ? quote(parameter.getValue())
+        : parameter.getValue();
   }
 
   /** Returns the quoted value. */
