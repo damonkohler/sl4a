@@ -15,6 +15,8 @@
  */
 package com.google.ase.language;
 
+import com.google.ase.jsonrpc.ParameterDescriptor;
+
 import junit.framework.TestCase;
 
 /**
@@ -46,21 +48,27 @@ public class LanguageTest extends TestCase {
   }
 
   public void testMethodCall() {
-    checkMethodCall("droid.method(1, b, 'c')", beanShell, "1", "b", "'c'");
-    checkMethodCall("droid.method(1, b, 'c')", javaScript, "1", "b", "'c'");
-    checkMethodCall("android.method(1, b, 'c')", lua, "1", "b", "'c'");
-    checkMethodCall("$droid->method(1, b, 'c')", perl, "1", "b", "'c'");
-    checkMethodCall("droid.method(1, b, 'c')", python, "1", "b", "'c'");
-    checkMethodCall("droid.method(1, b, 'c')", ruby, "1", "b", "'c'");
-    checkMethodCall("droid.method(1, b, 'c')", shell, "1", "b", "'c'");
-    checkMethodCall("$droid method 1, b, 'c'", tcl, "1", "b", "'c'");
+    ParameterDescriptor[] params = new ParameterDescriptor[] {
+      new ParameterDescriptor("1", Integer.class),
+      new ParameterDescriptor("abc", String.class),
+      new ParameterDescriptor(null, Object.class),
+    };
+    checkMethodCall("droid.method(1, \"abc\", null)", beanShell, params);
+    checkMethodCall("droid.method(1, \"abc\", null)", javaScript, params);
+    checkMethodCall("android.method(1, \"abc\", null)", lua, params);
+    checkMethodCall("$droid->method(1, \"abc\", null)", perl, params);
+    checkMethodCall("droid.method(1, 'abc', null)", python, params);
+    checkMethodCall("droid.method(1, \"abc\", null)", ruby, params);
+    checkMethodCall("droid.method(1, \"abc\", null)", shell, params);
+    checkMethodCall("$droid method 1, \"abc\", null", tcl, params);
   }
 
   private void checkContentTemplate(String expectedContent, Language language) {
     assertEquals(expectedContent, language.getContentTemplate());
   }
 
-  private void checkMethodCall(String expectedContent, Language language, String... params) {
+  private void checkMethodCall(String expectedContent, Language language,
+      ParameterDescriptor... params) {
     assertEquals(expectedContent, language.getMethodCallText(language.getDefaultRpcReceiver(),
         "method", params));
   }

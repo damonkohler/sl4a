@@ -14,26 +14,29 @@
  * the License.
  */
 
-package com.google.ase.language;
+package com.google.ase.jsonrpc;
+
+import java.lang.reflect.Type;
 
 /**
- * Represents the Python programming language.
+ * RPC parameter description.
  * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
-public class PythonLanguage extends Language {
-
-  @Override
-  protected String getImportStatement() {
-    return "import android\n";
+public final class ParameterDescriptor {
+  private final String value;
+  private final Type type;
+  
+  public ParameterDescriptor(String value, Type type) {
+    this.value = value;
+    this.type = type;
   }
-
-  @Override
-  protected String getRpcReceiverDeclaration(String rpcReceiver) {
-    return rpcReceiver + " = android.Android()\n";
+  
+  public String getValue() {
+    return value;
   }
-
-  protected String getQuote() {
-    return "'";
+  
+  public Type getType() {
+    return type;
   }
 }

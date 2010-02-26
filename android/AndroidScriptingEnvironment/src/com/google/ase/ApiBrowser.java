@@ -106,7 +106,7 @@ public class ApiBrowser extends ListActivity {
   
   @Override
   public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-    menu.add(Menu.NONE, MenuId.INSERT_TEXT.getId(), Menu.NONE, "Insert text");
+    menu.add(Menu.NONE, MenuId.INSERT_TEXT.getId(), Menu.NONE, "Insert");
   }
 
   @Override

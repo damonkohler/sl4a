@@ -155,20 +155,22 @@ public class RpcInfo {
   }
 
   /**
-   * Returns parameter values suitable for the RPC call text representation.
+   * Returns parameter descriptors suitable for the RPC call text representation.
    * 
-   * <p>Uses parameter name or default value if it is more meaningful.
+   * <p>Uses parameter name or default value if it is more meaningful as value.
    * 
-   * @return an array of parameter values
+   * @return an array of parameter descriptors
    */
-  public Pair<String, Class<?>>[] getDefaultParameterValues() {
+  public ParameterDescriptor[] getDefaultParameterValues() {
+    final Type[] parameterTypes = mMethod.getGenericParameterTypes();
     final Annotation[][] parametersAnnotations = mMethod.getParameterAnnotations();
-    final String[] parameters = new String[parametersAnnotations.length];
-    int index = 0;
-    for (Annotation[] parameterAnnotations : parametersAnnotations) {
-      parameters[index++] = RpcAnnotationHelper.hasDefaultValue(parameterAnnotations) ?
-          String.valueOf(RpcAnnotationHelper.getDefaultValue(parameterAnnotations)) :
-          RpcAnnotationHelper.getDescription(parameterAnnotations);
+    final ParameterDescriptor[] parameters = new ParameterDescriptor[parametersAnnotations.length];
+    for (int index = 0; index < parameters.length; index ++) {
+      parameters[index] = new ParameterDescriptor( 
+          RpcAnnotationHelper.hasDefaultValue(parametersAnnotations[index]) ?
+              String.valueOf(RpcAnnotationHelper.getDefaultValue(parametersAnnotations[index])) :
+              RpcAnnotationHelper.getDescription(parametersAnnotations[index]),
+          parameterTypes[index]);
     }
     return parameters;
   }

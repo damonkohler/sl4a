@@ -42,10 +42,6 @@ public abstract class Interpreter {
     return getLanguage().getRpcText(content, rpc);
   }
   
-  public final String getRpcText(String content, RpcInfo rpc, String[] parameters) {
-    return getLanguage().getRpcText(content, rpc, parameters);
-  }
-  
   public boolean isInstalled() {
     return InterpreterUtils.checkInstalled(getName());
   }
