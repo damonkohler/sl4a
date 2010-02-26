@@ -453,10 +453,18 @@ public class AndroidFacade implements RpcReceiver {
         alert.setMessage(message);
         alert.setView(input);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+          @Override
           public void onClick(DialogInterface dialog, int whichButton) {
             Intent intent = new Intent();
             intent.putExtra("result", input.getText().toString());
             result.set(intent);
+            activity.finish();
+          }
+        });
+        alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+          @Override
+          public void onCancel(DialogInterface arg0) {
+            result.set(null);
             activity.finish();
           }
         });
@@ -469,7 +477,11 @@ public class AndroidFacade implements RpcReceiver {
       AseLog.e("Failed to launch intent.", e);
     }
     try {
-      return result.get().getStringExtra("result");
+      if (result.get() == null) {
+        return null;
+      } else {
+        return result.get().getStringExtra("result");
+      }
     } catch (Exception e) {
       AseLog.e("Failed to display dialog.", e);
       throw new AseRuntimeException(e);
