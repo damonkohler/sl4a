@@ -158,11 +158,6 @@ public class Terminal extends Activity {
     mEmulatorView.attachInterpreterProcess(mInterpreterProcess);
   }
 
-  private void restart() {
-    startActivity(getIntent());
-    finish();
-  }
-
   private void updatePreferences() {
     mEmulatorView.setTextSize(readIntPref(FONTSIZE_KEY, DEFAULT_FONT_SIZE, 30));
     int[] scheme =
@@ -298,9 +293,6 @@ public class Terminal extends Activity {
       case R.id.terminal_menu_preferences:
         doPreferences();
         break;
-      case R.id.terminal_menu_reset:
-        doResetTerminal();
-        break;
       case R.id.terminal_menu_send_email:
         doEmailTranscript();
         break;
@@ -319,10 +311,6 @@ public class Terminal extends Activity {
 
   private void doPreferences() {
     startActivity(new Intent(this, AsePreferences.class));
-  }
-
-  private void doResetTerminal() {
-    restart();
   }
 
   private void doEmailTranscript() {
