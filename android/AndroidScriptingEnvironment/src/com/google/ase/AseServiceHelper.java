@@ -17,29 +17,37 @@
 package com.google.ase;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
-public class ServiceHelper extends Activity {
+/**
+ * This {@link Activity} is launched by the {@link AseService} in order to perform operations that a
+ * {@link Service} is unable to do. For example: start another activity for result, show dialogs,
+ * etc.
+ *
+ * @author Damon Kohler (damonkohler@gmail.com)
+ */
+public class AseServiceHelper extends Activity {
+  FutureIntent mResult;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Intent launchIntent = getIntent().getParcelableExtra("launchIntent");
     setPersistent(true);
-    startActivityForResult(launchIntent, getIntent().getIntExtra("requestCode", 0));
+    AseApplication application = (AseApplication) getApplication();
+    ActivityRunnable task = application.pollTaskQueue();
+    mResult = task.getFutureResult();
+    Handler handler = new Handler();
+    handler.post(task.getRunnable(this));
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == 0) {
-      Intent intent = new Intent(this, AseService.class);
-      intent.setAction(Constants.ACTION_ACTIVITY_RESULT);
-      intent.putExtra("requestCode", requestCode);
-      intent.putExtra("resultCode", resultCode);
-      intent.putExtra("data", data);
-      startService(intent);
-      setPersistent(false);
+      // TODO(damonkohler): Also return resultCode if necessary.
+      mResult.set(data);
       finish();
     }
   }

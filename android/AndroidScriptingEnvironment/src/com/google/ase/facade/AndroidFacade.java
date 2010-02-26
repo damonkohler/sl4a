@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -59,11 +58,14 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.ase.ActivityRunnable;
+import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
 import com.google.ase.AseRuntimeException;
+import com.google.ase.AseServiceHelper;
 import com.google.ase.CircularBuffer;
+import com.google.ase.FutureIntent;
 import com.google.ase.R;
-import com.google.ase.ServiceHelper;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
@@ -74,10 +76,9 @@ import com.google.ase.jsonrpc.RpcReceiver;
 
 public class AndroidFacade implements RpcReceiver {
 
-  private static final int REQUEST_CODE = 0;
-
   private final Service mService;
   private final Handler mHandler;
+  private final AseApplication mApplication;
 
   private final CircularBuffer<Bundle> mEventBuffer;
   private static final int EVENT_BUFFER_LIMIT = 1024;
@@ -89,11 +90,6 @@ public class AndroidFacade implements RpcReceiver {
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
   private final Geocoder mGeocoder;
-
-  private CountDownLatch mLatch;
-  // The result from a call to startActivityForResult().
-  private Intent mStartActivityResult;
-
   private final TextToSpeechFacade mTts;
 
   private Bundle mSensorReadings;
@@ -211,6 +207,7 @@ public class AndroidFacade implements RpcReceiver {
   public AndroidFacade(Service service, Handler handler, Intent intent) {
     mService = service;
     mHandler = handler;
+    mApplication = (AseApplication) mService.getApplication();
     mSms = SmsManager.getDefault();
     mActivityManager = (ActivityManager) mService.getSystemService(Context.ACTIVITY_SERVICE);
     mWifi = (WifiManager) mService.getSystemService(Context.WIFI_SERVICE);
@@ -332,35 +329,29 @@ public class AndroidFacade implements RpcReceiver {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
   }
 
-  private synchronized void post(Runnable runnable) {
-    mLatch = new CountDownLatch(1);
-    mHandler.post(runnable);
+  public Intent startActivityForResult(final Intent intent) {
+    FutureIntent result = mApplication.offerTask(new ActivityRunnable() {
+      @Override
+      public void run(Activity activity, FutureIntent result) {
+        activity.startActivityForResult(intent, 0);
+      }
+    });
     try {
-      mLatch.await();
-    } catch (InterruptedException e) {
-      String message = "Interrupted while waiting for handler to complete.";
-      AseLog.e(message, e);
-      throw new AseRuntimeException(message);
+      launchHelper();
+    } catch (Exception e) {
+      AseLog.e("Failed to launch intent.", e);
+    }
+    try {
+      return result.get();
+    } catch (Exception e) {
+      throw new AseRuntimeException(e);
     }
   }
 
-  public Intent startActivityForResult(final Intent intent) {
-    // Help ensure the service isn't killed to free up memory.
-    (mService).setForeground(true);
-    post(new Runnable() {
-      public void run() {
-        try {
-          Intent helper = new Intent(mService, ServiceHelper.class);
-          helper.putExtra("launchIntent", intent);
-          helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          (mService).startActivity(helper);
-        } catch (Exception e) {
-          AseLog.e("Failed to launch intent.", e);
-        }
-      }
-    });
-    (mService).setForeground(false);
-    return mStartActivityResult;
+  private void launchHelper() {
+    Intent helper = new Intent(mService, AseServiceHelper.class);
+    helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    mService.startActivity(helper);
   }
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
@@ -378,18 +369,13 @@ public class AndroidFacade implements RpcReceiver {
     return startActivityForResult(Intent.ACTION_PICK, uri);
   }
 
-  public void startActivity(final Intent intent) {
-    post(new Runnable() {
-      public void run() {
-        try {
-          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          mService.startActivity(intent);
-        } catch (Exception e) {
-          AseLog.e("Failed to launch intent.", e);
-        }
-        mLatch.countDown();
-      }
-    });
+  private void startActivity(final Intent intent) {
+    try {
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      mService.startActivity(intent);
+    } catch (Exception e) {
+      AseLog.e("Failed to launch intent.", e);
+    }
   }
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
@@ -445,63 +431,63 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Displays a short-duration Toast notification.")
   public void makeToast(@RpcParameter("message") final String message) {
-    post(new Runnable() {
+    mHandler.post(new Runnable() {
       public void run() {
         Toast.makeText(mService, message, Toast.LENGTH_SHORT).show();
-        mLatch.countDown();
       }
     });
   }
 
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == REQUEST_CODE) {
-      if (resultCode == Activity.RESULT_OK) {
-        AseLog.v("Request completed. Received intent: " + data);
-        mStartActivityResult = data;
-      } else if (requestCode == Activity.RESULT_CANCELED) {
-        AseLog.v("Request canceled.");
-      }
-      if (mLatch != null) {
-        mLatch.countDown();
-      }
-    }
-  }
-
-  private String getInputFromAlertDialog(final EditText input, final String title,
-      final String message) {
-    post(new Runnable() {
-      public void run() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(mService);
+  private String getInputFromAlertDialog(final String title, final String message,
+      final boolean password) {
+    FutureIntent result = mApplication.offerTask(new ActivityRunnable() {
+      @Override
+      public void run(final Activity activity, final FutureIntent result) {
+        final EditText input = new EditText(activity);
+        if (password) {
+          input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+          input.setTransformationMethod(new PasswordTransformationMethod());
+        }
+        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setTitle(title);
         alert.setMessage(message);
         alert.setView(input);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int whichButton) {
-            mLatch.countDown();
+            Intent intent = new Intent();
+            intent.putExtra("result", input.getText().toString());
+            result.set(intent);
+            activity.finish();
           }
         });
         alert.show();
       }
     });
-    return input.getText().toString();
+    try {
+      launchHelper();
+    } catch (Exception e) {
+      AseLog.e("Failed to launch intent.", e);
+    }
+    try {
+      return result.get().getStringExtra("result");
+    } catch (Exception e) {
+      AseLog.e("Failed to display dialog.", e);
+      throw new AseRuntimeException(e);
+    }
   }
 
   @Rpc(description = "Queries the user for a text input.")
   public String getInput(
       @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Input") final String title,
       @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter value:") final String message) {
-    EditText input = new EditText(mService);
-    return getInputFromAlertDialog(input, title, message);
+    return getInputFromAlertDialog(title, message, false);
   }
 
   @Rpc(description = "Queries the user for a password.")
   public String getPassword(
       @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Password Input") final String title,
       @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter password:") final String message) {
-    final EditText input = new EditText(mService);
-    input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-    input.setTransformationMethod(new PasswordTransformationMethod());
-    return getInputFromAlertDialog(input, title, message);
+    return getInputFromAlertDialog(title, message, true);
   }
 
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")

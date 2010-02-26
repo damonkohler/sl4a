@@ -18,7 +18,6 @@ package com.google.ase;
 
 import java.net.InetSocketAddress;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -58,9 +57,7 @@ public class AseService extends Service {
     } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
       launchServer(intent);
       launchTerminal(intent);
-    } else if (intent.getAction().equals(Constants.ACTION_ACTIVITY_RESULT)) {
-      mAndroidProxy.onActivityResult(intent.getIntExtra("requestCode", 0), intent.getIntExtra(
-          "resultCode", Activity.RESULT_CANCELED), intent.<Intent> getParcelableExtra("data"));
+      showNotification();
     } else if (intent.getAction().equals(Constants.ACTION_KILL_SERVICE)) {
       stopSelf();
     }

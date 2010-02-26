@@ -77,7 +77,7 @@
     <activity
       android:name=".interpreter.ZipExtractor" />
     <activity
-      android:name="ServiceHelper" />
+      android:name="AseServiceHelper" />
     <service
       android:name="AseService">
     </service>

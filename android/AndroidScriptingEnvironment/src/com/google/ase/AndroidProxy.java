@@ -27,7 +27,7 @@ import com.google.ase.facade.AndroidFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
 import com.google.ase.facade.TextToSpeechFacade;
-import com.google.ase.facade.UiFacade;
+import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcInfo;
 
@@ -58,11 +58,6 @@ public class AndroidProxy {
   public InetSocketAddress startPublic() {
     mAddress = mJsonRpcServer.startPublic();
     return mAddress;
-  }
-
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    mAndroidFacade.onActivityResult(requestCode, resultCode, data);
-    // mActivityLauncher.onActivityResult(requestCode, resultCode, data);
   }
 
   public Map<String, RpcInfo> getKnownRpcs() {
