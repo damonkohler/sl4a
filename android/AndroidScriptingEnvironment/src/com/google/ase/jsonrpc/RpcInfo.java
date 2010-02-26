@@ -161,12 +161,12 @@ public class RpcInfo {
    * 
    * @return an array of parameter values
    */
-  public String[] getDefaultParameterValues() {
+  public Pair<String, Class<?>>[] getDefaultParameterValues() {
     final Annotation[][] parametersAnnotations = mMethod.getParameterAnnotations();
     final String[] parameters = new String[parametersAnnotations.length];
     int index = 0;
     for (Annotation[] parameterAnnotations : parametersAnnotations) {
-      parameters[index] = RpcAnnotationHelper.hasDefaultValue(parameterAnnotations) ?
+      parameters[index++] = RpcAnnotationHelper.hasDefaultValue(parameterAnnotations) ?
           String.valueOf(RpcAnnotationHelper.getDefaultValue(parameterAnnotations)) :
           RpcAnnotationHelper.getDescription(parameterAnnotations);
     }
