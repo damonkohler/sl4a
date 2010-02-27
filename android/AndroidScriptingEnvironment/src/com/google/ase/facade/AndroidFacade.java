@@ -201,10 +201,8 @@ public class AndroidFacade implements RpcReceiver {
    *          is the {@link Context} the APIs will run under
    * @param handler
    *          is the {@link Handler} the APIs will use to communicate with the UI thread
-   * @param intent
-   *          is the {@link Intent} that was used to start the {@link Activity}
    */
-  public AndroidFacade(Service service, Handler handler, Intent intent) {
+  public AndroidFacade(Service service, Handler handler) {
     mService = service;
     mHandler = handler;
     mApplication = (AseApplication) mService.getApplication();

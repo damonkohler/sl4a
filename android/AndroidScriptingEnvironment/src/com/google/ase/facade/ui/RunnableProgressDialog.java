@@ -16,66 +16,50 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.concurrent.CountDownLatch;
-
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.Service;
-
-import com.google.ase.AseLog;
 
 /**
  * Wrapper class for progress dialog running in separate thread
  *
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-class RunnableProgressDialog implements Runnable {
-  private ProgressDialog mDialog;
+class RunnableProgressDialog implements RunnableDialog {
+  private final ProgressDialog mDialog;
   private final Service mService;
-  private final CountDownLatch mLatch;
-  private final CountDownLatch mShowLatch;
 
-  private Integer mType = ProgressDialog.STYLE_SPINNER;
+  private final int mStyle;
   private final String mTitle;
   private final String mMessage;
   private final Boolean mCancelable;
 
-  public RunnableProgressDialog(final Service service, final CountDownLatch latch,
-      final CountDownLatch show_latch, final Integer dialog_type, final String title,
-      final String message, final Boolean cancelable) {
-    // Set local variables.
-    mType = dialog_type;
+  public RunnableProgressDialog(Service service, int style, String title, String message,
+      boolean cancelable) {
+    mStyle = style;
     mService = service;
-    mLatch = latch;
-    mShowLatch = show_latch;
-    mDialog = null;
     mTitle = title;
     mMessage = message;
     mCancelable = cancelable;
+    mDialog = new ProgressDialog(mService);
   }
 
-  /**
-   * Returns created dialog
-   *
-   * @return Object
-   */
-  public Object getDialog() {
+  @Override
+  public Dialog getDialog() {
     return mDialog;
   }
 
   @Override
   public void run() {
-    mDialog = new ProgressDialog(mService);
-    mDialog.setProgressStyle(mType);
+    mDialog.setProgressStyle(mStyle);
     mDialog.setCancelable(mCancelable);
     mDialog.setTitle(mTitle);
     mDialog.setMessage(mMessage);
-    // Allow main thread to continue and wait for show signal.
-    mLatch.countDown();
-    try {
-      mShowLatch.await();
-    } catch (InterruptedException e) {
-      AseLog.e("Interrupted while waiting for handler to complete.", e);
-    }
     mDialog.show();
+  }
+
+  @Override
+  public void setMessage(String message) {
+    mDialog.setMessage(message);
   }
 }

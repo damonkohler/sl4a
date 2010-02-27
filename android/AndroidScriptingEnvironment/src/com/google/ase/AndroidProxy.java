@@ -35,15 +35,15 @@ public class AndroidProxy {
 
   private InetSocketAddress mAddress;
   private final JsonRpcServer mJsonRpcServer;
-  private final AndroidFacade mAndroidFacade;
 
   public AndroidProxy(Service service, Intent intent) {
-    mAndroidFacade = new AndroidFacade(service, new Handler(), intent);
+    Handler handler = new Handler();
+    AndroidFacade androidFacade = new AndroidFacade(service, handler);
+    UiFacade uiFacade = new UiFacade(service, handler);
     MediaFacade mediaFacade = new MediaFacade();
     TextToSpeechFacade ttsFacade = new TextToSpeechFacade(service);
-    SpeechRecognitionFacade srFacade = new SpeechRecognitionFacade(mAndroidFacade);
-    UiFacade uiFacade = new UiFacade(service);
-    mJsonRpcServer = new JsonRpcServer(mAndroidFacade, mediaFacade, ttsFacade, srFacade, uiFacade);
+    SpeechRecognitionFacade srFacade = new SpeechRecognitionFacade(androidFacade);
+    mJsonRpcServer = new JsonRpcServer(androidFacade, mediaFacade, ttsFacade, srFacade, uiFacade);
   }
 
   public InetSocketAddress getAddress() {

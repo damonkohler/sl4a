@@ -19,15 +19,11 @@ package com.google.ase.facade.ui;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.os.Handler;
 
-import com.google.ase.AseLog;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
@@ -44,232 +40,141 @@ import com.google.ase.jsonrpc.RpcReceiver;
 public class UiFacade implements RpcReceiver {
   private final Service mService;
   private final Handler mHandler;
-  private final Map<String, Object> mObjectMap = new HashMap<String, Object>();
-  private final Map<String, CountDownLatch> mLockMap = new HashMap<String, CountDownLatch>();
+  private final Map<String, RunnableDialog> mDialogMap = new HashMap<String, RunnableDialog>();
 
-  public UiFacade(Service service) {
+  public UiFacade(Service service, Handler handler) {
     mService = service;
-    mHandler = new Handler();
-    AseLog.v("UI Facade started!");
+    mHandler = handler;
   }
 
   /**
    * Returns universally unique identifier which is used in object addressing
    */
-  private String getUUID() {
+  private String getUuid() {
     return String.valueOf(UUID.randomUUID());
   }
 
   /**
-   * Returns object corresponding to a UUID.
-   *
-   * @param id
-   *          UUID of object to return
-   * @return Object
+   * Returns {@link RunnableDialog} corresponding to a UUID.
    */
-  private Object getObjectById(String id) {
-    Object result = null;
-    Object object = null;
-    if (mObjectMap.containsKey(id)) {
-      object = mObjectMap.get(id);
-      // Progress dialog.
-      if (object instanceof RunnableProgressDialog) {
-        result = ((RunnableProgressDialog) object).getDialog();
-      } else
-      // Alert dialog.
-      if (object instanceof RunnableAlertDialog) {
-        result = ((RunnableAlertDialog) object).getDialog();
-      }
+  private RunnableDialog getDialogById(String id) {
+    if (mDialogMap.containsKey(id)) {
+      return mDialogMap.get(id);
     }
-    return result;
+    return null;
   }
 
   /**
-   * Add object by UUID
-   *
-   * @param id
-   *          UUID of object to add
-   * @param obj
-   *          object to add
+   * Add {@link RunnableDialog} by UUID.
    */
-  private void addObject(String id, Object obj) {
-    mObjectMap.put(id, obj);
+  private void addDialog(String id, RunnableDialog dialog) {
+    mDialogMap.put(id, dialog);
   }
 
-  @Rpc(description = "Create progress dialog of specified type and return its ID.\nTypes: 0 - spinner, 1 - horizontal\n", returns = "UUID as String")
+  @Rpc(description = "Create a spinner progress dialog.", returns = "Dialog ID as String")
+  public String dialogCreateSpinnerProgress(
+      @RpcDefaultString(description = "Title", defaultValue = "") String title,
+      @RpcDefaultString(description = "Message", defaultValue = "") String message,
+      @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) boolean cancelable) {
+    String id = getUuid();
+    addDialog(id, new RunnableProgressDialog(mService, ProgressDialog.STYLE_SPINNER, title,
+        message, cancelable));
+    return id;
+  }
+
+  @Rpc(description = "Create a horizontal progress dialog.", returns = "Dialog ID as String")
   public String dialogCreateProgress(
-      @RpcParameter("dialog_type") Integer dialog_type,
-      @RpcDefaultString(description = "Dialog title", defaultValue = "") String title,
-      @RpcDefaultString(description = "Dialog message", defaultValue = "") String message,
-      @RpcDefaultBoolean(description = "Can dialog be canceled", defaultValue = false) Boolean cancelable) {
-    String id = getUUID();
-    RunnableProgressDialog thread_obj;
-    CountDownLatch latch = new CountDownLatch(1);
-
-    // Show signal.
-    CountDownLatch show_latch = new CountDownLatch(1);
-    mLockMap.put(id, show_latch);
-
-    // Create new thread and register dialog.
-    thread_obj =
-        new RunnableProgressDialog(mService, latch, show_latch, dialog_type, title, message,
-            cancelable);
-
-    addObject(id, thread_obj);
-    mHandler.post(thread_obj);
-
-    // Wait for dialog to be created.
-    try {
-      latch.await(5, TimeUnit.SECONDS);
-    } catch (InterruptedException e) {
-      AseLog.e("Interrupted while waiting for handler to complete.", e);
-    }
-
-    AseLog.v("Created progress dialog with id: " + id);
+      @RpcDefaultString(description = "Title", defaultValue = "") String title,
+      @RpcDefaultString(description = "Message", defaultValue = "") String message,
+      @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) boolean cancelable) {
+    String id = getUuid();
+    addDialog(id, new RunnableProgressDialog(mService, ProgressDialog.STYLE_HORIZONTAL, title,
+        message, cancelable));
     return id;
   }
 
-  @Rpc(description = "Create alert dialog", returns = "UUID as String")
+  @Rpc(description = "Create alert dialog.", returns = "Dialog ID as String")
   public String dialogCreateAlert(
-      @RpcDefaultString(description = "Dialog title", defaultValue = "") String title,
-      @RpcDefaultString(description = "Dialog message", defaultValue = "") String message,
-      @RpcDefaultBoolean(description = "Can dialog be canceled", defaultValue = false) Boolean cancelable) {
-    String id = getUUID();
-    CountDownLatch latch = new CountDownLatch(1);
-
-    // Show signal.
-    CountDownLatch show_latch = new CountDownLatch(1);
-    mLockMap.put(id, show_latch);
-
-    // Create new thread and register dialog.
-    RunnableAlertDialog thread_obj =
-        new RunnableAlertDialog(mService, latch, show_latch, title, message, cancelable);
-    addObject(id, thread_obj);
-    mHandler.post(thread_obj);
-
-    // Wait for dialog to be created.
-    try {
-      latch.await(5, TimeUnit.SECONDS);
-    } catch (InterruptedException e) {
-      AseLog.e("Interrupted while waiting for handler to complete.", e);
-    }
-
-    AseLog.v("Created alert dialog with id: " + id);
+      @RpcDefaultString(description = "Title", defaultValue = "") String title,
+      @RpcDefaultString(description = "Message", defaultValue = "") String message,
+      @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) boolean cancelable) {
+    String id = getUuid();
+    addDialog(id, new RunnableAlertDialog(mService, title, message, cancelable));
     return id;
   }
 
-  @Rpc(description = "Dismiss dialog with specified ID")
+  @Rpc(description = "Dismiss dialog")
   public void dialogDismiss(@RpcParameter("id") String id) {
-    Object dialog = getObjectById(id);
+    RunnableDialog dialog = getDialogById(id);
     if (dialog != null) {
-      // Progress dialog.
-      if (dialog instanceof ProgressDialog) {
-        ((ProgressDialog) dialog).dismiss();
-      } else
-      // Alert dialog.
-      if (dialog instanceof AlertDialog) {
-        ((AlertDialog) dialog).dismiss();
-      }
-      // Remove objects from maps so GC can deal with them.
-      mObjectMap.remove(id);
-      mLockMap.remove(id);
-      AseLog.v("Dismissed dialog with id: " + id);
+      dialog.getDialog().dismiss();
+      mDialogMap.remove(id);
     }
   }
 
-  @Rpc(description = "Allow selected dialog to be shown")
+  @Rpc(description = "Show dialog.")
   public void dialogShow(@RpcParameter("id") String id) {
-    CountDownLatch show_latch;
-    if (mLockMap.containsKey(id)) {
-      show_latch = mLockMap.get(id);
-      show_latch.countDown();
+    RunnableDialog dialog = getDialogById(id);
+    if (dialog != null) {
+      mHandler.post(dialog);
     }
-    AseLog.v("Allowed dialog ID: " + id + " to show himself");
   }
 
-  @Rpc(description = "Set progress dialog maximum value")
-  public void dialogProgressSetMax(@RpcParameter("id") String id, @RpcParameter("max") Integer max) {
-    Object dialog = getObjectById(id);
+  @Rpc(description = "Set progress dialog maximum value.")
+  public void dialogProgressSetMax(@RpcParameter("id") String id, @RpcParameter("max") int max) {
+    Object dialog = getDialogById(id);
     if (dialog != null) {
       if (dialog instanceof ProgressDialog)
         ((ProgressDialog) dialog).setMax(max);
     }
   }
 
-  @Rpc(description = "Set progress dialog current value")
+  @Rpc(description = "Set progress dialog current value.")
   public void dialogProgressSetCurrent(@RpcParameter("id") String id,
-      @RpcParameter("current") Integer current) {
-    Object dialog = getObjectById(id);
-    if (dialog != null) {
-      if (dialog instanceof ProgressDialog)
-        ((ProgressDialog) dialog).setProgress(current);
+      @RpcParameter("current") int current) {
+    RunnableDialog dialog = getDialogById(id);
+    if (dialog != null && dialog.getDialog() instanceof ProgressDialog) {
+      ((ProgressDialog) dialog.getDialog()).setProgress(current);
     }
   }
 
-  @Rpc(description = "Set dialog title")
+  @Rpc(description = "Set dialog title.")
   public void dialogSetTitle(@RpcParameter("id") String id, @RpcParameter("title") String title) {
-    Object dialog = getObjectById(id);
+    RunnableDialog dialog = getDialogById(id);
     if (dialog != null) {
-      // Progress dialog.
-      if (dialog instanceof ProgressDialog) {
-        ((ProgressDialog) dialog).setTitle(title);
-      } else
-      // Alert dialog.
-      if (dialog instanceof AlertDialog) {
-        ((AlertDialog) dialog).setTitle(title);
-      }
+      dialog.getDialog().setTitle(title);
     }
   }
 
-  @Rpc(description = "Set dialog message")
+  @Rpc(description = "Set dialog message.")
   public void dialogSetMessage(@RpcParameter("id") String id,
       @RpcParameter("message") String message) {
-    Object dialog = getObjectById(id);
+    RunnableDialog dialog = getDialogById(id);
     if (dialog != null) {
-      // Progress dialog.
-      if (dialog instanceof ProgressDialog) {
-        ((ProgressDialog) dialog).setMessage(message);
-      } else
-      // Alert dialog.
-      if (dialog instanceof AlertDialog) {
-        ((AlertDialog) dialog).setMessage(message);
-      }
+      dialog.setMessage(message);
     }
   }
 
-  @Rpc(description = "Set dialog message")
-  public String dialogSetButton(@RpcParameter("id") String id,
-      @RpcDefaultInteger(description = "Button number", defaultValue = 0) Integer button,
+  @Rpc(description = "Set dialog button text.")
+  public void dialogSetButton(@RpcParameter("id") String id,
+      @RpcDefaultInteger(description = "Button number", defaultValue = 0) int button,
       @RpcParameter("text") String text) {
-    String result = null;
-    if (mObjectMap.containsKey(id)) {
-      Object object = mObjectMap.get(id);
-      // Alert dialog.
-      if (object instanceof RunnableAlertDialog) {
-        ((RunnableAlertDialog) object).setButton(button, text);
-        result = String.valueOf(((RunnableAlertDialog) object).getDialog());
-      }
+    RunnableDialog dialog = getDialogById(id);
+    if (dialog != null && dialog instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) dialog).setButton(button, text);
     }
-    return result;
   }
 
-  @Rpc(description = "Retrieves response from dialog", returns = "Result")
+  @Rpc(description = "Returns dialog response.", returns = "Button number")
   public Object dialogGetResponse(@RpcParameter("id") String id) {
-    Object result = null;
-    if (mObjectMap.containsKey(id)) {
-      Object object = mObjectMap.get(id);
-      // Alert dialog.
-      if (object instanceof RunnableAlertDialog) {
-        result = ((RunnableAlertDialog) object).mResponse;
-      }
+    RunnableDialog dialog = getDialogById(id);
+    if (dialog != null && dialog instanceof RunnableAlertDialog) {
+      return ((RunnableAlertDialog) dialog).getResponse();
     }
-    return result;
+    return null;
   }
 
   @Override
   public void shutdown() {
-    // Clean up.
-    mObjectMap.clear();
-    mLockMap.clear();
   }
 }
