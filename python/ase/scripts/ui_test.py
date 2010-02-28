@@ -44,10 +44,9 @@ droid.dialogDismiss(dialog)
 # Show horizontal progress.
 title = 'Horizontal'
 message = 'This is simple horizontal progress.'
-dialog = droid.dialogCreateHorizontalProgress(title, message)['result']
-droid.dialogSetMaxProgress(dialog, 50)
+dialog = droid.dialogCreateHorizontalProgress(title, message, 50)['result']
 droid.dialogShow(dialog)
 for x in range(0, 50):
   time.sleep(0.1)
-  droid.dialogSetCurrentProgress(dialog, x+1)
+  droid.dialogSetCurrentProgress(dialog, x)
 droid.dialogDismiss(dialog)

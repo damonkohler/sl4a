@@ -79,10 +79,9 @@
     <activity
       android:name="AseServiceHelper" />
     <service
-      android:name="AseService">
-    </service>
+      android:name="AseService" />
     <activity
-      android:name="InterpreterManager"></activity>
+      android:name="InterpreterManager" />
   </application>
   <uses-permission
     android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />

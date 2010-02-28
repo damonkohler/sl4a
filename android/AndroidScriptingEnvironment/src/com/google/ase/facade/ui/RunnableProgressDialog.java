@@ -31,15 +31,30 @@ import com.google.ase.future.FutureIntent;
 class RunnableProgressDialog extends FutureActivityTask implements RunnableDialog {
   private ProgressDialog mDialog;
   private final int mStyle;
+  private final int mMax;
   private final String mTitle;
   private final String mMessage;
   private final Boolean mCancelable;
+  private Activity mActivity;
 
-  public RunnableProgressDialog(int style, String title, String message, boolean cancelable) {
+  public RunnableProgressDialog(int style, int max, String title, String message, boolean cancelable) {
     mStyle = style;
+    mMax = max;
     mTitle = title;
     mMessage = message;
     mCancelable = cancelable;
+  }
+
+  @Override
+  public void run(Activity activity, FutureIntent result) {
+    mActivity = activity;
+    mDialog = new ProgressDialog(activity);
+    mDialog.setProgressStyle(mStyle);
+    mDialog.setMax(mMax);
+    mDialog.setCancelable(mCancelable);
+    mDialog.setTitle(mTitle);
+    mDialog.setMessage(mMessage);
+    mDialog.show();
   }
 
   @Override
@@ -48,12 +63,8 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
   }
 
   @Override
-  public void run(Activity activity, FutureIntent result) {
-    mDialog = new ProgressDialog(activity);
-    mDialog.setProgressStyle(mStyle);
-    mDialog.setCancelable(mCancelable);
-    mDialog.setTitle(mTitle);
-    mDialog.setMessage(mMessage);
-    mDialog.show();
+  public void dismissDialog() {
+    mDialog.dismiss();
+    mActivity.finish();
   }
 }

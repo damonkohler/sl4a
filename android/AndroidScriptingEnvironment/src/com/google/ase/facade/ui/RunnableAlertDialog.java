@@ -36,6 +36,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private final String mMessage;
   private FutureIntent mResult;
   private final String[] mButtonTexts;
+  private Activity mActivity;
 
   public RunnableAlertDialog(String title, String message) {
     mTitle = title;
@@ -62,6 +63,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
 
   @Override
   public void run(final Activity activity, FutureIntent result) {
+    mActivity = activity;
     mResult = result;
     mDialog = new AlertDialog.Builder(activity).create();
     mDialog.setTitle(mTitle);
@@ -95,5 +97,11 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
       }
     });
     mDialog.show();
+  }
+
+  @Override
+  public void dismissDialog() {
+    mDialog.dismiss();
+    mActivity.finish();
   }
 }

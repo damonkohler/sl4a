@@ -84,8 +84,9 @@ public class UiFacade implements RpcReceiver {
   public String dialogCreateSpinnerProgress(
       @RpcDefaultString(description = "Title", defaultValue = "ASE Progress") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
+      @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
-    return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, title,
+    return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, max, title,
         message, cancelable));
   }
 
@@ -93,8 +94,9 @@ public class UiFacade implements RpcReceiver {
   public String dialogCreateHorizontalProgress(
       @RpcDefaultString(description = "Title", defaultValue = "ASE Progress") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
+      @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
-    return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, title,
+    return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title,
         message, cancelable));
   }
 
@@ -109,7 +111,7 @@ public class UiFacade implements RpcReceiver {
   public void dialogDismiss(@RpcParameter("id") String id) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null) {
-      dialog.getDialog().dismiss();
+      dialog.dismissDialog();
       mDialogMap.remove(id);
     }
   }
@@ -120,15 +122,6 @@ public class UiFacade implements RpcReceiver {
     if (task != null) {
       mTaskQueue.offer(task);
       launchHelper();
-    }
-  }
-
-  @Rpc(description = "Set progress dialog maximum value.")
-  public void dialogSetMaxProgress(@RpcParameter("id") String id, @RpcParameter("max") Integer max) {
-    Object dialog = getDialogById(id);
-    if (dialog != null) {
-      if (dialog instanceof ProgressDialog)
-        ((ProgressDialog) dialog).setMax(max);
     }
   }
 

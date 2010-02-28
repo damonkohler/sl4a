@@ -23,4 +23,9 @@ public interface RunnableDialog {
    * Returns the wrapped {@link Dialog}.
    */
   public Dialog getDialog();
+
+  /**
+   * Dismiss the {@link Dialog} and close {@link AseActivity}.
+   */
+  public void dismissDialog();
 }
