@@ -39,19 +39,26 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterUtils;
 import com.google.ase.facade.AndroidFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
 import com.google.ase.facade.TextToSpeechFacade;
 import com.google.ase.facade.ui.UiFacade;
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterUtils;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcInfo;
 
 public class ApiBrowser extends ListActivity {
 
   private static enum MenuId {
+    EXPAND_ALL, COLLAPSE_ALL;
+    public int getId() {
+      return ordinal() + Menu.FIRST;
+    }
+  }
+
+  private static enum ContextMenuId {
     INSERT_TEXT;
     public int getId() {
       return ordinal() + Menu.FIRST;
@@ -95,6 +102,30 @@ public class ApiBrowser extends ListActivity {
   }
 
   @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
+    menu.clear();
+    menu.add(Menu.NONE, MenuId.EXPAND_ALL.getId(), Menu.NONE, "Expand All");
+    menu.add(Menu.NONE, MenuId.COLLAPSE_ALL.getId(), Menu.NONE, "Collapse All");
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    super.onOptionsItemSelected(item);
+    int itemId = item.getItemId();
+    if (itemId == MenuId.EXPAND_ALL.getId()) {
+      for (int i = 0; i < mRpcInfoList.size(); i++) {
+        mExpandedPositions.add(i);
+      }
+    } else if (itemId == MenuId.COLLAPSE_ALL.getId()) {
+      mExpandedPositions.clear();
+    }
+    mAdapter.notifyDataSetInvalidated();
+    return true;
+  }
+
+  @Override
   protected void onListItemClick(ListView l, View v, int position, long id) {
     if (mExpandedPositions.contains(position)) {
       mExpandedPositions.remove(position);
@@ -103,10 +134,10 @@ public class ApiBrowser extends ListActivity {
     }
     mAdapter.notifyDataSetInvalidated();
   }
-  
+
   @Override
   public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-    menu.add(Menu.NONE, MenuId.INSERT_TEXT.getId(), Menu.NONE, "Insert");
+    menu.add(Menu.NONE, ContextMenuId.INSERT_TEXT.getId(), Menu.NONE, "Insert");
   }
 
   @Override
@@ -118,14 +149,14 @@ public class ApiBrowser extends ListActivity {
       AseLog.e("Bad menuInfo", e);
       return false;
     }
-    
+
     RpcInfo rpc = (RpcInfo) getListAdapter().getItem(info.position);
     if (rpc == null) {
       AseLog.v("No RPC selected.");
       return false;
     }
 
-    if (item.getItemId() == MenuId.INSERT_TEXT.getId()) {
+    if (item.getItemId() == ContextMenuId.INSERT_TEXT.getId()) {
       insertText(rpc);
     }
     return true;
