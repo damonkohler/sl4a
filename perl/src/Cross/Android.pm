@@ -194,18 +194,6 @@ sub rpc_maker {
     }
 }
 
-sub help {
-    my ($self, $method) = @_;
-    my $help = defined $method ? $self->help($method) : $self->_help();
-    if (exists $help->{error}) {
-        print STDERR "$0: client: Failed to retrieve help text.\n";
-    } else {
-        for my $m (@{ $help->{result} }) {
-            print "$m\n";
-        }
-    }
-}
-
 # AUTOLOAD installs RPC proxies for all unknown methods.
 sub AUTOLOAD {
     if ($Opt{trace}) {

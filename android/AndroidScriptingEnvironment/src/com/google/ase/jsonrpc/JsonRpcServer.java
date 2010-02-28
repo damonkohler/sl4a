@@ -257,39 +257,7 @@ public class JsonRpcServer {
     int id = jsonRequest.getInt("id");
     String methodName = jsonRequest.getString("method");
     JSONArray params = jsonRequest.getJSONArray("params");
-    if (methodName.equals("_help")) {
-      return help(id, params);
-    }
     return dispatch(id, methodName, params);
-  }
-
-  private JSONObject help(int id, JSONArray params) throws JSONException {
-    JSONObject result = JsonRpcResult.empty();
-    result.put("id", id);
-    JSONArray methods = new JSONArray();
-    result.put("result", methods);
-
-    try {
-      String methodName = params.optString(0);
-      if (!methodName.equals("")) {
-        // Lookup help for one specific method.
-        final RpcInfo rpcInfo = mKnownRpcs.get(methodName);
-        if (rpcInfo == null) { // Method not found.
-          methods.put("Unknown Function.");
-        } else {
-          methods.put(rpcInfo.getHelp());
-        }
-      } else {
-        // Lookup help for all available RPC methods.
-        for (RpcInfo rpcInfo : mKnownRpcs.values()) {
-          methods.put(rpcInfo.getHelp() + "\n");
-        }
-      }
-    } catch (Exception e) {
-      result = JsonRpcResult.error("RPC Error", e);
-    }
-
-    return result;
   }
 
   private JSONObject dispatch(final int id, final String methodName, final JSONArray params)
