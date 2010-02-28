@@ -16,11 +16,16 @@
 
 package com.google.ase;
 
+import java.util.Queue;
+
 import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.google.ase.future.FutureActivityTask;
+import com.google.ase.future.FutureIntent;
 
 /**
  * This {@link Activity} is launched by the {@link AseService} in order to perform operations that a
@@ -36,9 +41,9 @@ public class AseServiceHelper extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setPersistent(true);
-    AseApplication application = (AseApplication) getApplication();
-    ActivityRunnable task = application.pollTaskQueue();
-    mResult = task.getFutureResult();
+    Queue<FutureActivityTask> taskQueue = ((AseApplication) getApplication()).getTaskQueue();
+    FutureActivityTask task = taskQueue.poll();
+    mResult = task.getResult();
     Handler handler = new Handler();
     handler.post(task.getRunnable(this));
   }

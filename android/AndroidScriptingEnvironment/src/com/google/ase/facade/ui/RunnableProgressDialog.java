@@ -20,15 +20,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 
-import com.google.ase.ActivityRunnable;
-import com.google.ase.FutureIntent;
+import com.google.ase.future.FutureActivityTask;
+import com.google.ase.future.FutureIntent;
 
 /**
  * Wrapper class for progress dialog running in separate thread
  *
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-class RunnableProgressDialog extends ActivityRunnable implements RunnableDialog {
+class RunnableProgressDialog extends FutureActivityTask implements RunnableDialog {
   private ProgressDialog mDialog;
   private final int mStyle;
   private final String mTitle;
@@ -45,11 +45,6 @@ class RunnableProgressDialog extends ActivityRunnable implements RunnableDialog 
   @Override
   public Dialog getDialog() {
     return mDialog;
-  }
-
-  @Override
-  public void setMessage(String message) {
-    mDialog.setMessage(message);
   }
 
   @Override

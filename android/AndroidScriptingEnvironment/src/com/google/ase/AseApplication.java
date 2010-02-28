@@ -19,40 +19,17 @@ package com.google.ase;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import android.app.Activity;
 import android.app.Application;
-import android.os.Handler;
+
+import com.google.ase.future.FutureActivityTask;
 
 public class AseApplication extends Application {
 
-  private Activity mHelperActivity;
-  private Handler mHelperHandler;
+  private final Queue<FutureActivityTask> mTaskQueue =
+      new ConcurrentLinkedQueue<FutureActivityTask>();
 
-  private final Queue<ActivityRunnable> mTaskQueue = new ConcurrentLinkedQueue<ActivityRunnable>();
-
-  public synchronized void setHelperActivity(Activity activity) {
-    mHelperActivity = activity;
-  }
-
-  public synchronized Activity getHelperActivity() {
-    return mHelperActivity;
-  }
-
-  public synchronized void setHelperHandler(Handler mHelperHandler) {
-    this.mHelperHandler = mHelperHandler;
-  }
-
-  public synchronized Handler getHelperHandler() {
-    return mHelperHandler;
-  }
-
-  public FutureIntent offerTask(ActivityRunnable task) {
-    mTaskQueue.offer(task);
-    return task.getFutureResult();
-  }
-
-  public ActivityRunnable pollTaskQueue() {
-    return mTaskQueue.poll();
+  public Queue<FutureActivityTask> getTaskQueue() {
+    return mTaskQueue;
   }
 
   @Override

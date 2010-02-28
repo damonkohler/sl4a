@@ -148,7 +148,7 @@ public class RpcInvokerFactory {
             return JsonRpcResult.result(result);
           }
         } catch (Exception e) {
-          throw new AseRuntimeException("Server error.", e);
+          throw new AseRuntimeException("Failed to invoke: " + m.getName(), e);
         }
       }
     };

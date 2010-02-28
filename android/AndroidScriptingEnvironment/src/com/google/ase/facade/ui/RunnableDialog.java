@@ -23,9 +23,4 @@ public interface RunnableDialog {
    * Returns the wrapped {@link Dialog}.
    */
   public Dialog getDialog();
-
-  /**
-   * Sets the dialog message.
-   */
-  public void setMessage(String message);
 }

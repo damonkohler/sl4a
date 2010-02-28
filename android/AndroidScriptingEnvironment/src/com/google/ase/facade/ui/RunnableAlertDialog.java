@@ -22,55 +22,37 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import com.google.ase.ActivityRunnable;
-import com.google.ase.FutureIntent;
+import com.google.ase.future.FutureActivityTask;
+import com.google.ase.future.FutureIntent;
 
 /**
  * Wrapper class for alert dialog running in separate thread.
  *
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-class RunnableAlertDialog extends ActivityRunnable implements RunnableDialog {
+class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private AlertDialog mDialog;
   private final String mTitle;
   private final String mMessage;
-  private final boolean mCancelable;
   private FutureIntent mResult;
+  private final String[] mButtonTexts;
 
-  public RunnableAlertDialog(String title, String message, boolean cancelable) {
+  public RunnableAlertDialog(String title, String message) {
     mTitle = title;
     mMessage = message;
-    mCancelable = cancelable;
+    mButtonTexts = new String[3];
   }
 
   /**
-   * Set button text
+   * Set button text.
    *
    * @param buttonNumber
    *          button number
    * @param text
    *          button text
    */
-  public void setButton(Integer buttonNumber, String text) {
-    DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        Intent intent = new Intent();
-        intent.putExtra("which", which);
-        mResult.set(intent);
-      }
-    };
-    switch (buttonNumber) {
-      case 0:
-        mDialog.setButton(text, listener);
-        break;
-      case 1:
-        mDialog.setButton2(text, listener);
-        break;
-      case 2:
-        mDialog.setButton3(text, listener);
-        break;
-    }
+  public void setButton(int buttonNumber, String text) {
+    mButtonTexts[buttonNumber] = text;
   }
 
   @Override
@@ -79,18 +61,39 @@ class RunnableAlertDialog extends ActivityRunnable implements RunnableDialog {
   }
 
   @Override
-  public void setMessage(String message) {
-    mDialog.setMessage(message);
-  }
-
-  @Override
-  public void run(Activity activity, FutureIntent result) {
+  public void run(final Activity activity, FutureIntent result) {
     mResult = result;
     mDialog = new AlertDialog.Builder(activity).create();
-    mDialog.setCancelable(mCancelable);
     mDialog.setTitle(mTitle);
     mDialog.setMessage(mMessage);
+    DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        Intent intent = new Intent();
+        intent.putExtra("which", which);
+        mResult.set(intent);
+        mDialog.dismiss();
+        activity.finish();
+      }
+    };
+    if (mButtonTexts[0] != null) {
+      mDialog.setButton(mButtonTexts[0], buttonListener);
+    }
+    if (mButtonTexts[1] != null) {
+      mDialog.setButton2(mButtonTexts[1], buttonListener);
+    }
+    if (mButtonTexts[2] != null) {
+      mDialog.setButton3(mButtonTexts[2], buttonListener);
+    }
+    mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+      @Override
+      public void onCancel(DialogInterface dialog) {
+        Intent intent = new Intent();
+        intent.putExtra("canceled", true);
+        mResult.set(intent);
+        activity.finish();
+      }
+    });
     mDialog.show();
   }
-
 }

@@ -18,13 +18,17 @@ package com.google.ase.facade.ui;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 import java.util.UUID;
 
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.Intent;
+import android.util.AndroidRuntimeException;
 
-import com.google.ase.ActivityRunnable;
 import com.google.ase.AseApplication;
+import com.google.ase.AseServiceHelper;
+import com.google.ase.future.FutureActivityTask;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
@@ -40,12 +44,19 @@ import com.google.ase.jsonrpc.RpcReceiver;
  */
 public class UiFacade implements RpcReceiver {
   private final Service mService;
-  private final AseApplication mApplication;
-  private final Map<String, RunnableDialog> mDialogMap = new HashMap<String, RunnableDialog>();
+  private final Map<String, RunnableDialog> mDialogMap;
+  private final Queue<FutureActivityTask> mTaskQueue;
 
   public UiFacade(Service service) {
     mService = service;
-    mApplication = (AseApplication) mService.getApplication();
+    mTaskQueue = ((AseApplication) mService.getApplication()).getTaskQueue();
+    mDialogMap = new HashMap<String, RunnableDialog>();
+  }
+
+  private void launchHelper() {
+    Intent helper = new Intent(mService, AseServiceHelper.class);
+    helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    mService.startActivity(helper);
   }
 
   /**
@@ -71,31 +82,30 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Create a spinner progress dialog.", returns = "Dialog ID as String")
   public String dialogCreateSpinnerProgress(
-      @RpcDefaultString(description = "Title", defaultValue = "") String title,
+      @RpcDefaultString(description = "Title", defaultValue = "ASE Progress") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
-      @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) boolean cancelable) {
+      @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
     return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, title,
         message, cancelable));
   }
 
   @Rpc(description = "Create a horizontal progress dialog.", returns = "Dialog ID as String")
   public String dialogCreateProgress(
-      @RpcDefaultString(description = "Title", defaultValue = "") String title,
+      @RpcDefaultString(description = "Title", defaultValue = "ASE Progress") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
-      @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) boolean cancelable) {
+      @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
     return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, title,
         message, cancelable));
   }
 
   @Rpc(description = "Create alert dialog.", returns = "Dialog ID as String")
   public String dialogCreateAlert(
-      @RpcDefaultString(description = "Title", defaultValue = "") String title,
-      @RpcDefaultString(description = "Message", defaultValue = "") String message,
-      @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) boolean cancelable) {
-    return addDialog(new RunnableAlertDialog(title, message, cancelable));
+      @RpcDefaultString(description = "Title", defaultValue = "ASE Alert") String title,
+      @RpcDefaultString(description = "Message", defaultValue = "") String message) {
+    return addDialog(new RunnableAlertDialog(title, message));
   }
 
-  @Rpc(description = "Dismiss dialog")
+  @Rpc(description = "Dismiss dialog.")
   public void dialogDismiss(@RpcParameter("id") String id) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null) {
@@ -106,14 +116,15 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Show dialog.")
   public void dialogShow(@RpcParameter("id") String id) {
-    ActivityRunnable dialog = (ActivityRunnable) getDialogById(id);
-    if (dialog != null) {
-      mApplication.offerTask(dialog);
+    FutureActivityTask task = (FutureActivityTask) getDialogById(id);
+    if (task != null) {
+      mTaskQueue.offer(task);
+      launchHelper();
     }
   }
 
   @Rpc(description = "Set progress dialog maximum value.")
-  public void dialogProgressSetMax(@RpcParameter("id") String id, @RpcParameter("max") int max) {
+  public void dialogProgressSetMax(@RpcParameter("id") String id, @RpcParameter("max") Integer max) {
     Object dialog = getDialogById(id);
     if (dialog != null) {
       if (dialog instanceof ProgressDialog)
@@ -123,33 +134,16 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Set progress dialog current value.")
   public void dialogProgressSetCurrent(@RpcParameter("id") String id,
-      @RpcParameter("current") int current) {
+      @RpcParameter("current") Integer current) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null && dialog.getDialog() instanceof ProgressDialog) {
       ((ProgressDialog) dialog.getDialog()).setProgress(current);
     }
   }
 
-  @Rpc(description = "Set dialog title.")
-  public void dialogSetTitle(@RpcParameter("id") String id, @RpcParameter("title") String title) {
-    RunnableDialog dialog = getDialogById(id);
-    if (dialog != null) {
-      dialog.getDialog().setTitle(title);
-    }
-  }
-
-  @Rpc(description = "Set dialog message.")
-  public void dialogSetMessage(@RpcParameter("id") String id,
-      @RpcParameter("message") String message) {
-    RunnableDialog dialog = getDialogById(id);
-    if (dialog != null) {
-      dialog.setMessage(message);
-    }
-  }
-
-  @Rpc(description = "Set dialog button text.")
+  @Rpc(description = "Set alert dialog button text.")
   public void dialogSetButton(@RpcParameter("id") String id,
-      @RpcDefaultInteger(description = "Button number", defaultValue = 0) int button,
+      @RpcDefaultInteger(description = "Button number", defaultValue = 0) Integer button,
       @RpcParameter("text") String text) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null && dialog instanceof RunnableAlertDialog) {
@@ -159,9 +153,12 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Returns dialog response.", returns = "Button number")
   public int dialogGetResponse(@RpcParameter("id") String id) {
-    RunnableDialog dialog = getDialogById(id);
-    // TODO(damonkohler): Actually get the result.
-    return 0;
+    FutureActivityTask task = (FutureActivityTask) getDialogById(id);
+    try {
+      return task.getResult().get().getIntExtra("which", 0);
+    } catch (Exception e) {
+      throw new AndroidRuntimeException(e);
+    }
   }
 
   @Override

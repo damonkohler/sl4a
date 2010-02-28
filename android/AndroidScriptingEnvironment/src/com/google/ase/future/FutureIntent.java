@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.future;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;

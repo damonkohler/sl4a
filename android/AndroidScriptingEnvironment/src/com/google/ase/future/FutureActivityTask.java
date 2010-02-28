@@ -14,30 +14,31 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.future;
+
 
 import android.app.Activity;
 
 /**
- * A {@link Runnable} that encapsulates an {@link Activity} and a {@link FutureIntent}.
+ * Encapsulates an {@link Activity} and a {@link FutureIntent}.
  *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public abstract class ActivityRunnable {
+public abstract class FutureActivityTask {
   private final FutureIntent mResult = new FutureIntent();
 
-  public abstract void run(Activity activity, FutureIntent result);
+  public abstract void run(final Activity activity, final FutureIntent result);
 
   public Runnable getRunnable(final Activity activity) {
     return new Runnable() {
       @Override
       public void run() {
-        ActivityRunnable.this.run(activity, mResult);
+        FutureActivityTask.this.run(activity, mResult);
       }
     };
   }
 
-  public FutureIntent getFutureResult() {
+  public FutureIntent getResult() {
     return mResult;
   }
 }
