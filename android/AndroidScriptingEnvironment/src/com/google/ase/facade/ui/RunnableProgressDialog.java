@@ -16,32 +16,30 @@
 
 package com.google.ase.facade.ui;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.Service;
+
+import com.google.ase.ActivityRunnable;
+import com.google.ase.FutureIntent;
 
 /**
  * Wrapper class for progress dialog running in separate thread
  *
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-class RunnableProgressDialog implements RunnableDialog {
-  private final ProgressDialog mDialog;
-  private final Service mService;
-
+class RunnableProgressDialog extends ActivityRunnable implements RunnableDialog {
+  private ProgressDialog mDialog;
   private final int mStyle;
   private final String mTitle;
   private final String mMessage;
   private final Boolean mCancelable;
 
-  public RunnableProgressDialog(Service service, int style, String title, String message,
-      boolean cancelable) {
+  public RunnableProgressDialog(int style, String title, String message, boolean cancelable) {
     mStyle = style;
-    mService = service;
     mTitle = title;
     mMessage = message;
     mCancelable = cancelable;
-    mDialog = new ProgressDialog(mService);
   }
 
   @Override
@@ -50,16 +48,17 @@ class RunnableProgressDialog implements RunnableDialog {
   }
 
   @Override
-  public void run() {
+  public void setMessage(String message) {
+    mDialog.setMessage(message);
+  }
+
+  @Override
+  public void run(Activity activity, FutureIntent result) {
+    mDialog = new ProgressDialog(activity);
     mDialog.setProgressStyle(mStyle);
     mDialog.setCancelable(mCancelable);
     mDialog.setTitle(mTitle);
     mDialog.setMessage(mMessage);
     mDialog.show();
-  }
-
-  @Override
-  public void setMessage(String message) {
-    mDialog.setMessage(message);
   }
 }

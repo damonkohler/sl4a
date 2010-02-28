@@ -22,8 +22,9 @@ import java.util.UUID;
 
 import android.app.ProgressDialog;
 import android.app.Service;
-import android.os.Handler;
 
+import com.google.ase.ActivityRunnable;
+import com.google.ase.AseApplication;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
@@ -39,19 +40,12 @@ import com.google.ase.jsonrpc.RpcReceiver;
  */
 public class UiFacade implements RpcReceiver {
   private final Service mService;
-  private final Handler mHandler;
+  private final AseApplication mApplication;
   private final Map<String, RunnableDialog> mDialogMap = new HashMap<String, RunnableDialog>();
 
-  public UiFacade(Service service, Handler handler) {
+  public UiFacade(Service service) {
     mService = service;
-    mHandler = handler;
-  }
-
-  /**
-   * Returns universally unique identifier which is used in object addressing
-   */
-  private String getUuid() {
-    return String.valueOf(UUID.randomUUID());
+    mApplication = (AseApplication) mService.getApplication();
   }
 
   /**
@@ -65,10 +59,14 @@ public class UiFacade implements RpcReceiver {
   }
 
   /**
-   * Add {@link RunnableDialog} by UUID.
+   * Adds {@link RunnableDialog} and returns its ID.
+   *
+   * @return dialog ID
    */
-  private void addDialog(String id, RunnableDialog dialog) {
+  private String addDialog(RunnableDialog dialog) {
+    String id = String.valueOf(UUID.randomUUID());
     mDialogMap.put(id, dialog);
+    return id;
   }
 
   @Rpc(description = "Create a spinner progress dialog.", returns = "Dialog ID as String")
@@ -76,10 +74,8 @@ public class UiFacade implements RpcReceiver {
       @RpcDefaultString(description = "Title", defaultValue = "") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) boolean cancelable) {
-    String id = getUuid();
-    addDialog(id, new RunnableProgressDialog(mService, ProgressDialog.STYLE_SPINNER, title,
+    return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, title,
         message, cancelable));
-    return id;
   }
 
   @Rpc(description = "Create a horizontal progress dialog.", returns = "Dialog ID as String")
@@ -87,10 +83,8 @@ public class UiFacade implements RpcReceiver {
       @RpcDefaultString(description = "Title", defaultValue = "") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) boolean cancelable) {
-    String id = getUuid();
-    addDialog(id, new RunnableProgressDialog(mService, ProgressDialog.STYLE_HORIZONTAL, title,
+    return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, title,
         message, cancelable));
-    return id;
   }
 
   @Rpc(description = "Create alert dialog.", returns = "Dialog ID as String")
@@ -98,9 +92,7 @@ public class UiFacade implements RpcReceiver {
       @RpcDefaultString(description = "Title", defaultValue = "") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) boolean cancelable) {
-    String id = getUuid();
-    addDialog(id, new RunnableAlertDialog(mService, title, message, cancelable));
-    return id;
+    return addDialog(new RunnableAlertDialog(title, message, cancelable));
   }
 
   @Rpc(description = "Dismiss dialog")
@@ -114,9 +106,9 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Show dialog.")
   public void dialogShow(@RpcParameter("id") String id) {
-    RunnableDialog dialog = getDialogById(id);
+    ActivityRunnable dialog = (ActivityRunnable) getDialogById(id);
     if (dialog != null) {
-      mHandler.post(dialog);
+      mApplication.offerTask(dialog);
     }
   }
 
@@ -166,12 +158,10 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Returns dialog response.", returns = "Button number")
-  public Object dialogGetResponse(@RpcParameter("id") String id) {
+  public int dialogGetResponse(@RpcParameter("id") String id) {
     RunnableDialog dialog = getDialogById(id);
-    if (dialog != null && dialog instanceof RunnableAlertDialog) {
-      return ((RunnableAlertDialog) dialog).getResponse();
-    }
-    return null;
+    // TODO(damonkohler): Actually get the result.
+    return 0;
   }
 
   @Override

@@ -18,7 +18,7 @@ package com.google.ase.facade.ui;
 
 import android.app.Dialog;
 
-public interface RunnableDialog extends Runnable {
+public interface RunnableDialog {
   /**
    * Returns the wrapped {@link Dialog}.
    */

@@ -16,35 +16,31 @@
 
 package com.google.ase.facade.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+
+import com.google.ase.ActivityRunnable;
+import com.google.ase.FutureIntent;
 
 /**
- * Wrapper class for alert dialog running in separate thread
+ * Wrapper class for alert dialog running in separate thread.
  *
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-class RunnableAlertDialog implements RunnableDialog {
-  private final AlertDialog mDialog;
-  private final Context mActivity;
+class RunnableAlertDialog extends ActivityRunnable implements RunnableDialog {
+  private AlertDialog mDialog;
   private final String mTitle;
   private final String mMessage;
-  private final Boolean mCancelable;
-  private int mResponse = 0;
+  private final boolean mCancelable;
+  private FutureIntent mResult;
 
-  // TODO(damonkohler): This needs to accept a service not a context.
-  public RunnableAlertDialog(Context activity, String title, String message, boolean cancelable) {
-    mActivity = activity;
+  public RunnableAlertDialog(String title, String message, boolean cancelable) {
     mTitle = title;
     mMessage = message;
     mCancelable = cancelable;
-    mDialog = new AlertDialog.Builder(mActivity).create();
-  }
-
-  public int getResponse() {
-    return mResponse;
   }
 
   /**
@@ -59,7 +55,9 @@ class RunnableAlertDialog implements RunnableDialog {
     DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        mResponse = which;
+        Intent intent = new Intent();
+        intent.putExtra("which", which);
+        mResult.set(intent);
       }
     };
     switch (buttonNumber) {
@@ -86,7 +84,9 @@ class RunnableAlertDialog implements RunnableDialog {
   }
 
   @Override
-  public void run() {
+  public void run(Activity activity, FutureIntent result) {
+    mResult = result;
+    mDialog = new AlertDialog.Builder(activity).create();
     mDialog.setCancelable(mCancelable);
     mDialog.setTitle(mTitle);
     mDialog.setMessage(mMessage);
