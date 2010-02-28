@@ -122,14 +122,15 @@ public class ScriptManager extends ListActivity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
-    // TODO(damonkohler): Would be nice if this were lazier and not done every time the menu
-    // button is pressed.
     menu.clear();
     buildMenuIdMaps();
     buildAddMenu(menu);
-    menu.add(Menu.NONE, MenuId.INTERPRETER_MANAGER.getId(), Menu.NONE, "Interpreters");
-    menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences");
-    menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help");
+    menu.add(Menu.NONE, MenuId.INTERPRETER_MANAGER.getId(), Menu.NONE, "Interpreters").setIcon(
+        android.R.drawable.ic_menu_more);
+    menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
+        android.R.drawable.ic_menu_preferences);
+    menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
+        android.R.drawable.ic_menu_help);
     return true;
   }
 
@@ -144,7 +145,9 @@ public class ScriptManager extends ListActivity {
   }
 
   private void buildAddMenu(Menu menu) {
-    Menu addMenu = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add");
+    Menu addMenu =
+        menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
+            android.R.drawable.ic_menu_add);
     for (Entry<Integer, Interpreter> entry : addMenuIds.entrySet()) {
       addMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
     }

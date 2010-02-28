@@ -18,8 +18,6 @@ package com.google.ase;
 
 import java.io.IOException;
 
-import com.google.ase.interpreter.InterpreterUtils;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +26,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.EditText;
+
+import com.google.ase.interpreter.InterpreterUtils;
 
 /**
  * A text editor for scripts.
@@ -83,9 +83,11 @@ public class ScriptEditor extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
-    menu.add(0, MenuId.SAVE.getId(), 0, "Save");
-    menu.add(0, MenuId.SAVE_AND_RUN.getId(), 0, "Save & Run");
-    menu.add(0, MenuId.HELP.getId(), 0, "Help");
+    menu.add(0, MenuId.SAVE.getId(), 0, "Save").setIcon(android.R.drawable.ic_menu_save);
+    menu.add(0, MenuId.SAVE_AND_RUN.getId(), 0, "Save & Run").setIcon(
+        android.R.drawable.ic_media_play);
+    menu.add(0, MenuId.HELP.getId(), 0, "API Browser").setIcon(
+        android.R.drawable.ic_menu_info_details);
     return true;
   }
 
@@ -135,11 +137,11 @@ public class ScriptEditor extends Activity {
     ScriptStorageAdapter.writeScript(mNameText.getText().toString(),
         mContentText.getText().toString());
   }
-  
+
   private void insertContent(String text) {
     int selectionStart = Math.min(mContentText.getSelectionStart(), mContentText.getSelectionEnd());
     int selectionEnd = Math.max(mContentText.getSelectionStart(), mContentText.getSelectionEnd());
     mContentText.getEditableText().replace(selectionStart, selectionEnd, text);
   }
-  
+
 }

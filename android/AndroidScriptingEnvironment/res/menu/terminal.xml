@@ -14,15 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/terminal_menu_preferences"
-    	android:title="Preferences" />
-    <item android:id="@+id/terminal_menu_exit_and_edit"
-    	android:title="Exit &amp; Edit" />
-    
-    <item android:id="@+id/terminal_menu_send_email"
-    	android:title="Email" />
-    <item android:id="@+id/terminal_menu_special_keys"
-    	android:title="Special Keys" />
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+    android:id="@+id/terminal_menu_exit_and_edit"
+    android:title="Exit &amp; Edit"
+    android:icon="@android:drawable/ic_menu_edit" />
+  <item
+    android:id="@+id/terminal_menu_send_email"
+    android:title="Email" android:icon="@android:drawable/ic_menu_send"/>
+  <item
+    android:id="@+id/terminal_menu_preferences"
+    android:title="Preferences"
+    android:icon="@android:drawable/ic_menu_preferences"></item>
+  <item
+    android:id="@+id/terminal_menu_special_keys"
+    android:title="Special Keys" />
 </menu>

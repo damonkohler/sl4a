@@ -115,7 +115,8 @@ public class InterpreterManager extends ListActivity {
     buildMenuIdMaps();
     buildInstallLanguagesMenu(menu);
     menu.add(Menu.NONE, MenuId.NETWORK.getId(), Menu.NONE, "Start Server");
-    menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help");
+    menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
+        android.R.drawable.ic_menu_help);
     return true;
   }
 
@@ -131,7 +132,9 @@ public class InterpreterManager extends ListActivity {
 
   private void buildInstallLanguagesMenu(Menu menu) {
     if (InterpreterUtils.getNotInstalledInterpreters().size() > 0) {
-      SubMenu installMenu = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add");
+      SubMenu installMenu =
+          menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
+              android.R.drawable.ic_menu_add);
       for (Entry<Integer, Interpreter> entry : installerMenuIds.entrySet()) {
         installMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
       }
