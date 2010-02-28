@@ -252,7 +252,7 @@ public class ScriptManager extends ListActivity {
     menu.add(Menu.NONE, MenuId.EDIT.getId(), Menu.NONE, "Edit");
     menu.add(Menu.NONE, MenuId.DELETE.getId(), Menu.NONE, "Delete");
     menu.add(Menu.NONE, MenuId.ADD_SHORTCUT.getId(), Menu.NONE, "Add Shortcut");
-    menu.add(Menu.NONE, MenuId.START_SERVICE.getId(), Menu.NONE, "Start Service");
+    menu.add(Menu.NONE, MenuId.START_SERVICE.getId(), Menu.NONE, "Start in Background");
   }
 
   @SuppressWarnings("unchecked")
