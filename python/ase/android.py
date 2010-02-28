@@ -14,12 +14,14 @@
 
 __author__ = 'Damon Kohler <damonkohler@gmail.com>'
 
+import collections
 import json
 import os
 import socket
 import sys
 
 PORT = os.environ.get('AP_PORT')
+Result = collections.namedtuple('Result', 'id,result,error')
 
 
 class Android(object):
@@ -43,20 +45,11 @@ class Android(object):
     result = json.loads(response)
     if result['error'] is not None:
       print result['error']
-    return result
+    # namedtuple doesn't work with unicode keys.
+    return Result(id=result['id'], result=result['result'],
+                  error=result['error'], )
 
   def __getattr__(self, name):
     def rpc_call(*args):
       return self._rpc(name, *args)
     return rpc_call
-
-  def help(self, method=None):
-    if method is None:
-      help = self._help()
-    else:
-      help = self._help(method)
-    if help['error'] is not None:
-      print 'Failed to retrieve help text.'
-    else:
-      for m in help['result']:
-        print m
