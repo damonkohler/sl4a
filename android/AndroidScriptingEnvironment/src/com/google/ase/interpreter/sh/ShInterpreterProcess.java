@@ -32,10 +32,11 @@ public class ShInterpreterProcess extends InterpreterProcess {
     StringBuilder path = new StringBuilder();
     for (Interpreter interpreter : InterpreterUtils.getInstalledInterpreters()) {
       if (interpreter.getBinary() != null) {
+        path.append(':');
         path.append(interpreter.getBinary().getParent());
       }
     }
-    mEnvironment.put("PATH", "$PATH:" + path.toString());
+    mEnvironment.put("PATH", "$PATH" + path.toString());
   }
 
   @Override
