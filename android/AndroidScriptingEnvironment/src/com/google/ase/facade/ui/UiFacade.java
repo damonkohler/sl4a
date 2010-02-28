@@ -90,7 +90,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Create a horizontal progress dialog.", returns = "Dialog ID as String")
-  public String dialogCreateProgress(
+  public String dialogCreateHorizontalProgress(
       @RpcDefaultString(description = "Title", defaultValue = "ASE Progress") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
@@ -124,7 +124,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Set progress dialog maximum value.")
-  public void dialogProgressSetMax(@RpcParameter("id") String id, @RpcParameter("max") Integer max) {
+  public void dialogSetMaxProgress(@RpcParameter("id") String id, @RpcParameter("max") Integer max) {
     Object dialog = getDialogById(id);
     if (dialog != null) {
       if (dialog instanceof ProgressDialog)
@@ -133,7 +133,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Set progress dialog current value.")
-  public void dialogProgressSetCurrent(@RpcParameter("id") String id,
+  public void dialogSetCurrentProgress(@RpcParameter("id") String id,
       @RpcParameter("current") Integer current) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null && dialog.getDialog() instanceof ProgressDialog) {
