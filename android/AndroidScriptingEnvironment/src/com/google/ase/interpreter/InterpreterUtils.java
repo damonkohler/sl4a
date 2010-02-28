@@ -43,9 +43,9 @@ public class InterpreterUtils {
   }
 
   private final static List<? extends Interpreter> mSupportedInterpreters =
-      Arrays.asList(new LuaInterpreter(), new BshInterpreter(), new PythonInterpreter(),
-          new ShInterpreter(), new JRubyInterpreter(), new PerlInterpreter(),
-          new RhinoInterpreter(), new TclInterpreter());
+      Arrays.asList(new BshInterpreter(), new JRubyInterpreter(), new LuaInterpreter(),
+          new PerlInterpreter(), new PythonInterpreter(), new RhinoInterpreter(),
+          new ShInterpreter(), new TclInterpreter());
 
   public static boolean checkInstalled(final String interpreterName) {
     if (interpreterName.equals("sh")) {
