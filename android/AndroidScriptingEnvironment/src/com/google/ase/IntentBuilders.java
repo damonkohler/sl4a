@@ -16,6 +16,8 @@
 
 package com.google.ase;
 
+import com.google.ase.activity.AseService;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Parcelable;

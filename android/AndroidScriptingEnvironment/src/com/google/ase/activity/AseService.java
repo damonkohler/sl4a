@@ -22,6 +22,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -42,6 +43,8 @@ import com.google.ase.terminal.Terminal;
  */
 public class AseService extends Service {
 
+  public static final ComponentName COMPONENT_NAME =
+    new ComponentName("com.google.ase.activity", "com.google.ase.activity.AseService");
   private AndroidProxy mAndroidProxy;
   private ScriptLauncher mLauncher;
   private final StringBuilder mNotificationMessage;

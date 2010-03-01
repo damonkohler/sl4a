@@ -22,7 +22,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.ase.Constants;
-import com.google.ase.activity.AseService;
+import com.google.ase.IntentBuilders;
 
 public class LocaleReceiver extends BroadcastReceiver {
 
@@ -30,15 +30,7 @@ public class LocaleReceiver extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     String scriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     Log.v("LocaleReceiver", "Locale initiated launch of " + scriptName);
-<<<<<<< local
-    Intent launch = IntentBuilders.buildLaunchIntent(scriptName);
-    launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    context.startService(launch);
-=======
-    Intent i = new Intent(context, AseService.class);
-    intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
-    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+    Intent i = IntentBuilders.buildLaunchWithTerminalIntent(scriptName);
     context.startService(i);
->>>>>>> other
   }
 }
