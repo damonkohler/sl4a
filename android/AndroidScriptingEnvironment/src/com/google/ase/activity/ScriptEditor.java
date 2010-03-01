@@ -28,7 +28,6 @@ import android.view.Window;
 import android.widget.EditText;
 
 import com.google.ase.Constants;
-import com.google.ase.CustomWindowTitle;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;

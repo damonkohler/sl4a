@@ -14,11 +14,14 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.activity;
 
 import android.app.Activity;
 import android.view.Window;
 import android.widget.TextView;
+
+import com.google.ase.AseVersion;
+import com.google.ase.R;
 
 public class CustomWindowTitle {
   private CustomWindowTitle() {

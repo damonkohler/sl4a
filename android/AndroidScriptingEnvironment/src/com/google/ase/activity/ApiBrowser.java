@@ -42,7 +42,6 @@ import android.widget.TextView;
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
-import com.google.ase.CustomWindowTitle;
 import com.google.ase.R;
 import com.google.ase.facade.AndroidFacade;
 import com.google.ase.facade.MediaFacade;

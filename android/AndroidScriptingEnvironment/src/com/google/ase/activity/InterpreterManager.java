@@ -45,7 +45,6 @@ import android.widget.SimpleAdapter;
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
-import com.google.ase.CustomWindowTitle;
 import com.google.ase.R;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterInstaller;
