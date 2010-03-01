@@ -8,7 +8,7 @@
     android:debuggable="true"
     android:icon="@drawable/ase_logo_48"
     android:label="@string/application_title"
-    android:name="AseApplication">
+    android:name=".activity.AseApplication">
     <activity
       android:name=".activity.ScriptManager">
       <intent-filter>
