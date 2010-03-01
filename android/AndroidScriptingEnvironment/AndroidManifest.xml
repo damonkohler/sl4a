@@ -35,7 +35,7 @@
     </activity>
     <activity-alias
       android:name="LocalePlugin"
-      android:targetActivity="ScriptManager"
+      android:targetActivity=".activity.ScriptManager"
       android:label="@string/application_title"
       android:icon="@drawable/ase_logo_32">
       <intent-filter>
