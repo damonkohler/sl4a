@@ -19,15 +19,15 @@ __copyright__ = 'Copyright (c) 2010, Google Inc.'
 __license__ = 'Apache License, Version 2.0'
 
 __all__ = [
-			'AlertDialog',
-			'ProgressDialog',
-			'SpinnerProgress',
-			'BUTTON_LEFT',
-			'BUTTON_RIGHT',
-			'BUTTON_MIDDLE',
-			'PROGRESS_SPINNER',
-			'PROGRESS_HORIZONTAL',
-		]
+      'AlertDialog',
+      'ProgressDialog',
+      'SpinnerProgress',
+      'BUTTON_LEFT',
+      'BUTTON_RIGHT',
+      'BUTTON_MIDDLE',
+      'PROGRESS_SPINNER',
+      'PROGRESS_HORIZONTAL',
+    ]
 
 
 # button position constants
@@ -41,163 +41,163 @@ PROGRESS_HORIZONTAL = 1
 
 
 class Dialog:
-	"""Base dialog
+  """Base dialog
 
-	This class is not meant for regular users. It provides
-	commonly used methods to other classes.
+  This class is not meant for regular users. It provides
+  commonly used methods to other classes.
 
-	Do *NOT* use this class in your programs!
+  Do *NOT* use this class in your programs!
 
-	"""
+  """
 
-	def __init__(self, AndroidProxy):
-		self._uuid = None
-		self._proxy = AndroidProxy
+  def __init__(self, AndroidProxy):
+    self._uuid = None
+    self._proxy = AndroidProxy
 
-		self._title = None
-		self._message = None
+    self._title = None
+    self._message = None
 
-	def show(self):
-		"""Show dialog
+  def show(self):
+    """Show dialog
 
-		Note: Once dialog is displayed you
-		can't change anything!
+    Note: Once dialog is displayed you
+    can't change anything!
 
-		"""
-		assert self._uuid is not None
-		self._proxy.dialogShow(self._uuid)
+    """
+    assert self._uuid is not None
+    self._proxy.dialogShow(self._uuid)
 
-	def dismiss(self):
-		"""Dismiss dialog"""
-		assert self._uuid is not None
+  def dismiss(self):
+    """Dismiss dialog"""
+    assert self._uuid is not None
 
-		self._proxy.dialogDismiss(self._uuid)
-		self._uuid = None;
+    self._proxy.dialogDismiss(self._uuid)
+    self._uuid = None;
 
-	def set_title(self, title):
-		"""Set dialog title"""
-		self._title = title
+  def set_title(self, title):
+    """Set dialog title"""
+    self._title = title
 
-	def set_message(self, message):
-		"""Set dialog message"""
-		self._message = message
+  def set_message(self, message):
+    """Set dialog message"""
+    self._message = message
 
-	def set_cancelable(self, cancelable=True):
-		"""Set dialog cancelable"""
-		self._cancelable = cancelable
+  def set_cancelable(self, cancelable=True):
+    """Set dialog cancelable"""
+    self._cancelable = cancelable
 
 
 class AlertDialog(Dialog):
-	"""Alert dialog with additional options"""
+  """Alert dialog with additional options"""
 
-	def __init__(self, AndroidProxy, title='', message='', cancelable=False):
-		Dialog.__init__(self, AndroidProxy)
+  def __init__(self, AndroidProxy, title='', message='', cancelable=False):
+    Dialog.__init__(self, AndroidProxy)
 
-		self._title = title
-		self._message = message
-		self._cancelable = cancelable
+    self._title = title
+    self._message = message
+    self._cancelable = cancelable
 
-	def set_button(self, text, position=BUTTON_LEFT):
-		"""Add button to alert dialog"""
-		assert self._uuid is not None
+  def set_button(self, text, position=BUTTON_LEFT):
+    """Add button to alert dialog"""
+    assert self._uuid is not None
 
-		self._proxy.dialogSetButton(self._uuid, position, text)
+    self._proxy.dialogSetButton(self._uuid, position, text)
 
-	def get_response(self):
-		"""Wait for user response on dialog"""
-		assert self._uuid is not None
+  def get_response(self):
+    """Wait for user response on dialog"""
+    assert self._uuid is not None
 
-		result = self._proxy.dialogGetResponse(self._uuid)['result']
-		return result
+    result = self._proxy.dialogGetResponse(self._uuid)['result']
+    return result
 
-	def show(self):
-		"""Show dialog"""
+  def show(self):
+    """Show dialog"""
 
-		# create alert dialog
-		self._uuid = self._proxy.dialogCreateAlert(
-												self._title,
-												self._message,
-												self._cancelable
-											)['result']
+    # create alert dialog
+    self._uuid = self._proxy.dialogCreateAlert(
+                        self._title,
+                        self._message,
+                        self._cancelable
+                      )['result']
 
-		# show newly created dialog
-		Dialog.show(self)
+    # show newly created dialog
+    Dialog.show(self)
 
 
 class ProgressDialog(Dialog):
-	"""Progress dialog"""
+  """Progress dialog"""
 
-	def __init__(self, AndroidProxy, type=PROGRESS_SPINNER, title='', message='', cancelable=False):
-		Dialog.__init__(self, AndroidProxy)
+  def __init__(self, AndroidProxy, type=PROGRESS_SPINNER, title='', message='', cancelable=False):
+    Dialog.__init__(self, AndroidProxy)
 
-		self._type = type
-		self._title = title
-		self._message = message
-		self._cancelable = cancelable
-		self._max = 100
-		self._current = 0
+    self._type = type
+    self._title = title
+    self._message = message
+    self._cancelable = cancelable
+    self._max = 100
+    self._current = 0
 
-	def set_max(self, max):
-		"""Set progress maximum value"""
-		self._max = max
+  def set_max(self, max):
+    """Set progress maximum value"""
+    self._max = max
 
-		if self._uuid is not None:
-			self._proxy.dialogProgressSetMax(self._uuid, self._max)
+    if self._uuid is not None:
+      self._proxy.dialogProgressSetMax(self._uuid, self._max)
 
-	def set_current(self, current):
-		"""Set current dialog progress"""
-		assert self._uuid is not None
+  def set_current(self, current):
+    """Set current dialog progress"""
+    assert self._uuid is not None
 
-		self._current = current
-		self._proxy.dialogProgressSetCurrent(self._uuid, self._current)
+    self._current = current
+    self._proxy.dialogProgressSetCurrent(self._uuid, self._current)
 
-	def show(self):
-		"""Show dialog"""
+  def show(self):
+    """Show dialog"""
 
-		method = {
-				PROGRESS_SPINNER: self._proxy.dialogCreateSpinnerProgress,
-				PROGRESS_HORIZONTAL: self._proxy.dialogCreateHorizontalProgress,
-			}
+    method = {
+        PROGRESS_SPINNER: self._proxy.dialogCreateSpinnerProgress,
+        PROGRESS_HORIZONTAL: self._proxy.dialogCreateHorizontalProgress,
+      }
 
-		# create dialog
-		self._uuid = method[self._type](
-										self._title,
-										self._message,
-										self._max,
-										self._cancelable
-									)['result']
+    # create dialog
+    self._uuid = method[self._type](
+                    self._title,
+                    self._message,
+                    self._max,
+                    self._cancelable
+                  )['result']
 
-		# show newly created dialog
-		Dialog.show(self)
+    # show newly created dialog
+    Dialog.show(self)
 
 
 class SpinnerProgress(ProgressDialog):
-	"""Spinner progress dialog class"""
+  """Spinner progress dialog class"""
 
-	def __init__(self, AndroidProxy, title='', message='', max=100, cancelable=False):
-		ProgressDialog.__init__(
-								self,
-								AndroidProxy,
-								PROGRESS_SPINNER,
-								title,
-								message,
-								cancelable
-							)
+  def __init__(self, AndroidProxy, title='', message='', max=100, cancelable=False):
+    ProgressDialog.__init__(
+                self,
+                AndroidProxy,
+                PROGRESS_SPINNER,
+                title,
+                message,
+                cancelable
+              )
 
-		self.set_max(max)
+    self.set_max(max)
 
 
 class HorizontalProgress(ProgressDialog):
-	"""Horizontal progress dialog class"""
+  """Horizontal progress dialog class"""
 
-	def __init__(self, AndroidProxy, title='', message='', max=100, cancelable=False):
-		ProgressDialog.__init__(
-								self,
-								AndroidProxy,
-								PROGRESS_HORIZONTAL,
-								title,
-								message,
-								cancelable
-							)
+  def __init__(self, AndroidProxy, title='', message='', max=100, cancelable=False):
+    ProgressDialog.__init__(
+                self,
+                AndroidProxy,
+                PROGRESS_HORIZONTAL,
+                title,
+                message,
+                cancelable
+              )
 
-		self.set_max(max)
+    self.set_max(max)
