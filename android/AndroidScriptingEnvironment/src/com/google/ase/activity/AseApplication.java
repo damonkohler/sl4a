@@ -14,13 +14,14 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.activity;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.app.Application;
 
+import com.google.ase.AseAnalytics;
 import com.google.ase.future.FutureActivityTask;
 
 public class AseApplication extends Application {
