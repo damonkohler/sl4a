@@ -53,15 +53,17 @@ public class LanguageTest extends TestCase {
       new ParameterDescriptor("abc", String.class),
       new ParameterDescriptor(null, String.class),
       new ParameterDescriptor(null, Object.class),
+      new ParameterDescriptor("true", Boolean.class),
+      new ParameterDescriptor("isComplete", Boolean.class),
     };
-    checkMethodCall("droid.method(1, \"abc\", null, null)", beanShell, params);
-    checkMethodCall("droid.method(1, \"abc\", null, null)", javaScript, params);
-    checkMethodCall("android.method(1, \"abc\", null, null)", lua, params);
-    checkMethodCall("$droid->method(1, \"abc\", null, null)", perl, params);
-    checkMethodCall("droid.method(1, 'abc', null, null)", python, params);
-    checkMethodCall("droid.method(1, \"abc\", null, null)", ruby, params);
-    checkMethodCall("droid.method(1, \"abc\", null, null)", shell, params);
-    checkMethodCall("$droid method 1 \"abc\" null null", tcl, params);
+    checkMethodCall("droid.method(1, \"abc\", null, null, true, isComplete)", beanShell, params);
+    checkMethodCall("droid.method(1, \"abc\", null, null, true, isComplete)", javaScript, params);
+    checkMethodCall("android.method(1, \"abc\", null, null, true, isComplete)", lua, params);
+    checkMethodCall("$droid->method(1, \"abc\", null, null, true, isComplete)", perl, params);
+    checkMethodCall("droid.method(1, 'abc', None, None, True, isComplete)", python, params);
+    checkMethodCall("droid.method(1, \"abc\", null, null, true, isComplete)", ruby, params);
+    checkMethodCall("droid.method(1, \"abc\", null, null, true, isComplete)", shell, params);
+    checkMethodCall("$droid method 1 \"abc\" null null true isComplete", tcl, params);
   }
 
   private void checkContentTemplate(String expectedContent, Language language) {
