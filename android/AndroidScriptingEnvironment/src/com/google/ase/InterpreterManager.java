@@ -56,7 +56,7 @@ public class InterpreterManager extends ListActivity {
     INSTALL_INTERPRETER, UNINSTALL_INTERPRETER
   }
 
-  private HashMap<Integer, Interpreter> installerMenuIds;
+  private HashMap<Integer, Interpreter> mInstallerMenuIds;
 
   private static enum MenuId {
     HELP, ADD, DELETE, NETWORK;
@@ -121,11 +121,11 @@ public class InterpreterManager extends ListActivity {
   }
 
   private void buildMenuIdMaps() {
-    installerMenuIds = new HashMap<Integer, Interpreter>();
+    mInstallerMenuIds = new HashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
     List<Interpreter> notInstalled = InterpreterUtils.getNotInstalledInterpreters();
     for (Interpreter interpreter : notInstalled) {
-      installerMenuIds.put(i, interpreter);
+      mInstallerMenuIds.put(i, interpreter);
       ++i;
     }
   }
@@ -135,7 +135,15 @@ public class InterpreterManager extends ListActivity {
       SubMenu installMenu =
           menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
               android.R.drawable.ic_menu_add);
-      for (Entry<Integer, Interpreter> entry : installerMenuIds.entrySet()) {
+      List<Entry<Integer, Interpreter>> interpreters = new ArrayList<Entry<Integer, Interpreter>>();
+      interpreters.addAll(mInstallerMenuIds.entrySet());
+      Collections.sort(interpreters, new Comparator<Entry<Integer, Interpreter>>() {
+        @Override
+        public int compare(Entry<Integer, Interpreter> arg0, Entry<Integer, Interpreter> arg1) {
+          return arg0.getValue().getNiceName().compareTo(arg1.getValue().getNiceName());
+        }
+      });
+      for (Entry<Integer, Interpreter> entry : interpreters) {
         installMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
       }
     }
@@ -159,9 +167,9 @@ public class InterpreterManager extends ListActivity {
         }
       });
       dialog.show();
-    } else if (installerMenuIds.containsKey(itemId)) {
+    } else if (mInstallerMenuIds.containsKey(itemId)) {
       // Install selected interpreter.
-      Interpreter interpreter = installerMenuIds.get(itemId);
+      Interpreter interpreter = mInstallerMenuIds.get(itemId);
       installInterpreter(interpreter);
     }
     return super.onOptionsItemSelected(item);
