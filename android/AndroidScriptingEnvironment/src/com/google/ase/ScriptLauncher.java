@@ -29,39 +29,36 @@ import com.google.ase.interpreter.InterpreterUtils;
 public class ScriptLauncher {
 
   private final String mScriptName;
-  private final String mInterpeterName;
+  private final String mInterpreterName;
+  private final Interpreter mInterpreter;
   private final InetSocketAddress mAddress;
   private InterpreterProcess mProcess;
 
   public ScriptLauncher(Intent intent, InetSocketAddress address) {
     mScriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    mInterpeterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
+    if (mScriptName != null) {
+      mInterpreter = InterpreterUtils.getInterpreterForScript(mScriptName);
+      mInterpreterName = mInterpreter.getName();
+    } else {
+      mInterpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
+      mInterpreter = InterpreterUtils.getInterpreterByName(mInterpreterName); // Returns null?
+    }
     mAddress = address;
   }
 
   public void launch() throws AseException {
-    if (mScriptName == null && mInterpeterName == null) {
+    if (mScriptName == null && mInterpreter == null) {
       throw new AseException("Must specify either script or interpreter.");
     }
-    Interpreter interpreter;
-    // TODO(damonkohler): Relying on a null parameter feels broken.
     String scriptPath = null;
     if (mScriptName != null) {
-      interpreter = InterpreterUtils.getInterpreterForScript(mScriptName);
-      if (interpreter == null) {
-        throw new AseException("No compatible interpreter installed.");
-      }
       File script = ScriptStorageAdapter.getScript(mScriptName);
       if (script == null) {
         throw new AseException("No such script to launch.");
       }
       scriptPath = script.getAbsolutePath();
-    } else {
-      interpreter = InterpreterUtils.getInterpreterByName(mInterpeterName);
     }
-    mProcess =
-        InterpreterUtils.getInterpreterByName(interpreter.getName()).buildProcess(scriptPath,
-            mAddress.getPort());
+    mProcess = mInterpreter.buildProcess(scriptPath, mAddress.getPort());
     mProcess.start();
   }
 
@@ -76,7 +73,7 @@ public class ScriptLauncher {
   }
 
   public String getInterpreterName() {
-    return mInterpeterName;
+    return mInterpreterName;
   }
 
   public InterpreterProcess getProcess() {
