@@ -37,4 +37,19 @@ public class PythonLanguage extends Language {
   protected String getQuote() {
     return "'";
   }
+
+  @Override
+  protected String getNull() {
+    return "None";
+  }
+
+  @Override
+  protected String getTrue() {
+    return "True";
+  }
+  
+  @Override
+  protected String getFalse() {
+    return "False";
+  }
 }

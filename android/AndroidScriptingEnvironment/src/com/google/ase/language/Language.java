@@ -73,7 +73,7 @@ public abstract class Language {
         .append(getApplyOperatorText()).append(method).append(getLeftParametersText());
     String separator = "";
     for (ParameterDescriptor parameter : parameters) {
-      result.append(separator).append(maybeQuote(parameter));
+      result.append(separator).append(getValueText(parameter));
       separator = getParameterSeparator();
     }
     result.append(getRightParametersText());
@@ -111,16 +111,54 @@ public abstract class Language {
     return "\"";
   }
 
-  /** Returns the parameter value, quoted if needed. */
-  private String maybeQuote(ParameterDescriptor parameter) {
-    return parameter.getType().equals(String.class) && parameter.getValue() != null
-        ? quote(parameter.getValue())
-        : parameter.getValue();
+  /** Returns the text of the {@code null} value. */
+  protected String getNull() {
+    return "null";
   }
 
-  /** Returns the quoted value. */
-  private String quote(String value) {
-    return getQuote() + value + getQuote();
+  /** Returns the text of the {{@code true} value. */
+  protected String getTrue() {
+    return "true";
   }
 
+  /** Returns the text of the false value. */
+  protected String getFalse() {
+    return "false";
+  }
+
+  /** Returns the parameter value suitable for code generation. */
+  private String getValueText(ParameterDescriptor parameter) {
+    if (parameter.getValue() == null) {
+      return getNullValueText();
+    } else if (parameter.getType().equals(String.class)) {
+      return getStringValueText(parameter.getValue());
+    } else if (parameter.getType().equals(Boolean.class)) {
+      return getBooleanValueText(parameter.getValue());
+    } else {
+      return parameter.getValue();
+    }
+  }
+  
+  /** Returns the null value suitable for code generation. */
+  private String getNullValueText() {
+    return getNull(); 
+  }
+
+  /** Returns the string parameter value suitable for code generation. */
+  protected String getStringValueText(String value) {
+    // TODO(igorkarp): do not quote expressions once they could be detected.
+    return getQuote() + value + getQuote(); 
+  }
+
+  /** Returns the boolean parameter value suitable for code generation. */
+  protected String getBooleanValueText(String value) {
+    if (value.equals(Boolean.TRUE.toString())) {
+      return getTrue();
+    } else if (value.equals(Boolean.FALSE.toString())) {
+      return getFalse();
+    } else {
+      // If it is neither true nor false it is must be an expression.
+      return value;
+    }
+  }
 }
