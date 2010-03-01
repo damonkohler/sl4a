@@ -44,7 +44,7 @@ import com.google.ase.terminal.Terminal;
 public class AseService extends Service {
 
   public static final ComponentName COMPONENT_NAME =
-    new ComponentName("com.google.ase.activity", "com.google.ase.activity.AseService");
+      new ComponentName("com.google.ase", "com.google.ase.activity.AseService");
   private AndroidProxy mAndroidProxy;
   private ScriptLauncher mLauncher;
   private final StringBuilder mNotificationMessage;

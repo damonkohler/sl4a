@@ -28,7 +28,7 @@ public class IntentBuilders {
     // Utility class.
   }
 
-  public static Intent buildLaunchIntent(String scriptName) {
+  public static Intent buildStartInBackgroundIntent(String scriptName) {
     final ComponentName componentName = AseService.COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
@@ -37,7 +37,7 @@ public class IntentBuilders {
     return intent;
   }
   
-  public static Intent buildLaunchWithTerminalIntent(String scriptName) {
+  public static Intent buildStartInTerminalIntent(String scriptName) {
     final ComponentName componentName = AseService.COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
@@ -55,10 +55,10 @@ public class IntentBuilders {
    *          the icon resource to associate with the shortcut
    * @return the intent that will create the shortcut
    */
-  public static Intent buildShortcutIntent(String scriptName, Parcelable iconResource) {
+  public static Intent buildCreateShortcutIntent(String scriptName, Parcelable iconResource) {
     // Then, set up the container intent (the response to the caller)
     Intent intent = new Intent();
-    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, buildLaunchIntent(scriptName));
+    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, buildStartInBackgroundIntent(scriptName));
     intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, scriptName);
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
     return intent;

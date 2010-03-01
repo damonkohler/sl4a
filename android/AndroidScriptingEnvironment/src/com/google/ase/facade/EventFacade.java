@@ -47,7 +47,7 @@ public class EventFacade implements RpcReceiver {
       @RpcParameter("interval") Long interval,
       @RpcParameter("script") String script) {
     final PendingIntent pendingIntent = PendingIntent.getService(mContext,
-        EXECUTE_SCRIPT_REQUEST_CODE, IntentBuilders.buildLaunchIntent(script), 0);
+        EXECUTE_SCRIPT_REQUEST_CODE, IntentBuilders.buildStartInBackgroundIntent(script), 0);
 
     mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
         SystemClock.elapsedRealtime(), interval, pendingIntent);
@@ -56,7 +56,7 @@ public class EventFacade implements RpcReceiver {
   @Rpc(description = "cancels the regular execution of a given script")
   public void cancelRepeating(@RpcParameter("script") String script) {
     final PendingIntent pendingIntent = PendingIntent.getService(mContext,
-        EXECUTE_SCRIPT_REQUEST_CODE, IntentBuilders.buildLaunchIntent(script), 0);
+        EXECUTE_SCRIPT_REQUEST_CODE, IntentBuilders.buildStartInBackgroundIntent(script), 0);
 
     mAlarmManager.cancel(pendingIntent);
   }
