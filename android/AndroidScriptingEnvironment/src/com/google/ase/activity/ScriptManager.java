@@ -219,8 +219,6 @@ public class ScriptManager extends ListActivity {
       return;
     }
 
-    // TODO(damonkohler): To continue support for Locale plugin, will need to have a helper activity
-    // to launch the service.
     if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
       Intent intent = new Intent();
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
