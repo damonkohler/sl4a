@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.exception;
 
 @SuppressWarnings("serial")
 public class AseRuntimeException extends RuntimeException {

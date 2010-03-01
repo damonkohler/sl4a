@@ -21,6 +21,7 @@ import java.net.InetSocketAddress;
 
 import android.content.Intent;
 
+import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.interpreter.InterpreterUtils;

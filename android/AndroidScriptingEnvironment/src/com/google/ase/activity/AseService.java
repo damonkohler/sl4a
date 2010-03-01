@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.activity;
 
 import java.net.InetSocketAddress;
 
@@ -27,6 +27,12 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
+import com.google.ase.AndroidProxy;
+import com.google.ase.AseLog;
+import com.google.ase.Constants;
+import com.google.ase.R;
+import com.google.ase.ScriptLauncher;
+import com.google.ase.exception.AseException;
 import com.google.ase.terminal.Terminal;
 
 /**

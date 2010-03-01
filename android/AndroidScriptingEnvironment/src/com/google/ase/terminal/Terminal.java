@@ -33,13 +33,13 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.google.ase.AseAnalytics;
-import com.google.ase.AseException;
 import com.google.ase.AseLog;
-import com.google.ase.AsePreferences;
-import com.google.ase.AseService;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
+import com.google.ase.activity.AsePreferences;
+import com.google.ase.activity.AseService;
+import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterProcess;
 
 /**

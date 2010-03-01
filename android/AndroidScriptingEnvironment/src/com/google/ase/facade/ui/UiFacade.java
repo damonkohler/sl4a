@@ -27,7 +27,7 @@ import android.content.Intent;
 import android.util.AndroidRuntimeException;
 
 import com.google.ase.AseApplication;
-import com.google.ase.AseServiceHelper;
+import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;

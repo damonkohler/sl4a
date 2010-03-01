@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.activity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,6 +43,14 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.google.ase.AseAnalytics;
+import com.google.ase.AseLog;
+import com.google.ase.Constants;
+import com.google.ase.CustomWindowTitle;
+import com.google.ase.IntentBuilders;
+import com.google.ase.R;
+import com.google.ase.ScriptStorageAdapter;
+import com.google.ase.UsageTrackingConfirmation;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterUtils;
 

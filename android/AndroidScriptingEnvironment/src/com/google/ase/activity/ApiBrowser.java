@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.activity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +39,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.ase.AseAnalytics;
+import com.google.ase.AseLog;
+import com.google.ase.Constants;
+import com.google.ase.CustomWindowTitle;
+import com.google.ase.R;
 import com.google.ase.facade.AndroidFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;

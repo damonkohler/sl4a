@@ -27,8 +27,8 @@ import java.util.concurrent.TimeUnit;
 import android.content.Context;
 import android.content.Intent;
 
-import com.google.ase.AseException;
 import com.google.ase.AseLog;
+import com.google.ase.exception.AseException;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;

@@ -10,7 +10,7 @@
     android:label="@string/application_title"
     android:name="AseApplication">
     <activity
-      android:name="ScriptManager">
+      android:name=".activity.ScriptManager">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />
@@ -51,14 +51,14 @@
       </intent-filter>
     </receiver>
     <activity
-      android:name=".AsePreferences" />
+      android:name=".activity.AsePreferences" />
     <activity
       android:name=".terminal.Terminal"
       android:windowSoftInputMode="adjustResize"
       android:configChanges="keyboardHidden|orientation">
     </activity>
     <activity
-      android:name="ScriptEditor">
+      android:name=".activity.ScriptEditor">
       <intent-filter>
         <action
           android:name="com.google.ase.action.EDIT_SCRIPT" />
@@ -67,7 +67,7 @@
       </intent-filter>
     </activity>
     <activity
-      android:name=".ApiBrowser" />
+      android:name=".activity.ApiBrowser" />
     <activity
       android:name=".interpreter.InterpreterInstaller" />
     <activity
@@ -77,11 +77,11 @@
     <activity
       android:name=".interpreter.ZipExtractor" />
     <activity
-      android:name="AseServiceHelper" />
+      android:name=".activity.AseServiceHelper" />
     <service
-      android:name="AseService" />
+      android:name=".activity.AseService" />
     <activity
-      android:name="InterpreterManager" />
+      android:name=".activity.InterpreterManager" />
   </application>
   <uses-permission
     android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />

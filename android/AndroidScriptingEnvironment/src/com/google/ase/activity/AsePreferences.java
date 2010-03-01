@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2007 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,13 +14,18 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.activity;
 
-@SuppressWarnings("serial")
-public class AseException extends Exception {
+import android.os.Bundle;
+import android.preference.PreferenceActivity;
 
-  public AseException(String message) {
-    super(message);
+import com.google.ase.R;
+
+public class AsePreferences extends PreferenceActivity {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Load the preferences from an XML resource
+    addPreferencesFromResource(R.xml.preferences);
   }
-
 }

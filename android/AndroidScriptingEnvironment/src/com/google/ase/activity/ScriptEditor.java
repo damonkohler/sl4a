@@ -14,7 +14,7 @@
  * governing permissions and limitations under the License.
  */
 
-package com.google.ase;
+package com.google.ase.activity;
 
 import java.io.IOException;
 
@@ -27,6 +27,11 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.EditText;
 
+import com.google.ase.Constants;
+import com.google.ase.CustomWindowTitle;
+import com.google.ase.IntentBuilders;
+import com.google.ase.R;
+import com.google.ase.ScriptStorageAdapter;
 import com.google.ase.interpreter.InterpreterUtils;
 
 /**

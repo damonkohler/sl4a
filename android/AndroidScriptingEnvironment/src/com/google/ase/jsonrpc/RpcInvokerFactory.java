@@ -30,7 +30,7 @@ import android.location.Address;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
-import com.google.ase.AseRuntimeException;
+import com.google.ase.exception.AseRuntimeException;
 
 /**
  * A factory for {@link RpcInvoker} objects.

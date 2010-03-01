@@ -78,7 +78,7 @@ public class ScriptStorageAdapter {
    * Deletes the specified script by name.
    */
   // TODO(damonkohler): Sanitize the script name.
-  static void deleteScript(String name) {
+  public static void deleteScript(String name) {
     File scriptFile = getScript(name);
     if (scriptFile == null) {
       return;
@@ -97,7 +97,7 @@ public class ScriptStorageAdapter {
   /**
    * Returns a list of all available script {@link File}s.
    */
-  static List<File> listScripts() {
+  public static List<File> listScripts() {
     File dir = new File(Constants.SCRIPTS_ROOT);
     if (dir.exists()) {
       return Arrays.asList(new File(Constants.SCRIPTS_ROOT).listFiles());
@@ -132,7 +132,7 @@ public class ScriptStorageAdapter {
    */
   // TODO(damonkohler): There's probably a better way to do this. Maybe Apache
   // IO Utils?
-  static String readScript(String name) throws IOException {
+  public static String readScript(String name) throws IOException {
     File scriptFile = getScript(name);
     if (scriptFile == null) {
       return null;

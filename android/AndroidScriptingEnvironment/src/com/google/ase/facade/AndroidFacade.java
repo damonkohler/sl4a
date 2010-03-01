@@ -61,10 +61,10 @@ import android.widget.Toast;
 
 import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
-import com.google.ase.AseRuntimeException;
-import com.google.ase.AseServiceHelper;
 import com.google.ase.CircularBuffer;
 import com.google.ase.R;
+import com.google.ase.activity.AseServiceHelper;
+import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureIntent;
 import com.google.ase.jsonrpc.Rpc;
