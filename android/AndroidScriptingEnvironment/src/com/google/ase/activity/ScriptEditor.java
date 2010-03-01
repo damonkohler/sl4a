@@ -19,12 +19,16 @@ package com.google.ase.activity;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
@@ -105,8 +109,8 @@ public class ScriptEditor extends Activity {
       finish();
     } else if (item.getItemId() == MenuId.HELP.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
-      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME,
-          InterpreterUtils.getInterpreterForScript(mNameText.getText().toString()).getName());
+      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, InterpreterUtils.getInterpreterForScript(
+          mNameText.getText().toString()).getName());
       intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());
       startActivityForResult(intent, RequestCode.RPC_HELP.ordinal());
     }
@@ -137,8 +141,9 @@ public class ScriptEditor extends Activity {
   }
 
   private void save() {
-    ScriptStorageAdapter.writeScript(mNameText.getText().toString(),
-        mContentText.getText().toString());
+    ScriptStorageAdapter.writeScript(mNameText.getText().toString(), mContentText.getText()
+        .toString());
+    Toast.makeText(this, "Saved " + mNameText.getText().toString(), Toast.LENGTH_SHORT);
   }
 
   private void insertContent(String text) {
@@ -147,4 +152,31 @@ public class ScriptEditor extends Activity {
     mContentText.getEditableText().replace(selectionStart, selectionEnd, text);
   }
 
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_BACK) {
+      AlertDialog.Builder alert = new AlertDialog.Builder(this);
+      alert.setCancelable(false);
+      alert.setMessage("Would you like to save?");
+      alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int whichButton) {
+          save();
+          finish();
+        }
+      });
+      alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int whichButton) {
+          finish();
+        }
+      });
+      alert.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int whichButton) {
+        }
+      });
+      alert.show();
+      return true;
+    } else {
+      return super.onKeyDown(keyCode, event);
+    }
+  }
 }
