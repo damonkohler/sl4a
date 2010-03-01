@@ -74,6 +74,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
         Intent intent = new Intent();
         intent.putExtra("which", which);
         mResult.set(intent);
+        // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
         mDialog.dismiss();
         activity.finish();
       }
