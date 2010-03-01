@@ -21,12 +21,12 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.EditText;
 
+import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
@@ -40,7 +40,6 @@ import com.google.ase.interpreter.InterpreterUtils;
  */
 public class ScriptEditor extends Activity {
 
-  private static String TAG = "ScriptEditor";
   private EditText mNameText;
   private EditText mContentText;
 
@@ -77,7 +76,7 @@ public class ScriptEditor extends Activity {
         content = ScriptStorageAdapter.readScript(name);
         mContentText.setText(content);
       } catch (IOException e) {
-        Log.e(TAG, "Failed to read script.", e);
+        AseLog.e("Failed to read script.", e);
       }
     } else if (content != null) {
       mContentText.setText(content);
@@ -102,7 +101,7 @@ public class ScriptEditor extends Activity {
       finish();
     } else if (item.getItemId() == MenuId.SAVE_AND_RUN.getId()) {
       save();
-      startActivity(IntentBuilders.buildLaunchIntent(mNameText.getText().toString()));
+      startService(IntentBuilders.buildStartInTerminalIntent(mNameText.getText().toString()));
       finish();
     } else if (item.getItemId() == MenuId.HELP.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);

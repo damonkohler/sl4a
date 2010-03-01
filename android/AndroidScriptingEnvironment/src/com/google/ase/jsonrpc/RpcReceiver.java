@@ -17,8 +17,6 @@
 package com.google.ase.jsonrpc;
 
 public interface RpcReceiver {
-  /**
-   * Invoked when the receiver is shut down.
-   */
+  /** Invoked when the receiver is shut down. */
   public void shutdown();
 }

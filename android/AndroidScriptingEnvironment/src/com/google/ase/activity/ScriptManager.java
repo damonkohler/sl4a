@@ -198,7 +198,7 @@ public class ScriptManager extends ListActivity {
     if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
       Parcelable iconResource =
           Intent.ShortcutIconResource.fromContext(this, R.drawable.ase_logo_48);
-      Intent intent = IntentBuilders.buildShortcutIntent(scriptName, iconResource);
+      Intent intent = IntentBuilders.buildCreateShortcutIntent(scriptName, iconResource);
       if (intent != null) {
         setResult(RESULT_OK, intent);
       } else {
@@ -209,7 +209,7 @@ public class ScriptManager extends ListActivity {
     }
 
     if (Intent.ACTION_PICK.equals(getIntent().getAction())) {
-      Intent intent = IntentBuilders.buildLaunchIntent(scriptName);
+      Intent intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
       if (intent != null) {
         setResult(RESULT_OK, intent);
       } else {
@@ -235,11 +235,7 @@ public class ScriptManager extends ListActivity {
       return;
     }
 
-    // TODO(damonkohler): This isn't ideal and should be extracted.
-    Intent intent = new Intent(this, AseService.class);
-    intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
-    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
-    startService(intent);
+    startService(IntentBuilders.buildStartInTerminalIntent(scriptName));
   }
 
   /**
@@ -290,7 +286,7 @@ public class ScriptManager extends ListActivity {
     } else if (itemId == MenuId.ADD_SHORTCUT.getId()) {
       Parcelable iconResource =
           Intent.ShortcutIconResource.fromContext(this, R.drawable.ase_logo_48);
-      Intent i = IntentBuilders.buildShortcutIntent(scriptName, iconResource);
+      Intent i = IntentBuilders.buildCreateShortcutIntent(scriptName, iconResource);
       if (i != null) {
         i.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
         sendBroadcast(i);

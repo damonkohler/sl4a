@@ -16,6 +16,9 @@
 
 package com.google.ase;
 
+import com.google.ase.activity.AseService;
+
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Parcelable;
 
@@ -25,11 +28,22 @@ public class IntentBuilders {
     // Utility class.
   }
 
-  public static Intent buildLaunchIntent(String scriptName) {
-    Intent i = new Intent();
-    i.setAction(Constants.ACTION_LAUNCH_SCRIPT);
-    i.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
-    return i;
+  public static Intent buildStartInBackgroundIntent(String scriptName) {
+    final ComponentName componentName = AseService.COMPONENT_NAME;
+    Intent intent = new Intent();
+    intent.setComponent(componentName);
+    intent.setAction(Constants.ACTION_LAUNCH_SCRIPT);
+    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+    return intent;
+  }
+  
+  public static Intent buildStartInTerminalIntent(String scriptName) {
+    final ComponentName componentName = AseService.COMPONENT_NAME;
+    Intent intent = new Intent();
+    intent.setComponent(componentName);
+    intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
+    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+    return intent;
   }
 
   /**
@@ -41,10 +55,10 @@ public class IntentBuilders {
    *          the icon resource to associate with the shortcut
    * @return the intent that will create the shortcut
    */
-  public static Intent buildShortcutIntent(String scriptName, Parcelable iconResource) {
+  public static Intent buildCreateShortcutIntent(String scriptName, Parcelable iconResource) {
     // Then, set up the container intent (the response to the caller)
     Intent intent = new Intent();
-    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, buildLaunchIntent(scriptName));
+    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, buildStartInBackgroundIntent(scriptName));
     intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, scriptName);
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
     return intent;
