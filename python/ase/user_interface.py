@@ -15,10 +15,19 @@
 #   the License.
 
 __author__ = 'MeanEYE.rcf <meaneye.rcf@gmail.com>'
-__copyright__ = 'Copyright (c) 2009, Google Inc.'
+__copyright__ = 'Copyright (c) 2010, Google Inc.'
 __license__ = 'Apache License, Version 2.0'
 
-__all__ = ['AlertDialog', 'ProgressDialog']
+__all__ = [
+			'AlertDialog',
+			'ProgressDialog',
+			'SpinnerProgress',
+			'BUTTON_LEFT',
+			'BUTTON_RIGHT',
+			'BUTTON_MIDDLE',
+			'PROGRESS_SPINNER',
+			'PROGRESS_HORIZONTAL',
+		]
 
 
 # button position constants
@@ -35,7 +44,7 @@ class Dialog:
 	"""Base dialog
 
 	This class is not meant for regular users. It provides
-	commonly used methods to other child classes.
+	commonly used methods to other classes.
 
 	Do *NOT* use this class in your programs!
 
@@ -56,7 +65,6 @@ class Dialog:
 
 		"""
 		assert self._uuid is not None
-
 		self._proxy.dialogShow(self._uuid)
 
 	def dismiss(self):
@@ -68,17 +76,15 @@ class Dialog:
 
 	def set_title(self, title):
 		"""Set dialog title"""
-		assert self._uuid is not None
-
 		self._title = title
-		self._proxy.dialogSetTitle(self._uuid, title)
 
 	def set_message(self, message):
 		"""Set dialog message"""
-		assert self._uuid is not None
-
 		self._message = message
-		self._proxy.dialogSetMessage(self._uuid, message)
+
+	def set_cancelable(self, cancelable=True):
+		"""Set dialog cancelable"""
+		self._cancelable = cancelable
 
 
 class AlertDialog(Dialog):
@@ -87,8 +93,9 @@ class AlertDialog(Dialog):
 	def __init__(self, AndroidProxy, title='', message='', cancelable=False):
 		Dialog.__init__(self, AndroidProxy)
 
-		# create alert dialog
-		self._uuid = self._proxy.dialogCreateAlert(title, message, cancelable)['result']
+		self._title = title
+		self._message = message
+		self._cancelable = cancelable
 
 	def set_button(self, text, position=BUTTON_LEFT):
 		"""Add button to alert dialog"""
@@ -103,6 +110,19 @@ class AlertDialog(Dialog):
 		result = self._proxy.dialogGetResponse(self._uuid)['result']
 		return result
 
+	def show(self):
+		"""Show dialog"""
+
+		# create alert dialog
+		self._uuid = self._proxy.dialogCreateAlert(
+												self._title,
+												self._message,
+												self._cancelable
+											)['result']
+
+		# show newly created dialog
+		Dialog.show(self)
+
 
 class ProgressDialog(Dialog):
 	"""Progress dialog"""
@@ -110,19 +130,74 @@ class ProgressDialog(Dialog):
 	def __init__(self, AndroidProxy, type=PROGRESS_SPINNER, title='', message='', cancelable=False):
 		Dialog.__init__(self, AndroidProxy)
 
-		# create progress dialog
-		self._type = type;
-
-		self._uuid = self._proxy.dialogCreateProgress(self._type, title, message, cancelable)['result']
+		self._type = type
+		self._title = title
+		self._message = message
+		self._cancelable = cancelable
+		self._max = 100
+		self._current = 0
 
 	def set_max(self, max):
 		"""Set progress maximum value"""
-		assert self._uuid is not None
+		self._max = max
 
-		self._proxy.dialogProgressSetMax(self._uuid, max)
+		if self._uuid is not None:
+			self._proxy.dialogProgressSetMax(self._uuid, self._max)
 
-	def set_progress(self, progress):
+	def set_current(self, current):
 		"""Set current dialog progress"""
 		assert self._uuid is not None
 
-		self._proxy.dialogProgressSetCurrent(self._uuid, progress)
+		self._current = current
+		self._proxy.dialogProgressSetCurrent(self._uuid, self._current)
+
+	def show(self):
+		"""Show dialog"""
+
+		method = {
+				PROGRESS_SPINNER: self._proxy.dialogCreateSpinnerProgress,
+				PROGRESS_HORIZONTAL: self._proxy.dialogCreateHorizontalProgress,
+			}
+
+		# create dialog
+		self._uuid = method[self._type](
+										self._title,
+										self._message,
+										self._max,
+										self._cancelable
+									)['result']
+
+		# show newly created dialog
+		Dialog.show(self)
+
+
+class SpinnerProgress(ProgressDialog):
+	"""Spinner progress dialog class"""
+
+	def __init__(self, AndroidProxy, title='', message='', max=100, cancelable=False):
+		ProgressDialog.__init__(
+								self,
+								AndroidProxy,
+								PROGRESS_SPINNER,
+								title,
+								message,
+								cancelable
+							)
+
+		self.set_max(max)
+
+
+class HorizontalProgress(ProgressDialog):
+	"""Horizontal progress dialog class"""
+
+	def __init__(self, AndroidProxy, title='', message='', max=100, cancelable=False):
+		ProgressDialog.__init__(
+								self,
+								AndroidProxy,
+								PROGRESS_HORIZONTAL,
+								title,
+								message,
+								cancelable
+							)
+
+		self.set_max(max)
