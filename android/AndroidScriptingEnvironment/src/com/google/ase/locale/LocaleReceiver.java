@@ -32,7 +32,7 @@ public class LocaleReceiver extends BroadcastReceiver {
     Log.v("LocaleReceiver", "Locale initiated launch of " + scriptName);
     Intent launch = IntentBuilders.buildLaunchIntent(scriptName);
     launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    context.startActivity(launch);
+    context.startService(launch);
   }
 
 }

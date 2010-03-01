@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.os.Handler;
 
 import com.google.ase.facade.AndroidFacade;
+import com.google.ase.facade.EventFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
 import com.google.ase.facade.TextToSpeechFacade;
@@ -37,6 +38,16 @@ public class AndroidProxy {
   private final JsonRpcServer mJsonRpcServer;
 
   public AndroidProxy(Service service, Intent intent) {
+<<<<<<< local
+    mAndroidFacade = new AndroidFacade(service, new Handler(), intent);
+    final MediaFacade mediaFacade = new MediaFacade();
+    final TextToSpeechFacade ttsFacade = new TextToSpeechFacade(service);
+    final SpeechRecognitionFacade srFacade = new SpeechRecognitionFacade(mAndroidFacade);
+    final UiFacade uiFacade = new UiFacade(service);
+    final EventFacade eventFacade = new EventFacade(service);
+    mJsonRpcServer = new JsonRpcServer(mAndroidFacade, mediaFacade, ttsFacade, srFacade, uiFacade,
+        eventFacade);
+=======
     Handler handler = new Handler();
     AndroidFacade androidFacade = new AndroidFacade(service, handler);
     UiFacade uiFacade = new UiFacade(service);
@@ -44,6 +55,7 @@ public class AndroidProxy {
     TextToSpeechFacade ttsFacade = new TextToSpeechFacade(service);
     SpeechRecognitionFacade srFacade = new SpeechRecognitionFacade(androidFacade);
     mJsonRpcServer = new JsonRpcServer(androidFacade, mediaFacade, ttsFacade, srFacade, uiFacade);
+>>>>>>> other
   }
 
   public InetSocketAddress getAddress() {

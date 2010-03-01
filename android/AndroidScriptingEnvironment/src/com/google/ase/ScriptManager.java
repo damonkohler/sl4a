@@ -231,11 +231,7 @@ public class ScriptManager extends ListActivity {
       return;
     }
 
-    // TODO(damonkohler): This isn't ideal and should be extracted.
-    Intent intent = new Intent(this, AseService.class);
-    intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
-    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
-    startService(intent);
+    startService(IntentBuilders.buildLaunchWithTerminalIntent(scriptName));
   }
 
   /**
