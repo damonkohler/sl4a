@@ -514,13 +514,11 @@ public class AndroidFacade implements RpcReceiver {
       @RpcDefaultString(description = "ticker", defaultValue = "ASE Notification") final String ticker) {
     Notification notification =
         new Notification(R.drawable.ase_logo_48, ticker, System.currentTimeMillis());
-    // This is pretty dumb. You _have_ to specify a PendingIntent to be
-    // triggered when the notification is clicked on. You cannot specify null.
-    Intent notificationIntent = new Intent();
-    PendingIntent contentIntent = PendingIntent.getActivity(mService, 0, notificationIntent, 0);
-    notification.setLatestEventInfo(mService, title, message, contentIntent);
+    // This contentIntent is a noop.
+    PendingIntent contentIntent = PendingIntent.getService(mService, 0, new Intent(), 0);
+    notification.setLatestEventInfo(mService, title, ticker, contentIntent);
     notification.flags = Notification.FLAG_AUTO_CANCEL;
-    mNotificationManager.notify(0, notification);
+    mNotificationManager.notify(1, notification);
   }
 
   @Rpc(description = "Dials a contact/phone number by URI.")

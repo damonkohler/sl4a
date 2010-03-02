@@ -122,8 +122,7 @@ public class AseService extends Service {
     Intent notificationIntent = new Intent(this, AseService.class);
     notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
     notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
-    notification.flags = Notification.FLAG_NO_CLEAR;
-    notification.flags = Notification.FLAG_ONGOING_EVENT;
+    notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
     NotificationManager manager =
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     manager.notify(0, notification);
