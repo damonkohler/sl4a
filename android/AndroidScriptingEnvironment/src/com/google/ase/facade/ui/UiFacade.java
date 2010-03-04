@@ -84,7 +84,7 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Create a spinner progress dialog.", returns = "Dialog ID as String")
   public String dialogCreateSpinnerProgress(
-      @RpcDefaultString(description = "Title", defaultValue = "ASE Progress") String title,
+      @RpcDefaultString(description = "Title", defaultValue = "") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
       @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
@@ -94,7 +94,7 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Create a horizontal progress dialog.", returns = "Dialog ID as String")
   public String dialogCreateHorizontalProgress(
-      @RpcDefaultString(description = "Title", defaultValue = "ASE Progress") String title,
+      @RpcDefaultString(description = "Title", defaultValue = "") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
       @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
@@ -104,7 +104,7 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Create alert dialog.", returns = "Dialog ID as String")
   public String dialogCreateAlert(
-      @RpcDefaultString(description = "Title", defaultValue = "ASE Alert") String title,
+      @RpcDefaultString(description = "Title", defaultValue = "") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message) {
     return addDialog(new RunnableAlertDialog(title, message));
   }

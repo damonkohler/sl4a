@@ -16,6 +16,8 @@
 
 package com.google.ase.facade.ui;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -25,6 +27,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureIntent;
 
@@ -41,6 +45,9 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private final String[] mButtonTexts;
   private Activity mActivity;
   private JSONArray mItems;
+  private ArrayList<String> mListData;
+  private ArrayAdapter<String> mListAdapter;
+  private ListView mList;
 
   public RunnableAlertDialog(String title, String message) {
     mTitle = title;
@@ -70,13 +77,12 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
       // store items localy
       mItems = items;
     } else {
-      ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mActivity, 0);
-      
+      mListData.clear();
       for (int i=0; i<items.length(); i++)
         try {
-          adapter.add((CharSequence) items.get(i));
+          mListData.add((String) items.get(i));
         } catch (JSONException e) {}
-      mDialog.getListView().setAdapter(adapter);
+      mList.setAdapter(mListAdapter);
     }
   }
 
@@ -90,9 +96,15 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     mActivity = activity;
     mResult = result;
     mDialog = new AlertDialog.Builder(activity).create();
-    mDialog.setTitle(mTitle);
-    mDialog.setMessage(mMessage);
-    if (mItems != null) this.setItems(mItems);
+    if (mTitle.length() > 0) {
+      mDialog.setTitle(mTitle);
+    }
+    if (mMessage.length() > 0) {
+      mDialog.setMessage(mMessage);
+    }
+    if (mItems != null) { 
+      createListView();
+    }
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -125,6 +137,23 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     mDialog.show();
   }
 
+  /**
+   * Create {@link ListView} to contain items
+   */
+  private void createListView() {
+    mListData = new ArrayList<String>();
+    mListAdapter = new ArrayAdapter<String>(
+                                          mActivity, 
+                                          android.R.layout.simple_list_item_1, 
+                                          mListData
+                                        );
+    mList = new ListView(mActivity);
+    mList.setAdapter(mListAdapter);
+    //TODO(meaneye.rcf): Add onClick event
+    mDialog.setView(mList);
+    setItems(mItems);   
+  }
+  
   @Override
   public void dismissDialog() {
     mDialog.dismiss();
