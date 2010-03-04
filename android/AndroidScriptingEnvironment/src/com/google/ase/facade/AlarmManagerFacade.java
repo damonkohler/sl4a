@@ -34,7 +34,7 @@ public class AlarmManagerFacade implements RpcReceiver {
   final AlarmManager mAlarmManager;
   final Service mService;
   
-  AlarmManagerFacade(Service service, EventFacade eventFacade) {
+  public AlarmManagerFacade(Service service, EventFacade eventFacade) {
     mAlarmManager = (AlarmManager)service.getSystemService(Context.ALARM_SERVICE);
     mService = service;
   }
