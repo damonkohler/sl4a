@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import android.util.Log;
@@ -100,7 +101,9 @@ public class ScriptStorageAdapter {
   public static List<File> listScripts() {
     File dir = new File(Constants.SCRIPTS_ROOT);
     if (dir.exists()) {
-      return Arrays.asList(new File(Constants.SCRIPTS_ROOT).listFiles());
+      List<File> scripts = Arrays.asList(new File(Constants.SCRIPTS_ROOT).listFiles());
+      Collections.sort(scripts);
+      return scripts;
     }
     return new ArrayList<File>();
   }
