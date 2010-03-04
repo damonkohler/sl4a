@@ -16,17 +16,17 @@ droid = android.Android()
 def event_loop():
   for i in range(10):
     e = droid.receiveEvent()
-    if e['result'] is not None:
+    if e.result is not None:
       return True
     time.sleep(2)
   return False
 
 
 def test_clipboard():
-  previous = droid.getClipboard()['result']
+  previous = droid.getClipboard().result
   msg = 'Hello, world!'
   droid.setClipboard(msg)
-  echo = droid.getClipboard()['result']
+  echo = droid.getClipboard().result
   droid.setClipboard(previous)
   return echo == msg
 
@@ -36,8 +36,8 @@ def test_gdata():
   client = gdata.docs.service.DocsService()
 
   # Authenticate using your Google Docs email address and password.
-  username = droid.getInput('Username')['result']
-  password = droid.getPassword('Password', 'For ' + username)['result']
+  username = droid.getInput('Username').result
+  password = droid.getPassword('Password', 'For ' + username).result
   client.ClientLogin(username, password)
 
   # Query the server for an Atom feed containing a list of your documents.
@@ -88,7 +88,7 @@ def test_ringer_volume():
   if get_result['error'] is not None:
     return False
   droid.setRingerVolume(0)
-  set_result = droid.setRingerVolume(get_result['result'])
+  set_result = droid.setRingerVolume(get_result.result)
   if set_result['error'] is not None:
     return False
   return True
@@ -127,6 +127,56 @@ def test_notify():
 def test_get_running_packages():
   result = droid.getRunningPackages()
   return result['error'] is None
+
+
+def test_alert_dialog():
+  title = 'User Interace'
+  message = ('Welcome to ASE UI test. In next few '
+             'steps we will demonstrate some of the '
+             'basics in handling user interface.')
+  dialog = droid.dialogCreateAlert(title, message).result
+  droid.dialogSetButton(dialog, 0, 'Continue')
+  droid.dialogShow(dialog)
+  droid.dialogGetResponse(dialog)
+
+
+def test_alert_dialog_with_buttons():
+  title = 'Alert'
+  message = ('This alert box has 3 buttons and '
+             'will wait for you to press one. '
+             'After that, a toast will tell you '
+             'which one you pressed.')
+  dialog = droid.dialogCreateAlert(title, message).result
+  buttons = {
+    -1: 'Button 1',
+    -2: 'Button 2',
+    -3: 'Button 3',
+    }
+  droid.dialogSetButton(dialog, 0, buttons[-1])
+  droid.dialogSetButton(dialog, 1, buttons[-2])
+  droid.dialogSetButton(dialog, 2, buttons[-3])
+  droid.dialogShow(dialog)
+  response = droid.dialogGetResponse(dialog).result
+
+
+def test_spinner_progress():
+  title = 'Spinner'
+  message = 'This is simple spinner progress.'
+  dialog = droid.dialogCreateSpinnerProgress(title, message).result
+  droid.dialogShow(dialog)
+  time.sleep(2)
+  droid.dialogDismiss(dialog)
+
+
+def test_horizontal_progress():
+  title = 'Horizontal'
+  message = 'This is simple horizontal progress.'
+  dialog = droid.dialogCreateHorizontalProgress(title, message, 50).result
+  droid.dialogShow(dialog)
+  for x in range(0, 50):
+    time.sleep(0.1)
+    droid.dialogSetCurrentProgress(dialog, x)
+  droid.dialogDismiss(dialog)
 
 
 if __name__ == '__main__':
