@@ -47,6 +47,7 @@ public class ScriptEditor extends Activity {
 
   private EditText mNameText;
   private EditText mContentText;
+  private boolean mIsNewScript;
 
   private static enum MenuId {
     SAVE, SAVE_AND_RUN, HELP;
@@ -72,7 +73,8 @@ public class ScriptEditor extends Activity {
 
     Intent intent = getIntent();
     String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    
+    mIsNewScript = intent.getBooleanExtra(Constants.EXTRA_IS_NEW_SCRIPT, false);
+
     if (name == null) {
       AseLog.w("ScriptEditor invoked with out EXTRA_SCRIPT_NAME.");
       name = "";
@@ -91,7 +93,7 @@ public class ScriptEditor extends Activity {
       mContentText.setText(content);
     }
 
-    if (name.startsWith(".")) {
+    if (mIsNewScript) {
       mNameText.setSelected(true);
 
       // NOTE: this appears to be the only way to get Andorid to put the cursor to the begining of

@@ -179,6 +179,7 @@ public class ScriptManager extends ListActivity {
       Interpreter interpreter = addMenuIds.get(itemId);
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, interpreter.getExtension());
       intent.putExtra(Constants.EXTRA_SCRIPT_CONTENT, interpreter.getContentTemplate());
+      intent.putExtra(Constants.EXTRA_IS_NEW_SCRIPT, true);
       startActivity(intent);
     } else if (itemId == MenuId.QRCODE_ADD.getId()) {
       Intent intent = new Intent("com.google.zxing.client.android.SCAN");

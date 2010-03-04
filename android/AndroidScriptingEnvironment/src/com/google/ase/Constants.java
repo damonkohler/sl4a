@@ -44,6 +44,7 @@ public class Constants {
   public static final String EXTRA_SCRIPT_TEXT = "com.google.ase.extra.SCRIPT_TEXT";
   public static final String EXTRA_RPC_HELP_TEXT = "com.google.ase.extra.RPC_HELP_TEXT";
   public static final String EXTRA_PROXY_PORT = "com.google.ase.extra.PROXY_PORT";
+  public static final String EXTRA_IS_NEW_SCRIPT = "com.google.ase.extra.IS_NEW_SCRIPT";
 
   public static final String SDCARD_ROOT = "/sdcard/";
   public static final String DOWNLOAD_ROOT = SDCARD_ROOT;
