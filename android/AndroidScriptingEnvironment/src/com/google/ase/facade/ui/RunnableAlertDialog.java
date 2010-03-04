@@ -16,6 +16,9 @@
 
 package com.google.ase.facade.ui;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -37,6 +40,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private FutureIntent mResult;
   private final String[] mButtonTexts;
   private Activity mActivity;
+  private JSONArray mItems;
 
   public RunnableAlertDialog(String title, String message) {
     mTitle = title;
@@ -61,12 +65,19 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
    * 
    * @param Items
    */
-  public void setItems(String[] items) {
-    ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mActivity, 0);
-    
-    for (int i=0; i<items.length; i++) 
-      adapter.add((CharSequence) items[i]);
-    mDialog.getListView().setAdapter(adapter);
+  public void setItems(JSONArray items) {
+    if (mActivity == null) {
+      // store items localy
+      mItems = items;
+    } else {
+      ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mActivity, 0);
+      
+      for (int i=0; i<items.length(); i++)
+        try {
+          adapter.add((CharSequence) items.get(i));
+        } catch (JSONException e) {}
+      mDialog.getListView().setAdapter(adapter);
+    }
   }
 
   @Override
@@ -81,6 +92,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     mDialog = new AlertDialog.Builder(activity).create();
     mDialog.setTitle(mTitle);
     mDialog.setMessage(mMessage);
+    if (mItems != null) this.setItems(mItems);
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {

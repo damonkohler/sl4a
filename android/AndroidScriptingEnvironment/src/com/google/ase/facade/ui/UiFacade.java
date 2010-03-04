@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 
+import org.json.JSONArray;
+
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Intent;
@@ -154,7 +156,7 @@ public class UiFacade implements RpcReceiver {
   
   @Rpc(description = "Set alert dialog list items.")
   public void dialogSetItems(@RpcParameter("id") String id,
-      @RpcParameter("items") String[] items) {
+      @RpcParameter("items") JSONArray items) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null && dialog instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) dialog).setItems(items);
