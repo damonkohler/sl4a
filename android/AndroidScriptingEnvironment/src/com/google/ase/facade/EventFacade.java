@@ -25,8 +25,6 @@ import android.app.Service;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 
 import com.google.ase.IntentBuilders;
 import com.google.ase.jsonrpc.Rpc;
@@ -50,7 +48,6 @@ public class EventFacade implements RpcReceiver {
   public EventFacade(final Service service) {
     mService = service;
     mAlarmManager = (AlarmManager)service.getSystemService(Context.ALARM_SERVICE);
-    mTelephonyManager = (TelephonyManager)service.getSystemService(Context.TELEPHONY_SERVICE);
   }
   
   @Rpc(description = "scheudles a script for regular execution")
@@ -87,45 +84,7 @@ public class EventFacade implements RpcReceiver {
     mEventQueue.add(event);
   }
   
-  private Bundle mPhoneState;
-  private final TelephonyManager mTelephonyManager;
-  private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
-    @Override
-    public void onCallStateChanged(int state, String incomingNumber) {
-      mPhoneState = new Bundle();
-      mPhoneState.putString("incomingNumber", incomingNumber);
-      switch (state) {
-        case TelephonyManager.CALL_STATE_IDLE:
-          mPhoneState.putString("state", "idle");
-          break;
-        case TelephonyManager.CALL_STATE_OFFHOOK:
-          mPhoneState.putString("state", "offhook");
-          break;
-        case TelephonyManager.CALL_STATE_RINGING:
-          mPhoneState.putString("state", "ringing");
-          break;
-      }
-      postEvent("phone_state", mPhoneState);
-    }
-  };
-
   @Override
   public void shutdown() {
-    stopTrackingPhoneState();
-  }
-
-  @Rpc(description = "Starts tracking phone state.")
-  public void startTrackingPhoneState() {
-    mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-  }
-
-  @Rpc(description = "Returns the current phone state and incoming number.", returns = "A map of \"state\" and \"incomingNumber\"")
-  public Bundle readPhoneState() {
-    return mPhoneState;
-  }
-
-  @Rpc(description = "Stops tracking phone state.")
-  public void stopTrackingPhoneState() {
-    mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
   }
 }
