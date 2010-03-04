@@ -17,7 +17,6 @@
 package com.google.ase.facade.ui;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
@@ -155,11 +154,10 @@ public class UiFacade implements RpcReceiver {
   
   @Rpc(description = "Set alert dialog list items.")
   public void dialogSetItems(@RpcParameter("id") String id,
-      @RpcParameter("items") List items) {
-    //TODO(MeanEYE.rcf): Finish!
+      @RpcParameter("items") String[] items) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null && dialog instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) dialog).setItems((List<CharSequence>)items);
+      ((RunnableAlertDialog) dialog).setItems(items);
     }
   }
 

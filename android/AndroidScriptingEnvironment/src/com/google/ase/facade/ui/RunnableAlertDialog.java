@@ -16,8 +16,6 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -63,11 +61,11 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
    * 
    * @param Items
    */
-  public void setItems(List<CharSequence> items) {
+  public void setItems(String[] items) {
     ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mActivity, 0);
     
-    for (int i=0; i<items.size(); i++) 
-      adapter.add(items.get(i));
+    for (int i=0; i<items.length; i++) 
+      adapter.add((CharSequence) items[i]);
     mDialog.getListView().setAdapter(adapter);
   }
 
