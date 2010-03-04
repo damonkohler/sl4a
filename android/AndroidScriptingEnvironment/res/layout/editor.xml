@@ -5,13 +5,13 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
   <EditText
-    android:id="@+id/title"
+    android:id="@+id/script_editor_title"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:hint="Script Name"
     android:singleLine="true" />
   <EditText
-    android:id="@+id/body"
+    android:id="@+id/script_editor_body"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scrollbars="vertical"

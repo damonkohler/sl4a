@@ -27,6 +27,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -61,16 +62,13 @@ public class ScriptEditor extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+    requestWindowFeature(Window.FEATURE_NO_TITLE);
+    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        WindowManager.LayoutParams.FLAG_FULLSCREEN);
     setContentView(R.layout.editor);
-    CustomWindowTitle.buildWindowTitle(this);
-
-    // TODO(damonkohler): Rename these views.
-    mNameText = (EditText) findViewById(R.id.title);
-    mContentText = (EditText) findViewById(R.id.body);
-
-    Intent intent = getIntent();
-    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    mNameText = (EditText) findViewById(R.id.script_editor_title);
+    mContentText = (EditText) findViewById(R.id.script_editor_body);
+    String name = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     if (name != null) {
       mNameText.setText(name);
       mNameText.setSelected(true);
@@ -80,7 +78,7 @@ public class ScriptEditor extends Activity {
       mNameText.extendSelection(0);
       mNameText.setSelection(0);
     }
-    String content = intent.getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
+    String content = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
     if (content == null && name != null) {
       try {
         content = ScriptStorageAdapter.readScript(name);
