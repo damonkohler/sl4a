@@ -72,7 +72,7 @@ public class ScriptEditor extends Activity {
     if (name != null) {
       mNameText.setText(name);
       mNameText.setSelected(true);
-      // NOTE: this appears to be the only way to get Andorid to put the cursor to the begining of
+      // NOTE: This appears to be the only way to get Android to put the cursor to the beginning of
       // the EditText field.
       mNameText.setSelection(1);
       mNameText.extendSelection(0);
