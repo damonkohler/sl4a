@@ -22,12 +22,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -47,9 +47,10 @@ public class ScriptEditor extends Activity {
 
   private EditText mNameText;
   private EditText mContentText;
+  private SharedPreferences mPreferences;
 
   private static enum MenuId {
-    SAVE, SAVE_AND_RUN, HELP;
+    SAVE, SAVE_AND_RUN, PREFERENCES, HELP;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -59,15 +60,31 @@ public class ScriptEditor extends Activity {
     RPC_HELP
   }
 
+  private int readIntPref(String key, int defaultValue, int maxValue) {
+    int val;
+    try {
+      val = Integer.parseInt(mPreferences.getString(key, Integer.toString(defaultValue)));
+    } catch (NumberFormatException e) {
+      val = defaultValue;
+    }
+    val = Math.max(0, Math.min(val, maxValue));
+    return val;
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    requestWindowFeature(Window.FEATURE_NO_TITLE);
-    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    if (mPreferences.getBoolean("editor_fullscreen", true)) {
+      CustomizeWindow.requestFullscreen(this);
+    } else {
+      CustomizeWindow.requestNoTitle(this);
+    }
     setContentView(R.layout.editor);
     mNameText = (EditText) findViewById(R.id.script_editor_title);
     mContentText = (EditText) findViewById(R.id.script_editor_body);
+    updatePreferences();
+
     String name = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     if (name != null) {
       mNameText.setText(name);
@@ -92,11 +109,23 @@ public class ScriptEditor extends Activity {
   }
 
   @Override
+  protected void onResume() {
+    super.onResume();
+    updatePreferences();
+  }
+
+  private void updatePreferences() {
+    mContentText.setTextSize(readIntPref("editor_fontsize", 10, 30));
+  }
+
+  @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
     menu.add(0, MenuId.SAVE.getId(), 0, "Save").setIcon(android.R.drawable.ic_menu_save);
     menu.add(0, MenuId.SAVE_AND_RUN.getId(), 0, "Save & Run").setIcon(
         android.R.drawable.ic_media_play);
+    menu.add(0, MenuId.PREFERENCES.getId(), 0, "Preferences").setIcon(
+        android.R.drawable.ic_menu_preferences);
     menu.add(0, MenuId.HELP.getId(), 0, "API Browser").setIcon(
         android.R.drawable.ic_menu_info_details);
     return true;
@@ -111,6 +140,8 @@ public class ScriptEditor extends Activity {
       save();
       startService(IntentBuilders.buildStartInTerminalIntent(mNameText.getText().toString()));
       finish();
+    } else if (item.getItemId() == MenuId.PREFERENCES.getId()) {
+      startActivity(new Intent(this, AsePreferences.class));
     } else if (item.getItemId() == MenuId.HELP.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
       intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, InterpreterUtils.getInterpreterForScript(

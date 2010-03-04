@@ -9,8 +9,27 @@
       android:summary="Allow anonymous usage tracking." android:defaultValue="false"/>
   </PreferenceCategory>
   <PreferenceCategory
+    android:title="Editor">
+    <CheckBoxPreference
+      android:key="editor_fullscreen"
+      android:title="Fullscreen"
+      android:summary="Show the editor in fullscreen mode." android:defaultValue="true"/>
+     <ListPreference
+      android:key="editor_fontsize"
+      android:defaultValue="@string/default_value_fontsize_preference"
+      android:title="@string/title_fontsize_preference"
+      android:summary="@string/summary_fontsize_preference"
+      android:entries="@array/entries_fontsize_preference"
+      android:entryValues="@array/entryvalues_fontsize_preference"
+      android:dialogTitle="@string/dialog_title_fontsize_preference" />
+   </PreferenceCategory>
+   <PreferenceCategory
     android:title="Terminal">
-    <ListPreference
+    <CheckBoxPreference
+      android:key="terminal_fullscreen"
+      android:title="Fullscreen"
+      android:summary="Show the terminal in fullscreen mode." android:defaultValue="true"/>
+     <ListPreference
       android:key="fontsize"
       android:defaultValue="@string/default_value_fontsize_preference"
       android:title="@string/title_fontsize_preference"

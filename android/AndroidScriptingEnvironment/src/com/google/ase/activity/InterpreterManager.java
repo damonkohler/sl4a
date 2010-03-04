@@ -74,7 +74,7 @@ public class InterpreterManager extends ListActivity {
     super.onCreate(savedInstanceState);
     requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
     setContentView(R.layout.list);
-    CustomWindowTitle.buildWindowTitle(this);
+    CustomizeWindow.requestCustomTitle(this);
 
     listInterpreters();
     registerForContextMenu(getListView());

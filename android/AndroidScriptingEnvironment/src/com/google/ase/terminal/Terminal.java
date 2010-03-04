@@ -30,7 +30,6 @@ import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
@@ -39,6 +38,7 @@ import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
 import com.google.ase.activity.AsePreferences;
 import com.google.ase.activity.AseService;
+import com.google.ase.activity.CustomizeWindow;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -110,7 +110,7 @@ public class Terminal extends Activity {
 
   private int mControlKeyCode;
 
-  private SharedPreferences mPrefs;
+  private SharedPreferences mPreferences;
 
   private InterpreterProcess mInterpreterProcess; // Convenience member.
   private ScriptLauncher mLauncher;
@@ -126,7 +126,12 @@ public class Terminal extends Activity {
       return;
     }
 
-    requestWindowFeature(Window.FEATURE_NO_TITLE);
+    mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    if (mPreferences.getBoolean("terminal_fullscreen", true)) {
+      CustomizeWindow.requestFullscreen(this);
+    } else {
+      CustomizeWindow.requestNoTitle(this);
+    }
     setContentView(R.layout.term);
 
     int port = getIntent().getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
@@ -137,7 +142,6 @@ public class Terminal extends Activity {
     }
     mLauncher = new ScriptLauncher(getIntent(), new InetSocketAddress(port));
 
-    mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
     mEmulatorView = (EmulatorView) findViewById(EMULATOR_VIEW);
     mKeyListener = new TermKeyListener();
     updatePreferences();
@@ -170,7 +174,7 @@ public class Terminal extends Activity {
   private int readIntPref(String key, int defaultValue, int maxValue) {
     int val;
     try {
-      val = Integer.parseInt(mPrefs.getString(key, Integer.toString(defaultValue)));
+      val = Integer.parseInt(mPreferences.getString(key, Integer.toString(defaultValue)));
     } catch (NumberFormatException e) {
       val = defaultValue;
     }
