@@ -25,14 +25,15 @@ import java.util.Set;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -81,9 +82,13 @@ public class ApiBrowser extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+    if (preferences.getBoolean("editor_fullscreen", true)) {
+      CustomizeWindow.requestFullscreen(this);
+    } else {
+      CustomizeWindow.requestNoTitle(this);
+    }
     setContentView(R.layout.list);
-    CustomWindowTitle.buildWindowTitle(this);
     mExpandedPositions = new HashSet<Integer>();
     mRpcInfoList = buildRpcInfoList();
     mAdapter = new ApiBrowserAdapter();

@@ -36,7 +36,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -72,13 +71,9 @@ public class InterpreterManager extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-    setContentView(R.layout.list);
-    CustomWindowTitle.buildWindowTitle(this);
-
+    CustomizeWindow.requestCustomTitle(this, R.layout.list);
     listInterpreters();
     registerForContextMenu(getListView());
-
     AseAnalytics.trackActivity(this);
   }
 
