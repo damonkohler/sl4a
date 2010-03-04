@@ -64,7 +64,7 @@ def test_sensors():
 
 def test_speak():
   result = droid.speak('Hello, world!')
-  return result['error'] is None
+  return result.error is None
 
 
 def test_phone_state():
@@ -77,7 +77,7 @@ def test_phone_state():
 
 def test_ringer_silent():
   result = droid.setRingerSilent()
-  if result['error'] is not None:
+  if result.error is not None:
     return False
   result = droid.setRingerSilent(False)
   return True
@@ -85,78 +85,71 @@ def test_ringer_silent():
 
 def test_ringer_volume():
   get_result = droid.getRingerVolume()
-  if get_result['error'] is not None:
+  if get_result.error is not None:
     return False
   droid.setRingerVolume(0)
   set_result = droid.setRingerVolume(get_result.result)
-  if set_result['error'] is not None:
+  if set_result.error is not None:
     return False
   return True
 
 
 def test_get_last_known_location():
   result = droid.getLastKnownLocation()
-  return result['error'] is None
+  return result.error is None
 
 
 def test_geocode():
   result = droid.geocode(0.0, 0.0, 1)
-  return result['error'] is None
+  return result.error is None
 
 
 def test_wifi():
   result = droid.setWifiEnabled()
-  return result['error'] is None
+  return result.error is None
 
 
 def test_make_toast():
   result = droid.makeToast('Hello, world!')
-  return result['error'] is None
+  return result.error is None
 
 
 def test_vibrate():
   result = droid.vibrate()
-  return result['error'] is None
+  return result.error is None
 
 
 def test_notify():
   result = droid.notify('Hello, world!')
-  return result['error'] is None
+  return result.error is None
 
 
 def test_get_running_packages():
   result = droid.getRunningPackages()
-  return result['error'] is None
+  return result.error is None
 
 
 def test_alert_dialog():
   title = 'User Interace'
-  message = ('Welcome to ASE UI test. In next few '
-             'steps we will demonstrate some of the '
-             'basics in handling user interface.')
+  message = 'Welcome to the ASE integration test.'
   dialog = droid.dialogCreateAlert(title, message).result
   droid.dialogSetButton(dialog, 0, 'Continue')
   droid.dialogShow(dialog)
   droid.dialogGetResponse(dialog)
+  return True
 
 
 def test_alert_dialog_with_buttons():
   title = 'Alert'
   message = ('This alert box has 3 buttons and '
-             'will wait for you to press one. '
-             'After that, a toast will tell you '
-             'which one you pressed.')
+             'will wait for you to press one.')
   dialog = droid.dialogCreateAlert(title, message).result
-  buttons = {
-    -1: 'Button 1',
-    -2: 'Button 2',
-    -3: 'Button 3',
-    }
-  droid.dialogSetButton(dialog, 0, buttons[-1])
-  droid.dialogSetButton(dialog, 1, buttons[-2])
-  droid.dialogSetButton(dialog, 2, buttons[-3])
+  droid.dialogSetButton(dialog, 0, 'Button 1')
+  droid.dialogSetButton(dialog, 1, 'Button 2')
+  droid.dialogSetButton(dialog, 2, 'Button 3')
   droid.dialogShow(dialog)
   response = droid.dialogGetResponse(dialog).result
+  return response is not None
 
 
 def test_spinner_progress():
@@ -166,6 +159,7 @@ def test_spinner_progress():
   droid.dialogShow(dialog)
   time.sleep(2)
   droid.dialogDismiss(dialog)
+  return True
 
 
 def test_horizontal_progress():
@@ -177,6 +171,7 @@ def test_horizontal_progress():
     time.sleep(0.1)
     droid.dialogSetCurrentProgress(dialog, x)
   droid.dialogDismiss(dialog)
+  return True
 
 
 if __name__ == '__main__':

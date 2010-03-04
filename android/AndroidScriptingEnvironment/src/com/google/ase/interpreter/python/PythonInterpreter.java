@@ -30,7 +30,7 @@ import com.google.ase.language.PythonLanguage;
 public class PythonInterpreter extends Interpreter {
 
   private final static String PYTHON_BIN = "/data/data/com.google.ase/python/bin/python";
-  
+
   public PythonInterpreter() {
     super(new PythonLanguage());
   }
@@ -77,6 +77,6 @@ public class PythonInterpreter extends Interpreter {
 
   @Override
   public int getVersion() {
-    return 2;
+    return 3;
   }
 }
