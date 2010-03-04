@@ -39,9 +39,11 @@ public class CustomizeWindow {
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
   }
 
-  public static void requestCustomTitle(Activity activity) {
-    String versionName = AseVersion.getVersion(activity);
+  public static void requestCustomTitle(Activity activity, int contentViewLayoutResId) {
+    activity.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+    activity.setContentView(contentViewLayoutResId);
     activity.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
-    ((TextView) activity.findViewById(R.id.right_text)).setText("r" + versionName);
+    ((TextView) activity.findViewById(R.id.right_text)).setText("r"
+        + AseVersion.getVersion(activity));
   }
 }
