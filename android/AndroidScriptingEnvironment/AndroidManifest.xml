@@ -80,8 +80,10 @@
       android:name=".activity.AseServiceLauncher"
       android:taskAffinity="">
       <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
+        <action
+          android:name="android.intent.action.VIEW" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </activity>
     <activity
@@ -111,31 +113,33 @@
   <uses-permission
     android:name="android.permission.ACCESS_FINE_LOCATION" />
   <uses-permission
-    android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission
-    android:name="android.permission.CALL_PHONE"></uses-permission>
+    android:name="android.permission.CALL_PHONE" />
   <uses-permission
-    android:name="android.permission.SEND_SMS"></uses-permission>
+    android:name="android.permission.SEND_SMS" />
   <uses-permission
-    android:name="android.permission.VIBRATE"></uses-permission>
+    android:name="android.permission.VIBRATE" />
   <uses-permission
-    android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    android:name="android.permission.ACCESS_WIFI_STATE" />
   <uses-permission
-    android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    android:name="android.permission.CHANGE_WIFI_STATE" />
   <uses-permission
-    android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    android:name="android.permission.READ_PHONE_STATE" />
   <uses-permission
-    android:name="android.permission.PERSISTENT_ACTIVITY"></uses-permission>
+    android:name="android.permission.PERSISTENT_ACTIVITY" />
   <uses-permission
-    android:name="android.permission.RESTART_PACKAGES"></uses-permission>
+    android:name="android.permission.RESTART_PACKAGES" />
   <uses-permission
-    android:name="android.permission.GET_TASKS"></uses-permission>
+    android:name="android.permission.GET_TASKS" />
   <uses-permission
-    android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission
-    android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    android:name="android.permission.ACCESS_NETWORK_STATE" />
   <uses-permission
-    android:name="android.permission.RECORD_AUDIO"></uses-permission>
+    android:name="android.permission.RECORD_AUDIO" />
+  <uses-permission
+    android:name="android.permission.READ_LOGS" />
   <uses-sdk
     android:minSdkVersion="3"></uses-sdk>
 </manifest>
