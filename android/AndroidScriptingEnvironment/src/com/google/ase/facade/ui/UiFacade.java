@@ -151,6 +151,15 @@ public class UiFacade implements RpcReceiver {
       ((RunnableAlertDialog) dialog).setButton(button, text);
     }
   }
+  
+  @Rpc(description = "Set alert dialog list items.")
+  public void dialogSetItems(@RpcParameter("id") String id,
+      @RpcParameter("items") String[] items) {
+    RunnableDialog dialog = getDialogById(id);
+    if (dialog != null && dialog instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) dialog).setItems(items);
+    }
+  }
 
   @Rpc(description = "Returns dialog response.", returns = "Button number")
   public int dialogGetResponse(@RpcParameter("id") String id) {

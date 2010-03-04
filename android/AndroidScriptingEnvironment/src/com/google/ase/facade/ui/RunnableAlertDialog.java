@@ -21,7 +21,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-
+import android.widget.ArrayAdapter;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureIntent;
 
@@ -54,6 +54,19 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
    */
   public void setButton(int buttonNumber, String text) {
     mButtonTexts[buttonNumber] = text;
+  }
+  
+  /**
+   * Set list items
+   * 
+   * @param Items
+   */
+  public void setItems(String[] items) {
+    ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mActivity, 0);
+    
+    for (int i=0; i<items.length; i++) 
+      adapter.add((CharSequence) items[i]);
+    mDialog.getListView().setAdapter(adapter);
   }
 
   @Override
