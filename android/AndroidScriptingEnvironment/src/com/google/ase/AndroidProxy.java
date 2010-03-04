@@ -23,10 +23,14 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 
+import com.google.ase.facade.AlarmManagerFacade;
 import com.google.ase.facade.AndroidFacade;
 import com.google.ase.facade.EventFacade;
+import com.google.ase.facade.LocationManagerFacade;
 import com.google.ase.facade.MediaFacade;
+import com.google.ase.facade.SensorManagerFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
+import com.google.ase.facade.TelephonyManagerFacade;
 import com.google.ase.facade.TextToSpeechFacade;
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
@@ -45,8 +49,16 @@ public class AndroidProxy {
     final TextToSpeechFacade ttsFacade = new TextToSpeechFacade(service);
     final SpeechRecognitionFacade srFacade = new SpeechRecognitionFacade(androidFacade);
     final EventFacade eventFacade = new EventFacade(service);
-    mJsonRpcServer = new JsonRpcServer(androidFacade, mediaFacade, ttsFacade, srFacade, uiFacade,
-        eventFacade);
+    final SensorManagerFacade sensorManagerFacade = new SensorManagerFacade(service, eventFacade);
+    final LocationManagerFacade locationManagerFacade =
+        new LocationManagerFacade(service, eventFacade);
+    final TelephonyManagerFacade telephonyManagerFacade =
+        new TelephonyManagerFacade(service, eventFacade);
+    final AlarmManagerFacade alarmManagerFacade =
+        new AlarmManagerFacade(service, eventFacade);
+    mJsonRpcServer =
+        new JsonRpcServer(androidFacade, mediaFacade, ttsFacade, srFacade, uiFacade, eventFacade,
+            sensorManagerFacade, locationManagerFacade, telephonyManagerFacade, alarmManagerFacade);
   }
 
   public InetSocketAddress getAddress() {

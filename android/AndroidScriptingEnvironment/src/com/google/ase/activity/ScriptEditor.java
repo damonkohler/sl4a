@@ -73,6 +73,12 @@ public class ScriptEditor extends Activity {
     String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     if (name != null) {
       mNameText.setText(name);
+      mNameText.setSelected(true);
+      // NOTE: this appears to be the only way to get Andorid to put the cursor to the begining of
+      // the EditText field.
+      mNameText.setSelection(1);
+      mNameText.extendSelection(0);
+      mNameText.setSelection(0);
     }
     String content = intent.getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
     if (content == null && name != null) {
@@ -157,6 +163,7 @@ public class ScriptEditor extends Activity {
     if (keyCode == KeyEvent.KEYCODE_BACK) {
       AlertDialog.Builder alert = new AlertDialog.Builder(this);
       alert.setCancelable(false);
+      alert.setTitle("Confirm exit");
       alert.setMessage("Would you like to save?");
       alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int whichButton) {
