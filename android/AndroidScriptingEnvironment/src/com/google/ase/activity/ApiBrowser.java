@@ -43,9 +43,14 @@ import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
+import com.google.ase.facade.AlarmManagerFacade;
 import com.google.ase.facade.AndroidFacade;
+import com.google.ase.facade.EventFacade;
+import com.google.ase.facade.LocationManagerFacade;
 import com.google.ase.facade.MediaFacade;
+import com.google.ase.facade.SensorManagerFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
+import com.google.ase.facade.TelephonyManagerFacade;
 import com.google.ase.facade.TextToSpeechFacade;
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.interpreter.Interpreter;
@@ -96,7 +101,14 @@ public class ApiBrowser extends ListActivity {
     list.addAll(JsonRpcServer.buildRpcInfoMap(MediaFacade.class).values());
     list.addAll(JsonRpcServer.buildRpcInfoMap(SpeechRecognitionFacade.class).values());
     list.addAll(JsonRpcServer.buildRpcInfoMap(TextToSpeechFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(TelephonyManagerFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(AlarmManagerFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(SensorManagerFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(EventFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(LocationManagerFacade.class).values());
+
     list.addAll(JsonRpcServer.buildRpcInfoMap(UiFacade.class).values());
+
     Collections.sort(list, new Comparator<RpcInfo>() {
       public int compare(RpcInfo info1, RpcInfo info2) {
         return info1.getName().compareTo(info2.getName());
