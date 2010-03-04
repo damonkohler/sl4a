@@ -46,8 +46,6 @@ import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterInstaller;
-import com.google.ase.interpreter.InterpreterUninstaller;
 import com.google.ase.interpreter.InterpreterUtils;
 
 public class InterpreterManager extends ListActivity {

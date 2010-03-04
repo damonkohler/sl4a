@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase.interpreter;
+package com.google.ase.activity;
 
 import java.io.File;
 
@@ -25,6 +25,8 @@ import android.os.Bundle;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.Exec;
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterUtils;
 
 /**
  * Activity for installing interpreters.

@@ -8,7 +8,7 @@
     android:debuggable="true"
     android:icon="@drawable/ase_logo_48"
     android:label="@string/application_title"
-    android:name=".activity.AseApplication">
+    android:name=".AseApplication">
     <activity
       android:name=".activity.ScriptManager">
       <intent-filter>
@@ -69,13 +69,13 @@
     <activity
       android:name=".activity.ApiBrowser" />
     <activity
-      android:name=".interpreter.InterpreterInstaller" />
+      android:name=".activity.InterpreterInstaller" />
     <activity
-      android:name=".interpreter.InterpreterUninstaller" />
+      android:name=".activity.InterpreterUninstaller" />
     <activity
-      android:name=".interpreter.UrlDownloader" />
+      android:name=".activity.UrlDownloader" />
     <activity
-      android:name=".interpreter.ZipExtractor" />
+      android:name=".activity.ZipExtractor" />
     <activity
       android:name=".activity.AseServiceLauncher"
       android:taskAffinity="">

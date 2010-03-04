@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase.activity;
+package com.google.ase;
 
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -1,4 +1,4 @@
-package com.google.ase.interpreter;
+package com.google.ase.activity;
 
 import java.io.File;
 import java.util.Arrays;
@@ -12,6 +12,8 @@ import android.os.Bundle;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterUtils;
 
 public class InterpreterUninstaller extends Activity {
   private String mName;

@@ -48,6 +48,7 @@ import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
+import com.google.ase.UsageTrackingConfirmation;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterUtils;
 
