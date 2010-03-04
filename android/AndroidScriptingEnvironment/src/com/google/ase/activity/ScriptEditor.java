@@ -95,6 +95,7 @@ public class ScriptEditor extends Activity {
       mNameText.extendSelection(0);
       mNameText.setSelection(0);
     }
+
     String content = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
     if (content == null && name != null) {
       try {
