@@ -66,18 +66,19 @@ public class ScriptEditor extends Activity {
     getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
     setContentView(R.layout.editor);
+
     mNameText = (EditText) findViewById(R.id.script_editor_title);
     mContentText = (EditText) findViewById(R.id.script_editor_body);
-    String name = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    if (name != null) {
-      mNameText.setText(name);
-      mNameText.setSelected(true);
-      // NOTE: this appears to be the only way to get Andorid to put the cursor to the begining of
-      // the EditText field.
-      mNameText.setSelection(1);
-      mNameText.extendSelection(0);
-      mNameText.setSelection(0);
+
+    Intent intent = getIntent();
+    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    
+    if (name == null) {
+      AseLog.w("ScriptEditor invoked with out EXTRA_SCRIPT_NAME.");
+      name = "";
     }
+    mNameText.setText(name);
+
     String content = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
     if (content == null && name != null) {
       try {
@@ -89,7 +90,19 @@ public class ScriptEditor extends Activity {
     } else if (content != null) {
       mContentText.setText(content);
     }
-  }
+
+    if (name.startsWith(".")) {
+      mNameText.setSelected(true);
+
+      // NOTE: this appears to be the only way to get Andorid to put the cursor to the begining of
+      // the EditText field.
+      mNameText.setSelection(1);
+      mNameText.extendSelection(0);
+      mNameText.setSelection(0);
+    } else {
+      mContentText.requestFocus();
+    }
+ }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
