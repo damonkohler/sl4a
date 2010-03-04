@@ -27,8 +27,13 @@ import android.os.Bundle;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcReceiver;
 
+/**
+ * Exposes the SensorManager related functionality.
+ * 
+ * @author Damon Kohler (damonkohler@gmail.com)
+ *         Felix Arends (felix.arends@gmail.com)
+ */
 public class SensorManagerFacade implements RpcReceiver {
-  
   private final EventFacade mEventFacade;
   private final SensorManager mSensorManager;
   private Bundle mSensorReadings;

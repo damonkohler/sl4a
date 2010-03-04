@@ -25,6 +25,7 @@ import android.os.Handler;
 
 import com.google.ase.facade.AndroidFacade;
 import com.google.ase.facade.EventFacade;
+import com.google.ase.facade.LocationManagerFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.SensorManagerFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
@@ -47,8 +48,11 @@ public class AndroidProxy {
     final SpeechRecognitionFacade srFacade = new SpeechRecognitionFacade(androidFacade);
     final EventFacade eventFacade = new EventFacade(service);
     final SensorManagerFacade sensorManagerFacade = new SensorManagerFacade(service, eventFacade);
-    mJsonRpcServer = new JsonRpcServer(androidFacade, mediaFacade, ttsFacade, srFacade, uiFacade,
-        sensorManagerFacade, eventFacade);
+    final LocationManagerFacade locationManagerFacade =
+        new LocationManagerFacade(service, eventFacade);
+    mJsonRpcServer =
+        new JsonRpcServer(androidFacade, mediaFacade, ttsFacade, srFacade, uiFacade, eventFacade,
+            sensorManagerFacade, locationManagerFacade);
   }
 
   public InetSocketAddress getAddress() {

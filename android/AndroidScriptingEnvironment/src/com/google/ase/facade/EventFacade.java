@@ -23,10 +23,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
@@ -34,8 +30,6 @@ import android.telephony.TelephonyManager;
 
 import com.google.ase.IntentBuilders;
 import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcDefaultInteger;
-import com.google.ase.jsonrpc.RpcDefaultString;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
 
@@ -43,7 +37,7 @@ import com.google.ase.jsonrpc.RpcReceiver;
  * This facade exposes the functionality to read from the event queue as an RPC, and the
  * functionality to write to the event queue as a pure java function.
  * 
- * @author felixarends
+ * @author Felix Arends (felix.arends@gmail.com)
  * 
  */
 public class EventFacade implements RpcReceiver {
@@ -56,7 +50,6 @@ public class EventFacade implements RpcReceiver {
   public EventFacade(final Service service) {
     mService = service;
     mAlarmManager = (AlarmManager)service.getSystemService(Context.ALARM_SERVICE);
-    mLocationManager = (LocationManager)service.getSystemService(Context.LOCATION_SERVICE);
     mTelephonyManager = (TelephonyManager)service.getSystemService(Context.TELEPHONY_SERVICE);
   }
   
@@ -118,10 +111,8 @@ public class EventFacade implements RpcReceiver {
 
   @Override
   public void shutdown() {
-    stopLocating();
     stopTrackingPhoneState();
   }
-
 
   @Rpc(description = "Starts tracking phone state.")
   public void startTrackingPhoneState() {
@@ -136,77 +127,5 @@ public class EventFacade implements RpcReceiver {
   @Rpc(description = "Stops tracking phone state.")
   public void stopTrackingPhoneState() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
-  }
-
-  @Rpc(description = "Starts collecting location data.")
-  public void startLocating(
-      @RpcDefaultString(description = "String accuracy (\"fine\", \"coarse\")", defaultValue = "coarse") String accuracy,
-      @RpcDefaultInteger(description = "minimum time between updates (milli-seconds)", defaultValue = 60000) Integer minUpdateTimeMs,
-      @RpcDefaultInteger(description = "minimum distance between updates (meters)", defaultValue = 30) Integer minUpdateDistanceM) {
-    Criteria criteria = new Criteria();
-    if (accuracy == "coarse") {
-      criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-    } else if (accuracy == "fine") {
-      criteria.setAccuracy(Criteria.ACCURACY_FINE);
-    }
-    mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(criteria, true),
-        minUpdateTimeMs, minUpdateDistanceM, mLocationListener, mService.getMainLooper());
-  }
-
-  @Rpc(description = "Returns the current location.", returns = "A map of location information.")
-  // TODO(damonkohler): It might be nice to have a version of this method that
-  // automatically starts locating and keeps locating until no more requests are
-  // received for before some time out.
-  public Bundle readLocation() {
-    return mLocation;
-  }
-
-  @Rpc(description = "Stops collecting location data.")
-  public void stopLocating() {
-    mLocationManager.removeUpdates(mLocationListener);
-    mLocation = null;
-  }
-
-  @Rpc(description = "Returns the last known location of the device.", returns = "A map of location information.")
-  public Bundle getLastKnownLocation() {
-    Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-    if (location == null) {
-      location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-    }
-    return buildLocationBundle(location);
-  }
-  
-  private Bundle mLocation;
-  private final LocationManager mLocationManager;
-  private final LocationListener mLocationListener = new LocationListener() {
-    @Override
-    public void onLocationChanged(Location location) {
-      mLocation = buildLocationBundle(location);
-      postEvent("location", mLocation);
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-  };
-
-  private Bundle buildLocationBundle(Location location) {
-    Bundle bundle = new Bundle();
-    bundle.putDouble("altitude", location.getAltitude());
-    bundle.putDouble("latitude", location.getLatitude());
-    bundle.putDouble("longitude", location.getLongitude());
-    bundle.putLong("time", location.getTime());
-    bundle.putFloat("accuracy", location.getAccuracy());
-    bundle.putFloat("speed", location.getSpeed());
-    bundle.putString("provider", location.getProvider());
-    return bundle;
   }
 }
