@@ -23,10 +23,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -43,17 +39,23 @@ import com.google.ase.jsonrpc.RpcDefaultString;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
 
+/**
+ * This facade exposes the functionality to read from the event queue as an RPC, and the
+ * functionality to write to the event queue as a pure java function.
+ * 
+ * @author felixarends
+ * 
+ */
 public class EventFacade implements RpcReceiver {
   private static final int EXECUTE_SCRIPT_REQUEST_CODE = 1;
 
   final Queue<Bundle> mEventQueue = new ConcurrentLinkedQueue<Bundle>();
   final Context mService;
   final AlarmManager mAlarmManager;
-  
+
   public EventFacade(final Service service) {
     mService = service;
     mAlarmManager = (AlarmManager)service.getSystemService(Context.ALARM_SERVICE);
-    mSensorManager = (SensorManager)service.getSystemService(Context.SENSOR_SERVICE);
     mLocationManager = (LocationManager)service.getSystemService(Context.LOCATION_SERVICE);
     mTelephonyManager = (TelephonyManager)service.getSystemService(Context.TELEPHONY_SERVICE);
   }
@@ -82,7 +84,11 @@ public class EventFacade implements RpcReceiver {
     return mEventQueue.poll();
   }
 
-  private void postEvent(String name, Bundle bundle) {
+  /**
+   * Posts an event on the event queue. This method is supposed to be used from other facades to
+   * post events.
+   */
+  void postEvent(String name, Bundle bundle) {
     Bundle event = new Bundle(bundle);
     event.putString("name", name);
     mEventQueue.add(event);
@@ -112,48 +118,10 @@ public class EventFacade implements RpcReceiver {
 
   @Override
   public void shutdown() {
-    stopSensing();
     stopLocating();
     stopTrackingPhoneState();
   }
 
-  private Bundle mSensorReadings;
-  private final SensorManager mSensorManager;
-  private final SensorEventListener mSensorListener = new SensorEventListener() {
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-      if (mSensorReadings == null) {
-        mSensorReadings = new Bundle();
-      }
-      mSensorReadings.putInt("accuracy", accuracy);
-      postEvent("sensors", mSensorReadings);
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-      if (mSensorReadings == null) {
-        mSensorReadings = new Bundle();
-      }
-      switch (event.sensor.getType()) {
-        case Sensor.TYPE_ORIENTATION:
-          mSensorReadings.putFloat("azimuth", event.values[0]);
-          mSensorReadings.putFloat("pitch", event.values[1]);
-          mSensorReadings.putFloat("roll", event.values[2]);
-          break;
-        case Sensor.TYPE_ACCELEROMETER:
-          mSensorReadings.putFloat("xforce", event.values[0]);
-          mSensorReadings.putFloat("yforce", event.values[1]);
-          mSensorReadings.putFloat("zforce", event.values[2]);
-          break;
-        case Sensor.TYPE_MAGNETIC_FIELD:
-          mSensorReadings.putFloat("xmag", event.values[0]);
-          mSensorReadings.putFloat("ymag", event.values[1]);
-          mSensorReadings.putFloat("zmag", event.values[2]);
-          break;
-      }
-      postEvent("sensors", mSensorReadings);
-    }
-  };
 
   @Rpc(description = "Starts tracking phone state.")
   public void startTrackingPhoneState() {
@@ -168,24 +136,6 @@ public class EventFacade implements RpcReceiver {
   @Rpc(description = "Stops tracking phone state.")
   public void stopTrackingPhoneState() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
-  }
-
-  @Rpc(description = "Starts recording sensor data to be available for polling.")
-  public void startSensing() {
-    for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_ALL)) {
-      mSensorManager.registerListener(mSensorListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-  }
-
-  @Rpc(description = "Starts recording sensor data to be available for polling.")
-  public Bundle readSensors() {
-    return mSensorReadings;
-  }
-
-  @Rpc(description = "Stops collecting sensor data.")
-  public void stopSensing() {
-    mSensorManager.unregisterListener(mSensorListener);
-    mSensorReadings = null;
   }
 
   @Rpc(description = "Starts collecting location data.")
