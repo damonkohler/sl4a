@@ -43,7 +43,7 @@ public abstract class Interpreter {
   }
   
   public boolean isInstalled() {
-    return InterpreterUtils.checkInstalled(getName());
+    return InterpreterConfiguration.checkInstalled(getName());
   }
 
   public String getInterpreterArchiveName() {

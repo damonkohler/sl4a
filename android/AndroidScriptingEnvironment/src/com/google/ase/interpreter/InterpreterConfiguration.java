@@ -36,9 +36,9 @@ import com.google.ase.interpreter.tcl.TclInterpreter;
  *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class InterpreterUtils {
+public class InterpreterConfiguration {
 
-  private InterpreterUtils() {
+  private InterpreterConfiguration() {
     // Utility class.
   }
 

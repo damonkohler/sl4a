@@ -50,7 +50,7 @@ import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
 import com.google.ase.UsageTrackingConfirmation;
 import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterUtils;
+import com.google.ase.interpreter.InterpreterConfiguration;
 
 /**
  * Manages creation, deletion, and execution of stored scripts.
@@ -141,7 +141,7 @@ public class ScriptManager extends ListActivity {
   private void buildMenuIdMaps() {
     addMenuIds = new HashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
-    List<Interpreter> installed = InterpreterUtils.getInstalledInterpreters();
+    List<Interpreter> installed = InterpreterConfiguration.getInstalledInterpreters();
     for (Interpreter interpreter : installed) {
       addMenuIds.put(i, interpreter);
       ++i;

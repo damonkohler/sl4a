@@ -46,7 +46,7 @@ import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterUtils;
+import com.google.ase.interpreter.InterpreterConfiguration;
 
 public class InterpreterManager extends ListActivity {
 
@@ -85,7 +85,7 @@ public class InterpreterManager extends ListActivity {
    * Populates the list view with all available interpreters.
    */
   private void listInterpreters() {
-    List<Interpreter> interpreters = InterpreterUtils.getInstalledInterpreters();
+    List<Interpreter> interpreters = InterpreterConfiguration.getInstalledInterpreters();
     List<Map<String, String>> data = new ArrayList<Map<String, String>>();
     for (Interpreter interpreter : interpreters) {
       Map<String, String> map = new HashMap<String, String>();
@@ -120,7 +120,7 @@ public class InterpreterManager extends ListActivity {
   private void buildMenuIdMaps() {
     mInstallerMenuIds = new HashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
-    List<Interpreter> notInstalled = InterpreterUtils.getNotInstalledInterpreters();
+    List<Interpreter> notInstalled = InterpreterConfiguration.getNotInstalledInterpreters();
     for (Interpreter interpreter : notInstalled) {
       mInstallerMenuIds.put(i, interpreter);
       ++i;
@@ -128,7 +128,7 @@ public class InterpreterManager extends ListActivity {
   }
 
   private void buildInstallLanguagesMenu(Menu menu) {
-    if (InterpreterUtils.getNotInstalledInterpreters().size() > 0) {
+    if (InterpreterConfiguration.getNotInstalledInterpreters().size() > 0) {
       SubMenu installMenu =
           menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
               android.R.drawable.ic_menu_add);
@@ -198,7 +198,7 @@ public class InterpreterManager extends ListActivity {
     super.onListItemClick(list, view, position, id);
     Map<String, String> item = (Map<String, String>) list.getItemAtPosition(position);
     String interpreterName = item.get(NAME);
-    launchTerminal(InterpreterUtils.getInterpreterByName(interpreterName));
+    launchTerminal(InterpreterConfiguration.getInterpreterByName(interpreterName));
   }
 
   @Override
@@ -225,7 +225,7 @@ public class InterpreterManager extends ListActivity {
     }
 
     String name = interpreterItem.get(NAME);
-    if (!InterpreterUtils.getInterpreterByName(name).isUninstallable()) {
+    if (!InterpreterConfiguration.getInterpreterByName(name).isUninstallable()) {
       AseLog.v(this, "Cannot uninstall " + interpreterItem.get(NICE_NAME));
       return true;
     }

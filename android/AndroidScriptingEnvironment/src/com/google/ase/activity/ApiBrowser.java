@@ -55,7 +55,7 @@ import com.google.ase.facade.TelephonyManagerFacade;
 import com.google.ase.facade.TextToSpeechFacade;
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterUtils;
+import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcInfo;
 
@@ -185,7 +185,7 @@ public class ApiBrowser extends ListActivity {
 
   private void insertText(RpcInfo rpc) {
     String scriptText = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_TEXT);
-    Interpreter interpreter = InterpreterUtils.getInterpreterByName(
+    Interpreter interpreter = InterpreterConfiguration.getInterpreterByName(
         getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));
     String rpcHelpText = interpreter.getRpcText(scriptText, rpc);
 
