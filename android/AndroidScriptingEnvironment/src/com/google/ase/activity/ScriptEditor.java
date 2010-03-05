@@ -17,6 +17,9 @@
 package com.google.ase.activity;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,6 +28,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -107,6 +112,11 @@ public class ScriptEditor extends Activity {
     } else if (content != null) {
       mContentText.setText(content);
     }
+    InputFilter[] oldFilters = mContentText.getFilters();
+    List<InputFilter> filters = new ArrayList<InputFilter>(oldFilters.length + 1);
+    filters.addAll(Arrays.asList(oldFilters));
+    filters.add(new ContentInputFilter());
+    mContentText.setFilters(filters.toArray(oldFilters));
   }
 
   @Override
@@ -145,8 +155,9 @@ public class ScriptEditor extends Activity {
       startActivity(new Intent(this, AsePreferences.class));
     } else if (item.getItemId() == MenuId.HELP.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
-      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, InterpreterConfiguration.getInterpreterForScript(
-          mNameText.getText().toString()).getName());
+      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME,
+          InterpreterConfiguration.getInterpreterForScript(
+              mNameText.getText().toString()).getName());
       intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());
       startActivityForResult(intent, RequestCode.RPC_HELP.ordinal());
     }
@@ -216,4 +227,17 @@ public class ScriptEditor extends Activity {
       return super.onKeyDown(keyCode, event);
     }
   }
+
+  private final class ContentInputFilter implements InputFilter {
+    @Override
+    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart,
+        int dend) {
+      if (end - start == 1) {
+        return InterpreterConfiguration.getInterpreterForScript(
+            mNameText.getText().toString()).getLanguage().autoClose(source.charAt(start));
+      }
+      return null;
+    }
+  }
+
 }

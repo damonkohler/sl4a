@@ -16,6 +16,9 @@
 
 package com.google.ase.language;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.ase.jsonrpc.ParameterDescriptor;
 import com.google.ase.jsonrpc.RpcInfo;
 
@@ -25,6 +28,9 @@ import com.google.ase.jsonrpc.RpcInfo;
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 public abstract class Language {
+  
+  private final static Map<Character, String> AUTO_CLOSE_MAP = buildAutoCloseMap(
+      '[', "[]", '{', "{}", '(', "()", '\'', "''", '"', "\"\"");
   
   /** Returns the initial template for newly created script. */
   public String getContentTemplate() {
@@ -49,6 +55,14 @@ public abstract class Language {
   /** Returns the default RPC receiver name. */
   protected String getDefaultRpcReceiver() {
     return "droid";
+  }
+  
+  /**
+   * Returns the string containing opening and closing tokens if the input is an
+   * opening token. Returns {@code null} otherwise.
+   */
+  public String autoClose(char token) {
+    return AUTO_CLOSE_MAP.get(token);
   }
 
   /** Returns the RPC call text with default parameter values. */
@@ -160,5 +174,16 @@ public abstract class Language {
       // If it is neither true nor false it is must be an expression.
       return value;
     }
+  }
+
+  private static Map<Character, String> buildAutoCloseMap(char c1, String s1, char c2, String s2,
+      char c3, String s3, char c4, String s4, char c5, String s5) {
+    Map<Character, String> map = new HashMap<Character, String>(5);
+    map.put(c1, s1);
+    map.put(c2, s2);
+    map.put(c3, s3);
+    map.put(c4, s4);
+    map.put(c5, s5);
+    return map;
   }
 }
