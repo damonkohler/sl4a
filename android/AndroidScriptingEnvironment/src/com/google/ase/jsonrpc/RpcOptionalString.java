@@ -32,5 +32,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface RpcOptionalString {
   /** A description of the parameter. */
-  public String value();
+  public String description();
 }

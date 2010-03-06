@@ -172,7 +172,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
   public Intent startActivityForResult(@RpcParameter("action") final String action,
-      @RpcOptionalString("uri") final String uri) {
+      @RpcOptionalString(description = "uri") final String uri) {
     Intent intent = new Intent(action);
     if (uri != null) {
       intent.setData(Uri.parse(uri));
@@ -196,7 +196,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
   public void startActivity(@RpcParameter("action") final String action,
-      @RpcOptionalString("uri") final String uri) {
+      @RpcOptionalString(description = "uri") final String uri) {
     Intent intent = new Intent(action);
     if (uri != null) {
       intent.setData(Uri.parse(uri));

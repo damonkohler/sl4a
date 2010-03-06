@@ -52,11 +52,15 @@ public class RpcInvokerFactory {
 
   private static JSONObject buildJsonIntent(Intent data) throws JSONException {
     JSONObject result = new JSONObject();
-    result.put("data", data.toURI()); // Add result data URI.
-    Bundle extras = data.getExtras(); // Add any result data extras.
+    Bundle extras = data.getExtras();
     if (extras != null) {
       for (String key : extras.keySet()) {
-        result.put(key, extras.get(key));
+        Object value = extras.get(key);
+        if (value instanceof Intent) {
+          result.put(key, buildJsonIntent((Intent) value));
+        } else {
+          result.put(key, value);
+        }
       }
     }
     return result;

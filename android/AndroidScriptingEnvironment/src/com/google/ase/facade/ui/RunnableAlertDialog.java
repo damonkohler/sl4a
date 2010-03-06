@@ -16,19 +16,17 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
+import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureIntent;
 
@@ -44,10 +42,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private FutureIntent mResult;
   private final String[] mButtonTexts;
   private Activity mActivity;
-  private JSONArray mItems;
-  private ArrayList<String> mListData;
-  private ArrayAdapter<String> mListAdapter;
-  private ListView mList;
+  private CharSequence[] mItems;
 
   public RunnableAlertDialog(String title, String message) {
     mTitle = title;
@@ -66,23 +61,22 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   public void setButton(int buttonNumber, String text) {
     mButtonTexts[buttonNumber] = text;
   }
-  
+
   /**
    * Set list items
-   * 
+   *
    * @param Items
    */
   public void setItems(JSONArray items) {
-    if (mActivity == null) {
-      // store items localy
-      mItems = items;
-    } else {
-      mListData.clear();
-      for (int i=0; i<items.length(); i++)
+    if (mItems == null) {
+      mItems = new CharSequence[items.length()];
+      for (int i = 0; i < items.length(); i++) {
         try {
-          mListData.add((String) items.get(i));
-        } catch (JSONException e) {}
-      mList.setAdapter(mListAdapter);
+          mItems[i] = items.getString(i);
+        } catch (JSONException e) {
+          throw new AseRuntimeException(e);
+        }
+      }
     }
   }
 
@@ -95,16 +89,46 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   public void run(final Activity activity, FutureIntent result) {
     mActivity = activity;
     mResult = result;
-    mDialog = new AlertDialog.Builder(activity).create();
-    if (mTitle.length() > 0) {
-      mDialog.setTitle(mTitle);
+    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+    if (mTitle != null) {
+      builder.setTitle(mTitle);
     }
-    if (mMessage.length() > 0) {
-      mDialog.setMessage(mMessage);
+    // Can't display both a message and items. We'll elect to show the items instead.
+    if (mMessage != null && mItems == null) {
+      builder.setMessage(mMessage);
     }
-    if (mItems != null) { 
-      createListView();
+    if (mItems != null) {
+      builder.setItems(mItems, new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int item) {
+          Intent intent = new Intent();
+          intent.putExtra("item", item);
+          mResult.set(intent);
+          // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
+          dialog.dismiss();
+          activity.finish();
+        }
+      });
     }
+    configureButtons(builder, activity);
+    addOnCancelListener(builder, activity);
+    mDialog = builder.show();
+  }
+
+  private Builder addOnCancelListener(final AlertDialog.Builder builder, final Activity activity) {
+    return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+      @Override
+      public void onCancel(DialogInterface dialog) {
+        Intent intent = new Intent();
+        intent.putExtra("canceled", true);
+        mResult.set(intent);
+        // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
+        dialog.dismiss();
+        activity.finish();
+      }
+    });
+  }
+
+  private void configureButtons(final AlertDialog.Builder builder, final Activity activity) {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -112,48 +136,21 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
         intent.putExtra("which", which);
         mResult.set(intent);
         // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
-        mDialog.dismiss();
+        dialog.dismiss();
         activity.finish();
       }
     };
     if (mButtonTexts[0] != null) {
-      mDialog.setButton(mButtonTexts[0], buttonListener);
+      builder.setNegativeButton(mButtonTexts[0], buttonListener);
     }
     if (mButtonTexts[1] != null) {
-      mDialog.setButton2(mButtonTexts[1], buttonListener);
+      builder.setPositiveButton(mButtonTexts[1], buttonListener);
     }
     if (mButtonTexts[2] != null) {
-      mDialog.setButton3(mButtonTexts[2], buttonListener);
+      builder.setNeutralButton(mButtonTexts[2], buttonListener);
     }
-    mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-      @Override
-      public void onCancel(DialogInterface dialog) {
-        Intent intent = new Intent();
-        intent.putExtra("canceled", true);
-        mResult.set(intent);
-        activity.finish();
-      }
-    });
-    mDialog.show();
   }
 
-  /**
-   * Create {@link ListView} to contain items
-   */
-  private void createListView() {
-    mListData = new ArrayList<String>();
-    mListAdapter = new ArrayAdapter<String>(
-                                          mActivity, 
-                                          android.R.layout.simple_list_item_1, 
-                                          mListData
-                                        );
-    mList = new ListView(mActivity);
-    mList.setAdapter(mListAdapter);
-    //TODO(meaneye.rcf): Add onClick event
-    mDialog.setView(mList);
-    setItems(mItems);   
-  }
-  
   @Override
   public void dismissDialog() {
     mDialog.dismiss();

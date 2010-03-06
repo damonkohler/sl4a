@@ -49,7 +49,7 @@ public class RpcAnnotationHelper {
       } else if (a instanceof RpcOptionalObject) {
         return ((RpcOptionalObject) a).value();
       } else if (a instanceof RpcOptionalString) {
-        return ((RpcOptionalString) a).value();
+        return ((RpcOptionalString) a).description();
       }
     }
     return "(no description)";

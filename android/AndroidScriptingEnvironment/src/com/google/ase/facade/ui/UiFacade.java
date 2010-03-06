@@ -35,6 +35,7 @@ import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
 import com.google.ase.jsonrpc.RpcDefaultString;
+import com.google.ase.jsonrpc.RpcOptionalString;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
 
@@ -83,8 +84,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Create a spinner progress dialog.", returns = "Dialog ID as String")
-  public String dialogCreateSpinnerProgress(
-      @RpcDefaultString(description = "Title", defaultValue = "") String title,
+  public String dialogCreateSpinnerProgress(@RpcOptionalString(description = "Title") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
       @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
@@ -94,7 +94,7 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Create a horizontal progress dialog.", returns = "Dialog ID as String")
   public String dialogCreateHorizontalProgress(
-      @RpcDefaultString(description = "Title", defaultValue = "") String title,
+      @RpcOptionalString(description = "Title") String title,
       @RpcDefaultString(description = "Message", defaultValue = "") String message,
       @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
@@ -103,9 +103,8 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Create alert dialog.", returns = "Dialog ID as String")
-  public String dialogCreateAlert(
-      @RpcDefaultString(description = "Title", defaultValue = "") String title,
-      @RpcDefaultString(description = "Message", defaultValue = "") String message) {
+  public String dialogCreateAlert(@RpcOptionalString(description = "Title") String title,
+      @RpcOptionalString(description = "Message") String message) {
     return addDialog(new RunnableAlertDialog(title, message));
   }
 
@@ -153,10 +152,10 @@ public class UiFacade implements RpcReceiver {
       ((RunnableAlertDialog) dialog).setButton(button, text);
     }
   }
-  
+
+  // TODO(damonkohler): Make RPC layer translate between JSONArray and List<Object>.
   @Rpc(description = "Set alert dialog list items.")
-  public void dialogSetItems(@RpcParameter("id") String id,
-      @RpcParameter("items") JSONArray items) {
+  public void dialogSetItems(@RpcParameter("id") String id, @RpcParameter("items") JSONArray items) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null && dialog instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) dialog).setItems(items);
@@ -164,10 +163,10 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Returns dialog response.", returns = "Button number")
-  public int dialogGetResponse(@RpcParameter("id") String id) {
+  public Intent dialogGetResponse(@RpcParameter("id") String id) {
     FutureActivityTask task = (FutureActivityTask) getDialogById(id);
     try {
-      return task.getResult().get().getIntExtra("which", 0);
+      return task.getResult().get();
     } catch (Exception e) {
       throw new AndroidRuntimeException(e);
     }
