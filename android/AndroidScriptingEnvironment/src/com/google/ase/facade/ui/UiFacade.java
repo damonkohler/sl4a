@@ -143,13 +143,30 @@ public class UiFacade implements RpcReceiver {
     }
   }
 
-  @Rpc(description = "Set alert dialog button text.")
-  public void dialogSetButton(@RpcParameter("id") String id,
-      @RpcDefaultInteger(description = "Button number", defaultValue = 0) Integer button,
+  @Rpc(description = "Set alert dialog positive button text.")
+  public void dialogSetPositiveButtonText(@RpcParameter("id") String id,
       @RpcParameter("text") String text) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null && dialog instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) dialog).setButton(button, text);
+      ((RunnableAlertDialog) dialog).setPositiveButtonText(text);
+    }
+  }
+
+  @Rpc(description = "Set alert dialog button text.")
+  public void dialogSetNegativeButton(@RpcParameter("id") String id,
+      @RpcParameter("text") String text) {
+    RunnableDialog dialog = getDialogById(id);
+    if (dialog != null && dialog instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) dialog).setNegativeButtonText(text);
+    }
+  }
+
+  @Rpc(description = "Set alert dialog button text.")
+  public void dialogSetNeutralButton(@RpcParameter("id") String id,
+      @RpcParameter("text") String text) {
+    RunnableDialog dialog = getDialogById(id);
+    if (dialog != null && dialog instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) dialog).setNeutralButtonText(text);
     }
   }
 
