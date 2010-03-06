@@ -52,6 +52,7 @@ public class ScriptEditor extends Activity {
 
   private EditText mNameText;
   private EditText mContentText;
+  private String mLastSavedContent;
   private SharedPreferences mPreferences;
 
   private static enum MenuId {
@@ -101,17 +102,20 @@ public class ScriptEditor extends Activity {
       mNameText.setSelection(0);
     }
 
-    String content = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
-    if (content == null && name != null) {
-      try {
-        content = ScriptStorageAdapter.readScript(name);
-        mContentText.setText(content);
-      } catch (IOException e) {
-        AseLog.e("Failed to read script.", e);
+    mLastSavedContent = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
+    if (mLastSavedContent == null) {
+      if (name != null) {
+        try {
+          mLastSavedContent = ScriptStorageAdapter.readScript(name);
+        } catch (IOException e) {
+          AseLog.e("Failed to read script.", e);
+          mLastSavedContent = "";
+        } finally {
+        }
       }
-    } else if (content != null) {
-      mContentText.setText(content);
     }
+    mContentText.setText(mLastSavedContent);
+
     InputFilter[] oldFilters = mContentText.getFilters();
     List<InputFilter> filters = new ArrayList<InputFilter>(oldFilters.length + 1);
     filters.addAll(Arrays.asList(oldFilters));
@@ -188,8 +192,8 @@ public class ScriptEditor extends Activity {
   }
 
   private void save() {
-    ScriptStorageAdapter.writeScript(mNameText.getText().toString(), mContentText.getText()
-        .toString());
+    mLastSavedContent = mContentText.getText().toString();
+    ScriptStorageAdapter.writeScript(mNameText.getText().toString(), mLastSavedContent);
     Toast.makeText(this, "Saved " + mNameText.getText().toString(), Toast.LENGTH_SHORT);
   }
 
@@ -201,7 +205,7 @@ public class ScriptEditor extends Activity {
 
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_BACK) {
+    if (keyCode == KeyEvent.KEYCODE_BACK && hasContentChanged()) {
       AlertDialog.Builder alert = new AlertDialog.Builder(this);
       alert.setCancelable(false);
       alert.setTitle("Confirm exit");
@@ -226,6 +230,10 @@ public class ScriptEditor extends Activity {
     } else {
       return super.onKeyDown(keyCode, event);
     }
+  }
+  
+  private boolean hasContentChanged() {
+    return !mLastSavedContent.equals(mContentText.getText().toString());
   }
 
   private final class ContentInputFilter implements InputFilter {
