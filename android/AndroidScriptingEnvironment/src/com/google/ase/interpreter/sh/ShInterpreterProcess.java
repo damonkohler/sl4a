@@ -18,7 +18,7 @@ package com.google.ase.interpreter.sh;
 
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
-import com.google.ase.interpreter.InterpreterUtils;
+import com.google.ase.interpreter.InterpreterConfiguration;
 
 public class ShInterpreterProcess extends InterpreterProcess {
 
@@ -30,7 +30,7 @@ public class ShInterpreterProcess extends InterpreterProcess {
   protected void buildEnvironment() {
     // Add bin directories for all interpreters to the path.
     StringBuilder path = new StringBuilder();
-    for (Interpreter interpreter : InterpreterUtils.getInstalledInterpreters()) {
+    for (Interpreter interpreter : InterpreterConfiguration.getInstalledInterpreters()) {
       if (interpreter.getBinary() != null) {
         path.append(':');
         path.append(interpreter.getBinary().getParent());

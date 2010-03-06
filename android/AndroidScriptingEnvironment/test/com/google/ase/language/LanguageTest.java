@@ -65,6 +65,17 @@ public class LanguageTest extends TestCase {
     checkMethodCall("droid.method(1, \"abc\", null, null, true, isComplete)", shell, params);
     checkMethodCall("$droid method 1 \"abc\" null null true isComplete", tcl, params);
   }
+  
+  public void testAutoComplete() {
+    checkAutoComplete(beanShell);
+    checkAutoComplete(javaScript);
+    checkAutoComplete(lua);
+    checkAutoComplete(perl);
+    checkAutoComplete(python);
+    checkAutoComplete(ruby);
+    checkAutoComplete(shell);
+    checkAutoComplete(tcl);
+  }
 
   private void checkContentTemplate(String expectedContent, Language language) {
     assertEquals(expectedContent, language.getContentTemplate());
@@ -74,5 +85,19 @@ public class LanguageTest extends TestCase {
       ParameterDescriptor... params) {
     assertEquals(expectedContent, language.getMethodCallText(language.getDefaultRpcReceiver(),
         "method", params));
+  }
+  
+  private void checkAutoComplete(Language language) {
+    checkAutoComplete(language, '[', "[]");
+    checkAutoComplete(language, '{', "{}");
+    checkAutoComplete(language, '(', "()");
+    checkAutoComplete(language, '\'', "''");
+    checkAutoComplete(language, '"', "\"\"");
+    checkAutoComplete(language, ']', null);
+    checkAutoComplete(language, '*', null);
+  }
+
+  private void checkAutoComplete(Language language, char token, String expected) {
+    assertEquals(language.autoClose(token), expected);
   }
 }

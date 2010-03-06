@@ -13,7 +13,7 @@ import android.os.Bundle;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterUtils;
+import com.google.ase.interpreter.InterpreterConfiguration;
 
 public class InterpreterUninstaller extends Activity {
   private String mName;
@@ -29,13 +29,13 @@ public class InterpreterUninstaller extends Activity {
       finish();
       return;
     }
-    if (!InterpreterUtils.checkInstalled(mName)) {
+    if (!InterpreterConfiguration.checkInstalled(mName)) {
       AseLog.e("Interpreter not installed.");
       setResult(RESULT_CANCELED);
       finish();
       return;
     }
-    mInterpreter = InterpreterUtils.getInterpreterByName(mName);
+    mInterpreter = InterpreterConfiguration.getInterpreterByName(mName);
     if (mInterpreter == null) {
       AseLog.e("No matching interpreter found for name: " + mName);
       setResult(RESULT_CANCELED);

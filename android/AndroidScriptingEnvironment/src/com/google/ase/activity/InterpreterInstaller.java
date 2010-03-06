@@ -26,7 +26,7 @@ import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.Exec;
 import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterUtils;
+import com.google.ase.interpreter.InterpreterConfiguration;
 
 /**
  * Activity for installing interpreters.
@@ -53,13 +53,13 @@ public class InterpreterInstaller extends Activity {
       finish();
       return;
     }
-    if (InterpreterUtils.checkInstalled(mName)) {
+    if (InterpreterConfiguration.checkInstalled(mName)) {
       AseLog.e("Interpreter already installed.");
       setResult(RESULT_CANCELED);
       finish();
       return;
     }
-    mInterpreter = InterpreterUtils.getInterpreterByName(mName);
+    mInterpreter = InterpreterConfiguration.getInterpreterByName(mName);
     if (mInterpreter == null) {
       AseLog.e("No matching interpreter found for name: " + mName);
       setResult(RESULT_CANCELED);

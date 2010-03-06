@@ -24,7 +24,7 @@ import android.content.Intent;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterProcess;
-import com.google.ase.interpreter.InterpreterUtils;
+import com.google.ase.interpreter.InterpreterConfiguration;
 
 public class ScriptLauncher {
 
@@ -37,11 +37,11 @@ public class ScriptLauncher {
   public ScriptLauncher(Intent intent, InetSocketAddress address) {
     mScriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     if (mScriptName != null) {
-      mInterpreter = InterpreterUtils.getInterpreterForScript(mScriptName);
+      mInterpreter = InterpreterConfiguration.getInterpreterForScript(mScriptName);
       mInterpreterName = mInterpreter.getName();
     } else {
       mInterpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
-      mInterpreter = InterpreterUtils.getInterpreterByName(mInterpreterName); // Returns null?
+      mInterpreter = InterpreterConfiguration.getInterpreterByName(mInterpreterName); // Returns null?
     }
     mAddress = address;
   }

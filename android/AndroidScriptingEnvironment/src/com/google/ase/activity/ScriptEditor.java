@@ -17,6 +17,9 @@
 package com.google.ase.activity;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,6 +28,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Selection;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +44,7 @@ import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
-import com.google.ase.interpreter.InterpreterUtils;
+import com.google.ase.interpreter.InterpreterConfiguration;
 
 /**
  * A text editor for scripts.
@@ -47,6 +55,8 @@ public class ScriptEditor extends Activity {
 
   private EditText mNameText;
   private EditText mContentText;
+  private boolean mScheduleMoveLeft;
+  private String mLastSavedContent;
   private SharedPreferences mPreferences;
 
   private static enum MenuId {
@@ -96,17 +106,27 @@ public class ScriptEditor extends Activity {
       mNameText.setSelection(0);
     }
 
-    String content = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
-    if (content == null && name != null) {
-      try {
-        content = ScriptStorageAdapter.readScript(name);
-        mContentText.setText(content);
-      } catch (IOException e) {
-        AseLog.e("Failed to read script.", e);
+    mLastSavedContent = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
+    if (mLastSavedContent == null) {
+      if (name != null) {
+        try {
+          mLastSavedContent = ScriptStorageAdapter.readScript(name);
+        } catch (IOException e) {
+          AseLog.e("Failed to read script.", e);
+          mLastSavedContent = "";
+        } finally {
+        }
       }
-    } else if (content != null) {
-      mContentText.setText(content);
     }
+    mContentText.setText(mLastSavedContent);
+
+    InputFilter[] oldFilters = mContentText.getFilters();
+    List<InputFilter> filters = new ArrayList<InputFilter>(oldFilters.length + 1);
+    filters.addAll(Arrays.asList(oldFilters));
+    filters.add(new ContentInputFilter());
+    mContentText.setFilters(filters.toArray(oldFilters));
+    
+    mContentText.addTextChangedListener(new ContentTextWatcher());
   }
 
   @Override
@@ -145,8 +165,9 @@ public class ScriptEditor extends Activity {
       startActivity(new Intent(this, AsePreferences.class));
     } else if (item.getItemId() == MenuId.HELP.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
-      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, InterpreterUtils.getInterpreterForScript(
-          mNameText.getText().toString()).getName());
+      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME,
+          InterpreterConfiguration.getInterpreterForScript(
+              mNameText.getText().toString()).getName());
       intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());
       startActivityForResult(intent, RequestCode.RPC_HELP.ordinal());
     }
@@ -177,8 +198,8 @@ public class ScriptEditor extends Activity {
   }
 
   private void save() {
-    ScriptStorageAdapter.writeScript(mNameText.getText().toString(), mContentText.getText()
-        .toString());
+    mLastSavedContent = mContentText.getText().toString();
+    ScriptStorageAdapter.writeScript(mNameText.getText().toString(), mLastSavedContent);
     Toast.makeText(this, "Saved " + mNameText.getText().toString(), Toast.LENGTH_SHORT);
   }
 
@@ -190,7 +211,7 @@ public class ScriptEditor extends Activity {
 
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_BACK) {
+    if (keyCode == KeyEvent.KEYCODE_BACK && hasContentChanged()) {
       AlertDialog.Builder alert = new AlertDialog.Builder(this);
       alert.setCancelable(false);
       alert.setTitle("Confirm exit");
@@ -216,4 +237,43 @@ public class ScriptEditor extends Activity {
       return super.onKeyDown(keyCode, event);
     }
   }
+  
+  private boolean hasContentChanged() {
+    return !mLastSavedContent.equals(mContentText.getText().toString());
+  }
+
+  private final class ContentInputFilter implements InputFilter {
+    @Override
+    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart,
+        int dend) {
+      if (end - start == 1) {
+        String auto = InterpreterConfiguration.getInterpreterForScript(
+            mNameText.getText().toString()).getLanguage().autoClose(source.charAt(start));
+        if (auto != null) {
+          mScheduleMoveLeft = true;
+          return auto;
+        }
+      }
+      return null;
+    }
+  }
+
+  private final class ContentTextWatcher implements TextWatcher {
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+      if (mScheduleMoveLeft) {
+        mScheduleMoveLeft = false;
+        Selection.moveLeft(mContentText.getText(), mContentText.getLayout());
+      }
+    }
+  }
+
 }
