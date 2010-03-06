@@ -28,8 +28,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.Selection;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +55,7 @@ public class ScriptEditor extends Activity {
 
   private EditText mNameText;
   private EditText mContentText;
+  private boolean mScheduleMoveLeft;
   private String mLastSavedContent;
   private SharedPreferences mPreferences;
 
@@ -121,6 +125,8 @@ public class ScriptEditor extends Activity {
     filters.addAll(Arrays.asList(oldFilters));
     filters.add(new ContentInputFilter());
     mContentText.setFilters(filters.toArray(oldFilters));
+    
+    mContentText.addTextChangedListener(new ContentTextWatcher());
   }
 
   @Override
@@ -241,10 +247,32 @@ public class ScriptEditor extends Activity {
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart,
         int dend) {
       if (end - start == 1) {
-        return InterpreterConfiguration.getInterpreterForScript(
+        String auto = InterpreterConfiguration.getInterpreterForScript(
             mNameText.getText().toString()).getLanguage().autoClose(source.charAt(start));
+        if (auto != null) {
+          mScheduleMoveLeft = true;
+          return auto;
+        }
       }
       return null;
+    }
+  }
+
+  private final class ContentTextWatcher implements TextWatcher {
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+      if (mScheduleMoveLeft) {
+        mScheduleMoveLeft = false;
+        Selection.moveLeft(mContentText.getText(), mContentText.getLayout());
+      }
     }
   }
 
