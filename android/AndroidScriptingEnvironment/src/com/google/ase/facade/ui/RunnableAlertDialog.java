@@ -42,9 +42,9 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private FutureIntent mResult;
   private Activity mActivity;
   private CharSequence[] mItems;
-  private String mPositiveButton;
-  private String mNegativeButton;
-  private String mNeutralButton;
+  private String mPositiveButtonText;
+  private String mNegativeButtonText;
+  private String mNeutralButtonText;
 
   public RunnableAlertDialog(String title, String message) {
     mTitle = title;
@@ -52,15 +52,15 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   }
 
   public void setPositiveButtonText(String text) {
-    mPositiveButton = text;
+    mPositiveButtonText = text;
   }
 
   public void setNegativeButtonText(String text) {
-    mNegativeButton = text;
+    mNegativeButtonText = text;
   }
 
   public void setNeutralButtonText(String text) {
-    mNeutralButton = text;
+    mNeutralButtonText = text;
   }
 
   /**
@@ -141,14 +141,14 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
         activity.finish();
       }
     };
-    if (mNegativeButton != null) {
-      builder.setNegativeButton(mNegativeButton, buttonListener);
+    if (mNegativeButtonText != null) {
+      builder.setNegativeButton(mNegativeButtonText, buttonListener);
     }
-    if (mPositiveButton != null) {
-      builder.setPositiveButton(mPositiveButton, buttonListener);
+    if (mPositiveButtonText != null) {
+      builder.setPositiveButton(mPositiveButtonText, buttonListener);
     }
-    if (mNeutralButton != null) {
-      builder.setNeutralButton(mNeutralButton, buttonListener);
+    if (mNeutralButtonText != null) {
+      builder.setNeutralButton(mNeutralButtonText, buttonListener);
     }
   }
 

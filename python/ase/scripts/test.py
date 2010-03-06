@@ -144,9 +144,9 @@ def test_alert_dialog_with_buttons():
   message = ('This alert box has 3 buttons and '
              'will wait for you to press one.')
   dialog = droid.dialogCreateAlert(title, message).result
-  droid.dialogSetButton(dialog, 0, 'Button 1')
-  droid.dialogSetButton(dialog, 1, 'Button 2')
-  droid.dialogSetButton(dialog, 2, 'Button 3')
+  droid.dialogSetPositiveButtonText(dialog, 'Yes')
+  droid.dialogSetNegativeButtonText(dialog, 'No')
+  droid.dialogSetNeutralButtonText(dialog, 'Cancel')
   droid.dialogShow(dialog)
   response = droid.dialogGetResponse(dialog).result
   return response is not None
@@ -172,6 +172,15 @@ def test_horizontal_progress():
     droid.dialogSetCurrentProgress(dialog, x)
   droid.dialogDismiss(dialog)
   return True
+
+
+def test_alert_dialog_with_list():
+  title = 'Alert'
+  dialog = droid.dialogCreateAlert(title).result
+  droid.dialogSetItems(dialog, ['foo', 'bar', 'baz'])
+  droid.dialogShow(dialog)
+  response = droid.dialogGetResponse(dialog).result
+  return 0 <= response['item'] <= 3
 
 
 if __name__ == '__main__':

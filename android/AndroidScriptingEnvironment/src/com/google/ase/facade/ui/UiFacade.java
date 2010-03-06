@@ -34,7 +34,6 @@ import com.google.ase.future.FutureActivityTask;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
-import com.google.ase.jsonrpc.RpcDefaultString;
 import com.google.ase.jsonrpc.RpcOptionalString;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
@@ -85,7 +84,7 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Create a spinner progress dialog.", returns = "Dialog ID as String")
   public String dialogCreateSpinnerProgress(@RpcOptionalString(description = "Title") String title,
-      @RpcDefaultString(description = "Message", defaultValue = "") String message,
+      @RpcOptionalString(description = "Message") String message,
       @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
     return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, max, title, message,
@@ -95,7 +94,7 @@ public class UiFacade implements RpcReceiver {
   @Rpc(description = "Create a horizontal progress dialog.", returns = "Dialog ID as String")
   public String dialogCreateHorizontalProgress(
       @RpcOptionalString(description = "Title") String title,
-      @RpcDefaultString(description = "Message", defaultValue = "") String message,
+      @RpcOptionalString(description = "Message") String message,
       @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
     return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title,
@@ -153,7 +152,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Set alert dialog button text.")
-  public void dialogSetNegativeButton(@RpcParameter("id") String id,
+  public void dialogSetNegativeButtonText(@RpcParameter("id") String id,
       @RpcParameter("text") String text) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null && dialog instanceof RunnableAlertDialog) {
@@ -162,7 +161,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Set alert dialog button text.")
-  public void dialogSetNeutralButton(@RpcParameter("id") String id,
+  public void dialogSetNeutralButtonText(@RpcParameter("id") String id,
       @RpcParameter("text") String text) {
     RunnableDialog dialog = getDialogById(id);
     if (dialog != null && dialog instanceof RunnableAlertDialog) {
