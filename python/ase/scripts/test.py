@@ -130,56 +130,56 @@ def test_get_running_packages():
 
 
 def test_alert_dialog():
-  title = 'User Interace'
+  title = 'User Interface'
   message = 'Welcome to the ASE integration test.'
-  dialog = droid.dialogCreateAlert(title, message).result
-  droid.dialogSetButton(dialog, 0, 'Continue')
-  droid.dialogShow(dialog)
-  droid.dialogGetResponse(dialog)
-  return True
+  droid.dialogCreateAlert(title, message)
+  droid.dialogSetPositiveButtonText('Continue')
+  droid.dialogShow()
+  response = droid.dialogGetResponse().result
+  return response['which'] == 'positive'
 
 
 def test_alert_dialog_with_buttons():
   title = 'Alert'
   message = ('This alert box has 3 buttons and '
              'will wait for you to press one.')
-  dialog = droid.dialogCreateAlert(title, message).result
-  droid.dialogSetPositiveButtonText(dialog, 'Yes')
-  droid.dialogSetNegativeButtonText(dialog, 'No')
-  droid.dialogSetNeutralButtonText(dialog, 'Cancel')
-  droid.dialogShow(dialog)
-  response = droid.dialogGetResponse(dialog).result
-  return response is not None
+  droid.dialogCreateAlert(title, message)
+  droid.dialogSetPositiveButtonText('Yes')
+  droid.dialogSetNegativeButtonText('No')
+  droid.dialogSetNeutralButtonText('Cancel')
+  droid.dialogShow()
+  response = droid.dialogGetResponse().result
+  return response['which'] in ('positive', 'negative', 'neutral')
 
 
 def test_spinner_progress():
   title = 'Spinner'
   message = 'This is simple spinner progress.'
-  dialog = droid.dialogCreateSpinnerProgress(title, message).result
-  droid.dialogShow(dialog)
+  droid.dialogCreateSpinnerProgress(title, message)
+  droid.dialogShow()
   time.sleep(2)
-  droid.dialogDismiss(dialog)
+  droid.dialogDismiss()
   return True
 
 
 def test_horizontal_progress():
   title = 'Horizontal'
   message = 'This is simple horizontal progress.'
-  dialog = droid.dialogCreateHorizontalProgress(title, message, 50).result
-  droid.dialogShow(dialog)
+  droid.dialogCreateHorizontalProgress(title, message, 50)
+  droid.dialogShow()
   for x in range(0, 50):
     time.sleep(0.1)
-    droid.dialogSetCurrentProgress(dialog, x)
-  droid.dialogDismiss(dialog)
+    droid.dialogSetCurrentProgress(x)
+  droid.dialogDismiss()
   return True
 
 
 def test_alert_dialog_with_list():
   title = 'Alert'
-  dialog = droid.dialogCreateAlert(title).result
-  droid.dialogSetItems(dialog, ['foo', 'bar', 'baz'])
-  droid.dialogShow(dialog)
-  response = droid.dialogGetResponse(dialog).result
+  droid.dialogCreateAlert(title)
+  droid.dialogSetItems(['foo', 'bar', 'baz'])
+  droid.dialogShow()
+  response = droid.dialogGetResponse().result
   return 0 <= response['item'] <= 3
 
 

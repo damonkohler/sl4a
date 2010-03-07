@@ -16,10 +16,7 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Queue;
-import java.util.UUID;
 
 import org.json.JSONArray;
 
@@ -30,6 +27,7 @@ import android.util.AndroidRuntimeException;
 
 import com.google.ase.AseApplication;
 import com.google.ase.activity.AseServiceHelper;
+import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
@@ -46,13 +44,12 @@ import com.google.ase.jsonrpc.RpcReceiver;
  */
 public class UiFacade implements RpcReceiver {
   private final Service mService;
-  private final Map<String, RunnableDialog> mDialogMap;
   private final Queue<FutureActivityTask> mTaskQueue;
+  private RunnableDialog mDialogTask;
 
   public UiFacade(Service service) {
     mService = service;
     mTaskQueue = ((AseApplication) mService.getApplication()).getTaskQueue();
-    mDialogMap = new HashMap<String, RunnableDialog>();
   }
 
   private void launchHelper() {
@@ -61,128 +58,109 @@ public class UiFacade implements RpcReceiver {
     mService.startActivity(helper);
   }
 
-  /**
-   * Returns {@link RunnableDialog} corresponding to a UUID.
-   */
-  private RunnableDialog getDialogById(String id) {
-    if (mDialogMap.containsKey(id)) {
-      return mDialogMap.get(id);
-    }
-    return null;
-  }
-
-  /**
-   * Adds {@link RunnableDialog} and returns its ID.
-   *
-   * @return dialog ID
-   */
-  private String addDialog(RunnableDialog dialog) {
-    String id = String.valueOf(UUID.randomUUID());
-    mDialogMap.put(id, dialog);
-    return id;
-  }
-
-  @Rpc(description = "Create a spinner progress dialog.", returns = "Dialog ID as String")
-  public String dialogCreateSpinnerProgress(@RpcOptionalString(description = "Title") String title,
+  @Rpc(description = "Create a spinner progress dialog.")
+  public void dialogCreateSpinnerProgress(@RpcOptionalString(description = "Title") String title,
       @RpcOptionalString(description = "Message") String message,
       @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
-    return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, max, title, message,
-        cancelable));
+    mDialogTask =
+        new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, max, title, message, cancelable);
   }
 
-  @Rpc(description = "Create a horizontal progress dialog.", returns = "Dialog ID as String")
-  public String dialogCreateHorizontalProgress(
+  @Rpc(description = "Create a horizontal progress dialog.")
+  public void dialogCreateHorizontalProgress(
       @RpcOptionalString(description = "Title") String title,
       @RpcOptionalString(description = "Message") String message,
       @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
-    return addDialog(new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title,
-        message, cancelable));
+    mDialogTask =
+        new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title, message, cancelable);
   }
 
-  @Rpc(description = "Create alert dialog.", returns = "Dialog ID as String")
-  public String dialogCreateAlert(@RpcOptionalString(description = "Title") String title,
+  @Rpc(description = "Create alert dialog.")
+  public void dialogCreateAlert(@RpcOptionalString(description = "Title") String title,
       @RpcOptionalString(description = "Message") String message) {
-    return addDialog(new RunnableAlertDialog(title, message));
+    mDialogTask = new RunnableAlertDialog(title, message);
   }
 
   @Rpc(description = "Dismiss dialog.")
-  public void dialogDismiss(@RpcParameter("id") String id) {
-    RunnableDialog dialog = getDialogById(id);
-    if (dialog != null) {
-      dialog.dismissDialog();
-      mDialogMap.remove(id);
+  public void dialogDismiss() {
+    if (mDialogTask != null) {
+      mDialogTask.dismissDialog();
+    } else {
+      throw new AseRuntimeException("No dialog to dismiss.");
     }
   }
 
   @Rpc(description = "Show dialog.")
-  public void dialogShow(@RpcParameter("id") String id) {
-    FutureActivityTask task = (FutureActivityTask) getDialogById(id);
-    if (task != null) {
-      mTaskQueue.offer(task);
+  public void dialogShow() {
+    if (mDialogTask != null) {
+      mTaskQueue.offer((FutureActivityTask) mDialogTask);
       launchHelper();
+    } else {
+      throw new AndroidRuntimeException("No dialog to show.");
     }
   }
 
   @Rpc(description = "Set progress dialog current value.")
-  public void dialogSetCurrentProgress(@RpcParameter("id") String id,
-      @RpcParameter("current") Integer current) {
-    RunnableDialog dialog = getDialogById(id);
-    if (dialog != null && dialog.getDialog() instanceof ProgressDialog) {
-      ((ProgressDialog) dialog.getDialog()).setProgress(current);
+  public void dialogSetCurrentProgress(@RpcParameter("current") Integer current) {
+    if (mDialogTask != null && mDialogTask instanceof RunnableProgressDialog) {
+      ((ProgressDialog) mDialogTask.getDialog()).setProgress(current);
+    } else {
+      throw new AseRuntimeException("No valid dialog to assign value to.");
     }
   }
 
   @Rpc(description = "Set progress dialog maximum value.")
-  public void dialogSetMaxProgress(@RpcParameter("id") String id, @RpcParameter("max") Integer max) {
-    RunnableDialog dialog = getDialogById(id);
-    if (dialog != null && dialog.getDialog() instanceof ProgressDialog) {
-      ((ProgressDialog) dialog.getDialog()).setMax(max);
+  public void dialogSetMaxProgress(@RpcParameter("max") Integer max) {
+    if (mDialogTask != null && mDialogTask instanceof RunnableProgressDialog) {
+      ((ProgressDialog) mDialogTask.getDialog()).setMax(max);
+    } else {
+      throw new AseRuntimeException("No valid dialog to set maximum value of.");
     }
   }
 
   @Rpc(description = "Set alert dialog positive button text.")
-  public void dialogSetPositiveButtonText(@RpcParameter("id") String id,
-      @RpcParameter("text") String text) {
-    RunnableDialog dialog = getDialogById(id);
-    if (dialog != null && dialog instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) dialog).setPositiveButtonText(text);
+  public void dialogSetPositiveButtonText(@RpcParameter("text") String text) {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) mDialogTask).setPositiveButtonText(text);
+    } else {
+      throw new AndroidRuntimeException("No dialog to add button to.");
     }
   }
 
   @Rpc(description = "Set alert dialog button text.")
-  public void dialogSetNegativeButtonText(@RpcParameter("id") String id,
-      @RpcParameter("text") String text) {
-    RunnableDialog dialog = getDialogById(id);
-    if (dialog != null && dialog instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) dialog).setNegativeButtonText(text);
+  public void dialogSetNegativeButtonText(@RpcParameter("text") String text) {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) mDialogTask).setNegativeButtonText(text);
+    } else {
+      throw new AndroidRuntimeException("No dialog to add button to.");
     }
   }
 
   @Rpc(description = "Set alert dialog button text.")
-  public void dialogSetNeutralButtonText(@RpcParameter("id") String id,
-      @RpcParameter("text") String text) {
-    RunnableDialog dialog = getDialogById(id);
-    if (dialog != null && dialog instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) dialog).setNeutralButtonText(text);
+  public void dialogSetNeutralButtonText(@RpcParameter("text") String text) {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) mDialogTask).setNeutralButtonText(text);
+    } else {
+      throw new AndroidRuntimeException("No dialog to add button to.");
     }
   }
 
   // TODO(damonkohler): Make RPC layer translate between JSONArray and List<Object>.
   @Rpc(description = "Set alert dialog list items.")
-  public void dialogSetItems(@RpcParameter("id") String id, @RpcParameter("items") JSONArray items) {
-    RunnableDialog dialog = getDialogById(id);
-    if (dialog != null && dialog instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) dialog).setItems(items);
+  public void dialogSetItems(@RpcParameter("items") JSONArray items) {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) mDialogTask).setItems(items);
+    } else {
+      throw new AndroidRuntimeException("No dialog to add list to.");
     }
   }
 
-  @Rpc(description = "Returns dialog response.", returns = "Button number")
-  public Intent dialogGetResponse(@RpcParameter("id") String id) {
-    FutureActivityTask task = (FutureActivityTask) getDialogById(id);
+  @Rpc(description = "Returns dialog response.", returns = "User response")
+  public Intent dialogGetResponse() {
     try {
-      return task.getResult().get();
+      return ((FutureActivityTask) mDialogTask).getResult().get();
     } catch (Exception e) {
       throw new AndroidRuntimeException(e);
     }

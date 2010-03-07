@@ -134,7 +134,17 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         Intent intent = new Intent();
-        intent.putExtra("which", which);
+        switch (which) {
+          case DialogInterface.BUTTON_POSITIVE:
+            intent.putExtra("which", "positive");
+            break;
+          case DialogInterface.BUTTON_NEGATIVE:
+            intent.putExtra("which", "negative");
+            break;
+          case DialogInterface.BUTTON_NEUTRAL:
+            intent.putExtra("which", "neutral");
+            break;
+        }
         mResult.set(intent);
         // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
         dialog.dismiss();
