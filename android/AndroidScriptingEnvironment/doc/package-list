@@ -1,5 +1,9 @@
 com.google.ase
+com.google.ase.activity
+com.google.ase.exception
 com.google.ase.facade
+com.google.ase.facade.ui
+com.google.ase.future
 com.google.ase.interpreter
 com.google.ase.interpreter.bsh
 com.google.ase.interpreter.jruby
@@ -8,6 +12,8 @@ com.google.ase.interpreter.perl
 com.google.ase.interpreter.python
 com.google.ase.interpreter.rhino
 com.google.ase.interpreter.sh
+com.google.ase.interpreter.tcl
 com.google.ase.jsonrpc
+com.google.ase.language
 com.google.ase.locale
 com.google.ase.terminal
