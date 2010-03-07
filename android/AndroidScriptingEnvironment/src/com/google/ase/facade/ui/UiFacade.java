@@ -63,6 +63,7 @@ public class UiFacade implements RpcReceiver {
       @RpcOptionalString(description = "Message") String message,
       @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
+    dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
         new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, max, title, message, cancelable);
   }
@@ -73,6 +74,7 @@ public class UiFacade implements RpcReceiver {
       @RpcOptionalString(description = "Message") String message,
       @RpcDefaultInteger(description = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(description = "Cancelable", defaultValue = false) Boolean cancelable) {
+    dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
         new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title, message, cancelable);
   }
@@ -80,6 +82,7 @@ public class UiFacade implements RpcReceiver {
   @Rpc(description = "Create alert dialog.")
   public void dialogCreateAlert(@RpcOptionalString(description = "Title") String title,
       @RpcOptionalString(description = "Message") String message) {
+    dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask = new RunnableAlertDialog(title, message);
   }
 
@@ -87,8 +90,7 @@ public class UiFacade implements RpcReceiver {
   public void dialogDismiss() {
     if (mDialogTask != null) {
       mDialogTask.dismissDialog();
-    } else {
-      throw new AseRuntimeException("No dialog to dismiss.");
+      mDialogTask = null;
     }
   }
 
