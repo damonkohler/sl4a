@@ -30,7 +30,7 @@ import com.google.ase.language.PerlLanguage;
 public class PerlInterpreter extends Interpreter {
 
   private final static String PERL_BIN = "/data/data/com.google.ase/perl/perl";
-  
+
   public PerlInterpreter() {
     super(new PerlLanguage());
   }
@@ -77,6 +77,6 @@ public class PerlInterpreter extends Interpreter {
 
   @Override
   public int getVersion() {
-    return 2;
+    return 3;
   }
 }

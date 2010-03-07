@@ -31,7 +31,7 @@ import com.google.ase.language.TclLanguage;
 public class TclInterpreter extends Interpreter {
 
   private final static String TCL_BINARY = "/data/data/com.google.ase/tclsh/tclsh";
-  
+
   public TclInterpreter() {
     super(new TclLanguage());
   }
@@ -78,6 +78,6 @@ public class TclInterpreter extends Interpreter {
 
   @Override
   public int getVersion() {
-    return 1;
+    return 0;
   }
 }
