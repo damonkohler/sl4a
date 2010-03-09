@@ -111,7 +111,8 @@ public class InterpreterManager extends ListActivity {
     menu.clear();
     buildMenuIdMaps();
     buildInstallLanguagesMenu(menu);
-    menu.add(Menu.NONE, MenuId.NETWORK.getId(), Menu.NONE, "Start Server");
+    menu.add(Menu.NONE, MenuId.NETWORK.getId(), Menu.NONE, "Start Server").setIcon(
+        android.R.drawable.ic_menu_share);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
     return true;
