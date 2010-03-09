@@ -78,7 +78,8 @@
       android:name=".activity.ZipExtractor" />
     <activity
       android:name=".activity.AseServiceLauncher"
-      android:taskAffinity="">
+      android:taskAffinity=""
+      android:theme="@android:style/Theme.Translucent">
       <intent-filter>
         <action
           android:name="android.intent.action.VIEW" />
@@ -87,7 +88,8 @@
       </intent-filter>
     </activity>
     <activity
-      android:name=".activity.AseServiceHelper" />
+      android:name=".activity.AseServiceHelper"
+      android:theme="@android:style/Theme.Translucent" />
     <service
       android:name=".activity.AseService" />
     <activity
