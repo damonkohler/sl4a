@@ -7,5 +7,5 @@ __license__ = 'Apache License, Version 2.0'
 import android
 
 droid = android.Android()
-message = droid.getInput('TTS', 'What would you like to say?')['result']
+message = droid.getInput('TTS', 'What would you like to say?').result
 droid.speak(message)

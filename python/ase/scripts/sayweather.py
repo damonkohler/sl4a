@@ -11,9 +11,9 @@ import weather
 def say_weather(droid):
   """Speak the weather at the current location."""
   print 'Finding ZIP code.'
-  location = droid.getLastKnownLocation()['result']
+  location = droid.getLastKnownLocation().result
   addresses = droid.geocode(location['latitude'], location['longitude'])
-  zip = addresses['result'][0]['postal_code']
+  zip = addresses.result[0]['postal_code']
   if zip is None:
     msg = 'Failed to find location.'
   else:

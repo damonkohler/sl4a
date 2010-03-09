@@ -18,8 +18,8 @@ class SayChat(object):
 
   def __init__(self):
     self.droid = android.Android()
-    username = self.droid.getInput('Username')['result']
-    password = self.droid.getInput('Password')['result']
+    username = self.droid.getInput('Username').result
+    password = self.droid.getInput('Password').result
     jid = xmpp.protocol.JID(username)
     self.client = xmpp.Client(jid.getDomain(), debug=[])
     self.client.connect(server=_SERVER)
