@@ -29,7 +29,6 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -45,6 +44,7 @@ import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
+import com.google.ase.dialog.Help;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
 
@@ -150,11 +150,7 @@ public class InterpreterManager extends ListActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
     if (itemId == MenuId.HELP.getId()) {
-      // Show documentation.
-      Intent intent = new Intent();
-      intent.setAction(Intent.ACTION_VIEW);
-      intent.setData(Uri.parse(getString(R.string.wiki_url)));
-      startActivity(intent);
+      Help.show(this);
     } else if (itemId == MenuId.NETWORK.getId()) {
       AlertDialog.Builder dialog = new AlertDialog.Builder(this);
       dialog.setItems(new CharSequence[] { "Public", "Private" }, new OnClickListener() {

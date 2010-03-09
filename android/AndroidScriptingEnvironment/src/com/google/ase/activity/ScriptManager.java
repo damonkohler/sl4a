@@ -29,7 +29,6 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.ContextMenu;
@@ -47,7 +46,8 @@ import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
-import com.google.ase.UsageTrackingConfirmation;
+import com.google.ase.dialog.Help;
+import com.google.ase.dialog.UsageTrackingConfirmation;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
 
@@ -161,11 +161,7 @@ public class ScriptManager extends ListActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
     if (itemId == MenuId.HELP.getId()) {
-      // Show documentation.
-      Intent intent = new Intent();
-      intent.setAction(Intent.ACTION_VIEW);
-      intent.setData(Uri.parse(getString(R.string.wiki_url)));
-      startActivity(intent);
+      Help.show(this);
     } else if (itemId == MenuId.INTERPRETER_MANAGER.getId()) {
       // Show interpreter manger.
       Intent i = new Intent(this, InterpreterManager.class);
@@ -226,8 +222,8 @@ public class ScriptManager extends ListActivity {
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
       // Set the description of the action.
       if (scriptName.length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB,
-            scriptName.substring(0, com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH));
+        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, scriptName.substring(0,
+            com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH));
       } else {
         intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, scriptName);
       }
