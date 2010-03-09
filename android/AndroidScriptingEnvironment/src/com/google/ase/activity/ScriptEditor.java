@@ -44,6 +44,7 @@ import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
+import com.google.ase.dialog.Help;
 import com.google.ase.interpreter.InterpreterConfiguration;
 
 /**
@@ -60,7 +61,7 @@ public class ScriptEditor extends Activity {
   private SharedPreferences mPreferences;
 
   private static enum MenuId {
-    SAVE, SAVE_AND_RUN, PREFERENCES, HELP;
+    SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -146,8 +147,9 @@ public class ScriptEditor extends Activity {
         android.R.drawable.ic_media_play);
     menu.add(0, MenuId.PREFERENCES.getId(), 0, "Preferences").setIcon(
         android.R.drawable.ic_menu_preferences);
-    menu.add(0, MenuId.HELP.getId(), 0, "API Browser").setIcon(
+    menu.add(0, MenuId.API_BROWSER.getId(), 0, "API Browser").setIcon(
         android.R.drawable.ic_menu_info_details);
+    menu.add(0, MenuId.HELP.getId(), 0, "Help").setIcon(android.R.drawable.ic_menu_help);
     return true;
   }
 
@@ -162,13 +164,15 @@ public class ScriptEditor extends Activity {
       finish();
     } else if (item.getItemId() == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, AsePreferences.class));
-    } else if (item.getItemId() == MenuId.HELP.getId()) {
+    } else if (item.getItemId() == MenuId.API_BROWSER.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
       intent.putExtra(Constants.EXTRA_INTERPRETER_NAME,
           InterpreterConfiguration.getInterpreterForScript(
               mNameText.getText().toString()).getName());
       intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());
       startActivityForResult(intent, RequestCode.RPC_HELP.ordinal());
+    } else if (item.getItemId() == MenuId.HELP.getId()) {
+      Help.show(this);
     }
     return super.onOptionsItemSelected(item);
   }
