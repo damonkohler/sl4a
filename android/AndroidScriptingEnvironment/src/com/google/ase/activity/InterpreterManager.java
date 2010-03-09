@@ -60,7 +60,7 @@ public class InterpreterManager extends ListActivity {
   private HashMap<Integer, Interpreter> mInstallerMenuIds;
 
   private static enum MenuId {
-    HELP, ADD, DELETE, NETWORK;
+    HELP, ADD, DELETE, NETWORK, PREFERENCES;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -113,6 +113,8 @@ public class InterpreterManager extends ListActivity {
     buildInstallLanguagesMenu(menu);
     menu.add(Menu.NONE, MenuId.NETWORK.getId(), Menu.NONE, "Start Server").setIcon(
         android.R.drawable.ic_menu_share);
+    menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
+        android.R.drawable.ic_menu_preferences);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
     return true;
@@ -165,6 +167,8 @@ public class InterpreterManager extends ListActivity {
       // Install selected interpreter.
       Interpreter interpreter = mInstallerMenuIds.get(itemId);
       installInterpreter(interpreter);
+    } else if (itemId == MenuId.PREFERENCES.getId()) {
+      startActivity(new Intent(this, AsePreferences.class));
     }
     return super.onOptionsItemSelected(item);
   }
