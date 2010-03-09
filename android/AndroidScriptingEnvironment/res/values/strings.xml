@@ -37,7 +37,7 @@
   <string name="summary_initialcommand_preference">Sent to the shell when it starts.</string>
   <string name="dialog_title_initialcommand_preference">Initial Command</string>
   <string name="default_value_fontsize_preference">10</string>
-  <string name="default_value_color_preference">2</string>
+  <string name="default_value_color_preference">1</string>
   <string name="default_value_controlkey_preference">0</string>
   <string name="no_scripts_message">Start adding scripts and interpreters by pressing the menu button.</string>
 </resources>
