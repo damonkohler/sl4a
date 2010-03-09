@@ -68,6 +68,7 @@ public class AndroidFacade implements RpcReceiver {
 
   private final Service mService;
   private final Handler mHandler;
+  private final Intent mIntent;
   private final Queue<FutureActivityTask> mTaskQueue;
 
   private final ActivityManager mActivityManager;
@@ -92,9 +93,10 @@ public class AndroidFacade implements RpcReceiver {
    * @param handler
    *          is the {@link Handler} the APIs will use to communicate with the UI thread
    */
-  public AndroidFacade(Service service, Handler handler) {
+  public AndroidFacade(Service service, Handler handler, Intent intent) {
     mService = service;
     mHandler = handler;
+    mIntent = intent;
     mTaskQueue = ((AseApplication) mService.getApplication()).getTaskQueue();
     mSms = SmsManager.getDefault();
     mActivityManager = (ActivityManager) mService.getSystemService(Context.ACTIVITY_SERVICE);
@@ -394,6 +396,11 @@ public class AndroidFacade implements RpcReceiver {
   @Rpc(description = "Exits the activity or service running the script.")
   public void exit() {
     mService.stopSelf();
+  }
+
+  @Rpc(description = "Returns an extra value that was specified in the launch intent.", returns = "The extra value.")
+  public Object getExtra(@RpcParameter("name") String name) {
+    return mIntent.getExtras().get(name);
   }
 
   @Rpc(description = "Returns a list of packages running activities or services.", returns = "List of packages running activities.")

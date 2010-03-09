@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 
@@ -29,12 +28,19 @@ public class AseServiceLauncher extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Intent intent =
-        IntentBuilders.buildStartInBackgroundIntent(getIntent().getStringExtra(
-            Constants.EXTRA_SCRIPT_NAME));
-    AseLog.v("Starting in background.");
-    startService(intent);
+    String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    String action = getIntent().getAction();
+    Intent intent = null;
+    if (action.equals(Constants.ACTION_LAUNCH_SCRIPT)) {
+      intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
+    }
+    if (action.equals(Constants.ACTION_LAUNCH_TERMINAL)) {
+      intent = IntentBuilders.buildStartInTerminalIntent(scriptName);
+    }
+    if (intent != null) {
+      intent.putExtras(getIntent().getExtras());
+      startService(intent);
+    }
     finish();
   }
-
 }

@@ -160,7 +160,7 @@ public class InterpreterManager extends ListActivity {
       dialog.setItems(new CharSequence[] { "Public", "Private" }, new OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          launchService(which == 0);
+          launchService(which == 0 /* usePublicIp */);
         }
       });
       dialog.show();

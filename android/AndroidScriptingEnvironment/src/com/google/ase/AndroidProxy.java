@@ -43,7 +43,7 @@ public class AndroidProxy {
 
   public AndroidProxy(Service service, Intent intent) {
     Handler handler = new Handler();
-    final AndroidFacade androidFacade = new AndroidFacade(service, handler);
+    final AndroidFacade androidFacade = new AndroidFacade(service, handler, intent);
     final UiFacade uiFacade = new UiFacade(service);
     final MediaFacade mediaFacade = new MediaFacade();
     final TextToSpeechFacade ttsFacade = new TextToSpeechFacade(service);
