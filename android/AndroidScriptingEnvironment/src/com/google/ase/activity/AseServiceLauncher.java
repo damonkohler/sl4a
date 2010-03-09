@@ -17,30 +17,22 @@
 package com.google.ase.activity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.ase.Constants;
-import com.google.ase.IntentBuilders;
-
 public class AseServiceLauncher extends Activity {
+
+  public static final ComponentName COMPONENT_NAME =
+      new ComponentName("com.google.ase", "com.google.ase.activity.AseServiceLauncher");
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    String action = getIntent().getAction();
-    Intent intent = null;
-    if (action.equals(Constants.ACTION_LAUNCH_SCRIPT)) {
-      intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
-    }
-    if (action.equals(Constants.ACTION_LAUNCH_TERMINAL)) {
-      intent = IntentBuilders.buildStartInTerminalIntent(scriptName);
-    }
-    if (intent != null) {
-      intent.putExtras(getIntent().getExtras());
-      startService(intent);
-    }
+    // Forward the intent that launched us to start the service.
+    Intent intent = getIntent();
+    intent.setComponent(AseService.COMPONENT_NAME);
+    startService(intent);
     finish();
   }
 }

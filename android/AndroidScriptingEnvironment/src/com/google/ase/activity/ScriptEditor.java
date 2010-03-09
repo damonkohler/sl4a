@@ -125,7 +125,6 @@ public class ScriptEditor extends Activity {
     filters.addAll(Arrays.asList(oldFilters));
     filters.add(new ContentInputFilter());
     mContentText.setFilters(filters.toArray(oldFilters));
-    
     mContentText.addTextChangedListener(new ContentTextWatcher());
   }
 
@@ -159,7 +158,7 @@ public class ScriptEditor extends Activity {
       finish();
     } else if (item.getItemId() == MenuId.SAVE_AND_RUN.getId()) {
       save();
-      startService(IntentBuilders.buildStartInTerminalIntent(mNameText.getText().toString()));
+      startActivity(IntentBuilders.buildStartInTerminalIntent(mNameText.getText().toString()));
       finish();
     } else if (item.getItemId() == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, AsePreferences.class));
@@ -237,7 +236,7 @@ public class ScriptEditor extends Activity {
       return super.onKeyDown(keyCode, event);
     }
   }
-  
+
   private boolean hasContentChanged() {
     return !mLastSavedContent.equals(mContentText.getText().toString());
   }

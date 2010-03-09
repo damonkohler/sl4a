@@ -40,7 +40,6 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
@@ -66,7 +65,7 @@ public class ScriptManager extends ListActivity {
   private HashMap<Integer, Interpreter> addMenuIds;
 
   private static enum MenuId {
-    DELETE, EDIT, ADD_SHORTCUT, START_SERVICE, HELP, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES;
+    DELETE, EDIT, START_SERVICE, HELP, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -193,28 +192,32 @@ public class ScriptManager extends ListActivity {
   protected void onListItemClick(ListView list, View view, int position, long id) {
     super.onListItemClick(list, view, position, id);
     Map<String, String> item = (Map<String, String>) list.getItemAtPosition(position);
-    String scriptName = item.get(Constants.EXTRA_SCRIPT_NAME);
-    if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
-      Parcelable iconResource =
-          Intent.ShortcutIconResource.fromContext(this, R.drawable.ase_logo_48);
-      Intent intent = IntentBuilders.buildCreateShortcutIntent(scriptName, iconResource);
-      if (intent != null) {
-        setResult(RESULT_OK, intent);
-      } else {
-        setResult(RESULT_CANCELED, null);
-      }
-      finish();
-      return;
-    }
+    final String scriptName = item.get(Constants.EXTRA_SCRIPT_NAME);
 
-    if (Intent.ACTION_PICK.equals(getIntent().getAction())) {
-      Intent intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
-      if (intent != null) {
-        setResult(RESULT_OK, intent);
-      } else {
-        setResult(RESULT_CANCELED, null);
-      }
-      finish();
+    if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setItems(new CharSequence[] { "Start in Terminal", "Start in Background" },
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              Parcelable iconResource =
+                  Intent.ShortcutIconResource.fromContext(ScriptManager.this,
+                      R.drawable.ase_logo_48);
+              Intent intent = null;
+              if (which == 0) {
+                intent = IntentBuilders.buildTerminalShortcutIntent(scriptName, iconResource);
+              } else {
+                intent = IntentBuilders.buildBackgroundShortcutIntent(scriptName, iconResource);
+              }
+              if (intent != null) {
+                setResult(RESULT_OK, intent);
+              } else {
+                setResult(RESULT_CANCELED, null);
+              }
+              finish();
+            }
+          });
+      builder.show();
       return;
     }
 
@@ -234,7 +237,7 @@ public class ScriptManager extends ListActivity {
       return;
     }
 
-    startService(IntentBuilders.buildStartInTerminalIntent(scriptName));
+    startActivity(IntentBuilders.buildStartInTerminalIntent(scriptName));
   }
 
   /**
@@ -253,7 +256,6 @@ public class ScriptManager extends ListActivity {
   public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
     menu.add(Menu.NONE, MenuId.EDIT.getId(), Menu.NONE, "Edit");
     menu.add(Menu.NONE, MenuId.DELETE.getId(), Menu.NONE, "Delete");
-    menu.add(Menu.NONE, MenuId.ADD_SHORTCUT.getId(), Menu.NONE, "Add Shortcut");
     menu.add(Menu.NONE, MenuId.START_SERVICE.getId(), Menu.NONE, "Start in Background");
   }
 
@@ -282,17 +284,6 @@ public class ScriptManager extends ListActivity {
       deleteScript(scriptName);
     } else if (itemId == MenuId.EDIT.getId()) {
       editScript(scriptName);
-    } else if (itemId == MenuId.ADD_SHORTCUT.getId()) {
-      Parcelable iconResource =
-          Intent.ShortcutIconResource.fromContext(this, R.drawable.ase_logo_48);
-      Intent i = IntentBuilders.buildCreateShortcutIntent(scriptName, iconResource);
-      if (i != null) {
-        i.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-        sendBroadcast(i);
-        Toast.makeText(this, "Created shortcut to " + scriptName + ".", Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(this, "Could not find script.", Toast.LENGTH_SHORT).show();
-      }
     } else if (itemId == MenuId.START_SERVICE.getId()) {
       Intent intent = new Intent(this, AseService.class);
       intent.setAction(Constants.ACTION_LAUNCH_SCRIPT);
