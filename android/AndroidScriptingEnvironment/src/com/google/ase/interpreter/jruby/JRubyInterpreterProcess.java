@@ -24,7 +24,7 @@ import com.google.ase.interpreter.InterpreterProcess;
 public class JRubyInterpreterProcess extends InterpreterProcess {
 
   private final static String JRUBY_BIN = "dalvikvm -Xss128k " +
-      "-classpath /sdcard/ase/extras/jruby/jruby-complete-1.2.0RC1-dex.jar org.jruby.Main -X-C";
+      "-classpath /sdcard/ase/extras/jruby/jruby-complete-1.4.jar org.jruby.Main -X-C";
 
   public JRubyInterpreterProcess(String launchScript, int port) {
     super(launchScript, port);
@@ -46,7 +46,11 @@ public class JRubyInterpreterProcess extends InterpreterProcess {
       print(" " + mLaunchScript);
     } else {
       // Start IRB for interactive terminal.
-      print(" -e \"require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start\"");
+      print(" -e \"def trap(*ignore) end; " + // Trap does not work on Android.
+            // Fix include path.
+            "$:.push('file:/sdcard/ase/extras/jruby/jruby-complete-1.4.jar!/META-INF/jruby.home/lib/ruby/1.8'); " +
+            // Finally start irb.
+            "require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start\"");
     }
     print("\n");
   }
