@@ -41,7 +41,7 @@ public class JRubyInterpreter extends Interpreter {
 
   @Override
   public String getNiceName() {
-    return "JRuby-1.2.0RC1";
+    return "JRuby-1.4";
   }
 
   @Override
@@ -71,6 +71,6 @@ public class JRubyInterpreter extends Interpreter {
 
   @Override
   public int getVersion() {
-    return 0;
+    return 1;
   }
 }
