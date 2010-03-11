@@ -63,7 +63,8 @@ public class ZipExtractor extends Activity {
     AseLog.v("Extracting " + mInput.getAbsolutePath() + " to " + mOutput.getAbsolutePath());
 
     final ProgressDialog dialog = new ProgressDialog(this);
-    dialog.setMessage("Extracting " + mInput.getName());
+    dialog.setTitle("Extracting");
+    dialog.setMessage(mInput.getName());
     dialog.setIndeterminate(true);
     dialog.setCancelable(false);
     dialog.show();

@@ -10,14 +10,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.commons.io.IOUtils;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
+import com.google.ase.IoUtils;
 
 public class UrlDownloader extends Activity {
 
@@ -58,18 +58,7 @@ public class UrlDownloader extends Activity {
     AseLog.v("Downloading " + mUrl);
 
     final int size = mUrlConnection.getContentLength();
-
-    final ProgressDialog dialog = new ProgressDialog(this);
-    dialog.setTitle("Downloading");
-    dialog.setMessage(mFileName);
-    if (size == -1) {
-      dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    } else {
-      dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-      dialog.setMax(size);
-    }
-    dialog.setCancelable(false);
-    dialog.show();
+    final ProgressDialog dialog = buildProgressDialog(size);
 
     final OutputStream out;
     try {
@@ -89,11 +78,11 @@ public class UrlDownloader extends Activity {
       return;
     }
 
-    new Thread() {
+    final Thread downloader = new Thread() {
       @Override
       public void run() {
         try {
-          int bytesCopied = IOUtils.copy(mUrlConnection.getInputStream(), out);
+          int bytesCopied = IoUtils.copy(mUrlConnection.getInputStream(), out);
           if (bytesCopied != size && size != -1 /* -1 indicates no ContentLength */) {
             throw new IOException("Download incomplete: " + bytesCopied + " != " + size);
           }
@@ -111,6 +100,29 @@ public class UrlDownloader extends Activity {
           finish();
         }
       }
-    }.start();
+    };
+
+    dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+      @Override
+      public void onCancel(DialogInterface dialog) {
+        downloader.interrupt();
+      }
+    });
+
+    dialog.show();
+    downloader.start();
+  }
+
+  private ProgressDialog buildProgressDialog(final int size) {
+    final ProgressDialog dialog = new ProgressDialog(this);
+    dialog.setTitle("Downloading");
+    dialog.setMessage(mFileName);
+    if (size == -1) {
+      dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    } else {
+      dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+      dialog.setMax(size);
+    }
+    return dialog;
   }
 }
