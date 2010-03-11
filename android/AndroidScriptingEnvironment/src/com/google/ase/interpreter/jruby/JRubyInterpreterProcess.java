@@ -46,11 +46,9 @@ public class JRubyInterpreterProcess extends InterpreterProcess {
       print(" " + mLaunchScript);
     } else {
       // Start IRB for interactive terminal.
-      print(" -e \"def trap(*ignore) end; " + // Trap does not work on Android.
-            // Fix include path.
-            "$:.push('file:/sdcard/ase/extras/jruby/jruby-complete-1.4.jar!/META-INF/jruby.home/lib/ruby/1.8'); " +
+      print("$:.push('file:/sdcard/ase/extras/jruby/jruby-complete-1.4.jar!/META-INF/jruby.home/lib/ruby/1.8'); " +
             // Finally start irb.
-            "require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start\"");
+            "require 'android'; require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start\"");
     }
     print("\n");
   }

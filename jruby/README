@@ -44,15 +44,23 @@ diff -r jruby-1.2.0RC1/build.xml jruby-1.2.0RC1.patched/build.xml
 
 Steps to get jruby 1.4 ASEfied and build r1
 ===========================================
-in jruby/ download jruby-src-1.4.0.
-$ tar -xzvf jruby-src-1.4.0.tar.gz
-$ cp -r json/ jruby-1.4.0/lib/ruby/1.8/
-$ cp android.rb jruby-1.4.0/lib/ruby/1.8/
-$ cd jruby-1.4.0/
-Fix build.xml (see patch above).
-$ ant jar-complete
-$ dx -JXms1024m -JXmx1024m --dex --output=jruby-complete-1.4.jar lib/jruby-complete.jar 
-$ zipalign 4 jruby-complete-1.4.jar jruby-complete-1.4.jar.tmp
-$ mkdir jruby
-$ mv jruby-complete-1.4.jar.tmp jruby/jruby-complete-1.4.jar
-$ zip -r jruby_extras_r1.zip jruby/
+(in $ASE_DIR/jruby/)
+curl -O http://jruby.kenai.com/downloads/ruby-src-1.4.0.tar.gz
+tar -xzvf jruby-src-1.4.0.tar.gz
+cp -r json jruby-1.4.0/lib/ruby/1.8/
+cp android.rb jruby-1.4.0/lib/ruby/1.8/
+cd jruby-1.4.0/
+sed 's|dynalang-0.3.jar"/>|dynalang-0.3.jar"><exclude name="**/doc/html"/></zipfileset>|g' build.xml >build.xml.tmp
+mv build.xml.tmp build.xml
+
+ant jar-complete
+dx -JXms1024m -JXmx1024m --dex --output=jruby-complete-1.4.jar lib/jruby-complete.jar 
+zipalign 4 jruby-complete-1.4.jar jruby-complete-1.4.jar.tmp
+mkdir jruby
+mv jruby-complete-1.4.jar.tmp jruby/jruby-complete-1.4.jar
+zip -r jruby_extras_r1.zip jruby/
+zip -j jruby_scripts_r1.zip ../ase/scripts/*
+
+adb push jruby_extras_r1.zip /sdcard/
+adb push jruby_scripts_r1.zip /sdcard/
+
