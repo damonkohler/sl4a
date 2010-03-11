@@ -24,8 +24,11 @@ import com.google.ase.interpreter.InterpreterProcess;
 public class JRubyInterpreterProcess extends InterpreterProcess {
 
   private final static String JRUBY_BIN = "dalvikvm -Xss128k " +
-      "-classpath /sdcard/ase/extras/jruby/jruby-complete-1.4.jar org.jruby.Main -X-C";
-
+      "-classpath /sdcard/ase/extras/jruby/jruby-complete-1.4.jar org.jruby.Main -X-C " +
+      // Fix include path.
+      "-e \"$LOAD_PATH.push('file:/sdcard/ase/extras/jruby/jruby-complete-1.4.jar!/META-INF/jruby.home/lib/ruby/1.8'); " +
+      "require 'android';";
+  
   public JRubyInterpreterProcess(String launchScript, int port) {
     super(launchScript, port);
   }
@@ -43,12 +46,10 @@ public class JRubyInterpreterProcess extends InterpreterProcess {
   protected void writeInterpreterCommand() {
     print(JRUBY_BIN);
     if (mLaunchScript != null) {
-      print(" " + mLaunchScript);
+      print("load('" + mLaunchScript + "')\"");
     } else {
       // Start IRB for interactive terminal.
-      print("$:.push('file:/sdcard/ase/extras/jruby/jruby-complete-1.4.jar!/META-INF/jruby.home/lib/ruby/1.8'); " +
-            // Finally start irb.
-            "require 'android'; require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start\"");
+      print("require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start\"");
     }
     print("\n");
   }
