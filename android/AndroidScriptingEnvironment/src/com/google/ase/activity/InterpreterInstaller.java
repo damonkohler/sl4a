@@ -35,6 +35,8 @@ import com.google.ase.interpreter.InterpreterConfiguration;
  */
 public class InterpreterInstaller extends Activity {
 
+  private static final int MAX_CHMOD_RETRIES = 5;
+
   private String mName;
   private Interpreter mInterpreter;
 
@@ -184,9 +186,7 @@ public class InterpreterInstaller extends Activity {
         extractInterpreter();
         break;
       case EXTRACT_INTERPRETER:
-        // After extracting the interpreter, we need to mark the binary (if there is one) as
-        // executable.
-        if (mInterpreter.getBinary() != null && !chmod(mInterpreter.getBinary(), "700")) {
+        if (!chmodIntepreter()) {
           abort();
           return;
         }
@@ -205,6 +205,30 @@ public class InterpreterInstaller extends Activity {
         abort();
         return;
     }
+  }
+
+  /**
+   * After extracting the interpreter, we need to mark the binary (if there is one) as executable.
+   *
+   * @return true if the chmod was successful or unnecessary
+   */
+  private boolean chmodIntepreter() {
+    if (mInterpreter.getBinary() == null) {
+      return true;
+    }
+    boolean success = false;
+    for (int attemptNumber = 0; attemptNumber < MAX_CHMOD_RETRIES; attemptNumber++) {
+      if (chmod(mInterpreter.getBinary(), "755")) {
+        success = true;
+        break;
+      }
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e) {
+        AseLog.e(e);
+      }
+    }
+    return success;
   }
 
   private boolean chmod(File path, String permissions) {

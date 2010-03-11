@@ -1,8 +1,11 @@
 package com.google.ase.activity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -47,29 +50,54 @@ public class UrlDownloader extends Activity {
   }
 
   private void download() {
+    if (mOutput.exists()) {
+      AseLog.v("Output file already exists. Skipping download.");
+      setResult(RESULT_OK);
+      return;
+    }
     AseLog.v("Downloading " + mUrl);
 
+    final int size = mUrlConnection.getContentLength();
+
     final ProgressDialog dialog = new ProgressDialog(this);
-    dialog.setMessage("Downloading " + mFileName);
-    dialog.setIndeterminate(true);
+    dialog.setTitle("Downloading");
+    dialog.setMessage(mFileName);
+    if (size == -1) {
+      dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    } else {
+      dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+      dialog.setMax(size);
+    }
     dialog.setCancelable(false);
     dialog.show();
+
+    final OutputStream out;
+    try {
+      out = new FilterOutputStream(new FileOutputStream(mOutput)) {
+        private int mSize = 0;
+
+        @Override
+        public void write(byte[] buffer, int offset, int count) throws IOException {
+          super.write(buffer, offset, count);
+          mSize += count;
+          dialog.setProgress(mSize);
+        }
+      };
+    } catch (FileNotFoundException e) {
+      AseLog.e(e);
+      setResult(RESULT_CANCELED);
+      return;
+    }
 
     new Thread() {
       @Override
       public void run() {
         try {
-          if (!mOutput.exists()) {
-            int bytesCopied = IOUtils.copy(mUrlConnection.getInputStream(),
-                new FileOutputStream(mOutput));
-            int size = mUrlConnection.getContentLength();
-            if (bytesCopied != size && size != -1 /* -1 indicates no ContentLength */) {
-              throw new IOException("Download incomplete: " + bytesCopied + " != " + size);
-            }
-            AseLog.v("Download completed successfully.");
-          } else {
-            AseLog.v("Output file already exists.");
+          int bytesCopied = IOUtils.copy(mUrlConnection.getInputStream(), out);
+          if (bytesCopied != size && size != -1 /* -1 indicates no ContentLength */) {
+            throw new IOException("Download incomplete: " + bytesCopied + " != " + size);
           }
+          AseLog.v("Download completed successfully.");
           setResult(RESULT_OK);
         } catch (Exception e) {
           AseLog.e("Download failed.", e);
