@@ -18,35 +18,45 @@ package com.google.ase.facade;
 
 import android.app.Service;
 import android.content.Context;
+import android.media.AudioManager;
+import android.net.wifi.WifiManager;
 import android.provider.Settings.SettingNotFoundException;
 
 import com.google.ase.jsonrpc.Rpc;
+import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
 
+/**
+ * Exposes device settings related functionality.
+ */
 public class SettingsFacade implements RpcReceiver {
 
   private final Service mService;
+  private final AudioManager mAudio;
+  private final WifiManager mWifi;
 
   /**
-   * Creates a new AndroidFacade that simplifies the interface to settings.
+   * Creates a new SettingsFacade.
    *
    * @param service
    *          is the {@link Context} the APIs will run under
    */
   public SettingsFacade(Service service) {
     mService = service;
+    mWifi = (WifiManager) mService.getSystemService(Context.WIFI_SERVICE);
+    mAudio = (AudioManager) mService.getSystemService(Context.AUDIO_SERVICE);
   }
 
-  @Rpc(description = "Set screen timeout to this number of seconds). Returns the old value.")
+  @Rpc(description = "Set the screen timeout to this number of seconds.", returns = "The original screen timeout.")
   public Integer setScreenTimeout(@RpcParameter("value") Integer value) {
     Integer old_value = getScreenTimeout();
     android.provider.Settings.System.putInt(mService.getContentResolver(),
         android.provider.Settings.System.SCREEN_OFF_TIMEOUT, value * 1000);
     return old_value;
   }
-  
-  @Rpc(description = "Get current screen timeout in seconds.")
+
+  @Rpc(description = "Returns the current screen timeout in seconds.")
   public Integer getScreenTimeout() {
     try {
       return android.provider.Settings.System.getInt(mService.getContentResolver(),
@@ -54,6 +64,32 @@ public class SettingsFacade implements RpcReceiver {
     } catch (SettingNotFoundException e) {
       return 0;
     }
+  }
+
+  @Rpc(description = "Returns the current ringer volume.", returns = "The current volume as an integer.")
+  public int getRingerVolume() {
+    return mAudio.getStreamVolume(AudioManager.STREAM_RING);
+  }
+
+  @Rpc(description = "Sets whether or not the ringer should be silent.")
+  public void setRingerSilent(
+      @RpcDefaultBoolean(description = "Boolean silent", defaultValue = true) Boolean enabled) {
+    if (enabled) {
+      mAudio.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+    } else {
+      mAudio.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+    }
+  }
+
+  @Rpc(description = "Sets the ringer volume.")
+  public void setRingerVolume(@RpcParameter("volume") Integer volume) {
+    mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
+  }
+
+  @Rpc(description = "Enables or disables Wifi according to the supplied boolean.")
+  public void setWifiEnabled(
+      @RpcDefaultBoolean(description = "enabled", defaultValue = true) Boolean enabled) {
+    mWifi.setWifiEnabled(enabled);
   }
 
   @Override

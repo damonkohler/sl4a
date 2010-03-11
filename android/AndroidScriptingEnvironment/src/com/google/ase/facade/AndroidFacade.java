@@ -36,9 +36,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.media.AudioManager;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -57,7 +55,6 @@ import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureIntent;
 import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
 import com.google.ase.jsonrpc.RpcDefaultString;
 import com.google.ase.jsonrpc.RpcOptionalString;
@@ -72,9 +69,7 @@ public class AndroidFacade implements RpcReceiver {
   private final Queue<FutureActivityTask> mTaskQueue;
 
   private final ActivityManager mActivityManager;
-  private final WifiManager mWifi;
   private final SmsManager mSms;
-  private final AudioManager mAudio;
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
   private final Geocoder mGeocoder;
@@ -100,8 +95,6 @@ public class AndroidFacade implements RpcReceiver {
     mTaskQueue = ((AseApplication) mService.getApplication()).getTaskQueue();
     mSms = SmsManager.getDefault();
     mActivityManager = (ActivityManager) mService.getSystemService(Context.ACTIVITY_SERVICE);
-    mWifi = (WifiManager) mService.getSystemService(Context.WIFI_SERVICE);
-    mAudio = (AudioManager) mService.getSystemService(Activity.AUDIO_SERVICE);
     mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);
     mNotificationManager =
         (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -131,18 +124,6 @@ public class AndroidFacade implements RpcReceiver {
       @RpcDefaultInteger(description = "max. no. of results (default 1)", defaultValue = 1) Integer maxResults)
       throws IOException {
     return mGeocoder.getFromLocation(latitude, longitude, maxResults);
-  }
-
-  @Rpc(description = "Returns the current ringer volume.", returns = "The current volume as an Integer.")
-  public int getRingerVolume() {
-    // TODO(damonkohler): We may want to pass in the stream type and rename
-    // the method to getVolume().
-    return mAudio.getStreamVolume(AudioManager.STREAM_RING);
-  }
-
-  @Rpc(description = "Sets the ringer volume.")
-  public void setRingerVolume(@RpcParameter("volume") Integer volume) {
-    mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
   }
 
   public Intent startActivityForResult(final Intent intent) {
@@ -229,22 +210,6 @@ public class AndroidFacade implements RpcReceiver {
   public void vibrate(
       @RpcDefaultInteger(description = "duration in milliseconds", defaultValue = 300) Integer duration) {
     mVibrator.vibrate(300);
-  }
-
-  @Rpc(description = "Sets whether or not the ringer should be silent.")
-  public void setRingerSilent(
-      @RpcDefaultBoolean(description = "Boolean silent", defaultValue = true) Boolean enabled) {
-    if (enabled) {
-      mAudio.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-    } else {
-      mAudio.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-    }
-  }
-
-  @Rpc(description = "Enables or disables Wifi according to the supplied boolean.")
-  public void setWifiEnabled(
-      @RpcDefaultBoolean(description = "enabled", defaultValue = true) Boolean enabled) {
-    mWifi.setWifiEnabled(enabled);
   }
 
   @Rpc(description = "Displays a short-duration Toast notification.")
