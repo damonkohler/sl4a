@@ -29,6 +29,7 @@ import com.google.ase.facade.EventFacade;
 import com.google.ase.facade.LocationManagerFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.SensorManagerFacade;
+import com.google.ase.facade.SettingsFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
 import com.google.ase.facade.TelephonyManagerFacade;
 import com.google.ase.facade.TextToSpeechFacade;
@@ -44,6 +45,7 @@ public class AndroidProxy {
   public AndroidProxy(Service service, Intent intent) {
     Handler handler = new Handler();
     final AndroidFacade androidFacade = new AndroidFacade(service, handler, intent);
+    final SettingsFacade settingsFacade = new SettingsFacade(service);
     final UiFacade uiFacade = new UiFacade(service);
     final MediaFacade mediaFacade = new MediaFacade();
     final TextToSpeechFacade ttsFacade = new TextToSpeechFacade(service);
@@ -57,7 +59,7 @@ public class AndroidProxy {
     final AlarmManagerFacade alarmManagerFacade =
         new AlarmManagerFacade(service, eventFacade);
     mJsonRpcServer =
-        new JsonRpcServer(androidFacade, mediaFacade, ttsFacade, srFacade, uiFacade, eventFacade,
+        new JsonRpcServer(androidFacade, settingsFacade, mediaFacade, ttsFacade, srFacade, uiFacade, eventFacade,
             sensorManagerFacade, locationManagerFacade, telephonyManagerFacade, alarmManagerFacade);
   }
 

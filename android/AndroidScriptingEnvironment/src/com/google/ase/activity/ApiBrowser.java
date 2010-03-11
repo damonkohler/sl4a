@@ -50,6 +50,7 @@ import com.google.ase.facade.EventFacade;
 import com.google.ase.facade.LocationManagerFacade;
 import com.google.ase.facade.MediaFacade;
 import com.google.ase.facade.SensorManagerFacade;
+import com.google.ase.facade.SettingsFacade;
 import com.google.ase.facade.SpeechRecognitionFacade;
 import com.google.ase.facade.TelephonyManagerFacade;
 import com.google.ase.facade.TextToSpeechFacade;
@@ -111,6 +112,7 @@ public class ApiBrowser extends ListActivity {
     list.addAll(JsonRpcServer.buildRpcInfoMap(SensorManagerFacade.class).values());
     list.addAll(JsonRpcServer.buildRpcInfoMap(EventFacade.class).values());
     list.addAll(JsonRpcServer.buildRpcInfoMap(LocationManagerFacade.class).values());
+    list.addAll(JsonRpcServer.buildRpcInfoMap(SettingsFacade.class).values());
 
     list.addAll(JsonRpcServer.buildRpcInfoMap(UiFacade.class).values());
 
