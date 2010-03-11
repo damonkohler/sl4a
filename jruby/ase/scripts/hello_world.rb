@@ -1,3 +1,2 @@
-require "android"
-droid = Droid.new
+droid = Android.new
 droid.makeToast "Hello, Android!"
