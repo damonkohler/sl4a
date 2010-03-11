@@ -53,6 +53,7 @@ public class UrlDownloader extends Activity {
     if (mOutput.exists()) {
       AseLog.v("Output file already exists. Skipping download.");
       setResult(RESULT_OK);
+      finish();
       return;
     }
     AseLog.v("Downloading " + mUrl);
@@ -75,6 +76,7 @@ public class UrlDownloader extends Activity {
     } catch (FileNotFoundException e) {
       AseLog.e(e);
       setResult(RESULT_CANCELED);
+      finish();
       return;
     }
 

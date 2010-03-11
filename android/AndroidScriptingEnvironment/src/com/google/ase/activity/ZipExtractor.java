@@ -77,6 +77,10 @@ public class ZipExtractor extends Activity {
           setResult(RESULT_OK);
         } catch (Exception e) {
           AseLog.e("Zip extraction failed.", e);
+          if (mInput.exists()) {
+            // Clean up bad zip file.
+            mInput.delete();
+          }
           setResult(RESULT_CANCELED);
         } finally {
           dialog.dismiss();
