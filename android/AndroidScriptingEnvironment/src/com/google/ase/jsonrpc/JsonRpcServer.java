@@ -237,7 +237,7 @@ public class JsonRpcServer {
             }
           }
         } catch (Exception e) {
-          AseLog.e("Server error.", e);
+          AseLog.e("Unknown server error.", e);
         } finally {
           mNetworkThreads.remove(this);
           AseLog.v("RPC thread " + getId() + " died.");
