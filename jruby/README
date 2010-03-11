@@ -45,7 +45,7 @@ diff -r jruby-1.2.0RC1/build.xml jruby-1.2.0RC1.patched/build.xml
 Steps to get jruby 1.4 ASEfied and build r1
 ===========================================
 in jruby/ download jruby-src-1.4.0.
-$ tar -xvf jruby-src-1.4.0.tar 
+$ tar -xzvf jruby-src-1.4.0.tar.gz
 $ cp -r json/ jruby-1.4.0/lib/ruby/1.8/
 $ cp android.rb jruby-1.4.0/lib/ruby/1.8/
 $ cd jruby-1.4.0/
