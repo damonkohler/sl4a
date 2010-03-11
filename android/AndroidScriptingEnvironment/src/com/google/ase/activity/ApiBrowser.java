@@ -16,9 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,20 +41,9 @@ import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
-import com.google.ase.facade.AlarmManagerFacade;
-import com.google.ase.facade.AndroidFacade;
-import com.google.ase.facade.EventFacade;
-import com.google.ase.facade.LocationManagerFacade;
-import com.google.ase.facade.MediaFacade;
-import com.google.ase.facade.SensorManagerFacade;
-import com.google.ase.facade.SettingsFacade;
-import com.google.ase.facade.SpeechRecognitionFacade;
-import com.google.ase.facade.TelephonyManagerFacade;
-import com.google.ase.facade.TextToSpeechFacade;
-import com.google.ase.facade.ui.UiFacade;
+import com.google.ase.facade.FacadeConfiguration;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
-import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcInfo;
 
 public class ApiBrowser extends ListActivity {
@@ -91,37 +77,12 @@ public class ApiBrowser extends ListActivity {
     }
     setContentView(R.layout.list);
     mExpandedPositions = new HashSet<Integer>();
-    mRpcInfoList = buildRpcInfoList();
+    mRpcInfoList = FacadeConfiguration.buildRpcInfoList();
     mAdapter = new ApiBrowserAdapter();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     AseAnalytics.trackActivity(this);
     setResult(RESULT_CANCELED);
-  }
-
-  private List<RpcInfo> buildRpcInfoList() {
-    List<RpcInfo> list = new ArrayList<RpcInfo>();
-    // TODO(damonkohler): Factor out this list of facades so that it's not duplicated between here
-    // and the AndroidProxy.
-    list.addAll(JsonRpcServer.buildRpcInfoMap(AndroidFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(MediaFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(SpeechRecognitionFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(TextToSpeechFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(TelephonyManagerFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(AlarmManagerFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(SensorManagerFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(EventFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(LocationManagerFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(SettingsFacade.class).values());
-
-    list.addAll(JsonRpcServer.buildRpcInfoMap(UiFacade.class).values());
-
-    Collections.sort(list, new Comparator<RpcInfo>() {
-      public int compare(RpcInfo info1, RpcInfo info2) {
-        return info1.getName().compareTo(info2.getName());
-      }
-    });
-    return list;
   }
 
   @Override
