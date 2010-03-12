@@ -31,13 +31,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface RpcParameter {
   /**
-   * The value returned by defaultValue if a parameter is required.
-   */
-  final static public Object REQUIRED = new Object();
-
-  /**
    * A description of the RPC parameter. There is no need to include the
    * parameter type (this information will be generated automatically).
    */
-  public String value();
+  public String name();
 }

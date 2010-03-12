@@ -110,7 +110,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Put text in the clipboard.")
-  public void setClipboard(@RpcParameter("text") String text) {
+  public void setClipboard(@RpcParameter(name = "text") String text) {
     ClipboardManager clipboard =
         (ClipboardManager) mService.getSystemService(Context.CLIPBOARD_SERVICE);
     clipboard.setText(text);
@@ -126,8 +126,8 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Returns a list of addresses for the given latitude and longitude.", returns = "A list of addresses.")
   public List<Address> geocode(
-      @RpcParameter("latitude") Double latitude,
-      @RpcParameter("longitude") Double longitude,
+      @RpcParameter(name = "latitude") Double latitude,
+      @RpcParameter(name = "longitude") Double longitude,
       @RpcDefaultInteger(description = "max. no. of results (default 1)", defaultValue = 1) Integer maxResults)
       throws IOException {
     return mGeocoder.getFromLocation(latitude, longitude, maxResults);
@@ -141,7 +141,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Sets the ringer volume.")
-  public void setRingerVolume(@RpcParameter("volume") Integer volume) {
+  public void setRingerVolume(@RpcParameter(name = "volume") Integer volume) {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
   }
 
@@ -173,7 +173,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
-  public Intent startActivityForResult(@RpcParameter("action") final String action,
+  public Intent startActivityForResult(@RpcParameter(name = "action") final String action,
       @RpcOptionalString(description = "uri") final String uri) {
     Intent intent = new Intent(action);
     if (uri != null) {
@@ -183,7 +183,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Display content to be picked by URI (e.g. contacts)", returns = "A map of result values.")
-  public Intent pick(@RpcParameter("uri") String uri) {
+  public Intent pick(@RpcParameter(name = "uri") String uri) {
     return startActivityForResult(Intent.ACTION_PICK, uri);
   }
 
@@ -197,7 +197,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
-  public void startActivity(@RpcParameter("action") final String action,
+  public void startActivity(@RpcParameter(name = "action") final String action,
       @RpcOptionalString(description = "uri") final String uri) {
     Intent intent = new Intent(action);
     if (uri != null) {
@@ -207,12 +207,12 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Start activity with view action by URI (i.e. browser, contacts, etc.).")
-  public void view(@RpcParameter("uri") String uri) {
+  public void view(@RpcParameter(name = "uri") String uri) {
     startActivity(Intent.ACTION_VIEW, uri);
   }
 
   @Rpc(description = "Start activity with the given class name (i.e. Browser, Maps, etc.).")
-  public void launch(@RpcParameter("className") String className) {
+  public void launch(@RpcParameter(name = "className") String className) {
     Intent intent = new Intent(Intent.ACTION_MAIN);
     String packageName = className.substring(0, className.lastIndexOf("."));
     intent.setClassName(packageName, className);
@@ -220,8 +220,8 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Sends a text message to the given recipient.")
-  public void sendTextMessage(@RpcParameter("destinationAddress") String destinationAddress,
-      @RpcParameter("text") String text) {
+  public void sendTextMessage(@RpcParameter(name = "destinationAddress") String destinationAddress,
+      @RpcParameter(name = "text") String text) {
     mSms.sendTextMessage(destinationAddress, null, text, null, null);
   }
 
@@ -248,7 +248,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Displays a short-duration Toast notification.")
-  public void makeToast(@RpcParameter("message") final String message) {
+  public void makeToast(@RpcParameter(name = "message") final String message) {
     mHandler.post(new Runnable() {
       public void run() {
         Toast.makeText(mService, message, Toast.LENGTH_SHORT).show();
@@ -326,7 +326,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")
   public void notify(
-      @RpcParameter("message") String message,
+      @RpcParameter(name = "message") String message,
       @RpcDefaultString(description = "title", defaultValue = "ASE Notification") final String title,
       @RpcDefaultString(description = "ticker", defaultValue = "ASE Notification") final String ticker) {
     Notification notification =
@@ -339,27 +339,27 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Dials a contact/phone number by URI.")
-  public void dial(@RpcParameter("uri") final String uri) {
+  public void dial(@RpcParameter(name = "uri") final String uri) {
     startActivity(Intent.ACTION_DIAL, uri);
   }
 
   @Rpc(description = "Dials a phone number.")
-  public void dialNumber(@RpcParameter("phone number") final String number) {
+  public void dialNumber(@RpcParameter(name = "phone number") final String number) {
     dial("tel:" + number);
   }
 
   @Rpc(description = "Calls a contact/phone number by URI.")
-  public void call(@RpcParameter("uri") final String uri) {
+  public void call(@RpcParameter(name = "uri") final String uri) {
     startActivity(Intent.ACTION_CALL, uri);
   }
 
   @Rpc(description = "Calls a phone number.")
-  public void callNumber(@RpcParameter("phone number") final String number) {
+  public void callNumber(@RpcParameter(name = "phone number") final String number) {
     call("tel:" + number);
   }
 
   @Rpc(description = "Opens a map search for query (e.g. pizza, 123 My Street).")
-  public void map(@RpcParameter("query, e.g. pizza, 123 My Street") String query) {
+  public void map(@RpcParameter(name = "query, e.g. pizza, 123 My Street") String query) {
     view("geo:0,0?q=" + query);
   }
 
@@ -389,7 +389,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Opens a web search for the given query.")
-  public void webSearch(@RpcParameter("query") String query) {
+  public void webSearch(@RpcParameter(name = "query") String query) {
     view("http://www.google.com/search?q=" + query);
   }
 
@@ -399,7 +399,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Returns an extra value that was specified in the launch intent.", returns = "The extra value.")
-  public Object getExtra(@RpcParameter("name") String name) {
+  public Object getExtra(@RpcParameter(name = "name") String name) {
     return mIntent.getExtras().get(name);
   }
 
@@ -422,7 +422,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Force stops a package.")
-  public void forceStopPackage(@RpcParameter("package name") String packageName) {
+  public void forceStopPackage(@RpcParameter(name = "package name") String packageName) {
     mActivityManager.restartPackage(packageName);
   }
 
@@ -438,9 +438,9 @@ public class AndroidFacade implements RpcReceiver {
    */
   @Rpc(description = "Launches an activity that sends an e-mail message to a given recipient.")
   public void sendEmail(
-      @RpcParameter("the recipient's e-mail address") final String recipientAddress,
-      @RpcParameter("subject of the e-mail") final String subject,
-      @RpcParameter("message body") final String body) {
+      @RpcParameter(name = "the recipient's e-mail address") final String recipientAddress,
+      @RpcParameter(name = "subject of the e-mail") final String subject,
+      @RpcParameter(name = "message body") final String body) {
     final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
     emailIntent.setType("plain/text");
     emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] { recipientAddress });

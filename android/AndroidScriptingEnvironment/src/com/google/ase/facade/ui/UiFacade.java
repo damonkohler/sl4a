@@ -105,7 +105,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Set progress dialog current value.")
-  public void dialogSetCurrentProgress(@RpcParameter("current") Integer current) {
+  public void dialogSetCurrentProgress(@RpcParameter(name = "current") Integer current) {
     if (mDialogTask != null && mDialogTask instanceof RunnableProgressDialog) {
       ((ProgressDialog) mDialogTask.getDialog()).setProgress(current);
     } else {
@@ -114,7 +114,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Set progress dialog maximum value.")
-  public void dialogSetMaxProgress(@RpcParameter("max") Integer max) {
+  public void dialogSetMaxProgress(@RpcParameter(name = "max") Integer max) {
     if (mDialogTask != null && mDialogTask instanceof RunnableProgressDialog) {
       ((ProgressDialog) mDialogTask.getDialog()).setMax(max);
     } else {
@@ -123,7 +123,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Set alert dialog positive button text.")
-  public void dialogSetPositiveButtonText(@RpcParameter("text") String text) {
+  public void dialogSetPositiveButtonText(@RpcParameter(name = "text") String text) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setPositiveButtonText(text);
     } else {
@@ -132,7 +132,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Set alert dialog button text.")
-  public void dialogSetNegativeButtonText(@RpcParameter("text") String text) {
+  public void dialogSetNegativeButtonText(@RpcParameter(name = "text") String text) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setNegativeButtonText(text);
     } else {
@@ -141,7 +141,7 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Set alert dialog button text.")
-  public void dialogSetNeutralButtonText(@RpcParameter("text") String text) {
+  public void dialogSetNeutralButtonText(@RpcParameter(name = "text") String text) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setNeutralButtonText(text);
     } else {
@@ -151,7 +151,7 @@ public class UiFacade implements RpcReceiver {
 
   // TODO(damonkohler): Make RPC layer translate between JSONArray and List<Object>.
   @Rpc(description = "Set alert dialog list items.")
-  public void dialogSetItems(@RpcParameter("items") JSONArray items) {
+  public void dialogSetItems(@RpcParameter(name = "items") JSONArray items) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setItems(items);
     } else {

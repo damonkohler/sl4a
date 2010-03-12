@@ -39,7 +39,7 @@ public class RpcAnnotationHelper {
   public static String getDescription(Annotation[] annotations) {
     for (Annotation a : annotations) {
       if (a instanceof RpcParameter) {
-        return ((RpcParameter) a).value();
+        return ((RpcParameter) a).name();
       } else if (a instanceof RpcDefaultInteger) {
         return ((RpcDefaultInteger) a).description();
       } else if (a instanceof RpcDefaultString) {
