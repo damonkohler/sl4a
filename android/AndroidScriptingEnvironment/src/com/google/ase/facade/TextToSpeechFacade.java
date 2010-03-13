@@ -59,6 +59,7 @@ public class TextToSpeechFacade implements RpcReceiver {
     public void speak(String message) {
       Intent intent = new Intent("com.google.tts.makeBagel");
       intent.putExtra("message", message);
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       mContext.startActivity(intent);
     }
   }
