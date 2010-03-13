@@ -24,7 +24,6 @@ import android.os.Bundle;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
-import com.google.ase.Exec;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
 
@@ -232,11 +231,20 @@ public class InterpreterInstaller extends Activity {
   }
 
   private boolean chmod(File path, String permissions) {
-    AseLog.v("chmod " + permissions + " " + path.getAbsolutePath());
-    int[] pid = new int[1];
-    Exec.createSubprocess("/system/bin/chmod", permissions, path.getAbsolutePath(), pid);
-    if (Exec.waitFor(pid[0]) != 0) {
-      AseLog.e("chmod " + permissions + " " + path.getAbsolutePath() + " failed!");
+    String[] command =
+        new String[] { "/system/bin/sh", "-c",
+            String.format("chmod %s %s", permissions, path.getAbsolutePath()) };
+    Process process;
+    int exitValue;
+    try {
+      process = Runtime.getRuntime().exec(command);
+      exitValue = process.waitFor();
+    } catch (Exception e) {
+      AseLog.e(e);
+      return false;
+    }
+    if (exitValue != 0) {
+      AseLog.e("chmod exited with code " + process.exitValue());
       return false;
     }
     return true;

@@ -58,14 +58,13 @@ public class UrlDownloader extends Activity {
     }
     AseLog.v("Downloading " + mUrl);
 
-    final int size = mUrlConnection.getContentLength();
-    final ProgressDialog dialog = buildProgressDialog(size);
+    final int downloadSize = mUrlConnection.getContentLength();
+    final ProgressDialog dialog = buildProgressDialog(downloadSize);
 
     final OutputStream out;
     try {
       out = new FilterOutputStream(new FileOutputStream(mOutput)) {
         private int mSize = 0;
-
         @Override
         public void write(byte[] buffer, int offset, int count) throws IOException {
           super.write(buffer, offset, count);
@@ -85,8 +84,8 @@ public class UrlDownloader extends Activity {
       public void run() {
         try {
           int bytesCopied = IoUtils.copy(mUrlConnection.getInputStream(), out);
-          if (bytesCopied != size && size != -1 /* -1 indicates no ContentLength */) {
-            throw new IOException("Download incomplete: " + bytesCopied + " != " + size);
+          if (bytesCopied != downloadSize && downloadSize != -1 /* -1 indicates no ContentLength */) {
+            throw new IOException("Download incomplete: " + bytesCopied + " != " + downloadSize);
           }
           AseLog.v("Download completed successfully.");
           setResult(RESULT_OK);
