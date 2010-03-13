@@ -209,7 +209,7 @@ public class AndroidFacade implements RpcReceiver {
   @Rpc(description = "Vibrates the phone or a specified duration in milliseconds.")
   public void vibrate(
       @RpcDefaultInteger(description = "duration in milliseconds", defaultValue = 300) Integer duration) {
-    mVibrator.vibrate(300);
+    mVibrator.vibrate(duration);
   }
 
   @Rpc(description = "Displays a short-duration Toast notification.")
