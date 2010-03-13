@@ -61,13 +61,14 @@ public class UrlDownloader extends Activity {
     final int downloadSize = mUrlConnection.getContentLength();
     final ProgressDialog dialog = buildProgressDialog(downloadSize);
 
-    final OutputStream out;
+    final OutputStream outputStream;
     try {
-      out = new FilterOutputStream(new FileOutputStream(mOutput)) {
+      outputStream = new FilterOutputStream(new FileOutputStream(mOutput)) {
         private int mSize = 0;
+
         @Override
         public void write(byte[] buffer, int offset, int count) throws IOException {
-          super.write(buffer, offset, count);
+          out.write(buffer, offset, count);
           mSize += count;
           dialog.setProgress(mSize);
         }
@@ -83,7 +84,7 @@ public class UrlDownloader extends Activity {
       @Override
       public void run() {
         try {
-          int bytesCopied = IoUtils.copy(mUrlConnection.getInputStream(), out);
+          int bytesCopied = IoUtils.copy(mUrlConnection.getInputStream(), outputStream);
           if (bytesCopied != downloadSize && downloadSize != -1 /* -1 indicates no ContentLength */) {
             throw new IOException("Download incomplete: " + bytesCopied + " != " + downloadSize);
           }

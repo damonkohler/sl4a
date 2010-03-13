@@ -44,6 +44,18 @@ public class InterpreterUninstaller extends Activity {
     uninstall();
   }
 
+  private void delete(File path) {
+    if (path.isDirectory()) {
+      for (File child : path.listFiles()) {
+        delete(child);
+      }
+      path.delete(); // Delete empty directory.
+    }
+    if (path.isFile()) {
+      path.delete();
+    }
+  }
+
   private void uninstall() {
     final ProgressDialog dialog = new ProgressDialog(this);
     dialog.setMessage("Uninstalling " + mInterpreter.getNiceName());
@@ -64,11 +76,7 @@ public class InterpreterUninstaller extends Activity {
         List<File> directories = Arrays.asList(extras, root, scriptsArchive, archive,
             extrasArchive);
         for (File directory : directories) {
-          try {
-            directory.delete();
-          } catch (SecurityException e) {
-            AseLog.e(e);
-          }
+          delete(directory);
         }
         dialog.dismiss();
         setResult(RESULT_OK);
