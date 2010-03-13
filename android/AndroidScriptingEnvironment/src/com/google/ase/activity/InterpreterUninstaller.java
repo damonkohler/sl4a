@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -66,7 +64,11 @@ public class InterpreterUninstaller extends Activity {
         List<File> directories = Arrays.asList(extras, root, scriptsArchive, archive,
             extrasArchive);
         for (File directory : directories) {
-          FileUtils.deleteQuietly(directory);
+          try {
+            directory.delete();
+          } catch (SecurityException e) {
+            AseLog.e(e);
+          }
         }
         dialog.dismiss();
         setResult(RESULT_OK);
