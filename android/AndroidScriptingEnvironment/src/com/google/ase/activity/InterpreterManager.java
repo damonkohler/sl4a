@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import android.app.AlertDialog;
@@ -29,16 +28,20 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
@@ -50,8 +53,8 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 
 public class InterpreterManager extends ListActivity {
 
-  private static final String NAME = "NAME";
-  private static final String NICE_NAME = "NICE_NAME";
+  private InterpreterManagerAdapter mAdapter;
+  private List<Interpreter> mInterpreterList;
 
   private static enum RequestCode {
     INSTALL_INTERPRETER, UNINSTALL_INTERPRETER
@@ -70,7 +73,9 @@ public class InterpreterManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, R.layout.list);
-    listInterpreters();
+    mAdapter = new InterpreterManagerAdapter();
+    mAdapter.registerDataSetObserver(new InterpreterListObserver());
+    setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     AseAnalytics.trackActivity(this);
   }
@@ -78,31 +83,7 @@ public class InterpreterManager extends ListActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    listInterpreters();
-  }
-
-  /**
-   * Populates the list view with all available interpreters.
-   */
-  private void listInterpreters() {
-    List<Interpreter> interpreters = InterpreterConfiguration.getInstalledInterpreters();
-    List<Map<String, String>> data = new ArrayList<Map<String, String>>();
-    for (Interpreter interpreter : interpreters) {
-      Map<String, String> map = new HashMap<String, String>();
-      map.put(NAME, interpreter.getName());
-      map.put(NICE_NAME, interpreter.getNiceName());
-      data.add(map);
-    }
-    Collections.sort(data, new Comparator<Map<String, String>>() {
-      public int compare(Map<String, String> m1, Map<String, String> m2) {
-        return m1.get(NICE_NAME).compareTo(m2.get(NICE_NAME));
-      }
-    });
-
-    String[] from = new String[] { NICE_NAME };
-    int[] to = new int[] { R.id.text1 };
-    SimpleAdapter scripts = new SimpleAdapter(this, data, R.layout.row, from, to);
-    setListAdapter(scripts);
+    mAdapter.notifyDataSetInvalidated();
   }
 
   @Override
@@ -170,7 +151,7 @@ public class InterpreterManager extends ListActivity {
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, AsePreferences.class));
     }
-    return super.onOptionsItemSelected(item);
+    return true;
   }
 
   private void launchService(boolean usePublicIp) {
@@ -193,13 +174,10 @@ public class InterpreterManager extends ListActivity {
     startService(intent);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    super.onListItemClick(list, view, position, id);
-    Map<String, String> item = (Map<String, String>) list.getItemAtPosition(position);
-    String interpreterName = item.get(NAME);
-    launchTerminal(InterpreterConfiguration.getInterpreterByName(interpreterName));
+    Interpreter interpreter = (Interpreter) list.getItemAtPosition(position);
+    launchTerminal(interpreter);
   }
 
   @Override
@@ -207,7 +185,6 @@ public class InterpreterManager extends ListActivity {
     menu.add(Menu.NONE, MenuId.DELETE.getId(), Menu.NONE, "Uninstall");
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public boolean onContextItemSelected(MenuItem item) {
     AdapterView.AdapterContextMenuInfo info;
@@ -218,23 +195,21 @@ public class InterpreterManager extends ListActivity {
       return false;
     }
 
-    Map<String, String> interpreterItem =
-        (Map<String, String>) getListAdapter().getItem(info.position);
-    if (interpreterItem == null) {
+    Interpreter interpreter = (Interpreter) mAdapter.getItem(info.position);
+    if (interpreter == null) {
       AseLog.v(this, "No interpreter selected.");
       return false;
     }
 
-    String name = interpreterItem.get(NAME);
-    if (!InterpreterConfiguration.getInterpreterByName(name).isUninstallable()) {
-      AseLog.v(this, "Cannot uninstall " + interpreterItem.get(NICE_NAME));
+    if (!interpreter.isUninstallable()) {
+      AseLog.v(this, "Cannot uninstall " + interpreter.getNiceName());
       return true;
     }
 
     int itemId = item.getItemId();
     if (itemId == MenuId.DELETE.getId()) {
       Intent intent = new Intent(this, InterpreterUninstaller.class);
-      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, name);
+      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
       startActivityForResult(intent, RequestCode.UNINSTALL_INTERPRETER.ordinal());
     }
     return true;
@@ -242,7 +217,6 @@ public class InterpreterManager extends ListActivity {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
     RequestCode request = RequestCode.values()[requestCode];
     if (resultCode == RESULT_OK) {
       switch (request) {
@@ -265,6 +239,40 @@ public class InterpreterManager extends ListActivity {
           break;
       }
     }
-    listInterpreters();
+    mAdapter.notifyDataSetInvalidated();
+  }
+
+  private class InterpreterListObserver extends DataSetObserver {
+    @Override
+    public void onInvalidated() {
+      mInterpreterList = InterpreterConfiguration.getInstalledInterpreters();
+    }
+  }
+
+  private class InterpreterManagerAdapter extends BaseAdapter {
+
+    @Override
+    public int getCount() {
+      return mInterpreterList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+      return mInterpreterList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+      TextView view = new TextView(InterpreterManager.this);
+      view.setPadding(2, 2, 2, 2);
+      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+      view.setText(mInterpreterList.get(position).getName());
+      return view;
+    }
   }
 }

@@ -151,12 +151,11 @@ public class ScriptManager extends ListActivity {
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, AsePreferences.class));
     }
-    return super.onOptionsItemSelected(item);
+    return true;
   }
 
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    super.onListItemClick(list, view, position, id);
     final File script = (File) list.getItemAtPosition(position);
 
     if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
@@ -276,7 +275,6 @@ public class ScriptManager extends ListActivity {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
     RequestCode request = RequestCode.values()[requestCode];
     if (resultCode == RESULT_OK) {
       switch (request) {
