@@ -26,6 +26,7 @@ import java.util.zip.ZipFile;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
@@ -105,8 +106,12 @@ public class ZipExtractor extends Activity {
         destination.getParentFile().mkdirs();
       }
       IoUtils.copy(zip.getInputStream(entry), new FileOutputStream(destination));
-      AseLog.v("Extracted entry \"" + entry.getName() + "\".");
     }
     zip.close();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 }

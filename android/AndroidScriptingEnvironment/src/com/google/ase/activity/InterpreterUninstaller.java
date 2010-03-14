@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
@@ -83,5 +84,10 @@ public class InterpreterUninstaller extends Activity {
         finish();
       }
     }.start();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 }

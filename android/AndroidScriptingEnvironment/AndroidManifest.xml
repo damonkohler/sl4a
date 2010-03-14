@@ -69,13 +69,17 @@
     <activity
       android:name=".activity.ApiBrowser" />
     <activity
-      android:name=".activity.InterpreterInstaller" />
+      android:name=".activity.InterpreterInstaller"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
-      android:name=".activity.InterpreterUninstaller" />
+      android:name=".activity.InterpreterUninstaller"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
-      android:name=".activity.UrlDownloader" />
+      android:name=".activity.UrlDownloader"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
-      android:name=".activity.ZipExtractor" />
+      android:name=".activity.ZipExtractor"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
       android:name=".activity.AseServiceLauncher"
       android:taskAffinity=""

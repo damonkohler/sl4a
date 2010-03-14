@@ -20,6 +20,7 @@ import java.io.File;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
@@ -268,5 +269,10 @@ public class InterpreterInstaller extends Activity {
     AseLog.v(this, "Installation failed.");
     setResult(RESULT_CANCELED);
     finish();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 }
