@@ -30,6 +30,7 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
 
 /**
@@ -101,7 +102,9 @@ public class ScriptStorageAdapter {
       if (!showAllFiles) {
         // Filter out any files that don't have interpreters installed.
         for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
-          if (InterpreterConfiguration.getInterpreterForScript(it.next().getName()) == null) {
+          Interpreter interpreter =
+              InterpreterConfiguration.getInterpreterForScript(it.next().getName());
+          if (interpreter == null || !interpreter.isInstalled()) {
             it.remove();
           }
         }
