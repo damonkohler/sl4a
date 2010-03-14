@@ -25,9 +25,11 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -60,6 +62,7 @@ public class ScriptManager extends ListActivity {
 
   private List<File> mScriptList;
   private ScriptManagerAdapter mAdapter;
+  private SharedPreferences mPreferences;
 
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
@@ -78,7 +81,9 @@ public class ScriptManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, R.layout.list);
-    mScriptList = ScriptStorageAdapter.listScripts();
+    mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    mScriptList =
+        ScriptStorageAdapter.listScripts(mPreferences.getBoolean("show_all_files", false));
     mAdapter = new ScriptManagerAdapter();
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
@@ -301,7 +306,8 @@ public class ScriptManager extends ListActivity {
   private class ScriptListObserver extends DataSetObserver {
     @Override
     public void onInvalidated() {
-      mScriptList = ScriptStorageAdapter.listScripts();
+      mScriptList =
+          ScriptStorageAdapter.listScripts(mPreferences.getBoolean("show_all_files", false));
     }
   }
 

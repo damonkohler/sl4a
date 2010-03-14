@@ -5,11 +5,18 @@
     android:title="General">
     <CheckBoxPreference
       android:key="usagetracking"
-      android:title="Usage Tracking"
+      android:title="Usage tracking"
       android:summary="Allow anonymous usage tracking." android:defaultValue="false"/>
   </PreferenceCategory>
   <PreferenceCategory
-    android:title="Editor">
+    android:title="Script Manager">
+     <CheckBoxPreference
+      android:key="show_all_files"
+      android:title="Show all files"
+      android:defaultValue="false"/>
+  </PreferenceCategory>
+  <PreferenceCategory
+    android:title="Script Editor">
     <CheckBoxPreference
       android:key="editor_fullscreen"
       android:title="Fullscreen"
@@ -28,7 +35,7 @@
     <CheckBoxPreference
       android:key="terminal_fullscreen"
       android:title="Fullscreen"
-      android:summary="Show the terminal in fullscreen mode." android:defaultValue="true"/>
+      android:summary="Show the terminal in fullscreen mode." android:defaultValue="false"/>
      <ListPreference
       android:key="fontsize"
       android:defaultValue="@string/default_value_fontsize_preference"

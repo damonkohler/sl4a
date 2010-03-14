@@ -62,7 +62,7 @@ public class ScriptProvider extends ContentProvider {
     String[] columns = { LiveFolders._ID, LiveFolders.NAME, LiveFolders.INTENT };
     MatrixCursor cursor = new MatrixCursor(columns);
     int index = 0;
-    for (File script : ScriptStorageAdapter.listScripts()) {
+    for (File script : ScriptStorageAdapter.listScripts(true)) {
       String scriptName = script.getName();
       Intent intent = new Intent();
       intent.setComponent(new ComponentName("com.google.ase",

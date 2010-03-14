@@ -24,9 +24,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.util.Log;
+
+import com.google.ase.interpreter.InterpreterConfiguration;
 
 /**
  * Manages storage and retrieval of scripts on the file system.
@@ -56,7 +60,6 @@ public class ScriptStorageAdapter {
       }
     }
 
-    // This returns the File object even if the script doesn't exist.
     File scriptFile = getScript(name);
     try {
       FileWriter stream = new FileWriter(scriptFile, false /* overwrite */);
@@ -88,10 +91,21 @@ public class ScriptStorageAdapter {
   /**
    * Returns a list of all available script {@link File}s.
    */
-  public static List<File> listScripts() {
+  public static List<File> listScripts(boolean showAllFiles) {
     File dir = new File(Constants.SCRIPTS_ROOT);
     if (dir.exists()) {
-      List<File> scripts = Arrays.asList(new File(Constants.SCRIPTS_ROOT).listFiles());
+      // NOTE(damonkohler): Creating a LinkedList here is necessary in order to be able to filter it
+      // later.
+      List<File> scripts =
+          new LinkedList<File>(Arrays.asList(new File(Constants.SCRIPTS_ROOT).listFiles()));
+      if (!showAllFiles) {
+        // Filter out any files that don't have interpreters installed.
+        for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
+          if (InterpreterConfiguration.getInterpreterForScript(it.next().getName()) == null) {
+            it.remove();
+          }
+        }
+      }
       Collections.sort(scripts);
       return scripts;
     }
