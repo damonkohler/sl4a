@@ -29,11 +29,27 @@ import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcInfo;
 
+/**
+ * Encapsulates the list of supported facades and their construction.
+ *
+ * @author Damon Kohler <damonkohler@gmail.com>
+ */
 public class FacadeConfiguration {
   private FacadeConfiguration() {
     // Utility class.
   }
 
+  /**
+   * Returns a {@link JsonRpcServer} with all facades configured.
+   *
+   * @param service
+   *          service to configure facades with
+   * @param intent
+   *          intent to configure facades with
+   * @param handler
+   *          handler to configure facades with
+   * @return a new {@link JsonRpcServer} configured with all facades
+   */
   public static JsonRpcServer buildJsonRpcServer(Service service, Intent intent, Handler handler) {
     AndroidFacade androidFacade = new AndroidFacade(service, handler, intent);
     SettingsFacade settingsFacade = new SettingsFacade(service);
@@ -52,6 +68,9 @@ public class FacadeConfiguration {
         alarmManagerFacade);
   }
 
+  /**
+   * Returns a list of {@link RpcInfo} objects for all facades.
+   */
   public static List<RpcInfo> buildRpcInfoList() {
     List<RpcInfo> list = new ArrayList<RpcInfo>();
     list.addAll(JsonRpcServer.buildRpcInfoMap(AndroidFacade.class).values());
