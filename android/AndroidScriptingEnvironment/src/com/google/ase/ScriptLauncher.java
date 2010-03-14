@@ -52,7 +52,7 @@ public class ScriptLauncher {
     }
     String scriptPath = null;
     if (mScriptName != null) {
-      File script = ScriptStorageAdapter.getScript(mScriptName);
+      File script = ScriptStorageAdapter.getExistingScript(mScriptName);
       if (script == null) {
         throw new AseException("No such script to launch.");
       }

@@ -64,6 +64,9 @@ public class InterpreterConfiguration {
     return mSupportedInterpreters;
   }
 
+  /**
+   * Returns the list of all installed interpreters.
+   */
   public static List<Interpreter> getInstalledInterpreters() {
     List<Interpreter> interpreters = new ArrayList<Interpreter>();
     for (Interpreter i : mSupportedInterpreters) {
@@ -74,6 +77,9 @@ public class InterpreterConfiguration {
     return interpreters;
   }
 
+  /**
+   * Returns the list of all not installed interpreters.
+   */
   public static List<Interpreter> getNotInstalledInterpreters() {
     List<Interpreter> interpreters = new ArrayList<Interpreter>();
     for (Interpreter i : mSupportedInterpreters) {
