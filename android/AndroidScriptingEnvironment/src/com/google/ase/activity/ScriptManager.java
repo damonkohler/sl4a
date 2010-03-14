@@ -17,28 +17,28 @@
 package com.google.ase.activity;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
@@ -58,6 +58,9 @@ import com.google.ase.interpreter.InterpreterConfiguration;
  */
 public class ScriptManager extends ListActivity {
 
+  private List<File> mScriptList;
+  private ScriptManagerAdapter mAdapter;
+
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
   }
@@ -75,8 +78,11 @@ public class ScriptManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, R.layout.list);
+    mScriptList = ScriptStorageAdapter.listScripts();
+    mAdapter = new ScriptManagerAdapter();
+    mAdapter.registerDataSetObserver(new ScriptListObserver());
+    setListAdapter(mAdapter);
     UsageTrackingConfirmation.show(this);
-    listScripts();
     registerForContextMenu(getListView());
     AseAnalytics.trackActivity(this);
   }
@@ -84,42 +90,7 @@ public class ScriptManager extends ListActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    listScripts();
-  }
-
-  /**
-   * Populates the list view with all available scripts.
-   */
-  private void listScripts() {
-    // Get all of the rows from the database and create the item list
-    List<File> scriptFiles = ScriptStorageAdapter.listScripts();
-
-    // Build up a simple list of maps. Just one attribute we care about
-    // currently.
-    List<Map<String, String>> data = new ArrayList<Map<String, String>>();
-    for (File f : scriptFiles) {
-      Map<String, String> map = new HashMap<String, String>();
-      map.put(Constants.EXTRA_SCRIPT_NAME, f.getName());
-      data.add(map);
-    }
-
-    Collections.sort(data, new Comparator<Map<String, String>>() {
-      public int compare(Map<String, String> m1, Map<String, String> m2) {
-        return m1.get(Constants.EXTRA_SCRIPT_NAME).compareTo(m2.get(Constants.EXTRA_SCRIPT_NAME));
-      }
-    });
-
-    // Create an array to specify the fields we want to display in the list
-    // (only TITLE)
-    String[] from = new String[] { Constants.EXTRA_SCRIPT_NAME };
-
-    // and an array of the fields we want to bind those fields to (in this case
-    // just text1)
-    int[] to = new int[] { R.id.text1 };
-
-    // Now create a simple cursor adapter and set it to display
-    SimpleAdapter scripts = new SimpleAdapter(this, data, R.layout.row, from, to);
-    setListAdapter(scripts);
+    mAdapter.notifyDataSetInvalidated();
   }
 
   @Override
@@ -183,12 +154,10 @@ public class ScriptManager extends ListActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
     super.onListItemClick(list, view, position, id);
-    Map<String, String> item = (Map<String, String>) list.getItemAtPosition(position);
-    final String scriptName = item.get(Constants.EXTRA_SCRIPT_NAME);
+    final File script = (File) list.getItemAtPosition(position);
 
     if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -201,9 +170,10 @@ public class ScriptManager extends ListActivity {
                       R.drawable.ase_logo_48);
               Intent intent = null;
               if (which == 0) {
-                intent = IntentBuilders.buildTerminalShortcutIntent(scriptName, iconResource);
+                intent = IntentBuilders.buildTerminalShortcutIntent(script.getName(), iconResource);
               } else {
-                intent = IntentBuilders.buildBackgroundShortcutIntent(scriptName, iconResource);
+                intent =
+                    IntentBuilders.buildBackgroundShortcutIntent(script.getName(), iconResource);
               }
               if (intent != null) {
                 setResult(RESULT_OK, intent);
@@ -219,21 +189,21 @@ public class ScriptManager extends ListActivity {
 
     if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
       Intent intent = new Intent();
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
       // Set the description of the action.
-      if (scriptName.length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, scriptName.substring(0,
+      if (script.getName().length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
+        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName().substring(0,
             com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH));
       } else {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, scriptName);
+        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName());
       }
       setResult(RESULT_OK, intent);
-      AseLog.v("Returned launch intent for " + scriptName + " to Locale: " + intent.toURI());
+      AseLog.v("Returned launch intent for " + script.getName() + " to Locale: " + intent.toURI());
       finish();
       return;
     }
 
-    startActivity(IntentBuilders.buildStartInTerminalIntent(scriptName));
+    startActivity(IntentBuilders.buildStartInTerminalIntent(script.getName()));
   }
 
   /**
@@ -255,7 +225,6 @@ public class ScriptManager extends ListActivity {
     menu.add(Menu.NONE, MenuId.START_SERVICE.getId(), Menu.NONE, "Start in Background");
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public boolean onContextItemSelected(MenuItem item) {
     AdapterView.AdapterContextMenuInfo info;
@@ -266,24 +235,22 @@ public class ScriptManager extends ListActivity {
       return false;
     }
 
-    Map<String, String> scriptItem = (Map<String, String>) getListAdapter().getItem(info.position);
-    if (scriptItem == null) {
+    File script = (File) mAdapter.getItem(info.position);
+    if (script == null) {
       AseLog.v("No script selected.");
       return false;
     }
-
-    final String scriptName = scriptItem.get(Constants.EXTRA_SCRIPT_NAME);
-    AseLog.v("Selected: " + scriptName);
+    AseLog.v("Selected: " + script.getName());
 
     int itemId = item.getItemId();
     if (itemId == MenuId.DELETE.getId()) {
-      deleteScript(scriptName);
+      deleteScript(script.getName());
     } else if (itemId == MenuId.EDIT.getId()) {
-      editScript(scriptName);
+      editScript(script.getName());
     } else if (itemId == MenuId.START_SERVICE.getId()) {
       Intent intent = new Intent(this, AseService.class);
       intent.setAction(Constants.ACTION_LAUNCH_SCRIPT);
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
       startService(intent);
     }
     return true;
@@ -296,7 +263,7 @@ public class ScriptManager extends ListActivity {
     alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int whichButton) {
         ScriptStorageAdapter.deleteScript(scriptName);
-        listScripts();
+        mAdapter.notifyDataSetInvalidated();
       }
     });
     alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -330,6 +297,40 @@ public class ScriptManager extends ListActivity {
           break;
       }
     }
-    listScripts();
+    mAdapter.notifyDataSetInvalidated();
+  }
+
+  private class ScriptListObserver extends DataSetObserver {
+    @Override
+    public void onInvalidated() {
+      mScriptList = ScriptStorageAdapter.listScripts();
+    }
+  }
+
+  private class ScriptManagerAdapter extends BaseAdapter {
+
+    @Override
+    public int getCount() {
+      return mScriptList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+      return mScriptList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+      return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+      TextView view = new TextView(ScriptManager.this);
+      view.setPadding(2, 2, 2, 2);
+      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+      view.setText(mScriptList.get(position).getName());
+      return view;
+    }
   }
 }
