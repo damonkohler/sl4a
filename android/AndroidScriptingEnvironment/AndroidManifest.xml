@@ -67,7 +67,8 @@
       </intent-filter>
     </activity>
     <activity
-      android:name=".activity.ApiBrowser" />
+      android:name=".activity.ApiBrowser"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
       android:name=".activity.InterpreterInstaller"
       android:configChanges="keyboardHidden|orientation" />
@@ -98,6 +99,8 @@
       android:name=".activity.AseService" />
     <activity
       android:name=".activity.InterpreterManager" />
+    <activity
+      android:name=".activity.LogcatViewer" />
     <activity
       android:name=".activity.ScriptsLiveFolder"
       android:label="Scripts">

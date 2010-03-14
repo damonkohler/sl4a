@@ -23,6 +23,8 @@ import java.util.Set;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
@@ -33,8 +35,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.AlphabetIndexer;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.google.ase.AseAnalytics;
@@ -75,7 +79,8 @@ public class ApiBrowser extends ListActivity {
     } else {
       CustomizeWindow.requestNoTitle(this);
     }
-    setContentView(R.layout.list);
+    setContentView(R.layout.api_browser);
+    getListView().setFastScrollEnabled(true);
     mExpandedPositions = new HashSet<Integer>();
     mRpcInfoList = FacadeConfiguration.buildRpcInfoList();
     mAdapter = new ApiBrowserAdapter();
@@ -148,6 +153,11 @@ public class ApiBrowser extends ListActivity {
     return true;
   }
 
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+  }
+
   private void insertText(RpcInfo rpc) {
     String scriptText = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_TEXT);
     Interpreter interpreter = InterpreterConfiguration.getInterpreterByName(
@@ -160,7 +170,18 @@ public class ApiBrowser extends ListActivity {
     finish();
   }
 
-  private class ApiBrowserAdapter extends BaseAdapter {
+  private class ApiBrowserAdapter extends BaseAdapter implements SectionIndexer {
+
+    private final AlphabetIndexer mIndexer;
+    private final MatrixCursor mCursor;
+
+    public ApiBrowserAdapter() {
+      mCursor = new MatrixCursor(new String[] { "NAME" });
+      for (RpcInfo info : mRpcInfoList) {
+        mCursor.addRow(new String[] { info.getName() });
+      }
+      mIndexer = new AlphabetIndexer(mCursor, 0, " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    }
 
     @Override
     public int getCount() {
@@ -187,6 +208,21 @@ public class ApiBrowser extends ListActivity {
         view.setText(mRpcInfoList.get(position).getName());
       }
       return view;
+    }
+
+    @Override
+    public int getPositionForSection(int section) {
+      return mIndexer.getPositionForSection(section);
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+      return mIndexer.getSectionForPosition(position);
+    }
+
+    @Override
+    public Object[] getSections() {
+      return mIndexer.getSections();
     }
   }
 }

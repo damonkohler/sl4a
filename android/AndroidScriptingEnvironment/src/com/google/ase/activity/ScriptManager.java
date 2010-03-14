@@ -80,7 +80,7 @@ public class ScriptManager extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    CustomizeWindow.requestCustomTitle(this, R.layout.list);
+    CustomizeWindow.requestCustomTitle(this, R.layout.script_manager);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     mScriptList =
         ScriptStorageAdapter.listScripts(mPreferences.getBoolean("show_all_files", false));

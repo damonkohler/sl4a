@@ -63,7 +63,7 @@ public class InterpreterManager extends ListActivity {
   private HashMap<Integer, Interpreter> mInstallerMenuIds;
 
   private static enum MenuId {
-    HELP, ADD, DELETE, NETWORK, PREFERENCES;
+    HELP, ADD, DELETE, NETWORK, PREFERENCES, LOGCAT;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -72,7 +72,7 @@ public class InterpreterManager extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    CustomizeWindow.requestCustomTitle(this, R.layout.list);
+    CustomizeWindow.requestCustomTitle(this, R.layout.interpreter_manager);
     mInterpreterList = InterpreterConfiguration.getInstalledInterpreters();
     mAdapter = new InterpreterManagerAdapter();
     mAdapter.registerDataSetObserver(new InterpreterListObserver());
@@ -95,6 +95,8 @@ public class InterpreterManager extends ListActivity {
     buildInstallLanguagesMenu(menu);
     menu.add(Menu.NONE, MenuId.NETWORK.getId(), Menu.NONE, "Start Server").setIcon(
         android.R.drawable.ic_menu_share);
+    menu.add(Menu.NONE, MenuId.LOGCAT.getId(), Menu.NONE, "View Logcat").setIcon(
+        android.R.drawable.ic_menu_sort_by_size);
     menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
         android.R.drawable.ic_menu_preferences);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
@@ -151,6 +153,8 @@ public class InterpreterManager extends ListActivity {
       installInterpreter(interpreter);
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, AsePreferences.class));
+    } else if (itemId == MenuId.LOGCAT.getId()) {
+      startActivity(new Intent(this, LogcatViewer.class));
     }
     return true;
   }
