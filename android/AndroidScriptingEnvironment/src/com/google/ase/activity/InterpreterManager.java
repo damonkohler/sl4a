@@ -73,6 +73,7 @@ public class InterpreterManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, R.layout.list);
+    mInterpreterList = InterpreterConfiguration.getInstalledInterpreters();
     mAdapter = new InterpreterManagerAdapter();
     mAdapter.registerDataSetObserver(new InterpreterListObserver());
     setListAdapter(mAdapter);
@@ -271,7 +272,7 @@ public class InterpreterManager extends ListActivity {
       TextView view = new TextView(InterpreterManager.this);
       view.setPadding(2, 2, 2, 2);
       view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-      view.setText(mInterpreterList.get(position).getName());
+      view.setText(mInterpreterList.get(position).getNiceName());
       return view;
     }
   }
