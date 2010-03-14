@@ -14,9 +14,12 @@
  * the License.
  */
 
-package com.google.ase;
+package com.google.ase.provider;
 
 import java.io.File;
+
+import com.google.ase.Constants;
+import com.google.ase.ScriptStorageAdapter;
 
 import android.content.ComponentName;
 import android.content.ContentProvider;

@@ -9,9 +9,10 @@ import android.provider.LiveFolders;
 
 import com.google.ase.R;
 
-public class AseLiveFolder extends Activity {
+public class ScriptsLiveFolder extends Activity {
 
-  public static final Uri CONTENT_URI = Uri.parse("content://com.google.ase.scriptprovider");
+  public static final Uri CONTENT_URI =
+      Uri.parse("content://com.google.ase.provider.scriptprovider");
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
