@@ -23,9 +23,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -33,6 +36,7 @@ import android.widget.TextView;
 
 import com.google.ase.AseLog;
 import com.google.ase.R;
+import com.google.ase.dialog.Help;
 
 public class LogcatViewer extends ListActivity {
 
@@ -40,6 +44,13 @@ public class LogcatViewer extends ListActivity {
   private int mOldLastPosition;
   private LogcatViewerAdapter mAdapter;
   private Handler mHandler;
+
+  private static enum MenuId {
+    HELP, PREFERENCES, JUMP_TO_BOTTOM;
+    public int getId() {
+      return ordinal() + Menu.FIRST;
+    }
+  }
 
   private class LogcatWatcher implements Runnable {
     @Override
@@ -84,6 +95,31 @@ public class LogcatViewer extends ListActivity {
     Thread logcatWatcher = new Thread(new LogcatWatcher());
     logcatWatcher.setPriority(Thread.NORM_PRIORITY - 1);
     logcatWatcher.start();
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    menu.clear();
+    menu.add(Menu.NONE, MenuId.JUMP_TO_BOTTOM.getId(), Menu.NONE, "Jump to Bottom").setIcon(
+        android.R.drawable.ic_menu_revert);
+    menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
+        android.R.drawable.ic_menu_preferences);
+    menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
+        android.R.drawable.ic_menu_help);
+    return super.onPrepareOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    if (itemId == MenuId.HELP.getId()) {
+      Help.show(this);
+    } else if (itemId == MenuId.JUMP_TO_BOTTOM.getId()) {
+      getListView().setSelection(mLogcatMessages.size() - 1);
+    } else if (itemId == MenuId.PREFERENCES.getId()) {
+      startActivity(new Intent(this, AsePreferences.class));
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   private class LogcatViewerAdapter extends BaseAdapter {

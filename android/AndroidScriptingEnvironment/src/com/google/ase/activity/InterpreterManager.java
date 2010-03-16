@@ -89,7 +89,6 @@ public class InterpreterManager extends ListActivity {
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    super.onPrepareOptionsMenu(menu);
     menu.clear();
     buildMenuIdMaps();
     buildInstallLanguagesMenu(menu);
@@ -101,7 +100,7 @@ public class InterpreterManager extends ListActivity {
         android.R.drawable.ic_menu_preferences);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
-    return true;
+    return super.onPrepareOptionsMenu(menu);
   }
 
   private void buildMenuIdMaps() {
