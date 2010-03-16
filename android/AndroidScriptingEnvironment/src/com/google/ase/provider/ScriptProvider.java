@@ -18,10 +18,6 @@ package com.google.ase.provider;
 
 import java.io.File;
 
-import com.google.ase.Constants;
-import com.google.ase.ScriptStorageAdapter;
-
-import android.content.ComponentName;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -29,6 +25,9 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.LiveFolders;
+
+import com.google.ase.IntentBuilders;
+import com.google.ase.ScriptStorageAdapter;
 
 public class ScriptProvider extends ContentProvider {
 
@@ -67,10 +66,7 @@ public class ScriptProvider extends ContentProvider {
     int index = 0;
     for (File script : ScriptStorageAdapter.listScripts(true)) {
       String scriptName = script.getName();
-      Intent intent = new Intent();
-      intent.setComponent(new ComponentName("com.google.ase",
-          "com.google.ase.activity.AseServiceLauncher"));
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+      Intent intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       Object[] row = { index, scriptName, intent.toURI() };
       cursor.addRow(row);

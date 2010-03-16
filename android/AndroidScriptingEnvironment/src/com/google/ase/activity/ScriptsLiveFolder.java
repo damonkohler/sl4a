@@ -20,7 +20,7 @@ public class ScriptsLiveFolder extends Activity {
     final Intent intent = getIntent();
     final String action = intent.getAction();
     if (LiveFolders.ACTION_CREATE_LIVE_FOLDER.equals(action)) {
-      setResult(RESULT_OK, createLiveFolder(this, CONTENT_URI, "ASE Scripts",
+      setResult(RESULT_OK, createLiveFolder(this, CONTENT_URI, "Scripts",
           R.drawable.ase_logo_48));
     } else {
       setResult(RESULT_CANCELED);
