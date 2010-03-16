@@ -35,7 +35,9 @@ import com.google.ase.AseLog;
 import com.google.ase.R;
 
 public class LogcatViewer extends ListActivity {
+
   private List<String> mLogcatMessages;
+  private int mOldLastPosition;
   private LogcatViewerAdapter mAdapter;
   private Handler mHandler;
 
@@ -53,6 +55,14 @@ public class LogcatViewer extends ListActivity {
             @Override
             public void run() {
               mAdapter.notifyDataSetInvalidated();
+              // This logic performs what transcriptMode="normal" should do. Since that doesn't seem
+              // to work, we do it this way.
+              int lastVisiblePosition = getListView().getLastVisiblePosition();
+              int lastPosition = mLogcatMessages.size() - 1;
+              if (lastVisiblePosition == mOldLastPosition || lastVisiblePosition == -1) {
+                getListView().setSelection(lastPosition);
+              }
+              mOldLastPosition = lastPosition;
             }
           });
         }
@@ -67,6 +77,7 @@ public class LogcatViewer extends ListActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.logcat_viewer);
     mLogcatMessages = new LinkedList<String>();
+    mOldLastPosition = 0;
     mAdapter = new LogcatViewerAdapter();
     mHandler = new Handler();
     setListAdapter(mAdapter);
