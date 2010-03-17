@@ -22,11 +22,10 @@ import android.view.View;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
 
-import com.google.ase.AseLog;
-
 public abstract class ActivityFlinger {
 
   private static final int SWIPE_MIN_DISTANCE = 120;
+  private static final int SWIPE_MAX_OFF_PATH = 100;
   private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
   private final GestureDetector mGestureDetector;
@@ -48,7 +47,9 @@ public abstract class ActivityFlinger {
   private class SwitchActivity extends SimpleOnGestureListener {
     @Override
     public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-      AseLog.v("fling!");
+      if (Math.abs(event1.getY() - event2.getY()) > SWIPE_MAX_OFF_PATH) {
+        return false;
+      }
       if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE
           && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
         left();
@@ -61,5 +62,4 @@ public abstract class ActivityFlinger {
       return true;
     }
   }
-
 }
