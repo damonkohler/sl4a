@@ -41,6 +41,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
@@ -87,8 +88,21 @@ public class ScriptManager extends ListActivity {
     mAdapter = new ScriptManagerAdapter();
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
-    UsageTrackingConfirmation.show(this);
     registerForContextMenu(getListView());
+    new ActivityFlinger(getListView()) {
+      @Override
+      protected void right() {
+        Toast.makeText(ScriptManager.this, "Interpreter Manager", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(ScriptManager.this, InterpreterManager.class));
+      }
+
+      @Override
+      protected void left() {
+        Toast.makeText(ScriptManager.this, "Logcat Viewer", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(ScriptManager.this, LogcatViewer.class));
+      }
+    };
+    UsageTrackingConfirmation.show(this);
     AseAnalytics.trackActivity(this);
   }
 

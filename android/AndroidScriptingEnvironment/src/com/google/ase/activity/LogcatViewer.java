@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.ase.AseLog;
 import com.google.ase.R;
@@ -95,6 +96,19 @@ public class LogcatViewer extends ListActivity {
     Thread logcatWatcher = new Thread(new LogcatWatcher());
     logcatWatcher.setPriority(Thread.NORM_PRIORITY - 1);
     logcatWatcher.start();
+    new ActivityFlinger(getListView()) {
+      @Override
+      protected void right() {
+        Toast.makeText(LogcatViewer.this, "Script Manager", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(LogcatViewer.this, ScriptManager.class));
+      }
+
+      @Override
+      protected void left() {
+        Toast.makeText(LogcatViewer.this, "Interpreter Manager", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(LogcatViewer.this, InterpreterManager.class));
+      }
+    };
   }
 
   @Override

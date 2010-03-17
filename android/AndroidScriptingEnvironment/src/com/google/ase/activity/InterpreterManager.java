@@ -42,6 +42,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
@@ -78,6 +79,19 @@ public class InterpreterManager extends ListActivity {
     mAdapter.registerDataSetObserver(new InterpreterListObserver());
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
+    new ActivityFlinger(getListView()) {
+      @Override
+      protected void right() {
+        Toast.makeText(InterpreterManager.this, "Logcat Viewer", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(InterpreterManager.this, LogcatViewer.class));
+      }
+
+      @Override
+      protected void left() {
+        Toast.makeText(InterpreterManager.this, "Script Manager", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(InterpreterManager.this, ScriptManager.class));
+      }
+    };
     AseAnalytics.trackActivity(this);
   }
 
