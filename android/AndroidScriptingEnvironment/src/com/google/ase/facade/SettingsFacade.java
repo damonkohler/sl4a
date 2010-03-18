@@ -86,7 +86,7 @@ public class SettingsFacade implements RpcReceiver {
   @Rpc(description = "Toggle Airplane mode. Without argument it will change the current state. " +
                      "Always returns the new value.")
   public Boolean toggleAirplaneMode(
-      @RpcOptionalObject("new_airplane_mode") Boolean airplane_mode) {
+      @RpcOptionalObject(name = "airplane_mode") Boolean airplane_mode) {
     boolean set_airplane_mode = airplane_mode == null ? !isInAirplaneMode() : airplane_mode.booleanValue();
     android.provider.Settings.System.putInt(mService.getContentResolver(),
         android.provider.Settings.System.AIRPLANE_MODE_ON, set_airplane_mode ? AIRPLANE_MODE_ON : AIRPLANE_MODE_OFF);
