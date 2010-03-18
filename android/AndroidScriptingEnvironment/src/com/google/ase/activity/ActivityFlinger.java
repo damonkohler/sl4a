@@ -16,35 +16,81 @@
 
 package com.google.ase.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
+import android.widget.Toast;
 
-public abstract class ActivityFlinger {
+public class ActivityFlinger {
 
   private static final int SWIPE_MIN_DISTANCE = 120;
   private static final int SWIPE_MAX_OFF_PATH = 100;
   private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
-  private final GestureDetector mGestureDetector;
-
-  public ActivityFlinger(View view) {
-    mGestureDetector = new GestureDetector(new SwitchActivity());
-    view.setOnTouchListener(new OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        return mGestureDetector.onTouchEvent(event);
-      }
-    });
+  private ActivityFlinger() {
+    // Use ActivityFlinger.Builder instead.
   }
 
-  protected abstract void left();
+  public static class Builder {
 
-  protected abstract void right();
+    private final GestureDetector mGestureDetector;
+    private final LeftRightFlingListener mListener;
 
-  private class SwitchActivity extends SimpleOnGestureListener {
+    public Builder() {
+      mListener = new LeftRightFlingListener();
+      mGestureDetector = new GestureDetector(mListener);
+    }
+
+    public void attachToView(View view) {
+      view.setOnTouchListener(new OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+          return mGestureDetector.onTouchEvent(event);
+        }
+      });
+    }
+
+    public Builder addLeftActivity(final Context context, final Class<?> activity,
+        final String name) {
+      mListener.mLeftRunnable = new StartActivityRunnable(name, context, activity);
+      return this;
+    }
+
+    public Builder addRightActivity(final Context context, final Class<?> activity,
+        final String name) {
+      mListener.mRightRunnable = new StartActivityRunnable(name, context, activity);
+      return this;
+    }
+  }
+
+  private static class StartActivityRunnable implements Runnable {
+
+    private final String message;
+    private final Context context;
+    private final Class<?> activity;
+
+    private StartActivityRunnable(String message, Context context, Class<?> activity) {
+      this.message = message;
+      this.context = context;
+      this.activity = activity;
+    }
+
+    @Override
+    public void run() {
+      Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+      Intent intent = new Intent(context, activity);
+      context.startActivity(intent);
+    }
+  }
+
+  private static class LeftRightFlingListener extends SimpleOnGestureListener {
+    Runnable mLeftRunnable;
+    Runnable mRightRunnable;
+
     @Override
     public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
       if (Math.abs(event1.getY() - event2.getY()) > SWIPE_MAX_OFF_PATH) {
@@ -52,10 +98,14 @@ public abstract class ActivityFlinger {
       }
       if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE
           && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-        left();
+        if (mLeftRunnable != null) {
+          mLeftRunnable.run();
+        }
       } else if (event2.getX() - event1.getX() > SWIPE_MIN_DISTANCE
           && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-        right();
+        if (mRightRunnable != null) {
+          mRightRunnable.run();
+        }
       } else {
         return super.onFling(event1, event2, velocityX, velocityY);
       }

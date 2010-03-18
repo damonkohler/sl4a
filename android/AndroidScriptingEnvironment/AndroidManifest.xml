@@ -10,7 +10,9 @@
     android:label="@string/application_title"
     android:name=".AseApplication">
     <activity
-      android:name=".activity.ScriptManager">
+      android:name=".activity.ScriptManager"
+      android:launchMode="singleInstance"
+      android:clearTaskOnLaunch="true">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />
@@ -98,9 +100,13 @@
     <service
       android:name=".activity.AseService" />
     <activity
-      android:name=".activity.InterpreterManager" />
+      android:name=".activity.InterpreterManager"
+      android:launchMode="singleInstance"
+      android:clearTaskOnLaunch="true" />
     <activity
-      android:name=".activity.LogcatViewer" />
+      android:name=".activity.LogcatViewer"
+      android:launchMode="singleInstance"
+      android:clearTaskOnLaunch="true" />
     <activity
       android:name=".activity.ScriptsLiveFolder"
       android:label="Scripts">

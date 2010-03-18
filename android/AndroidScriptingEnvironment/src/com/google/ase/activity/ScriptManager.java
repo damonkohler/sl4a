@@ -89,19 +89,10 @@ public class ScriptManager extends ListActivity {
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
-    new ActivityFlinger(getListView()) {
-      @Override
-      protected void right() {
-        Toast.makeText(ScriptManager.this, "Interpreter Manager", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(ScriptManager.this, InterpreterManager.class));
-      }
-
-      @Override
-      protected void left() {
-        Toast.makeText(ScriptManager.this, "Logcat Viewer", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(ScriptManager.this, LogcatViewer.class));
-      }
-    };
+    new ActivityFlinger.Builder()
+        .addLeftActivity(this, InterpreterManager.class, "Interpreter Manager")
+        .addRightActivity(this, LogcatViewer.class, "Logcat Viewer")
+        .attachToView(getListView());
     UsageTrackingConfirmation.show(this);
     AseAnalytics.trackActivity(this);
   }
