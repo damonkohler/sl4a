@@ -17,8 +17,6 @@
 package com.google.ase.facade.ui;
 
 import java.util.Arrays;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
