@@ -28,10 +28,15 @@ import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
 
 /**
- * Exposes device settings related functionality.
+ * Exposes phone settings functionality.
+ * 
+ * @author Frank Spychalski (frank.spychalski@gmail.com)
  */
 public class SettingsFacade implements RpcReceiver {
 
+  public static int AIRPLANE_MODE_OFF = 0;
+  public static int AIRPLANE_MODE_ON = 1;
+  
   private final Service mService;
   private final AudioManager mAudio;
   private final WifiManager mWifi;
@@ -66,6 +71,12 @@ public class SettingsFacade implements RpcReceiver {
     }
   }
 
+  @Rpc(description = "Is airplane mode turned on?")
+  public Boolean isInAirplaneMode() {
+    return android.provider.Settings.System.getInt(mService.getContentResolver(),
+        android.provider.Settings.System.AIRPLANE_MODE_ON, AIRPLANE_MODE_OFF) == AIRPLANE_MODE_ON;
+  }
+  
   @Rpc(description = "Returns the current ringer volume.", returns = "The current volume as an integer.")
   public int getRingerVolume() {
     return mAudio.getStreamVolume(AudioManager.STREAM_RING);
