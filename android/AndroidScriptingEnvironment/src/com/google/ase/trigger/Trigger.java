@@ -14,16 +14,14 @@
  * the License.
  */
 
-package com.google.ase.observers;
+package com.google.ase.trigger;
 
-import android.app.ListActivity;
-import android.os.Bundle;
+import java.io.Serializable;
 
-public class AlarmBrowser extends ListActivity {
+import android.content.Context;
+import android.view.View;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
-
+public interface Trigger extends Serializable {
+  /** Returns the view of this trigger */
+  public View getView(Context context);
 }

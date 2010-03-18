@@ -71,6 +71,9 @@
       android:name=".activity.ApiBrowser"
       android:configChanges="keyboardHidden|orientation" />
     <activity
+      android:name=".activity.TriggerManager"
+      android:configChanges="keyboardHidden|orientation" />
+    <activity
       android:name=".activity.InterpreterInstaller"
       android:configChanges="keyboardHidden|orientation" />
     <activity

@@ -23,7 +23,6 @@ import java.util.Set;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -151,11 +150,6 @@ public class ApiBrowser extends ListActivity {
       insertText(rpc);
     }
     return true;
-  }
-
-  @Override
-  public void onConfigurationChanged(Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
   }
 
   private void insertText(RpcInfo rpc) {

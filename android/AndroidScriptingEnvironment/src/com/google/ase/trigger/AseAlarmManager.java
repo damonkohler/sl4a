@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase.observers;
+package com.google.ase.trigger;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -26,23 +26,30 @@ import com.google.ase.IntentBuilders;
 public class AseAlarmManager {
   final AlarmManager mAlarmManager;
   final Service mService;
+  final AseTriggerRepository mTriggerRepository;
 
-  public AseAlarmManager(Service service) {
+  public AseAlarmManager(Service service, AseTriggerRepository triggerRepository) {
     mAlarmManager = (AlarmManager) service.getSystemService(Context.ALARM_SERVICE);
     mService = service;
+    mTriggerRepository = triggerRepository;
   }
-  
+
   /**
-   * Schedules the repeated execution of a script.  The intervals may vary slightly.  This is
-   * more power efficient than scheduleRepeating.
+   * Schedules the repeated execution of a script. The intervals may vary slightly. This is more
+   * power efficient than scheduleRepeating.
    * 
-   * @param interval interval between script invocations, in seconds
-   * @param script script to execute
-   * @param wakeUp wake up the device even when asleep
+   * @param interval
+   *          interval between script invocations, in seconds
+   * @param script
+   *          script to execute
+   * @param wakeUp
+   *          wake up the device even when asleep
    */
   public void scheduleInexactRepeating(Double interval, String script, boolean wakeUp) {
     final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mService, script);
     final int alarmType = wakeUp ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
+
+    mTriggerRepository.addTrigger(new InexactRepeatingAlarmTrigger(script, interval, wakeUp));
 
     mAlarmManager.setInexactRepeating(alarmType, System.currentTimeMillis(),
         convertSecondsToMilliseconds(interval), pendingIntent);
@@ -51,15 +58,22 @@ public class AseAlarmManager {
   /**
    * Schedules the repeated execution of a script.
    * 
-   * @param intervalS interval between executions, in seconds
-   * @param script script to execute
-   * @param firstExecutionTimeS time stamp of first time to execute the script, in seconds
-   * @param wakeUp if true then the phone will wake up when the alarm goes off
+   * @param intervalS
+   *          interval between executions, in seconds
+   * @param script
+   *          script to execute
+   * @param firstExecutionTimeS
+   *          time stamp of first time to execute the script, in seconds
+   * @param wakeUp
+   *          if true then the phone will wake up when the alarm goes off
    */
   public void scheduleRepeating(Double intervalS, String script, Double firstExecutionTimeS,
       boolean wakeUp) {
     final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mService, script);
     final int alarmType = wakeUp ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
+
+    mTriggerRepository.addTrigger(new RepeatingAlarmTrigger(intervalS, script, firstExecutionTimeS,
+        wakeUp));
 
     mAlarmManager.setRepeating(alarmType, convertSecondsToMilliseconds(firstExecutionTimeS),
         convertSecondsToMilliseconds(intervalS), pendingIntent);
@@ -68,15 +82,27 @@ public class AseAlarmManager {
   /**
    * Cancels the scheduled execution of a script.
    * 
-   * @param script name of the script whose scheduled invocation to cancel
+   * @param script
+   *          name of the script whose scheduled invocation to cancel
    */
-  public void cancelRepeating(String script) {
+  public void cancelRepeating(final String script) {
     final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mService, script);
+
+    mTriggerRepository.removeTriggers(new AseTriggerRepository.TriggerFilter() {
+      @Override
+      public boolean matches(Trigger trigger) {
+        if (trigger instanceof AlarmTrigger) {
+          return ((AlarmTrigger)trigger).getScriptName().compareToIgnoreCase(script) == 0;
+        } else {
+          return false;
+        }
+      }
+    });
 
     mAlarmManager.cancel(pendingIntent);
   }
 
   private long convertSecondsToMilliseconds(Double seconds) {
-    return (long)(seconds * 1000L);
+    return (long) (seconds * 1000L);
   }
 }

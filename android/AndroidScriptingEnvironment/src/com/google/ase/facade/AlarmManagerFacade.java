@@ -23,13 +23,15 @@ import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcOptionalDouble;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
-import com.google.ase.observers.AseAlarmManager;
+import com.google.ase.trigger.AseAlarmManager;
+import com.google.ase.trigger.AseTriggerRepository;
 
 public class AlarmManagerFacade implements RpcReceiver {
   final AseAlarmManager mAlarmManager;
 
-  public AlarmManagerFacade(Service service, EventFacade eventFacade) {
-    mAlarmManager = new AseAlarmManager(service);
+  public AlarmManagerFacade(Service service, EventFacade eventFacade,
+      AseTriggerRepository triggerRepository) {
+    mAlarmManager = new AseAlarmManager(service, triggerRepository);
   }
 
   @Rpc(description = "schedules a script for (inexact) regular execution - saves battery in "
