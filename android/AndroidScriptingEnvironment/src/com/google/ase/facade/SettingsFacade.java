@@ -18,12 +18,14 @@ package com.google.ase.facade;
 
 import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.provider.Settings.SettingNotFoundException;
 
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
+import com.google.ase.jsonrpc.RpcOptionalObject;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
 
@@ -73,8 +75,25 @@ public class SettingsFacade implements RpcReceiver {
 
   @Rpc(description = "Is airplane mode turned on?")
   public Boolean isInAirplaneMode() {
-    return android.provider.Settings.System.getInt(mService.getContentResolver(),
-        android.provider.Settings.System.AIRPLANE_MODE_ON, AIRPLANE_MODE_OFF) == AIRPLANE_MODE_ON;
+    try {
+      return android.provider.Settings.System.getInt(mService.getContentResolver(),
+          android.provider.Settings.System.AIRPLANE_MODE_ON) == AIRPLANE_MODE_ON;
+    } catch (SettingNotFoundException e) {
+      return false;
+    }
+  }
+  
+  @Rpc(description = "Toggle Airplane mode. Without argument it will change the current state. " +
+                     "Always returns the new value.")
+  public Boolean toggleAirplaneMode(
+      @RpcOptionalObject("new_airplane_mode") Boolean airplane_mode) {
+    boolean set_airplane_mode = airplane_mode == null ? !isInAirplaneMode() : airplane_mode.booleanValue();
+    android.provider.Settings.System.putInt(mService.getContentResolver(),
+        android.provider.Settings.System.AIRPLANE_MODE_ON, set_airplane_mode ? AIRPLANE_MODE_ON : AIRPLANE_MODE_OFF);
+    Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED); 
+    intent.putExtra("state", set_airplane_mode); 
+    mService.sendBroadcast(intent);
+    return set_airplane_mode;
   }
   
   @Rpc(description = "Returns the current ringer volume.", returns = "The current volume as an integer.")
