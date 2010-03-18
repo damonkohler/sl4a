@@ -121,12 +121,12 @@ public class AndroidFacade implements RpcReceiver {
   public List<Address> geocode(
       @RpcParameter(name = "latitude") Double latitude,
       @RpcParameter(name = "longitude") Double longitude,
-      @RpcDefaultInteger(name = "max. no. of results (default 1)", defaultValue = 1) Integer maxResults)
+      @RpcDefaultInteger(name = "maxResults", description = "max. no. of results", defaultValue = 1) Integer maxResults)
       throws IOException {
     return mGeocoder.getFromLocation(latitude, longitude, maxResults);
   }
 
-  public Intent startActivityForResult(final Intent intent) {
+  Intent startActivityForResult(final Intent intent) {
     FutureActivityTask task = new FutureActivityTask() {
       @Override
       public void run(Activity activity, FutureIntent result) {
@@ -208,7 +208,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Vibrates the phone or a specified duration in milliseconds.")
   public void vibrate(
-      @RpcDefaultInteger(name = "duration in milliseconds", defaultValue = 300) Integer duration) {
+      @RpcDefaultInteger(name = "duration", description = "duration in milliseconds", defaultValue = 300) Integer duration) {
     mVibrator.vibrate(duration);
   }
 
@@ -387,7 +387,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Force stops a package.")
-  public void forceStopPackage(@RpcParameter(name = "package name") String packageName) {
+  public void forceStopPackage(@RpcParameter(name = "packageName", description = "name of package") String packageName) {
     mActivityManager.restartPackage(packageName);
   }
 
@@ -403,9 +403,9 @@ public class AndroidFacade implements RpcReceiver {
    */
   @Rpc(description = "Launches an activity that sends an e-mail message to a given recipient.")
   public void sendEmail(
-      @RpcParameter(name = "the recipient's e-mail address") final String recipientAddress,
-      @RpcParameter(name = "subject of the e-mail") final String subject,
-      @RpcParameter(name = "message body") final String body) {
+      @RpcParameter(name = "recipientAddress") final String recipientAddress,
+      @RpcParameter(name = "subject") final String subject,
+      @RpcParameter(name = "body") final String body) {
     final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
     emailIntent.setType("plain/text");
     emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] { recipientAddress });
