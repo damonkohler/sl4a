@@ -34,7 +34,7 @@ public class MediaFacade implements RpcReceiver {
   private final MediaRecorder mAudioRecorder = new MediaRecorder();
 
   @Rpc(description = "Records an audio snippet and saves it to the given location.")
-  public void startAudioRecording(@RpcParameter(name = "path of target file") final String targetPath)
+  public void startAudioRecording(@RpcParameter(name = "targetPath") final String targetPath)
       throws IOException, InterruptedException {
     mAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
     mAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
