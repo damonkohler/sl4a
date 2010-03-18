@@ -131,6 +131,7 @@ public class LogcatViewer extends ListActivity {
     Thread logcatWatcher = new Thread(new LogcatWatcher());
     logcatWatcher.setPriority(Thread.NORM_PRIORITY - 1);
     logcatWatcher.start();
+    mAdapter.notifyDataSetInvalidated();
     super.onStart();
   }
 
