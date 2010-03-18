@@ -11,8 +11,7 @@
     android:name=".AseApplication">
     <activity
       android:name=".activity.ScriptManager"
-      android:launchMode="singleInstance"
-      android:clearTaskOnLaunch="true">
+      android:launchMode="singleTask">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />
@@ -101,12 +100,10 @@
       android:name=".activity.AseService" />
     <activity
       android:name=".activity.InterpreterManager"
-      android:launchMode="singleInstance"
-      android:clearTaskOnLaunch="true" />
+      android:launchMode="singleTask" />
     <activity
       android:name=".activity.LogcatViewer"
-      android:launchMode="singleInstance"
-      android:clearTaskOnLaunch="true" />
+      android:launchMode="singleTask" />
     <activity
       android:name=".activity.ScriptsLiveFolder"
       android:label="Scripts">
