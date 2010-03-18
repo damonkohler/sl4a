@@ -28,6 +28,7 @@ import android.os.Handler;
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcInfo;
+import com.google.ase.trigger.AseTriggerRepository;
 
 /**
  * Encapsulates the list of supported facades and their construction.
@@ -41,7 +42,7 @@ public class FacadeConfiguration {
 
   /**
    * Returns a {@link JsonRpcServer} with all facades configured.
-   *
+   * 
    * @param service
    *          service to configure facades with
    * @param intent
@@ -51,6 +52,8 @@ public class FacadeConfiguration {
    * @return a new {@link JsonRpcServer} configured with all facades
    */
   public static JsonRpcServer buildJsonRpcServer(Service service, Intent intent, Handler handler) {
+    final AseTriggerRepository triggerRepository = new AseTriggerRepository(service);
+
     AndroidFacade androidFacade = new AndroidFacade(service, handler, intent);
     SettingsFacade settingsFacade = new SettingsFacade(service);
     UiFacade uiFacade = new UiFacade(service);
@@ -62,7 +65,8 @@ public class FacadeConfiguration {
     LocationManagerFacade locationManagerFacade = new LocationManagerFacade(service, eventFacade);
     TelephonyManagerFacade telephonyManagerFacade =
         new TelephonyManagerFacade(service, eventFacade);
-    AlarmManagerFacade alarmManagerFacade = new AlarmManagerFacade(service, eventFacade);
+    AlarmManagerFacade alarmManagerFacade =
+        new AlarmManagerFacade(service, eventFacade, triggerRepository);
     return new JsonRpcServer(androidFacade, settingsFacade, mediaFacade, ttsFacade, srFacade,
         uiFacade, eventFacade, sensorManagerFacade, locationManagerFacade, telephonyManagerFacade,
         alarmManagerFacade);

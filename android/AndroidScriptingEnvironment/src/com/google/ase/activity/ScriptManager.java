@@ -72,7 +72,7 @@ public class ScriptManager extends ListActivity {
   private HashMap<Integer, Interpreter> addMenuIds;
 
   private static enum MenuId {
-    DELETE, EDIT, START_SERVICE, HELP, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES;
+    DELETE, EDIT, START_SERVICE, HELP, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES, TRIGGER_MANAGER;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -124,6 +124,8 @@ public class ScriptManager extends ListActivity {
         android.R.drawable.ic_menu_preferences);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
+    menu.add(Menu.NONE, MenuId.TRIGGER_MANAGER.getId(), Menu.NONE, "Trigger Manager").setIcon(
+        android.R.drawable.ic_menu_more);
     return true;
   }
 
@@ -169,6 +171,8 @@ public class ScriptManager extends ListActivity {
       startActivityForResult(intent, RequestCode.QRCODE_ADD.ordinal());
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, AsePreferences.class));
+    } else if (itemId == MenuId.TRIGGER_MANAGER.getId()) {
+      startActivity(new Intent(this, TriggerManager.class));
     }
     return true;
   }
