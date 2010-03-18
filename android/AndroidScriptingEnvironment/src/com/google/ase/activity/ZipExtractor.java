@@ -26,6 +26,8 @@ import java.util.zip.ZipFile;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -66,10 +68,9 @@ public class ZipExtractor extends Activity {
     dialog.setTitle("Extracting");
     dialog.setMessage(mInput.getName());
     dialog.setIndeterminate(true);
-    dialog.setCancelable(false);
-    dialog.show();
+    dialog.setCancelable(true);
 
-    new Thread() {
+    final Thread unzipThread = new Thread() {
       @Override
       public void run() {
         try {
@@ -87,7 +88,17 @@ public class ZipExtractor extends Activity {
           finish();
         }
       }
-    }.start();
+    };
+
+    dialog.setOnCancelListener(new OnCancelListener() {
+      @Override
+      public void onCancel(DialogInterface dialog) {
+        unzipThread.interrupt();
+      }
+    });
+
+    unzipThread.start();
+    dialog.show();
   }
 
   private void unzip() throws ZipException, IOException, InterruptedException {
