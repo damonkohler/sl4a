@@ -98,13 +98,13 @@ public class ActivityFlinger {
       }
       if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE
           && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-        if (mLeftRunnable != null) {
-          mLeftRunnable.run();
+        if (mRightRunnable != null) {
+          mRightRunnable.run();
         }
       } else if (event2.getX() - event1.getX() > SWIPE_MIN_DISTANCE
           && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-        if (mRightRunnable != null) {
-          mRightRunnable.run();
+        if (mLeftRunnable != null) {
+          mLeftRunnable.run();
         }
       } else {
         return super.onFling(event1, event2, velocityX, velocityY);

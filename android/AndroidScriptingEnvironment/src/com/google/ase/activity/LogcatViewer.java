@@ -95,8 +95,7 @@ public class LogcatViewer extends ListActivity {
     mHandler = new Handler();
     setListAdapter(mAdapter);
     new ActivityFlinger.Builder()
-        .addLeftActivity(this, ScriptManager.class, "Script Manager")
-        .addRightActivity(this, InterpreterManager.class, "Interpreter Manager")
+        .addLeftActivity(this, InterpreterManager.class, "Interpreter Manager")
         .attachToView(getListView());
   }
 

@@ -79,8 +79,8 @@ public class InterpreterManager extends ListActivity {
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     new ActivityFlinger.Builder()
-        .addLeftActivity(this, LogcatViewer.class, "Logcat Viewer")
-        .addRightActivity(this, ScriptManager.class, "Script Manager")
+        .addRightActivity(this, LogcatViewer.class, "Logcat Viewer")
+        .addLeftActivity(this, ScriptManager.class, "Script Manager")
         .attachToView(getListView());
     AseAnalytics.trackActivity(this);
   }
