@@ -23,11 +23,11 @@ public class AseRuntimeException extends RuntimeException {
     super(message);
   }
 
-  public AseRuntimeException(String message, Exception wrapped_exception) {
-    super(message + "\n" + wrapped_exception.toString());
+  public AseRuntimeException(String message, Throwable wrapped_throwable) {
+    super(message + "\n" + wrapped_throwable.toString());
   }
 
-  public AseRuntimeException(Exception wrapped_exception) {
-    super(wrapped_exception.toString());
+  public AseRuntimeException(Throwable wrapped_throwable) {
+    super(wrapped_throwable.toString());
   }
 }

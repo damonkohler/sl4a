@@ -77,6 +77,6 @@ public class PythonInterpreter extends Interpreter {
 
   @Override
   public int getVersion() {
-    return 4;
+    return 5;
   }
 }

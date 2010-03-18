@@ -20,11 +20,11 @@ import java.io.File;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
-import com.google.ase.Exec;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
 
@@ -209,6 +209,7 @@ public class InterpreterInstaller extends Activity {
 
   /**
    * After extracting the interpreter, we need to mark the binary (if there is one) as executable.
+   * In addition, all parent directories must be marked as executable.
    *
    * @return true if the chmod was successful or unnecessary
    */
@@ -216,9 +217,21 @@ public class InterpreterInstaller extends Activity {
     if (mInterpreter.getBinary() == null) {
       return true;
     }
+    // Chmod up the directory tree to the top of our data directory.
+    for (File pathPart = mInterpreter.getBinary();
+         pathPart != null && !pathPart.getName().equals("com.google.ase");
+         pathPart = pathPart.getParentFile()) {
+      if (!chmodWithRetries(pathPart, "755", MAX_CHMOD_RETRIES)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private boolean chmodWithRetries(File path, String mode, int times) {
     boolean success = false;
     for (int attemptNumber = 0; attemptNumber < MAX_CHMOD_RETRIES; attemptNumber++) {
-      if (chmod(mInterpreter.getBinary(), "755")) {
+      if (chmod(path, mode)) {
         success = true;
         break;
       }
@@ -231,12 +244,22 @@ public class InterpreterInstaller extends Activity {
     return success;
   }
 
-  private boolean chmod(File path, String permissions) {
-    AseLog.v("chmod " + permissions + " " + path.getAbsolutePath());
-    int[] pid = new int[1];
-    Exec.createSubprocess("/system/bin/chmod", permissions, path.getAbsolutePath(), pid);
-    if (Exec.waitFor(pid[0]) != 0) {
-      AseLog.e("chmod " + permissions + " " + path.getAbsolutePath() + " failed!");
+  private boolean chmod(File path, String mode) {
+    String[] command =
+        new String[] { "/system/bin/sh", "-c",
+            String.format("chmod %s %s", mode, path.getAbsolutePath()) };
+    Process process;
+    int exitValue;
+    try {
+      process = Runtime.getRuntime().exec(command);
+      exitValue = process.waitFor();
+    } catch (Exception e) {
+      AseLog.e(e);
+      return false;
+    }
+    if (exitValue != 0) {
+      AseLog.e(String.format("chmod %s %s exited with code %d", path.getAbsolutePath(), mode,
+          process.exitValue()));
       return false;
     }
     return true;
@@ -246,5 +269,10 @@ public class InterpreterInstaller extends Activity {
     AseLog.v(this, "Installation failed.");
     setResult(RESULT_CANCELED);
     finish();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 }

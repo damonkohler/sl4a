@@ -4,10 +4,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
@@ -46,6 +45,18 @@ public class InterpreterUninstaller extends Activity {
     uninstall();
   }
 
+  private void delete(File path) {
+    if (path.isDirectory()) {
+      for (File child : path.listFiles()) {
+        delete(child);
+      }
+      path.delete(); // Delete empty directory.
+    }
+    if (path.isFile()) {
+      path.delete();
+    }
+  }
+
   private void uninstall() {
     final ProgressDialog dialog = new ProgressDialog(this);
     dialog.setMessage("Uninstalling " + mInterpreter.getNiceName());
@@ -66,12 +77,17 @@ public class InterpreterUninstaller extends Activity {
         List<File> directories = Arrays.asList(extras, root, scriptsArchive, archive,
             extrasArchive);
         for (File directory : directories) {
-          FileUtils.deleteQuietly(directory);
+          delete(directory);
         }
         dialog.dismiss();
         setResult(RESULT_OK);
         finish();
       }
     }.start();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 }

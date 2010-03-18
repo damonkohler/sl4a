@@ -77,6 +77,10 @@ public class AseLog {
     Log.e(getTag(), message, e);
   }
 
+  public static void w(Throwable e) {
+    Log.w(getTag(), "Warning", e);
+  }
+
   public static void w(String message) {
     Log.w(getTag(), message);
   }

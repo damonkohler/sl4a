@@ -2,8 +2,8 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.google.ase"
-  android:versionName="18"
-  android:versionCode="18">
+  android:versionName="19"
+  android:versionCode="19">
   <application
     android:debuggable="true"
     android:icon="@drawable/ase_logo_48"
@@ -67,15 +67,20 @@
       </intent-filter>
     </activity>
     <activity
-      android:name=".activity.ApiBrowser" />
+      android:name=".activity.ApiBrowser"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
-      android:name=".activity.InterpreterInstaller" />
+      android:name=".activity.InterpreterInstaller"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
-      android:name=".activity.InterpreterUninstaller" />
+      android:name=".activity.InterpreterUninstaller"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
-      android:name=".activity.UrlDownloader" />
+      android:name=".activity.UrlDownloader"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
-      android:name=".activity.ZipExtractor" />
+      android:name=".activity.ZipExtractor"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
       android:name=".activity.AseServiceLauncher"
       android:taskAffinity=""
@@ -95,8 +100,10 @@
     <activity
       android:name=".activity.InterpreterManager" />
     <activity
-      android:name=".activity.AseLiveFolder"
-      android:label="ASE Scripts">
+      android:name=".activity.LogcatViewer" />
+    <activity
+      android:name=".activity.ScriptsLiveFolder"
+      android:label="Scripts">
       <intent-filter>
         <action
           android:name="android.intent.action.CREATE_LIVE_FOLDER" />
@@ -105,8 +112,8 @@
       </intent-filter>
     </activity>
     <provider
-      android:name="ScriptProvider"
-      android:authorities="com.google.ase.scriptprovider" />
+      android:name=".provider.ScriptProvider"
+      android:authorities="com.google.ase.provider.scriptprovider" />
   </application>
   <uses-permission
     android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />

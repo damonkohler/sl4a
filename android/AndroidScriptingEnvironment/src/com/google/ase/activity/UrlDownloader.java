@@ -13,7 +13,10 @@ import java.net.URLConnection;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
@@ -21,10 +24,38 @@ import com.google.ase.IoUtils;
 
 public class UrlDownloader extends Activity {
 
-  private String mFileName;
-  private File mOutput;
+  private File mFile;
+  private FileOutputStream mFileOutputStream;
   private URL mUrl;
-  private URLConnection mUrlConnection;
+  private ProgressDialog mDialog;
+
+  private OutputStream mProgressReportingOutputStream;
+  private final Thread mDownloader = new Thread(new Downloader());
+
+  private static final int MSG_REPORT_CONTENT_LENGTH = 0;
+  private static final int MSG_REPORT_PROGRESS = 1;
+
+  private final Handler mHandler = new Handler() {
+    @Override
+    public void handleMessage(Message msg) {
+      switch (msg.what) {
+        case MSG_REPORT_CONTENT_LENGTH:
+          if (msg.arg1 == -1) {
+            mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+          } else {
+            mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mDialog.setMax(msg.arg1);
+          }
+          mDialog.show();
+          break;
+        case MSG_REPORT_PROGRESS:
+          mDialog.setProgress(msg.arg1);
+          break;
+        default:
+          throw new IllegalArgumentException("Unknown message id " + msg.what);
+      }
+    };
+  };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -37,94 +68,107 @@ public class UrlDownloader extends Activity {
       finish();
       return;
     }
-    try {
-      mUrlConnection = mUrl.openConnection();
-    } catch (IOException e) {
-      AseLog.e("Cannot open URL connection: " + url, e);
-      finish();
-      return;
-    }
-    mFileName = new File(mUrl.getFile()).getName();
-    mOutput = new File(getIntent().getStringExtra(Constants.EXTRA_OUTPUT_PATH), mFileName);
-    download();
-  }
-
-  private void download() {
-    if (mOutput.exists()) {
+    String name = new File(mUrl.getFile()).getName();
+    mFile = new File(getIntent().getStringExtra(Constants.EXTRA_OUTPUT_PATH), name);
+    if (mFile.exists()) {
       AseLog.v("Output file already exists. Skipping download.");
       setResult(RESULT_OK);
       finish();
       return;
     }
-    AseLog.v("Downloading " + mUrl);
-
-    final int size = mUrlConnection.getContentLength();
-    final ProgressDialog dialog = buildProgressDialog(size);
-
-    final OutputStream out;
     try {
-      out = new FilterOutputStream(new FileOutputStream(mOutput)) {
-        private int mSize = 0;
-
-        @Override
-        public void write(byte[] buffer, int offset, int count) throws IOException {
-          super.write(buffer, offset, count);
-          mSize += count;
-          dialog.setProgress(mSize);
-        }
-      };
+      mFileOutputStream = new FileOutputStream(mFile);
     } catch (FileNotFoundException e) {
       AseLog.e(e);
       setResult(RESULT_CANCELED);
       finish();
       return;
     }
-
-    final Thread downloader = new Thread() {
-      @Override
-      public void run() {
-        try {
-          int bytesCopied = IoUtils.copy(mUrlConnection.getInputStream(), out);
-          if (bytesCopied != size && size != -1 /* -1 indicates no ContentLength */) {
-            throw new IOException("Download incomplete: " + bytesCopied + " != " + size);
-          }
-          AseLog.v("Download completed successfully.");
-          setResult(RESULT_OK);
-        } catch (Exception e) {
-          AseLog.e("Download failed.", e);
-          if (mOutput.exists()) {
-            // Clean up bad downloads.
-            mOutput.delete();
-          }
-          setResult(RESULT_CANCELED);
-        } finally {
-          dialog.dismiss();
-          finish();
-        }
-      }
-    };
-
-    dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-      @Override
-      public void onCancel(DialogInterface dialog) {
-        downloader.interrupt();
-      }
-    });
-
-    dialog.show();
-    downloader.start();
+    mProgressReportingOutputStream = new ProgressReportingOuputStream();
+    buildProgressDialog();
+    startDownload();
   }
 
-  private ProgressDialog buildProgressDialog(final int size) {
-    final ProgressDialog dialog = new ProgressDialog(this);
-    dialog.setTitle("Downloading");
-    dialog.setMessage(mFileName);
-    if (size == -1) {
-      dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    } else {
-      dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-      dialog.setMax(size);
+  private void startDownload() {
+    AseLog.v("Downloading " + mUrl);
+    mDownloader.setPriority(Thread.NORM_PRIORITY - 1);
+    mDownloader.start();
+  }
+
+  private final class ProgressReportingOuputStream extends FilterOutputStream {
+    private int mProgress = 0;
+
+    private ProgressReportingOuputStream() {
+      super(mFileOutputStream);
     }
-    return dialog;
+
+    @Override
+    public void write(byte[] buffer, int offset, int count) throws IOException {
+      mProgress += count;
+      mHandler.sendMessage(Message.obtain(mHandler, MSG_REPORT_PROGRESS, mProgress, 0));
+      out.write(buffer, offset, count);
+    }
+  }
+
+  private class Downloader implements Runnable {
+    private URLConnection mUrlConnection;
+
+    @Override
+    public void run() {
+      if (!buildConnection()) {
+        return;
+      }
+
+      int contentLength = mUrlConnection.getContentLength();
+      mHandler.sendMessage(Message.obtain(mHandler, MSG_REPORT_CONTENT_LENGTH, contentLength, 0));
+      try {
+        int bytesCopied =
+            IoUtils.copy(mUrlConnection.getInputStream(), mProgressReportingOutputStream);
+        if (bytesCopied != contentLength && contentLength != -1 /* -1 indicates no ContentLength */) {
+          throw new IOException("Download incomplete: " + bytesCopied + " != " + contentLength);
+        }
+        AseLog.v("Download completed successfully.");
+        setResult(RESULT_OK);
+      } catch (Exception e) {
+        AseLog.e("Download failed.", e);
+        if (mFile.exists()) {
+          // Clean up bad downloads.
+          mFile.delete();
+        }
+        setResult(RESULT_CANCELED);
+      } finally {
+        mDialog.dismiss();
+        finish();
+      }
+    }
+
+    private boolean buildConnection() {
+      try {
+        mUrlConnection = mUrl.openConnection();
+      } catch (IOException e) {
+        AseLog.e("Cannot open URL: " + mUrl, e);
+        setResult(RESULT_CANCELED);
+        finish();
+        return false;
+      }
+      return true;
+    }
+  }
+
+  private void buildProgressDialog() {
+    mDialog = new ProgressDialog(this);
+    mDialog.setTitle("Downloading");
+    mDialog.setMessage(mFile.getName());
+    mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+      @Override
+      public void onCancel(DialogInterface dialog) {
+        mDownloader.interrupt();
+      }
+    });
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 }

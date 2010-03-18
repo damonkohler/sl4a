@@ -24,14 +24,14 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.io.IOUtils;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
+import com.google.ase.IoUtils;
 
 /**
  * Activity for extracting ZIP files.
@@ -90,7 +90,7 @@ public class ZipExtractor extends Activity {
     }.start();
   }
 
-  private void unzip() throws ZipException, IOException {
+  private void unzip() throws ZipException, IOException, InterruptedException {
     Enumeration<? extends ZipEntry> entries;
     ZipFile zip = new ZipFile(mInput);
     entries = zip.entries();
@@ -105,9 +105,13 @@ public class ZipExtractor extends Activity {
       if (!destination.getParentFile().exists()) {
         destination.getParentFile().mkdirs();
       }
-      IOUtils.copy(zip.getInputStream(entry), new FileOutputStream(destination));
-      AseLog.v("Extracted entry \"" + entry.getName() + "\".");
+      IoUtils.copy(zip.getInputStream(entry), new FileOutputStream(destination));
     }
     zip.close();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 }

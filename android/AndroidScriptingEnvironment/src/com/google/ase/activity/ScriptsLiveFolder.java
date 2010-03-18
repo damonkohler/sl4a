@@ -9,9 +9,10 @@ import android.provider.LiveFolders;
 
 import com.google.ase.R;
 
-public class AseLiveFolder extends Activity {
+public class ScriptsLiveFolder extends Activity {
 
-  public static final Uri CONTENT_URI = Uri.parse("content://com.google.ase.scriptprovider");
+  public static final Uri CONTENT_URI =
+      Uri.parse("content://com.google.ase.provider.scriptprovider");
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +20,7 @@ public class AseLiveFolder extends Activity {
     final Intent intent = getIntent();
     final String action = intent.getAction();
     if (LiveFolders.ACTION_CREATE_LIVE_FOLDER.equals(action)) {
-      setResult(RESULT_OK, createLiveFolder(this, CONTENT_URI, "ASE Scripts",
+      setResult(RESULT_OK, createLiveFolder(this, CONTENT_URI, "Scripts",
           R.drawable.ase_logo_48));
     } else {
       setResult(RESULT_CANCELED);

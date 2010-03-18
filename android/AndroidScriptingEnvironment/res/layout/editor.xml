@@ -15,7 +15,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scrollbars="vertical"
-    android:textSize="12sp"
     android:hint="Script Content"
     android:typeface="monospace"
     android:gravity="top"
