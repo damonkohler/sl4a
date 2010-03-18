@@ -32,25 +32,27 @@ public class AlarmManagerFacade implements RpcReceiver {
     mAlarmManager = new AseAlarmManager(service);
   }
 
-  @Rpc(description = "schedules a script for (inexact) regular execution - saves battery in " +
-      "comparison to scheduleRepeating")
+  @Rpc(description = "schedules a script for (inexact) regular execution - saves battery in "
+      + "comparison to scheduleRepeating")
   public void scheduleInexactRepeating(
-      @RpcParameter(name = "interval, in seconds") Double interval,
-      @RpcParameter(name = "script") String script,
-      @RpcDefaultBoolean(description="wakeUp - whether or not to wakeup the device if asleep",
-          defaultValue = true) Boolean wakeUp) {
+      @RpcParameter(name = "interval", description = "the interval between invocations, in seconds")
+      Double interval,
+      @RpcParameter(name = "script", description = "the script to execute")
+      String script,
+      @RpcDefaultBoolean(name = "wakeUp", description = "whether or not to wakeup the device if asleep", defaultValue = true) 
+      Boolean wakeUp) {
     mAlarmManager.scheduleInexactRepeating(interval, script, wakeUp);
   }
 
   @Rpc(description = "scheudles a script for (exact) regular execution")
   public void scheduleRepeating(
-      @RpcParameter(name = "interval, in seconds") Double interval,
-      @RpcParameter(name = "script") String script,
-      @RpcOptionalDouble(name="firstExecutionTime - first time to " +
-          "execute script, in seconds since epoch", description="")
+      @RpcParameter(name = "interval", description = "interval between invocations, in seconds")
+      Double interval,
+      @RpcParameter(name = "script")
+      String script,
+      @RpcOptionalDouble(name = "firstExecutionTime", description = "first time to execute script, in seconds since epoch")
       Double firstExecutionTime,
-      @RpcDefaultBoolean(description = "wakeUp - whether or not to wakeup the device if asleep",
-          defaultValue = true)
+      @RpcDefaultBoolean(name = "wakeUp", description = "whether or not to wake up the device if asleep", defaultValue = true)
       Boolean wakeUp) {
     if (firstExecutionTime == null) {
       // If the default value is passed, the current time is used.

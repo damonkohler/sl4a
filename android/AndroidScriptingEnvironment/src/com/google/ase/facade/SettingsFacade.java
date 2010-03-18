@@ -49,7 +49,7 @@ public class SettingsFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Set the screen timeout to this number of seconds.", returns = "The original screen timeout.")
-  public Integer setScreenTimeout(@RpcParameter("value") Integer value) {
+  public Integer setScreenTimeout(@RpcParameter(name = "value") Integer value) {
     Integer old_value = getScreenTimeout();
     android.provider.Settings.System.putInt(mService.getContentResolver(),
         android.provider.Settings.System.SCREEN_OFF_TIMEOUT, value * 1000);
@@ -73,8 +73,8 @@ public class SettingsFacade implements RpcReceiver {
 
   @Rpc(description = "Sets whether or not the ringer should be silent.")
   public void setRingerSilent(
-      @RpcDefaultBoolean(description = "Boolean silent", defaultValue = true) Boolean enabled) {
-    if (enabled) {
+      @RpcDefaultBoolean(name = "silent", defaultValue = true) Boolean silent) {
+    if (silent) {
       mAudio.setRingerMode(AudioManager.RINGER_MODE_SILENT);
     } else {
       mAudio.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
@@ -82,13 +82,13 @@ public class SettingsFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Sets the ringer volume.")
-  public void setRingerVolume(@RpcParameter("volume") Integer volume) {
+  public void setRingerVolume(@RpcParameter(name = "volume") Integer volume) {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
   }
 
   @Rpc(description = "Enables or disables Wifi according to the supplied boolean.")
   public void setWifiEnabled(
-      @RpcDefaultBoolean(description = "enabled", defaultValue = true) Boolean enabled) {
+      @RpcDefaultBoolean(name = "enabled", defaultValue = true) Boolean enabled) {
     mWifi.setWifiEnabled(enabled);
   }
 

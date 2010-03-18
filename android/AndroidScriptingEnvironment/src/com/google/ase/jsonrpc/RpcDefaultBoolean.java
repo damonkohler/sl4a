@@ -31,8 +31,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface RpcDefaultBoolean {
+  /** Name of formal parameter.  Must match name in java file. */
+  public String name();
+  
   /** A description of the parameter. */
-  public String description();
+  public String description() default "";
 
   /** The parameters default value. */
   public boolean defaultValue();

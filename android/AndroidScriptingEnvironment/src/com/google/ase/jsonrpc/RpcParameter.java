@@ -31,8 +31,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface RpcParameter {
   /**
-   * A description of the RPC parameter. There is no need to include the
-   * parameter type (this information will be generated automatically).
+   * The name of the formal parameter. This should be in agreement with the java code.
    */
   public String name();
+
+  /**
+   * Description of the RPC. This should be a short descriptive statement without a full stop, such
+   * as 'disables the WiFi mode'.
+   */
+  public String description() default "";
 }

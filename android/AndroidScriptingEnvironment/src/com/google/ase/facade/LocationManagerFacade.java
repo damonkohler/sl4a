@@ -74,9 +74,9 @@ public class LocationManagerFacade implements RpcReceiver {
 
   @Rpc(description = "Starts collecting location data.")
   public void startLocating(
-      @RpcDefaultString(description = "String accuracy (\"fine\", \"coarse\")", defaultValue = "coarse") String accuracy,
-      @RpcDefaultInteger(description = "minimum time between updates (milli-seconds)", defaultValue = 60000) Integer minUpdateTimeMs,
-      @RpcDefaultInteger(description = "minimum distance between updates (meters)", defaultValue = 30) Integer minUpdateDistanceM) {
+      @RpcDefaultString(name = "accuracy", description = "String accuracy (\"fine\", \"coarse\")", defaultValue = "coarse") String accuracy,
+      @RpcDefaultInteger(name = "minDistance", description = "minimum time between updates (milli-seconds)", defaultValue = 60000) Integer minUpdateTimeMs,
+      @RpcDefaultInteger(name = "minUpdateDistance", description = "minimum distance between updates (meters)", defaultValue = 30) Integer minUpdateDistanceM) {
     Criteria criteria = new Criteria();
     if (accuracy == "coarse") {
       criteria.setAccuracy(Criteria.ACCURACY_COARSE);

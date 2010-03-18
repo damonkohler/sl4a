@@ -121,7 +121,7 @@ public class AndroidFacade implements RpcReceiver {
   public List<Address> geocode(
       @RpcParameter(name = "latitude") Double latitude,
       @RpcParameter(name = "longitude") Double longitude,
-      @RpcDefaultInteger(description = "max. no. of results (default 1)", defaultValue = 1) Integer maxResults)
+      @RpcDefaultInteger(name = "max. no. of results (default 1)", defaultValue = 1) Integer maxResults)
       throws IOException {
     return mGeocoder.getFromLocation(latitude, longitude, maxResults);
   }
@@ -155,7 +155,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
   public Intent startActivityForResult(@RpcParameter(name = "action") final String action,
-      @RpcOptionalString(description = "uri") final String uri) {
+      @RpcOptionalString(name = "uri") final String uri) {
     Intent intent = new Intent(action);
     if (uri != null) {
       intent.setData(Uri.parse(uri));
@@ -179,7 +179,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
   public void startActivity(@RpcParameter(name = "action") final String action,
-      @RpcOptionalString(description = "uri") final String uri) {
+      @RpcOptionalString(name = "uri") final String uri) {
     Intent intent = new Intent(action);
     if (uri != null) {
       intent.setData(Uri.parse(uri));
@@ -208,7 +208,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Vibrates the phone or a specified duration in milliseconds.")
   public void vibrate(
-      @RpcDefaultInteger(description = "duration in milliseconds", defaultValue = 300) Integer duration) {
+      @RpcDefaultInteger(name = "duration in milliseconds", defaultValue = 300) Integer duration) {
     mVibrator.vibrate(duration);
   }
 
@@ -277,23 +277,23 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Queries the user for a text input.")
   public String getInput(
-      @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Input") final String title,
-      @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter value:") final String message) {
+      @RpcDefaultString(name = "title", description = "title of the input box", defaultValue = "ASE Input") final String title,
+      @RpcDefaultString(name = "message", description = "message to display above the input box", defaultValue = "Please enter value:") final String message) {
     return getInputFromAlertDialog(title, message, false);
   }
 
   @Rpc(description = "Queries the user for a password.")
   public String getPassword(
-      @RpcDefaultString(description = "title of the input box", defaultValue = "ASE Password Input") final String title,
-      @RpcDefaultString(description = "message to display above the input box", defaultValue = "Please enter password:") final String message) {
+      @RpcDefaultString(name = "title", description = "title of the input box", defaultValue = "ASE Password Input") final String title,
+      @RpcDefaultString(name = "message", description = "message to display above the input box", defaultValue = "Please enter password:") final String message) {
     return getInputFromAlertDialog(title, message, true);
   }
 
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")
   public void notify(
       @RpcParameter(name = "message") String message,
-      @RpcDefaultString(description = "title", defaultValue = "ASE Notification") final String title,
-      @RpcDefaultString(description = "ticker", defaultValue = "ASE Notification") final String ticker) {
+      @RpcDefaultString(name = "title", description = "title", defaultValue = "ASE Notification") final String title,
+      @RpcDefaultString(name = "ticker", description = "ticker", defaultValue = "ASE Notification") final String ticker) {
     Notification notification =
         new Notification(R.drawable.ase_logo_48, ticker, System.currentTimeMillis());
     // This contentIntent is a noop.
