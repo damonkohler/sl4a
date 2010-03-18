@@ -141,7 +141,7 @@ public class TextToSpeechFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Speaks the provided message via TTS")
-  public void speak(@RpcParameter(name = "message to speak") String message) throws AseException {
+  public void speak(@RpcParameter(name = "message", description = "message to speak") String message) throws AseException {
     try {
       if (!mLock.await(10, TimeUnit.SECONDS)) {
         throw new AseException("TTS initialization timed out.");

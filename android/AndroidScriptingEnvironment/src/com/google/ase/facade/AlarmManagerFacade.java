@@ -48,7 +48,7 @@ public class AlarmManagerFacade implements RpcReceiver {
   public void scheduleRepeating(
       @RpcParameter(name = "interval", description = "interval between invocations, in seconds")
       Double interval,
-      @RpcParameter(name = "script")
+      @RpcParameter(name = "script", description = "script to execute")
       String script,
       @RpcOptionalDouble(name = "firstExecutionTime", description = "first time to execute script, in seconds since epoch")
       Double firstExecutionTime,
@@ -62,7 +62,7 @@ public class AlarmManagerFacade implements RpcReceiver {
     mAlarmManager.scheduleRepeating(interval, script, firstExecutionTime, wakeUp);
   }
 
-  @Rpc(description = "cancels the regular execution of a given script")
+  @Rpc(description = "cancels all scheduled regular executions of a given script")
   public void cancelRepeating(@RpcParameter(name = "script") String script) {
     mAlarmManager.cancelRepeating(script);
   }
