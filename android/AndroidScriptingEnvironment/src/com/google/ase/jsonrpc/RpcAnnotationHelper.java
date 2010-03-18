@@ -29,6 +29,33 @@ public class RpcAnnotationHelper {
   /** This is a utility class. We don't want instances of it */
   private RpcAnnotationHelper() {
   }
+  
+  /**
+   * Extracts the formal parameter name from an annotation.
+   * 
+   * @param annotations the annotations of the parameter
+   * @return the formal name of the parameter
+   */
+  public static String getName(Annotation[] annotations) {
+    for (Annotation a : annotations) {
+      if (a instanceof RpcParameter) {
+        return ((RpcParameter) a).name();
+      } else if (a instanceof RpcDefaultInteger) {
+        return ((RpcDefaultInteger) a).name();
+      } else if (a instanceof RpcDefaultString) {
+        return ((RpcDefaultString) a).name();
+      } else if (a instanceof RpcDefaultBoolean) {
+        return ((RpcDefaultBoolean) a).name();
+      } else if (a instanceof RpcOptionalDouble) {
+        return ((RpcOptionalDouble) a).name();
+      } else if (a instanceof RpcOptionalObject) {
+        return ((RpcOptionalDouble) a).name();
+      } else if (a instanceof RpcOptionalString) {
+        return ((RpcOptionalString) a).name();
+      }
+    }
+    return "(unknown)";
+  }
 
   /**
    * Extracts the parameter description from its annotations.
@@ -39,15 +66,17 @@ public class RpcAnnotationHelper {
   public static String getDescription(Annotation[] annotations) {
     for (Annotation a : annotations) {
       if (a instanceof RpcParameter) {
-        return ((RpcParameter) a).value();
+        return ((RpcParameter) a).description();
       } else if (a instanceof RpcDefaultInteger) {
         return ((RpcDefaultInteger) a).description();
       } else if (a instanceof RpcDefaultString) {
         return ((RpcDefaultString) a).description();
       } else if (a instanceof RpcDefaultBoolean) {
         return ((RpcDefaultBoolean) a).description();
+      } else if (a instanceof RpcOptionalDouble) {
+        return ((RpcOptionalDouble) a).description();
       } else if (a instanceof RpcOptionalObject) {
-        return ((RpcOptionalObject) a).value();
+        return ((RpcOptionalObject) a).description();
       } else if (a instanceof RpcOptionalString) {
         return ((RpcOptionalString) a).description();
       }
@@ -70,6 +99,8 @@ public class RpcAnnotationHelper {
         return ((RpcDefaultString) a).defaultValue();
       } else if (a instanceof RpcDefaultBoolean) {
         return ((RpcDefaultBoolean) a).defaultValue();
+      } else if (a instanceof RpcOptionalDouble) {
+        return null;
       } else if (a instanceof RpcOptionalObject) {
         return null;
       } else if (a instanceof RpcOptionalString) {
@@ -95,6 +126,8 @@ public class RpcAnnotationHelper {
         return true;
       } else if (a instanceof RpcDefaultBoolean) {
         return true;
+      } else if (a instanceof RpcOptionalDouble) {
+        return false;
       } else if (a instanceof RpcOptionalObject) {
         return false;
       } else if (a instanceof RpcOptionalString) {
@@ -118,6 +151,8 @@ public class RpcAnnotationHelper {
       } else if (a instanceof RpcDefaultString) {
         return true;
       } else if (a instanceof RpcDefaultBoolean) {
+        return true;
+      } else if (a instanceof RpcOptionalDouble) {
         return true;
       } else if (a instanceof RpcOptionalObject) {
         return true;

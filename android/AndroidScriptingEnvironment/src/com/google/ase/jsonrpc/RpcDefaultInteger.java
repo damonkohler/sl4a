@@ -22,8 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation marks an Integer parameter as optional and supplies a default
- * value.
+ * This annotation marks an Integer parameter as optional and supplies a default value.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
  * 
@@ -31,8 +30,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface RpcDefaultInteger {
+  /** Name of formal parameter. Must match name in Java file. */
+  public String name();
+
   /** A description of the parameter. */
-  public String description();
+  public String description() default "";
 
   /** The parameters default value. */
   public int defaultValue();

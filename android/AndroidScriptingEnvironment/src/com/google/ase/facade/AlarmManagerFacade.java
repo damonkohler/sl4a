@@ -16,46 +16,59 @@
 
 package com.google.ase.facade;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
-import android.os.SystemClock;
 
-import com.google.ase.IntentBuilders;
 import com.google.ase.jsonrpc.Rpc;
+import com.google.ase.jsonrpc.RpcDefaultBoolean;
+import com.google.ase.jsonrpc.RpcOptionalDouble;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.observers.AseAlarmManager;
 
 public class AlarmManagerFacade implements RpcReceiver {
-  /** A random value that is used to identify pending intents. */
-  private static final int EXECUTE_SCRIPT_REQUEST_CODE = 0x12f412a;
+  final AseAlarmManager mAlarmManager;
 
-  final AlarmManager mAlarmManager;
-  final Service mService;
-  
   public AlarmManagerFacade(Service service, EventFacade eventFacade) {
-    mAlarmManager = (AlarmManager)service.getSystemService(Context.ALARM_SERVICE);
-    mService = service;
+    mAlarmManager = new AseAlarmManager(service);
   }
 
-  @Rpc(description = "scheudles a script for regular execution")
-  public void scheduleRepeating(
-      @RpcParameter("interval") Long interval,
-      @RpcParameter("script") String script) {
-    final PendingIntent pendingIntent = PendingIntent.getService(mService,
-        EXECUTE_SCRIPT_REQUEST_CODE, IntentBuilders.buildStartInBackgroundIntent(script), 0);
+  @Rpc(description = "schedules a script for (inexact) regular execution - saves battery in "
+      + "comparison to scheduleRepeating")
+  public void scheduleInexactRepeating(
+      @RpcParameter(name = "interval", description = "the interval between invocations, in seconds")
+      Double interval,
+      @RpcParameter(name = "script", description = "the script to execute")
+      String script,
+      @RpcDefaultBoolean(name = "wakeUp", description = "whether or not to wakeup the device if asleep", defaultValue = true) 
+      Boolean wakeUp) {
+    mAlarmManager.scheduleInexactRepeating(interval, script, wakeUp);
+  }
 
-    mAlarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-        SystemClock.elapsedRealtime(), interval, pendingIntent);
+  @Rpc(description = "scheudles a script for (exact) regular execution")
+  public void scheduleRepeating(
+      @RpcParameter(name = "interval", description = "interval between invocations, in seconds")
+      Double interval,
+      @RpcParameter(name = "script")
+      String script,
+      @RpcOptionalDouble(name = "firstExecutionTime", description = "first time to execute script, in seconds since epoch")
+      Double firstExecutionTime,
+      @RpcDefaultBoolean(name = "wakeUp", description = "whether or not to wake up the device if asleep", defaultValue = true)
+      Boolean wakeUp) {
+    if (firstExecutionTime == null) {
+      // If the default value is passed, the current time is used.
+      firstExecutionTime = currentTime();
+    }
+
+    mAlarmManager.scheduleRepeating(interval, script, firstExecutionTime, wakeUp);
   }
 
   @Rpc(description = "cancels the regular execution of a given script")
-  public void cancelRepeating(@RpcParameter("script") String script) {
-    final PendingIntent pendingIntent = PendingIntent.getService(mService,
-        EXECUTE_SCRIPT_REQUEST_CODE, IntentBuilders.buildStartInBackgroundIntent(script), 0);
+  public void cancelRepeating(@RpcParameter(name = "script") String script) {
+    mAlarmManager.cancelRepeating(script);
+  }
 
-    mAlarmManager.cancel(pendingIntent);
+  private Double currentTime() {
+    return (1.0 * System.currentTimeMillis()) / 1000;
   }
 
   @Override

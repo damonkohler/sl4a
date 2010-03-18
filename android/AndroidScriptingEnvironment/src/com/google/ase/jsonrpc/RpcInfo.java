@@ -100,18 +100,28 @@ public class RpcInfo {
   private String getHelpForParameter(Type parameterType, Annotation[] annotations) {
     StringBuilder result = new StringBuilder();
 
-    Object defaultValue = RpcAnnotationHelper.getDefaultValue(annotations);
-    String description = RpcAnnotationHelper.getDescription(annotations);
+    final Object defaultValue = RpcAnnotationHelper.getDefaultValue(annotations);
+    final String name = RpcAnnotationHelper.getName(annotations);
+    final String description = RpcAnnotationHelper.getDescription(annotations);
     boolean isOptionalParameter = RpcAnnotationHelper.isOptionalParameter(annotations);
+    boolean hasDefaultValue = RpcAnnotationHelper.hasDefaultValue(annotations);
 
     appendTypeName(result, parameterType);
+    result.append(" ");
+    result.append(name);
     if (isOptionalParameter) {
-      result.append("[optional, default " + defaultValue + "]: ");
-    } else {
-      result.append(":");
+      result.append("[optional");
+      if (hasDefaultValue) {
+        result.append(", default " + defaultValue);         
+      }
+      result.append("]");
+    }
+    
+    if (description.length() > 0) {
+      result.append(": ");
+      result.append(description);
     }
 
-    result.append(description);
     return result.toString();
   }
 

@@ -16,13 +16,19 @@
 
 package com.google.ase;
 
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Parcelable;
 
+import com.google.ase.activity.AseService;
 import com.google.ase.activity.AseServiceLauncher;
 
 public class IntentBuilders {
+  /** A random value that is used to identify pending intents. */
+  private static final int EXECUTE_SCRIPT_REQUEST_CODE = 0x12f412a;
+
 
   private IntentBuilders() {
     // Utility class.
@@ -92,5 +98,20 @@ public class IntentBuilders {
     intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, scriptName);
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
     return intent;
+  }
+
+  /**
+   * Creates a pending intent that will launch the given script.
+   * 
+   * @param service the service under whose authority to launch the intent
+   * @param scriptName name of the script to launch
+   * 
+   * @return the {@link PendingIntent} object for launching the script
+   */
+  public static PendingIntent buildPendingIntent(Service mService, String scriptName) {
+    final Intent intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
+    intent.setComponent(AseService.COMPONENT_NAME);
+
+    return PendingIntent.getService(mService, EXECUTE_SCRIPT_REQUEST_CODE, intent, 0);
   }
 }

@@ -31,6 +31,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface RpcOptionalString {
+  /** Name of formal parameter. Must match name in Java file. */
+  public String name();
+
   /** A description of the parameter. */
-  public String description();
+  public String description() default "";
 }

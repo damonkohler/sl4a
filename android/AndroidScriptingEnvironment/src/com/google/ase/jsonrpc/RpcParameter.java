@@ -31,13 +31,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface RpcParameter {
   /**
-   * The value returned by defaultValue if a parameter is required.
+   * The name of the formal parameter. This should be in agreement with the java code.
    */
-  final static public Object REQUIRED = new Object();
+  public String name();
 
   /**
-   * A description of the RPC parameter. There is no need to include the
-   * parameter type (this information will be generated automatically).
+   * Description of the RPC. This should be a short descriptive statement without a full stop, such
+   * as 'disables the WiFi mode'.
    */
-  public String value();
+  public String description() default "";
 }
