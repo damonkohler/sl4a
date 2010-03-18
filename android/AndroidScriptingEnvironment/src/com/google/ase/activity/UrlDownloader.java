@@ -27,6 +27,7 @@ public class UrlDownloader extends Activity {
   private File mFile;
   private FileOutputStream mFileOutputStream;
   private URL mUrl;
+  private ProgressDialog mConnectingDialog;
   private ProgressDialog mDialog;
 
   private OutputStream mProgressReportingOutputStream;
@@ -46,6 +47,7 @@ public class UrlDownloader extends Activity {
             mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mDialog.setMax(msg.arg1);
           }
+          mConnectingDialog.hide();
           mDialog.show();
           break;
         case MSG_REPORT_PROGRESS:
@@ -85,6 +87,7 @@ public class UrlDownloader extends Activity {
       return;
     }
     mProgressReportingOutputStream = new ProgressReportingOuputStream();
+    showConnectingDialog();
     buildProgressDialog();
     startDownload();
   }
@@ -153,6 +156,19 @@ public class UrlDownloader extends Activity {
       }
       return true;
     }
+  }
+
+  private void showConnectingDialog() {
+    mConnectingDialog = new ProgressDialog(this);
+    mConnectingDialog.setMessage("Connecting...");
+    mConnectingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    mConnectingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+      @Override
+      public void onCancel(DialogInterface dialog) {
+        mDownloader.interrupt();
+      }
+    });
+    mConnectingDialog.show();
   }
 
   private void buildProgressDialog() {

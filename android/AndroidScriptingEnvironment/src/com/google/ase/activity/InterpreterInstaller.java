@@ -68,7 +68,11 @@ public class InterpreterInstaller extends Activity {
       finish();
       return;
     }
-    downloadInterpreter();
+    if (mInterpreter.hasInterpreterArchive()) {
+      downloadInterpreter();
+    } else {
+      downloadInterpreterExtras();
+    }
   }
 
   private void downloadInterpreter() {
@@ -127,48 +131,48 @@ public class InterpreterInstaller extends Activity {
       switch (request) {
         case DOWNLOAD_INTERPRETER:
           if (mInterpreter.hasInterpreterArchive()) {
-            AseLog.e(this, "Downloading interpreter failed.");
+            AseLog.e("Downloading interpreter failed.");
             abort();
             return;
           }
           break;
         case DOWNLOAD_INTERPRETER_EXTRAS:
           if (mInterpreter.hasInterpreterExtrasArchive()) {
-            AseLog.e(this, "Downloading interpreter extras failed.");
+            AseLog.e("Downloading interpreter extras failed.");
             abort();
             return;
           }
           break;
         case DOWNLOAD_SCRIPTS:
           if (mInterpreter.hasScriptsArchive()) {
-            AseLog.e(this, "Downloading scripts failed.");
+            AseLog.e("Downloading scripts failed.");
             abort();
             return;
           }
           break;
         case EXTRACT_INTERPRETER:
           if (mInterpreter.hasInterpreterArchive()) {
-            AseLog.e(this, "Extracting interpreter failed.");
+            AseLog.e("Extracting interpreter failed.");
             abort();
             return;
           }
           break;
         case EXTRACT_INTERPRETER_EXTRAS:
           if (mInterpreter.hasInterpreterExtrasArchive()) {
-            AseLog.e(this, "Extracting interpreter extras failed.");
+            AseLog.e("Extracting interpreter extras failed.");
             abort();
             return;
           }
           break;
         case EXTRACT_SCRIPTS:
           if (mInterpreter.hasScriptsArchive()) {
-            AseLog.e(this, "Extracting scripts failed.");
+            AseLog.e("Extracting scripts failed.");
             abort();
             return;
           }
           break;
         default:
-          AseLog.e(this, "Unknown installation state.");
+          AseLog.e("Unknown installation state.");
           abort();
           return;
       }
