@@ -28,7 +28,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
@@ -37,7 +36,7 @@ import com.google.ase.IoUtils;
 
 /**
  * Activity for extracting ZIP files.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ZipExtractor extends Activity {
@@ -68,7 +67,6 @@ public class ZipExtractor extends Activity {
     dialog.setTitle("Extracting");
     dialog.setMessage(mInput.getName());
     dialog.setIndeterminate(true);
-    dialog.setCancelable(true);
 
     final Thread unzipThread = new Thread() {
       @Override
@@ -119,10 +117,5 @@ public class ZipExtractor extends Activity {
       IoUtils.copy(zip.getInputStream(entry), new FileOutputStream(destination));
     }
     zip.close();
-  }
-
-  @Override
-  public void onConfigurationChanged(Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
   }
 }

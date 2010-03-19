@@ -13,7 +13,6 @@ import java.net.URLConnection;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -47,7 +46,7 @@ public class UrlDownloader extends Activity {
             mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mDialog.setMax(msg.arg1);
           }
-          mConnectingDialog.hide();
+          mConnectingDialog.dismiss();
           mDialog.show();
           break;
         case MSG_REPORT_PROGRESS:
@@ -181,10 +180,5 @@ public class UrlDownloader extends Activity {
         mDownloader.interrupt();
       }
     });
-  }
-
-  @Override
-  public void onConfigurationChanged(Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
   }
 }

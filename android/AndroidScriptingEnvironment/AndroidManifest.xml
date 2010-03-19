@@ -11,7 +11,8 @@
     android:name=".AseApplication">
     <activity
       android:name=".activity.ScriptManager"
-      android:launchMode="singleTask">
+      android:launchMode="singleTask"
+      android:configChanges="keyboardHidden|orientation">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />
@@ -59,7 +60,8 @@
       android:configChanges="keyboardHidden|orientation">
     </activity>
     <activity
-      android:name=".activity.ScriptEditor">
+      android:name=".activity.ScriptEditor"
+      android:configChanges="keyboardHidden|orientation">
       <intent-filter>
         <action
           android:name="com.google.ase.action.EDIT_SCRIPT" />
@@ -75,20 +77,24 @@
       android:configChanges="keyboardHidden|orientation" />
     <activity
       android:name=".activity.InterpreterInstaller"
-      android:configChanges="keyboardHidden|orientation" />
+      android:configChanges="keyboardHidden|orientation"
+      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     <activity
       android:name=".activity.InterpreterUninstaller"
-      android:configChanges="keyboardHidden|orientation" />
+      android:configChanges="keyboardHidden|orientation"
+      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     <activity
       android:name=".activity.UrlDownloader"
-      android:configChanges="keyboardHidden|orientation" />
+      android:configChanges="keyboardHidden|orientation"
+      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     <activity
       android:name=".activity.ZipExtractor"
-      android:configChanges="keyboardHidden|orientation" />
+      android:configChanges="keyboardHidden|orientation"
+      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     <activity
       android:name=".activity.AseServiceLauncher"
       android:taskAffinity=""
-      android:theme="@android:style/Theme.Translucent">
+      android:theme="@android:style/Theme.Translucent.NoTitleBar">
       <intent-filter>
         <action
           android:name="android.intent.action.VIEW" />
@@ -98,18 +104,22 @@
     </activity>
     <activity
       android:name=".activity.AseServiceHelper"
-      android:theme="@android:style/Theme.Translucent" />
+      android:theme="@android:style/Theme.Translucent.NoTitleBar"
+      android:configChanges="keyboardHidden|orientation" />
     <service
       android:name=".activity.AseService" />
     <activity
       android:name=".activity.InterpreterManager"
-      android:launchMode="singleTask" />
+      android:launchMode="singleTask"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
       android:name=".activity.LogcatViewer"
-      android:launchMode="singleTask" />
+      android:launchMode="singleTask"
+      android:configChanges="keyboardHidden|orientation" />
     <activity
       android:name=".activity.ScriptsLiveFolder"
-      android:label="Scripts">
+      android:label="Scripts"
+      android:configChanges="keyboardHidden|orientation">
       <intent-filter>
         <action
           android:name="android.intent.action.CREATE_LIVE_FOLDER" />
