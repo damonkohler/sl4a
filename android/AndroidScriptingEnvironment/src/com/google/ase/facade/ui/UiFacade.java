@@ -161,8 +161,8 @@ public class UiFacade implements RpcReceiver {
   
   @Rpc(description = "Set dialog single choice items and selected item")
   public void dialogSetSingleChoiceItems(
-      @RpcParameter("items") JSONArray items,
-      @RpcDefaultInteger(description = "selected", defaultValue = -1) Integer selected) {
+      @RpcParameter(name = "items") JSONArray items,
+      @RpcDefaultInteger(name = "selected", defaultValue = -1) Integer selected) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setSingleChoiceItems(items, selected);
     } else {

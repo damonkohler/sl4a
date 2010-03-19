@@ -34,6 +34,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -412,5 +415,62 @@ public class AndroidFacade implements RpcReceiver {
     emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
     emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
     mService.startActivity(emailIntent);
+  }
+  
+  /**
+   * Retrieve package version code
+   * @param packageName
+   * @return
+   */
+  @Rpc(description = "Retrieve package version code")
+  public int getPackageVersionCode(
+      @RpcParameter(name = "packageName") final String packageName) {
+    int result = -1;
+    PackageInfo pInfo = null;
+    try {
+      pInfo = mService.getPackageManager().getPackageInfo(packageName,
+          PackageManager.GET_META_DATA);
+    } catch (NameNotFoundException e) {
+      pInfo = null;
+    }
+    if (pInfo != null)
+      result = pInfo.versionCode;
+    return result;
+  }
+  
+  /**
+   * Retrieve package version string
+   * @param packageName
+   * @return
+   */
+  @Rpc(description = "Retrieve package version string")
+  public String getPackageVersion(
+      @RpcParameter(name = "packageName") final String packageName) {
+    String result = "";
+    PackageInfo pInfo = null;
+    try {
+      pInfo = mService.getPackageManager().getPackageInfo(packageName,
+          PackageManager.GET_META_DATA);
+    } catch (NameNotFoundException e) {
+      pInfo = null;
+    }
+    if (pInfo != null)
+      result = ""+pInfo.versionName;
+    return result;
+  }
+  
+  /**
+   * Check if ASE is higher or equal of specified version
+   * @param version
+   * @return
+   */
+  @Rpc(description = "Check if ASE is higher or equal of specified version")
+  public boolean requiredVersion(
+      @RpcParameter(name = "requiredVersion") final Integer version) {
+    boolean result = false;
+    int packageVersion = getPackageVersionCode("com.google.ase");
+    if (version > -1)
+      result = (packageVersion >= version);
+    return result;
   }
 }
