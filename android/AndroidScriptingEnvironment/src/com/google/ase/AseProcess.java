@@ -28,9 +28,7 @@ import android.os.Process;
 public class AseProcess {
 
   protected Integer mPid;
-  protected FileDescriptor mShellFd;
-  protected FileOutputStream mShellOut;
-  protected FileInputStream mShellIn;
+  protected FileDescriptor mFd;
 
   protected PrintStream mOut;
   protected BufferedReader mIn;
@@ -43,7 +41,7 @@ public class AseProcess {
   }
 
   public FileDescriptor getFd() {
-    return mShellFd;
+    return mFd;
   }
 
   public PrintStream getOut() {
@@ -72,14 +70,10 @@ public class AseProcess {
 
   public void start(String binary, String arg1, String arg2) {
     int[] pid = new int[1];
-    mShellFd = Exec.createSubprocess(binary, arg1, arg2, pid);
+    mFd = Exec.createSubprocess(binary, arg1, arg2, pid);
     mPid = pid[0];
-
-    mShellOut = new FileOutputStream(mShellFd);
-    mShellIn = new FileInputStream(mShellFd);
-
-    mOut = new PrintStream(mShellOut, true /* autoflush */);
-    mIn = new BufferedReader(new InputStreamReader(mShellIn));
+    mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
+    mIn = new BufferedReader(new InputStreamReader(new FileInputStream(mFd)));
 
     new Thread(new Runnable() {
       public void run() {
