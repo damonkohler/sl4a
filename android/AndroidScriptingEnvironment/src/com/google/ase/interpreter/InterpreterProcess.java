@@ -16,48 +16,29 @@
 
 package com.google.ase.interpreter;
 
-import java.io.BufferedReader;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import android.os.Process;
-import android.util.Log;
-
 import com.google.ase.AseLog;
-import com.google.ase.Exec;
+import com.google.ase.AseProcess;
 
 /**
  * This is a skeletal implementation of an interpreter process.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public abstract class InterpreterProcess {
+public abstract class InterpreterProcess extends AseProcess {
 
   protected final static String SHELL_BIN = "/system/bin/sh";
-  protected static final String TAG = "InterpreterInterface";
 
   protected String mLaunchScript;
   protected Map<String, String> mEnvironment = new HashMap<String, String>();
 
-  protected Integer mShellPid;
-  protected FileDescriptor mShellFd;
-  protected FileOutputStream mShellOut;
-  protected FileInputStream mShellIn;
-
-  protected PrintStream mOut;
-  protected Reader mIn;
-
   /**
    * Creates a new {@link InterpreterProcess}.
-   *
+   * 
    * @param launchScript
    *          the absolute path to a script that should be launched with the interpreter
    * @param port
@@ -68,48 +49,8 @@ public abstract class InterpreterProcess {
     mEnvironment.put("AP_PORT", Integer.toString(port));
   }
 
-  public Integer getPid() {
-    return mShellPid;
-  }
-
-  public FileDescriptor getFd() {
-    return mShellFd;
-  }
-
-  public PrintStream getOut() {
-    return mOut;
-  }
-
-  public PrintStream getErr() {
-    return getOut();
-  }
-
-  public Reader getIn() {
-    return mIn;
-  }
-
-  public void error(Object obj) {
-    println(obj);
-  }
-
-  public void print(Object obj) {
-    getOut().print(obj);
-  }
-
-  public void println(Object obj) {
-    getOut().println(obj);
-  }
-
   public void start() {
-    int[] pid = new int[1];
-    mShellFd = Exec.createSubprocess(SHELL_BIN, "-", null, pid);
-    mShellPid = pid[0];
-
-    mShellOut = new FileOutputStream(mShellFd);
-    mShellIn = new FileInputStream(mShellFd);
-
-    mOut = new PrintStream(mShellOut, true /* autoflush */);
-    mIn = new BufferedReader(new InputStreamReader(mShellIn));
+    super.start(SHELL_BIN, "-", null);
 
     // Wait until the shell has produced some output before we start writing to it. This prevents
     // misplaced $ prompts in the output.
@@ -125,21 +66,6 @@ public abstract class InterpreterProcess {
 
     exportEnvironment();
     writeInterpreterCommand();
-
-    // TODO(damonkohler): Possibly allow clients to have a death listener.
-    new Thread(new Runnable() {
-      public void run() {
-        Log.i(TAG, "Waiting for: " + mShellPid);
-        int result = Exec.waitFor(mShellPid);
-        Log.i(TAG, "Subprocess exited: " + result);
-      }
-    }).start();
-  }
-
-  public void kill() {
-    if (mShellPid != null) {
-      Process.killProcess(mShellPid);
-    }
   }
 
   protected void exportEnvironment() {
