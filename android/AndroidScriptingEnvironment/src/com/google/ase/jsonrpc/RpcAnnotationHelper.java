@@ -19,21 +19,21 @@ package com.google.ase.jsonrpc;
 import java.lang.annotation.Annotation;
 
 /**
- * A helper class that helps extract descriptions and default values from
- * parameter annotations.
- *
+ * A helper class that helps extract descriptions and default values from parameter annotations.
+ * 
  * @author Felix Arends (felix.arends@gmail.com)
- *
+ * 
  */
 public class RpcAnnotationHelper {
   /** This is a utility class. We don't want instances of it */
   private RpcAnnotationHelper() {
   }
-  
+
   /**
    * Extracts the formal parameter name from an annotation.
    * 
-   * @param annotations the annotations of the parameter
+   * @param annotations
+   *          the annotations of the parameter
    * @return the formal name of the parameter
    */
   public static String getName(Annotation[] annotations) {
@@ -48,8 +48,8 @@ public class RpcAnnotationHelper {
         return ((RpcDefaultBoolean) a).name();
       } else if (a instanceof RpcOptionalDouble) {
         return ((RpcOptionalDouble) a).name();
-      } else if (a instanceof RpcOptionalObject) {
-        return ((RpcOptionalDouble) a).name();
+      } else if (a instanceof RpcOptionalBoolean) {
+        return ((RpcOptionalBoolean) a).name();
       } else if (a instanceof RpcOptionalString) {
         return ((RpcOptionalString) a).name();
       }
@@ -59,8 +59,9 @@ public class RpcAnnotationHelper {
 
   /**
    * Extracts the parameter description from its annotations.
-   *
-   * @param annotations the annotations of the parameter
+   * 
+   * @param annotations
+   *          the annotations of the parameter
    * @return the description of the parameter
    */
   public static String getDescription(Annotation[] annotations) {
@@ -75,8 +76,8 @@ public class RpcAnnotationHelper {
         return ((RpcDefaultBoolean) a).description();
       } else if (a instanceof RpcOptionalDouble) {
         return ((RpcOptionalDouble) a).description();
-      } else if (a instanceof RpcOptionalObject) {
-        return ((RpcOptionalObject) a).description();
+      } else if (a instanceof RpcOptionalBoolean) {
+        return ((RpcOptionalBoolean) a).description();
       } else if (a instanceof RpcOptionalString) {
         return ((RpcOptionalString) a).description();
       }
@@ -86,8 +87,9 @@ public class RpcAnnotationHelper {
 
   /**
    * Returns the default value for a specific parameter.
-   *
-   * @param annotations annotations of the parameter
+   * 
+   * @param annotations
+   *          annotations of the parameter
    */
   public static Object getDefaultValue(Annotation[] annotations) {
     for (Annotation a : annotations) {
@@ -101,7 +103,7 @@ public class RpcAnnotationHelper {
         return ((RpcDefaultBoolean) a).defaultValue();
       } else if (a instanceof RpcOptionalDouble) {
         return null;
-      } else if (a instanceof RpcOptionalObject) {
+      } else if (a instanceof RpcOptionalBoolean) {
         return null;
       } else if (a instanceof RpcOptionalString) {
         return null;
@@ -111,10 +113,10 @@ public class RpcAnnotationHelper {
   }
 
   /**
-   * Returns whether the default value is specified
-   * for a specific parameter.
-   *
-   * @param annotations annotations of the parameter
+   * Returns whether the default value is specified for a specific parameter.
+   * 
+   * @param annotations
+   *          annotations of the parameter
    */
   public static boolean hasDefaultValue(Annotation[] annotations) {
     for (Annotation a : annotations) {
@@ -128,7 +130,7 @@ public class RpcAnnotationHelper {
         return true;
       } else if (a instanceof RpcOptionalDouble) {
         return false;
-      } else if (a instanceof RpcOptionalObject) {
+      } else if (a instanceof RpcOptionalBoolean) {
         return false;
       } else if (a instanceof RpcOptionalString) {
         return false;
@@ -139,8 +141,9 @@ public class RpcAnnotationHelper {
 
   /**
    * Determines whether or not this parameter is optional.
-   *
-   * @param annotations annotations of the parameter
+   * 
+   * @param annotations
+   *          annotations of the parameter
    */
   public static boolean isOptionalParameter(Annotation[] annotations) {
     for (Annotation a : annotations) {
@@ -154,7 +157,7 @@ public class RpcAnnotationHelper {
         return true;
       } else if (a instanceof RpcOptionalDouble) {
         return true;
-      } else if (a instanceof RpcOptionalObject) {
+      } else if (a instanceof RpcOptionalBoolean) {
         return true;
       } else if (a instanceof RpcOptionalString) {
         return true;

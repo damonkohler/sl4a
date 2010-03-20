@@ -22,15 +22,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation marks an String parameter as optional (a value of null will
- * be passed in if the string is not defined).
+ * This annotation marks a Boolean parameter as optional (a value of null will be passed in if the
+ * string is not defined).
  * 
  * @author Felix Arends (felix.arends@gmail.com)
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-public @interface RpcOptionalObject {
+public @interface RpcOptionalBoolean {
   /** Name of formal parameter. */
   public String name();
 
