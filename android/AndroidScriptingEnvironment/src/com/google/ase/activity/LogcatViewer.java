@@ -61,6 +61,12 @@ public class LogcatViewer extends ListActivity {
     public void run() {
       try {
         mLogcatProcess = Runtime.getRuntime().exec("logcat");
+      } catch (Exception e) {
+        AseLog.e("Logcat execution failed.");
+        killLogcat();
+        return;
+      }
+      try {
         InputStreamReader isr = new InputStreamReader(mLogcatProcess.getInputStream());
         BufferedReader br = new BufferedReader(isr);
         String line;
@@ -82,7 +88,9 @@ public class LogcatViewer extends ListActivity {
           });
         }
       } catch (IOException e) {
-        AseLog.e("Logcat execution failed.");
+        AseLog.e("Failed to read from logcat process.", e);
+      } finally {
+        killLogcat();
       }
     }
   }
@@ -138,11 +146,15 @@ public class LogcatViewer extends ListActivity {
 
   @Override
   protected void onPause() {
+    killLogcat();
+    super.onPause();
+  }
+
+  private void killLogcat() {
     if (mLogcatProcess != null) {
       AseLog.v("Logcat killed.");
       mLogcatProcess.destroy();
     }
-    super.onPause();
   }
 
   private class LogcatViewerAdapter extends BaseAdapter {
