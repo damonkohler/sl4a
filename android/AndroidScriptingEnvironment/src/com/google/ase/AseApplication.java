@@ -35,6 +35,7 @@ public class AseApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
+    ActivityFlinger.Initialize();
     AseAnalytics.start(this);
   }
 

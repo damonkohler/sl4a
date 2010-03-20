@@ -34,6 +34,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.google.ase.ActivityFlinger;
+import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.R;
 import com.google.ase.dialog.Help;
@@ -94,9 +96,9 @@ public class LogcatViewer extends ListActivity {
     mAdapter = new LogcatViewerAdapter();
     mHandler = new Handler();
     setListAdapter(mAdapter);
-    new ActivityFlinger.Builder()
-        .addLeftActivity(this, InterpreterManager.class, "Interpreter Manager")
-        .attachToView(getListView());
+    ActivityFlinger.attachView(getListView(), this);
+    ActivityFlinger.attachView(getWindow().getDecorView(), this);
+    AseAnalytics.trackActivity(this);
   }
 
   @Override

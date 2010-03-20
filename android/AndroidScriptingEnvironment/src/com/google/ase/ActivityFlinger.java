@@ -1,0 +1,163 @@
+/*
+ * Copyright (C) 2010 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package com.google.ase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import android.content.Context;
+import android.content.Intent;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.View.OnTouchListener;
+import android.widget.Toast;
+
+import com.google.ase.activity.InterpreterManager;
+import com.google.ase.activity.LogcatViewer;
+import com.google.ase.activity.ScriptManager;
+import com.google.ase.activity.TriggerManager;
+
+public class ActivityFlinger {
+
+  private static final int SWIPE_MIN_DISTANCE = 120;
+  private static final int SWIPE_MAX_OFF_PATH = 100;
+  private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+  private static class ActivityTransitionEntry {
+    String mName;
+    Class<?> mClass;
+
+    public ActivityTransitionEntry(String name, Class<?> clazz) {
+      mName = name;
+      mClass = clazz;
+    }
+  }
+
+  private static class ActivityTransition {
+    ActivityTransitionEntry mLeft;
+    ActivityTransitionEntry mRight;
+
+    public ActivityTransition(ActivityTransitionEntry left, ActivityTransitionEntry right) {
+      mLeft = left;
+      mRight = right;
+    }
+  }
+
+  private static Map<Class<?>, ActivityTransition> mActivityTransitions =
+      new HashMap<Class<?>, ActivityTransition>();
+
+  private ActivityFlinger() {
+    // Utility class.
+  }
+
+  public static void Initialize() {
+    List<ActivityTransitionEntry> entries = new ArrayList<ActivityTransitionEntry>();
+    entries.add(new ActivityTransitionEntry("Scripts", ScriptManager.class));
+    entries.add(new ActivityTransitionEntry("Interpreters", InterpreterManager.class));
+    entries.add(new ActivityTransitionEntry("Triggers", TriggerManager.class));
+    entries.add(new ActivityTransitionEntry("Logcat", LogcatViewer.class));
+
+    ActivityTransitionEntry left = null;
+    ActivityTransitionEntry current = null;
+    ActivityTransitionEntry right = null;
+
+    for (Iterator<ActivityTransitionEntry> it = entries.iterator(); it.hasNext() || current != null;) {
+      if (current == null) {
+        current = it.next();
+      }
+      if (it.hasNext()) {
+        right = it.next();
+      } else {
+        right = null;
+      }
+      mActivityTransitions.put(current.mClass, new ActivityTransition(left, right));
+      left = current;
+      current = right;
+    }
+  }
+
+  public static void attachView(View view, Context context) {
+    final LeftRightFlingListener mListener = new LeftRightFlingListener();
+    final GestureDetector mGestureDetector = new GestureDetector(mListener);
+    ActivityTransition transition = mActivityTransitions.get(context.getClass());
+    if (transition.mLeft != null) {
+      mListener.mLeftRunnable =
+          new StartActivityRunnable(transition.mLeft.mName, context, transition.mLeft.mClass);
+    }
+    if (transition.mRight != null) {
+      mListener.mRightRunnable =
+          new StartActivityRunnable(transition.mRight.mName, context, transition.mRight.mClass);
+    }
+    view.setOnTouchListener(new OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        return mGestureDetector.onTouchEvent(event);
+      }
+    });
+  }
+
+  private static class StartActivityRunnable implements Runnable {
+
+    private final String message;
+    private final Context context;
+    private final Class<?> activity;
+
+    private StartActivityRunnable(String message, Context context, Class<?> activity) {
+      this.message = message;
+      this.context = context;
+      this.activity = activity;
+    }
+
+    @Override
+    public void run() {
+      Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+      Intent intent = new Intent(context, activity);
+      context.startActivity(intent);
+    }
+  }
+
+  private static class LeftRightFlingListener extends SimpleOnGestureListener {
+    Runnable mLeftRunnable;
+    Runnable mRightRunnable;
+
+    @Override
+    public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
+      if (Math.abs(event1.getY() - event2.getY()) > SWIPE_MAX_OFF_PATH) {
+        return false;
+      }
+      if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE
+          && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+        if (mRightRunnable != null) {
+          mRightRunnable.run();
+        }
+      } else if (event2.getX() - event1.getX() > SWIPE_MIN_DISTANCE
+          && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+        if (mLeftRunnable != null) {
+          mLeftRunnable.run();
+        }
+      } else {
+        return super.onFling(event1, event2, velocityX, velocityY);
+      }
+      return true;
+    }
+  }
+}

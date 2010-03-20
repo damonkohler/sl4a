@@ -25,13 +25,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.google.ase.ActivityFlinger;
 import com.google.ase.AseAnalytics;
 import com.google.ase.R;
 import com.google.ase.trigger.AseTriggerRepository;
 import com.google.ase.trigger.Trigger;
 
 public class TriggerManager extends ListActivity {
-  private AseTriggerRepository triggerRepository;
+  private AseTriggerRepository mTriggerRepository;
 
   public TriggerManager() {
   }
@@ -39,14 +40,15 @@ public class TriggerManager extends ListActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    triggerRepository = new AseTriggerRepository(this);
-
+    mTriggerRepository = new AseTriggerRepository(this);
     setContentView(R.layout.trigger_manager);
     getListView().setFastScrollEnabled(true);
     AseAnalytics.trackActivity(this);
     setResult(RESULT_CANCELED);
-    setListAdapter(new TriggerAdapter(this, triggerRepository.getAllTriggers()));
+    setListAdapter(new TriggerAdapter(this, mTriggerRepository.getAllTriggers()));
+    ActivityFlinger.attachView(getListView(), this);
+    ActivityFlinger.attachView(getWindow().getDecorView(), this);
+    AseAnalytics.trackActivity(this);
   }
 
   private static class TriggerAdapter extends BaseAdapter {

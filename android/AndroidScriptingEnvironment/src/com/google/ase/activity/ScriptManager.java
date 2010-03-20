@@ -42,6 +42,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.ase.ActivityFlinger;
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
@@ -89,9 +90,9 @@ public class ScriptManager extends ListActivity {
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
-    new ActivityFlinger.Builder().addRightActivity(this, InterpreterManager.class,
-        "Interpreter Manager").attachToView(getListView());
     UsageTrackingConfirmation.show(this);
+    ActivityFlinger.attachView(getListView(), this);
+    ActivityFlinger.attachView(getWindow().getDecorView(), this);
     AseAnalytics.trackActivity(this);
   }
 
