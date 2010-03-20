@@ -119,12 +119,16 @@ public class SettingsFacade implements RpcReceiver {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
   }
 
+  @Rpc(description = "Checks Wifi state.", returns = "True if Wifi is enabled.")
+  public Boolean checkWifiState() {
+    return mWifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
+        || mWifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
+  }
+
   @Rpc(description = "Toggle Wifi on and off.", returns = "True if Wifi is enabled.")
-  public Boolean toggleWifi(@RpcOptionalBoolean(name = "enabled") Boolean enabled) {
+  public Boolean toggleWifiState(@RpcOptionalBoolean(name = "enabled") Boolean enabled) {
     if (enabled == null) {
-      enabled =
-          mWifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
-              || mWifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
+      enabled = checkWifiState();
     }
     mWifi.setWifiEnabled(enabled);
     return enabled;
