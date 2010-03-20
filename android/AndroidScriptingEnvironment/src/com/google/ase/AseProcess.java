@@ -22,25 +22,24 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.Reader;
 
 import android.os.Process;
 
 public class AseProcess {
 
-  protected Integer mShellPid;
+  protected Integer mPid;
   protected FileDescriptor mShellFd;
   protected FileOutputStream mShellOut;
   protected FileInputStream mShellIn;
 
   protected PrintStream mOut;
-  protected Reader mIn;
+  protected BufferedReader mIn;
 
   public AseProcess() {
   }
 
   public Integer getPid() {
-    return mShellPid;
+    return mPid;
   }
 
   public FileDescriptor getFd() {
@@ -55,7 +54,7 @@ public class AseProcess {
     return getOut();
   }
 
-  public Reader getIn() {
+  public BufferedReader getIn() {
     return mIn;
   }
 
@@ -74,7 +73,7 @@ public class AseProcess {
   public void start(String binary, String arg1, String arg2) {
     int[] pid = new int[1];
     mShellFd = Exec.createSubprocess(binary, arg1, arg2, pid);
-    mShellPid = pid[0];
+    mPid = pid[0];
 
     mShellOut = new FileOutputStream(mShellFd);
     mShellIn = new FileInputStream(mShellFd);
@@ -84,16 +83,17 @@ public class AseProcess {
 
     new Thread(new Runnable() {
       public void run() {
-        AseLog.v("Waiting for: " + mShellPid);
-        int result = Exec.waitFor(mShellPid);
-        AseLog.v("Subprocess exited: " + result);
+        AseLog.v("Waiting for " + mPid);
+        int result = Exec.waitFor(mPid);
+        AseLog.v("Subprocess exited with result code " + result);
       }
     }).start();
   }
 
   public void kill() {
-    if (mShellPid != null) {
-      Process.killProcess(mShellPid);
+    if (mPid != null) {
+      Process.killProcess(mPid);
+      AseLog.v("Killed process " + mPid);
     }
   }
 }
