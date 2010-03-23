@@ -73,8 +73,7 @@ public class JsonRpcServer extends Server {
           // We already know an RPC of the same name.
           throw new RuntimeException("An RPC with the name " + m.getName() + " is already known.");
         }
-        mKnownRpcs.put(m.getName(), new RpcInfo(receiver, m, RpcInvokerFactory.createInvoker(m
-            .getGenericParameterTypes())));
+        mKnownRpcs.put(m.getName(), new RpcInfo(receiver, m));
     }
     mReceivers.add(receiver);
   }

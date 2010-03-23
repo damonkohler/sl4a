@@ -16,30 +16,33 @@
 
 package com.google.ase.jsonrpc;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
+import android.os.Bundle;
+
+import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.rpc.MethodDescriptor;
 
 /**
  * Instances of this class describe specific RPCs on the server. An RPC on the server is described
- * by a triple consisting of: - a receiving object of the call - the method of the object to call -
- * an {@link RpcInvoker} object that knows to parse a {@link JSONArray} for the parameters
+ * by a receiving object of the call and the descriptor of the method of the object to call.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
- * 
  */
-public class RpcInfo {
+public final class RpcInfo {
   private final Object mReceiver;
   private final MethodDescriptor mMethodDescriptor;
-  private final RpcInvoker mInvoker;
 
-  public RpcInfo(final Object receiver, final MethodDescriptor methodDescriptor,
-      final RpcInvoker invoker) {
+  public RpcInfo(final Object receiver, final MethodDescriptor methodDescriptor) {
     mReceiver = receiver;
     mMethodDescriptor = methodDescriptor;
-    mInvoker = invoker;
   }
 
   /**
@@ -52,7 +55,51 @@ public class RpcInfo {
    */
   public JSONObject invoke(final JSONArray parameters) {
     try {
-      return mInvoker.invoke(mMethodDescriptor, mReceiver, parameters);
+      final Type[] parameterTypes = mMethodDescriptor.getGenericParameterTypes();
+      final Object[] args = new Object[parameterTypes.length];
+      final Annotation annotations[][] = mMethodDescriptor.getParameterAnnotations();
+
+      for (int i = 0; i < args.length; i++) {
+        final Type parameterType = parameterTypes[i];
+        Object defaultValue = MethodDescriptor.getDefaultValue(annotations[i]);
+        if (i < parameters.length()) {
+          // Parameter is specified.
+          try {
+            // We must handle numbers explicitly because we cannot magically cast between them.
+            if (parameterType == Long.class) {
+              args[i] = parameters.getLong(i);
+            } else if (parameterType == Double.class) {
+              args[i] = parameters.getDouble(i);
+            } else if (parameterType == Integer.class) {
+              args[i] = parameters.getInt(i);
+            } else {
+              // Magically cast the parameter to the right Java type.
+              args[i] = ((Class<?>) parameterType).cast(parameters.get(i));
+            }
+          } catch (ClassCastException e) {
+            return JsonRpcResult.error("Argument " + (i + 1) + " should be of type " +
+                ((Class<?>)parameterType).getSimpleName() + ".");
+          }
+        } else {
+          // Use default value of optional parameter.
+          args[i] = defaultValue;
+        }
+      }
+
+      try {
+        Object result = mMethodDescriptor.getMethod().invoke(mReceiver, args);
+        if (result instanceof Bundle) {
+          return JsonRpcResult.result(JsonResultBuilders.buildJsonBundle((Bundle) result));
+        } else if (result instanceof Intent) {
+          return JsonRpcResult.result(JsonResultBuilders.buildJsonIntent((Intent) result));
+        } else if (result instanceof List<?>) {
+          return JsonRpcResult.result(JsonResultBuilders.buildJsonList((List<?>) result));
+        } else {
+          return JsonRpcResult.result(result);
+        }
+      } catch (Exception e) {
+        throw new AseRuntimeException("Failed to invoke: " + mMethodDescriptor.getName(), e.getCause());
+      }
     } catch (JSONException e) {
       return JsonRpcResult.error("Remote Exception", e);
     }
