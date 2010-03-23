@@ -32,6 +32,8 @@ import org.json.JSONObject;
 import com.google.ase.AseLog;
 import com.google.ase.Server;
 import com.google.ase.exception.AseRuntimeException;
+import com.google.ase.rpc.MethodDescriptor;
+import com.google.ase.rpc.Rpc;
 
 /**
  * A JSON RPC server that forwards RPC calls to a specified receiver object.
@@ -74,8 +76,8 @@ public class JsonRpcServer extends Server {
           // We already know an RPC of the same name.
           throw new RuntimeException("An RPC with the name " + m.getName() + " is already known.");
         }
-        mKnownRpcs.put(m.getName(), new RpcInfo(receiver, m, RpcInvokerFactory.createInvoker(m
-            .getGenericParameterTypes())));
+        mKnownRpcs.put(m.getName(), new RpcInfo(receiver, new MethodDescriptor(m),
+            RpcInvokerFactory.createInvoker(m.getGenericParameterTypes())));
       }
     }
     mReceivers.add(receiver);
@@ -93,8 +95,8 @@ public class JsonRpcServer extends Server {
       if (m.getAnnotation(Rpc.class) != null) {
         // TODO(damonkohler): This doesn't build valid RpcInfo objects since receiver is a class not
         // an instance.
-        rpcs.put(m.getName(), new RpcInfo(receiver, m, RpcInvokerFactory.createInvoker(m
-            .getGenericParameterTypes())));
+        rpcs.put(m.getName(), new RpcInfo(receiver, new MethodDescriptor(m), RpcInvokerFactory
+            .createInvoker(m.getGenericParameterTypes())));
       }
     }
     return rpcs;

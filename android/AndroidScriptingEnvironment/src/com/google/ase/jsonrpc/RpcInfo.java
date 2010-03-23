@@ -27,16 +27,17 @@ import com.google.ase.rpc.ParameterDescriptor;
  * Instances of this class describe specific RPCs on the server. An RPC on the server is described
  * by a triple consisting of: - a receiving object of the call - the method of the object to call -
  * an {@link RpcInvoker} object that knows to parse a {@link JSONArray} for the parameters
- *
+ * 
  * @author Felix Arends (felix.arends@gmail.com)
- *
+ * 
  */
 public class RpcInfo {
   private final Object mReceiver;
   private final MethodDescriptor mMethodDescriptor;
   private final RpcInvoker mInvoker;
 
-  public RpcInfo(final Object receiver, final MethodDescriptor methodDescriptor, final RpcInvoker invoker) {
+  public RpcInfo(final Object receiver, final MethodDescriptor methodDescriptor,
+      final RpcInvoker invoker) {
     mReceiver = receiver;
     mMethodDescriptor = methodDescriptor;
     mInvoker = invoker;
@@ -45,7 +46,7 @@ public class RpcInfo {
   /**
    * Invokes the call that belongs to this object with the given parameters. Wraps the response
    * (possibly an exception) in a JSONObject.
-   *
+   * 
    * @param parameters
    *          {@code JSONArray} containing the parameters
    * @return RPC response
@@ -64,7 +65,7 @@ public class RpcInfo {
 
   /**
    * Returns a human-readable help text for this RPC, based on annotations in the source code.
-   *
+   * 
    * @return derived help string
    */
   public String getHelp() {
@@ -74,7 +75,8 @@ public class RpcInfo {
   /**
    * Returns parameter descriptors suitable for the RPC call text representation.
    * 
-   * <p>Uses parameter name or default value if it is more meaningful as value.
+   * <p>
+   * Uses parameter name or default value if it is more meaningful as value.
    * 
    * @return an array of parameter descriptors
    */
