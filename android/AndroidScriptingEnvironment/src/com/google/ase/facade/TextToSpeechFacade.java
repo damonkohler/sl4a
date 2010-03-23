@@ -29,9 +29,9 @@ import android.content.Intent;
 
 import com.google.ase.AseLog;
 import com.google.ase.exception.AseException;
-import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcParameter;
 
 public class TextToSpeechFacade implements RpcReceiver {
 

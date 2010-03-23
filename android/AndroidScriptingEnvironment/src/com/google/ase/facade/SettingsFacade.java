@@ -23,10 +23,10 @@ import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.provider.Settings.SettingNotFoundException;
 
-import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcOptional;
-import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcOptional;
+import com.google.ase.rpc.RpcParameter;
 
 /**
  * Exposes phone settings functionality.

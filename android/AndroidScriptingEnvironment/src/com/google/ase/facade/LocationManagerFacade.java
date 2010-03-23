@@ -24,10 +24,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcDefaultInteger;
-import com.google.ase.jsonrpc.RpcDefaultString;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcDefaultInteger;
+import com.google.ase.rpc.RpcDefaultString;
 
 /**
  * This facade exposes the LocationManager related functionality. 

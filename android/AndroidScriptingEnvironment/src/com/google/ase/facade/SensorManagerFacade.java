@@ -24,8 +24,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
-import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
 
 /**
  * Exposes the SensorManager related functionality.

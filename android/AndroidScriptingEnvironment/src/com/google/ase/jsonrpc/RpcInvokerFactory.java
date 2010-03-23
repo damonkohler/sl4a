@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.ase.exception.AseRuntimeException;
+import com.google.ase.rpc.RpcAnnotationHelper;
 
 /**
  * A factory for {@link RpcInvoker} objects.

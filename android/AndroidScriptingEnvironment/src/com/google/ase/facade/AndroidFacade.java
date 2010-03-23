@@ -54,12 +54,12 @@ import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureIntent;
-import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcDefaultInteger;
-import com.google.ase.jsonrpc.RpcDefaultString;
-import com.google.ase.jsonrpc.RpcOptional;
-import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcDefaultInteger;
+import com.google.ase.rpc.RpcDefaultString;
+import com.google.ase.rpc.RpcOptional;
+import com.google.ase.rpc.RpcParameter;
 
 public class AndroidFacade implements RpcReceiver {
 

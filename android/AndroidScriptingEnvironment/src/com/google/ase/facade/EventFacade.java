@@ -23,8 +23,8 @@ import android.app.Service;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
 
 /**
  * This facade exposes the functionality to read from the event queue as an RPC, and the

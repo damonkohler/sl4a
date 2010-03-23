@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 
-import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcParameter;
-import com.google.ase.jsonrpc.RpcOptional;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcOptional;
+import com.google.ase.rpc.RpcParameter;
 
 /**
  * A facade containing RPC implementations related to the speech-to-text

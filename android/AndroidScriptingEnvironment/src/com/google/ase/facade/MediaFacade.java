@@ -20,9 +20,9 @@ import java.io.IOException;
 
 import android.media.MediaRecorder;
 
-import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcParameter;
 
 /**
  * A facade for media related RPCs.

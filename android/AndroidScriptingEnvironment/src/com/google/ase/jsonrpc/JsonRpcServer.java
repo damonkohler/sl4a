@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.ase.AseLog;
+import com.google.ase.rpc.Rpc;
 
 /**
  * A JSON RPC server that forwards RPC calls to a specified receiver object.

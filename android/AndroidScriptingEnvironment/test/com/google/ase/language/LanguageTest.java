@@ -15,7 +15,7 @@
  */
 package com.google.ase.language;
 
-import com.google.ase.jsonrpc.ParameterDescriptor;
+import com.google.ase.rpc.ParameterDescriptor;
 
 import junit.framework.TestCase;
 

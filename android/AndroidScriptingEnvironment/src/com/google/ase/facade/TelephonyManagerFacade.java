@@ -22,8 +22,8 @@ import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
 
 /**
  * Exposes TelephonyManager funcitonality.

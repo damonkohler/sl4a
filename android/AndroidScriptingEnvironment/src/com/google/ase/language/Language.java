@@ -19,8 +19,8 @@ package com.google.ase.language;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.ase.jsonrpc.ParameterDescriptor;
 import com.google.ase.jsonrpc.RpcInfo;
+import com.google.ase.rpc.ParameterDescriptor;
 
 /**
  * Represents the programming language supported by the ASE.

@@ -25,6 +25,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.ase.rpc.ParameterDescriptor;
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcAnnotationHelper;
+import com.google.ase.rpc.RpcParameter;
+
 /**
  * Instances of this class describe specific RPCs on the server. An RPC on the server is described
  * by a triple consisting of: - a receiving object of the call - the method of the object to call -
@@ -68,7 +73,7 @@ public class RpcInfo {
    * @param type
    *          type whose name to append
    */
-  private void appendTypeName(final StringBuilder builder, final Type type) {
+  private static void appendTypeName(final StringBuilder builder, final Type type) {
     if (type instanceof Class<?>) {
       builder.append(((Class<?>) type).getSimpleName());
     } else {
@@ -97,7 +102,7 @@ public class RpcInfo {
    *          {@link RpcParameter} annotation of the type, may be null
    * @return string describing the parameter based on source code annotations
    */
-  private String getHelpForParameter(Type parameterType, Annotation[] annotations) {
+  private static String getHelpForParameter(Type parameterType, Annotation[] annotations) {
     StringBuilder result = new StringBuilder();
 
     final Object defaultValue = RpcAnnotationHelper.getDefaultValue(annotations);

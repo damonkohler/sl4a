@@ -18,11 +18,11 @@ package com.google.ase.facade;
 
 import android.app.Service;
 
-import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcDefaultBoolean;
-import com.google.ase.jsonrpc.RpcOptional;
-import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcDefaultBoolean;
+import com.google.ase.rpc.RpcOptional;
+import com.google.ase.rpc.RpcParameter;
 import com.google.ase.trigger.AseAlarmManager;
 import com.google.ase.trigger.AseTriggerRepository;
 
