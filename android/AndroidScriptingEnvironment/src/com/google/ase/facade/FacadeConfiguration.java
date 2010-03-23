@@ -32,8 +32,8 @@ import com.google.ase.trigger.AseTriggerRepository;
 
 /**
  * Encapsulates the list of supported facades and their construction.
- *
- * @author Damon Kohler <damonkohler@gmail.com>
+ * 
+ * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class FacadeConfiguration {
   private FacadeConfiguration() {
