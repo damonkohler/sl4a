@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.ase.AseLog;
+import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.Rpc;
 
 /**
@@ -97,7 +98,7 @@ public class JsonRpcServer {
           // We already know an RPC of the same name.
           throw new RuntimeException("An RPC with the name " + m.getName() + " is already known.");
         }
-        mKnownRpcs.put(m.getName(), new RpcInfo(receiver, m, RpcInvokerFactory.createInvoker(m
+        mKnownRpcs.put(m.getName(), new RpcInfo(receiver, new MethodDescriptor(m), RpcInvokerFactory.createInvoker(m
             .getGenericParameterTypes())));
       }
     }
@@ -116,7 +117,7 @@ public class JsonRpcServer {
       if (m.getAnnotation(Rpc.class) != null) {
         // TODO(damonkohler): This doesn't build valid RpcInfo objects since receiver is a class not
         // an instance.
-        rpcs.put(m.getName(), new RpcInfo(receiver, m, RpcInvokerFactory.createInvoker(m
+        rpcs.put(m.getName(), new RpcInfo(receiver, new MethodDescriptor(m), RpcInvokerFactory.createInvoker(m
             .getGenericParameterTypes())));
       }
     }
