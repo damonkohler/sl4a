@@ -32,7 +32,7 @@ import com.google.ase.future.FutureActivityTask;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
-import com.google.ase.jsonrpc.RpcOptionalString;
+import com.google.ase.jsonrpc.RpcOptional;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
 
@@ -59,8 +59,8 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Create a spinner progress dialog.")
-  public void dialogCreateSpinnerProgress(@RpcOptionalString(name = "Title") String title,
-      @RpcOptionalString(name = "Message") String message,
+  public void dialogCreateSpinnerProgress(@RpcParameter(name = "Title") @RpcOptional String title,
+      @RpcParameter(name = "Message") @RpcOptional String message,
       @RpcDefaultInteger(name = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(name = "cancelable", defaultValue = false) Boolean cancelable) {
     dialogDismiss(); // Dismiss any existing dialog.
@@ -70,8 +70,8 @@ public class UiFacade implements RpcReceiver {
 
   @Rpc(description = "Create a horizontal progress dialog.")
   public void dialogCreateHorizontalProgress(
-      @RpcOptionalString(name = "Title") String title,
-      @RpcOptionalString(name = "Message") String message,
+      @RpcParameter(name = "Title") @RpcOptional String title,
+      @RpcParameter(name = "Message") @RpcOptional String message,
       @RpcDefaultInteger(name = "Maximum progress", defaultValue = 100) Integer max,
       @RpcDefaultBoolean(name  = "cancelable", defaultValue = false) Boolean cancelable) {
     dialogDismiss(); // Dismiss any existing dialog.
@@ -80,8 +80,8 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Create alert dialog.")
-  public void dialogCreateAlert(@RpcOptionalString(name = "Title") String title,
-      @RpcOptionalString(name = "Message") String message) {
+  public void dialogCreateAlert(@RpcParameter(name = "Title") @RpcOptional String title,
+      @RpcParameter(name = "Message") @RpcOptional String message) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask = new RunnableAlertDialog(title, message);
   }

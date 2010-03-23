@@ -46,12 +46,6 @@ public class RpcAnnotationHelper {
         return ((RpcDefaultString) a).name();
       } else if (a instanceof RpcDefaultBoolean) {
         return ((RpcDefaultBoolean) a).name();
-      } else if (a instanceof RpcOptionalDouble) {
-        return ((RpcOptionalDouble) a).name();
-      } else if (a instanceof RpcOptionalBoolean) {
-        return ((RpcOptionalBoolean) a).name();
-      } else if (a instanceof RpcOptionalString) {
-        return ((RpcOptionalString) a).name();
       }
     }
     return "(unknown)";
@@ -74,12 +68,6 @@ public class RpcAnnotationHelper {
         return ((RpcDefaultString) a).description();
       } else if (a instanceof RpcDefaultBoolean) {
         return ((RpcDefaultBoolean) a).description();
-      } else if (a instanceof RpcOptionalDouble) {
-        return ((RpcOptionalDouble) a).description();
-      } else if (a instanceof RpcOptionalBoolean) {
-        return ((RpcOptionalBoolean) a).description();
-      } else if (a instanceof RpcOptionalString) {
-        return ((RpcOptionalString) a).description();
       }
     }
     return "(no description)";
@@ -101,11 +89,7 @@ public class RpcAnnotationHelper {
         return ((RpcDefaultString) a).defaultValue();
       } else if (a instanceof RpcDefaultBoolean) {
         return ((RpcDefaultBoolean) a).defaultValue();
-      } else if (a instanceof RpcOptionalDouble) {
-        return null;
-      } else if (a instanceof RpcOptionalBoolean) {
-        return null;
-      } else if (a instanceof RpcOptionalString) {
+      } else if (a instanceof RpcOptional) {
         return null;
       }
     }
@@ -128,11 +112,7 @@ public class RpcAnnotationHelper {
         return true;
       } else if (a instanceof RpcDefaultBoolean) {
         return true;
-      } else if (a instanceof RpcOptionalDouble) {
-        return false;
-      } else if (a instanceof RpcOptionalBoolean) {
-        return false;
-      } else if (a instanceof RpcOptionalString) {
+      } else if (a instanceof RpcOptional) {
         return false;
       }
     }
@@ -155,11 +135,7 @@ public class RpcAnnotationHelper {
         return true;
       } else if (a instanceof RpcDefaultBoolean) {
         return true;
-      } else if (a instanceof RpcOptionalDouble) {
-        return true;
-      } else if (a instanceof RpcOptionalBoolean) {
-        return true;
-      } else if (a instanceof RpcOptionalString) {
+      } else if (a instanceof RpcOptional) {
         return true;
       }
     }

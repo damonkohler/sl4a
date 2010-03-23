@@ -22,7 +22,8 @@ import android.content.Intent;
 import android.speech.RecognizerIntent;
 
 import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcOptionalString;
+import com.google.ase.jsonrpc.RpcParameter;
+import com.google.ase.jsonrpc.RpcOptional;
 import com.google.ase.jsonrpc.RpcReceiver;
 
 /**
@@ -45,9 +46,9 @@ public class SpeechRecognitionFacade implements RpcReceiver {
 
   @Rpc(description = "Recognizes user's speech and returns the most likely result.", returns = "An empty string in case the speech cannot be recongnized.")
   public String recognizeSpeech(
-      @RpcOptionalString(name = "prompt", description = "text prompt to show to the user when asking them to speak") final String prompt,
-      @RpcOptionalString(name = "language", description = "language override to inform the recognizer that it should expect speech in a language different than the one set in the java.util.Locale.getDefault()") final String language,
-      @RpcOptionalString(name = "languageModel", description = "informs the recognizer which speech model to prefer (see android.speech.RecognizeIntent)") final String languageModel) {
+      @RpcParameter(name = "prompt", description = "text prompt to show to the user when asking them to speak") @RpcOptional final String prompt,
+      @RpcParameter(name = "language", description = "language override to inform the recognizer that it should expect speech in a language different than the one set in the java.util.Locale.getDefault()") @RpcOptional final String language,
+      @RpcParameter(name = "languageModel", description = "informs the recognizer which speech model to prefer (see android.speech.RecognizeIntent)") @RpcOptional final String languageModel) {
     final Intent recognitionIntent =
         new Intent(android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 

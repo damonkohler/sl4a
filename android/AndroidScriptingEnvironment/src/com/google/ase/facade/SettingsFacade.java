@@ -24,7 +24,7 @@ import android.net.wifi.WifiManager;
 import android.provider.Settings.SettingNotFoundException;
 
 import com.google.ase.jsonrpc.Rpc;
-import com.google.ase.jsonrpc.RpcOptionalBoolean;
+import com.google.ase.jsonrpc.RpcOptional;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
 
@@ -83,7 +83,7 @@ public class SettingsFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Toggle airplane mode on and off.", returns = "True if airplane mode is enabled.")
-  public Boolean toggleAirplaneMode(@RpcOptionalBoolean(name = "enabled") Boolean enabled) {
+  public Boolean toggleAirplaneMode(@RpcParameter(name = "enabled") @RpcOptional Boolean enabled) {
     boolean set_airplane_mode = enabled == null ? !checkAirplaneMode() : enabled;
     android.provider.Settings.System.putInt(mService.getContentResolver(),
         android.provider.Settings.System.AIRPLANE_MODE_ON, set_airplane_mode ? AIRPLANE_MODE_ON
@@ -100,7 +100,7 @@ public class SettingsFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Toggle ringer silent mode on and off.", returns = "True if ringer silent mode is enabled.")
-  public Boolean toggleRingerSilentMode(@RpcOptionalBoolean(name = "enabled") Boolean enabled) {
+  public Boolean toggleRingerSilentMode(@RpcParameter(name = "enabled") @RpcOptional Boolean enabled) {
     if (enabled == null) {
       enabled = checkRingerSilentMode();
     }
@@ -120,7 +120,7 @@ public class SettingsFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Toggle Wifi on and off.", returns = "True if Wifi is enabled.")
-  public Boolean toggleWifi(@RpcOptionalBoolean(name = "enabled") Boolean enabled) {
+  public Boolean toggleWifi(@RpcParameter(name = "enabled") @RpcOptional Boolean enabled) {
     if (enabled == null) {
       enabled =
           mWifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED

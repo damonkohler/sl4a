@@ -57,7 +57,7 @@ import com.google.ase.future.FutureIntent;
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultInteger;
 import com.google.ase.jsonrpc.RpcDefaultString;
-import com.google.ase.jsonrpc.RpcOptionalString;
+import com.google.ase.jsonrpc.RpcOptional;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
 
@@ -155,7 +155,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
   public Intent startActivityForResult(@RpcParameter(name = "action") final String action,
-      @RpcOptionalString(name = "uri") final String uri) {
+      @RpcParameter(name = "uri") @RpcOptional final String uri) {
     Intent intent = new Intent(action);
     if (uri != null) {
       intent.setData(Uri.parse(uri));
@@ -179,7 +179,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
   public void startActivity(@RpcParameter(name = "action") final String action,
-      @RpcOptionalString(name = "uri") final String uri) {
+      @RpcParameter(name = "uri") @RpcOptional final String uri) {
     Intent intent = new Intent(action);
     if (uri != null) {
       intent.setData(Uri.parse(uri));

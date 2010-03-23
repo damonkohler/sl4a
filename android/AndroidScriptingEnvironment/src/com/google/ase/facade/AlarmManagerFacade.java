@@ -20,7 +20,7 @@ import android.app.Service;
 
 import com.google.ase.jsonrpc.Rpc;
 import com.google.ase.jsonrpc.RpcDefaultBoolean;
-import com.google.ase.jsonrpc.RpcOptionalDouble;
+import com.google.ase.jsonrpc.RpcOptional;
 import com.google.ase.jsonrpc.RpcParameter;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.trigger.AseAlarmManager;
@@ -52,7 +52,7 @@ public class AlarmManagerFacade implements RpcReceiver {
       Double interval,
       @RpcParameter(name = "script", description = "script to execute")
       String script,
-      @RpcOptionalDouble(name = "firstExecutionTime", description = "first time to execute script, in seconds since epoch")
+      @RpcParameter(name = "firstExecutionTime", description = "first time to execute script, in seconds since epoch") @RpcOptional
       Double firstExecutionTime,
       @RpcDefaultBoolean(name = "wakeUp", description = "whether or not to wake up the device if asleep", defaultValue = true)
       Boolean wakeUp) {
