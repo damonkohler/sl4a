@@ -47,7 +47,7 @@ import com.google.ase.R;
 import com.google.ase.facade.FacadeConfiguration;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
-import com.google.ase.jsonrpc.RpcInfo;
+import com.google.ase.rpc.MethodDescriptor;
 
 public class ApiBrowser extends ListActivity {
 
@@ -65,7 +65,7 @@ public class ApiBrowser extends ListActivity {
     }
   }
 
-  private List<RpcInfo> mRpcInfoList;
+  private List<MethodDescriptor> mRpcDescriptors;
   private Set<Integer> mExpandedPositions;
   private ApiBrowserAdapter mAdapter;
 
@@ -81,7 +81,7 @@ public class ApiBrowser extends ListActivity {
     setContentView(R.layout.api_browser);
     getListView().setFastScrollEnabled(true);
     mExpandedPositions = new HashSet<Integer>();
-    mRpcInfoList = FacadeConfiguration.buildRpcInfoList();
+    mRpcDescriptors = FacadeConfiguration.collectRpcDescriptors();
     mAdapter = new ApiBrowserAdapter();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
@@ -105,7 +105,7 @@ public class ApiBrowser extends ListActivity {
     super.onOptionsItemSelected(item);
     int itemId = item.getItemId();
     if (itemId == MenuId.EXPAND_ALL.getId()) {
-      for (int i = 0; i < mRpcInfoList.size(); i++) {
+      for (int i = 0; i < mRpcDescriptors.size(); i++) {
         mExpandedPositions.add(i);
       }
     } else if (itemId == MenuId.COLLAPSE_ALL.getId()) {
@@ -140,7 +140,7 @@ public class ApiBrowser extends ListActivity {
       return false;
     }
 
-    RpcInfo rpc = (RpcInfo) getListAdapter().getItem(info.position);
+    MethodDescriptor rpc = (MethodDescriptor) getListAdapter().getItem(info.position);
     if (rpc == null) {
       AseLog.v("No RPC selected.");
       return false;
@@ -152,7 +152,7 @@ public class ApiBrowser extends ListActivity {
     return true;
   }
 
-  private void insertText(RpcInfo rpc) {
+  private void insertText(MethodDescriptor rpc) {
     String scriptText = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_TEXT);
     Interpreter interpreter = InterpreterConfiguration.getInterpreterByName(
         getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));
@@ -171,7 +171,7 @@ public class ApiBrowser extends ListActivity {
 
     public ApiBrowserAdapter() {
       mCursor = new MatrixCursor(new String[] { "NAME" });
-      for (RpcInfo info : mRpcInfoList) {
+      for (MethodDescriptor info : mRpcDescriptors) {
         mCursor.addRow(new String[] { info.getName() });
       }
       mIndexer = new AlphabetIndexer(mCursor, 0, " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
@@ -179,12 +179,12 @@ public class ApiBrowser extends ListActivity {
 
     @Override
     public int getCount() {
-      return mRpcInfoList.size();
+      return mRpcDescriptors.size();
     }
 
     @Override
     public Object getItem(int position) {
-      return mRpcInfoList.get(position);
+      return mRpcDescriptors.get(position);
     }
 
     @Override
@@ -197,9 +197,9 @@ public class ApiBrowser extends ListActivity {
       TextView view = new TextView(ApiBrowser.this);
       view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
       if (mExpandedPositions.contains(position)) {
-        view.setText(mRpcInfoList.get(position).getHelp());
+        view.setText(mRpcDescriptors.get(position).getHelp());
       } else {
-        view.setText(mRpcInfoList.get(position).getName());
+        view.setText(mRpcDescriptors.get(position).getName());
       }
       return view;
     }

@@ -27,7 +27,7 @@ import android.os.Handler;
 
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
-import com.google.ase.jsonrpc.RpcInfo;
+import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.trigger.AseTriggerRepository;
 
 /**
@@ -73,24 +73,24 @@ public class FacadeConfiguration {
   }
 
   /**
-   * Returns a list of {@link RpcInfo} objects for all facades.
+   * Returns a list of {@link MethodDescriptor} objects for all facades.
    */
-  public static List<RpcInfo> buildRpcInfoList() {
-    List<RpcInfo> list = new ArrayList<RpcInfo>();
-    list.addAll(JsonRpcServer.buildRpcInfoMap(AndroidFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(MediaFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(SpeechRecognitionFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(TextToSpeechFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(TelephonyManagerFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(AlarmManagerFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(SensorManagerFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(EventFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(LocationManagerFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(SettingsFacade.class).values());
-    list.addAll(JsonRpcServer.buildRpcInfoMap(UiFacade.class).values());
-    Collections.sort(list, new Comparator<RpcInfo>() {
-      public int compare(RpcInfo info1, RpcInfo info2) {
-        return info1.getName().compareTo(info2.getName());
+  public static List<MethodDescriptor> collectRpcDescriptors() {
+    List<MethodDescriptor> list = new ArrayList<MethodDescriptor>();
+    list.addAll(MethodDescriptor.collectFrom(AndroidFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(MediaFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(SpeechRecognitionFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(TextToSpeechFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(TelephonyManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(AlarmManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(SensorManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(EventFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(LocationManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(SettingsFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
+    Collections.sort(list, new Comparator<MethodDescriptor>() {
+      public int compare(MethodDescriptor method1, MethodDescriptor method2) {
+        return method1.getName().compareTo(method2.getName());
       }
     });
     return list;

@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -43,7 +42,6 @@ import org.json.JSONObject;
 
 import com.google.ase.AseLog;
 import com.google.ase.rpc.MethodDescriptor;
-import com.google.ase.rpc.Rpc;
 
 /**
  * A JSON RPC server that forwards RPC calls to a specified receiver object.
@@ -92,36 +90,15 @@ public class JsonRpcServer {
    */
   private void registerRpcReceiver(final RpcReceiver receiver) {
     final Class<?> clazz = receiver.getClass();
-    for (Method m : clazz.getMethods()) {
-      if (m.getAnnotation(Rpc.class) != null) {
-        if (mKnownRpcs.containsKey(m.getName())) {
+    for (MethodDescriptor m : MethodDescriptor.collectFrom(clazz)) {
+      if (mKnownRpcs.containsKey(m.getName())) {
           // We already know an RPC of the same name.
           throw new RuntimeException("An RPC with the name " + m.getName() + " is already known.");
         }
-        mKnownRpcs.put(m.getName(), new RpcInfo(receiver, new MethodDescriptor(m), RpcInvokerFactory.createInvoker(m
+        mKnownRpcs.put(m.getName(), new RpcInfo(receiver, m, RpcInvokerFactory.createInvoker(m
             .getGenericParameterTypes())));
-      }
     }
     mReceivers.add(receiver);
-  }
-
-  /**
-   * Builds a map of method names to {@link RpcInfo} objects.
-   *
-   * @param receiver
-   *          the {@link RpcReceiver} class to inspect
-   */
-  public static Map<String, RpcInfo> buildRpcInfoMap(final Class<? extends RpcReceiver> receiver) {
-    Map<String, RpcInfo> rpcs = new ConcurrentHashMap<String, RpcInfo>();
-    for (Method m : receiver.getMethods()) {
-      if (m.getAnnotation(Rpc.class) != null) {
-        // TODO(damonkohler): This doesn't build valid RpcInfo objects since receiver is a class not
-        // an instance.
-        rpcs.put(m.getName(), new RpcInfo(receiver, new MethodDescriptor(m), RpcInvokerFactory.createInvoker(m
-            .getGenericParameterTypes())));
-      }
-    }
-    return rpcs;
   }
 
   private InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {

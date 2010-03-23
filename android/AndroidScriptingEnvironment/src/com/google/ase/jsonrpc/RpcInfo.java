@@ -21,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.ase.rpc.MethodDescriptor;
-import com.google.ase.rpc.ParameterDescriptor;
 
 /**
  * Instances of this class describe specific RPCs on the server. An RPC on the server is described
@@ -52,33 +51,9 @@ public class RpcInfo {
    */
   public JSONObject invoke(final JSONArray parameters) {
     try {
-      return mInvoker.invoke(mMethodDescriptor.getMethod(), mReceiver, parameters);
+      return mInvoker.invoke(mMethodDescriptor, mReceiver, parameters);
     } catch (JSONException e) {
       return JsonRpcResult.error("Remote Exception", e);
     }
-  }
-
-  public String getName() {
-    return mMethodDescriptor.getName();
-  }
-
-  /**
-   * Returns a human-readable help text for this RPC, based on annotations in the source code.
-   *
-   * @return derived help string
-   */
-  public String getHelp() {
-    return mMethodDescriptor.getHelp();
-  }
-
-  /**
-   * Returns parameter descriptors suitable for the RPC call text representation.
-   * 
-   * <p>Uses parameter name or default value if it is more meaningful as value.
-   * 
-   * @return an array of parameter descriptors
-   */
-  public ParameterDescriptor[] getDefaultParameterValues() {
-    return mMethodDescriptor.getDefaultParameterValues();
   }
 }

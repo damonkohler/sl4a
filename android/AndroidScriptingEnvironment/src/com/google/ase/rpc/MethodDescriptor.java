@@ -20,17 +20,32 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * An adapter that wraps {@code Method}.
  * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
-public class MethodDescriptor {
+public final class MethodDescriptor {
   private final Method mMethod;
   
   public MethodDescriptor(Method method) {
     mMethod = method;
+  }
+  
+  /** Collects all methods with {@code RPC} annotation from given class. */
+  public static Collection<MethodDescriptor> collectFrom(Class<?> clazz) {
+    List<MethodDescriptor> descriptors = new ArrayList<MethodDescriptor>();
+    for (Method method : clazz.getMethods()) {
+      if (method.isAnnotationPresent(Rpc.class)) {
+        descriptors.add(new MethodDescriptor(method));
+      }
+    }
+
+    return descriptors;
   }
 
   public Method getMethod() {
@@ -39,6 +54,14 @@ public class MethodDescriptor {
 
   public String getName() {
     return mMethod.getName();
+  }
+
+  public Type[] getGenericParameterTypes() {
+    return mMethod.getGenericParameterTypes();
+  }
+
+  public Annotation[][] getParameterAnnotations() {
+    return mMethod.getParameterAnnotations();
   }
 
   /**
@@ -77,23 +100,20 @@ public class MethodDescriptor {
   }
 
   /**
-   * Returns the help string for one particular parameter. This respects parameters of type {@code
-   * OptionalParameter<T>}.
+   * Returns the help string for one particular parameter. This respects optional parameters.
    *
-   * @param parameterType
-   *          (generic) type of the parameter
-   * @param annotation
-   *          {@link RpcParameter} annotation of the type, may be null
+   * @param parameterType (generic) type of the parameter
+   * @param annotations annotations of the parameter, may be null
    * @return string describing the parameter based on source code annotations
    */
   private static String getHelpForParameter(Type parameterType, Annotation[] annotations) {
     StringBuilder result = new StringBuilder();
 
-    final Object defaultValue = RpcAnnotationHelper.getDefaultValue(annotations);
-    final String name = RpcAnnotationHelper.getName(annotations);
-    final String description = RpcAnnotationHelper.getDescription(annotations);
-    boolean isOptionalParameter = RpcAnnotationHelper.isOptionalParameter(annotations);
-    boolean hasDefaultValue = RpcAnnotationHelper.hasDefaultValue(annotations);
+    final Object defaultValue = getDefaultValue(annotations);
+    final String name = getName(annotations);
+    final String description = getDescription(annotations);
+    boolean isOptionalParameter = isOptionalParameter(annotations);
+    boolean hasDefaultValue = hasDefaultValue(annotations);
 
     appendTypeName(result, parameterType);
     result.append(" ");
@@ -117,10 +137,8 @@ public class MethodDescriptor {
   /**
    * Appends the name of the given type to the {@link StringBuilder}.
    *
-   * @param builder
-   *          string builder to append to
-   * @param type
-   *          type whose name to append
+   * @param builder string builder to append to
+   * @param type type whose name to append
    */
   private static void appendTypeName(final StringBuilder builder, final Type type) {
     if (type instanceof Class<?>) {
@@ -154,11 +172,120 @@ public class MethodDescriptor {
     final ParameterDescriptor[] parameters = new ParameterDescriptor[parametersAnnotations.length];
     for (int index = 0; index < parameters.length; index ++) {
       parameters[index] = new ParameterDescriptor( 
-          RpcAnnotationHelper.hasDefaultValue(parametersAnnotations[index]) ?
-              String.valueOf(RpcAnnotationHelper.getDefaultValue(parametersAnnotations[index])) :
-              RpcAnnotationHelper.getDescription(parametersAnnotations[index]),
+          MethodDescriptor.hasDefaultValue(parametersAnnotations[index]) ?
+              String.valueOf(MethodDescriptor.getDefaultValue(parametersAnnotations[index])) :
+              MethodDescriptor.getDescription(parametersAnnotations[index]),
           parameterTypes[index]);
     }
     return parameters;
+  }
+
+  /**
+   * Extracts the formal parameter name from an annotation.
+   * 
+   * @param annotations
+   *          the annotations of the parameter
+   * @return the formal name of the parameter
+   */
+  private static String getName(Annotation[] annotations) {
+    for (Annotation a : annotations) {
+      if (a instanceof RpcParameter) {
+        return ((RpcParameter) a).name();
+      } else if (a instanceof RpcDefaultInteger) {
+        return ((RpcDefaultInteger) a).name();
+      } else if (a instanceof RpcDefaultString) {
+        return ((RpcDefaultString) a).name();
+      } else if (a instanceof RpcDefaultBoolean) {
+        return ((RpcDefaultBoolean) a).name();
+      }
+    }
+    return "(unknown)";
+  }
+
+  /**
+   * Extracts the parameter description from its annotations.
+   * 
+   * @param annotations the annotations of the parameter
+   * @return the description of the parameter
+   */
+  private static String getDescription(Annotation[] annotations) {
+    for (Annotation a : annotations) {
+      if (a instanceof RpcParameter) {
+        return ((RpcParameter) a).description();
+      } else if (a instanceof RpcDefaultInteger) {
+        return ((RpcDefaultInteger) a).description();
+      } else if (a instanceof RpcDefaultString) {
+        return ((RpcDefaultString) a).description();
+      } else if (a instanceof RpcDefaultBoolean) {
+        return ((RpcDefaultBoolean) a).description();
+      }
+    }
+    return "(no description)";
+  }
+
+  /**
+   * Returns the default value for a specific parameter.
+   * 
+   * @param annotations annotations of the parameter
+   */
+  public static Object getDefaultValue(Annotation[] annotations) {
+    for (Annotation a : annotations) {
+      if (a instanceof RpcParameter) {
+        return null;
+      } else if (a instanceof RpcDefaultInteger) {
+        return ((RpcDefaultInteger) a).defaultValue();
+      } else if (a instanceof RpcDefaultString) {
+        return ((RpcDefaultString) a).defaultValue();
+      } else if (a instanceof RpcDefaultBoolean) {
+        return ((RpcDefaultBoolean) a).defaultValue();
+      } else if (a instanceof RpcOptional) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Returns whether the default value is specified for a specific parameter.
+   * 
+   * @param annotations annotations of the parameter
+   */
+  private static boolean hasDefaultValue(Annotation[] annotations) {
+    for (Annotation a : annotations) {
+      if (a instanceof RpcParameter) {
+        return false;
+      } else if (a instanceof RpcDefaultInteger) {
+        return true;
+      } else if (a instanceof RpcDefaultString) {
+        return true;
+      } else if (a instanceof RpcDefaultBoolean) {
+        return true;
+      } else if (a instanceof RpcOptional) {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Determines whether or not this parameter is optional.
+   * 
+   * @param annotations annotations of the parameter
+   */
+  private static boolean isOptionalParameter(Annotation[] annotations) {
+    for (Annotation a : annotations) {
+      if (a instanceof RpcParameter) {
+        return false;
+      } else if (a instanceof RpcDefaultInteger) {
+        return true;
+      } else if (a instanceof RpcDefaultString) {
+        return true;
+      } else if (a instanceof RpcDefaultBoolean) {
+        return true;
+      } else if (a instanceof RpcOptional) {
+        return true;
+      }
+    }
+    return false;
   }
 }

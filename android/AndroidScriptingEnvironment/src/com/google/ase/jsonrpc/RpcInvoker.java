@@ -16,11 +16,12 @@
 
 package com.google.ase.jsonrpc;
 
-import java.lang.reflect.Method;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.ase.rpc.MethodDescriptor;
 
 /**
  * Implementations of this interface are used to parse the JSONArray arriving
@@ -39,5 +40,5 @@ public interface RpcInvoker {
    * @param parameters array of parameters as received by the client
    * @return the {@code JsonRpcResult} object with the appropriate result
    */
-  public JSONObject invoke(Method m, Object receiver, JSONArray parameters) throws JSONException;
+  public JSONObject invoke(MethodDescriptor m, Object receiver, JSONArray parameters) throws JSONException;
 }

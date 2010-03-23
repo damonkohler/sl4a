@@ -19,8 +19,8 @@ package com.google.ase.interpreter;
 import java.io.File;
 
 import com.google.ase.Constants;
-import com.google.ase.jsonrpc.RpcInfo;
 import com.google.ase.language.Language;
+import com.google.ase.rpc.MethodDescriptor;
 
 public abstract class Interpreter {
   
@@ -38,7 +38,7 @@ public abstract class Interpreter {
     return getLanguage().getContentTemplate();
   }
   
-  public final String getRpcText(String content, RpcInfo rpc) {
+  public final String getRpcText(String content, MethodDescriptor rpc) {
     return getLanguage().getRpcText(content, rpc);
   }
   

@@ -17,7 +17,6 @@
 package com.google.ase.jsonrpc;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -29,7 +28,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.ase.exception.AseRuntimeException;
-import com.google.ase.rpc.RpcAnnotationHelper;
+import com.google.ase.rpc.MethodDescriptor;
 
 /**
  * A factory for {@link RpcInvoker} objects.
@@ -48,14 +47,15 @@ public class RpcInvokerFactory {
   public static RpcInvoker createInvoker(final Type[] parameterTypes) {
     return new RpcInvoker() {
       @Override
-      public JSONObject invoke(final Method m, final Object receiver, final JSONArray parameters)
+      public JSONObject invoke(final MethodDescriptor m, final Object receiver, final JSONArray parameters)
           throws JSONException {
+        final Type[] parameterTypes = m.getGenericParameterTypes();
         final Object[] args = new Object[parameterTypes.length];
         final Annotation annotations[][] = m.getParameterAnnotations();
 
         for (int i = 0; i < args.length; i++) {
           final Type parameterType = parameterTypes[i];
-          Object defaultValue = RpcAnnotationHelper.getDefaultValue(annotations[i]);
+          Object defaultValue = MethodDescriptor.getDefaultValue(annotations[i]);
           if (i < parameters.length()) {
             // Parameter is specified.
             try {
@@ -81,7 +81,7 @@ public class RpcInvokerFactory {
         }
 
         try {
-          Object result = m.invoke(receiver, args);
+          Object result = m.getMethod().invoke(receiver, args);
           if (result instanceof Bundle) {
             return JsonRpcResult.result(JsonResultBuilders.buildJsonBundle((Bundle) result));
           } else if (result instanceof Intent) {
