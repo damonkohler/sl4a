@@ -17,12 +17,17 @@
 package com.google.ase.rpc;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.google.ase.AseLog;
 
 /**
  * An adapter that wraps {@code Method}.
@@ -30,6 +35,8 @@ import java.util.List;
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 public final class MethodDescriptor {
+  private static final Map<Class<?>, Converter<?>> sConverters = populateConverters();
+
   private final Method mMethod;
   
   public MethodDescriptor(Method method) {
@@ -109,23 +116,18 @@ public final class MethodDescriptor {
   private static String getHelpForParameter(Type parameterType, Annotation[] annotations) {
     StringBuilder result = new StringBuilder();
 
-    final Object defaultValue = getDefaultValue(annotations);
-    final String name = getName(annotations);
-    final String description = getDescription(annotations);
-    boolean isOptionalParameter = isOptionalParameter(annotations);
-    boolean hasDefaultValue = hasDefaultValue(annotations);
-
     appendTypeName(result, parameterType);
     result.append(" ");
-    result.append(name);
-    if (isOptionalParameter) {
+    result.append(getName(annotations));
+    if (isOptionalParameter(annotations)) {
       result.append("[optional");
-      if (hasDefaultValue) {
-        result.append(", default " + defaultValue);         
+      if (hasDefaultValue(annotations)) {
+        result.append(", default " + getDefaultValue(parameterType, annotations));         
       }
       result.append("]");
     }
     
+    String description = getDescription(annotations);
     if (description.length() > 0) {
       result.append(": ");
       result.append(description);
@@ -172,9 +174,9 @@ public final class MethodDescriptor {
     final ParameterDescriptor[] parameters = new ParameterDescriptor[parametersAnnotations.length];
     for (int index = 0; index < parameters.length; index ++) {
       parameters[index] = new ParameterDescriptor( 
-          MethodDescriptor.hasDefaultValue(parametersAnnotations[index]) ?
-              String.valueOf(MethodDescriptor.getDefaultValue(parametersAnnotations[index])) :
-              MethodDescriptor.getDescription(parametersAnnotations[index]),
+          hasDefaultValue(parametersAnnotations[index])
+              ? String.valueOf(getDefaultValue(parameterTypes[index], parametersAnnotations[index]))
+              : getDescription(parametersAnnotations[index]),
           parameterTypes[index]);
     }
     return parameters;
@@ -191,12 +193,6 @@ public final class MethodDescriptor {
     for (Annotation a : annotations) {
       if (a instanceof RpcParameter) {
         return ((RpcParameter) a).name();
-      } else if (a instanceof RpcDefaultInteger) {
-        return ((RpcDefaultInteger) a).name();
-      } else if (a instanceof RpcDefaultString) {
-        return ((RpcDefaultString) a).name();
-      } else if (a instanceof RpcDefaultBoolean) {
-        return ((RpcDefaultBoolean) a).name();
       }
     }
     return "(unknown)";
@@ -212,12 +208,6 @@ public final class MethodDescriptor {
     for (Annotation a : annotations) {
       if (a instanceof RpcParameter) {
         return ((RpcParameter) a).description();
-      } else if (a instanceof RpcDefaultInteger) {
-        return ((RpcDefaultInteger) a).description();
-      } else if (a instanceof RpcDefaultString) {
-        return ((RpcDefaultString) a).description();
-      } else if (a instanceof RpcDefaultBoolean) {
-        return ((RpcDefaultBoolean) a).description();
       }
     }
     return "(no description)";
@@ -225,22 +215,35 @@ public final class MethodDescriptor {
 
   /**
    * Returns the default value for a specific parameter.
-   * 
+   * @param parameterType parameterType
    * @param annotations annotations of the parameter
    */
-  public static Object getDefaultValue(Annotation[] annotations) {
+  public static Object getDefaultValue(Type parameterType, Annotation[] annotations) {
     for (Annotation a : annotations) {
-      if (a instanceof RpcParameter) {
-        return null;
-      } else if (a instanceof RpcDefaultInteger) {
-        return ((RpcDefaultInteger) a).defaultValue();
-      } else if (a instanceof RpcDefaultString) {
-        return ((RpcDefaultString) a).defaultValue();
-      } else if (a instanceof RpcDefaultBoolean) {
-        return ((RpcDefaultBoolean) a).defaultValue();
-      } else if (a instanceof RpcOptional) {
-        return null;
+      if (a instanceof RpcDefault) {
+        RpcDefault defaultAnnotation = (RpcDefault) a;
+        Converter<?> converter = converterFor(parameterType, defaultAnnotation.converter());
+        return converter == null ? null : converter.convert(defaultAnnotation.value());
       }
+    }
+    return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static Converter<?> converterFor(Type parameterType,
+      Class<? extends Converter> converterClass) {
+    if (converterClass == Converter.class) {
+      Converter<?> converter = sConverters.get(parameterType);
+      if (converter == null) {
+        AseLog.e("No converter found for " + parameterType);
+      }
+      return converter;
+    }
+    try {
+      Constructor<?> constructor = converterClass.getConstructor(new Class<?>[0]);
+      return (Converter<?>) constructor.newInstance(new Object[0]);
+    } catch (Exception e) {
+      AseLog.e("Cannot create converter from " + converterClass.getCanonicalName());
     }
     return null;
   }
@@ -252,16 +255,8 @@ public final class MethodDescriptor {
    */
   private static boolean hasDefaultValue(Annotation[] annotations) {
     for (Annotation a : annotations) {
-      if (a instanceof RpcParameter) {
-        return false;
-      } else if (a instanceof RpcDefaultInteger) {
+      if (a instanceof RpcDefault) {
         return true;
-      } else if (a instanceof RpcDefaultString) {
-        return true;
-      } else if (a instanceof RpcDefaultBoolean) {
-        return true;
-      } else if (a instanceof RpcOptional) {
-        return false;
       }
     }
     return false;
@@ -274,18 +269,46 @@ public final class MethodDescriptor {
    */
   private static boolean isOptionalParameter(Annotation[] annotations) {
     for (Annotation a : annotations) {
-      if (a instanceof RpcParameter) {
-        return false;
-      } else if (a instanceof RpcDefaultInteger) {
-        return true;
-      } else if (a instanceof RpcDefaultString) {
-        return true;
-      } else if (a instanceof RpcDefaultBoolean) {
-        return true;
-      } else if (a instanceof RpcOptional) {
+      if (a instanceof RpcOptional) {
         return true;
       }
     }
     return false;
+  }
+
+  /** Returns the converters for {@code String}, {@code Integer} and {@code Boolean}. */
+  private static Map<Class<?>, Converter<?>> populateConverters() {
+    Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
+    converters.put(String.class, new Converter<String>() {
+      @Override public String convert(String value) {
+        return value;
+      }});
+    converters.put(Integer.class, new Converter<Integer>() {
+      @Override public Integer convert(String input) {
+        AseLog.v("Converting '" + input + "' as integer");
+        try {
+          return Integer.decode(input);
+        } catch (NumberFormatException e) {
+          AseLog.e("'" + input + "' is not an integer");
+          return null;
+        }
+      }});
+    converters.put(Boolean.class, new Converter<Boolean>() {
+      @Override public Boolean convert(String input) {
+        AseLog.v("Converting '" + input + "' as boolean");
+        if (input == null) {
+          return null;
+        }
+        input = input.toLowerCase();
+        if (input.equals("true")) {
+          return true;
+        }
+        if (input.equals("false")) {
+          return false;
+        }
+        AseLog.e("'" + input + "' is not a boolean");
+        return null;
+      }});
+    return converters;
   }
 }

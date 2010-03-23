@@ -26,8 +26,8 @@ import android.os.Bundle;
 
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
-import com.google.ase.rpc.RpcDefaultInteger;
-import com.google.ase.rpc.RpcDefaultString;
+import com.google.ase.rpc.RpcDefault;
+import com.google.ase.rpc.RpcParameter;
 
 /**
  * This facade exposes the LocationManager related functionality. 
@@ -74,9 +74,9 @@ public class LocationManagerFacade implements RpcReceiver {
 
   @Rpc(description = "Starts collecting location data.")
   public void startLocating(
-      @RpcDefaultString(name = "accuracy", description = "String accuracy (\"fine\", \"coarse\")", defaultValue = "coarse") String accuracy,
-      @RpcDefaultInteger(name = "minDistance", description = "minimum time between updates (milli-seconds)", defaultValue = 60000) Integer minUpdateTimeMs,
-      @RpcDefaultInteger(name = "minUpdateDistance", description = "minimum distance between updates (meters)", defaultValue = 30) Integer minUpdateDistanceM) {
+      @RpcParameter(name = "accuracy", description = "String accuracy (\"fine\", \"coarse\")") @RpcDefault("coarse") String accuracy,
+      @RpcParameter(name = "minDistance", description = "minimum time between updates (milli-seconds)") @RpcDefault("60000") Integer minUpdateTimeMs,
+      @RpcParameter(name = "minUpdateDistance", description = "minimum distance between updates (meters)") @RpcDefault("30") Integer minUpdateDistanceM) {
     Criteria criteria = new Criteria();
     if (accuracy == "coarse") {
       criteria.setAccuracy(Criteria.ACCURACY_COARSE);

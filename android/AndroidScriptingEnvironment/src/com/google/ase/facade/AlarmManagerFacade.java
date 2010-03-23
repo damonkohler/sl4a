@@ -20,7 +20,7 @@ import android.app.Service;
 
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
-import com.google.ase.rpc.RpcDefaultBoolean;
+import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 import com.google.ase.trigger.AseAlarmManager;
@@ -41,7 +41,7 @@ public class AlarmManagerFacade implements RpcReceiver {
       Double interval,
       @RpcParameter(name = "script", description = "the script to execute")
       String script,
-      @RpcDefaultBoolean(name = "wakeUp", description = "whether or not to wakeup the device if asleep", defaultValue = true) 
+      @RpcParameter(name = "wakeUp", description = "whether or not to wakeup the device if asleep") @RpcDefault("true") 
       Boolean wakeUp) {
     mAlarmManager.scheduleInexactRepeating(interval, script, wakeUp);
   }
@@ -54,7 +54,7 @@ public class AlarmManagerFacade implements RpcReceiver {
       String script,
       @RpcParameter(name = "firstExecutionTime", description = "first time to execute script, in seconds since epoch") @RpcOptional
       Double firstExecutionTime,
-      @RpcDefaultBoolean(name = "wakeUp", description = "whether or not to wake up the device if asleep", defaultValue = true)
+      @RpcParameter(name = "wakeUp", description = "whether or not to wake up the device if asleep") @RpcDefault("true")
       Boolean wakeUp) {
     if (firstExecutionTime == null) {
       // If the default value is passed, the current time is used.

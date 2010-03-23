@@ -31,8 +31,7 @@ import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
-import com.google.ase.rpc.RpcDefaultBoolean;
-import com.google.ase.rpc.RpcDefaultInteger;
+import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
@@ -61,8 +60,8 @@ public class UiFacade implements RpcReceiver {
   @Rpc(description = "Create a spinner progress dialog.")
   public void dialogCreateSpinnerProgress(@RpcParameter(name = "Title") @RpcOptional String title,
       @RpcParameter(name = "Message") @RpcOptional String message,
-      @RpcDefaultInteger(name = "Maximum progress", defaultValue = 100) Integer max,
-      @RpcDefaultBoolean(name = "cancelable", defaultValue = false) Boolean cancelable) {
+      @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max,
+      @RpcParameter(name = "cancelable") @RpcDefault("false") Boolean cancelable) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
         new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, max, title, message, cancelable);
@@ -72,8 +71,8 @@ public class UiFacade implements RpcReceiver {
   public void dialogCreateHorizontalProgress(
       @RpcParameter(name = "Title") @RpcOptional String title,
       @RpcParameter(name = "Message") @RpcOptional String message,
-      @RpcDefaultInteger(name = "Maximum progress", defaultValue = 100) Integer max,
-      @RpcDefaultBoolean(name  = "cancelable", defaultValue = false) Boolean cancelable) {
+      @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max,
+      @RpcParameter(name  = "cancelable") @RpcDefault("false") Boolean cancelable) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
         new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title, message, cancelable);

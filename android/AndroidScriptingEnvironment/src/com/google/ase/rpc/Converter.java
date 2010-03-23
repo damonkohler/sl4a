@@ -16,19 +16,14 @@
 
 package com.google.ase.rpc;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
- * Use this annotation to mark RPC parameter as optional.
- * 
- * <p>The parameter marked as optional has no default value.
- * 
+ * A converter can take a String and turn it into an instance of type T
+ * (the type parameter to the converter).
+ *
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-public @interface RpcOptional {
+public interface Converter<T> {
+
+  /** Convert a string into type T. */
+  T convert(String value);
 }

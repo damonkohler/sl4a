@@ -22,13 +22,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to mark RPC parameter as optional.
+ * Use this annotation to mark RPC parameter that have a default value.
  * 
- * <p>The parameter marked as optional has no default value.
+ * <p>The parameter marked as default is also optional.
  * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-public @interface RpcOptional {
+public @interface RpcDefault {
+  /** The default value of the RPC parameter. */
+  public String value();
+  
+  @SuppressWarnings("unchecked")
+  public Class<? extends Converter> converter() default Converter.class;
 }

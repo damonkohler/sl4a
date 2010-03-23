@@ -18,6 +18,7 @@ package com.google.ase.jsonrpc;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -61,7 +62,7 @@ public final class RpcInfo {
 
       for (int i = 0; i < args.length; i++) {
         final Type parameterType = parameterTypes[i];
-        Object defaultValue = MethodDescriptor.getDefaultValue(annotations[i]);
+        Object defaultValue = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
         if (i < parameters.length()) {
           // Parameter is specified.
           try {
@@ -86,8 +87,9 @@ public final class RpcInfo {
         }
       }
 
+      Object result = null;
       try {
-        Object result = mMethodDescriptor.getMethod().invoke(mReceiver, args);
+        result = mMethodDescriptor.getMethod().invoke(mReceiver, args);
         if (result instanceof Bundle) {
           return JsonRpcResult.result(JsonResultBuilders.buildJsonBundle((Bundle) result));
         } else if (result instanceof Intent) {
@@ -98,7 +100,8 @@ public final class RpcInfo {
           return JsonRpcResult.result(result);
         }
       } catch (Exception e) {
-        throw new AseRuntimeException("Failed to invoke: " + mMethodDescriptor.getName(), e.getCause());
+        throw new AseRuntimeException("Failed to invoke: " + mMethodDescriptor.getName()
+            + " with args " + Arrays.toString(args) + " and result " + result, e.getCause());
       }
     } catch (JSONException e) {
       return JsonRpcResult.error("Remote Exception", e);
