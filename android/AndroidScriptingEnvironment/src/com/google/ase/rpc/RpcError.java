@@ -14,14 +14,13 @@
  * the License.
  */
 
-package com.google.ase.trigger;
+package com.google.ase.rpc;
 
-import java.io.Serializable;
+@SuppressWarnings("serial")
+public class RpcError extends Exception {
 
-import android.content.Context;
-import android.view.View;
+  public RpcError(String message) {
+    super(message);
+  }
 
-public interface Trigger extends Serializable {
-  /** Returns the view for this trigger. */
-  public View getView(Context context);
 }

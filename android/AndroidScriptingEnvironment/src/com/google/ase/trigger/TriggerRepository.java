@@ -32,7 +32,7 @@ import android.preference.PreferenceManager;
 
 import com.google.ase.AseLog;
 
-public class AseTriggerRepository {
+public class TriggerRepository {
   private static final String TRIGGERS_PREF_KEY = "TRIGGERS";
 
   private final SharedPreferences mPreferences;
@@ -41,7 +41,7 @@ public class AseTriggerRepository {
     boolean matches(Trigger trigger);
   }
 
-  public AseTriggerRepository(Context context) {
+  public TriggerRepository(Context context) {
     mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
   }
 

@@ -28,7 +28,7 @@ import android.os.Handler;
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.rpc.MethodDescriptor;
-import com.google.ase.trigger.AseTriggerRepository;
+import com.google.ase.trigger.TriggerRepository;
 
 /**
  * Encapsulates the list of supported facades and their construction.
@@ -52,7 +52,7 @@ public class FacadeConfiguration {
    * @return a new {@link JsonRpcServer} configured with all facades
    */
   public static JsonRpcServer buildJsonRpcServer(Service service, Intent intent, Handler handler) {
-    final AseTriggerRepository triggerRepository = new AseTriggerRepository(service);
+    final TriggerRepository triggerRepository = new TriggerRepository(service);
 
     AndroidFacade androidFacade = new AndroidFacade(service, handler, intent);
     SettingsFacade settingsFacade = new SettingsFacade(service);

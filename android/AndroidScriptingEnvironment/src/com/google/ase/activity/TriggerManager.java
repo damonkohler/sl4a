@@ -21,18 +21,35 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
 import com.google.ase.ActivityFlinger;
 import com.google.ase.AseAnalytics;
+import com.google.ase.AseLog;
 import com.google.ase.R;
-import com.google.ase.trigger.AseTriggerRepository;
+import com.google.ase.trigger.AlarmTrigger;
+import com.google.ase.trigger.AlarmTriggerManager;
 import com.google.ase.trigger.Trigger;
+import com.google.ase.trigger.TriggerRepository;
 
 public class TriggerManager extends ListActivity {
-  private AseTriggerRepository mTriggerRepository;
+  private TriggerRepository mTriggerRepository;
+  private AlarmTriggerManager mAlarmTriggerManager;
+  private TriggerAdapter mAdapter;
+
+  private static enum ContextMenuId {
+    REMOVE;
+    public int getId() {
+      return ordinal() + Menu.FIRST;
+    }
+  }
 
   public TriggerManager() {
   }
@@ -40,15 +57,44 @@ public class TriggerManager extends ListActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mTriggerRepository = new AseTriggerRepository(this);
     setContentView(R.layout.trigger_manager);
-    getListView().setFastScrollEnabled(true);
-    AseAnalytics.trackActivity(this);
-    setResult(RESULT_CANCELED);
-    setListAdapter(new TriggerAdapter(this, mTriggerRepository.getAllTriggers()));
+    mTriggerRepository = new TriggerRepository(this);
+    mAdapter = new TriggerAdapter(this, mTriggerRepository.getAllTriggers());
+    setListAdapter(mAdapter);
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     AseAnalytics.trackActivity(this);
+  }
+
+  @Override
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    menu.add(Menu.NONE, ContextMenuId.REMOVE.getId(), Menu.NONE, "Remove");
+  }
+
+  @Override
+  public boolean onContextItemSelected(MenuItem item) {
+    AdapterView.AdapterContextMenuInfo info;
+    try {
+      info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    } catch (ClassCastException e) {
+      AseLog.e("Bad menuInfo", e);
+      return false;
+    }
+
+    Trigger trigger = (Trigger) mAdapter.getItem(info.position);
+    if (trigger == null) {
+      AseLog.v("No trigger selected.");
+      return false;
+    }
+
+    if (item.getItemId() == ContextMenuId.REMOVE.getId()) {
+      if (trigger instanceof AlarmTrigger) {
+        mAlarmTriggerManager.cancelRepeating(((AlarmTrigger) trigger).getScriptName());
+      } else {
+        throw new RuntimeException("Unknown trigger type.");
+      }
+    }
+    return true;
   }
 
   private static class TriggerAdapter extends BaseAdapter {

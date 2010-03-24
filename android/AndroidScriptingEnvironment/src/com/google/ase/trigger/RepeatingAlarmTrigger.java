@@ -29,7 +29,7 @@ public class RepeatingAlarmTrigger extends AlarmTrigger {
   public RepeatingAlarmTrigger(Double intervalS, String scriptName, Double firstExecutionTimeS,
       boolean wakeUp) {
     super(scriptName, intervalS, wakeUp);
-    this.mFirstExecutionTimeS = firstExecutionTimeS;
+    mFirstExecutionTimeS = firstExecutionTimeS;
   }
 
   @Override

@@ -17,7 +17,6 @@
 package com.google.ase;
 
 import java.net.InetSocketAddress;
-import java.util.Map;
 
 import android.app.Service;
 import android.content.Intent;
@@ -25,7 +24,6 @@ import android.os.Handler;
 
 import com.google.ase.facade.FacadeConfiguration;
 import com.google.ase.jsonrpc.JsonRpcServer;
-import com.google.ase.jsonrpc.RpcInfo;
 
 public class AndroidProxy {
 
@@ -49,10 +47,6 @@ public class AndroidProxy {
   public InetSocketAddress startPublic() {
     mAddress = mJsonRpcServer.startPublic();
     return mAddress;
-  }
-
-  public Map<String, RpcInfo> getKnownRpcs() {
-    return mJsonRpcServer.getKnownRpcs();
   }
 
   public void shutdown() {

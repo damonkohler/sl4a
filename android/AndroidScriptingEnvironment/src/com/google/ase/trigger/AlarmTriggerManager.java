@@ -23,12 +23,12 @@ import android.content.Context;
 
 import com.google.ase.IntentBuilders;
 
-public class AseAlarmManager {
+public class AlarmTriggerManager {
   final AlarmManager mAlarmManager;
   final Service mService;
-  final AseTriggerRepository mTriggerRepository;
+  final TriggerRepository mTriggerRepository;
 
-  public AseAlarmManager(Service service, AseTriggerRepository triggerRepository) {
+  public AlarmTriggerManager(Service service, TriggerRepository triggerRepository) {
     mAlarmManager = (AlarmManager) service.getSystemService(Context.ALARM_SERVICE);
     mService = service;
     mTriggerRepository = triggerRepository;
@@ -88,7 +88,7 @@ public class AseAlarmManager {
   public void cancelRepeating(final String script) {
     final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mService, script);
 
-    mTriggerRepository.removeTriggers(new AseTriggerRepository.TriggerFilter() {
+    mTriggerRepository.removeTriggers(new TriggerRepository.TriggerFilter() {
       @Override
       public boolean matches(Trigger trigger) {
         if (trigger instanceof AlarmTrigger) {
