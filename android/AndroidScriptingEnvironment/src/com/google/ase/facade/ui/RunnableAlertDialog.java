@@ -16,9 +16,9 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,7 +43,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private final String mTitle;
   private final String mMessage;
   private FutureIntent mResult;
-  private List<Integer> mResultItems;
+  private Set<Integer> mResultItems;
   private Activity mActivity;
   private CharSequence[] mItems;
   private int mSelectedItem;
@@ -63,7 +63,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     mTitle = title;
     mMessage = message;
     mListType = ListType.MENU;
-    mResultItems = new ArrayList<Integer>();
+    mResultItems = new TreeSet<Integer>();
   }
 
   public void setPositiveButtonText(String text) {
@@ -114,7 +114,6 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
    * Set multi choice items
    * @param items
    * @param selected
-   * @param button_text
    */
   public void setMultiChoiceItems(JSONArray items, JSONArray selected) {
     if (mItems == null) {
@@ -140,7 +139,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     return mDialog;
   }
   
-  public List<Integer> getSelectedItems() {
+  public Set<Integer> getSelectedItems() {
     return mResultItems;
   }
 
@@ -158,7 +157,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     }
     if (mItems != null) {
       switch(mListType) {
-        // single choice menu items
+        // Add single choice menu items to dialog.
         case ListType.SINGLE_CHOICE:
           builder.setSingleChoiceItems(mItems, mSelectedItem, 
               new DialogInterface.OnClickListener() {
@@ -169,25 +168,23 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
                 }
           });
           break;
-        // multiple choice menu items
+        // Add multiple choice items to the dialog.
         case ListType.MULTI_CHOICE:
           builder.setMultiChoiceItems(mItems, mSelectedItems,
               new DialogInterface.OnMultiChoiceClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int item, 
                     boolean isChecked) {
-                  // TODO(MeanEYE.rcf): This is extremly ugly solution, change it
                   if (isChecked) {
-                    if (mResultItems.indexOf(item) == -1)
                       mResultItems.add(item);
                   } else {
-                    if (mResultItems.indexOf(item) > -1)
-                      mResultItems.remove(mResultItems.indexOf(item));
+                    if (mResultItems.contains(item))
+                      mResultItems.remove(item);
                   }
                 }
               });
           break;
-        // standard menu items
+        // Add standard, menu-like, items to dialog.
         default:
           builder.setItems(mItems, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {

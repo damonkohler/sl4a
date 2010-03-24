@@ -16,8 +16,8 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 import org.json.JSONArray;
 
@@ -161,7 +161,8 @@ public class UiFacade implements RpcReceiver {
   @Rpc(description = "Set dialog single choice items and selected item")
   public void dialogSetSingleChoiceItems(
       @RpcParameter(name = "items") JSONArray items,
-      @RpcParameter(name = "selected") @RpcDefault("-1") Integer selected) {
+      @RpcParameter(name = "selected", description = "list of selected items") 
+      @RpcOptional Integer selected) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setSingleChoiceItems(items, selected);
     } else {
@@ -191,7 +192,7 @@ public class UiFacade implements RpcReceiver {
   
   @Rpc(description = "This method provides list of items user selected.", 
       returns = "Selected items")
-  public List<Integer> dialogGetSelectedItems() {
+  public Set<Integer> dialogGetSelectedItems() {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       return ((RunnableAlertDialog) mDialogTask).getSelectedItems();
     } else {
