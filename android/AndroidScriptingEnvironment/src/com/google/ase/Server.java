@@ -31,6 +31,11 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * Skeletal implementation of a multi-threaded server.
+ * 
+ * @author Damon Kohler (damonkohler@gmail.com)
+ */
 public abstract class Server {
 
   private ServerSocket mServer;

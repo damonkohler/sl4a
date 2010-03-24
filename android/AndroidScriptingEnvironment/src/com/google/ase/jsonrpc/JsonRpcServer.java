@@ -80,9 +80,6 @@ public class JsonRpcServer extends Server {
     mReceivers.add(receiver);
   }
 
-  /**
-   * Shuts down the RPC server.
-   */
   @Override
   public void shutdown() {
     super.shutdown();
