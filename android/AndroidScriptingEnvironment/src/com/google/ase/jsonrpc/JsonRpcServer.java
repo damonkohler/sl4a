@@ -49,14 +49,16 @@ public class JsonRpcServer extends Server {
    */
   private final List<RpcReceiver> mReceivers = new ArrayList<RpcReceiver>();
 
+  /**
+   * Construct a {@link JsonRpcServer} connected to the provided {@link RpcReceiver}s.
+   * 
+   * @param receivers
+   *          the {@link RpcReceiver}s to register with the server
+   */
   public JsonRpcServer(final RpcReceiver... receivers) {
     for (RpcReceiver receiver : receivers) {
       registerRpcReceiver(receiver);
     }
-  }
-
-  public Map<String, RpcInfo> getKnownRpcs() {
-    return mKnownRpcs;
   }
 
   /**
@@ -69,7 +71,8 @@ public class JsonRpcServer extends Server {
     final Class<?> clazz = receiver.getClass();
     for (MethodDescriptor m : MethodDescriptor.collectFrom(clazz)) {
       if (mKnownRpcs.containsKey(m.getName())) {
-        // We already know an RPC of the same name.
+        // We already know an RPC of the same name. We don't catch this anywhere because this is a
+        // programming error.
         throw new RuntimeException("An RPC with the name " + m.getName() + " is already known.");
       }
       mKnownRpcs.put(m.getName(), new RpcInfo(receiver, m));
@@ -83,8 +86,7 @@ public class JsonRpcServer extends Server {
   @Override
   public void shutdown() {
     super.shutdown();
-    // Notify all RPC receiving objects. They may have to clean up some of
-    // their state.
+    // Notify all RPC receiving objects. They may have to clean up some of their state.
     for (RpcReceiver receiver : mReceivers) {
       receiver.shutdown();
     }
@@ -116,8 +118,8 @@ public class JsonRpcServer extends Server {
     int id = jsonRequest.getInt("id");
     String methodName = jsonRequest.getString("method");
     JSONArray params = jsonRequest.getJSONArray("params");
-    JSONObject result = null;
-    final RpcInfo rpcInfo = mKnownRpcs.get(methodName);
+    JSONObject result;
+    RpcInfo rpcInfo = mKnownRpcs.get(methodName);
     if (rpcInfo == null) {
       result = JsonRpcResult.error("Unknown RPC.");
     } else {
