@@ -23,15 +23,15 @@ import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
-import com.google.ase.trigger.AseAlarmManager;
-import com.google.ase.trigger.AseTriggerRepository;
+import com.google.ase.trigger.AlarmTriggerManager;
+import com.google.ase.trigger.TriggerRepository;
 
 public class AlarmManagerFacade implements RpcReceiver {
-  final AseAlarmManager mAlarmManager;
+  final AlarmTriggerManager mAlarmManager;
 
   public AlarmManagerFacade(Service service, EventFacade eventFacade,
-      AseTriggerRepository triggerRepository) {
-    mAlarmManager = new AseAlarmManager(service, triggerRepository);
+      TriggerRepository triggerRepository) {
+    mAlarmManager = new AlarmTriggerManager(service, triggerRepository);
   }
 
   @Rpc(description = "schedules a script for (inexact) regular execution - saves battery in "

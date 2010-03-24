@@ -22,6 +22,6 @@ import android.content.Context;
 import android.view.View;
 
 public interface Trigger extends Serializable {
-  /** Returns the view of this trigger */
+  /** Returns the view for this trigger. */
   public View getView(Context context);
 }

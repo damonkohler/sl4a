@@ -256,7 +256,6 @@ public class ScriptManager extends ListActivity {
       AseLog.v("No script selected.");
       return false;
     }
-    AseLog.v("Selected: " + script.getName());
 
     int itemId = item.getItemId();
     if (itemId == MenuId.DELETE.getId()) {
