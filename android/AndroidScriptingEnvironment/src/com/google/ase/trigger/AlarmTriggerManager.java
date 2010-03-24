@@ -58,7 +58,7 @@ public class AlarmTriggerManager {
   /**
    * Schedules the repeated execution of a script.
    * 
-   * @param intervalS
+   * @param interval
    *          interval between executions, in seconds
    * @param script
    *          script to execute
@@ -67,16 +67,16 @@ public class AlarmTriggerManager {
    * @param wakeUp
    *          if true then the phone will wake up when the alarm goes off
    */
-  public void scheduleRepeating(Double intervalS, String script, Double firstExecutionTimeS,
+  public void scheduleRepeating(Double interval, String script, Double firstExecutionTimeS,
       boolean wakeUp) {
     final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mService, script);
     final int alarmType = wakeUp ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
 
-    mTriggerRepository.addTrigger(new RepeatingAlarmTrigger(intervalS, script, firstExecutionTimeS,
+    mTriggerRepository.addTrigger(new RepeatingAlarmTrigger(interval, script, firstExecutionTimeS,
         wakeUp));
 
     mAlarmManager.setRepeating(alarmType, convertSecondsToMilliseconds(firstExecutionTimeS),
-        convertSecondsToMilliseconds(intervalS), pendingIntent);
+        convertSecondsToMilliseconds(interval), pendingIntent);
   }
 
   /**
@@ -92,7 +92,7 @@ public class AlarmTriggerManager {
       @Override
       public boolean matches(Trigger trigger) {
         if (trigger instanceof AlarmTrigger) {
-          return ((AlarmTrigger)trigger).getScriptName().compareToIgnoreCase(script) == 0;
+          return ((AlarmTrigger) trigger).getScriptName().compareToIgnoreCase(script) == 0;
         } else {
           return false;
         }

@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -34,6 +35,7 @@ import com.google.ase.ActivityFlinger;
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.R;
+import com.google.ase.dialog.Help;
 import com.google.ase.trigger.AlarmTrigger;
 import com.google.ase.trigger.AlarmTriggerManager;
 import com.google.ase.trigger.Trigger;
@@ -46,6 +48,13 @@ public class TriggerManager extends ListActivity {
 
   private static enum ContextMenuId {
     REMOVE;
+    public int getId() {
+      return ordinal() + Menu.FIRST;
+    }
+  }
+
+  private static enum MenuId {
+    SCHEDULE_REPEATING, HELP, SCHEDULE_INEXACT_REPEATING;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -64,6 +73,29 @@ public class TriggerManager extends ListActivity {
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     AseAnalytics.trackActivity(this);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    SubMenu subMenu = menu.addSubMenu("Add");
+    subMenu.setIcon(android.R.drawable.ic_menu_add);
+    subMenu.add(Menu.NONE, MenuId.SCHEDULE_REPEATING.getId(), Menu.NONE, "Repeating");
+    subMenu.add(Menu.NONE, MenuId.SCHEDULE_INEXACT_REPEATING.getId(), Menu.NONE,
+        "Power Efficient Repeating");
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    if (itemId == MenuId.HELP.getId()) {
+      Help.show(this);
+    } else if (itemId == MenuId.SCHEDULE_REPEATING.getId()) {
+      // TODO(damonkohler): Show number picker dialog to selection duration.
+    } else if (itemId == MenuId.SCHEDULE_INEXACT_REPEATING.getId()) {
+      // TODO(damonkohler): Show number picker dialog to selection duration.
+    }
+    return true;
   }
 
   @Override
