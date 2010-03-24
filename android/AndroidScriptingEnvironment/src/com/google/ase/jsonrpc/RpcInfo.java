@@ -18,7 +18,6 @@ package com.google.ase.jsonrpc;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -28,8 +27,9 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.ase.exception.AseRuntimeException;
+import com.google.ase.AseLog;
 import com.google.ase.rpc.MethodDescriptor;
+import com.google.ase.rpc.RpcError;
 
 /**
  * Instances of this class describe specific RPCs on the server. An RPC on the server is described
@@ -53,58 +53,56 @@ public final class RpcInfo {
    * @param parameters
    *          {@code JSONArray} containing the parameters
    * @return RPC response
+   * @throws RpcError
+   * @throws JSONException
    */
-  public JSONObject invoke(final JSONArray parameters) {
-    try {
-      final Type[] parameterTypes = mMethodDescriptor.getGenericParameterTypes();
-      final Object[] args = new Object[parameterTypes.length];
-      final Annotation annotations[][] = mMethodDescriptor.getParameterAnnotations();
+  public JSONObject invoke(final JSONArray parameters) throws RpcError, JSONException {
+    final Type[] parameterTypes = mMethodDescriptor.getGenericParameterTypes();
+    final Object[] args = new Object[parameterTypes.length];
+    final Annotation annotations[][] = mMethodDescriptor.getParameterAnnotations();
 
-      for (int i = 0; i < args.length; i++) {
-        final Type parameterType = parameterTypes[i];
-        Object defaultValue = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
-        if (i < parameters.length()) {
-          // Parameter is specified.
-          try {
-            // We must handle numbers explicitly because we cannot magically cast between them.
-            if (parameterType == Long.class) {
-              args[i] = parameters.getLong(i);
-            } else if (parameterType == Double.class) {
-              args[i] = parameters.getDouble(i);
-            } else if (parameterType == Integer.class) {
-              args[i] = parameters.getInt(i);
-            } else {
-              // Magically cast the parameter to the right Java type.
-              args[i] = ((Class<?>) parameterType).cast(parameters.get(i));
-            }
-          } catch (ClassCastException e) {
-            return JsonRpcResult.error("Argument " + (i + 1) + " should be of type " +
-                ((Class<?>)parameterType).getSimpleName() + ".");
+    for (int i = 0; i < args.length; i++) {
+      final Type parameterType = parameterTypes[i];
+      Object defaultValue = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
+      if (i < parameters.length()) {
+        // Parameter is specified.
+        try {
+          // We must handle numbers explicitly because we cannot magically cast between them.
+          if (parameterType == Long.class) {
+            args[i] = parameters.getLong(i);
+          } else if (parameterType == Double.class) {
+            args[i] = parameters.getDouble(i);
+          } else if (parameterType == Integer.class) {
+            args[i] = parameters.getInt(i);
+          } else {
+            // Magically cast the parameter to the right Java type.
+            args[i] = ((Class<?>) parameterType).cast(parameters.get(i));
           }
-        } else {
-          // Use default value of optional parameter.
-          args[i] = defaultValue;
+        } catch (ClassCastException e) {
+          throw new RpcError("Argument " + (i + 1) + " should be of type "
+              + ((Class<?>) parameterType).getSimpleName() + ".");
         }
+      } else {
+        // Use default value of optional parameter.
+        args[i] = defaultValue;
       }
+    }
 
-      Object result = null;
-      try {
-        result = mMethodDescriptor.getMethod().invoke(mReceiver, args);
-        if (result instanceof Bundle) {
-          return JsonRpcResult.result(JsonResultBuilders.buildJsonBundle((Bundle) result));
-        } else if (result instanceof Intent) {
-          return JsonRpcResult.result(JsonResultBuilders.buildJsonIntent((Intent) result));
-        } else if (result instanceof List<?>) {
-          return JsonRpcResult.result(JsonResultBuilders.buildJsonList((List<?>) result));
-        } else {
-          return JsonRpcResult.result(result);
-        }
-      } catch (Exception e) {
-        throw new AseRuntimeException("Failed to invoke: " + mMethodDescriptor.getName()
-            + " with args " + Arrays.toString(args) + " and result " + result, e.getCause());
-      }
-    } catch (JSONException e) {
-      return JsonRpcResult.error("Remote Exception", e);
+    Object result = null;
+    try {
+      result = mMethodDescriptor.getMethod().invoke(mReceiver, args);
+    } catch (Exception e) {
+      AseLog.e("Invocation error.", e.getCause());
+      throw new RpcError(e.getCause().getMessage());
+    }
+    if (result instanceof Bundle) {
+      return JsonRpcResult.result(JsonResultBuilders.buildJsonBundle((Bundle) result));
+    } else if (result instanceof Intent) {
+      return JsonRpcResult.result(JsonResultBuilders.buildJsonIntent((Intent) result));
+    } else if (result instanceof List<?>) {
+      return JsonRpcResult.result(JsonResultBuilders.buildJsonList((List<?>) result));
+    } else {
+      return JsonRpcResult.result(result);
     }
   }
 }

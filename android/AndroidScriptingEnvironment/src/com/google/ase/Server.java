@@ -135,8 +135,8 @@ public abstract class Server {
           BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
           PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
           process(in, out);
-        } catch (IOException e) {
-          AseLog.e("Unknown server error.", e);
+        } catch (Exception e) {
+          AseLog.e("Server error.", e);
         } finally {
           mNetworkThreads.remove(this);
           AseLog.v("Server thread " + getId() + " died.");
@@ -148,5 +148,5 @@ public abstract class Server {
     networkThread.start();
   }
 
-  protected abstract void process(BufferedReader in, PrintWriter out) throws IOException;
+  protected abstract void process(BufferedReader in, PrintWriter out) throws Exception;
 }
