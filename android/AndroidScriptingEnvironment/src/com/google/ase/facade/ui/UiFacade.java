@@ -157,6 +157,17 @@ public class UiFacade implements RpcReceiver {
       throw new AndroidRuntimeException("No dialog to add list to.");
     }
   }
+  
+  @Rpc(description = "Set dialog single choice items and selected item")
+  public void dialogSetSingleChoiceItems(
+      @RpcParameter(name = "items") JSONArray items,
+      @RpcDefaultInteger(name = "selected", defaultValue = -1) Integer selected) {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) mDialogTask).setSingleChoiceItems(items, selected);
+    } else {
+      throw new AndroidRuntimeException("No dialog to add list to.");
+    }
+  }
 
   @Rpc(description = "Returns dialog response.", returns = "User response")
   public Intent dialogGetResponse() {
