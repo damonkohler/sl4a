@@ -20,6 +20,7 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -39,9 +40,7 @@ import com.google.ase.R;
 import com.google.ase.dialog.DurationPickerDialog;
 import com.google.ase.dialog.Help;
 import com.google.ase.dialog.DurationPickerDialog.DurationPickedListener;
-import com.google.ase.trigger.AlarmTrigger;
 import com.google.ase.trigger.AlarmTriggerManager;
-import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository;
 import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
@@ -49,6 +48,7 @@ public class TriggerManager extends ListActivity {
   private TriggerRepository mTriggerRepository;
   private AlarmTriggerManager mAlarmTriggerManager;
   private TriggerAdapter mAdapter;
+  private List<TriggerInfo> mTriggerInfoList;
 
   private static enum ContextMenuId {
     REMOVE;
@@ -73,8 +73,11 @@ public class TriggerManager extends ListActivity {
     setContentView(R.layout.trigger_manager);
     mTriggerRepository = new TriggerRepository(this);
     mAlarmTriggerManager = new AlarmTriggerManager(this, mTriggerRepository);
-    mAdapter = new TriggerAdapter(mTriggerRepository.getAllTriggers());
+    mTriggerInfoList = mTriggerRepository.getAllTriggers();
+    mAdapter = new TriggerAdapter();
+    mAdapter.registerDataSetObserver(new TriggerListObserver());
     setListAdapter(mAdapter);
+    registerForContextMenu(getListView());
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     AseAnalytics.trackActivity(this);
@@ -122,37 +125,36 @@ public class TriggerManager extends ListActivity {
       return false;
     }
 
-    Trigger trigger = (Trigger) mAdapter.getItem(info.position);
-    if (trigger == null) {
+    TriggerInfo triggerInfo = (TriggerInfo) mAdapter.getItem(info.position);
+    if (triggerInfo == null) {
       AseLog.v("No trigger selected.");
       return false;
     }
 
     if (item.getItemId() == ContextMenuId.REMOVE.getId()) {
-      if (trigger instanceof AlarmTrigger) {
-        mAlarmTriggerManager.cancelRepeating(((AlarmTrigger) trigger).getScriptName());
-      } else {
-        throw new RuntimeException("Unknown trigger type.");
-      }
+      mAlarmTriggerManager.cancelRepeating(triggerInfo.getTrigger().getScriptName());
     }
+    mAdapter.notifyDataSetInvalidated();
     return true;
   }
 
-  private class TriggerAdapter extends BaseAdapter {
-    private final List<TriggerInfo> mTriggers;
-
-    public TriggerAdapter(List<TriggerInfo> triggers) {
-      mTriggers = triggers;
+  private class TriggerListObserver extends DataSetObserver {
+    @Override
+    public void onInvalidated() {
+      mTriggerInfoList = mTriggerRepository.getAllTriggers();
     }
+  }
+
+  private class TriggerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-      return mTriggers.size();
+      return mTriggerInfoList.size();
     }
 
     @Override
     public Object getItem(int position) {
-      return mTriggers.get(position);
+      return mTriggerInfoList.get(position);
     }
 
     @Override
@@ -162,7 +164,7 @@ public class TriggerManager extends ListActivity {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-      return mTriggers.get(position).getTrigger().getView(TriggerManager.this);
+      return mTriggerInfoList.get(position).getTrigger().getView(TriggerManager.this);
     }
   }
 

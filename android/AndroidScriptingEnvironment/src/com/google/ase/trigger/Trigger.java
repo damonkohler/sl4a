@@ -29,7 +29,7 @@ import android.widget.TextView;
  * @author Felix Arends (felix.arends@gmail.com)
  * 
  */
-public abstract class Trigger implements Serializable {
+public class Trigger implements Serializable {
   private static final long serialVersionUID = 5190219422732210378L;
   private final String mScriptName;
 
