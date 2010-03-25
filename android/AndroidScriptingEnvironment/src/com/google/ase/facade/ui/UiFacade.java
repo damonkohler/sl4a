@@ -17,6 +17,7 @@
 package com.google.ase.facade.ui;
 
 import java.util.Queue;
+import java.util.Set;
 
 import org.json.JSONArray;
 
@@ -39,7 +40,6 @@ import com.google.ase.rpc.RpcParameter;
  * UiFacade
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
- * @version 1.0
  */
 public class UiFacade implements RpcReceiver {
   private final Service mService;
@@ -72,7 +72,7 @@ public class UiFacade implements RpcReceiver {
       @RpcParameter(name = "Title") @RpcOptional String title,
       @RpcParameter(name = "Message") @RpcOptional String message,
       @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max,
-      @RpcParameter(name = "cancelable") @RpcDefault("false") Boolean cancelable) {
+      @RpcParameter(name = "cancelable") @RpcDefault("true") Boolean cancelable) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
         new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title, message, cancelable);
@@ -157,6 +157,30 @@ public class UiFacade implements RpcReceiver {
       throw new AndroidRuntimeException("No dialog to add list to.");
     }
   }
+  
+  @Rpc(description = "Set dialog single choice items and selected item")
+  public void dialogSetSingleChoiceItems(
+      @RpcParameter(name = "items") JSONArray items,
+      @RpcParameter(name = "selected", description = "selected item") 
+      @RpcOptional Integer selected) {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) mDialogTask).setSingleChoiceItems(items, selected);
+    } else {
+      throw new AndroidRuntimeException("No dialog to add list to.");
+    }
+  }
+  
+  @Rpc(description = "Set dialog multi choice items and selection")
+  public void dialogSetMultiChoiceItems(
+      @RpcParameter(name = "items") JSONArray items,
+      @RpcParameter(name = "selected", description = "list of selected items") 
+      @RpcOptional JSONArray selected) {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) mDialogTask).setMultiChoiceItems(items, selected);
+    } else {
+      throw new AndroidRuntimeException("No dialog to add list to.");
+    }
+  }
 
   @Rpc(description = "Returns dialog response.", returns = "User response")
   public Intent dialogGetResponse() {
@@ -164,6 +188,16 @@ public class UiFacade implements RpcReceiver {
       return ((FutureActivityTask) mDialogTask).getResult().get();
     } catch (Exception e) {
       throw new AndroidRuntimeException(e);
+    }
+  }
+  
+  @Rpc(description = "This method provides list of items user selected.", 
+      returns = "Selected items")
+  public Set<Integer> dialogGetSelectedItems() {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      return ((RunnableAlertDialog) mDialogTask).getSelectedItems();
+    } else {
+      throw new AndroidRuntimeException("No dialog to add list to.");
     }
   }
 

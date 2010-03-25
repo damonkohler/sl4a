@@ -180,7 +180,27 @@ def test_alert_dialog_with_list():
   droid.dialogSetItems(['foo', 'bar', 'baz'])
   droid.dialogShow()
   response = droid.dialogGetResponse().result
-  return 0 <= response['item'] <= 3
+  return True
+
+
+def test_alert_dialog_with_single_choice_list():
+  title = 'Alert'
+  droid.dialogCreateAlert(title)
+  droid.dialogSetSingleChoiceItems(['foo', 'bar', 'baz'])
+  droid.dialogSetPositiveButtonText('Yay!')
+  droid.dialogShow()
+  response = droid.dialogGetResponse().result
+  return True
+
+
+def test_alert_dialog_with_multi_choice_list():
+  title = 'Alert'
+  droid.dialogCreateAlert(title)
+  droid.dialogSetMultiChoiceItems(['foo', 'bar', 'baz'], [])
+  droid.dialogSetPositiveButtonText('Yay!')
+  droid.dialogShow()
+  response = droid.dialogGetResponse().result
+  return True
 
 
 if __name__ == '__main__':
