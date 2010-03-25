@@ -64,7 +64,7 @@ public class ScriptProvider extends ContentProvider {
     String[] columns = { LiveFolders._ID, LiveFolders.NAME, LiveFolders.INTENT };
     MatrixCursor cursor = new MatrixCursor(columns);
     int index = 0;
-    for (File script : ScriptStorageAdapter.listScripts(true)) {
+    for (File script : ScriptStorageAdapter.listScripts(false)) {
       String scriptName = script.getName();
       Intent intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

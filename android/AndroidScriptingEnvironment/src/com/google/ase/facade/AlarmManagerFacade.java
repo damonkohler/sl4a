@@ -70,7 +70,7 @@ public class AlarmManagerFacade implements RpcReceiver {
       firstExecutionTime = currentTime();
     }
 
-    mAlarmManager.scheduleRepeating(interval, script, firstExecutionTime, wakeup);
+    mAlarmManager.scheduleRepeating(interval, script, wakeup);
   }
   
   @Rpc(description = "schedules one-time execution of a script")

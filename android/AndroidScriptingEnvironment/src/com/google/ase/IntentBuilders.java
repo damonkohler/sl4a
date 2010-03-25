@@ -17,8 +17,8 @@
 package com.google.ase;
 
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 
@@ -29,14 +29,13 @@ public class IntentBuilders {
   /** A random value that is used to identify pending intents. */
   private static final int EXECUTE_SCRIPT_REQUEST_CODE = 0x12f412a;
 
-
   private IntentBuilders() {
     // Utility class.
   }
 
   /**
    * Builds an intent that will launch a script in the background.
-   *
+   * 
    * @param scriptName
    *          the script to launch
    * @return the intent that will launch the script
@@ -52,7 +51,7 @@ public class IntentBuilders {
 
   /**
    * Builds an intent that launches a script in a terminal.
-   *
+   * 
    * @param scriptName
    *          the script to launch
    * @return the intent that will launch the script
@@ -68,7 +67,7 @@ public class IntentBuilders {
 
   /**
    * Builds an intent that creates a shortcut to launch the provided script in the background.
-   *
+   * 
    * @param scriptName
    *          the script to link to
    * @param iconResource
@@ -85,7 +84,7 @@ public class IntentBuilders {
 
   /**
    * Builds an intent that creates a shortcut to launch the provided script in a terminal.
-   *
+   * 
    * @param scriptName
    *          the script to link to
    * @param iconResource
@@ -103,15 +102,16 @@ public class IntentBuilders {
   /**
    * Creates a pending intent that will launch the given script.
    * 
-   * @param service the service under whose authority to launch the intent
-   * @param scriptName name of the script to launch
+   * @param service
+   *          the service under whose authority to launch the intent
+   * @param scriptName
+   *          name of the script to launch
    * 
    * @return the {@link PendingIntent} object for launching the script
    */
-  public static PendingIntent buildPendingIntent(Service mService, String scriptName) {
+  public static PendingIntent buildPendingIntent(Context mContext, String scriptName) {
     final Intent intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
     intent.setComponent(AseService.COMPONENT_NAME);
-
-    return PendingIntent.getService(mService, EXECUTE_SCRIPT_REQUEST_CODE, intent, 0);
+    return PendingIntent.getService(mContext, EXECUTE_SCRIPT_REQUEST_CODE, intent, 0);
   }
 }

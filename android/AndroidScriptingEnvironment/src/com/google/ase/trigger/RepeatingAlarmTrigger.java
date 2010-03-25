@@ -19,29 +19,21 @@ package com.google.ase.trigger;
 public abstract class RepeatingAlarmTrigger extends Trigger {
   private static final long serialVersionUID = 7610406773988708932L;
 
-  /** Name of the script to run. */
-  private final String mScriptName;
-
   /** Interval between executions of the alarm, in seconds. */
-  private final Double mIntervalS;
+  private final double mInterval;
 
   /** Whether or not to wake up the device. */
   private final boolean mWakeUp;
 
-  public RepeatingAlarmTrigger(String scriptName, Double interval, boolean wakeUp) {
-    mScriptName = scriptName;
-    mIntervalS = interval;
+  public RepeatingAlarmTrigger(String scriptName, double interval, boolean wakeUp) {
+    super(scriptName);
+    mInterval = interval;
     mWakeUp = wakeUp;
   }
 
-  /** Returns the name of the script to execute. */
-  public String getScriptName() {
-    return mScriptName;
-  }
-
   /** Returns the interval between executions in seconds. */
-  public Double getIntervalS() {
-    return mIntervalS;
+  public double getInterval() {
+    return mInterval;
   }
 
   /** Returns whether or not the device should be woken up by the alarm. */

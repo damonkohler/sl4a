@@ -19,27 +19,44 @@ package com.google.ase.trigger;
 import java.io.Serializable;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.TextView;
 
 /**
  * The interfaces implemented by trigger methods.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
- *
+ * 
  */
 public abstract class Trigger implements Serializable {
   private static final long serialVersionUID = 5190219422732210378L;
+  private final String mScriptName;
 
-  public Trigger() {
+  public Trigger(String scriptName) {
+    mScriptName = scriptName;
   }
-  
+
   /** Invoked just after the trigger is invoked */
-  public void afterTrigger() { }
+  public void afterTrigger() {
+  }
 
   /** Invoked before the trigger is invoked */
-  public void beforeTrigger() { }
-  
-  /** Creates a view to display this trigger in the trigger manager. */
-  public abstract View getView(Context context);
-}
+  public void beforeTrigger() {
+  }
 
+  /** Returns the name of the script to execute */
+  public String getScriptName() {
+    return mScriptName;
+  }
+
+  /** Creates a view to display this trigger in the trigger manager. */
+  public View getView(Context context) {
+    TextView view = new TextView(context);
+    view.setPadding(2, 2, 2, 2);
+    view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+    view.setText(getScriptName());
+    return view;
+  }
+
+}

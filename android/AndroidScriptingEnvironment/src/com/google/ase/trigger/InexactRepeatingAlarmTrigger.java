@@ -16,9 +16,6 @@
 
 package com.google.ase.trigger;
 
-import android.content.Context;
-import android.view.View;
-import android.widget.TextView;
 
 public class InexactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
   private static final long serialVersionUID = -9193318334645990578L;
@@ -26,12 +23,4 @@ public class InexactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
   public InexactRepeatingAlarmTrigger(String scriptName, Double interval, boolean wakeUp) {
     super(scriptName, interval, wakeUp);
   }
-
-  @Override
-  public View getView(Context context) {
-    final TextView result = new TextView(context);
-    result.setText(getScriptName());
-    return result;
-  }
-
 }

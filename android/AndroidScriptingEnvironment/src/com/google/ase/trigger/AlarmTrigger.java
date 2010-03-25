@@ -16,30 +16,19 @@
 
 package com.google.ase.trigger;
 
-import android.content.Context;
-import android.view.View;
-import android.widget.TextView;
-
 public class AlarmTrigger extends Trigger {
   private static final long serialVersionUID = 3175281973854075190L;
+  private final double mExecutionTime;
 
-  final Double executionTimeS;
-  final String scriptName;
-
-  public AlarmTrigger(Double executionTimeS, String scriptName) {
-    this.executionTimeS = executionTimeS;
-    this.scriptName = scriptName;
+  public AlarmTrigger(double executionTime, String scriptName) {
+    super(scriptName);
+    mExecutionTime = executionTime;
   }
 
-  @Override
-  public View getView(Context context) {
-    TextView text = new TextView(context);
-    text.setText(getScriptName());
-    return text;
-  }
-
-  /** Returns the name of the script to execute */
-  public String getScriptName() {
-    return scriptName;
+  /**
+   * Returns the execution time in seconds since epoch.
+   */
+  public double getExecutionTime() {
+    return mExecutionTime;
   }
 }

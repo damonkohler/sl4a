@@ -28,7 +28,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -174,76 +173,7 @@ public class ScriptManager extends ListActivity {
 
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    final File script = (File) list.getItemAtPosition(position);
-
-    if (Intent.ACTION_PICK.equals(getIntent().getAction())) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setItems(new CharSequence[] { "Start in Terminal", "Start in Background" },
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              Intent intent = null;
-              if (which == 0) {
-                intent = IntentBuilders.buildStartInTerminalIntent(script.getName());
-              } else {
-                intent = IntentBuilders.buildStartInBackgroundIntent(script.getName());
-              }
-              if (intent != null) {
-                setResult(RESULT_OK, intent);
-              } else {
-                setResult(RESULT_CANCELED, null);
-              }
-              finish();
-            }
-          });
-      builder.show();
-      return;
-    }
-
-    if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setItems(new CharSequence[] { "Start in Terminal", "Start in Background" },
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              Parcelable iconResource =
-                  Intent.ShortcutIconResource.fromContext(ScriptManager.this,
-                      R.drawable.ase_logo_48);
-              Intent intent = null;
-              if (which == 0) {
-                intent = IntentBuilders.buildTerminalShortcutIntent(script.getName(), iconResource);
-              } else {
-                intent =
-                    IntentBuilders.buildBackgroundShortcutIntent(script.getName(), iconResource);
-              }
-              if (intent != null) {
-                setResult(RESULT_OK, intent);
-              } else {
-                setResult(RESULT_CANCELED, null);
-              }
-              finish();
-            }
-          });
-      builder.show();
-      return;
-    }
-
-    if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
-      Intent intent = new Intent();
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
-      // Set the description of the action.
-      if (script.getName().length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName().substring(0,
-            com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH));
-      } else {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName());
-      }
-      setResult(RESULT_OK, intent);
-      AseLog.v("Returned launch intent for " + script.getName() + " to Locale: " + intent.toURI());
-      finish();
-      return;
-    }
-
+    File script = (File) list.getItemAtPosition(position);
     startActivity(IntentBuilders.buildStartInTerminalIntent(script.getName()));
   }
 

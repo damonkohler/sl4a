@@ -16,9 +16,6 @@
 
 package com.google.ase.trigger;
 
-import android.content.Context;
-import android.view.View;
-import android.widget.TextView;
 
 @SuppressWarnings("unused")
 public class ExactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
@@ -31,12 +28,4 @@ public class ExactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
     super(scriptName, intervalS, wakeUp);
     mFirstExecutionTimeS = firstExecutionTimeS;
   }
-
-  @Override
-  public View getView(Context context) {
-    TextView text = new TextView(context);
-    text.setText(getScriptName());
-    return text;
-  }
-
 }

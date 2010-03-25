@@ -19,6 +19,10 @@
         <category
           android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
+    </activity>
+    <activity
+      android:name=".activity.ScriptPicker"
+      android:configChanges="keyboardHidden|orientation">
       <intent-filter>
         <action
           android:name="android.intent.action.CREATE_SHORTCUT" />
@@ -37,7 +41,7 @@
     </activity>
     <activity-alias
       android:name="LocalePlugin"
-      android:targetActivity=".activity.ScriptManager"
+      android:targetActivity=".activity.ScriptPicker"
       android:label="@string/application_title"
       android:icon="@drawable/ase_logo_32">
       <intent-filter>
