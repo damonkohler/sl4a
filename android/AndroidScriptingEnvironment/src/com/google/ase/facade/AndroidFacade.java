@@ -205,6 +205,7 @@ public class AndroidFacade implements RpcReceiver {
   @Rpc(description = "Sends a text message to the given recipient.")
   public void sendTextMessage(@RpcParameter(name = "destinationAddress") String destinationAddress,
       @RpcParameter(name = "text") String text) {
+    // TODO(MeanEYE.rcf): Migrate this method to SMSFacade
     mSms.sendTextMessage(destinationAddress, null, text, null, null);
   }
 
