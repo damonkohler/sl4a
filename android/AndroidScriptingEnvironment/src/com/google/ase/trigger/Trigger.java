@@ -21,7 +21,25 @@ import java.io.Serializable;
 import android.content.Context;
 import android.view.View;
 
-public interface Trigger extends Serializable {
-  /** Returns the view for this trigger. */
-  public View getView(Context context);
+/**
+ * The interfaces implemented by trigger methods.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ *
+ */
+public abstract class Trigger implements Serializable {
+  private static final long serialVersionUID = 5190219422732210378L;
+
+  public Trigger() {
+  }
+  
+  /** Invoked just after the trigger is invoked */
+  public void afterTrigger() { }
+
+  /** Invoked before the trigger is invoked */
+  public void beforeTrigger() { }
+  
+  /** Creates a view to display this trigger in the trigger manager. */
+  public abstract View getView(Context context);
 }
+

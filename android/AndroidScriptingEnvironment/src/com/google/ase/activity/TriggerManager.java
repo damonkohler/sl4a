@@ -36,10 +36,11 @@ import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.R;
 import com.google.ase.dialog.Help;
-import com.google.ase.trigger.AlarmTrigger;
+import com.google.ase.trigger.RepeatingAlarmTrigger;
 import com.google.ase.trigger.AlarmTriggerManager;
 import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository;
+import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
 public class TriggerManager extends ListActivity {
   private TriggerRepository mTriggerRepository;
@@ -120,8 +121,8 @@ public class TriggerManager extends ListActivity {
     }
 
     if (item.getItemId() == ContextMenuId.REMOVE.getId()) {
-      if (trigger instanceof AlarmTrigger) {
-        mAlarmTriggerManager.cancelRepeating(((AlarmTrigger) trigger).getScriptName());
+      if (trigger instanceof RepeatingAlarmTrigger) {
+        mAlarmTriggerManager.cancelRepeating(((RepeatingAlarmTrigger) trigger).getScriptName());
       } else {
         throw new RuntimeException("Unknown trigger type.");
       }
@@ -130,10 +131,10 @@ public class TriggerManager extends ListActivity {
   }
 
   private static class TriggerAdapter extends BaseAdapter {
-    private final List<Trigger> triggers;
+    private final List<TriggerInfo> triggers;
     private final Context context;
 
-    public TriggerAdapter(Context context, List<Trigger> triggers) {
+    public TriggerAdapter(Context context, List<TriggerInfo> triggers) {
       this.triggers = triggers;
       this.context = context;
     }
@@ -155,7 +156,7 @@ public class TriggerManager extends ListActivity {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-      return triggers.get(position).getView(context);
+      return triggers.get(position).getTrigger().getView(context);
     }
   }
 

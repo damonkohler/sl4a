@@ -23,6 +23,13 @@ import android.content.Context;
 
 import com.google.ase.IntentBuilders;
 
+/**
+ * A class keeping track of currently scheduled alarms in cooperation
+ * with the {@link TriggerRepository}.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ *
+ */
 public class AlarmTriggerManager {
   final AlarmManager mAlarmManager;
   final Service mService;
@@ -72,11 +79,26 @@ public class AlarmTriggerManager {
     final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mService, script);
     final int alarmType = wakeUp ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
 
-    mTriggerRepository.addTrigger(new RepeatingAlarmTrigger(interval, script, firstExecutionTimeS,
-        wakeUp));
+    mTriggerRepository.addTrigger(new ExactRepeatingAlarmTrigger(interval,
+        script, firstExecutionTimeS, wakeUp));
 
     mAlarmManager.setRepeating(alarmType, convertSecondsToMilliseconds(firstExecutionTimeS),
         convertSecondsToMilliseconds(interval), pendingIntent);
+  }
+  
+  /**
+   * Schedules the execution of a script at a specific point of time.
+   * 
+   * @param executionTimeS time of execution, in seconds since epoch
+   * @param script script to execute
+   * @param wakeup whether or not to wakeup the phone if its asleep
+   */
+  public void schedule(Double executionTimeS, String script, boolean wakeup) {
+    final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mService, script);
+    final int alarmType = wakeup ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
+
+    mTriggerRepository.addTrigger(new AlarmTrigger(executionTimeS, script));
+    mAlarmManager.set(alarmType, convertSecondsToMilliseconds(executionTimeS), pendingIntent);
   }
 
   /**
@@ -91,8 +113,8 @@ public class AlarmTriggerManager {
     mTriggerRepository.removeTriggers(new TriggerRepository.TriggerFilter() {
       @Override
       public boolean matches(Trigger trigger) {
-        if (trigger instanceof AlarmTrigger) {
-          return ((AlarmTrigger) trigger).getScriptName().compareToIgnoreCase(script) == 0;
+        if (trigger instanceof RepeatingAlarmTrigger) {
+          return ((RepeatingAlarmTrigger) trigger).getScriptName().compareToIgnoreCase(script) == 0;
         } else {
           return false;
         }

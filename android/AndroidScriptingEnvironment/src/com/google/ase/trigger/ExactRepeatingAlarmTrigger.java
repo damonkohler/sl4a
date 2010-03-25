@@ -20,15 +20,16 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-public class AlarmTrigger extends Trigger {
-  private static final long serialVersionUID = 3175281973854075190L;
+@SuppressWarnings("unused")
+public class ExactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
+  private static final long serialVersionUID = -9125118724160624255L;
 
-  final Double executionTimeS;
-  final String scriptName;
+  private final Double mFirstExecutionTimeS;
 
-  public AlarmTrigger(Double executionTimeS, String scriptName) {
-    this.executionTimeS = executionTimeS;
-    this.scriptName = scriptName;
+  public ExactRepeatingAlarmTrigger(Double intervalS, String scriptName,
+      Double firstExecutionTimeS, boolean wakeUp) {
+    super(scriptName, intervalS, wakeUp);
+    mFirstExecutionTimeS = firstExecutionTimeS;
   }
 
   @Override
@@ -38,8 +39,4 @@ public class AlarmTrigger extends Trigger {
     return text;
   }
 
-  /** Returns the name of the script to execute */
-  public String getScriptName() {
-    return scriptName;
-  }
 }

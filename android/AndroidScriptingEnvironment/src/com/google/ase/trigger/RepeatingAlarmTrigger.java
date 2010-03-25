@@ -16,27 +16,36 @@
 
 package com.google.ase.trigger;
 
-import android.content.Context;
-import android.view.View;
-import android.widget.TextView;
+public abstract class RepeatingAlarmTrigger extends Trigger {
+  private static final long serialVersionUID = 7610406773988708932L;
 
-@SuppressWarnings("unused")
-public class RepeatingAlarmTrigger extends AlarmTrigger {
-  private static final long serialVersionUID = -9125118724160624255L;
+  /** Name of the script to run. */
+  private final String mScriptName;
 
-  private final Double mFirstExecutionTimeS;
+  /** Interval between executions of the alarm, in seconds. */
+  private final Double mIntervalS;
 
-  public RepeatingAlarmTrigger(Double intervalS, String scriptName, Double firstExecutionTimeS,
-      boolean wakeUp) {
-    super(scriptName, intervalS, wakeUp);
-    mFirstExecutionTimeS = firstExecutionTimeS;
+  /** Whether or not to wake up the device. */
+  private final boolean mWakeUp;
+
+  public RepeatingAlarmTrigger(String scriptName, Double interval, boolean wakeUp) {
+    mScriptName = scriptName;
+    mIntervalS = interval;
+    mWakeUp = wakeUp;
   }
 
-  @Override
-  public View getView(Context context) {
-    TextView text = new TextView(context);
-    text.setText(getScriptName());
-    return text;
+  /** Returns the name of the script to execute. */
+  public String getScriptName() {
+    return mScriptName;
   }
 
+  /** Returns the interval between executions in seconds. */
+  public Double getIntervalS() {
+    return mIntervalS;
+  }
+
+  /** Returns whether or not the device should be woken up by the alarm. */
+  public boolean shouldWakeUp() {
+    return mWakeUp;
+  }
 }
