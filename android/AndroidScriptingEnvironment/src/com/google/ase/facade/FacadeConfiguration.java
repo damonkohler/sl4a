@@ -25,6 +25,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 
+import com.google.ase.AseApplication;
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.rpc.MethodDescriptor;
@@ -52,7 +53,8 @@ public class FacadeConfiguration {
    * @return a new {@link JsonRpcServer} configured with all facades
    */
   public static JsonRpcServer buildJsonRpcServer(Service service, Intent intent, Handler handler) {
-    final TriggerRepository triggerRepository = new TriggerRepository(service);
+    final TriggerRepository triggerRepository =
+        ((AseApplication) service.getApplication()).getTriggerRepository();
 
     AndroidFacade androidFacade = new AndroidFacade(service, handler, intent);
     SettingsFacade settingsFacade = new SettingsFacade(service);

@@ -16,6 +16,8 @@
 
 package com.google.ase.trigger;
 
+import com.google.ase.trigger.TriggerRepository.TriggerInfo;
+
 public class AlarmTrigger extends Trigger {
   private static final long serialVersionUID = 3175281973854075190L;
   private final double mExecutionTime;
@@ -23,6 +25,12 @@ public class AlarmTrigger extends Trigger {
   public AlarmTrigger(double executionTime, String scriptName) {
     super(scriptName);
     mExecutionTime = executionTime;
+  }
+  
+  @Override
+  public void beforeTrigger(TriggerInfo info) {
+    // This trigger will only fire once: remove it from the repository.
+    info.remove();
   }
 
   /**

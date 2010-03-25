@@ -34,6 +34,7 @@ import android.widget.BaseAdapter;
 
 import com.google.ase.ActivityFlinger;
 import com.google.ase.AseAnalytics;
+import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
@@ -71,7 +72,7 @@ public class TriggerManager extends ListActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.trigger_manager);
-    mTriggerRepository = new TriggerRepository(this);
+    mTriggerRepository = ((AseApplication)getApplication()).getTriggerRepository();
     mAlarmTriggerManager = new AlarmTriggerManager(this, mTriggerRepository);
     mTriggerInfoList = mTriggerRepository.getAllTriggers();
     mAdapter = new TriggerAdapter();

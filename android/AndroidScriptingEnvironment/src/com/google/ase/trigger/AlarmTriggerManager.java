@@ -20,7 +20,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 
+import com.google.ase.AseLog;
 import com.google.ase.IntentBuilders;
+import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
 /**
  * A class keeping track of currently scheduled alarms in cooperation with the
@@ -52,10 +54,11 @@ public class AlarmTriggerManager {
    *          wake up the device even when asleep
    */
   public void scheduleInexactRepeating(double interval, String script, boolean wakeUp) {
-    final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mContext, script);
     final int alarmType = wakeUp ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
-    mTriggerRepository.addTrigger(new InexactRepeatingAlarmTrigger(script, interval, wakeUp));
+    final TriggerInfo info =
+        mTriggerRepository.addTrigger(new InexactRepeatingAlarmTrigger(script, interval, wakeUp));
     long firstExecutionTime = System.currentTimeMillis() + convertSecondsToMilliseconds(interval);
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, info);
     mAlarmManager.setInexactRepeating(alarmType, firstExecutionTime,
         convertSecondsToMilliseconds(interval), pendingIntent);
   }
@@ -67,15 +70,15 @@ public class AlarmTriggerManager {
    *          interval between executions, in seconds
    * @param script
    *          script to execute
-   * @param wakeUp
+   * @param wakeup
    *          if true then the phone will wake up when the alarm goes off
    */
-  public void scheduleRepeating(Double interval, String script, boolean wakeUp) {
-    final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mContext, script);
-    final int alarmType = wakeUp ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
+  public void scheduleRepeating(Double interval, String script, boolean wakeup) {
+    final int alarmType = wakeup ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
     long firstExecutionTime = System.currentTimeMillis() + convertSecondsToMilliseconds(interval);
-    mTriggerRepository.addTrigger(new ExactRepeatingAlarmTrigger(interval, script,
-        convertMillisecondsToSeconds(firstExecutionTime), wakeUp));
+    TriggerInfo info = mTriggerRepository.addTrigger(new ExactRepeatingAlarmTrigger(interval, script,
+        convertMillisecondsToSeconds(firstExecutionTime), wakeup));
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, info);
     mAlarmManager.setRepeating(alarmType, firstExecutionTime,
         convertSecondsToMilliseconds(interval), pendingIntent);
   }
@@ -91,10 +94,12 @@ public class AlarmTriggerManager {
    *          whether or not to wakeup the phone if its asleep
    */
   public void schedule(Double executionTimeS, String script, boolean wakeup) {
-    final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mContext, script);
     final int alarmType = wakeup ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
 
-    mTriggerRepository.addTrigger(new AlarmTrigger(executionTimeS, script));
+    final TriggerInfo info =
+        mTriggerRepository.addTrigger(new AlarmTrigger(executionTimeS, script));
+    AseLog.e("I just scheduled trigger no. " + info.getId());
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, info);
     mAlarmManager.set(alarmType, convertSecondsToMilliseconds(executionTimeS), pendingIntent);
   }
 
@@ -105,20 +110,18 @@ public class AlarmTriggerManager {
    *          name of the script whose scheduled invocation to cancel
    */
   public void cancelRepeating(final String script) {
-    final PendingIntent pendingIntent = IntentBuilders.buildPendingIntent(mContext, script);
-
     mTriggerRepository.removeTriggers(new TriggerRepository.TriggerFilter() {
       @Override
-      public boolean matches(Trigger trigger) {
-        if (trigger instanceof RepeatingAlarmTrigger) {
-          return ((RepeatingAlarmTrigger) trigger).getScriptName().compareToIgnoreCase(script) == 0;
+      public boolean matches(TriggerInfo info) {
+        final Trigger trigger = info.getTrigger();
+        if (trigger.getScriptName().compareToIgnoreCase(script) == 0) {
+          mAlarmManager.cancel(IntentBuilders.buildTriggerIntent(mContext, info));
+          return true;
         } else {
           return false;
         }
       }
     });
-
-    mAlarmManager.cancel(pendingIntent);
   }
 
   private long convertSecondsToMilliseconds(double seconds) {

@@ -24,9 +24,10 @@ import android.os.Parcelable;
 
 import com.google.ase.activity.AseService;
 import com.google.ase.activity.AseServiceLauncher;
+import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
 public class IntentBuilders {
-  /** A random value that is used to identify pending intents. */
+  /** An arbitrary value that is used to identify pending intents for executing scripts. */
   private static final int EXECUTE_SCRIPT_REQUEST_CODE = 0x12f412a;
 
   private IntentBuilders() {
@@ -100,18 +101,21 @@ public class IntentBuilders {
   }
 
   /**
-   * Creates a pending intent that will launch the given script.
+   * Creates a pending intent that can be used to execute the trigger with the given id.
    * 
    * @param service
    *          the service under whose authority to launch the intent
-   * @param scriptName
-   *          name of the script to launch
+   * @param info
+   *          {@link TriggerInfo} for the trigger to run
    * 
-   * @return the {@link PendingIntent} object for launching the script
+   * @return {@link PendingIntent} object for running the trigger
    */
-  public static PendingIntent buildPendingIntent(Context mContext, String scriptName) {
-    final Intent intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
+  public static PendingIntent buildTriggerIntent(Context context, TriggerInfo info) {
+    final Intent intent = buildStartInBackgroundIntent(info.getTrigger().getScriptName());
+    AseLog.e("Building intent for id = " + info.getId());
+    intent.putExtra(Constants.EXTRA_TRIGGER_ID, info.getId());
     intent.setComponent(AseService.COMPONENT_NAME);
-    return PendingIntent.getService(mContext, EXECUTE_SCRIPT_REQUEST_CODE, intent, 0);
+    return PendingIntent.getService(context, EXECUTE_SCRIPT_REQUEST_CODE, intent,
+        PendingIntent.FLAG_UPDATE_CURRENT);
   }
 }

@@ -45,20 +45,31 @@ public class TriggerRepository {
   /** Holds trigger object and meta-information. */
   public static class TriggerInfo implements Serializable {
     private static final long serialVersionUID = 8103773194726113518L;
-    private final long id;
-    private final Trigger trigger;
+    private final long mId;
+    private final Trigger mTrigger;
+    private transient TriggerRepository mRepository;
 
-    public TriggerInfo(long id, Trigger trigger) {
-      this.id = id;
-      this.trigger = trigger;
+    public TriggerInfo(TriggerRepository repository, long id, Trigger trigger) {
+      mRepository = repository;
+      mId = id;
+      mTrigger = trigger;
     }
 
     public long getId() {
-      return id;
+      return mId;
     }
 
     public Trigger getTrigger() {
-      return trigger;
+      return mTrigger;
+    }
+    
+    private void setRepostiory(TriggerRepository repository) {
+      this.mRepository = repository;
+    }
+
+    /** Removes this trigger from the repository */
+    public void remove() {
+      mRepository.removeTrigger(mId);
     }
   }
 
@@ -76,7 +87,7 @@ public class TriggerRepository {
   private final SharedPreferences mPreferences;
 
   public static interface TriggerFilter {
-    boolean matches(Trigger trigger);
+    boolean matches(TriggerInfo trigger);
   }
 
   public TriggerRepository(Context context) {
@@ -90,7 +101,7 @@ public class TriggerRepository {
 
   /** Adds a new trigger to the repository. */
   public synchronized TriggerInfo addTrigger(Trigger trigger) {
-    final TriggerInfo info = new TriggerInfo(createNewId(), trigger);
+    final TriggerInfo info = new TriggerInfo(this, createNewId(), trigger);
     final List<TriggerInfo> triggers = getAllTriggers();
     triggers.add(info);
     storeTriggers(triggers);
@@ -119,7 +130,9 @@ public class TriggerRepository {
       }
     }
 
+    AseLog.e("size = " + triggers.size());
     triggers.remove(itemToRemove);
+    AseLog.e("size = " + triggers.size());
     storeTriggers(triggers);
   }
 
@@ -134,7 +147,11 @@ public class TriggerRepository {
       final ByteArrayInputStream inputStream =
           new ByteArrayInputStream(Base64.decodeBase64(triggers.getBytes()));
       final ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-      return (List<TriggerInfo>) objectInputStream.readObject();
+      List<TriggerInfo> result = (List<TriggerInfo>) objectInputStream.readObject();
+      for (TriggerInfo info : result) {
+        info.setRepostiory(this);
+      }
+      return result;
     } catch (IOException e) {
       AseLog.e(e);
     } catch (ClassNotFoundException e) {
@@ -160,7 +177,7 @@ public class TriggerRepository {
   public synchronized void removeTriggers(TriggerFilter triggerFilter) {
     List<TriggerInfo> allTriggers = new ArrayList<TriggerInfo>();
     for (TriggerInfo info : getAllTriggers()) {
-      if (!triggerFilter.matches(info.getTrigger())) {
+      if (!triggerFilter.matches(info)) {
         allTriggers.add(info);
       }
     }
@@ -184,5 +201,16 @@ public class TriggerRepository {
     long newId = readIndex();
     writeIndex(newId + 1);
     return newId;
+  }
+
+  /** Returns the {@link TriggerInfo} object with the given id. */
+  public TriggerInfo getById(long id) {
+    for (TriggerInfo info : getAllTriggers()) {
+      if (info.getId() == id) {
+        return info;
+      }
+    }
+
+    return null;
   }
 }

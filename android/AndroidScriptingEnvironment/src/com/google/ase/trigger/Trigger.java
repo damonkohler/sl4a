@@ -23,6 +23,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.ase.trigger.TriggerRepository.TriggerInfo;
+
 /**
  * The interfaces implemented by trigger methods.
  * 
@@ -38,11 +40,11 @@ public class Trigger implements Serializable {
   }
 
   /** Invoked just after the trigger is invoked */
-  public void afterTrigger() {
+  public void afterTrigger(TriggerInfo info) {
   }
 
   /** Invoked before the trigger is invoked */
-  public void beforeTrigger() {
+  public void beforeTrigger(TriggerInfo info) {
   }
 
   /** Returns the name of the script to execute */

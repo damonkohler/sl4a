@@ -22,19 +22,27 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import android.app.Application;
 
 import com.google.ase.future.FutureActivityTask;
+import com.google.ase.trigger.TriggerRepository;
 
 public class AseApplication extends Application {
 
   private final Queue<FutureActivityTask> mTaskQueue =
       new ConcurrentLinkedQueue<FutureActivityTask>();
 
+  private TriggerRepository mTriggerRepository;
+
   public Queue<FutureActivityTask> getTaskQueue() {
     return mTaskQueue;
+  }
+
+  public TriggerRepository getTriggerRepository() {
+    return mTriggerRepository;
   }
 
   @Override
   public void onCreate() {
     super.onCreate();
+    mTriggerRepository = new TriggerRepository(this);
     ActivityFlinger.Initialize();
     AseAnalytics.start(this);
   }
