@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.ase.AseLog;
-
 /**
  * An adapter that wraps {@code Method}.
  * 
@@ -235,7 +233,7 @@ public final class MethodDescriptor {
     if (converterClass == Converter.class) {
       Converter<?> converter = sConverters.get(parameterType);
       if (converter == null) {
-        AseLog.e("No converter found for " + parameterType);
+        throw new IllegalArgumentException("No converter found for " + parameterType);
       }
       return converter;
     }
@@ -243,9 +241,9 @@ public final class MethodDescriptor {
       Constructor<?> constructor = converterClass.getConstructor(new Class<?>[0]);
       return (Converter<?>) constructor.newInstance(new Object[0]);
     } catch (Exception e) {
-      AseLog.e("Cannot create converter from " + converterClass.getCanonicalName());
+      throw new IllegalArgumentException("Cannot create converter from "
+          + converterClass.getCanonicalName());
     }
-    return null;
   }
 
   /**
@@ -285,17 +283,14 @@ public final class MethodDescriptor {
       }});
     converters.put(Integer.class, new Converter<Integer>() {
       @Override public Integer convert(String input) {
-        AseLog.v("Converting '" + input + "' as integer");
         try {
           return Integer.decode(input);
         } catch (NumberFormatException e) {
-          AseLog.e("'" + input + "' is not an integer");
-          return null;
+          throw new IllegalArgumentException("'" + input + "' is not an integer");
         }
       }});
     converters.put(Boolean.class, new Converter<Boolean>() {
       @Override public Boolean convert(String input) {
-        AseLog.v("Converting '" + input + "' as boolean");
         if (input == null) {
           return null;
         }
@@ -306,8 +301,7 @@ public final class MethodDescriptor {
         if (input.equals("false")) {
           return false;
         }
-        AseLog.e("'" + input + "' is not a boolean");
-        return null;
+        throw new IllegalArgumentException("'" + input + "' is not a boolean");
       }});
     return converters;
   }
