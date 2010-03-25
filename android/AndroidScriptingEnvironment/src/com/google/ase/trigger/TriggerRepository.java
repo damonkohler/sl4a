@@ -130,9 +130,7 @@ public class TriggerRepository {
       }
     }
 
-    AseLog.e("size = " + triggers.size());
     triggers.remove(itemToRemove);
-    AseLog.e("size = " + triggers.size());
     storeTriggers(triggers);
   }
 

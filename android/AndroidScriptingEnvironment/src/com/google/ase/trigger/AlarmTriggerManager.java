@@ -20,7 +20,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 
-import com.google.ase.AseLog;
 import com.google.ase.IntentBuilders;
 import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
@@ -98,7 +97,6 @@ public class AlarmTriggerManager {
 
     final TriggerInfo info =
         mTriggerRepository.addTrigger(new AlarmTrigger(executionTimeS, script));
-    AseLog.e("I just scheduled trigger no. " + info.getId());
     final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, info);
     mAlarmManager.set(alarmType, convertSecondsToMilliseconds(executionTimeS), pendingIntent);
   }

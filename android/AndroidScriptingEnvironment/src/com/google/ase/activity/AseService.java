@@ -80,7 +80,6 @@ public class AseService extends Service {
     AseApplication app = (AseApplication) getApplication();
     final long triggerId = intent.getLongExtra(Constants.EXTRA_TRIGGER_ID, -1);
     final TriggerInfo trigger = app.getTriggerRepository().getById(triggerId);
-    AseLog.e("triggerId = " + triggerId);
     if (trigger != null) {
       trigger.getTrigger().beforeTrigger(trigger);
     }

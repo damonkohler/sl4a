@@ -112,7 +112,6 @@ public class IntentBuilders {
    */
   public static PendingIntent buildTriggerIntent(Context context, TriggerInfo info) {
     final Intent intent = buildStartInBackgroundIntent(info.getTrigger().getScriptName());
-    AseLog.e("Building intent for id = " + info.getId());
     intent.putExtra(Constants.EXTRA_TRIGGER_ID, info.getId());
     intent.setComponent(AseService.COMPONENT_NAME);
     return PendingIntent.getService(context, EXECUTE_SCRIPT_REQUEST_CODE, intent,
