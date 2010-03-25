@@ -20,7 +20,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-public class InexactRepeatingAlarmTrigger extends AlarmTrigger {
+public class InexactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
   private static final long serialVersionUID = -9193318334645990578L;
 
   public InexactRepeatingAlarmTrigger(String scriptName, Double interval, boolean wakeUp) {

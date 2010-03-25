@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +33,48 @@ import android.preference.PreferenceManager;
 
 import com.google.ase.AseLog;
 
+/**
+ * A repository maintaining all currently scheduled triggers. This includes, for example, alarms or
+ * observers of arriving text messages etc. This class is responsible for serializing the list of
+ * triggers to the shared preferences store, and retrieving it from there.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ * 
+ */
 public class TriggerRepository {
+  /** Holds trigger object and meta-information. */
+  public static class TriggerInfo implements Serializable {
+    private static final long serialVersionUID = 8103773194726113518L;
+    private final long id;
+    private final Trigger trigger;
+
+    public TriggerInfo(long id, Trigger trigger) {
+      this.id = id;
+      this.trigger = trigger;
+    }
+
+    public long getId() {
+      return id;
+    }
+
+    public Trigger getTrigger() {
+      return trigger;
+    }
+  }
+
+  /**
+   * The list of triggers is serialzied to the shared preferences entry with this name.
+   */
   private static final String TRIGGERS_PREF_KEY = "TRIGGERS";
 
+  /**
+   * Each trigger has an id to make it identifiable. The next id is stored to the shared
+   * preferences. This is the key for the corresponding shared preferences entry.
+   */
+  private static final String NEXT_TRIGGER_ID_KEY = "NEXT_TRIGGER_ID";
+
   private final SharedPreferences mPreferences;
-  
+
   public static interface TriggerFilter {
     boolean matches(Trigger trigger);
   }
@@ -45,18 +83,22 @@ public class TriggerRepository {
     mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
-  public synchronized List<Trigger> getAllTriggers() {
+  public synchronized List<TriggerInfo> getAllTriggers() {
     final String triggers = mPreferences.getString(TRIGGERS_PREF_KEY, null);
     return deserializeTriggersFromString(triggers);
   }
 
-  public synchronized void addTrigger(Trigger trigger) {
-    List<Trigger> triggers = getAllTriggers();
-    triggers.add(trigger);
+  /** Adds a new trigger to the repository. */
+  public synchronized TriggerInfo addTrigger(Trigger trigger) {
+    final TriggerInfo info = new TriggerInfo(createNewId(), trigger);
+    final List<TriggerInfo> triggers = getAllTriggers();
+    triggers.add(info);
     storeTriggers(triggers);
+    return info;
   }
 
-  private void storeTriggers(List<Trigger> triggers) {
+  /** Writes the list of triggers to the shared preferences. */
+  private void storeTriggers(List<TriggerInfo> triggers) {
     SharedPreferences.Editor editor = mPreferences.edit();
     final String triggerValue = serializeTriggersToString(triggers);
     if (triggerValue != null) {
@@ -65,32 +107,44 @@ public class TriggerRepository {
     editor.commit();
   }
 
-  public synchronized void removeTrigger(Trigger trigger) {
-    List<Trigger> triggers = getAllTriggers();
-    triggers.remove(trigger);
+  /** Removes a specific trigger. */
+  public synchronized void removeTrigger(long id) {
+    List<TriggerInfo> triggers = getAllTriggers();
+
+    TriggerInfo itemToRemove = null;
+    for (TriggerInfo info : triggers) {
+      if (info.getId() == id) {
+        itemToRemove = info;
+        break;
+      }
+    }
+
+    triggers.remove(itemToRemove);
     storeTriggers(triggers);
   }
 
+  /** Deserializes the list of triggers from a base 64 encoded string. */
   @SuppressWarnings("unchecked")
-  private List<Trigger> deserializeTriggersFromString(String triggers) {
+  private List<TriggerInfo> deserializeTriggersFromString(String triggers) {
     if (triggers == null) {
-      return new ArrayList<Trigger>();
+      return new ArrayList<TriggerInfo>();
     }
 
     try {
       final ByteArrayInputStream inputStream =
           new ByteArrayInputStream(Base64.decodeBase64(triggers.getBytes()));
       final ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-      return (List<Trigger>) objectInputStream.readObject();
+      return (List<TriggerInfo>) objectInputStream.readObject();
     } catch (IOException e) {
       AseLog.e(e);
     } catch (ClassNotFoundException e) {
       AseLog.e(e);
     }
-    return new ArrayList<Trigger>();
+    return new ArrayList<TriggerInfo>();
   }
 
-  private String serializeTriggersToString(List<Trigger> triggers) {
+  /** Serializes the list of triggers to a Base64 encoded string. */
+  private String serializeTriggersToString(List<TriggerInfo> triggers) {
     try {
       final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       final ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
@@ -102,13 +156,33 @@ public class TriggerRepository {
     }
   }
 
-  public void removeTriggers(TriggerFilter triggerFilter) {
-    List<Trigger> allTriggers = new ArrayList<Trigger>();
-    for (Trigger trigger : getAllTriggers()) {
-      if (!triggerFilter.matches(trigger)) {
-        allTriggers.add(trigger);
+  /** Removes all triggers that match the filters */
+  public synchronized void removeTriggers(TriggerFilter triggerFilter) {
+    List<TriggerInfo> allTriggers = new ArrayList<TriggerInfo>();
+    for (TriggerInfo info : getAllTriggers()) {
+      if (!triggerFilter.matches(info.getTrigger())) {
+        allTriggers.add(info);
       }
     }
     storeTriggers(allTriggers);
+  }
+
+  /** Returns the currently stored index. */
+  private long readIndex() {
+    return mPreferences.getLong(NEXT_TRIGGER_ID_KEY, 0);
+  }
+
+  /** Write a new index to the store. */
+  private void writeIndex(long newIndex) {
+    SharedPreferences.Editor editor = mPreferences.edit();
+    editor.putLong(NEXT_TRIGGER_ID_KEY, newIndex);
+    editor.commit();
+  }
+
+  /** Returns a new unique id for use with the next trigger. */
+  public synchronized long createNewId() {
+    long newId = readIndex();
+    writeIndex(newId + 1);
+    return newId;
   }
 }

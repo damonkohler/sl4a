@@ -16,6 +16,7 @@
 
 package com.google.ase.facade;
 
+import android.app.AlarmManager;
 import android.app.Service;
 
 import com.google.ase.jsonrpc.RpcReceiver;
@@ -26,6 +27,12 @@ import com.google.ase.rpc.RpcParameter;
 import com.google.ase.trigger.AlarmTriggerManager;
 import com.google.ase.trigger.TriggerRepository;
 
+/**
+ * A facade exposing the functionality of the {@link AlarmManager}.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ *
+ */
 public class AlarmManagerFacade implements RpcReceiver {
   final AlarmTriggerManager mAlarmManager;
 
@@ -41,9 +48,10 @@ public class AlarmManagerFacade implements RpcReceiver {
       Double interval,
       @RpcParameter(name = "script", description = "the script to execute")
       String script,
-      @RpcParameter(name = "wakeUp", description = "whether or not to wakeup the device if asleep") @RpcDefault("true") 
-      Boolean wakeUp) {
-    mAlarmManager.scheduleInexactRepeating(interval, script, wakeUp);
+      @RpcParameter(name = "wakeup", description = "whether or not to wakeup the device if asleep")
+      @RpcDefault("true") 
+      Boolean wakeup) {
+    mAlarmManager.scheduleInexactRepeating(interval, script, wakeup);
   }
 
   @Rpc(description = "scheudles a script for (exact) regular execution")
@@ -54,14 +62,39 @@ public class AlarmManagerFacade implements RpcReceiver {
       String script,
       @RpcParameter(name = "firstExecutionTime", description = "first time to execute script, in seconds since epoch") @RpcOptional
       Double firstExecutionTime,
-      @RpcParameter(name = "wakeUp", description = "whether or not to wake up the device if asleep") @RpcDefault("true")
-      Boolean wakeUp) {
+      @RpcParameter(name = "wakeup", description = "whether or not to wake up the device if asleep")
+      @RpcDefault("true")
+      Boolean wakeup) {
     if (firstExecutionTime == null) {
-      // If the default value is passed, the current time is used.
+      // If the default value is passed, use the current time.
       firstExecutionTime = currentTime();
     }
 
-    mAlarmManager.scheduleRepeating(interval, script, firstExecutionTime, wakeUp);
+    mAlarmManager.scheduleRepeating(interval, script, firstExecutionTime, wakeup);
+  }
+  
+  @Rpc(description = "schedules one-time execution of a script")
+  public void scheudleAbsolute(
+      @RpcParameter(name = "script", description = "script to execute")
+      String script,
+      @RpcParameter(name = "time", description = "time of invocation, in seconds since epoch")
+      Double time,
+      @RpcParameter(name = "wakeup", description = "whether or not to wake up the device if asleep")
+      @RpcDefault("true")
+      Boolean wakeup) {
+    mAlarmManager.schedule(time, script, wakeup);
+  }
+  
+  @Rpc(description = "schedules one-time execution of a script, a given number of seconds from now")
+  public void scheduleRelative(
+      @RpcParameter(name = "script", description = "script to execute")
+      String script,
+      @RpcParameter(name = "secondsFromNow", description = "after what time to execute the script")
+      Double secondsFromNow,
+      @RpcParameter(name = "wakeup", description = "whether or not to wake up the device if asleep")
+      @RpcDefault("true")
+      Boolean wakeup) {
+    mAlarmManager.schedule(currentTime() + secondsFromNow, script, wakeup);
   }
 
   @Rpc(description = "cancels all scheduled regular executions of a given script")
@@ -69,8 +102,9 @@ public class AlarmManagerFacade implements RpcReceiver {
     mAlarmManager.cancelRepeating(script);
   }
 
+  /** Returns the current time, in seconds since epoch. */
   private Double currentTime() {
-    return (1.0 * System.currentTimeMillis()) / 1000;
+    return (1.0d * System.currentTimeMillis()) / 1000;
   }
 
   @Override
