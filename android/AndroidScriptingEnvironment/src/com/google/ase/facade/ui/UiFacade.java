@@ -72,7 +72,7 @@ public class UiFacade implements RpcReceiver {
       @RpcParameter(name = "Title") @RpcOptional String title,
       @RpcParameter(name = "Message") @RpcOptional String message,
       @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max,
-      @RpcParameter(name = "cancelable") @RpcDefault("false") Boolean cancelable) {
+      @RpcParameter(name = "cancelable") @RpcDefault("true") Boolean cancelable) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
         new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title, message, cancelable);
@@ -161,7 +161,7 @@ public class UiFacade implements RpcReceiver {
   @Rpc(description = "Set dialog single choice items and selected item")
   public void dialogSetSingleChoiceItems(
       @RpcParameter(name = "items") JSONArray items,
-      @RpcParameter(name = "selected", description = "list of selected items") 
+      @RpcParameter(name = "selected", description = "selected item") 
       @RpcOptional Integer selected) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setSingleChoiceItems(items, selected);
@@ -173,7 +173,8 @@ public class UiFacade implements RpcReceiver {
   @Rpc(description = "Set dialog multi choice items and selection")
   public void dialogSetMultiChoiceItems(
       @RpcParameter(name = "items") JSONArray items,
-      @RpcParameter(name = "selected") JSONArray selected) {
+      @RpcParameter(name = "selected", description = "list of selected items") 
+      @RpcOptional JSONArray selected) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setMultiChoiceItems(items, selected);
     } else {
