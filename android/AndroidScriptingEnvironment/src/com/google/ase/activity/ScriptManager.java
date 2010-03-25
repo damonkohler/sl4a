@@ -93,6 +93,7 @@ public class ScriptManager extends ListActivity {
     UsageTrackingConfirmation.show(this);
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
+    setResult(RESULT_CANCELED); // Default to canceled if we were started for result.
     AseAnalytics.trackActivity(this);
   }
 
@@ -174,6 +175,30 @@ public class ScriptManager extends ListActivity {
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
     final File script = (File) list.getItemAtPosition(position);
+
+    if (Intent.ACTION_PICK.equals(getIntent().getAction())) {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setItems(new CharSequence[] { "Start in Terminal", "Start in Background" },
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              Intent intent = null;
+              if (which == 0) {
+                intent = IntentBuilders.buildStartInTerminalIntent(script.getName());
+              } else {
+                intent = IntentBuilders.buildStartInBackgroundIntent(script.getName());
+              }
+              if (intent != null) {
+                setResult(RESULT_OK, intent);
+              } else {
+                setResult(RESULT_CANCELED, null);
+              }
+              finish();
+            }
+          });
+      builder.show();
+      return;
+    }
 
     if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);

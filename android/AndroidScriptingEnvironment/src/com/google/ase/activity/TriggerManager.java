@@ -20,6 +20,7 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -35,7 +36,9 @@ import com.google.ase.ActivityFlinger;
 import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.R;
+import com.google.ase.dialog.DurationPickerDialog;
 import com.google.ase.dialog.Help;
+import com.google.ase.dialog.DurationPickerDialog.DurationPickedListener;
 import com.google.ase.trigger.AlarmTrigger;
 import com.google.ase.trigger.AlarmTriggerManager;
 import com.google.ase.trigger.Trigger;
@@ -91,9 +94,13 @@ public class TriggerManager extends ListActivity {
     if (itemId == MenuId.HELP.getId()) {
       Help.show(this);
     } else if (itemId == MenuId.SCHEDULE_REPEATING.getId()) {
-      // TODO(damonkohler): Show number picker dialog to selection duration.
+      Intent intent = new Intent(this, ScriptManager.class);
+      intent.setAction(Intent.ACTION_PICK);
+      startActivityForResult(intent, 0);
     } else if (itemId == MenuId.SCHEDULE_INEXACT_REPEATING.getId()) {
-      // TODO(damonkohler): Show number picker dialog to selection duration.
+      Intent intent = new Intent(this, ScriptManager.class);
+      intent.setAction(Intent.ACTION_PICK);
+      startActivityForResult(intent, 1);
     }
     return true;
   }
@@ -157,6 +164,21 @@ public class TriggerManager extends ListActivity {
     public View getView(final int position, View convertView, ViewGroup parent) {
       return triggers.get(position).getView(context);
     }
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    DurationPickerDialog.getDurationFromDialog(this, "Repeat every", new DurationPickedListener() {
+      @Override
+      public void onSet(double duration) {
+
+      }
+
+      @Override
+      public void onCancel() {
+
+      }
+    });
   }
 
 }
