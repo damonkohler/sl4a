@@ -72,7 +72,7 @@ public class UiFacade implements RpcReceiver {
       @RpcParameter(name = "Title") @RpcOptional String title,
       @RpcParameter(name = "Message") @RpcOptional String message,
       @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max,
-      @RpcParameter(name = "cancelable") @RpcDefault("true") Boolean cancelable) {
+      @RpcParameter(name = "cancelable") @RpcDefault("false") Boolean cancelable) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
         new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title, message, cancelable);

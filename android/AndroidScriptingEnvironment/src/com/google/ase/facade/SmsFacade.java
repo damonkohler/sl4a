@@ -37,24 +37,23 @@ import com.google.ase.rpc.RpcParameter;
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-public class SMSFacade implements RpcReceiver {
-  private Service mService;
-  private ContentResolver mContentResolver;
+public class SmsFacade implements RpcReceiver {
+  private final Service mService;
+  private final ContentResolver mContentResolver;
 
-  public SMSFacade(Service service) {
+  public SmsFacade(Service service) {
     mService = service;
     mContentResolver = mService.getContentResolver();
   }
-  
+
   @Rpc(description = "Return number of messages")
-  public Integer getMessageCount(
-      @RpcParameter(name = "unread_only") Boolean unread_only, 
+  public Integer getMessageCount(@RpcParameter(name = "unread_only") Boolean unread_only,
       @RpcParameter(name = "folder") @RpcOptional String folder) {
-    Uri mURI = Uri.parse("content://sms" + (folder != "" ? "/"+folder : ""));
+    Uri mURI = Uri.parse("content://sms" + (folder != "" ? "/" + folder : ""));
     Integer result = 0;
     String cond = "";
     if (unread_only)
-        cond = "read = 0";
+      cond = "read = 0";
     try {
       Cursor cursor = mContentResolver.query(mURI, null, cond, null, null);
       result = cursor.getCount();
@@ -63,16 +62,15 @@ public class SMSFacade implements RpcReceiver {
     }
     return result;
   }
-  
+
   @Rpc(description = "Return list containing message id's")
-  public List<Integer> getMessageList(
-      @RpcParameter(name = "unread_only") Boolean unread_only, 
+  public List<Integer> getMessageList(@RpcParameter(name = "unread_only") Boolean unread_only,
       @RpcParameter(name = "folder") @RpcOptional String folder) {
-    Uri mURI = Uri.parse("content://sms" + (folder != "" ? "/"+folder : ""));
+    Uri mURI = Uri.parse("content://sms" + (folder != "" ? "/" + folder : ""));
     List<Integer> result = new ArrayList<Integer>();
     String cond = "";
     if (unread_only)
-        cond = "read = 0";
+      cond = "read = 0";
     try {
       Cursor cursor = mContentResolver.query(mURI, null, cond, null, null);
       while (cursor.moveToNext())
@@ -82,11 +80,11 @@ public class SMSFacade implements RpcReceiver {
     }
     return result;
   }
-  
+
   public JSONArray getMessage(Integer id) {
     return null;
   }
-  
+
   @Override
   public void shutdown() {
   }

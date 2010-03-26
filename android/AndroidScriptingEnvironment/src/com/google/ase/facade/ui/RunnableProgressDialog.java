@@ -19,7 +19,6 @@ package com.google.ase.facade.ui;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.util.AndroidRuntimeException;
 
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureIntent;
@@ -60,11 +59,7 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
 
   @Override
   public Dialog getDialog() {
-    if (mDialog != null) {
-      return mDialog;
-    } else {
-      throw new AndroidRuntimeException("There is no active dialog!");
-    }
+    return mDialog;
   }
 
   @Override

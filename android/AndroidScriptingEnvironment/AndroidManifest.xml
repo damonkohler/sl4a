@@ -147,7 +147,11 @@
     android:name="android.permission.CALL_PHONE" />
   <uses-permission
     android:name="android.permission.SEND_SMS" />
-  <uses-permission android:name="android.permission.READ_SMS"></uses-permission><uses-permission android:name="android.permission.WRITE_SMS"></uses-permission><uses-permission
+  <uses-permission
+    android:name="android.permission.READ_SMS" />
+  <uses-permission
+    android:name="android.permission.WRITE_SMS" />
+  <uses-permission
     android:name="android.permission.VIBRATE" />
   <uses-permission
     android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -171,7 +175,6 @@
     android:name="android.permission.READ_LOGS" />
   <uses-sdk
     android:minSdkVersion="3"></uses-sdk>
-<uses-permission android:name="android.permission.WRITE_SETTINGS"></uses-permission>
-
-
+  <uses-permission
+    android:name="android.permission.WRITE_SETTINGS"></uses-permission>
 </manifest>

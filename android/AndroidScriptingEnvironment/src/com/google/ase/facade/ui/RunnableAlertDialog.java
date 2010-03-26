@@ -29,13 +29,14 @@ import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureIntent;
 
 /**
  * Wrapper class for alert dialog running in separate thread.
- *
+ * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
 class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
@@ -43,7 +44,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private final String mTitle;
   private final String mMessage;
   private FutureIntent mResult;
-  private Set<Integer> mResultItems;
+  private final Set<Integer> mResultItems;
   private Activity mActivity;
   private CharSequence[] mItems;
   private int mSelectedItem;
@@ -52,7 +53,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private String mPositiveButtonText;
   private String mNegativeButtonText;
   private String mNeutralButtonText;
-  
+
   public class ListType {
     public static final int MENU = 0;
     public static final int SINGLE_CHOICE = 1;
@@ -80,7 +81,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
 
   /**
    * Set list items.
-   *
+   * 
    * @param items
    */
   public void setItems(JSONArray items) {
@@ -96,9 +97,10 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
       mListType = ListType.MENU;
     }
   }
-  
+
   /**
    * Set single choice items
+   * 
    * @param items
    * @param selected
    */
@@ -112,6 +114,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
 
   /**
    * Set multi choice items
+   * 
    * @param items
    * @param selected
    */
@@ -133,12 +136,12 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
       mListType = ListType.MULTI_CHOICE;
     }
   }
-  
+
   @Override
   public Dialog getDialog() {
     return mDialog;
   }
-  
+
   public Set<Integer> getSelectedItems() {
     return mResultItems;
   }
@@ -156,27 +159,26 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
       builder.setMessage(mMessage);
     }
     if (mItems != null) {
-      switch(mListType) {
+      switch (mListType) {
         // Add single choice menu items to dialog.
         case ListType.SINGLE_CHOICE:
-          builder.setSingleChoiceItems(mItems, mSelectedItem, 
+          builder.setSingleChoiceItems(mItems, mSelectedItem,
               new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int item) {
                   mResultItems.clear();
                   mResultItems.add(item);
                 }
-          });
+              });
           break;
         // Add multiple choice items to the dialog.
         case ListType.MULTI_CHOICE:
           builder.setMultiChoiceItems(mItems, mSelectedItems,
               new DialogInterface.OnMultiChoiceClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int item, 
-                    boolean isChecked) {
+                public void onClick(DialogInterface dialog, int item, boolean isChecked) {
                   if (isChecked) {
-                      mResultItems.add(item);
+                    mResultItems.add(item);
                   } else {
                     if (mResultItems.contains(item))
                       mResultItems.remove(item);
@@ -191,13 +193,14 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
               Intent intent = new Intent();
               intent.putExtra("item", item);
               mResult.set(intent);
-              // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
+              // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory
+              // leak.
               dialog.dismiss();
               activity.finish();
             }
           });
           break;
-      } 
+      }
     }
     configureButtons(builder, activity);
     addOnCancelListener(builder, activity);
