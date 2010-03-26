@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.ase.util.VisibleForTesting;
+
 /**
  * An adapter that wraps {@code Method}.
  * 
@@ -39,6 +41,11 @@ public final class MethodDescriptor {
   
   public MethodDescriptor(Method method) {
     mMethod = method;
+  }
+  
+  @Override
+  public String toString() {
+    return mMethod.getDeclaringClass().getCanonicalName() + "." + mMethod.getName();
   }
   
   /** Collects all methods with {@code RPC} annotation from given class. */
@@ -117,9 +124,9 @@ public final class MethodDescriptor {
     appendTypeName(result, parameterType);
     result.append(" ");
     result.append(getName(annotations));
-    if (isOptionalParameter(annotations)) {
+    if (hasDefaultValue(annotations)) {
       result.append("[optional");
-      if (hasDefaultValue(annotations)) {
+      if (hasExplicitDefaultValue(annotations)) {
         result.append(", default " + getDefaultValue(parameterType, annotations));         
       }
       result.append("]");
@@ -213,6 +220,7 @@ public final class MethodDescriptor {
 
   /**
    * Returns the default value for a specific parameter.
+   * 
    * @param parameterType parameterType
    * @param annotations annotations of the parameter
    */
@@ -221,10 +229,12 @@ public final class MethodDescriptor {
       if (a instanceof RpcDefault) {
         RpcDefault defaultAnnotation = (RpcDefault) a;
         Converter<?> converter = converterFor(parameterType, defaultAnnotation.converter());
-        return converter == null ? null : converter.convert(defaultAnnotation.value());
+        return converter.convert(defaultAnnotation.value());
+      } else if (a instanceof RpcOptional) {
+        return null;
       }
     }
-    return null;
+    throw new IllegalStateException("No default value for " + parameterType);
   }
 
   @SuppressWarnings("unchecked")
@@ -233,7 +243,7 @@ public final class MethodDescriptor {
     if (converterClass == Converter.class) {
       Converter<?> converter = sConverters.get(parameterType);
       if (converter == null) {
-        throw new IllegalArgumentException("No converter found for " + parameterType);
+        throw new IllegalArgumentException("No predefined converter found for " + parameterType);
       }
       return converter;
     }
@@ -247,13 +257,13 @@ public final class MethodDescriptor {
   }
 
   /**
-   * Returns whether the default value is specified for a specific parameter.
+   * Determines whether or not this parameter has default value.
    * 
    * @param annotations annotations of the parameter
    */
-  private static boolean hasDefaultValue(Annotation[] annotations) {
+  public static boolean hasDefaultValue(Annotation[] annotations) {
     for (Annotation a : annotations) {
-      if (a instanceof RpcDefault) {
+      if (a instanceof RpcDefault || a instanceof RpcOptional) {
         return true;
       }
     }
@@ -261,13 +271,13 @@ public final class MethodDescriptor {
   }
 
   /**
-   * Determines whether or not this parameter is optional.
+   * Returns whether the default value is specified for a specific parameter.
    * 
    * @param annotations annotations of the parameter
    */
-  private static boolean isOptionalParameter(Annotation[] annotations) {
+  @VisibleForTesting static boolean hasExplicitDefaultValue(Annotation[] annotations) {
     for (Annotation a : annotations) {
-      if (a instanceof RpcOptional) {
+      if (a instanceof RpcDefault) {
         return true;
       }
     }
