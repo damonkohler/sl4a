@@ -50,8 +50,7 @@ public final class RpcInfo {
    * Invokes the call that belongs to this object with the given parameters. Wraps the response
    * (possibly an exception) in a JSONObject.
    * 
-   * @param parameters
-   *          {@code JSONArray} containing the parameters
+   * @param parameters {@code JSONArray} containing the parameters
    * @return RPC response
    * @throws RpcError
    * @throws JSONException
@@ -63,7 +62,6 @@ public final class RpcInfo {
 
     for (int i = 0; i < args.length; i++) {
       final Type parameterType = parameterTypes[i];
-      Object defaultValue = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
       if (i < parameters.length()) {
         // Parameter is specified.
         try {
@@ -82,9 +80,10 @@ public final class RpcInfo {
           throw new RpcError("Argument " + (i + 1) + " should be of type "
               + ((Class<?>) parameterType).getSimpleName() + ".");
         }
+      } else if (MethodDescriptor.hasDefaultValue(annotations[i])) {
+        args[i] = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
       } else {
-        // Use default value of optional parameter.
-        args[i] = defaultValue;
+        throw new RpcError("Argument " + (i + 1) + " is not present");
       }
     }
 

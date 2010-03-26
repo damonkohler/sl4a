@@ -24,8 +24,6 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to mark RPC parameter that have a default value.
  * 
- * <p>The parameter marked as default is also optional.
- * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 @Retention(RetentionPolicy.RUNTIME)
