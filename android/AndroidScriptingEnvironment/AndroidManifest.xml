@@ -134,6 +134,7 @@
     <provider
       android:name=".provider.ScriptProvider"
       android:authorities="com.google.ase.provider.scriptprovider" />
+    <uses-library android:name="android.test.runner" />      
   </application>
   <uses-permission
     android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
@@ -173,8 +174,10 @@
     android:name="android.permission.RECORD_AUDIO" />
   <uses-permission
     android:name="android.permission.READ_LOGS" />
-  <uses-sdk
-    android:minSdkVersion="3"></uses-sdk>
   <uses-permission
     android:name="android.permission.WRITE_SETTINGS"></uses-permission>
+  <uses-sdk
+    android:minSdkVersion="3"></uses-sdk>
+  <instrumentation android:name="android.test.InstrumentationTestRunner"
+       android:targetPackage="com.google.ase" android:label="ASE Android Tests" />
 </manifest>
