@@ -38,7 +38,10 @@ def test_gdata():
   # Authenticate using your Google Docs email address and password.
   username = droid.getInput('Username').result
   password = droid.getPassword('Password', 'For ' + username).result
-  client.ClientLogin(username, password)
+  try:
+    client.ClientLogin(username, password)
+  except:
+    return False
 
   # Query the server for an Atom feed containing a list of your documents.
   documents_feed = client.GetDocumentListFeed()
@@ -76,11 +79,9 @@ def test_phone_state():
 
 
 def test_ringer_silent():
-  result = droid.setRingerSilent()
-  if result.error is not None:
-    return False
-  result = droid.setRingerSilent(False)
-  return True
+  result1 = droid.toggleRingerSilentMode()
+  result2 = droid.toggleRingerSilentMode()
+  return result1.error is None and result2.error is None
 
 
 def test_ringer_volume():
@@ -105,8 +106,9 @@ def test_geocode():
 
 
 def test_wifi():
-  result = droid.setWifiEnabled()
-  return result.error is None
+  result1 = droid.toggleWifiState()
+  result2 = droid.toggleWifiState()
+  return result1.error is None and result2.error is None
 
 
 def test_make_toast():

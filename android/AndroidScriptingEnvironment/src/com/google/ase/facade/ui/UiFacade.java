@@ -20,6 +20,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -157,24 +158,23 @@ public class UiFacade implements RpcReceiver {
       throw new AndroidRuntimeException("No dialog to add list to.");
     }
   }
-  
+
   @Rpc(description = "Set dialog single choice items and selected item")
   public void dialogSetSingleChoiceItems(
       @RpcParameter(name = "items") JSONArray items,
-      @RpcParameter(name = "selected", description = "selected item") 
-      @RpcOptional Integer selected) {
+      @RpcParameter(name = "selected", description = "selected item index") @RpcDefault("0") Integer selected) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setSingleChoiceItems(items, selected);
     } else {
       throw new AndroidRuntimeException("No dialog to add list to.");
     }
   }
-  
+
   @Rpc(description = "Set dialog multi choice items and selection")
   public void dialogSetMultiChoiceItems(
       @RpcParameter(name = "items") JSONArray items,
-      @RpcParameter(name = "selected", description = "list of selected items") 
-      @RpcOptional JSONArray selected) {
+      @RpcParameter(name = "selected", description = "list of selected items") @RpcOptional JSONArray selected)
+      throws JSONException {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setMultiChoiceItems(items, selected);
     } else {
@@ -190,9 +190,8 @@ public class UiFacade implements RpcReceiver {
       throw new AndroidRuntimeException(e);
     }
   }
-  
-  @Rpc(description = "This method provides list of items user selected.", 
-      returns = "Selected items")
+
+  @Rpc(description = "This method provides list of items user selected.", returns = "Selected items")
   public Set<Integer> dialogGetSelectedItems() {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       return ((RunnableAlertDialog) mDialogTask).getSelectedItems();
