@@ -69,9 +69,10 @@ public class FacadeConfiguration {
         new TelephonyManagerFacade(service, eventFacade);
     AlarmManagerFacade alarmManagerFacade =
         new AlarmManagerFacade(service, eventFacade, triggerRepository);
+    SMSFacade smsFacade = new SMSFacade(service);
     return new JsonRpcServer(androidFacade, settingsFacade, mediaFacade, ttsFacade, srFacade,
         uiFacade, eventFacade, sensorManagerFacade, locationManagerFacade, telephonyManagerFacade,
-        alarmManagerFacade);
+        alarmManagerFacade, smsFacade);
   }
 
   /**
@@ -90,6 +91,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(LocationManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SettingsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(SMSFacade.class));
     Collections.sort(list, new Comparator<MethodDescriptor>() {
       public int compare(MethodDescriptor method1, MethodDescriptor method2) {
         return method1.getName().compareTo(method2.getName());

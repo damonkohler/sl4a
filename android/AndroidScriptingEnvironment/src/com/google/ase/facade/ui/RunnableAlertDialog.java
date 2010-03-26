@@ -16,6 +16,10 @@
 
 package com.google.ase.facade.ui;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -25,7 +29,6 @@ import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
-
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureIntent;
@@ -40,15 +43,27 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private final String mTitle;
   private final String mMessage;
   private FutureIntent mResult;
+  private Set<Integer> mResultItems;
   private Activity mActivity;
   private CharSequence[] mItems;
+  private int mSelectedItem;
+  private boolean mSelectedItems[];
+  private int mListType;
   private String mPositiveButtonText;
   private String mNegativeButtonText;
   private String mNeutralButtonText;
+  
+  public class ListType {
+    public static final int MENU = 0;
+    public static final int SINGLE_CHOICE = 1;
+    public static final int MULTI_CHOICE = 2;
+  }
 
   public RunnableAlertDialog(String title, String message) {
     mTitle = title;
     mMessage = message;
+    mListType = ListType.MENU;
+    mResultItems = new TreeSet<Integer>();
   }
 
   public void setPositiveButtonText(String text) {
@@ -66,7 +81,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   /**
    * Set list items.
    *
-   * @param Items
+   * @param items
    */
   public void setItems(JSONArray items) {
     if (mItems == null) {
@@ -78,12 +93,54 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
           throw new AseRuntimeException(e);
         }
       }
+      mListType = ListType.MENU;
+    }
+  }
+  
+  /**
+   * Set single choice items
+   * @param items
+   * @param selected
+   */
+  public void setSingleChoiceItems(JSONArray items, int selected) {
+    if (mItems == null) {
+      setItems(items);
+      mSelectedItem = selected;
+      mListType = ListType.SINGLE_CHOICE;
     }
   }
 
+  /**
+   * Set multi choice items
+   * @param items
+   * @param selected
+   */
+  public void setMultiChoiceItems(JSONArray items, JSONArray selected) {
+    if (mItems == null) {
+      setItems(items);
+      if (selected != null) {
+        mSelectedItems = new boolean[items.length()];
+        Arrays.fill(mSelectedItems, false);
+        for (int i = 0; i < selected.length(); i++) {
+          try {
+            mSelectedItems[selected.getInt(i)] = true;
+            mResultItems.add(selected.getInt(i));
+          } catch (JSONException e) {
+            throw new AseRuntimeException(e);
+          }
+        }
+      }
+      mListType = ListType.MULTI_CHOICE;
+    }
+  }
+  
   @Override
   public Dialog getDialog() {
     return mDialog;
+  }
+  
+  public Set<Integer> getSelectedItems() {
+    return mResultItems;
   }
 
   @Override
@@ -99,16 +156,48 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
       builder.setMessage(mMessage);
     }
     if (mItems != null) {
-      builder.setItems(mItems, new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int item) {
-          Intent intent = new Intent();
-          intent.putExtra("item", item);
-          mResult.set(intent);
-          // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
-          dialog.dismiss();
-          activity.finish();
-        }
-      });
+      switch(mListType) {
+        // Add single choice menu items to dialog.
+        case ListType.SINGLE_CHOICE:
+          builder.setSingleChoiceItems(mItems, mSelectedItem, 
+              new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                  mResultItems.clear();
+                  mResultItems.add(item);
+                }
+          });
+          break;
+        // Add multiple choice items to the dialog.
+        case ListType.MULTI_CHOICE:
+          builder.setMultiChoiceItems(mItems, mSelectedItems,
+              new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int item, 
+                    boolean isChecked) {
+                  if (isChecked) {
+                      mResultItems.add(item);
+                  } else {
+                    if (mResultItems.contains(item))
+                      mResultItems.remove(item);
+                  }
+                }
+              });
+          break;
+        // Add standard, menu-like, items to dialog.
+        default:
+          builder.setItems(mItems, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+              Intent intent = new Intent();
+              intent.putExtra("item", item);
+              mResult.set(intent);
+              // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
+              dialog.dismiss();
+              activity.finish();
+            }
+          });
+          break;
+      } 
     }
     configureButtons(builder, activity);
     addOnCancelListener(builder, activity);
