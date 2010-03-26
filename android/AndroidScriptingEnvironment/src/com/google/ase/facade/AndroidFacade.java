@@ -43,7 +43,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.telephony.gsm.SmsManager;
 import android.text.ClipboardManager;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -71,7 +70,6 @@ public class AndroidFacade implements RpcReceiver {
   private final Queue<FutureActivityTask> mTaskQueue;
 
   private final ActivityManager mActivityManager;
-  private final SmsManager mSms;
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
   private final Geocoder mGeocoder;
@@ -84,7 +82,7 @@ public class AndroidFacade implements RpcReceiver {
 
   /**
    * Creates a new AndroidFacade that simplifies the interface to various Android APIs.
-   *
+   * 
    * @param service
    *          is the {@link Context} the APIs will run under
    * @param handler
@@ -95,7 +93,6 @@ public class AndroidFacade implements RpcReceiver {
     mHandler = handler;
     mIntent = intent;
     mTaskQueue = ((AseApplication) mService.getApplication()).getTaskQueue();
-    mSms = SmsManager.getDefault();
     mActivityManager = (ActivityManager) mService.getSystemService(Context.ACTIVITY_SERVICE);
     mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);
     mNotificationManager =
@@ -117,7 +114,6 @@ public class AndroidFacade implements RpcReceiver {
         (ClipboardManager) mService.getSystemService(Context.CLIPBOARD_SERVICE);
     return clipboard.getText().toString();
   }
-
 
   @Rpc(description = "Returns a list of addresses for the given latitude and longitude.", returns = "A list of addresses.")
   public List<Address> geocode(
@@ -200,13 +196,6 @@ public class AndroidFacade implements RpcReceiver {
     String packageName = className.substring(0, className.lastIndexOf("."));
     intent.setClassName(packageName, className);
     startActivity(intent);
-  }
-
-  @Rpc(description = "Sends a text message to the given recipient.")
-  public void sendTextMessage(@RpcParameter(name = "destinationAddress") String destinationAddress,
-      @RpcParameter(name = "text") String text) {
-    // TODO(MeanEYE.rcf): Migrate this method to SMSFacade
-    mSms.sendTextMessage(destinationAddress, null, text, null, null);
   }
 
   @Rpc(description = "Vibrates the phone or a specified duration in milliseconds.")
@@ -390,13 +379,14 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Force stops a package.")
-  public void forceStopPackage(@RpcParameter(name = "packageName", description = "name of package") String packageName) {
+  public void forceStopPackage(
+      @RpcParameter(name = "packageName", description = "name of package") String packageName) {
     mActivityManager.restartPackage(packageName);
   }
 
   /**
    * Launches an activity that sends an e-mail message to a given recipient.
-   *
+   * 
    * @param recipientAddress
    *          recipient's e-mail address
    * @param subject
@@ -405,8 +395,7 @@ public class AndroidFacade implements RpcReceiver {
    *          message body
    */
   @Rpc(description = "Launches an activity that sends an e-mail message to a given recipient.")
-  public void sendEmail(
-      @RpcParameter(name = "recipientAddress") final String recipientAddress,
+  public void sendEmail(@RpcParameter(name = "recipientAddress") final String recipientAddress,
       @RpcParameter(name = "subject") final String subject,
       @RpcParameter(name = "body") final String body) {
     final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -416,20 +405,20 @@ public class AndroidFacade implements RpcReceiver {
     emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
     mService.startActivity(emailIntent);
   }
-  
+
   /**
    * Retrieve package version code
+   * 
    * @param packageName
    * @return
    */
   @Rpc(description = "Retrieve package version code")
-  public int getPackageVersionCode(
-      @RpcParameter(name = "packageName") final String packageName) {
+  public int getPackageVersionCode(@RpcParameter(name = "packageName") final String packageName) {
     int result = -1;
     PackageInfo pInfo = null;
     try {
-      pInfo = mService.getPackageManager().getPackageInfo(packageName,
-          PackageManager.GET_META_DATA);
+      pInfo =
+          mService.getPackageManager().getPackageInfo(packageName, PackageManager.GET_META_DATA);
     } catch (NameNotFoundException e) {
       pInfo = null;
     }
@@ -437,36 +426,36 @@ public class AndroidFacade implements RpcReceiver {
       result = pInfo.versionCode;
     return result;
   }
-  
+
   /**
    * Retrieve package version string
+   * 
    * @param packageName
    * @return
    */
   @Rpc(description = "Retrieve package version string")
-  public String getPackageVersion(
-      @RpcParameter(name = "packageName") final String packageName) {
+  public String getPackageVersion(@RpcParameter(name = "packageName") final String packageName) {
     String result = "";
     PackageInfo pInfo = null;
     try {
-      pInfo = mService.getPackageManager().getPackageInfo(packageName,
-          PackageManager.GET_META_DATA);
+      pInfo =
+          mService.getPackageManager().getPackageInfo(packageName, PackageManager.GET_META_DATA);
     } catch (NameNotFoundException e) {
       pInfo = null;
     }
     if (pInfo != null)
-      result = ""+pInfo.versionName;
+      result = "" + pInfo.versionName;
     return result;
   }
-  
+
   /**
    * Check if ASE is higher or equal of specified version
+   * 
    * @param version
    * @return
    */
   @Rpc(description = "Check if ASE is higher or equal of specified version")
-  public boolean requiredVersion(
-      @RpcParameter(name = "requiredVersion") final Integer version) {
+  public boolean requiredVersion(@RpcParameter(name = "requiredVersion") final Integer version) {
     boolean result = false;
     int packageVersion = getPackageVersionCode("com.google.ase");
     if (version > -1)
