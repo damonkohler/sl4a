@@ -54,6 +54,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(LocationManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SettingsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(SmsFacade.class));
     for (MethodDescriptor rpc : list) {
       sRpcs.put(rpc.getName(), rpc);
     }
@@ -91,9 +92,10 @@ public class FacadeConfiguration {
         new TelephonyManagerFacade(service, eventFacade);
     AlarmManagerFacade alarmManagerFacade =
         new AlarmManagerFacade(service, eventFacade, triggerRepository);
+    SmsFacade smsFacade = new SmsFacade(service);
     return new JsonRpcServer(androidFacade, settingsFacade, mediaFacade, ttsFacade, srFacade,
         uiFacade, eventFacade, sensorManagerFacade, locationManagerFacade, telephonyManagerFacade,
-        alarmManagerFacade);
+        alarmManagerFacade, smsFacade);
   }
 
   /** Returns a list of {@link MethodDescriptor} objects for all facades. */

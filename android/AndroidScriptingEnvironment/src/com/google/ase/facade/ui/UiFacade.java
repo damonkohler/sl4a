@@ -17,8 +17,10 @@
 package com.google.ase.facade.ui;
 
 import java.util.Queue;
+import java.util.Set;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -39,7 +41,6 @@ import com.google.ase.rpc.RpcParameter;
  * UiFacade
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
- * @version 1.0
  */
 public class UiFacade implements RpcReceiver {
   private final Service mService;
@@ -158,12 +159,44 @@ public class UiFacade implements RpcReceiver {
     }
   }
 
+  @Rpc(description = "Set dialog single choice items and selected item")
+  public void dialogSetSingleChoiceItems(
+      @RpcParameter(name = "items") JSONArray items,
+      @RpcParameter(name = "selected", description = "selected item index") @RpcDefault("0") Integer selected) {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) mDialogTask).setSingleChoiceItems(items, selected);
+    } else {
+      throw new AndroidRuntimeException("No dialog to add list to.");
+    }
+  }
+
+  @Rpc(description = "Set dialog multi choice items and selection")
+  public void dialogSetMultiChoiceItems(
+      @RpcParameter(name = "items") JSONArray items,
+      @RpcParameter(name = "selected", description = "list of selected items") @RpcOptional JSONArray selected)
+      throws JSONException {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      ((RunnableAlertDialog) mDialogTask).setMultiChoiceItems(items, selected);
+    } else {
+      throw new AndroidRuntimeException("No dialog to add list to.");
+    }
+  }
+
   @Rpc(description = "Returns dialog response.", returns = "User response")
   public Intent dialogGetResponse() {
     try {
       return ((FutureActivityTask) mDialogTask).getResult().get();
     } catch (Exception e) {
       throw new AndroidRuntimeException(e);
+    }
+  }
+
+  @Rpc(description = "This method provides list of items user selected.", returns = "Selected items")
+  public Set<Integer> dialogGetSelectedItems() {
+    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
+      return ((RunnableAlertDialog) mDialogTask).getSelectedItems();
+    } else {
+      throw new AndroidRuntimeException("No dialog to add list to.");
     }
   }
 
