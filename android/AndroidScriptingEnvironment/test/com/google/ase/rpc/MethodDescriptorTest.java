@@ -73,12 +73,12 @@ public class MethodDescriptorTest extends TestCase {
         String.class, Integer.class, Boolean.class, Boolean.class,
         List.class, List.class, List.class);
     
-    assertDefault(null, m, 0);
-    assertDefault(null, m, 1);
-    assertDefault(null, m, 2);
-    assertDefault(null, m, 3);
-    assertDefault(null, m, 4);
-    assertDefault(null, m, 5);
+    assertDefaultThrows(m, 0);
+    assertDefaultThrows(m, 1);
+    assertDefaultThrows(m, 2);
+    assertDefaultThrows(m, 3);
+    assertDefaultThrows(m, 4);
+    assertDefaultThrows(m, 5);
     assertDefault("value", m, 6);
     assertDefaultThrows(m, 7);
     assertDefaultThrows(m, 8);
