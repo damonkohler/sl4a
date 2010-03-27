@@ -48,9 +48,14 @@ import com.google.ase.facade.FacadeConfiguration;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.rpc.MethodDescriptor;
+import com.google.ase.rpc.ParameterDescriptor;
 
 public class ApiBrowser extends ListActivity {
 
+  private static enum RequestCode {
+    RPC_PROMPT
+  }
+  
   private static enum MenuId {
     EXPAND_ALL, COLLAPSE_ALL;
     public int getId() {
@@ -59,7 +64,8 @@ public class ApiBrowser extends ListActivity {
   }
 
   private static enum ContextMenuId {
-    INSERT_TEXT;
+    INSERT_TEXT,
+    PROMPT_PARAMETERS;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -128,6 +134,7 @@ public class ApiBrowser extends ListActivity {
   @Override
   public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
     menu.add(Menu.NONE, ContextMenuId.INSERT_TEXT.getId(), Menu.NONE, "Insert");
+    menu.add(Menu.NONE, ContextMenuId.PROMPT_PARAMETERS.getId(), Menu.NONE, "Prompt");
   }
 
   @Override
@@ -147,16 +154,52 @@ public class ApiBrowser extends ListActivity {
     }
 
     if (item.getItemId() == ContextMenuId.INSERT_TEXT.getId()) {
-      insertText(rpc);
+      insertText(rpc, new String[0]);
+    } else if (item.getItemId() == ContextMenuId.PROMPT_PARAMETERS.getId()) {
+      Intent intent = new Intent(this, ApiPrompt.class);
+      intent.putExtra(Constants.EXTRA_API_PROMPT_RPC_NAME, rpc.getName());
+      ParameterDescriptor[] parameters = rpc.getParameterValues(new String[0]);
+      String[] values = new String[parameters.length];
+      int index = 0;
+      for (ParameterDescriptor parameter : parameters) {
+        values[index++] = parameter.getValue();
+      }
+      intent.putExtra(Constants.EXTRA_API_PROMPT_VALUES, values);
+      startActivityForResult(intent, RequestCode.RPC_PROMPT.ordinal());
     }
     return true;
   }
 
-  private void insertText(MethodDescriptor rpc) {
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    RequestCode request = RequestCode.values()[requestCode];
+    if (resultCode == RESULT_OK) {
+      switch (request) {
+        case RPC_PROMPT:
+          MethodDescriptor rpc = FacadeConfiguration.getMethodDescriptor(
+              data.getStringExtra(Constants.EXTRA_API_PROMPT_RPC_NAME));
+          String[] values = data.getStringArrayExtra(Constants.EXTRA_API_PROMPT_VALUES);
+          insertText(rpc, values);
+          break;
+        default:
+          break;
+      }
+    } else {
+      switch (request) {
+        case RPC_PROMPT:
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  private void insertText(MethodDescriptor rpc, String[] values) {
     String scriptText = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_TEXT);
     Interpreter interpreter = InterpreterConfiguration.getInterpreterByName(
         getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));
-    String rpcHelpText = interpreter.getRpcText(scriptText, rpc);
+    String rpcHelpText = interpreter.getRpcText(scriptText, rpc, values);
 
     Intent intent = new Intent();
     intent.putExtra(Constants.EXTRA_RPC_HELP_TEXT, rpcHelpText);

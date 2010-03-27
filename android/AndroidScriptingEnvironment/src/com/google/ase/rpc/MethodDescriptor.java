@@ -82,8 +82,8 @@ public final class MethodDescriptor {
    * @return derived help string
    */
   public String getHelp() {
-    final StringBuilder helpBuilder = new StringBuilder();
-    final Rpc rpcAnnotation = mMethod.getAnnotation(Rpc.class);
+    StringBuilder helpBuilder = new StringBuilder();
+    Rpc rpcAnnotation = mMethod.getAnnotation(Rpc.class);
 
     helpBuilder.append(mMethod.getName());
     helpBuilder.append("(");
@@ -169,22 +169,50 @@ public final class MethodDescriptor {
   /**
    * Returns parameter descriptors suitable for the RPC call text representation.
    * 
-   * <p>Uses parameter name or default value if it is more meaningful as value.
+   * <p>Uses parameter value, default value or name, whatever is available first.
    * 
    * @return an array of parameter descriptors
    */
-  public ParameterDescriptor[] getDefaultParameterValues() {
-    final Type[] parameterTypes = mMethod.getGenericParameterTypes();
-    final Annotation[][] parametersAnnotations = mMethod.getParameterAnnotations();
-    final ParameterDescriptor[] parameters = new ParameterDescriptor[parametersAnnotations.length];
+  public ParameterDescriptor[] getParameterValues(String[] values) {
+    Type[] parameterTypes = mMethod.getGenericParameterTypes();
+    Annotation[][] parametersAnnotations = mMethod.getParameterAnnotations();
+    ParameterDescriptor[] parameters = new ParameterDescriptor[parametersAnnotations.length];
     for (int index = 0; index < parameters.length; index ++) {
-      parameters[index] = new ParameterDescriptor( 
-          hasDefaultValue(parametersAnnotations[index])
-              ? String.valueOf(getDefaultValue(parameterTypes[index], parametersAnnotations[index]))
-              : getDescription(parametersAnnotations[index]),
-          parameterTypes[index]);
+      String value;
+      if (index < values.length) {
+        value = values[index];
+      } else if (hasDefaultValue(parametersAnnotations[index])) {
+        Object defaultValue = getDefaultValue(parameterTypes[index], parametersAnnotations[index]);
+        if (defaultValue == null) {
+          value = null;
+        } else {
+          value = String.valueOf(defaultValue);
+        }
+      } else {
+        value = getName(parametersAnnotations[index]);
+      }
+      parameters[index] = new ParameterDescriptor(value, parameterTypes[index]);
     }
     return parameters;
+  }
+
+  /**
+   * Returns parameter hints.
+   * 
+   * TODO(igor.v.karp): make sure all parameters have description
+   * 
+   * @return an array of parameter hints
+   */
+  public String[] getParameterHints() {
+    Annotation[][] parametersAnnotations = mMethod.getParameterAnnotations();
+    String[] names = new String[parametersAnnotations.length];
+    for (int index = 0; index < names.length; index ++) {
+      names[index] = getDescription(parametersAnnotations[index]);
+      if (names[index].equals("")) {
+        names[index] = getName(parametersAnnotations[index]);
+      }
+    }
+    return names;
   }
 
   /**
@@ -200,7 +228,7 @@ public final class MethodDescriptor {
         return ((RpcParameter) a).name();
       }
     }
-    return "(unknown)";
+    throw new IllegalStateException("No parameter name");
   }
 
   /**
@@ -215,7 +243,7 @@ public final class MethodDescriptor {
         return ((RpcParameter) a).description();
       }
     }
-    return "(no description)";
+    throw new IllegalStateException("No parameter description");
   }
 
   /**
@@ -306,10 +334,10 @@ public final class MethodDescriptor {
         }
         input = input.toLowerCase();
         if (input.equals("true")) {
-          return true;
+          return Boolean.TRUE;
         }
         if (input.equals("false")) {
-          return false;
+          return Boolean.FALSE;
         }
         throw new IllegalArgumentException("'" + input + "' is not a boolean");
       }});

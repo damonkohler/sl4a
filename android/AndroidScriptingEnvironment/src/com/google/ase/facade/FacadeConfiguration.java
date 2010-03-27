@@ -17,9 +17,9 @@
 package com.google.ase.facade;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import android.app.Service;
 import android.content.Intent;
@@ -35,8 +35,30 @@ import com.google.ase.trigger.TriggerRepository;
  * Encapsulates the list of supported facades and their construction.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
+ * @author Igor Karp (igor.v.karp@gmail.com)
  */
 public class FacadeConfiguration {
+  private final static SortedMap<String, MethodDescriptor> sRpcs =
+      new TreeMap<String, MethodDescriptor>();
+  
+  static {
+    List<MethodDescriptor> list = new ArrayList<MethodDescriptor>();
+    list.addAll(MethodDescriptor.collectFrom(AndroidFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(MediaFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(SpeechRecognitionFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(TextToSpeechFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(TelephonyManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(AlarmManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(SensorManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(EventFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(LocationManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(SettingsFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
+    for (MethodDescriptor rpc : list) {
+      sRpcs.put(rpc.getName(), rpc);
+    }
+  }
+  
   private FacadeConfiguration() {
     // Utility class.
   }
@@ -74,27 +96,13 @@ public class FacadeConfiguration {
         alarmManagerFacade);
   }
 
-  /**
-   * Returns a list of {@link MethodDescriptor} objects for all facades.
-   */
+  /** Returns a list of {@link MethodDescriptor} objects for all facades. */
   public static List<MethodDescriptor> collectRpcDescriptors() {
-    List<MethodDescriptor> list = new ArrayList<MethodDescriptor>();
-    list.addAll(MethodDescriptor.collectFrom(AndroidFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(MediaFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(SpeechRecognitionFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(TextToSpeechFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(TelephonyManagerFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(AlarmManagerFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(SensorManagerFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(EventFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(LocationManagerFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(SettingsFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
-    Collections.sort(list, new Comparator<MethodDescriptor>() {
-      public int compare(MethodDescriptor method1, MethodDescriptor method2) {
-        return method1.getName().compareTo(method2.getName());
-      }
-    });
-    return list;
+    return new ArrayList<MethodDescriptor>(sRpcs.values());
+  }
+  
+  /** Returns a method by name. */
+  public static MethodDescriptor getMethodDescriptor(String name) {
+    return sRpcs.get(name);
   }
 }

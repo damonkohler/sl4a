@@ -38,8 +38,8 @@ public abstract class Interpreter {
     return getLanguage().getContentTemplate();
   }
   
-  public final String getRpcText(String content, MethodDescriptor rpc) {
-    return getLanguage().getRpcText(content, rpc);
+  public final String getRpcText(String content, MethodDescriptor rpc, String[] values) {
+    return getLanguage().getRpcText(content, rpc, values);
   }
   
   public boolean isInstalled() {

@@ -65,16 +65,13 @@ public abstract class Language {
     return AUTO_CLOSE_MAP.get(token);
   }
 
-  /** Returns the RPC call text with default parameter values. */
-  public final String getRpcText(String content, MethodDescriptor rpc) {
-    return getRpcText(content, rpc, rpc.getDefaultParameterValues());
-  }
-  
   /** Returns the RPC call text with given parameter values. */
-  public final String getRpcText(String content, MethodDescriptor rpc, ParameterDescriptor[] parameters) {
-    return getMethodCallText(getRpcReceiverName(content), rpc.getName(), parameters);
+  public final String getRpcText(String content, MethodDescriptor rpc,
+      String[] values) {
+    return getMethodCallText(getRpcReceiverName(content), rpc.getName(),
+        rpc.getParameterValues(values));
   }
-  
+
   /** Returns the RPC receiver found in the given script. */
   protected String getRpcReceiverName(String content) {
     return getDefaultRpcReceiver();
