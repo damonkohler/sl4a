@@ -63,16 +63,15 @@ public class ScriptManager extends ListActivity {
   private List<File> mScriptList;
   private ScriptManagerAdapter mAdapter;
   private SharedPreferences mPreferences;
+  private HashMap<Integer, Interpreter> mAddMenuIds;
 
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
   }
 
-  private HashMap<Integer, Interpreter> addMenuIds;
-
   private static enum MenuId {
     DELETE, EDIT, START_SERVICE, HELP, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES, LOGCAT_VIEWER,
-    TRIGGER_MANAGER;
+    TRIGGER_MANAGER, REFRESH;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -118,15 +117,16 @@ public class ScriptManager extends ListActivity {
         android.R.drawable.ic_menu_preferences);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
+    menu.add(Menu.NONE, MenuId.REFRESH.getId(), Menu.NONE, "Refresh");
     return true;
   }
 
   private void buildMenuIdMaps() {
-    addMenuIds = new HashMap<Integer, Interpreter>();
+    mAddMenuIds = new HashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
     List<Interpreter> installed = InterpreterConfiguration.getInstalledInterpreters();
     for (Interpreter interpreter : installed) {
-      addMenuIds.put(i, interpreter);
+      mAddMenuIds.put(i, interpreter);
       ++i;
     }
   }
@@ -135,7 +135,7 @@ public class ScriptManager extends ListActivity {
     Menu addMenu =
         menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
             android.R.drawable.ic_menu_add);
-    for (Entry<Integer, Interpreter> entry : addMenuIds.entrySet()) {
+    for (Entry<Integer, Interpreter> entry : mAddMenuIds.entrySet()) {
       addMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
     }
     addMenu.add(Menu.NONE, MenuId.QRCODE_ADD.getId(), Menu.NONE, "Scan Barcode");
@@ -150,10 +150,10 @@ public class ScriptManager extends ListActivity {
       // Show interpreter manger.
       Intent i = new Intent(this, InterpreterManager.class);
       startActivity(i);
-    } else if (addMenuIds.containsKey(itemId)) {
+    } else if (mAddMenuIds.containsKey(itemId)) {
       // Add a new script.
       Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
-      Interpreter interpreter = addMenuIds.get(itemId);
+      Interpreter interpreter = mAddMenuIds.get(itemId);
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, interpreter.getExtension());
       intent.putExtra(Constants.EXTRA_SCRIPT_CONTENT, interpreter.getContentTemplate());
       intent.putExtra(Constants.EXTRA_IS_NEW_SCRIPT, true);
@@ -167,6 +167,8 @@ public class ScriptManager extends ListActivity {
       startActivity(new Intent(this, TriggerManager.class));
     } else if (itemId == MenuId.LOGCAT_VIEWER.getId()) {
       startActivity(new Intent(this, LogcatViewer.class));
+    } else if (itemId == MenuId.REFRESH.getId()) {
+      mAdapter.notifyDataSetInvalidated();
     }
     return true;
   }
