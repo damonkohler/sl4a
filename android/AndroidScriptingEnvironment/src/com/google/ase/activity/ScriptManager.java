@@ -107,18 +107,23 @@ public class ScriptManager extends ListActivity {
     menu.clear();
     buildMenuIdMaps();
     buildAddMenu(menu);
-    menu.add(Menu.NONE, MenuId.INTERPRETER_MANAGER.getId(), Menu.NONE, "Interpreters").setIcon(
-        android.R.drawable.ic_menu_more);
-    menu.add(Menu.NONE, MenuId.TRIGGER_MANAGER.getId(), Menu.NONE, "Triggers").setIcon(
-        android.R.drawable.ic_menu_more);
-    menu.add(Menu.NONE, MenuId.LOGCAT_VIEWER.getId(), Menu.NONE, "Logcat").setIcon(
-        android.R.drawable.ic_menu_more);
+    buildSwitchActivityMenu(menu);
     menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
         android.R.drawable.ic_menu_preferences);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
-    menu.add(Menu.NONE, MenuId.REFRESH.getId(), Menu.NONE, "Refresh");
+    menu.add(Menu.NONE, MenuId.REFRESH.getId(), Menu.NONE, "Refresh").setIcon(
+        R.drawable.ic_menu_refresh);
     return true;
+  }
+
+  private void buildSwitchActivityMenu(Menu menu) {
+    Menu subMenu =
+        menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "View").setIcon(
+            android.R.drawable.ic_menu_more);
+    subMenu.add(Menu.NONE, MenuId.INTERPRETER_MANAGER.getId(), Menu.NONE, "Interpreters");
+    subMenu.add(Menu.NONE, MenuId.TRIGGER_MANAGER.getId(), Menu.NONE, "Triggers");
+    subMenu.add(Menu.NONE, MenuId.LOGCAT_VIEWER.getId(), Menu.NONE, "Logcat");
   }
 
   private void buildMenuIdMaps() {
