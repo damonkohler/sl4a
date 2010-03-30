@@ -1,0 +1,16 @@
+cd trunk/jruby/
+curl -O http://jruby.kenai.com/downloads/ruby-src-1.4.0.tar.gz
+tar -xzvf jruby-src-1.4.0.tar.gz
+cp -r json jruby-1.4.0/lib/ruby/1.8/
+cp android.rb jruby-1.4.0/lib/ruby/1.8/
+cd jruby-1.4.0/
+sed 's|dynalang-0.3.jar"/>|dynalang-0.3.jar"><exclude name="**/doc/html"/></zipfileset>|g' build.xml >build.xml.tmp
+mv build.xml.tmp build.xml
+
+ant jar-complete
+dx -JXms1024m -JXmx1024m --dex --output=jruby-complete-1.4.jar lib/jruby-complete.jar 
+zipalign 4 jruby-complete-1.4.jar jruby-complete-1.4.jar.tmp
+mkdir jruby
+mv jruby-complete-1.4.jar.tmp jruby/jruby-complete-1.4.jar
+zip -r jruby_extras.zip jruby/
+zip -j jruby_scripts.zip ../ase/scripts/*
