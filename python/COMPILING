@@ -1,0 +1,4 @@
+1. Download and build the Android source.
+2. Download the source for Python 2.6 and compile it on your host.
+3. Copy the binary Parser/pgen from there to trunk/python/src/Parser/hostpgen.
+4. Execute build.py from the trunk/python directory to cross compile Python for use with ASE.
