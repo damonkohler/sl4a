@@ -1,0 +1,8 @@
+1. Download and build the Android source.
+2. Execute the following commands:
+
+export PATH="trunk/tools:$PATH"
+export PATH="android-sdk-linux_86/platforms/android-3/tools:$PATH"
+export PATH="android_src/prebuilt/linux-x86/toolchain/arm-eabi-4.3.1/bin:$PATH"
+cd ase_src/lua/
+./build.sh
