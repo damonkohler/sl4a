@@ -104,15 +104,14 @@ public class LogcatViewer extends ListActivity {
   }
 
   @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    menu.clear();
+  public boolean onCreateOptionsMenu(Menu menu) {
     menu.add(Menu.NONE, MenuId.JUMP_TO_BOTTOM.getId(), Menu.NONE, "Jump to Bottom").setIcon(
         android.R.drawable.ic_menu_revert);
     menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
         android.R.drawable.ic_menu_preferences);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
-    return super.onPrepareOptionsMenu(menu);
+    return super.onCreateOptionsMenu(menu);
   }
 
   @Override
