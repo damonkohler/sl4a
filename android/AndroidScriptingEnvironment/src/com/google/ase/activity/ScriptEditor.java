@@ -85,7 +85,7 @@ public class ScriptEditor extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.editor);
+    setContentView(R.layout.script_editor);
     mNameText = (EditText) findViewById(R.id.script_editor_title);
     mContentText = (EditText) findViewById(R.id.script_editor_body);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
