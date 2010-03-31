@@ -14,7 +14,6 @@
     android:id="@+id/script_editor_body"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:scrollbars="vertical"
     android:hint="Script Content"
     android:typeface="monospace"
     android:gravity="top"

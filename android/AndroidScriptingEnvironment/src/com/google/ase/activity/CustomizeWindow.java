@@ -18,7 +18,6 @@ package com.google.ase.activity;
 
 import android.app.Activity;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.ase.AseVersion;
@@ -27,16 +26,6 @@ import com.google.ase.R;
 public class CustomizeWindow {
   private CustomizeWindow() {
     // Utility class.
-  }
-
-  public static void requestNoTitle(Activity activity) {
-    activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
-  }
-
-  public static void requestFullscreen(Activity activity) {
-    requestNoTitle(activity);
-    activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-        WindowManager.LayoutParams.FLAG_FULLSCREEN);
   }
 
   public static void requestCustomTitle(Activity activity, int contentViewLayoutResId) {

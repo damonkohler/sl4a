@@ -22,10 +22,8 @@ import java.util.Set;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.MatrixCursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -55,7 +53,7 @@ public class ApiBrowser extends ListActivity {
   private static enum RequestCode {
     RPC_PROMPT
   }
-  
+
   private static enum MenuId {
     EXPAND_ALL, COLLAPSE_ALL;
     public int getId() {
@@ -64,8 +62,7 @@ public class ApiBrowser extends ListActivity {
   }
 
   private static enum ContextMenuId {
-    INSERT_TEXT,
-    PROMPT_PARAMETERS;
+    INSERT_TEXT, PROMPT_PARAMETERS;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -78,12 +75,6 @@ public class ApiBrowser extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-    if (preferences.getBoolean("editor_fullscreen", true)) {
-      CustomizeWindow.requestFullscreen(this);
-    } else {
-      CustomizeWindow.requestNoTitle(this);
-    }
     setContentView(R.layout.api_browser);
     getListView().setFastScrollEnabled(true);
     mExpandedPositions = new HashSet<Integer>();
@@ -177,8 +168,9 @@ public class ApiBrowser extends ListActivity {
     if (resultCode == RESULT_OK) {
       switch (request) {
         case RPC_PROMPT:
-          MethodDescriptor rpc = FacadeConfiguration.getMethodDescriptor(
-              data.getStringExtra(Constants.EXTRA_API_PROMPT_RPC_NAME));
+          MethodDescriptor rpc =
+              FacadeConfiguration.getMethodDescriptor(data
+                  .getStringExtra(Constants.EXTRA_API_PROMPT_RPC_NAME));
           String[] values = data.getStringArrayExtra(Constants.EXTRA_API_PROMPT_VALUES);
           insertText(rpc, values);
           break;
@@ -197,8 +189,9 @@ public class ApiBrowser extends ListActivity {
 
   private void insertText(MethodDescriptor rpc, String[] values) {
     String scriptText = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_TEXT);
-    Interpreter interpreter = InterpreterConfiguration.getInterpreterByName(
-        getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));
+    Interpreter interpreter =
+        InterpreterConfiguration.getInterpreterByName(getIntent().getStringExtra(
+            Constants.EXTRA_INTERPRETER_NAME));
     String rpcHelpText = interpreter.getRpcText(scriptText, rpc, values);
 
     Intent intent = new Intent();

@@ -38,7 +38,6 @@ import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
 import com.google.ase.activity.AsePreferences;
 import com.google.ase.activity.AseService;
-import com.google.ase.activity.CustomizeWindow;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterProcess;
 
@@ -127,11 +126,6 @@ public class Terminal extends Activity {
     }
 
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    if (mPreferences.getBoolean("terminal_fullscreen", true)) {
-      CustomizeWindow.requestFullscreen(this);
-    } else {
-      CustomizeWindow.requestNoTitle(this);
-    }
     setContentView(R.layout.term);
 
     int port = getIntent().getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
@@ -239,7 +233,7 @@ public class Terminal extends Activity {
 
   /**
    * Handle dpad left-right-up-down events. Don't handle dpad-center, that's our control key.
-   *
+   * 
    * @param keyCode
    * @param down
    */

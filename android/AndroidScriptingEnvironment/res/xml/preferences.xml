@@ -17,10 +17,6 @@
   </PreferenceCategory>
   <PreferenceCategory
     android:title="Script Editor">
-    <CheckBoxPreference
-      android:key="editor_fullscreen"
-      android:title="Fullscreen"
-      android:summary="Show the editor in fullscreen mode." android:defaultValue="true"/>
      <ListPreference
       android:key="editor_fontsize"
       android:defaultValue="@string/default_value_fontsize_preference"
@@ -32,10 +28,6 @@
    </PreferenceCategory>
    <PreferenceCategory
     android:title="Terminal">
-    <CheckBoxPreference
-      android:key="terminal_fullscreen"
-      android:title="Fullscreen"
-      android:summary="Show the terminal in fullscreen mode." android:defaultValue="false"/>
      <ListPreference
       android:key="fontsize"
       android:defaultValue="@string/default_value_fontsize_preference"

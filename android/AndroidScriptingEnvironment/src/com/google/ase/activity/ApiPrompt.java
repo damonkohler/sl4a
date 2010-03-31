@@ -19,9 +19,7 @@ package com.google.ase.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -58,12 +56,6 @@ public class ApiPrompt extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-    if (preferences.getBoolean("editor_fullscreen", true)) {
-      CustomizeWindow.requestFullscreen(this);
-    } else {
-      CustomizeWindow.requestNoTitle(this);
-    }
     setContentView(R.layout.api_prompt);
     mRpc =
         FacadeConfiguration.getMethodDescriptor(getIntent().getStringExtra(

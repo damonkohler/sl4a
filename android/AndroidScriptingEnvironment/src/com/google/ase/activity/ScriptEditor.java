@@ -49,7 +49,7 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 
 /**
  * A text editor for scripts.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ScriptEditor extends Activity {
@@ -85,15 +85,10 @@ public class ScriptEditor extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    if (mPreferences.getBoolean("editor_fullscreen", true)) {
-      CustomizeWindow.requestFullscreen(this);
-    } else {
-      CustomizeWindow.requestNoTitle(this);
-    }
     setContentView(R.layout.editor);
     mNameText = (EditText) findViewById(R.id.script_editor_title);
     mContentText = (EditText) findViewById(R.id.script_editor_body);
+    mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     updatePreferences();
 
     String name = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
@@ -166,9 +161,8 @@ public class ScriptEditor extends Activity {
       startActivity(new Intent(this, AsePreferences.class));
     } else if (item.getItemId() == MenuId.API_BROWSER.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
-      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME,
-          InterpreterConfiguration.getInterpreterForScript(
-              mNameText.getText().toString()).getName());
+      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, InterpreterConfiguration
+          .getInterpreterForScript(mNameText.getText().toString()).getName());
       intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());
       startActivityForResult(intent, RequestCode.RPC_HELP.ordinal());
     } else if (item.getItemId() == MenuId.HELP.getId()) {
@@ -250,8 +244,9 @@ public class ScriptEditor extends Activity {
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart,
         int dend) {
       if (end - start == 1) {
-        String auto = InterpreterConfiguration.getInterpreterForScript(
-            mNameText.getText().toString()).getLanguage().autoClose(source.charAt(start));
+        String auto =
+            InterpreterConfiguration.getInterpreterForScript(mNameText.getText().toString())
+                .getLanguage().autoClose(source.charAt(start));
         if (auto != null) {
           mScheduleMoveLeft = true;
           return auto;
