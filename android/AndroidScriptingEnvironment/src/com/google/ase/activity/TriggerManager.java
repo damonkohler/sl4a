@@ -71,7 +71,7 @@ public class TriggerManager extends ListActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    CustomizeWindow.requestCustomTitle(this, R.layout.trigger_manager);
+    CustomizeWindow.requestCustomTitle(this, "Triggers", R.layout.trigger_manager);
     mTriggerRepository = ((AseApplication) getApplication()).getTriggerRepository();
     mAlarmTriggerManager = new AlarmTriggerManager(this, mTriggerRepository);
     mTriggerInfoList = mTriggerRepository.getAllTriggers();

@@ -73,7 +73,7 @@ public class InterpreterManager extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    CustomizeWindow.requestCustomTitle(this, R.layout.interpreter_manager);
+    CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.interpreter_manager);
     mInterpreterList = InterpreterConfiguration.getInstalledInterpreters();
     mAdapter = new InterpreterManagerAdapter();
     mAdapter.registerDataSetObserver(new InterpreterListObserver());

@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.GestureDetector;
@@ -29,7 +30,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
-import android.widget.Toast;
 
 import com.google.ase.activity.InterpreterManager;
 import com.google.ase.activity.LogcatViewer;
@@ -42,21 +42,11 @@ public class ActivityFlinger {
   private static final int SWIPE_MAX_OFF_PATH = 100;
   private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
-  private static class ActivityTransitionEntry {
-    String mName;
-    Class<?> mClass;
-
-    public ActivityTransitionEntry(String name, Class<?> clazz) {
-      mName = name;
-      mClass = clazz;
-    }
-  }
-
   private static class ActivityTransition {
-    ActivityTransitionEntry mLeft;
-    ActivityTransitionEntry mRight;
+    Class<? extends Activity> mLeft;
+    Class<? extends Activity> mRight;
 
-    public ActivityTransition(ActivityTransitionEntry left, ActivityTransitionEntry right) {
+    public ActivityTransition(Class<? extends Activity> left, Class<? extends Activity> right) {
       mLeft = left;
       mRight = right;
     }
@@ -70,17 +60,18 @@ public class ActivityFlinger {
   }
 
   public static void Initialize() {
-    List<ActivityTransitionEntry> entries = new ArrayList<ActivityTransitionEntry>();
-    entries.add(new ActivityTransitionEntry("Scripts", ScriptManager.class));
-    entries.add(new ActivityTransitionEntry("Interpreters", InterpreterManager.class));
-    entries.add(new ActivityTransitionEntry("Triggers", TriggerManager.class));
-    entries.add(new ActivityTransitionEntry("Logcat", LogcatViewer.class));
+    List<Class<? extends Activity>> entries = new ArrayList<Class<? extends Activity>>();
+    entries.add(ScriptManager.class);
+    entries.add(InterpreterManager.class);
+    entries.add(TriggerManager.class);
+    entries.add(LogcatViewer.class);
 
-    ActivityTransitionEntry left = null;
-    ActivityTransitionEntry current = null;
-    ActivityTransitionEntry right = null;
+    Class<? extends Activity> left = null;
+    Class<? extends Activity> current = null;
+    Class<? extends Activity> right = null;
 
-    for (Iterator<ActivityTransitionEntry> it = entries.iterator(); it.hasNext() || current != null;) {
+    for (Iterator<Class<? extends Activity>> it = entries.iterator(); it.hasNext()
+        || current != null;) {
       if (current == null) {
         current = it.next();
       }
@@ -89,7 +80,7 @@ public class ActivityFlinger {
       } else {
         right = null;
       }
-      mActivityTransitions.put(current.mClass, new ActivityTransition(left, right));
+      mActivityTransitions.put(current, new ActivityTransition(left, right));
       left = current;
       current = right;
     }
@@ -100,12 +91,10 @@ public class ActivityFlinger {
     final GestureDetector mGestureDetector = new GestureDetector(mListener);
     ActivityTransition transition = mActivityTransitions.get(context.getClass());
     if (transition.mLeft != null) {
-      mListener.mLeftRunnable =
-          new StartActivityRunnable(transition.mLeft.mName, context, transition.mLeft.mClass);
+      mListener.mLeftRunnable = new StartActivityRunnable(context, transition.mLeft);
     }
     if (transition.mRight != null) {
-      mListener.mRightRunnable =
-          new StartActivityRunnable(transition.mRight.mName, context, transition.mRight.mClass);
+      mListener.mRightRunnable = new StartActivityRunnable(context, transition.mRight);
     }
     view.setOnTouchListener(new OnTouchListener() {
       @Override
@@ -117,21 +106,18 @@ public class ActivityFlinger {
 
   private static class StartActivityRunnable implements Runnable {
 
-    private final String message;
-    private final Context context;
-    private final Class<?> activity;
+    private final Context mContext;
+    private final Class<?> mActivityClass;
 
-    private StartActivityRunnable(String message, Context context, Class<?> activity) {
-      this.message = message;
-      this.context = context;
-      this.activity = activity;
+    private StartActivityRunnable(Context context, Class<?> activity) {
+      this.mContext = context;
+      this.mActivityClass = activity;
     }
 
     @Override
     public void run() {
-      Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-      Intent intent = new Intent(context, activity);
-      context.startActivity(intent);
+      Intent intent = new Intent(mContext, mActivityClass);
+      mContext.startActivity(intent);
     }
   }
 

@@ -53,7 +53,7 @@ public class ScriptPicker extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    CustomizeWindow.requestCustomTitle(this, R.layout.script_manager);
+    CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
     mScriptList = ScriptStorageAdapter.listScripts(false);
     mAdapter = new ScriptPickerAdapter();
     mAdapter.registerDataSetObserver(new ScriptListObserver());

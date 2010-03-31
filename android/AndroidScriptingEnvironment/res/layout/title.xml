@@ -19,11 +19,9 @@
     <TextView android:id="@+id/left_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:text="@string/application_nice_title" />
+        android:layout_alignParentLeft="true" android:textStyle="bold" android:textColor="#ffffff" android:shadowColor="#000000" android:shadowRadius="1"/>
     <TextView android:id="@+id/right_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="" />
+        android:layout_alignParentRight="true" />
 </RelativeLayout>
