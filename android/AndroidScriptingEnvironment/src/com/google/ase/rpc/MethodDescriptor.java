@@ -38,16 +38,16 @@ public final class MethodDescriptor {
   private static final Map<Class<?>, Converter<?>> sConverters = populateConverters();
 
   private final Method mMethod;
-  
+
   public MethodDescriptor(Method method) {
     mMethod = method;
   }
-  
+
   @Override
   public String toString() {
     return mMethod.getDeclaringClass().getCanonicalName() + "." + mMethod.getName();
   }
-  
+
   /** Collects all methods with {@code RPC} annotation from given class. */
   public static Collection<MethodDescriptor> collectFrom(Class<?> clazz) {
     List<MethodDescriptor> descriptors = new ArrayList<MethodDescriptor>();
@@ -78,7 +78,7 @@ public final class MethodDescriptor {
 
   /**
    * Returns a human-readable help text for this RPC, based on annotations in the source code.
-   *
+   * 
    * @return derived help string
    */
   public String getHelp() {
@@ -113,9 +113,11 @@ public final class MethodDescriptor {
 
   /**
    * Returns the help string for one particular parameter. This respects optional parameters.
-   *
-   * @param parameterType (generic) type of the parameter
-   * @param annotations annotations of the parameter, may be null
+   * 
+   * @param parameterType
+   *          (generic) type of the parameter
+   * @param annotations
+   *          annotations of the parameter, may be null
    * @return string describing the parameter based on source code annotations
    */
   private static String getHelpForParameter(Type parameterType, Annotation[] annotations) {
@@ -127,11 +129,11 @@ public final class MethodDescriptor {
     if (hasDefaultValue(annotations)) {
       result.append("[optional");
       if (hasExplicitDefaultValue(annotations)) {
-        result.append(", default " + getDefaultValue(parameterType, annotations));         
+        result.append(", default " + getDefaultValue(parameterType, annotations));
       }
       result.append("]");
     }
-    
+
     String description = getDescription(annotations);
     if (description.length() > 0) {
       result.append(": ");
@@ -143,9 +145,11 @@ public final class MethodDescriptor {
 
   /**
    * Appends the name of the given type to the {@link StringBuilder}.
-   *
-   * @param builder string builder to append to
-   * @param type type whose name to append
+   * 
+   * @param builder
+   *          string builder to append to
+   * @param type
+   *          type whose name to append
    */
   private static void appendTypeName(final StringBuilder builder, final Type type) {
     if (type instanceof Class<?>) {
@@ -169,7 +173,8 @@ public final class MethodDescriptor {
   /**
    * Returns parameter descriptors suitable for the RPC call text representation.
    * 
-   * <p>Uses parameter value, default value or name, whatever is available first.
+   * <p>
+   * Uses parameter value, default value or name, whatever is available first.
    * 
    * @return an array of parameter descriptors
    */
@@ -177,7 +182,7 @@ public final class MethodDescriptor {
     Type[] parameterTypes = mMethod.getGenericParameterTypes();
     Annotation[][] parametersAnnotations = mMethod.getParameterAnnotations();
     ParameterDescriptor[] parameters = new ParameterDescriptor[parametersAnnotations.length];
-    for (int index = 0; index < parameters.length; index ++) {
+    for (int index = 0; index < parameters.length; index++) {
       String value;
       if (index < values.length) {
         value = values[index];
@@ -205,14 +210,19 @@ public final class MethodDescriptor {
    */
   public String[] getParameterHints() {
     Annotation[][] parametersAnnotations = mMethod.getParameterAnnotations();
-    String[] names = new String[parametersAnnotations.length];
-    for (int index = 0; index < names.length; index ++) {
-      names[index] = getDescription(parametersAnnotations[index]);
-      if (names[index].equals("")) {
-        names[index] = getName(parametersAnnotations[index]);
+    String[] hints = new String[parametersAnnotations.length];
+    for (int index = 0; index < hints.length; index++) {
+      String name = getName(parametersAnnotations[index]);
+      String description = getDescription(parametersAnnotations[index]);
+      String hint = "No paramenter description.";
+      if (!name.equals("")) {
+        hint = name;
+      } else if (!description.equals("")) {
+        hint = description;
       }
+      hints[index] = hint;
     }
-    return names;
+    return hints;
   }
 
   /**
@@ -234,7 +244,8 @@ public final class MethodDescriptor {
   /**
    * Extracts the parameter description from its annotations.
    * 
-   * @param annotations the annotations of the parameter
+   * @param annotations
+   *          the annotations of the parameter
    * @return the description of the parameter
    */
   private static String getDescription(Annotation[] annotations) {
@@ -249,8 +260,10 @@ public final class MethodDescriptor {
   /**
    * Returns the default value for a specific parameter.
    * 
-   * @param parameterType parameterType
-   * @param annotations annotations of the parameter
+   * @param parameterType
+   *          parameterType
+   * @param annotations
+   *          annotations of the parameter
    */
   public static Object getDefaultValue(Type parameterType, Annotation[] annotations) {
     for (Annotation a : annotations) {
@@ -287,7 +300,8 @@ public final class MethodDescriptor {
   /**
    * Determines whether or not this parameter has default value.
    * 
-   * @param annotations annotations of the parameter
+   * @param annotations
+   *          annotations of the parameter
    */
   public static boolean hasDefaultValue(Annotation[] annotations) {
     for (Annotation a : annotations) {
@@ -301,9 +315,11 @@ public final class MethodDescriptor {
   /**
    * Returns whether the default value is specified for a specific parameter.
    * 
-   * @param annotations annotations of the parameter
+   * @param annotations
+   *          annotations of the parameter
    */
-  @VisibleForTesting static boolean hasExplicitDefaultValue(Annotation[] annotations) {
+  @VisibleForTesting
+  static boolean hasExplicitDefaultValue(Annotation[] annotations) {
     for (Annotation a : annotations) {
       if (a instanceof RpcDefault) {
         return true;
@@ -316,19 +332,24 @@ public final class MethodDescriptor {
   private static Map<Class<?>, Converter<?>> populateConverters() {
     Map<Class<?>, Converter<?>> converters = new HashMap<Class<?>, Converter<?>>();
     converters.put(String.class, new Converter<String>() {
-      @Override public String convert(String value) {
+      @Override
+      public String convert(String value) {
         return value;
-      }});
+      }
+    });
     converters.put(Integer.class, new Converter<Integer>() {
-      @Override public Integer convert(String input) {
+      @Override
+      public Integer convert(String input) {
         try {
           return Integer.decode(input);
         } catch (NumberFormatException e) {
           throw new IllegalArgumentException("'" + input + "' is not an integer");
         }
-      }});
+      }
+    });
     converters.put(Boolean.class, new Converter<Boolean>() {
-      @Override public Boolean convert(String input) {
+      @Override
+      public Boolean convert(String input) {
         if (input == null) {
           return null;
         }
@@ -340,7 +361,8 @@ public final class MethodDescriptor {
           return Boolean.FALSE;
         }
         throw new IllegalArgumentException("'" + input + "' is not a boolean");
-      }});
+      }
+    });
     return converters;
   }
 }
