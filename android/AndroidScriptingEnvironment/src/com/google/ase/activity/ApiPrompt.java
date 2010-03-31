@@ -16,19 +16,15 @@
 
 package com.google.ase.activity;
 
-import com.google.ase.AseAnalytics;
-import com.google.ase.Constants;
-import com.google.ase.R;
-import com.google.ase.facade.FacadeConfiguration;
-import com.google.ase.rpc.MethodDescriptor;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -36,17 +32,24 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.google.ase.AseAnalytics;
+import com.google.ase.Constants;
+import com.google.ase.R;
+import com.google.ase.facade.FacadeConfiguration;
+import com.google.ase.rpc.MethodDescriptor;
 
 /**
  * Prompts for API parameters.
- *
- * <p>This activity is started by {@link ApiBrowser} to prompt user for RPC
- * call parameters. Input/output interface is RPC name and explicit parameter
- * values.
+ * 
+ * <p>
+ * This activity is started by {@link ApiBrowser} to prompt user for RPC call parameters.
+ * Input/output interface is RPC name and explicit parameter values.
  * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
-public class ApiPrompt extends Activity implements OnClickListener {
+public class ApiPrompt extends Activity {
   private MethodDescriptor mRpc;
   private String[] mHints;
   private String[] mValues;
@@ -62,24 +65,25 @@ public class ApiPrompt extends Activity implements OnClickListener {
       CustomizeWindow.requestNoTitle(this);
     }
     setContentView(R.layout.api_prompt);
-    mRpc = FacadeConfiguration.getMethodDescriptor(
-        getIntent().getStringExtra(Constants.EXTRA_API_PROMPT_RPC_NAME));
+    mRpc =
+        FacadeConfiguration.getMethodDescriptor(getIntent().getStringExtra(
+            Constants.EXTRA_API_PROMPT_RPC_NAME));
     mHints = mRpc.getParameterHints();
     mValues = getIntent().getStringArrayExtra(Constants.EXTRA_API_PROMPT_VALUES);
     mAdapter = new ApiPromptAdapter();
     ((ListView) findViewById(R.id.list)).setAdapter(mAdapter);
-    ((Button) findViewById(R.id.done)).setOnClickListener(this);
+    ((Button) findViewById(R.id.done)).setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent();
+        intent.putExtra(Constants.EXTRA_API_PROMPT_RPC_NAME, mRpc.getName());
+        intent.putExtra(Constants.EXTRA_API_PROMPT_VALUES, mValues);
+        setResult(RESULT_OK, intent);
+        finish();
+      }
+    });
     AseAnalytics.trackActivity(this);
     setResult(RESULT_CANCELED);
-  }
-
-  @Override
-  public void onClick(View v) {
-    Intent intent = new Intent();
-    intent.putExtra(Constants.EXTRA_API_PROMPT_RPC_NAME, mRpc.getName());
-    intent.putExtra(Constants.EXTRA_API_PROMPT_VALUES, mValues);
-    setResult(RESULT_OK, intent);
-    finish();
   }
 
   private class ApiPromptAdapter extends BaseAdapter {
@@ -100,11 +104,15 @@ public class ApiPrompt extends Activity implements OnClickListener {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      EditText edit = new EditText(ApiPrompt.this);
-      edit.setText(mValues[position]);
-      edit.setHint(mHints[position]);
-      edit.addTextChangedListener(new ValueWatcher(position));
-      return edit;
+      LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      View item =
+          inflater.inflate(R.layout.api_prompt_item, parent, false /* do not attach to root */);
+      TextView description = (TextView) item.findViewById(R.id.api_prompt_item_description);
+      EditText value = (EditText) item.findViewById(R.id.api_prompt_item_value);
+      description.setText(mHints[position]);
+      value.setText(mValues[position]);
+      value.addTextChangedListener(new ValueWatcher(position));
+      return item;
     }
   }
 

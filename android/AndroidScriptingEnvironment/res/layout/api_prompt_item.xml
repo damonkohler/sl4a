@@ -4,13 +4,12 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
-  <ListView
-    android:id="@+id/list"
+  <TextView
+    android:id="@+id/api_prompt_item_description"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" />
-  <Button
-    android:id="@+id/done"
+  <EditText
+    android:id="@+id/api_prompt_item_value"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="Insert Code" />
+    android:layout_height="fill_parent" />
 </LinearLayout>
