@@ -204,8 +204,6 @@ public final class MethodDescriptor {
   /**
    * Returns parameter hints.
    * 
-   * TODO(igor.v.karp): make sure all parameters have description
-   * 
    * @return an array of parameter hints
    */
   public String[] getParameterHints() {
@@ -215,7 +213,9 @@ public final class MethodDescriptor {
       String name = getName(parametersAnnotations[index]);
       String description = getDescription(parametersAnnotations[index]);
       String hint = "No paramenter description.";
-      if (!name.equals("")) {
+      if (!name.equals("") && !description.equals("")) {
+        hint = name + ": " + description;
+      } else if (!name.equals("")) {
         hint = name;
       } else if (!description.equals("")) {
         hint = description;
