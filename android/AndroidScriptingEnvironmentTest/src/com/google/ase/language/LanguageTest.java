@@ -15,6 +15,15 @@
  */
 package com.google.ase.language;
 
+import com.google.ase.language.BeanShellLanguage;
+import com.google.ase.language.JavaScriptLanguage;
+import com.google.ase.language.Language;
+import com.google.ase.language.LuaLanguage;
+import com.google.ase.language.PerlLanguage;
+import com.google.ase.language.PythonLanguage;
+import com.google.ase.language.RubyLanguage;
+import com.google.ase.language.ShellLanguage;
+import com.google.ase.language.TclLanguage;
 import com.google.ase.rpc.ParameterDescriptor;
 
 import junit.framework.TestCase;

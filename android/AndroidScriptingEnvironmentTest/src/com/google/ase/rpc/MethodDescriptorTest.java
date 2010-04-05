@@ -22,6 +22,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.ase.rpc.Converter;
+import com.google.ase.rpc.MethodDescriptor;
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcDefault;
+import com.google.ase.rpc.RpcOptional;
+import com.google.ase.rpc.RpcParameter;
+
 import junit.framework.TestCase;
 
 /**

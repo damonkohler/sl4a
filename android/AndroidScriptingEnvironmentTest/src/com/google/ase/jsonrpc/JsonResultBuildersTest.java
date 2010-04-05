@@ -25,6 +25,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.ase.jsonrpc.JsonResultBuilders;
+
 import android.content.Intent;
 
 public class JsonResultBuildersTest extends TestCase {

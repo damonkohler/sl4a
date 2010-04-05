@@ -20,6 +20,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import com.google.ase.facade.FacadeConfiguration;
+import com.google.ase.rpc.MethodDescriptor;
+import com.google.ase.rpc.RpcDefault;
+import com.google.ase.rpc.RpcOptional;
+import com.google.ase.rpc.RpcParameter;
 
 import android.test.AndroidTestCase;
 
