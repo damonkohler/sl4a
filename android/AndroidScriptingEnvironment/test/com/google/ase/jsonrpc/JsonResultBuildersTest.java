@@ -25,6 +25,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
+
 public class JsonResultBuildersTest extends TestCase {
 
   public void testBuildJsonList() throws JSONException {
@@ -39,5 +41,17 @@ public class JsonResultBuildersTest extends TestCase {
     assertEquals(result.get(0), foo);
     assertEquals(result.get(1), bar);
     assertEquals(result.get(2), baz);
+  }
+
+  public void testBuildJsonIntent() throws JSONException {
+    Intent intent = new Intent();
+    intent.putExtra("foo", "value");
+    Intent nestedIntent = new Intent();
+    nestedIntent.putExtra("baz", 123);
+    intent.putExtra("bar", nestedIntent);
+    JSONObject result = JsonResultBuilders.buildJsonIntent(intent);
+    assertEquals(result.get("foo"), "value");
+    Object nestedJson = result.get("bar");
+    assertEquals(((JSONObject) nestedJson).getInt("baz"), 123);
   }
 }
