@@ -80,7 +80,7 @@ public class JsonResultBuilders {
     return result;
   }
 
-  public static <T> JSONObject buildJsonList(final List<T> list) {
+  public static <T> JSONArray buildJsonList(final List<T> list) {
     JSONArray result = new JSONArray();
     for (T item : list) {
       if (item instanceof Address) {
@@ -89,7 +89,7 @@ public class JsonResultBuilders {
         result.put(item);
       }
     }
-    return JsonRpcResult.result(result);
+    return result;
   }
 
 }
