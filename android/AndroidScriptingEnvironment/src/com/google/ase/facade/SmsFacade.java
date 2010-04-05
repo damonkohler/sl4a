@@ -70,6 +70,7 @@ public class SmsFacade implements RpcReceiver {
     try {
       Cursor cursor = mContentResolver.query(uri, null, selection, null, null);
       result = cursor.getCount();
+      cursor.close();
     } catch (Exception e) {
       throw new AseRuntimeException("Error retrieving message count.");
     }
@@ -88,6 +89,7 @@ public class SmsFacade implements RpcReceiver {
       Cursor cursor = mContentResolver.query(uri, columns, selection, null, null);
       while (cursor.moveToNext())
         result.add(cursor.getInt(0));
+      cursor.close();
     } catch (Exception e) {
       throw new AseRuntimeException("Error retrieving message list.");
     }
@@ -122,8 +124,41 @@ public class SmsFacade implements RpcReceiver {
           message.put(columns[i], cursor.getString(i));
         result.add(message);
       }
+      cursor.close();
     } catch (Exception e) {
       throw new AseRuntimeException("Error retrieving messages.");
+    }
+    return result;
+  }
+  
+  @Rpc(description = "Return attributes for message with specified ID.",
+      returns = "Message attributes.")
+  public JSONObject smsGetMessageById(@RpcParameter(name = "id") Integer id,
+      @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) {
+    JSONObject result = new JSONObject();
+    Uri uri = Uri.parse("content://sms/"+id);
+    String[] columns;
+    if (attributes.length() == 0) {
+      // In case no attributes are specified we set the default ones.
+      columns = new String[]{"_id", "address", "date", "body", "read"};
+    } else {
+      // Convert selected attributes list into usable string list.
+      columns = new String[attributes.length()];
+      for(int i=0; i<attributes.length(); i++)
+        try {
+          columns[i] = attributes.getString(i);
+        } catch (JSONException e) {}
+    }
+    try {
+      Cursor cursor = mContentResolver.query(uri, columns, null, null, null);
+      if (cursor.getCount() == 1) {
+        cursor.moveToFirst();
+        for(int i=0; i<columns.length; i++)
+          result.put(columns[i], cursor.getString(i));
+      }
+      cursor.close();
+    } catch (Exception e) {
+      throw new AseRuntimeException("Error retrieving message with ID: "+id);
     }
     return result;
   }
@@ -136,6 +171,7 @@ public class SmsFacade implements RpcReceiver {
     String[] columns = cursor.getColumnNames();
     for (int i=0; i<columns.length; i++)
       result.add(columns[i]);
+    cursor.close();
     return result;
   }
   
@@ -151,21 +187,24 @@ public class SmsFacade implements RpcReceiver {
     return result;
   }
   
-  @Rpc(description = "Mark messages with IDs in list as read.")
-  public void smsMarkMessageRead(
+  @Rpc(description = "Mark messages with IDs in list as read.",
+      returns = "Number of updated messages.")
+  public Integer smsMarkMessageRead(
       @RpcParameter(name = "list") JSONArray list, 
       @RpcParameter(name = "read") Boolean read) {
+    Integer result = 0;
     ContentValues values = new ContentValues();
     values.put("read", read);
     for (int i=0; i<list.length(); i++) {
       try {
-        int item_id = list.getInt(i);
-        Uri uri = Uri.parse("content://sms/"+item_id);
-        mContentResolver.update(uri, values, null, null);
+        int message_id = list.getInt(i);
+        Uri uri = Uri.parse("content://sms/"+message_id);
+        result += mContentResolver.update(uri, values, null, null);
       } catch (JSONException e) {
         throw new AseRuntimeException("Error marking message(s).");
       }
     }
+    return result;
   }
   
   @Override
