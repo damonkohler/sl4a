@@ -14,6 +14,5 @@
     android:minSdkVersion="3" />
   <instrumentation
     android:name="android.test.InstrumentationTestRunner"
-    android:targetPackage="com.google.ase"
-    android:label="ASE Android Tests" />
+    android:targetPackage="com.google.ase" />
 </manifest>

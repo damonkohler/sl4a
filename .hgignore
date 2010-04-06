@@ -4,8 +4,6 @@ syntax: glob
 *.orig
 *.swp
 *.pyc
-android/AndroidScriptingEnvironment/bin/*
-android/AndroidScriptingEnvironment/gen/*
 python/src/build/*
 python/gdata/build/*
 python/xmpppy/build/*
@@ -23,3 +21,5 @@ syntax: regexp
 python/.*\.pyc
 (python|lua)/.*\.so
 (python|lua)/.*\.a
+android/.*/(bin|gen)/.*
+
