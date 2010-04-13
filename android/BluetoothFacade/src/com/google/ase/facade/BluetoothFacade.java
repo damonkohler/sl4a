@@ -100,7 +100,7 @@ public class BluetoothFacade implements RpcReceiver {
     mEventFacade = eventFacade;
   }
 
-  @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "true if connection established successfully, false otherwise")
+  @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")
   public boolean bluetoothConnect() {
     Intent deviceChooserIntent = new Intent(mService, BluetoothDeviceManager.class);
     Intent result = mAndroidFacade.startActivityForResult(deviceChooserIntent);
@@ -124,7 +124,6 @@ public class BluetoothFacade implements RpcReceiver {
     if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
       Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
       discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, duration);
-      discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       // Use startActivityForResult to make this a synchronous call.
       mAndroidFacade.startActivityForResult(discoverableIntent);
     }
@@ -151,8 +150,8 @@ public class BluetoothFacade implements RpcReceiver {
     }
     if (enabled) {
       if (prompt) {
+        AseLog.v("Prompting");
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         // TODO(damonkohler): Use the result to determine if this was
         // successful. At any rate, keep using startActivityForResult in order
         // to synchronize this call.
