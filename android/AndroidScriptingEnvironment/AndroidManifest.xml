@@ -90,6 +90,9 @@
       android:launchMode="singleTask"
       android:configChanges="keyboardHidden|orientation" />
     <activity
+      android:name=".activity.BluetoothDeviceManager"
+      android:configChanges="keyboardHidden|orientation" />
+    <activity
       android:name=".activity.InterpreterInstaller"
       android:configChanges="keyboardHidden|orientation"
       android:theme="@android:style/Theme.Translucent.NoTitleBar" />
@@ -186,7 +189,11 @@
   <uses-permission
     android:name="android.permission.READ_LOGS" />
   <uses-permission
-    android:name="android.permission.WRITE_SETTINGS"></uses-permission>
+    android:name="android.permission.WRITE_SETTINGS" />
+  <uses-permission
+    android:name="android.permission.BLUETOOTH" />
+  <uses-permission
+    android:name="android.permission.BLUETOOTH_ADMIN" />
   <uses-sdk
     android:minSdkVersion="3"></uses-sdk>
 </manifest>

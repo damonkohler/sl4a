@@ -41,7 +41,7 @@ public class EventFacade implements RpcReceiver {
     mService = service;
   }
 
-  @Rpc(description = "Receives the most recent event (i.e. location or sensor update, etc.", returns = "Map of event properties.")
+  @Rpc(description = "Receives the most recent event (i.e. location or sensor update, etc.)", returns = "Map of event properties.")
   public Bundle receiveEvent() {
     return mEventQueue.poll();
   }

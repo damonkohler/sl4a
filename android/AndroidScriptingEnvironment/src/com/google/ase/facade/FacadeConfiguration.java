@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.os.Handler;
 
 import com.google.ase.AseApplication;
+import com.google.ase.AseLog;
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.rpc.MethodDescriptor;
@@ -40,7 +41,7 @@ import com.google.ase.trigger.TriggerRepository;
 public class FacadeConfiguration {
   private final static SortedMap<String, MethodDescriptor> sRpcs =
       new TreeMap<String, MethodDescriptor>();
-  
+
   static {
     List<MethodDescriptor> list = new ArrayList<MethodDescriptor>();
     list.addAll(MethodDescriptor.collectFrom(AndroidFacade.class));
@@ -55,11 +56,12 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(SettingsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SmsFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(BluetoothFacade.class));
     for (MethodDescriptor rpc : list) {
       sRpcs.put(rpc.getName(), rpc);
     }
   }
-  
+
   private FacadeConfiguration() {
     // Utility class.
   }
@@ -93,6 +95,14 @@ public class FacadeConfiguration {
     AlarmManagerFacade alarmManagerFacade =
         new AlarmManagerFacade(service, eventFacade, triggerRepository);
     SmsFacade smsFacade = new SmsFacade(service);
+    try {
+      BluetoothFacade bluetoothFacade = new BluetoothFacade(service, androidFacade, eventFacade);
+      return new JsonRpcServer(androidFacade, settingsFacade, mediaFacade, ttsFacade, srFacade,
+          uiFacade, eventFacade, sensorManagerFacade, locationManagerFacade,
+          telephonyManagerFacade, alarmManagerFacade, smsFacade, bluetoothFacade);
+    } catch (Throwable t) {
+      AseLog.e("Bluetooth not available.", t);
+    }
     return new JsonRpcServer(androidFacade, settingsFacade, mediaFacade, ttsFacade, srFacade,
         uiFacade, eventFacade, sensorManagerFacade, locationManagerFacade, telephonyManagerFacade,
         alarmManagerFacade, smsFacade);
@@ -102,7 +112,7 @@ public class FacadeConfiguration {
   public static List<MethodDescriptor> collectRpcDescriptors() {
     return new ArrayList<MethodDescriptor>(sRpcs.values());
   }
-  
+
   /** Returns a method by name. */
   public static MethodDescriptor getMethodDescriptor(String name) {
     return sRpcs.get(name);

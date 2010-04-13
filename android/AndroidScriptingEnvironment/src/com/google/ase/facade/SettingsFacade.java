@@ -84,14 +84,16 @@ public class SettingsFacade implements RpcReceiver {
 
   @Rpc(description = "Toggle airplane mode on and off.", returns = "True if airplane mode is enabled.")
   public Boolean toggleAirplaneMode(@RpcParameter(name = "enabled") @RpcOptional Boolean enabled) {
-    boolean set_airplane_mode = enabled == null ? !checkAirplaneMode() : enabled;
+    if (enabled == null) {
+      enabled = !checkAirplaneMode();
+    }
     android.provider.Settings.System.putInt(mService.getContentResolver(),
-        android.provider.Settings.System.AIRPLANE_MODE_ON, set_airplane_mode ? AIRPLANE_MODE_ON
+        android.provider.Settings.System.AIRPLANE_MODE_ON, enabled ? AIRPLANE_MODE_ON
             : AIRPLANE_MODE_OFF);
     Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-    intent.putExtra("state", set_airplane_mode);
+    intent.putExtra("state", enabled);
     mService.sendBroadcast(intent);
-    return set_airplane_mode;
+    return enabled;
   }
 
   @Rpc(description = "Checks the ringer silent mode setting.", returns = "True if ringer silent mode is enabled.")
@@ -102,7 +104,7 @@ public class SettingsFacade implements RpcReceiver {
   @Rpc(description = "Toggle ringer silent mode on and off.", returns = "True if ringer silent mode is enabled.")
   public Boolean toggleRingerSilentMode(@RpcParameter(name = "enabled") @RpcOptional Boolean enabled) {
     if (enabled == null) {
-      enabled = checkRingerSilentMode();
+      enabled = !checkRingerSilentMode();
     }
     mAudio.setRingerMode(enabled ? AudioManager.RINGER_MODE_SILENT
         : AudioManager.RINGER_MODE_NORMAL);
@@ -128,7 +130,7 @@ public class SettingsFacade implements RpcReceiver {
   @Rpc(description = "Toggle Wifi on and off.", returns = "True if Wifi is enabled.")
   public Boolean toggleWifiState(@RpcParameter(name = "enabled") @RpcOptional Boolean enabled) {
     if (enabled == null) {
-      enabled = checkWifiState();
+      enabled = !checkWifiState();
     }
     mWifi.setWifiEnabled(enabled);
     return enabled;
