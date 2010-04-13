@@ -62,7 +62,6 @@ public class BluetoothFacade implements RpcReceiver {
         break;
       case BluetoothService.MESSAGE_WRITE:
         byte[] writeBuf = (byte[]) msg.obj;
-        // construct a string from the buffer
         String writeMessage = new String(writeBuf);
         AseLog.v("Wrote: " + writeMessage);
         break;
@@ -76,7 +75,6 @@ public class BluetoothFacade implements RpcReceiver {
         mEventFacade.postEvent("bluetooth-read", bundle);
         break;
       case BluetoothService.MESSAGE_DEVICE_NAME:
-        // save the connected device's name
         mConnectedDeviceName = msg.getData().getString(BluetoothService.DEVICE_NAME);
         AseLog.v("Connected to " + mConnectedDeviceName);
         break;
