@@ -16,6 +16,8 @@
 
 package com.google.ase.facade;
 
+import java.util.UUID;
+
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -34,6 +36,9 @@ import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
 public class BluetoothFacade implements RpcReceiver {
+
+  // UUID for ASE.
+  private static final String DEFAULT_UUID = "457807c0-4897-11df-9879-0800200c9a66";
 
   private final Service mService;
   private String mConnectedDeviceName;
@@ -94,26 +99,28 @@ public class BluetoothFacade implements RpcReceiver {
     mService = service;
     mAndroidFacade = androidFacade;
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    mBluetoothService = new BluetoothService(service, mHandler);
+    mBluetoothService = new BluetoothService(mHandler);
     mEventFacade = eventFacade;
   }
 
   @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")
-  public boolean bluetoothConnect() {
+  public boolean bluetoothConnect(
+          @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
     Intent deviceChooserIntent = new Intent(mService, BluetoothDeviceManager.class);
     Intent result = mAndroidFacade.startActivityForResult(deviceChooserIntent);
     if (result != null && result.hasExtra(BluetoothDeviceManager.EXTRA_DEVICE_ADDRESS)) {
       String address = result.getStringExtra(BluetoothDeviceManager.EXTRA_DEVICE_ADDRESS);
       BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-      mBluetoothService.connect(device);
+      mBluetoothService.connect(device, UUID.fromString(uuid));
       return true;
     }
     return false;
   }
 
   @Rpc(description = "Listens for and accepts a Bluetooth connection.")
-  public void bluetoothAccept() {
-    mBluetoothService.start();
+  public void bluetoothAccept(
+          @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
+    mBluetoothService.start(UUID.fromString(uuid));
   }
 
   @Rpc(description = "Requests that the device be discoverable for Bluetooth connections.")
