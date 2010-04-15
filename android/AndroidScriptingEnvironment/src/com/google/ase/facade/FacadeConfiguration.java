@@ -39,6 +39,7 @@ import com.google.ase.trigger.TriggerRepository;
  * @author Igor Karp (igor.v.karp@gmail.com)
  */
 public class FacadeConfiguration {
+
   private final static SortedMap<String, MethodDescriptor> sRpcs =
       new TreeMap<String, MethodDescriptor>();
 
@@ -56,7 +57,11 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(SettingsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SmsFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(BluetoothFacade.class));
+    try {
+      list.addAll(MethodDescriptor.collectFrom(BluetoothFacade.class));
+    } catch (Throwable t) {
+      AseLog.e("Bluetooth not available.", t);
+    }
     for (MethodDescriptor rpc : list) {
       sRpcs.put(rpc.getName(), rpc);
     }
@@ -78,7 +83,7 @@ public class FacadeConfiguration {
    * @return a new {@link JsonRpcServer} configured with all facades
    */
   public static JsonRpcServer buildJsonRpcServer(Service service, Intent intent, Handler handler) {
-    final TriggerRepository triggerRepository =
+    TriggerRepository triggerRepository =
         ((AseApplication) service.getApplication()).getTriggerRepository();
 
     AndroidFacade androidFacade = new AndroidFacade(service, handler, intent);
