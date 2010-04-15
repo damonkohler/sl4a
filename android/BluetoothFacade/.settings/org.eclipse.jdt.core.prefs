@@ -1,4 +1,4 @@
-#Thu Apr 15 16:03:34 CEST 2010
+#Thu Apr 15 19:35:37 CEST 2010
 eclipse.preferences.version=1
 org.eclipse.jdt.core.formatter.align_type_members_on_columns=false
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_allocation_expression=16
@@ -57,7 +57,7 @@ org.eclipse.jdt.core.formatter.comment.insert_new_line_before_root_tags=insert
 org.eclipse.jdt.core.formatter.comment.insert_new_line_for_parameter=insert
 org.eclipse.jdt.core.formatter.comment.line_length=100
 org.eclipse.jdt.core.formatter.compact_else_if=true
-org.eclipse.jdt.core.formatter.continuation_indentation=4
+org.eclipse.jdt.core.formatter.continuation_indentation=2
 org.eclipse.jdt.core.formatter.continuation_indentation_for_array_initializer=1
 org.eclipse.jdt.core.formatter.format_guardian_clause_on_one_line=false
 org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_annotation_declaration_header=true

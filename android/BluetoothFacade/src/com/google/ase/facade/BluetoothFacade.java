@@ -105,7 +105,7 @@ public class BluetoothFacade implements RpcReceiver {
 
   @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")
   public boolean bluetoothConnect(
-          @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
+      @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
     Intent deviceChooserIntent = new Intent(mService, BluetoothDeviceManager.class);
     Intent result = mAndroidFacade.startActivityForResult(deviceChooserIntent);
     if (result != null && result.hasExtra(BluetoothDeviceManager.EXTRA_DEVICE_ADDRESS)) {
@@ -119,13 +119,13 @@ public class BluetoothFacade implements RpcReceiver {
 
   @Rpc(description = "Listens for and accepts a Bluetooth connection.")
   public void bluetoothAccept(
-          @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
+      @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
     mBluetoothService.start(UUID.fromString(uuid));
   }
 
   @Rpc(description = "Requests that the device be discoverable for Bluetooth connections.")
   public void bluetoothMakeDiscoverable(
-          @RpcParameter(name = "duration", description = "period of time, in seconds, during which the device should be discoverable") @RpcDefault("300") Integer duration) {
+      @RpcParameter(name = "duration", description = "period of time, in seconds, during which the device should be discoverable") @RpcDefault("300") Integer duration) {
     if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
       Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
       discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, duration);
@@ -148,8 +148,8 @@ public class BluetoothFacade implements RpcReceiver {
 
   @Rpc(description = "Toggle Bluetooth on and off.", returns = "True if Bluetooth is enabled.")
   public Boolean toggleBluetoothState(
-          @RpcParameter(name = "enabled") @RpcOptional Boolean enabled,
-          @RpcParameter(name = "prompt", description = "Prompt the user to confirm changing the Bluetooth state.") @RpcDefault("true") Boolean prompt) {
+      @RpcParameter(name = "enabled") @RpcOptional Boolean enabled,
+      @RpcParameter(name = "prompt", description = "Prompt the user to confirm changing the Bluetooth state.") @RpcDefault("true") Boolean prompt) {
     if (enabled == null) {
       enabled = !checkBluetoothState();
     }
