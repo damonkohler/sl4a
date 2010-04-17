@@ -27,11 +27,10 @@ import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
 /**
- * A facade containing RPC implementations related to the speech-to-text
- * functionality of Android.
- *
+ * A facade containing RPC implementations related to the speech-to-text functionality of Android.
+ * 
  * @author Felix Arends (felix.arends@gmail.com)
- *
+ * 
  */
 public class SpeechRecognitionFacade implements RpcReceiver {
   private final AndroidFacade mAndroidFacade;
@@ -66,16 +65,15 @@ public class SpeechRecognitionFacade implements RpcReceiver {
     // Run the activity an retrieve the result.
     final Intent data = mAndroidFacade.startActivityForResult(recognitionIntent);
 
-    // The result consists of an array-list containing one entry for each
-    // possible result. The most likely result is the first entry.
-    ArrayList<String> results =
-        data.getStringArrayListExtra(android.speech.RecognizerIntent.EXTRA_RESULTS);
-
-    if (results == null || results.size() == 0) {
-      return "";
+    if (data.hasExtra(android.speech.RecognizerIntent.EXTRA_RESULTS)) {
+      // The result consists of an array-list containing one entry for each
+      // possible result. The most likely result is the first entry.
+      ArrayList<String> results =
+          data.getStringArrayListExtra(android.speech.RecognizerIntent.EXTRA_RESULTS);
+      return results.get(0);
     }
 
-    return results.get(0);
+    return "";
   }
 
   @Override
