@@ -30,7 +30,7 @@ public class PerlLanguage extends Language {
 
   @Override
   protected String getRpcReceiverDeclaration(String rpcReceiver) {
-    return "my " + rpcReceiver + " = Android()->new();\n";
+    return "my " + rpcReceiver + " = Android->new();\n";
   }
 
   @Override
