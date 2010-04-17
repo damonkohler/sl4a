@@ -2,4 +2,4 @@
 package require android
 set android [android new]
 set time [clock format [clock seconds] -format "%I %M %p on %A, %B %e %Y."]
-android speak $time
+$android speak $time
