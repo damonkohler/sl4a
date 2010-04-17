@@ -30,8 +30,7 @@ import com.google.ase.rpc.Rpc;
 /**
  * Exposes the SensorManager related functionality.
  * 
- * @author Damon Kohler (damonkohler@gmail.com)
- *         Felix Arends (felix.arends@gmail.com)
+ * @author Damon Kohler (damonkohler@gmail.com) Felix Arends (felix.arends@gmail.com)
  */
 public class SensorManagerFacade implements RpcReceiver {
   private final EventFacade mEventFacade;
@@ -53,29 +52,32 @@ public class SensorManagerFacade implements RpcReceiver {
         mSensorReadings = new Bundle();
       }
       switch (event.sensor.getType()) {
-        case Sensor.TYPE_ORIENTATION:
-          mSensorReadings.putFloat("azimuth", event.values[0]);
-          mSensorReadings.putFloat("pitch", event.values[1]);
-          mSensorReadings.putFloat("roll", event.values[2]);
-          break;
-        case Sensor.TYPE_ACCELEROMETER:
-          mSensorReadings.putFloat("xforce", event.values[0]);
-          mSensorReadings.putFloat("yforce", event.values[1]);
-          mSensorReadings.putFloat("zforce", event.values[2]);
-          break;
-        case Sensor.TYPE_MAGNETIC_FIELD:
-          mSensorReadings.putFloat("xmag", event.values[0]);
-          mSensorReadings.putFloat("ymag", event.values[1]);
-          mSensorReadings.putFloat("zmag", event.values[2]);
-          break;
+      case Sensor.TYPE_ORIENTATION:
+        mSensorReadings.putFloat("azimuth", event.values[0]);
+        mSensorReadings.putFloat("pitch", event.values[1]);
+        mSensorReadings.putFloat("roll", event.values[2]);
+        break;
+      case Sensor.TYPE_ACCELEROMETER:
+        mSensorReadings.putFloat("xforce", event.values[0]);
+        mSensorReadings.putFloat("yforce", event.values[1]);
+        mSensorReadings.putFloat("zforce", event.values[2]);
+        break;
+      case Sensor.TYPE_MAGNETIC_FIELD:
+        mSensorReadings.putFloat("xmag", event.values[0]);
+        mSensorReadings.putFloat("ymag", event.values[1]);
+        mSensorReadings.putFloat("zmag", event.values[2]);
+        break;
+      case Sensor.TYPE_LIGHT:
+        mSensorReadings.putFloat("light", event.values[0]);
+        break;
       }
       mEventFacade.postEvent("sensors", mSensorReadings);
     }
   };
-  
+
   public SensorManagerFacade(Service service, EventFacade eventFacade) {
-    this.mEventFacade = eventFacade;    
-    this.mSensorManager = (SensorManager)service.getSystemService(Context.SENSOR_SERVICE);
+    this.mEventFacade = eventFacade;
+    this.mSensorManager = (SensorManager) service.getSystemService(Context.SENSOR_SERVICE);
   }
 
   @Rpc(description = "Starts recording sensor data to be available for polling.")
