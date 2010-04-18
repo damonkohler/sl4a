@@ -50,7 +50,8 @@ public final class RpcInfo {
    * Invokes the call that belongs to this object with the given parameters. Wraps the response
    * (possibly an exception) in a JSONObject.
    * 
-   * @param parameters {@code JSONArray} containing the parameters
+   * @param parameters
+   *          {@code JSONArray} containing the parameters
    * @return RPC response
    * @throws RpcError
    * @throws JSONException
@@ -65,8 +66,10 @@ public final class RpcInfo {
       if (i < parameters.length()) {
         // Parameter is specified.
         try {
-          // We must handle numbers explicitly because we cannot magically cast between them.
-          if (parameterType == Long.class) {
+          // We must handle null and numbers explicitly because we cannot magically cast them.
+          if (parameters.isNull(i)) {
+            args[i] = null;
+          } else if (parameterType == Long.class) {
             args[i] = parameters.getLong(i);
           } else if (parameterType == Double.class) {
             args[i] = parameters.getDouble(i);
