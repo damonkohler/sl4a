@@ -16,6 +16,7 @@
 
 package com.google.ase.rpc;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,12 +25,14 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to mark RPC parameter as optional.
  * 
- * <p>The parameter marked as optional has no explicit default value.
- * {@code null} is used as default value.
+ * <p>
+ * The parameter marked as optional has no explicit default value. {@code null} is used as default
+ * value.
  * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
+@Documented
 public @interface RpcOptional {
 }
