@@ -24,7 +24,7 @@ public class RpcInfoTest extends TestCase {
     // TODO(damonkohler): Test converting JSONArrays into Lists.
     Object[] args = new Object[parameters.length()];
     for (int i = 0; i < parameters.length(); i++) {
-      RpcInfo.convertParameter(parameters, args, i, types[i]);
+      args[i] = RpcInfo.convertParameter(parameters, i, types[i]);
     }
     assertNull(args[0]);
     assertEquals(Boolean.TRUE, args[1]);

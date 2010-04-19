@@ -66,7 +66,7 @@ public final class RpcInfo {
       final Type parameterType = parameterTypes[i];
       if (i < parameters.length()) {
         // Parameter is specified.
-        convertParameter(parameters, args, i, parameterType);
+        args[i] = convertParameter(parameters, i, parameterType);
       } else if (MethodDescriptor.hasDefaultValue(annotations[i])) {
         args[i] = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
       } else {
@@ -92,34 +92,41 @@ public final class RpcInfo {
     }
   }
 
-  /** Converts a parameter from JSON into a Java Object. */
+  /**
+   * Converts a parameter from JSON into a Java Object.
+   * 
+   * @return TODO
+   */
+  // TODO(damonkohler): This signature is a bit weird (auto-refactored). The obvious alternative
+  // would be to work on one supplied parameter and return the converted parameter. However, that's
+  // problematic because you lose the ability to call the getXXX methods on the JSON array.
   @VisibleForTesting
-  static void convertParameter(final JSONArray parameters, final Object[] args, int i,
-      final Type parameterType) throws JSONException, RpcError {
+  static Object convertParameter(final JSONArray parameters, int index, Type type)
+      throws JSONException, RpcError {
     try {
       // We must handle null and numbers explicitly because we cannot magically cast them. We
       // also need to convert implicitly from numbers to bools.
-      if (parameters.isNull(i)) {
-        args[i] = null;
-      } else if (parameterType == Boolean.class) {
+      if (parameters.isNull(index)) {
+        return null;
+      } else if (type == Boolean.class) {
         try {
-          args[i] = parameters.getBoolean(i);
+          return parameters.getBoolean(index);
         } catch (JSONException e) {
-          args[i] = new Boolean(parameters.getInt(i) != 0);
+          return new Boolean(parameters.getInt(index) != 0);
         }
-      } else if (parameterType == Long.class) {
-        args[i] = parameters.getLong(i);
-      } else if (parameterType == Double.class) {
-        args[i] = parameters.getDouble(i);
-      } else if (parameterType == Integer.class) {
-        args[i] = parameters.getInt(i);
+      } else if (type == Long.class) {
+        return parameters.getLong(index);
+      } else if (type == Double.class) {
+        return parameters.getDouble(index);
+      } else if (type == Integer.class) {
+        return parameters.getInt(index);
       } else {
         // Magically cast the parameter to the right Java type.
-        args[i] = ((Class<?>) parameterType).cast(parameters.get(i));
+        return ((Class<?>) type).cast(parameters.get(index));
       }
     } catch (ClassCastException e) {
-      throw new RpcError("Argument " + (i + 1) + " should be of type "
-          + ((Class<?>) parameterType).getSimpleName() + ".");
+      throw new RpcError("Argument " + (index + 1) + " should be of type "
+          + ((Class<?>) type).getSimpleName() + ".");
     }
   }
 }
