@@ -30,6 +30,7 @@ import android.os.Bundle;
 import com.google.ase.AseLog;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.RpcError;
+import com.google.ase.util.VisibleForTesting;
 
 /**
  * Instances of this class describe specific RPCs on the server. An RPC on the server is described
@@ -65,24 +66,7 @@ public final class RpcInfo {
       final Type parameterType = parameterTypes[i];
       if (i < parameters.length()) {
         // Parameter is specified.
-        try {
-          // We must handle null and numbers explicitly because we cannot magically cast them.
-          if (parameters.isNull(i)) {
-            args[i] = null;
-          } else if (parameterType == Long.class) {
-            args[i] = parameters.getLong(i);
-          } else if (parameterType == Double.class) {
-            args[i] = parameters.getDouble(i);
-          } else if (parameterType == Integer.class) {
-            args[i] = parameters.getInt(i);
-          } else {
-            // Magically cast the parameter to the right Java type.
-            args[i] = ((Class<?>) parameterType).cast(parameters.get(i));
-          }
-        } catch (ClassCastException e) {
-          throw new RpcError("Argument " + (i + 1) + " should be of type "
-              + ((Class<?>) parameterType).getSimpleName() + ".");
-        }
+        convertParameter(parameters, args, i, parameterType);
       } else if (MethodDescriptor.hasDefaultValue(annotations[i])) {
         args[i] = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
       } else {
@@ -105,6 +89,37 @@ public final class RpcInfo {
       return JsonRpcResult.result(JsonResultBuilders.buildJsonList((List<?>) result));
     } else {
       return JsonRpcResult.result(result);
+    }
+  }
+
+  /** Converts a parameter from JSON into a Java Object. */
+  @VisibleForTesting
+  static void convertParameter(final JSONArray parameters, final Object[] args, int i,
+      final Type parameterType) throws JSONException, RpcError {
+    try {
+      // We must handle null and numbers explicitly because we cannot magically cast them. We
+      // also need to convert implicitly from numbers to bools.
+      if (parameters.isNull(i)) {
+        args[i] = null;
+      } else if (parameterType == Boolean.class) {
+        try {
+          args[i] = parameters.getBoolean(i);
+        } catch (JSONException e) {
+          args[i] = new Boolean(parameters.getInt(i) != 0);
+        }
+      } else if (parameterType == Long.class) {
+        args[i] = parameters.getLong(i);
+      } else if (parameterType == Double.class) {
+        args[i] = parameters.getDouble(i);
+      } else if (parameterType == Integer.class) {
+        args[i] = parameters.getInt(i);
+      } else {
+        // Magically cast the parameter to the right Java type.
+        args[i] = ((Class<?>) parameterType).cast(parameters.get(i));
+      }
+    } catch (ClassCastException e) {
+      throw new RpcError("Argument " + (i + 1) + " should be of type "
+          + ((Class<?>) parameterType).getSimpleName() + ".");
     }
   }
 }
