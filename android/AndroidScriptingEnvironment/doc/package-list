@@ -1,5 +1,6 @@
 com.google.ase
 com.google.ase.activity
+com.google.ase.dialog
 com.google.ase.exception
 com.google.ase.facade
 com.google.ase.facade.ui
@@ -16,4 +17,9 @@ com.google.ase.interpreter.tcl
 com.google.ase.jsonrpc
 com.google.ase.language
 com.google.ase.locale
+com.google.ase.provider
+com.google.ase.rpc
 com.google.ase.terminal
+com.google.ase.trigger
+com.google.ase.util
+com.google.ase.widget
