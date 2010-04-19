@@ -1,4 +1,15 @@
-1. Download and build the Android source.
-2. Download the source for Python 2.6 and compile it on your host.
-3. Copy the binary Parser/pgen from there to trunk/python/src/Parser/hostpgen.
-4. Execute build.py from the trunk/python directory to cross compile Python for use with ASE.
+These steps were tested on Ubuntu Karmic 64-bit.
+
+1. Download and build the Android source and use the Donut branch:
+
+repo init -u git://android.git.kernel.org/platform/manifest.git -b donut
+
+On Karmic, you'll need to slightly modify your string.h:
+
+http://codepainters.wordpress.com/2009/12/18/first-android-platform-build/
+
+2. Download the Python 2.6 source (i.e not the patched Python source provided here).
+3. Build Python for your host (i.e. not your Android device) by following the Python build instructions (configure, make).
+4. Copy the built binary python_src/Parser/pgen from there to ase_trunk/python/src/Parser/hostpgen.
+5. Copy the built binary python_src/python from there to ase_trunk/python/src/hostpython.
+6. Execute build.py from the ase_trunk/python directory to cross compile Python for use with ASE.

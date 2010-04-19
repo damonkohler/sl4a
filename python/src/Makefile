@@ -57,15 +57,15 @@ MAKESETUP=      $(srcdir)/Modules/makesetup
 
 # Compiler options
 OPT=		-DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes
-BASECFLAGS=
+BASECFLAGS=	
 CFLAGS=		$(BASECFLAGS) $(OPT) $(EXTRA_CFLAGS)
 # Both CPPFLAGS and LDFLAGS need to contain the shell's value for setup.py to
 # be able to build extension modules using the directories specified in the
 # environment variables
-CPPFLAGS=	-I. -IInclude -I$(srcdir)/Include
-LDFLAGS=
-LDLAST=
-SGI_ABI=
+CPPFLAGS=	-I. -IInclude -I$(srcdir)/Include 
+LDFLAGS=	
+LDLAST=		
+SGI_ABI=	
 CCSHARED=	-fPIC
 LINKFORSHARED=	-Xlinker -export-dynamic
 # Extra C flags added for building the interpreter object files.
@@ -108,15 +108,15 @@ BLDSHARED=	$(CC) -shared
 DESTSHARED=	$(BINLIBDEST)/lib-dynload
 
 # Executable suffix (.exe on Windows and Mac OS X)
-EXE=
-BUILDEXE=
+EXE=		
+BUILDEXE=	
 
 # Short name and location for Mac OS X Python framework
 UNIVERSALSDK=
-PYTHONFRAMEWORK=
+PYTHONFRAMEWORK=	
 PYTHONFRAMEWORKDIR=	no-framework
-PYTHONFRAMEWORKPREFIX=
-PYTHONFRAMEWORKINSTALLDIR=
+PYTHONFRAMEWORKPREFIX=	
+PYTHONFRAMEWORKINSTALLDIR= 
 # Deployment target selected during configure, to be checked
 # by distutils. The export statement is needed to ensure that the
 # deployment target is active during build.
@@ -127,7 +127,7 @@ MACOSX_DEPLOYMENT_TARGET=
 OTHER_LIBTOOL_OPT=
 
 # Environment to run shared python without installed libraries
-RUNSHARED=
+RUNSHARED=       
 
 # Modes for directories, executables and data files created by the
 # install process.  Default to user-only-writable for all file types.
@@ -155,23 +155,23 @@ DIST=		$(DISTFILES) $(DISTDIRS)
 LIBRARY=	libpython$(VERSION).a
 LDLIBRARY=      libpython$(VERSION).a
 BLDLIBRARY=     $(LDLIBRARY)
-DLLLIBRARY=
-LDLIBRARYDIR=
+DLLLIBRARY=	
+LDLIBRARYDIR=   
 INSTSONAME=	$(LDLIBRARY)
 
 
-LIBS=		-ldl
+LIBS=		-ldl 
 LIBM=		-lm
-LIBC=
+LIBC=		
 SYSLIBS=	$(LIBM) $(LIBC)
 SHLIBS=		$(LIBS)
 
 THREADOBJ=	Python/thread.o
 DLINCLDIR=	.
 DYNLOADFILE=	dynload_shlib.o
-MACHDEP_OBJS=
+MACHDEP_OBJS=	
 LIBOBJDIR=	Python/
-LIBOBJS=
+LIBOBJS=	
 UNICODE_OBJS=   Objects/unicodeobject.o Objects/unicodectype.o
 
 PYTHON=		python$(EXE)
@@ -184,7 +184,7 @@ PROFILE_TASK=	$(srcdir)/Tools/pybench/pybench.py -n 2 --with-gc --with-syscheck
 
 # === Definitions added by makesetup ===
 
-LOCALMODLIBS=
+LOCALMODLIBS=          
 BASEMODLIBS=
 GLHACK=-Dclear=__GLclear
 PYTHONPATH=$(COREPYTHONPATH)
@@ -210,7 +210,7 @@ MODULE_OBJS=	\
 		Modules/gcmodule.o
 
 # Used of signalmodule.o is not available
-SIGNAL_OBJS=
+SIGNAL_OBJS=	
 
 
 ##########################################################################
@@ -439,7 +439,7 @@ libpython$(VERSION).so: $(LIBRARY_OBJS)
 
 libpython$(VERSION).dylib: $(LIBRARY_OBJS)
 	 $(CC) -dynamiclib -Wl,-single_module $(LDFLAGS) -undefined dynamic_lookup -Wl,-install_name,$(prefix)/lib/libpython$(VERSION).dylib -Wl,-compatibility_version,$(VERSION) -Wl,-current_version,$(VERSION) -o $@ $(LIBRARY_OBJS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
-
+		 
 
 libpython$(VERSION).sl: $(LIBRARY_OBJS)
 	$(LDSHARED) $(LDFLAGS) -o $@ $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST)
@@ -745,11 +745,11 @@ memtest:	all platform
 		$(TESTPYTHON) $(TESTPROG) $(MEMTESTOPTS)
 
 # Install everything
-install:	 altinstall bininstall maninstall
+install:	 altinstall bininstall maninstall 
 
 # Install almost everything without disturbing previous versions
 altinstall:	 altbininstall libinstall inclinstall libainstall \
-                sharedinstall oldsharedinstall
+                sharedinstall oldsharedinstall 
 
 # Install shared libraries enabled by Setup
 DESTDIRS=	$(exec_prefix) $(LIBDIR) $(BINLIBDEST) $(DESTSHARED)
@@ -822,7 +822,7 @@ maninstall:
 
 # Install the library
 PLATDIR=	plat-$(MACHDEP)
-EXTRAPLATDIR=
+EXTRAPLATDIR= 
 EXTRAMACHDEPPATH=
 MACHDEPS=	$(PLATDIR) $(EXTRAPLATDIR)
 XMLLIBSUBDIRS=  xml xml/dom xml/etree xml/parsers xml/sax
@@ -834,7 +834,7 @@ PLATMACDIRS= plat-mac plat-mac/Carbon plat-mac/lib-scriptpackages \
 	plat-mac/lib-scriptpackages/Netscape \
 	plat-mac/lib-scriptpackages/StdSuites \
 	plat-mac/lib-scriptpackages/SystemEvents \
-	plat-mac/lib-scriptpackages/Terminal
+	plat-mac/lib-scriptpackages/Terminal 
 PLATMACPATH=:plat-mac:plat-mac/lib-scriptpackages
 LIBSUBDIRS=	lib-tk site-packages test test/output test/data \
 		test/decimaltestdata \
@@ -1157,8 +1157,9 @@ pycremoval:
 clean: pycremoval
 	find . -name '*.o' -exec rm -f {} ';'
 	find . -name '*.s[ol]' -exec rm -f {} ';'
+	find $(srcdir)/build -name 'fficonfig.h' -exec rm -f {} ';' || true
+	find $(srcdir)/build -name 'fficonfig.py' -exec rm -f {} ';' || true
 	rm -rf $(srcdir)/android
-	rm -rf $(srcdir)/build
 
 profile-removal:
 	find . -name '*.gc??' -exec rm -f {} ';'
@@ -1230,7 +1231,7 @@ Python/thread.o:  $(srcdir)/Python/thread_atheos.h $(srcdir)/Python/thread_beos.
 .PHONY: maninstall libinstall inclinstall libainstall sharedinstall
 .PHONY: frameworkinstall frameworkinstallframework frameworkinstallstructure
 .PHONY: frameworkinstallmaclib frameworkinstallapps frameworkinstallunixtools
-.PHONY: frameworkaltinstallunixtools recheck autoconf clean clobber distclean
+.PHONY: frameworkaltinstallunixtools recheck autoconf clean clobber distclean 
 .PHONY: smelly funny patchcheck
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

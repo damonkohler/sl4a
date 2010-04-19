@@ -91,6 +91,12 @@ if match is None:
 android_src = match.group(1)
 os.environ['ANDROID_SRC'] = android_src
 
+agcc_path = subprocess.Popen(['which', 'agcc'],
+                             stdout=subprocess.PIPE).communicate()[0]
+if agcc_path == '':
+  print 'Could not find agcc on your path.'
+  sys.exit(1)
+
 pwd = os.getcwd()
 os.chdir('src')
 

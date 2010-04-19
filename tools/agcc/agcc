@@ -39,7 +39,7 @@ die "bad arm-eabi-gcc path" if $GCC !~ /(.*)\/prebuilt\//;
 my $DROID = $1;
 
 my $ALIB = "$DROID/out/target/product/generic/obj/lib";
-my $TOOLCHAIN = "$DROID/prebuilt/linux-x86/toolchain/arm-eabi-4.2.1";
+my $TOOLCHAIN = "$DROID/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0";
 
 my @include_paths = (
     "-I$DROID/system/core/include",
@@ -118,7 +118,7 @@ my @link_args = (
     "-nostdlib",
     "$ALIB/crtend_android.o",
     "$ALIB/crtbegin_static.o",
-    "$TOOLCHAIN/lib/gcc/arm-eabi/4.2.1/interwork/libgcc.a",
+    "$TOOLCHAIN/lib/gcc/arm-eabi/4.4.0/interwork/libgcc.a",
     "-lc",
     "-lm",
     "-ldl");
@@ -135,7 +135,7 @@ my @shared_args = (
     "-lm",
     "-ldl",
     #"-Wl,--no-undefined",
-    "$TOOLCHAIN/lib/gcc/arm-eabi/4.2.1/interwork/libgcc.a",
+    "$TOOLCHAIN/lib/gcc/arm-eabi/4.4.0/interwork/libgcc.a",
     "-Wl,--whole-archive"); # .a, .o input files go *after* here
 
 # Now implement a quick parser for a gcc-like command line
