@@ -29,6 +29,7 @@ import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.trigger.TriggerRepository;
 
@@ -58,11 +59,14 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SmsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(CameraFacade.class));
+
+    // Bluetooth is not available before Android 2.0.
     try {
       list.addAll(MethodDescriptor.collectFrom(BluetoothFacade.class));
     } catch (Throwable t) {
       AseLog.e("Bluetooth not available.", t);
     }
+
     for (MethodDescriptor rpc : list) {
       sRpcs.put(rpc.getName(), rpc);
     }
@@ -70,6 +74,16 @@ public class FacadeConfiguration {
 
   private FacadeConfiguration() {
     // Utility class.
+  }
+
+  /** Returns a list of {@link MethodDescriptor} objects for all facades. */
+  public static List<MethodDescriptor> collectRpcDescriptors() {
+    return new ArrayList<MethodDescriptor>(sRpcs.values());
+  }
+
+  /** Returns a method by name. */
+  public static MethodDescriptor getMethodDescriptor(String name) {
+    return sRpcs.get(name);
   }
 
   /**
@@ -84,44 +98,34 @@ public class FacadeConfiguration {
    * @return a new {@link JsonRpcServer} configured with all facades
    */
   public static JsonRpcServer buildJsonRpcServer(Service service, Intent intent, Handler handler) {
+    List<RpcReceiver> receivers = new ArrayList<RpcReceiver>();
     TriggerRepository triggerRepository =
         ((AseApplication) service.getApplication()).getTriggerRepository();
 
     AndroidFacade androidFacade = new AndroidFacade(service, handler, intent);
-    SettingsFacade settingsFacade = new SettingsFacade(service);
-    UiFacade uiFacade = new UiFacade(service);
-    MediaFacade mediaFacade = new MediaFacade();
-    TextToSpeechFacade ttsFacade = new TextToSpeechFacade(service);
-    SpeechRecognitionFacade srFacade = new SpeechRecognitionFacade(androidFacade);
     EventFacade eventFacade = new EventFacade(service);
-    SensorManagerFacade sensorManagerFacade = new SensorManagerFacade(service, eventFacade);
-    LocationManagerFacade locationManagerFacade = new LocationManagerFacade(service, eventFacade);
-    TelephonyManagerFacade telephonyManagerFacade =
-        new TelephonyManagerFacade(service, eventFacade);
-    AlarmManagerFacade alarmManagerFacade =
-        new AlarmManagerFacade(service, eventFacade, triggerRepository);
-    SmsFacade smsFacade = new SmsFacade(service);
-    CameraFacade cameraFacade = new CameraFacade();
+    receivers.add(androidFacade);
+    receivers.add(eventFacade);
+
+    receivers.add(new SettingsFacade(service));
+    receivers.add(new UiFacade(service));
+    receivers.add(new MediaFacade());
+    receivers.add(new TextToSpeechFacade(service));
+    receivers.add(new SpeechRecognitionFacade(androidFacade));
+    receivers.add(new SensorManagerFacade(service, eventFacade));
+    receivers.add(new LocationManagerFacade(service, eventFacade));
+    receivers.add(new TelephonyManagerFacade(service, eventFacade));
+    receivers.add(new AlarmManagerFacade(service, eventFacade, triggerRepository));
+    receivers.add(new SmsFacade(service));
+    receivers.add(new CameraFacade());
+
+    // Bluetooth is not available before Android 2.0.
     try {
-      BluetoothFacade bluetoothFacade = new BluetoothFacade(service, androidFacade, eventFacade);
-      return new JsonRpcServer(androidFacade, settingsFacade, mediaFacade, ttsFacade, srFacade,
-          uiFacade, eventFacade, sensorManagerFacade, locationManagerFacade,
-          telephonyManagerFacade, alarmManagerFacade, smsFacade, cameraFacade, bluetoothFacade);
+      receivers.add(new BluetoothFacade(service, androidFacade, eventFacade));
     } catch (Throwable t) {
       AseLog.e("Bluetooth not available.", t);
     }
-    return new JsonRpcServer(androidFacade, settingsFacade, mediaFacade, ttsFacade, srFacade,
-        uiFacade, eventFacade, sensorManagerFacade, locationManagerFacade, telephonyManagerFacade,
-        alarmManagerFacade, smsFacade, cameraFacade);
-  }
 
-  /** Returns a list of {@link MethodDescriptor} objects for all facades. */
-  public static List<MethodDescriptor> collectRpcDescriptors() {
-    return new ArrayList<MethodDescriptor>(sRpcs.values());
-  }
-
-  /** Returns a method by name. */
-  public static MethodDescriptor getMethodDescriptor(String name) {
-    return sRpcs.get(name);
+    return new JsonRpcServer(receivers);
   }
 }

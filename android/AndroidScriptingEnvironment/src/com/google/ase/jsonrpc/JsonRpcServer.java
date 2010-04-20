@@ -55,7 +55,7 @@ public class JsonRpcServer extends Server {
    * @param receivers
    *          the {@link RpcReceiver}s to register with the server
    */
-  public JsonRpcServer(final RpcReceiver... receivers) {
+  public JsonRpcServer(List<RpcReceiver> receivers) {
     for (RpcReceiver receiver : receivers) {
       registerRpcReceiver(receiver);
     }
