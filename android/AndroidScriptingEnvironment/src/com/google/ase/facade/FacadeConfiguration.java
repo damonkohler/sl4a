@@ -57,6 +57,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(SettingsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SmsFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(CameraFacade.class));
     try {
       list.addAll(MethodDescriptor.collectFrom(BluetoothFacade.class));
     } catch (Throwable t) {
@@ -100,17 +101,18 @@ public class FacadeConfiguration {
     AlarmManagerFacade alarmManagerFacade =
         new AlarmManagerFacade(service, eventFacade, triggerRepository);
     SmsFacade smsFacade = new SmsFacade(service);
+    CameraFacade cameraFacade = new CameraFacade();
     try {
       BluetoothFacade bluetoothFacade = new BluetoothFacade(service, androidFacade, eventFacade);
       return new JsonRpcServer(androidFacade, settingsFacade, mediaFacade, ttsFacade, srFacade,
           uiFacade, eventFacade, sensorManagerFacade, locationManagerFacade,
-          telephonyManagerFacade, alarmManagerFacade, smsFacade, bluetoothFacade);
+          telephonyManagerFacade, alarmManagerFacade, smsFacade, cameraFacade, bluetoothFacade);
     } catch (Throwable t) {
       AseLog.e("Bluetooth not available.", t);
     }
     return new JsonRpcServer(androidFacade, settingsFacade, mediaFacade, ttsFacade, srFacade,
         uiFacade, eventFacade, sensorManagerFacade, locationManagerFacade, telephonyManagerFacade,
-        alarmManagerFacade, smsFacade);
+        alarmManagerFacade, smsFacade, cameraFacade);
   }
 
   /** Returns a list of {@link MethodDescriptor} objects for all facades. */
