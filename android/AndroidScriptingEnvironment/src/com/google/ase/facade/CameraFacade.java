@@ -36,66 +36,55 @@ public class CameraFacade implements RpcReceiver {
     boolean mmResult;
   }
 
-  private Camera mCamera;
-
-  @Rpc(description = "Open the camera for use.")
-  public void cameraOpen() {
-    mCamera = Camera.open();
-  }
-
-  @Rpc(description = "Close the camera so that other processes may use it.")
-  public void cameraClose() {
-    if (mCamera != null) {
-      mCamera.release();
-    }
-    mCamera = null;
-  }
-
   @Rpc(description = "Take a picture and save it to the specified path.", returns = "True on success.")
   public Boolean cameraTakePicture(@RpcParameter(name = "path") final String path)
       throws InterruptedException {
     final CountDownLatch autoFocusLatch = new CountDownLatch(1);
     final CountDownLatch takePictureLatch = new CountDownLatch(1);
     final BooleanResult result = new BooleanResult();
+    final Camera camera = Camera.open();
 
-    mCamera.startPreview();
-    mCamera.autoFocus(new AutoFocusCallback() {
-      @Override
-      public void onAutoFocus(boolean success, Camera camera) {
-        result.mmResult = success;
-        autoFocusLatch.countDown();
-      }
-    });
-    autoFocusLatch.await();
-
-    mCamera.takePicture(null, null, new PictureCallback() {
-      @Override
-      public void onPictureTaken(byte[] data, Camera camera) {
-        try {
-          FileOutputStream output = new FileOutputStream(path);
-          output.write(data);
-          output.close();
-          result.mmResult = true;
-        } catch (FileNotFoundException e) {
-          AseLog.e("Failed to save picture.", e);
-          result.mmResult = false;
-          return;
-        } catch (IOException e) {
-          AseLog.e("Failed to save picture.", e);
-          result.mmResult = false;
-          return;
-        } finally {
-          takePictureLatch.countDown();
+    try {
+      camera.startPreview();
+      camera.autoFocus(new AutoFocusCallback() {
+        @Override
+        public void onAutoFocus(boolean success, Camera camera) {
+          result.mmResult = success;
+          autoFocusLatch.countDown();
         }
-      }
-    });
-    takePictureLatch.await();
+      });
+      autoFocusLatch.await();
+      camera.takePicture(null, null, new PictureCallback() {
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera) {
+          try {
+            FileOutputStream output = new FileOutputStream(path);
+            output.write(data);
+            output.close();
+            result.mmResult = true;
+          } catch (FileNotFoundException e) {
+            AseLog.e("Failed to save picture.", e);
+            result.mmResult = false;
+            return;
+          } catch (IOException e) {
+            AseLog.e("Failed to save picture.", e);
+            result.mmResult = false;
+            return;
+          } finally {
+            takePictureLatch.countDown();
+          }
+        }
+      });
+      takePictureLatch.await();
+    } finally {
+      camera.release();
+    }
 
     return result.mmResult;
   }
 
   @Override
   public void shutdown() {
-    cameraClose();
+    // Nothing to clean up.
   }
 }
