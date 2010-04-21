@@ -15,21 +15,14 @@ if is_server:
 else:
   droid.bluetoothConnect()
 
-def receiveMessage():
-  while True:
-    result = droid.receiveEvent()
-    if result.result is not None and result.result['name'] == 'bluetooth-read':
-      return result.result['message']
-    time.sleep(0.5)
-
 if is_server:
   result = droid.getInput('Chat', 'Enter a message').result
   if result is None:
     droid.exit()
-  droid.bluetoothWrite(result)
+  droid.bluetoothWrite(result + '\n')
 
 while True:
-  message = receiveMessage()
+  message = droid.bluetoothReadLine().result
   droid.dialogCreateAlert('Chat Received', message)
   droid.dialogSetPositiveButtonText('Ok')
   droid.dialogShow()
@@ -37,6 +30,6 @@ while True:
   result = droid.getInput('Chat', 'Enter a message').result
   if result is None:
     break
-  droid.bluetoothWrite(result)
+  droid.bluetoothWrite(result + '\n')
 
 droid.exit()

@@ -47,12 +47,21 @@ public class EventFacade implements RpcReceiver {
   }
 
   /**
-   * Posts an event on the event queue. This method is supposed to be used from other facades to
-   * post events.
+   * Posts an event on the event queue.
    */
   void postEvent(String name, Bundle bundle) {
     Bundle event = new Bundle(bundle);
     event.putString("name", name);
+    mEventQueue.add(event);
+  }
+
+  /**
+   * Posts a simple event to the event queue.
+   */
+  void postEvent(String name, String message) {
+    Bundle event = new Bundle();
+    event.putString("name", name);
+    event.putString("message", message);
     mEventQueue.add(event);
   }
 

@@ -16,13 +16,17 @@
 
 package com.google.ase.facade;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.UUID;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
@@ -42,6 +46,9 @@ public class BluetoothFacade implements RpcReceiver {
 
   private final Service mService;
   private String mConnectedDeviceName;
+  private final PipedOutputStream mOutputStream;
+  private final PipedInputStream mInputStream;
+  private final BufferedReader mReader;
 
   private final Handler mHandler = new Handler() {
 
@@ -52,36 +59,34 @@ public class BluetoothFacade implements RpcReceiver {
         switch (msg.arg1) {
         case BluetoothService.STATE_CONNECTED:
           AseLog.v("Bluetooth connected.");
-          mEventFacade.postEvent("bluetooth-connected", new Bundle());
+          mEventFacade.postEvent("bluetooth", "connected");
           break;
         case BluetoothService.STATE_CONNECTING:
           AseLog.v("Bluetooth connecting.");
+          mEventFacade.postEvent("bluetooth", "connecting");
           break;
         case BluetoothService.STATE_LISTEN:
           AseLog.v("Bluetooth listening.");
+          mEventFacade.postEvent("bluetooth", "listening");
           break;
-        case BluetoothService.STATE_NONE:
+        case BluetoothService.STATE_IDLE:
           AseLog.v("Bluetooth in null state.");
+          mEventFacade.postEvent("bluetooth", "idle");
           break;
         }
         break;
       case BluetoothService.MESSAGE_WRITE:
-        byte[] writeBuf = (byte[]) msg.obj;
-        String writeMessage = new String(writeBuf);
-        AseLog.v("Wrote: " + writeMessage);
+        // Wrote to Bluetooth channel.
         break;
       case BluetoothService.MESSAGE_READ:
-        byte[] readBuf = (byte[]) msg.obj;
-        // construct a string from the valid bytes in the buffer
-        String readMessage = new String(readBuf, 0, msg.arg1);
-        AseLog.v("Read: " + readMessage);
-        Bundle bundle = new Bundle();
-        bundle.putString("message", readMessage);
-        mEventFacade.postEvent("bluetooth-read", bundle);
+        try {
+          mOutputStream.write((byte[]) msg.obj);
+        } catch (IOException e) {
+          AseLog.e("Failed to read from Bluetooth.", e);
+        }
         break;
       case BluetoothService.MESSAGE_DEVICE_NAME:
         mConnectedDeviceName = msg.getData().getString(BluetoothService.DEVICE_NAME);
-        AseLog.v("Connected to " + mConnectedDeviceName);
         break;
       case BluetoothService.MESSAGE_TOAST:
         AseLog.e(msg.getData().getString(BluetoothService.TOAST));
@@ -95,7 +100,13 @@ public class BluetoothFacade implements RpcReceiver {
   BluetoothService mBluetoothService;
   EventFacade mEventFacade;
 
-  public BluetoothFacade(Service service, AndroidFacade androidFacade, EventFacade eventFacade) {
+  public BluetoothFacade(Service service, AndroidFacade androidFacade, EventFacade eventFacade)
+      throws IOException {
+    // Initialize these first in case an exception is thrown.
+    mOutputStream = new PipedOutputStream();
+    mInputStream = new PipedInputStream(mOutputStream);
+    mReader = new BufferedReader(new InputStreamReader(mInputStream, "ASCII"));
+
     mService = service;
     mAndroidFacade = androidFacade;
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -137,6 +148,28 @@ public class BluetoothFacade implements RpcReceiver {
   @Rpc(description = "Sends bytes over the currently open Bluetooth connection.")
   public void bluetoothWrite(String bytes) {
     mBluetoothService.write(bytes.getBytes());
+  }
+
+  @Rpc(description = "Read up to bufferSize bytes.")
+  public String bluetoothRead(
+      @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize) throws IOException {
+    char[] buffer = new char[bufferSize];
+    int bytesRead = mReader.read(buffer);
+    if (bytesRead == -1) {
+      AseLog.e("Read failed.");
+      throw new IOException("Read failed.");
+    }
+    return new String(buffer, 0, bytesRead);
+  }
+
+  @Rpc(description = "Read the next line.")
+  public String bluetoothReadLine() throws IOException {
+    return mReader.readLine();
+  }
+
+  @Rpc(description = "Returns the name of the connected device.")
+  public String bluetoothGetConnectedDeviceName() {
+    return mConnectedDeviceName;
   }
 
   // The following RPCs belong in the SettingsFacade namespace.
