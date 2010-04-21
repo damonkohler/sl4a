@@ -51,26 +51,23 @@ public class CameraFacade implements RpcReceiver {
     mCamera = null;
   }
 
-  @Rpc(description = "Auto focuses the camera.")
-  public Boolean cameraAutoFocus() throws InterruptedException {
-    final CountDownLatch latch = new CountDownLatch(1);
+  @Rpc(description = "Take a picture and save it to the specified path.", returns = "True on success.")
+  public Boolean cameraTakePicture(@RpcParameter(name = "path") final String path)
+      throws InterruptedException {
+    final CountDownLatch autoFocusLatch = new CountDownLatch(1);
+    final CountDownLatch takePictureLatch = new CountDownLatch(1);
     final BooleanResult result = new BooleanResult();
+
+    mCamera.startPreview();
     mCamera.autoFocus(new AutoFocusCallback() {
       @Override
       public void onAutoFocus(boolean success, Camera camera) {
         result.mmResult = success;
-        latch.countDown();
+        autoFocusLatch.countDown();
       }
     });
-    latch.await();
-    return result.mmResult;
-  }
+    autoFocusLatch.await();
 
-  @Rpc(description = "Take a picture and save it to the specified path.", returns = "True on success.")
-  public Boolean cameraTakePicture(@RpcParameter(name = "path") final String path)
-      throws InterruptedException {
-    final CountDownLatch latch = new CountDownLatch(1);
-    final BooleanResult result = new BooleanResult();
     mCamera.takePicture(null, null, new PictureCallback() {
       @Override
       public void onPictureTaken(byte[] data, Camera camera) {
@@ -88,11 +85,12 @@ public class CameraFacade implements RpcReceiver {
           result.mmResult = false;
           return;
         } finally {
-          latch.countDown();
+          takePictureLatch.countDown();
         }
       }
     });
-    latch.await();
+    takePictureLatch.await();
+
     return result.mmResult;
   }
 
