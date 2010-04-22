@@ -25,7 +25,7 @@ import com.google.ase.language.TclLanguage;
 
 /**
  * Represents the Tcl interpreter.
- *
+ * 
  * @author Pat Thoyts (patthoyts@users.sourceforge.net)
  */
 public class TclInterpreter extends Interpreter {
@@ -78,6 +78,6 @@ public class TclInterpreter extends Interpreter {
 
   @Override
   public int getVersion() {
-    return 0;
+    return 1;
   }
 }

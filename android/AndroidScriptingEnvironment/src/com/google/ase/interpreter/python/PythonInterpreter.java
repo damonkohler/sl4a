@@ -24,7 +24,7 @@ import com.google.ase.language.PythonLanguage;
 
 /**
  * Represents the Python interpreter.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class PythonInterpreter extends Interpreter {
@@ -77,6 +77,6 @@ public class PythonInterpreter extends Interpreter {
 
   @Override
   public int getVersion() {
-    return 5;
+    return 6;
   }
 }
