@@ -34,6 +34,11 @@ import com.google.ase.rpc.Rpc;
  * 
  */
 public class EventFacade implements RpcReceiver {
+  /**
+   * The maximum length of the event queue. Old events will be discarded when this limit is
+   * exceeded.
+   */
+  private static final int MAX_QUEUE_SIZE = 1024;
   final Queue<Bundle> mEventQueue = new ConcurrentLinkedQueue<Bundle>();
   final Context mService;
 
@@ -53,6 +58,9 @@ public class EventFacade implements RpcReceiver {
     Bundle event = new Bundle(bundle);
     event.putString("name", name);
     mEventQueue.add(event);
+    if (mEventQueue.size() > MAX_QUEUE_SIZE) {
+      mEventQueue.remove();
+    }
   }
 
   /**
