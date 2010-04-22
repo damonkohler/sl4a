@@ -183,7 +183,7 @@ public class SmsFacade implements RpcReceiver {
     return result;
   }
 
-  @Rpc(description = "Deletes a message.", returns = "True if message was deleted")
+  @Rpc(description = "Deletes a message.", returns = "True if the message was deleted")
   public Boolean smsDeleteMessage(@RpcParameter(name = "id") Integer id) {
     Uri uri = buildMessageUri(id);
     Boolean result = false;
