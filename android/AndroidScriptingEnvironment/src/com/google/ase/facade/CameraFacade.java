@@ -41,7 +41,8 @@ public class CameraFacade implements RpcReceiver {
       throws InterruptedException {
     final CountDownLatch autoFocusLatch = new CountDownLatch(1);
     final CountDownLatch takePictureLatch = new CountDownLatch(1);
-    final BooleanResult result = new BooleanResult();
+    final BooleanResult autoFocusResult = new BooleanResult();
+    final BooleanResult takePictureResult = new BooleanResult();
     final Camera camera = Camera.open();
 
     try {
@@ -49,7 +50,7 @@ public class CameraFacade implements RpcReceiver {
       camera.autoFocus(new AutoFocusCallback() {
         @Override
         public void onAutoFocus(boolean success, Camera camera) {
-          result.mmResult = success;
+          autoFocusResult.mmResult = success;
           autoFocusLatch.countDown();
         }
       });
@@ -61,14 +62,14 @@ public class CameraFacade implements RpcReceiver {
             FileOutputStream output = new FileOutputStream(path);
             output.write(data);
             output.close();
-            result.mmResult = true;
+            takePictureResult.mmResult = true;
           } catch (FileNotFoundException e) {
             AseLog.e("Failed to save picture.", e);
-            result.mmResult = false;
+            takePictureResult.mmResult = false;
             return;
           } catch (IOException e) {
             AseLog.e("Failed to save picture.", e);
-            result.mmResult = false;
+            takePictureResult.mmResult = false;
             return;
           } finally {
             takePictureLatch.countDown();
@@ -80,7 +81,7 @@ public class CameraFacade implements RpcReceiver {
       camera.release();
     }
 
-    return result.mmResult;
+    return autoFocusResult.mmResult && takePictureResult.mmResult;
   }
 
   @Override
