@@ -150,6 +150,11 @@ public class BluetoothFacade implements RpcReceiver {
     mBluetoothService.write(bytes.getBytes());
   }
 
+  @Rpc(description = "Returns True if the next read is guaranteed not to block.")
+  public Boolean bluetoothReady() throws IOException {
+    return mReader.ready();
+  }
+
   @Rpc(description = "Read up to bufferSize bytes.")
   public String bluetoothRead(
       @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize) throws IOException {
