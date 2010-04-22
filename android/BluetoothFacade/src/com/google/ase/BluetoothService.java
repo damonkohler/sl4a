@@ -47,7 +47,7 @@ public class BluetoothService {
   private int mState;
 
   // Constants that indicate the current connection state.
-  public static final int STATE_NONE = 0; // We're doing nothing.
+  public static final int STATE_IDLE = 0; // We're doing nothing.
   public static final int STATE_LISTEN = 1; // Now listening for incoming connections.
   public static final int STATE_CONNECTING = 2; // Now initiating an outgoing connection.
   public static final int STATE_CONNECTED = 3; // Now connected to a remote device.
@@ -72,7 +72,7 @@ public class BluetoothService {
   public BluetoothService(Handler handler) {
     mHandler = handler;
     mAdapter = BluetoothAdapter.getDefaultAdapter();
-    mState = STATE_NONE;
+    mState = STATE_IDLE;
   }
 
   /**
@@ -204,7 +204,7 @@ public class BluetoothService {
       mAcceptThread.cancel();
       mAcceptThread = null;
     }
-    setState(STATE_NONE);
+    setState(STATE_IDLE);
   }
 
   /**
@@ -297,7 +297,7 @@ public class BluetoothService {
               // Situation normal. Start the connected thread.
               connected(socket, socket.getRemoteDevice());
               break;
-            case STATE_NONE:
+            case STATE_IDLE:
             case STATE_CONNECTED:
               // Either not ready or already connected. Terminate new socket.
               try {

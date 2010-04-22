@@ -76,8 +76,8 @@ public class SensorManagerFacade implements RpcReceiver {
   };
 
   public SensorManagerFacade(Service service, EventFacade eventFacade) {
-    this.mEventFacade = eventFacade;
-    this.mSensorManager = (SensorManager) service.getSystemService(Context.SENSOR_SERVICE);
+    mEventFacade = eventFacade;
+    mSensorManager = (SensorManager) service.getSystemService(Context.SENSOR_SERVICE);
   }
 
   @Rpc(description = "Starts recording sensor data to be available for polling.")
