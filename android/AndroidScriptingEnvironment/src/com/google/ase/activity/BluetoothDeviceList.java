@@ -33,38 +33,38 @@ import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.bluetooth.BluetoothHelper.DeviceListener;
 
-public class BluetoothDeviceManager extends ListActivity {
+public class BluetoothDeviceList extends ListActivity {
   private static class DeviceInfo {
-    public final String mName;
-    public final String mAddress;
+    public final String mmName;
+    public final String mmAddress;
     public DeviceInfo(String name, String address) {
-      mName = name;
-      mAddress = address;
+      mmName = name;
+      mmAddress = address;
     }
   }
 
   private final DeviceListAdapter mDeviceListAdapter = new DeviceListAdapter();
 
   private class DeviceListAdapter extends BaseAdapter implements DeviceListener {
-    List<DeviceInfo> mDeviceList;
+    List<DeviceInfo> mmDeviceList;
 
     public DeviceListAdapter() {
-      mDeviceList = new ArrayList<DeviceInfo>();
+      mmDeviceList = new ArrayList<DeviceInfo>();
     }
 
     public void addDevice(String name, String address) {
-      mDeviceList.add(new DeviceInfo(name, address));
+      mmDeviceList.add(new DeviceInfo(name, address));
       notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-      return mDeviceList.size();
+      return mmDeviceList.size();
     }
 
     @Override
     public Object getItem(int position) {
-      return mDeviceList.get(position);
+      return mmDeviceList.get(position);
     }
 
     @Override
@@ -74,10 +74,10 @@ public class BluetoothDeviceManager extends ListActivity {
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
-      final DeviceInfo device = mDeviceList.get(position);
+      final DeviceInfo device = mmDeviceList.get(position);
 
-      final TextView textView = new TextView(BluetoothDeviceManager.this);
-      textView.setText(device.mName + " (" + device.mAddress + ")");
+      final TextView textView = new TextView(BluetoothDeviceList.this);
+      textView.setText(device.mmName + " (" + device.mmAddress + ")");
 
       return textView;
     }
@@ -97,7 +97,7 @@ public class BluetoothDeviceManager extends ListActivity {
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
       DeviceInfo device = (DeviceInfo) mDeviceListAdapter.getItem(position);
       final Intent result = new Intent();
-      result.putExtra(Constants.EXTRA_DEVICE_ADDRESS, device.mAddress);
+      result.putExtra(Constants.EXTRA_DEVICE_ADDRESS, device.mmAddress);
       setResult(RESULT_OK, result);
       finish();
     }

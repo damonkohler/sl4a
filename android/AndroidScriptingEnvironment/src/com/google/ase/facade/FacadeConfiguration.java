@@ -27,6 +27,7 @@ import android.os.Handler;
 
 import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
+import com.google.ase.R;
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.jsonrpc.RpcReceiver;
@@ -102,7 +103,13 @@ public class FacadeConfiguration {
     TriggerRepository triggerRepository =
         ((AseApplication) service.getApplication()).getTriggerRepository();
 
-    AndroidFacade androidFacade = new AndroidFacade(service, handler, intent);
+    AndroidFacade androidFacade =
+        new AndroidFacade(service, handler, intent, new AndroidFacade.Resources() {
+          @Override
+          public int getAseLogo48() {
+            return R.drawable.ase_logo_48;
+          }
+        });
     EventFacade eventFacade = new EventFacade(service);
     receivers.add(androidFacade);
     receivers.add(eventFacade);

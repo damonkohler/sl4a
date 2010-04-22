@@ -90,7 +90,7 @@
       android:launchMode="singleTask"
       android:configChanges="keyboardHidden|orientation" />
     <activity
-      android:name=".activity.BluetoothDeviceManager"
+      android:name=".activity.BluetoothDeviceList"
       android:configChanges="keyboardHidden|orientation" />
     <activity
       android:name=".activity.InterpreterInstaller"

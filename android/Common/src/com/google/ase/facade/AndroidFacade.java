@@ -27,7 +27,9 @@ import java.util.Set;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,6 +62,13 @@ import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
 public class AndroidFacade implements RpcReceiver {
+  /**
+   * An instance of this interface is passed to the facade. From this object,
+   * the resource IDs can be obtained.
+   */
+  public interface Resources {
+    int getAseLogo48();
+  }
 
   private final Service mService;
   private final Handler mHandler;
@@ -71,6 +80,8 @@ public class AndroidFacade implements RpcReceiver {
   private final NotificationManager mNotificationManager;
   private final Geocoder mGeocoder;
   private final TextToSpeechFacade mTts;
+  
+  private final Resources mResources;
 
   @Override
   public void shutdown() {
@@ -85,7 +96,7 @@ public class AndroidFacade implements RpcReceiver {
    * @param handler
    *          is the {@link Handler} the APIs will use to communicate with the UI thread
    */
-  public AndroidFacade(Service service, Handler handler, Intent intent) {
+  public AndroidFacade(Service service, Handler handler, Intent intent, Resources resources) {
     mService = service;
     mHandler = handler;
     mIntent = intent;
@@ -96,6 +107,7 @@ public class AndroidFacade implements RpcReceiver {
         (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
     mGeocoder = new Geocoder(mService);
     mTts = new TextToSpeechFacade(service);
+    mResources = resources;
   }
 
   @Rpc(description = "Put text in the clipboard.")
@@ -278,21 +290,19 @@ public class AndroidFacade implements RpcReceiver {
     return getInputFromAlertDialog(title, message, true);
   }
 
-  /*
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")
   public void notify(
       @RpcParameter(name = "message") String message,
       @RpcParameter(name = "title", description = "title") @RpcDefault("ASE Notification") final String title,
       @RpcParameter(name = "ticker", description = "ticker") @RpcDefault("ASE Notification") final String ticker) {
     Notification notification =
-        new Notification(R.drawable.ase_logo_48, ticker, System.currentTimeMillis());
+        new Notification(mResources.getAseLogo48(), ticker, System.currentTimeMillis());
     // This contentIntent is a noop.
     PendingIntent contentIntent = PendingIntent.getService(mService, 0, new Intent(), 0);
     notification.setLatestEventInfo(mService, title, ticker, contentIntent);
     notification.flags = Notification.FLAG_AUTO_CANCEL;
     mNotificationManager.notify(1, notification);
   }
-  */
 
   @Rpc(description = "Dials a contact/phone number by URI.")
   public void dial(@RpcParameter(name = "uri") final String uri) {
