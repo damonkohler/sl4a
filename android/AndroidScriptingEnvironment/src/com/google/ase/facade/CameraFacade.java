@@ -24,64 +24,84 @@ import java.util.concurrent.CountDownLatch;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
+import android.os.Bundle;
 
 import com.google.ase.AseLog;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
 
 public class CameraFacade implements RpcReceiver {
 
   private class BooleanResult {
-    boolean mmResult;
+    boolean mmResult = false;
   }
 
-  @Rpc(description = "Take a picture and save it to the specified path.", returns = "True on success.")
-  public Boolean cameraTakePicture(@RpcParameter(name = "path") final String path)
+  @Rpc(description = "Take a picture and save it to the specified path.", returns = "A map of Booleans autoFocus and takePicture where True indicates success.")
+  public Bundle cameraTakePicture(@RpcParameter(name = "path") final String path,
+      @RpcParameter(name = "useAutoFocus") @RpcDefault("true") Boolean useAutoFocus)
       throws InterruptedException {
-    final CountDownLatch autoFocusLatch = new CountDownLatch(1);
-    final CountDownLatch takePictureLatch = new CountDownLatch(1);
     final BooleanResult autoFocusResult = new BooleanResult();
     final BooleanResult takePictureResult = new BooleanResult();
-    final Camera camera = Camera.open();
 
+    final Camera camera = Camera.open();
     try {
       camera.startPreview();
-      camera.autoFocus(new AutoFocusCallback() {
-        @Override
-        public void onAutoFocus(boolean success, Camera camera) {
-          autoFocusResult.mmResult = success;
-          autoFocusLatch.countDown();
-        }
-      });
-      autoFocusLatch.await();
-      camera.takePicture(null, null, new PictureCallback() {
-        @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
-          try {
-            FileOutputStream output = new FileOutputStream(path);
-            output.write(data);
-            output.close();
-            takePictureResult.mmResult = true;
-          } catch (FileNotFoundException e) {
-            AseLog.e("Failed to save picture.", e);
-            takePictureResult.mmResult = false;
-            return;
-          } catch (IOException e) {
-            AseLog.e("Failed to save picture.", e);
-            takePictureResult.mmResult = false;
-            return;
-          } finally {
-            takePictureLatch.countDown();
-          }
-        }
-      });
-      takePictureLatch.await();
+      if (useAutoFocus) {
+        autoFocus(autoFocusResult, camera);
+      }
+      takePicture(path, takePictureResult, camera);
     } finally {
       camera.release();
     }
 
-    return autoFocusResult.mmResult && takePictureResult.mmResult;
+    Bundle result = new Bundle();
+    result.putBoolean("autoFocus", autoFocusResult.mmResult);
+    result.putBoolean("takePicture", takePictureResult.mmResult);
+    return result;
+  }
+
+  private void takePicture(final String path, final BooleanResult takePictureResult,
+      final Camera camera) throws InterruptedException {
+    final CountDownLatch latch = new CountDownLatch(1);
+    camera.takePicture(null, null, new PictureCallback() {
+      @Override
+      public void onPictureTaken(byte[] data, Camera camera) {
+        try {
+          FileOutputStream output = new FileOutputStream(path);
+          output.write(data);
+          output.close();
+          takePictureResult.mmResult = true;
+        } catch (FileNotFoundException e) {
+          AseLog.e("Failed to save picture.", e);
+          takePictureResult.mmResult = false;
+          return;
+        } catch (IOException e) {
+          AseLog.e("Failed to save picture.", e);
+          takePictureResult.mmResult = false;
+          return;
+        } finally {
+          latch.countDown();
+        }
+      }
+    });
+    latch.await();
+  }
+
+  private void autoFocus(final BooleanResult result, final Camera camera)
+      throws InterruptedException {
+    final CountDownLatch latch = new CountDownLatch(1);
+    {
+      camera.autoFocus(new AutoFocusCallback() {
+        @Override
+        public void onAutoFocus(boolean success, Camera camera) {
+          result.mmResult = success;
+          latch.countDown();
+        }
+      });
+      latch.await();
+    }
   }
 
   @Override
