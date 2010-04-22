@@ -59,7 +59,7 @@ public class ActivityFlinger {
     // Utility class.
   }
 
-  public static void Initialize() {
+  static {
     List<Class<? extends Activity>> entries = new ArrayList<Class<? extends Activity>>();
     entries.add(ScriptManager.class);
     entries.add(InterpreterManager.class);

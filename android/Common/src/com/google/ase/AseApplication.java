@@ -43,7 +43,6 @@ public class AseApplication extends Application {
   public void onCreate() {
     super.onCreate();
     mTriggerRepository = new TriggerRepository(this);
-    ActivityFlinger.Initialize();
     AseAnalytics.start(this);
   }
 

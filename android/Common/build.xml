@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<project default="main">
+  <target name="main">
+    <jar jarfile="../AndroidScriptingEnvironment/libs/common.jar" basedir="bin" includes="**/*.class" />
+  </target>
+</project>

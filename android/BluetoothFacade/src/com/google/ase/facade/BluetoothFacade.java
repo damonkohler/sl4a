@@ -23,7 +23,6 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.UUID;
 
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -32,7 +31,7 @@ import android.os.Message;
 
 import com.google.ase.AseLog;
 import com.google.ase.BluetoothService;
-import com.google.ase.activity.BluetoothDeviceManager;
+import com.google.ase.Constants;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
@@ -44,7 +43,6 @@ public class BluetoothFacade implements RpcReceiver {
   // UUID for ASE.
   private static final String DEFAULT_UUID = "457807c0-4897-11df-9879-0800200c9a66";
 
-  private final Service mService;
   private String mConnectedDeviceName;
   private final PipedOutputStream mOutputStream;
   private final PipedInputStream mInputStream;
@@ -100,14 +98,13 @@ public class BluetoothFacade implements RpcReceiver {
   BluetoothService mBluetoothService;
   EventFacade mEventFacade;
 
-  public BluetoothFacade(Service service, AndroidFacade androidFacade, EventFacade eventFacade)
+  public BluetoothFacade(AndroidFacade androidFacade, EventFacade eventFacade)
       throws IOException {
     // Initialize these first in case an exception is thrown.
     mOutputStream = new PipedOutputStream();
     mInputStream = new PipedInputStream(mOutputStream);
     mReader = new BufferedReader(new InputStreamReader(mInputStream, "ASCII"));
 
-    mService = service;
     mAndroidFacade = androidFacade;
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     mBluetoothService = new BluetoothService(mHandler);
@@ -117,10 +114,11 @@ public class BluetoothFacade implements RpcReceiver {
   @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")
   public boolean bluetoothConnect(
       @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
-    Intent deviceChooserIntent = new Intent(mService, BluetoothDeviceManager.class);
+    Intent deviceChooserIntent = new Intent();
+    deviceChooserIntent.setComponent(Constants.BLUETOOTH_DEVICE_MANAGER_COMPONENT_NAME);
     Intent result = mAndroidFacade.startActivityForResult(deviceChooserIntent);
-    if (result != null && result.hasExtra(BluetoothDeviceManager.EXTRA_DEVICE_ADDRESS)) {
-      String address = result.getStringExtra(BluetoothDeviceManager.EXTRA_DEVICE_ADDRESS);
+    if (result != null && result.hasExtra(Constants.EXTRA_DEVICE_ADDRESS)) {
+      String address = result.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
       BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
       mBluetoothService.connect(device, UUID.fromString(uuid));
       return true;

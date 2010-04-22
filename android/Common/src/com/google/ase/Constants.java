@@ -16,6 +16,8 @@
 
 package com.google.ase;
 
+import android.content.ComponentName;
+
 public class Constants {
 
   private Constants() {
@@ -48,6 +50,9 @@ public class Constants {
   public static final String EXTRA_PROXY_PORT = "com.google.ase.extra.PROXY_PORT";
   public static final String EXTRA_IS_NEW_SCRIPT = "com.google.ase.extra.IS_NEW_SCRIPT";
   public static final String EXTRA_TRIGGER_ID = "com.google.ase.extra.EXTRA_TRIGGER_ID";
+  
+  // BluetoothDeviceManager
+  public static final String EXTRA_DEVICE_ADDRESS = "com.google.ase.extra.device_address";
 
   public static final String SDCARD_ROOT = "/sdcard/";
   public static final String DOWNLOAD_ROOT = SDCARD_ROOT;
@@ -57,4 +62,12 @@ public class Constants {
   public static final String INTERPRETER_EXTRAS_ROOT = SDCARD_ASE_ROOT + "extras/";
   public static final String INTERPRETER_ROOT = "/data/data/com.google.ase/";
   public static final String BASE_INSTALL_URL = "http://android-scripting.googlecode.com/files/";
+  
+  public static final ComponentName ASE_SERVICE_COMPONENT_NAME = new ComponentName(
+		"com.google.ase", "com.google.ase.activity.AseService");
+  public static final ComponentName ASE_SERVICE_LAUNCHER_COMPONENT_NAME = new ComponentName(
+		"com.google.ase", "com.google.ase.activity.AseServiceLauncher");
+  public static final ComponentName BLUETOOTH_DEVICE_MANAGER_COMPONENT_NAME = new ComponentName(
+			"com.google.ase", "com.google.ase.activity.BluetoothDeviceManager");
+
 }

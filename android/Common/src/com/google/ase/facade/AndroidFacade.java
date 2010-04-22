@@ -51,7 +51,6 @@ import android.widget.Toast;
 
 import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
-import com.google.ase.R;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
@@ -63,6 +62,13 @@ import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
 public class AndroidFacade implements RpcReceiver {
+  /**
+   * An instance of this interface is passed to the facade. From this object,
+   * the resource IDs can be obtained.
+   */
+  public interface Resources {
+    int getAseLogo48();
+  }
 
   private final Service mService;
   private final Handler mHandler;
@@ -74,6 +80,8 @@ public class AndroidFacade implements RpcReceiver {
   private final NotificationManager mNotificationManager;
   private final Geocoder mGeocoder;
   private final TextToSpeechFacade mTts;
+  
+  private final Resources mResources;
 
   @Override
   public void shutdown() {
@@ -88,7 +96,7 @@ public class AndroidFacade implements RpcReceiver {
    * @param handler
    *          is the {@link Handler} the APIs will use to communicate with the UI thread
    */
-  public AndroidFacade(Service service, Handler handler, Intent intent) {
+  public AndroidFacade(Service service, Handler handler, Intent intent, Resources resources) {
     mService = service;
     mHandler = handler;
     mIntent = intent;
@@ -99,6 +107,7 @@ public class AndroidFacade implements RpcReceiver {
         (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
     mGeocoder = new Geocoder(mService);
     mTts = new TextToSpeechFacade(service);
+    mResources = resources;
   }
 
   @Rpc(description = "Put text in the clipboard.")
@@ -287,7 +296,7 @@ public class AndroidFacade implements RpcReceiver {
       @RpcParameter(name = "title", description = "title") @RpcDefault("ASE Notification") final String title,
       @RpcParameter(name = "ticker", description = "ticker") @RpcDefault("ASE Notification") final String ticker) {
     Notification notification =
-        new Notification(R.drawable.ase_logo_48, ticker, System.currentTimeMillis());
+        new Notification(mResources.getAseLogo48(), ticker, System.currentTimeMillis());
     // This contentIntent is a noop.
     PendingIntent contentIntent = PendingIntent.getService(mService, 0, new Intent(), 0);
     notification.setLatestEventInfo(mService, title, ticker, contentIntent);
