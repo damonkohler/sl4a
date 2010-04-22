@@ -53,20 +53,25 @@ public class SmsFacade implements RpcReceiver {
     mSms = SmsManager.getDefault();
   }
 
+  String buildSelectionClause(boolean unreadOnly) {
+    if (unreadOnly) {
+      return "read = 0";
+    }
+    return "";
+  }
+
   @Rpc(description = "Sends an SMS to the given recipient.")
-  public void smsSend(
-      @RpcParameter(name = "destinationAddress") String destinationAddress,
+  public void smsSend(@RpcParameter(name = "destinationAddress") String destinationAddress,
       @RpcParameter(name = "text") String text) {
     mSms.sendTextMessage(destinationAddress, null, text, null, null);
   }
 
   @Rpc(description = "Get the number of messages.", returns = "The number of messages.")
-  public Integer smsGetMessageCount(
-      @RpcParameter(name = "unread_only") Boolean unread_only,
+  public Integer smsGetMessageCount(@RpcParameter(name = "unreadOnly") Boolean unreadOnly,
       @RpcParameter(name = "folder") @RpcOptional String folder) {
     Uri uri = Uri.parse("content://sms" + (folder != "" ? "/" + folder : ""));
     Integer result = 0;
-    String selection = unread_only ? "read = 0" : "";
+    String selection = buildSelectionClause(unreadOnly);
     try {
       Cursor cursor = mContentResolver.query(uri, null, selection, null, null);
       result = cursor.getCount();
@@ -78,50 +83,49 @@ public class SmsFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Get list of message IDs.", returns = "The list of message IDs.")
-  public List<Integer> smsGetMessageIds(
-      @RpcParameter(name = "unread_only") Boolean unread_only,
+  public List<Integer> smsGetMessageIds(@RpcParameter(name = "unreadOnly") Boolean unreadOnly,
       @RpcParameter(name = "folder") @RpcOptional String folder) {
     Uri uri = Uri.parse("content://sms" + (folder != "" ? "/" + folder : ""));
     List<Integer> result = new ArrayList<Integer>();
-    String selection = unread_only ? "read = 0" : "";
-    String[] columns = {"_id"};
+    String selection = buildSelectionClause(unreadOnly);
+    String[] columns = { "_id" };
     try {
       Cursor cursor = mContentResolver.query(uri, columns, selection, null, null);
-      while (cursor.moveToNext())
+      while (cursor.moveToNext()) {
         result.add(cursor.getInt(0));
+      }
       cursor.close();
     } catch (Exception e) {
       throw new AseRuntimeException("Error retrieving message list.");
     }
     return result;
   }
-  
+
   @Rpc(description = "Get list of messages.", returns = "List containing messages.")
-  public List<JSONObject> smsGetMessages(
-      @RpcParameter(name = "unread_only") Boolean unread_only,
+  public List<JSONObject> smsGetMessages(@RpcParameter(name = "unreadOnly") Boolean unreadOnly,
       @RpcParameter(name = "folder") @RpcOptional String folder,
-      @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) {
+      @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) throws JSONException {
     List<JSONObject> result = new ArrayList<JSONObject>();
     Uri uri = Uri.parse("content://sms" + (folder != "" ? "/" + folder : ""));
-    String selection = unread_only ? "read = 0" : "";
+    String selection = buildSelectionClause(unreadOnly);
     String[] columns;
     if (attributes.length() == 0) {
       // In case no attributes are specified we set the default ones.
-      columns = new String[]{"_id", "address", "date", "body", "read"};
+      columns = new String[] { "_id", "address", "date", "body", "read" };
     } else {
       // Convert selected attributes list into usable string list.
       columns = new String[attributes.length()];
-      for(int i=0; i<attributes.length(); i++)
-        try {
-          columns[i] = attributes.getString(i);
-        } catch (JSONException e) {}
+      for (int i = 0; i < attributes.length(); i++) {
+        columns[i] = attributes.getString(i);
+      }
     }
     try {
       Cursor cursor = mContentResolver.query(uri, columns, selection, null, null);
       while (cursor.moveToNext()) {
         JSONObject message = new JSONObject();
-        for (int i=0; i<columns.length; i++) 
+        for (int i = 0; i < columns.length; i++) {
           message.put(columns[i], cursor.getString(i));
+        }
         result.add(message);
       }
       cursor.close();
@@ -130,83 +134,72 @@ public class SmsFacade implements RpcReceiver {
     }
     return result;
   }
-  
-  @Rpc(description = "Return attributes for message with specified ID.",
-      returns = "Message attributes.")
+
+  @Rpc(description = "Return attributes for message with specified ID.", returns = "Message attributes.")
   public JSONObject smsGetMessageById(@RpcParameter(name = "id") Integer id,
-      @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) {
+      @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) throws JSONException {
     JSONObject result = new JSONObject();
-    Uri uri = Uri.parse("content://sms/"+id);
+    Uri uri = Uri.parse("content://sms/" + id);
     String[] columns;
     if (attributes.length() == 0) {
       // In case no attributes are specified we set the default ones.
-      columns = new String[]{"_id", "address", "date", "body", "read"};
+      columns = new String[] { "_id", "address", "date", "body", "read" };
     } else {
       // Convert selected attributes list into usable string list.
       columns = new String[attributes.length()];
-      for(int i=0; i<attributes.length(); i++)
-        try {
-          columns[i] = attributes.getString(i);
-        } catch (JSONException e) {}
+      for (int i = 0; i < attributes.length(); i++) {
+        columns[i] = attributes.getString(i);
+      }
     }
     try {
       Cursor cursor = mContentResolver.query(uri, columns, null, null, null);
       if (cursor.getCount() == 1) {
         cursor.moveToFirst();
-        for(int i=0; i<columns.length; i++)
+        for (int i = 0; i < columns.length; i++) {
           result.put(columns[i], cursor.getString(i));
+        }
       }
       cursor.close();
     } catch (Exception e) {
-      throw new AseRuntimeException("Error retrieving message with ID: "+id);
+      throw new AseRuntimeException("Error retrieving message with ID: " + id);
     }
     return result;
   }
-  
+
   @Rpc(description = "Retrieve SMS list possible attributes", returns = "List of attributes")
   public List<String> smsGetAttributes() {
     List<String> result = new ArrayList<String>();
-    Cursor cursor = mContentResolver.query(Uri.parse("content://sms"), 
-        null, null, null, null);
+    Cursor cursor = mContentResolver.query(Uri.parse("content://sms"), null, null, null, null);
     String[] columns = cursor.getColumnNames();
-    for (int i=0; i<columns.length; i++)
+    for (int i = 0; i < columns.length; i++) {
       result.add(columns[i]);
+    }
     cursor.close();
     return result;
   }
-  
+
   @Rpc(description = "Delete specified SMS message.", returns = "True if message was deleted.")
   public Boolean smsDeleteMessage(@RpcParameter(name = "id") Integer id) {
-    Uri uri = Uri.parse("content://sms/"+id);
+    Uri uri = Uri.parse("content://sms/" + id);
     Boolean result = false;
-    try {
-      result = mContentResolver.delete(uri, null, null) > 0;
-    } catch (Exception e) {
-      throw new AseRuntimeException("Error deleting message.");
-    }
+    result = mContentResolver.delete(uri, null, null) > 0;
     return result;
   }
-  
-  @Rpc(description = "Mark messages with IDs in list as read.",
-      returns = "Number of updated messages.")
-  public Integer smsMarkMessageRead(
-      @RpcParameter(name = "list") JSONArray list, 
-      @RpcParameter(name = "read") Boolean read) {
+
+  @Rpc(description = "Mark messages with IDs in list as read.", returns = "Number of updated messages.")
+  public Integer smsMarkMessageRead(@RpcParameter(name = "list") JSONArray list,
+      @RpcParameter(name = "read") Boolean read) throws JSONException {
     Integer result = 0;
     ContentValues values = new ContentValues();
     values.put("read", read);
-    for (int i=0; i<list.length(); i++) {
-      try {
-        int message_id = list.getInt(i);
-        Uri uri = Uri.parse("content://sms/"+message_id);
-        result += mContentResolver.update(uri, values, null, null);
-      } catch (JSONException e) {
-        throw new AseRuntimeException("Error marking message(s).");
-      }
+    for (int i = 0; i < list.length(); i++) {
+      int message_id = list.getInt(i);
+      Uri uri = Uri.parse("content://sms/" + message_id);
+      result += mContentResolver.update(uri, values, null, null);
     }
     return result;
   }
-  
+
   @Override
   public void shutdown() {
   }
