@@ -17,21 +17,19 @@
 package com.google.ase.activity;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class AseServiceLauncher extends Activity {
+import com.google.ase.Constants;
 
-  public static final ComponentName COMPONENT_NAME =
-      new ComponentName("com.google.ase", "com.google.ase.activity.AseServiceLauncher");
+public class AseServiceLauncher extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // Forward the intent that launched us to start the service.
     Intent intent = getIntent();
-    intent.setComponent(AseService.COMPONENT_NAME);
+    intent.setComponent(Constants.ASE_SERVICE_COMPONENT_NAME);
     startService(intent);
     finish();
   }

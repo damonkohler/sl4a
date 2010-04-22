@@ -4,8 +4,9 @@
 	<classpathentry excluding="**/.svn*|doc" kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="libs/locale_platform.jar"/>
-	<classpathentry kind="lib" path="libs/libGoogleAnalytics.jar"/>
-	<classpathentry kind="lib" path="libs/commons-codec-1.4.jar"/>
-	<classpathentry kind="lib" path="libs/bluetooth_facade.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BluetoothFacade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Common"/>
+	<classpathentry kind="lib" path="/Common/libs/commons-codec-1.4.jar"/>
+	<classpathentry kind="lib" path="/Common/libs/libGoogleAnalytics.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

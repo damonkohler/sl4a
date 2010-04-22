@@ -121,7 +121,7 @@ public class FacadeConfiguration {
 
     // Bluetooth is not available before Android 2.0.
     try {
-      receivers.add(new BluetoothFacade(service, androidFacade, eventFacade));
+      receivers.add(new BluetoothFacade(androidFacade, eventFacade));
     } catch (Throwable t) {
       AseLog.e("Bluetooth not available.", t);
     }

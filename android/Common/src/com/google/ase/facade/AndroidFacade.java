@@ -27,9 +27,7 @@ import java.util.Set;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -51,7 +49,6 @@ import android.widget.Toast;
 
 import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
-import com.google.ase.R;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
@@ -281,6 +278,7 @@ public class AndroidFacade implements RpcReceiver {
     return getInputFromAlertDialog(title, message, true);
   }
 
+  /*
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")
   public void notify(
       @RpcParameter(name = "message") String message,
@@ -294,6 +292,7 @@ public class AndroidFacade implements RpcReceiver {
     notification.flags = Notification.FLAG_AUTO_CANCEL;
     mNotificationManager.notify(1, notification);
   }
+  */
 
   @Rpc(description = "Dials a contact/phone number by URI.")
   public void dial(@RpcParameter(name = "uri") final String uri) {

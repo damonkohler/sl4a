@@ -22,8 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 
-import com.google.ase.activity.AseService;
-import com.google.ase.activity.AseServiceLauncher;
 import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
 public class IntentBuilders {
@@ -42,7 +40,7 @@ public class IntentBuilders {
    * @return the intent that will launch the script
    */
   public static Intent buildStartInBackgroundIntent(String scriptName) {
-    final ComponentName componentName = AseServiceLauncher.COMPONENT_NAME;
+    final ComponentName componentName = Constants.ASE_SERVICE_LAUNCHER_COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_SCRIPT);
@@ -58,7 +56,7 @@ public class IntentBuilders {
    * @return the intent that will launch the script
    */
   public static Intent buildStartInTerminalIntent(String scriptName) {
-    final ComponentName componentName = AseServiceLauncher.COMPONENT_NAME;
+    final ComponentName componentName = Constants.ASE_SERVICE_LAUNCHER_COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
@@ -113,7 +111,7 @@ public class IntentBuilders {
   public static PendingIntent buildTriggerIntent(Context context, TriggerInfo info) {
     final Intent intent = buildStartInBackgroundIntent(info.getTrigger().getScriptName());
     intent.putExtra(Constants.EXTRA_TRIGGER_ID, info.getId());
-    intent.setComponent(AseService.COMPONENT_NAME);
+    intent.setComponent(Constants.ASE_SERVICE_COMPONENT_NAME);
     return PendingIntent.getService(context, EXECUTE_SCRIPT_REQUEST_CODE, intent,
         PendingIntent.FLAG_UPDATE_CURRENT);
   }
