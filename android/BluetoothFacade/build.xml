@@ -1,6 +1,0 @@
-<?xml version="1.0" ?>
-<project default="main">
-  <target name="main">
-    <jar jarfile="../AndroidScriptingEnvironment/libs/bluetooth_facade.jar" basedir="bin" includes="**/*.class" />
-  </target>
-</project>

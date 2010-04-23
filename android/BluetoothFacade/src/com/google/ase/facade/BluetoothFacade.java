@@ -98,8 +98,7 @@ public class BluetoothFacade implements RpcReceiver {
   BluetoothService mBluetoothService;
   EventFacade mEventFacade;
 
-  public BluetoothFacade(AndroidFacade androidFacade, EventFacade eventFacade)
-      throws IOException {
+  public BluetoothFacade(AndroidFacade androidFacade, EventFacade eventFacade) throws IOException {
     // Initialize these first in case an exception is thrown.
     mOutputStream = new PipedOutputStream();
     mInputStream = new PipedInputStream(mOutputStream);
@@ -144,7 +143,7 @@ public class BluetoothFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Sends bytes over the currently open Bluetooth connection.")
-  public void bluetoothWrite(String bytes) {
+  public void bluetoothWrite(@RpcParameter(name = "bytes") String bytes) {
     mBluetoothService.write(bytes.getBytes());
   }
 

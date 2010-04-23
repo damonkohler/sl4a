@@ -15,18 +15,9 @@
  */
 package com.google.ase.language;
 
-import com.google.ase.language.BeanShellLanguage;
-import com.google.ase.language.JavaScriptLanguage;
-import com.google.ase.language.Language;
-import com.google.ase.language.LuaLanguage;
-import com.google.ase.language.PerlLanguage;
-import com.google.ase.language.PythonLanguage;
-import com.google.ase.language.RubyLanguage;
-import com.google.ase.language.ShellLanguage;
-import com.google.ase.language.TclLanguage;
-import com.google.ase.rpc.ParameterDescriptor;
-
 import junit.framework.TestCase;
+
+import com.google.ase.rpc.ParameterDescriptor;
 
 /**
  * Tests languages support.
@@ -34,6 +25,7 @@ import junit.framework.TestCase;
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 public class LanguageTest extends TestCase {
+
   private final Language beanShell = new BeanShellLanguage();
   private final Language javaScript = new JavaScriptLanguage();
   private final Language lua = new LuaLanguage();
@@ -44,12 +36,12 @@ public class LanguageTest extends TestCase {
   private final Language tcl = new TclLanguage();
 
   public void testContentTemplate() {
-    checkContentTemplate(
-        "source(\"/sdcard/ase/extras/bsh/android.bsh\");\n\ndroid = Android();\n", beanShell);
+    checkContentTemplate("source(\"/sdcard/ase/extras/bsh/android.bsh\");\n\ndroid = Android();\n",
+        beanShell);
     checkContentTemplate(
         "load(\"/sdcard/ase/extras/rhino/android.js\");\n\nvar droid = Android();\n", javaScript);
     checkContentTemplate("require \"android\"\n\n", lua);
-    checkContentTemplate("use Android;\n\nmy $droid = Android()->new();\n", perl);
+    checkContentTemplate("use Android;\n\nmy $droid = Android->new();\n", perl);
     checkContentTemplate("import android\n\ndroid = android.Android()\n", python);
     checkContentTemplate("require \"android\";\n\ndroid = Droid.new\n", ruby);
     checkContentTemplate("", shell);
@@ -57,14 +49,12 @@ public class LanguageTest extends TestCase {
   }
 
   public void testMethodCall() {
-    ParameterDescriptor[] params = new ParameterDescriptor[] {
-      new ParameterDescriptor("1", Integer.class),
-      new ParameterDescriptor("abc", String.class),
-      new ParameterDescriptor(null, String.class),
-      new ParameterDescriptor(null, Object.class),
-      new ParameterDescriptor("true", Boolean.class),
-      new ParameterDescriptor("isComplete", Boolean.class),
-    };
+    ParameterDescriptor[] params =
+        new ParameterDescriptor[] { new ParameterDescriptor("1", Integer.class),
+          new ParameterDescriptor("abc", String.class),
+          new ParameterDescriptor(null, String.class), new ParameterDescriptor(null, Object.class),
+          new ParameterDescriptor("true", Boolean.class),
+          new ParameterDescriptor("isComplete", Boolean.class), };
     checkMethodCall("droid.method(1, \"abc\", null, null, true, isComplete)", beanShell, params);
     checkMethodCall("droid.method(1, \"abc\", null, null, true, isComplete)", javaScript, params);
     checkMethodCall("android.method(1, \"abc\", null, null, true, isComplete)", lua, params);
@@ -74,7 +64,7 @@ public class LanguageTest extends TestCase {
     checkMethodCall("droid.method(1, \"abc\", null, null, true, isComplete)", shell, params);
     checkMethodCall("$droid method 1 \"abc\" null null true isComplete", tcl, params);
   }
-  
+
   public void testAutoComplete() {
     checkAutoComplete(beanShell);
     checkAutoComplete(javaScript);
@@ -95,7 +85,7 @@ public class LanguageTest extends TestCase {
     assertEquals(expectedContent, language.getMethodCallText(language.getDefaultRpcReceiver(),
         "method", params));
   }
-  
+
   private void checkAutoComplete(Language language) {
     checkAutoComplete(language, '[', "[]");
     checkAutoComplete(language, '{', "{}");

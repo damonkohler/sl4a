@@ -19,20 +19,17 @@ package com.google.ase.rpc;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import com.google.ase.facade.FacadeConfiguration;
-import com.google.ase.rpc.MethodDescriptor;
-import com.google.ase.rpc.RpcDefault;
-import com.google.ase.rpc.RpcOptional;
-import com.google.ase.rpc.RpcParameter;
+import junit.framework.TestCase;
 
-import android.test.AndroidTestCase;
+import com.google.ase.facade.FacadeConfiguration;
 
 /**
  * Checks runtime characteristics of RPC annotations.
  * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
-public class RpcAnnotationsTest extends AndroidTestCase {
+public class RpcAnnotationsTest extends TestCase {
+
   public void testParameterAnnotationsCardinality() {
     for (MethodDescriptor rpc : FacadeConfiguration.collectRpcDescriptors()) {
       int param = -1;
@@ -43,28 +40,27 @@ public class RpcAnnotationsTest extends AndroidTestCase {
         int countRpcOptional = 0;
         for (Annotation annotation : annotations) {
           if (annotation instanceof RpcParameter) {
-            countRpcParameter++; 
+            countRpcParameter++;
           }
           if (annotation instanceof RpcDefault) {
-            countRpcDefault++; 
+            countRpcDefault++;
           }
           if (annotation instanceof RpcOptional) {
-            countRpcOptional++; 
+            countRpcOptional++;
           }
         }
         if (countRpcParameter == 0) {
           fail("No @RpcParameter annotation found on parameter #" + param + " of " + rpc);
         }
         if (countRpcDefault + countRpcOptional > 1) {
-          fail("Both @RpcDefault and @RpcOptional annotation found on parameter #" + param
-              + " of " + rpc);
+          fail("Both @RpcDefault and @RpcOptional annotation found on parameter #" + param + " of "
+              + rpc);
         }
       }
     }
   }
 
   public void testDefaultValues() {
-    
     for (MethodDescriptor rpc : FacadeConfiguration.collectRpcDescriptors()) {
       int param = -1;
       Type[] parameterTypes = rpc.getGenericParameterTypes();
