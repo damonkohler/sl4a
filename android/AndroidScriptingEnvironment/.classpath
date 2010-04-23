@@ -3,10 +3,10 @@
 	<classpathentry excluding="**/.svn*|doc" kind="src" path="src"/>
 	<classpathentry excluding="**/.svn*|doc" kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/BluetoothFacade"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Common"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Common"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/BluetoothFacade"/>
+	<classpathentry kind="lib" path="libs/locale_platform.jar"/>
 	<classpathentry kind="lib" path="/Common/libs/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="/Common/libs/libGoogleAnalytics.jar"/>
-	<classpathentry kind="lib" path="libs/locale_platform.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

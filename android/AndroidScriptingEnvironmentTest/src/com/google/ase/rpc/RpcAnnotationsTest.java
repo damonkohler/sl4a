@@ -19,7 +19,7 @@ package com.google.ase.rpc;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import junit.framework.TestCase;
+import android.test.AndroidTestCase;
 
 import com.google.ase.facade.FacadeConfiguration;
 
@@ -28,7 +28,7 @@ import com.google.ase.facade.FacadeConfiguration;
  * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
-public class RpcAnnotationsTest extends TestCase {
+public class RpcAnnotationsTest extends AndroidTestCase {
 
   public void testParameterAnnotationsCardinality() {
     for (MethodDescriptor rpc : FacadeConfiguration.collectRpcDescriptors()) {
