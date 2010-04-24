@@ -36,15 +36,15 @@ public class AseAnalytics {
     mAseVersion = AseVersion.getVersion(context);
     mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     mTracker = GoogleAnalyticsTracker.getInstance();
-    mTracker.start("UA-158835-13", context);
+    // Start with a dispatch interval so that dispatches happen (hopefully?) in the background.
+    mTracker.start("UA-158835-13", 20, context);
   }
 
-  public static void track(String name) {
+  public static void track(final String name) {
     if (mPrefs.getBoolean("usagetracking", false)) {
       String url = String.format("/%s/%s", mAseVersion, name);
       AseLog.v("Tracking " + url);
       mTracker.trackPageView(url);
-      mTracker.dispatch();
     }
   }
 
