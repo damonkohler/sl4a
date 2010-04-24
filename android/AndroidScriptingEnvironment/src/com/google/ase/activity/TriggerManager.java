@@ -65,9 +65,6 @@ public class TriggerManager extends ListActivity {
     }
   }
 
-  public TriggerManager() {
-  }
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -174,36 +171,36 @@ public class TriggerManager extends ListActivity {
     if (resultCode == RESULT_OK) {
       final String scriptName = data.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
       switch (requestCode) {
-        case 0:
-          DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
-              new DurationPickedListener() {
-                @Override
-                public void onSet(double duration) {
-                  mAlarmTriggerManager.scheduleRepeating(duration, scriptName, true);
-                  mAdapter.notifyDataSetInvalidated();
-                }
+      case 0:
+        DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
+            new DurationPickedListener() {
+              @Override
+              public void onSet(double duration) {
+                mAlarmTriggerManager.scheduleRepeating(duration, scriptName, true);
+                mAdapter.notifyDataSetInvalidated();
+              }
 
-                @Override
-                public void onCancel() {
-                }
-              });
-          break;
-        case 1:
-          DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
-              new DurationPickedListener() {
-                @Override
-                public void onSet(double duration) {
-                  mAlarmTriggerManager.scheduleInexactRepeating(duration, scriptName, true);
-                  mAdapter.notifyDataSetInvalidated();
-                }
+              @Override
+              public void onCancel() {
+              }
+            });
+        break;
+      case 1:
+        DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
+            new DurationPickedListener() {
+              @Override
+              public void onSet(double duration) {
+                mAlarmTriggerManager.scheduleInexactRepeating(duration, scriptName, true);
+                mAdapter.notifyDataSetInvalidated();
+              }
 
-                @Override
-                public void onCancel() {
-                }
-              });
-          break;
-        default:
-          break;
+              @Override
+              public void onCancel() {
+              }
+            });
+        break;
+      default:
+        break;
       }
     }
   }

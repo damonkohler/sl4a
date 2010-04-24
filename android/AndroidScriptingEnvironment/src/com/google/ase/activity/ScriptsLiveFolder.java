@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.LiveFolders;
 
+import com.google.ase.AseAnalytics;
 import com.google.ase.R;
 
 public class ScriptsLiveFolder extends Activity {
@@ -20,11 +21,11 @@ public class ScriptsLiveFolder extends Activity {
     final Intent intent = getIntent();
     final String action = intent.getAction();
     if (LiveFolders.ACTION_CREATE_LIVE_FOLDER.equals(action)) {
-      setResult(RESULT_OK, createLiveFolder(this, CONTENT_URI, "Scripts",
-          R.drawable.ase_logo_48));
+      setResult(RESULT_OK, createLiveFolder(this, CONTENT_URI, "Scripts", R.drawable.ase_logo_48));
     } else {
       setResult(RESULT_CANCELED);
     }
+    AseAnalytics.trackActivity(this);
     finish();
   }
 

@@ -29,14 +29,17 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.google.ase.AseAnalytics;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.bluetooth.BluetoothHelper.DeviceListener;
 
 public class BluetoothDeviceList extends ListActivity {
+
   private static class DeviceInfo {
     public final String mmName;
     public final String mmAddress;
+
     public DeviceInfo(String name, String address) {
       mmName = name;
       mmAddress = address;
@@ -106,14 +109,12 @@ public class BluetoothDeviceList extends ListActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     CustomizeWindow
-            .requestCustomTitle(this, "Bluetooth Devices", R.layout.bluetooth_device_manager);
-
+        .requestCustomTitle(this, "Bluetooth Devices", R.layout.bluetooth_device_manager);
     setResult(RESULT_CANCELED);
-
     setListAdapter(mDeviceListAdapter);
     getListView().setOnItemClickListener(mOnItemClickListener);
+    AseAnalytics.trackActivity(this);
   }
 
   @Override

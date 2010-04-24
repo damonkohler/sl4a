@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
@@ -122,6 +123,8 @@ public class ScriptEditor extends Activity {
     filters.add(new ContentInputFilter());
     mContentText.setFilters(filters.toArray(oldFilters));
     mContentText.addTextChangedListener(new ContentTextWatcher());
+
+    AseAnalytics.trackActivity(this);
   }
 
   @Override
@@ -177,19 +180,19 @@ public class ScriptEditor extends Activity {
     RequestCode request = RequestCode.values()[requestCode];
     if (resultCode == RESULT_OK) {
       switch (request) {
-        case RPC_HELP:
-          String rpcText = data.getStringExtra(Constants.EXTRA_RPC_HELP_TEXT);
-          insertContent(rpcText);
-          break;
-        default:
-          break;
+      case RPC_HELP:
+        String rpcText = data.getStringExtra(Constants.EXTRA_RPC_HELP_TEXT);
+        insertContent(rpcText);
+        break;
+      default:
+        break;
       }
     } else {
       switch (request) {
-        case RPC_HELP:
-          break;
-        default:
-          break;
+      case RPC_HELP:
+        break;
+      default:
+        break;
       }
     }
   }

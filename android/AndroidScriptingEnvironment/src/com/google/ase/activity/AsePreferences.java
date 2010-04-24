@@ -19,6 +19,7 @@ package com.google.ase.activity;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
+import com.google.ase.AseAnalytics;
 import com.google.ase.R;
 
 public class AsePreferences extends PreferenceActivity {
@@ -27,5 +28,6 @@ public class AsePreferences extends PreferenceActivity {
     super.onCreate(savedInstanceState);
     // Load the preferences from an XML resource
     addPreferencesFromResource(R.xml.preferences);
+    AseAnalytics.trackActivity(this);
   }
 }

@@ -39,7 +39,7 @@ import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class AseService extends Service {
