@@ -31,7 +31,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
@@ -103,7 +102,7 @@ public class Terminal extends Activity {
 
   private static final int[] CONTROL_KEY_SCHEMES =
       { KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_AT, KeyEvent.KEYCODE_ALT_LEFT,
-          KeyEvent.KEYCODE_ALT_RIGHT };
+        KeyEvent.KEYCODE_ALT_RIGHT };
 
   private static final String[] CONTROL_KEY_NAME = { "Ball", "@", "Left-Alt", "Right-Alt" };
 
@@ -140,8 +139,6 @@ public class Terminal extends Activity {
     mKeyListener = new TermKeyListener();
     updatePreferences();
     startInterpreter();
-
-    AseAnalytics.track(mLauncher.getInterpreterName());
   }
 
   private void startInterpreter() {
@@ -250,19 +247,19 @@ public class Terminal extends Activity {
       } else {
         char code;
         switch (keyCode) {
-          case KeyEvent.KEYCODE_DPAD_UP:
-            code = 'A';
-            break;
-          case KeyEvent.KEYCODE_DPAD_DOWN:
-            code = 'B';
-            break;
-          case KeyEvent.KEYCODE_DPAD_LEFT:
-            code = 'D';
-            break;
-          default:
-          case KeyEvent.KEYCODE_DPAD_RIGHT:
-            code = 'C';
-            break;
+        case KeyEvent.KEYCODE_DPAD_UP:
+          code = 'A';
+          break;
+        case KeyEvent.KEYCODE_DPAD_DOWN:
+          code = 'B';
+          break;
+        case KeyEvent.KEYCODE_DPAD_LEFT:
+          code = 'D';
+          break;
+        default:
+        case KeyEvent.KEYCODE_DPAD_RIGHT:
+          code = 'C';
+          break;
         }
         mInterpreterProcess.print((char) 27); // ESC
         if (mEmulatorView.getKeypadApplicationMode()) {
@@ -288,21 +285,21 @@ public class Terminal extends Activity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.terminal_menu_preferences:
-        doPreferences();
-        break;
-      case R.id.terminal_menu_send_email:
-        doEmailTranscript();
-        break;
-      case R.id.terminal_menu_special_keys:
-        doDocumentKeys();
-        break;
-      case R.id.terminal_menu_exit_and_edit:
-        Intent i = new Intent(Constants.ACTION_EDIT_SCRIPT);
-        i.putExtra(Constants.EXTRA_SCRIPT_NAME, mLauncher.getScriptName());
-        startActivity(i);
-        finish();
-        break;
+    case R.id.terminal_menu_preferences:
+      doPreferences();
+      break;
+    case R.id.terminal_menu_send_email:
+      doEmailTranscript();
+      break;
+    case R.id.terminal_menu_special_keys:
+      doDocumentKeys();
+      break;
+    case R.id.terminal_menu_exit_and_edit:
+      Intent i = new Intent(Constants.ACTION_EDIT_SCRIPT);
+      i.putExtra(Constants.EXTRA_SCRIPT_NAME, mLauncher.getScriptName());
+      startActivity(i);
+      finish();
+      break;
     }
     return super.onOptionsItemSelected(item);
   }

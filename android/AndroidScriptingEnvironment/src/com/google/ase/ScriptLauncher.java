@@ -23,8 +23,8 @@ import android.content.Intent;
 
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterProcess;
 
 public class ScriptLauncher {
 
@@ -41,7 +41,7 @@ public class ScriptLauncher {
       mInterpreterName = mInterpreter.getName();
     } else {
       mInterpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
-      mInterpreter = InterpreterConfiguration.getInterpreterByName(mInterpreterName); // Returns null?
+      mInterpreter = InterpreterConfiguration.getInterpreterByName(mInterpreterName);
     }
     mAddress = address;
   }
@@ -60,6 +60,7 @@ public class ScriptLauncher {
     }
     mProcess = mInterpreter.buildProcess(scriptPath, mAddress.getPort());
     mProcess.start();
+    AseAnalytics.track(mInterpreterName);
   }
 
   public void kill() {
