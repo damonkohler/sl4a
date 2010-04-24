@@ -35,7 +35,7 @@ import com.google.ase.AseLog;
  * devices. It has a thread that listens for incoming connections, a thread for connecting with a
  * device, and a thread for performing data transmissions when connected.
  */
-public class BluetoothService {
+public class BluetoothServer {
   private static final String SDP_NAME = "ASE";
 
   private final BluetoothAdapter mAdapter;
@@ -55,10 +55,7 @@ public class BluetoothService {
     IDLE, LISTENING, CONNECTING, CONNECTED
   }
 
-  // Message types sent.
-  public static final int MESSAGE_READ = 2;
-
-  public BluetoothService(EventFacade eventFacade) {
+  public BluetoothServer(EventFacade eventFacade) {
     mEventFacade = eventFacade;
     mAdapter = BluetoothAdapter.getDefaultAdapter();
     mState = State.IDLE;
@@ -234,7 +231,7 @@ public class BluetoothService {
       setName("AcceptThread");
       BluetoothSocket socket = null;
       // Listen to the server socket if we're not connected.
-      while (mState != BluetoothService.State.CONNECTED) {
+      while (mState != BluetoothServer.State.CONNECTED) {
         try {
           // This is a blocking call and will only return on a successful
           // connection or an exception.
@@ -246,7 +243,7 @@ public class BluetoothService {
 
         // If a connection was accepted.
         if (socket != null) {
-          synchronized (BluetoothService.this) {
+          synchronized (BluetoothServer.this) {
             switch (mState) {
             case LISTENING:
             case CONNECTING:
@@ -309,18 +306,18 @@ public class BluetoothService {
         // This is a blocking call and will only return on a successful connection or an exception.
         mmSocket.connect();
       } catch (IOException e) {
-        setState(BluetoothService.State.IDLE);
+        setState(BluetoothServer.State.IDLE);
         try {
           mmSocket.close();
         } catch (IOException e2) {
           AseLog.e("Bluetooth unable to close socket during connection failure.", e2);
         }
-        BluetoothService.this.stop();
+        BluetoothServer.this.stop();
         return;
       }
 
       // Reset the ConnectThread because we're done.
-      synchronized (BluetoothService.this) {
+      synchronized (BluetoothServer.this) {
         mConnectThread = null;
       }
 
@@ -375,10 +372,10 @@ public class BluetoothService {
           Thread.sleep(100);
         } catch (IOException e) {
           AseLog.e("Bluetooth disconnected.", e);
-          setState(BluetoothService.State.IDLE);
+          setState(BluetoothServer.State.IDLE);
         } catch (InterruptedException e) {
           AseLog.e("Bluetooth connection interrupted.", e);
-          setState(BluetoothService.State.IDLE);
+          setState(BluetoothServer.State.IDLE);
         }
       }
     }

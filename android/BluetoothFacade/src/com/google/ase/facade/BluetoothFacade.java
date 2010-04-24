@@ -38,13 +38,13 @@ public class BluetoothFacade implements RpcReceiver {
 
   AndroidFacade mAndroidFacade;
   BluetoothAdapter mBluetoothAdapter;
-  BluetoothService mBluetoothService;
+  BluetoothServer mBluetoothService;
   EventFacade mEventFacade;
 
   public BluetoothFacade(AndroidFacade androidFacade, EventFacade eventFacade) {
     mAndroidFacade = androidFacade;
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    mBluetoothService = new BluetoothService(null);
+    mBluetoothService = new BluetoothServer(null);
     mEventFacade = eventFacade;
   }
 
