@@ -20,7 +20,6 @@ import java.net.InetSocketAddress;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 
 import com.google.ase.facade.FacadeConfiguration;
 import com.google.ase.jsonrpc.JsonRpcServer;
@@ -31,8 +30,7 @@ public class AndroidProxy {
   private final JsonRpcServer mJsonRpcServer;
 
   public AndroidProxy(Service service, Intent intent) {
-    Handler handler = new Handler();
-    mJsonRpcServer = FacadeConfiguration.buildJsonRpcServer(service, intent, handler);
+    mJsonRpcServer = FacadeConfiguration.buildJsonRpcServer(service, intent);
   }
 
   public InetSocketAddress getAddress() {

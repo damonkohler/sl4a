@@ -23,7 +23,6 @@ import java.util.TreeMap;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 
 import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
@@ -94,17 +93,15 @@ public class FacadeConfiguration {
    *          service to configure facades with
    * @param intent
    *          intent to configure facades with
-   * @param handler
-   *          handler to configure facades with
    * @return a new {@link JsonRpcServer} configured with all facades
    */
-  public static JsonRpcServer buildJsonRpcServer(Service service, Intent intent, Handler handler) {
+  public static JsonRpcServer buildJsonRpcServer(Service service, Intent intent) {
     List<RpcReceiver> receivers = new ArrayList<RpcReceiver>();
     TriggerRepository triggerRepository =
         ((AseApplication) service.getApplication()).getTriggerRepository();
 
     AndroidFacade androidFacade =
-        new AndroidFacade(service, handler, intent, new AndroidFacade.Resources() {
+        new AndroidFacade(service, intent, new AndroidFacade.Resources() {
           @Override
           public int getAseLogo48() {
             return R.drawable.ase_logo_48;

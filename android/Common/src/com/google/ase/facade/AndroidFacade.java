@@ -63,15 +63,15 @@ import com.google.ase.rpc.RpcParameter;
 
 public class AndroidFacade implements RpcReceiver {
   /**
-   * An instance of this interface is passed to the facade. From this object,
-   * the resource IDs can be obtained.
+   * An instance of this interface is passed to the facade. From this object, the resource IDs can
+   * be obtained.
    */
   public interface Resources {
     int getAseLogo48();
   }
 
   private final Service mService;
-  private final Handler mHandler;
+  private final Handler mHandler = new Handler();
   private final Intent mIntent;
   private final Queue<FutureActivityTask> mTaskQueue;
 
@@ -80,7 +80,7 @@ public class AndroidFacade implements RpcReceiver {
   private final NotificationManager mNotificationManager;
   private final Geocoder mGeocoder;
   private final TextToSpeechFacade mTts;
-  
+
   private final Resources mResources;
 
   @Override
@@ -93,12 +93,9 @@ public class AndroidFacade implements RpcReceiver {
    * 
    * @param service
    *          is the {@link Context} the APIs will run under
-   * @param handler
-   *          is the {@link Handler} the APIs will use to communicate with the UI thread
    */
-  public AndroidFacade(Service service, Handler handler, Intent intent, Resources resources) {
+  public AndroidFacade(Service service, Intent intent, Resources resources) {
     mService = service;
-    mHandler = handler;
     mIntent = intent;
     mTaskQueue = ((AseApplication) mService.getApplication()).getTaskQueue();
     mActivityManager = (ActivityManager) mService.getSystemService(Context.ACTIVITY_SERVICE);
