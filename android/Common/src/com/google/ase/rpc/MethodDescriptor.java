@@ -101,11 +101,10 @@ public final class MethodDescriptor {
     }
     helpBuilder.append(")\n\n");
     helpBuilder.append(rpcAnnotation.description());
-    helpBuilder.append("\n");
-    if (rpcAnnotation.returns() != "") {
-      helpBuilder.append("\nReturns: ");
-      helpBuilder.append(rpcAnnotation.returns());
+    if (!rpcAnnotation.returns().equals("")) {
       helpBuilder.append("\n");
+      helpBuilder.append("\nReturns:\n  ");
+      helpBuilder.append(rpcAnnotation.returns());
     }
 
     return helpBuilder.toString();
