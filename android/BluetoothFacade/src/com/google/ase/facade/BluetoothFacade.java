@@ -43,7 +43,6 @@ public class BluetoothFacade implements RpcReceiver {
   // UUID for ASE.
   private static final String DEFAULT_UUID = "457807c0-4897-11df-9879-0800200c9a66";
 
-  private String mConnectedDeviceName;
   private final PipedOutputStream mOutputStream;
   private final PipedInputStream mInputStream;
   private final BufferedReader mReader;
@@ -73,21 +72,12 @@ public class BluetoothFacade implements RpcReceiver {
           break;
         }
         break;
-      case BluetoothService.MESSAGE_WRITE:
-        // Wrote to Bluetooth channel.
-        break;
       case BluetoothService.MESSAGE_READ:
         try {
           mOutputStream.write((byte[]) msg.obj);
         } catch (IOException e) {
           AseLog.e("Failed to read from Bluetooth.", e);
         }
-        break;
-      case BluetoothService.MESSAGE_DEVICE_NAME:
-        mConnectedDeviceName = msg.getData().getString(BluetoothService.DEVICE_NAME);
-        break;
-      case BluetoothService.MESSAGE_TOAST:
-        AseLog.e(msg.getData().getString(BluetoothService.TOAST));
         break;
       }
     }
@@ -171,7 +161,7 @@ public class BluetoothFacade implements RpcReceiver {
 
   @Rpc(description = "Returns the name of the connected device.")
   public String bluetoothGetConnectedDeviceName() {
-    return mConnectedDeviceName;
+    return mBluetoothService.getDeviceName();
   }
 
   // The following RPCs belong in the SettingsFacade namespace.
@@ -192,9 +182,8 @@ public class BluetoothFacade implements RpcReceiver {
       if (prompt) {
         AseLog.v("Prompting");
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        // TODO(damonkohler): Use the result to determine if this was
-        // successful. At any rate, keep using startActivityForResult in order
-        // to synchronize this call.
+        // TODO(damonkohler): Use the result to determine if this was successful. At any rate, keep
+        // using startActivityForResult in order to synchronize this call.
         mAndroidFacade.startActivityForResult(intent);
       } else {
         // TODO(damonkohler): Make this synchronous as well.

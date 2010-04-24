@@ -26,9 +26,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 
 /**
  * This class does all the work for setting up and managing Bluetooth connections with other
@@ -45,6 +43,7 @@ public class BluetoothService {
   private ConnectThread mConnectThread;
   private ConnectedThread mConnectedThread;
   private int mState;
+  private String mDeviceName;
 
   // Constants that indicate the current connection state.
   public static final int STATE_IDLE = 0; // We're doing nothing.
@@ -55,13 +54,6 @@ public class BluetoothService {
   // Message types sent.
   public static final int MESSAGE_STATE_CHANGE = 1;
   public static final int MESSAGE_READ = 2;
-  public static final int MESSAGE_WRITE = 3;
-  public static final int MESSAGE_DEVICE_NAME = 4;
-  public static final int MESSAGE_TOAST = 5;
-
-  // Key names received.
-  public static final String DEVICE_NAME = "device_name";
-  public static final String TOAST = "toast";
 
   /**
    * Constructor. Prepares a new Bluetooth session.
@@ -73,6 +65,10 @@ public class BluetoothService {
     mHandler = handler;
     mAdapter = BluetoothAdapter.getDefaultAdapter();
     mState = STATE_IDLE;
+  }
+
+  public String getDeviceName() {
+    return mDeviceName;
   }
 
   /**
@@ -179,11 +175,7 @@ public class BluetoothService {
     mConnectedThread.start();
 
     // Send the name of the connected device back to the UI Activity
-    Message msg = mHandler.obtainMessage(MESSAGE_DEVICE_NAME);
-    Bundle bundle = new Bundle();
-    bundle.putString(DEVICE_NAME, device.getName());
-    msg.setData(bundle);
-    mHandler.sendMessage(msg);
+    mDeviceName = device.getName();
 
     setState(STATE_CONNECTED);
   }
@@ -225,32 +217,6 @@ public class BluetoothService {
     }
     // Perform the write unsynchronized.
     r.write(out);
-  }
-
-  /**
-   * Indicate that the connection attempt failed and notify the calling {@link Activity}.
-   */
-  private void connectionFailed() {
-    setState(STATE_LISTEN);
-    // Send a failure message back to the Activity.
-    Message msg = mHandler.obtainMessage(MESSAGE_TOAST);
-    Bundle bundle = new Bundle();
-    bundle.putString(TOAST, "Unable to connect device");
-    msg.setData(bundle);
-    mHandler.sendMessage(msg);
-  }
-
-  /**
-   * Indicate that the connection was lost and notify the calling {@link Activity}.
-   */
-  private void connectionLost() {
-    setState(STATE_LISTEN);
-    // Send a failure message back to the Activity
-    Message msg = mHandler.obtainMessage(MESSAGE_TOAST);
-    Bundle bundle = new Bundle();
-    bundle.putString(TOAST, "Device connection was lost");
-    msg.setData(bundle);
-    mHandler.sendMessage(msg);
   }
 
   /**
@@ -353,12 +319,13 @@ public class BluetoothService {
         // This is a blocking call and will only return on a successful connection or an exception.
         mmSocket.connect();
       } catch (IOException e) {
-        connectionFailed();
+        setState(STATE_IDLE);
         try {
           mmSocket.close();
         } catch (IOException e2) {
           AseLog.e("Bluetooth unable to close socket during connection failure.", e2);
         }
+        BluetoothService.this.stop();
         return;
       }
 
@@ -419,24 +386,15 @@ public class BluetoothService {
           mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
         } catch (IOException e) {
           AseLog.e("Bluetooth disconnected.", e);
-          connectionLost();
+          setState(STATE_IDLE);
           break;
         }
       }
     }
 
-    /**
-     * Write to the connected OutStream.
-     * 
-     * @param buffer
-     *          The bytes to write
-     */
     public void write(byte[] buffer) {
       try {
         mmOutStream.write(buffer);
-
-        // Share the sent message back to the UI Activity
-        mHandler.obtainMessage(MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
       } catch (IOException e) {
         AseLog.e("Bluetooth exception during write.", e);
       }
