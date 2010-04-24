@@ -16,17 +16,17 @@
 
 package com.google.ase.facade;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
 
 import com.google.ase.AseLog;
 
@@ -36,17 +36,20 @@ import com.google.ase.AseLog;
  * device, and a thread for performing data transmissions when connected.
  */
 public class BluetoothService {
-  // Name for the SDP record when creating server socket
-  private static final String NAME = "ASE";
+  private static final String SDP_NAME = "ASE";
 
   private final BluetoothAdapter mAdapter;
-  private final Handler mHandler;
+  private final EventFacade mEventFacade;
+
   private AcceptThread mAcceptThread;
   private ConnectThread mConnectThread;
   private ConnectedThread mConnectedThread;
   private State mState;
   private String mDeviceName;
-  private final EventFacade mEventFacade;
+
+  private OutputStream mOutputStream;
+  private InputStream mInputStream;
+  private BufferedReader mReader;
 
   enum State {
     IDLE, LISTENING, CONNECTING, CONNECTED
@@ -55,19 +58,18 @@ public class BluetoothService {
   // Message types sent.
   public static final int MESSAGE_READ = 2;
 
-  /**
-   * Constructor. Prepares a new Bluetooth session.
-   * 
-   * @param handler
-   *          A Handler to send messages back to the calling {@link Activity}.
-   * @param eventFacade
-   *          TODO
-   */
-  public BluetoothService(Handler handler, EventFacade eventFacade) {
-    mHandler = handler;
+  public BluetoothService(EventFacade eventFacade) {
     mEventFacade = eventFacade;
     mAdapter = BluetoothAdapter.getDefaultAdapter();
     mState = State.IDLE;
+  }
+
+  public OutputStream getOutputStream() {
+    return mOutputStream;
+  }
+
+  public BufferedReader getReader() {
+    return mReader;
   }
 
   public String getDeviceName() {
@@ -209,26 +211,6 @@ public class BluetoothService {
   }
 
   /**
-   * Write to the ConnectedThread in an unsynchronized manner
-   * 
-   * @param out
-   *          The bytes to write
-   * @see ConnectedThread#write(byte[])
-   */
-  public void write(byte[] out) {
-    // Create temporary object.
-    ConnectedThread r;
-    // Synchronize a copy of the ConnectedThread.
-    synchronized (this) {
-      if (mState != State.CONNECTED)
-        return;
-      r = mConnectedThread;
-    }
-    // Perform the write unsynchronized.
-    r.write(out);
-  }
-
-  /**
    * This thread runs while listening for incoming connections. It behaves like a server-side
    * client. It runs until a connection is accepted (or until cancelled).
    */
@@ -240,7 +222,7 @@ public class BluetoothService {
       BluetoothServerSocket tmp = null;
       // Create a new listening server socket.
       try {
-        tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME, uuid);
+        tmp = mAdapter.listenUsingRfcommWithServiceRecord(SDP_NAME, uuid);
       } catch (IOException e) {
         AseLog.e("Bluetooth listen failed.", e);
       }
@@ -361,8 +343,6 @@ public class BluetoothService {
    */
   private class ConnectedThread extends Thread {
     private final BluetoothSocket mmSocket;
-    private final InputStream mmInStream;
-    private final OutputStream mmOutStream;
 
     public ConnectedThread(BluetoothSocket socket) {
       mmSocket = socket;
@@ -377,34 +357,29 @@ public class BluetoothService {
         AseLog.e("Bluetooth temp sockets not created.", e);
       }
 
-      mmInStream = tmpIn;
-      mmOutStream = tmpOut;
+      mInputStream = tmpIn;
+      mOutputStream = tmpOut;
+      try {
+        mReader = new BufferedReader(new InputStreamReader(tmpIn, "ASCII"));
+      } catch (IOException e) {
+        AseLog.e("Bluetooth sockets not created.", e);
+      }
     }
 
     @Override
     public void run() {
-      byte[] buffer = new byte[1024];
-      int bytes;
-      // Keep listening to the InputStream while connected.
       while (true) {
         try {
-          // Read from the InputStream.
-          bytes = mmInStream.read(buffer);
-          // Send the obtained bytes to the calling Activity.
-          mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+          // Detect a disconnected socket.
+          mInputStream.available();
+          Thread.sleep(100);
         } catch (IOException e) {
           AseLog.e("Bluetooth disconnected.", e);
           setState(BluetoothService.State.IDLE);
-          break;
+        } catch (InterruptedException e) {
+          AseLog.e("Bluetooth connection interrupted.", e);
+          setState(BluetoothService.State.IDLE);
         }
-      }
-    }
-
-    public void write(byte[] buffer) {
-      try {
-        mmOutStream.write(buffer);
-      } catch (IOException e) {
-        AseLog.e("Bluetooth exception during write.", e);
       }
     }
 
