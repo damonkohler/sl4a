@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.ase;
+package com.google.ase.facade;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +27,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
+
+import com.google.ase.AseLog;
 
 /**
  * This class does all the work for setting up and managing Bluetooth connections with other
@@ -42,17 +44,15 @@ public class BluetoothService {
   private AcceptThread mAcceptThread;
   private ConnectThread mConnectThread;
   private ConnectedThread mConnectedThread;
-  private int mState;
+  private State mState;
   private String mDeviceName;
+  private final EventFacade mEventFacade;
 
-  // Constants that indicate the current connection state.
-  public static final int STATE_IDLE = 0; // We're doing nothing.
-  public static final int STATE_LISTEN = 1; // Now listening for incoming connections.
-  public static final int STATE_CONNECTING = 2; // Now initiating an outgoing connection.
-  public static final int STATE_CONNECTED = 3; // Now connected to a remote device.
+  enum State {
+    IDLE, LISTENING, CONNECTING, CONNECTED
+  }
 
   // Message types sent.
-  public static final int MESSAGE_STATE_CHANGE = 1;
   public static final int MESSAGE_READ = 2;
 
   /**
@@ -60,11 +60,14 @@ public class BluetoothService {
    * 
    * @param handler
    *          A Handler to send messages back to the calling {@link Activity}.
+   * @param eventFacade
+   *          TODO
    */
-  public BluetoothService(Handler handler) {
+  public BluetoothService(Handler handler, EventFacade eventFacade) {
     mHandler = handler;
+    mEventFacade = eventFacade;
     mAdapter = BluetoothAdapter.getDefaultAdapter();
-    mState = STATE_IDLE;
+    mState = State.IDLE;
   }
 
   public String getDeviceName() {
@@ -77,17 +80,23 @@ public class BluetoothService {
    * @param state
    *          An integer defining the current connection state
    */
-  private synchronized void setState(int state) {
+  private synchronized void setState(State state) {
     AseLog.v("Bluetooth set changed from " + mState + " to " + state);
+    switch (state) {
+    case CONNECTED:
+      mEventFacade.postEvent("bluetooth", "connected");
+      break;
+    case CONNECTING:
+      mEventFacade.postEvent("bluetooth", "connecting");
+      break;
+    case LISTENING:
+      mEventFacade.postEvent("bluetooth", "listening");
+      break;
+    case IDLE:
+      mEventFacade.postEvent("bluetooth", "idle");
+      break;
+    }
     mState = state;
-    mHandler.obtainMessage(MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
-  }
-
-  /**
-   * Return the current connection state.
-   */
-  public synchronized int getState() {
-    return mState;
   }
 
   /**
@@ -113,7 +122,7 @@ public class BluetoothService {
       mAcceptThread.start();
     }
 
-    setState(STATE_LISTEN);
+    setState(State.LISTENING);
   }
 
   /**
@@ -124,7 +133,7 @@ public class BluetoothService {
    */
   public synchronized void connect(BluetoothDevice device, UUID uuid) {
     // Cancel any thread attempting to make a connection
-    if (mState == STATE_CONNECTING) {
+    if (mState == State.CONNECTING) {
       if (mConnectThread != null) {
         mConnectThread.cancel();
         mConnectThread = null;
@@ -140,7 +149,7 @@ public class BluetoothService {
     // Start the thread to connect with the given device
     mConnectThread = new ConnectThread(device, uuid);
     mConnectThread.start();
-    setState(STATE_CONNECTING);
+    setState(State.CONNECTING);
   }
 
   /**
@@ -177,7 +186,7 @@ public class BluetoothService {
     // Send the name of the connected device back to the UI Activity
     mDeviceName = device.getName();
 
-    setState(STATE_CONNECTED);
+    setState(State.CONNECTED);
   }
 
   /**
@@ -196,7 +205,7 @@ public class BluetoothService {
       mAcceptThread.cancel();
       mAcceptThread = null;
     }
-    setState(STATE_IDLE);
+    setState(State.IDLE);
   }
 
   /**
@@ -211,7 +220,7 @@ public class BluetoothService {
     ConnectedThread r;
     // Synchronize a copy of the ConnectedThread.
     synchronized (this) {
-      if (mState != STATE_CONNECTED)
+      if (mState != State.CONNECTED)
         return;
       r = mConnectedThread;
     }
@@ -242,9 +251,8 @@ public class BluetoothService {
     public void run() {
       setName("AcceptThread");
       BluetoothSocket socket = null;
-
       // Listen to the server socket if we're not connected.
-      while (mState != STATE_CONNECTED) {
+      while (mState != BluetoothService.State.CONNECTED) {
         try {
           // This is a blocking call and will only return on a successful
           // connection or an exception.
@@ -258,13 +266,13 @@ public class BluetoothService {
         if (socket != null) {
           synchronized (BluetoothService.this) {
             switch (mState) {
-            case STATE_LISTEN:
-            case STATE_CONNECTING:
+            case LISTENING:
+            case CONNECTING:
               // Situation normal. Start the connected thread.
               connected(socket, socket.getRemoteDevice());
               break;
-            case STATE_IDLE:
-            case STATE_CONNECTED:
+            case IDLE:
+            case CONNECTED:
               // Either not ready or already connected. Terminate new socket.
               try {
                 socket.close();
@@ -319,7 +327,7 @@ public class BluetoothService {
         // This is a blocking call and will only return on a successful connection or an exception.
         mmSocket.connect();
       } catch (IOException e) {
-        setState(STATE_IDLE);
+        setState(BluetoothService.State.IDLE);
         try {
           mmSocket.close();
         } catch (IOException e2) {
@@ -386,7 +394,7 @@ public class BluetoothService {
           mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
         } catch (IOException e) {
           AseLog.e("Bluetooth disconnected.", e);
-          setState(STATE_IDLE);
+          setState(BluetoothService.State.IDLE);
           break;
         }
       }

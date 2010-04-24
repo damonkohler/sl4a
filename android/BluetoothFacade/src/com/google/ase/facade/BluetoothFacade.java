@@ -30,7 +30,6 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.google.ase.AseLog;
-import com.google.ase.BluetoothService;
 import com.google.ase.Constants;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
@@ -52,26 +51,6 @@ public class BluetoothFacade implements RpcReceiver {
     @Override
     public void handleMessage(Message msg) {
       switch (msg.what) {
-      case BluetoothService.MESSAGE_STATE_CHANGE:
-        switch (msg.arg1) {
-        case BluetoothService.STATE_CONNECTED:
-          AseLog.v("Bluetooth connected.");
-          mEventFacade.postEvent("bluetooth", "connected");
-          break;
-        case BluetoothService.STATE_CONNECTING:
-          AseLog.v("Bluetooth connecting.");
-          mEventFacade.postEvent("bluetooth", "connecting");
-          break;
-        case BluetoothService.STATE_LISTEN:
-          AseLog.v("Bluetooth listening.");
-          mEventFacade.postEvent("bluetooth", "listening");
-          break;
-        case BluetoothService.STATE_IDLE:
-          AseLog.v("Bluetooth in null state.");
-          mEventFacade.postEvent("bluetooth", "idle");
-          break;
-        }
-        break;
       case BluetoothService.MESSAGE_READ:
         try {
           mOutputStream.write((byte[]) msg.obj);
@@ -96,7 +75,7 @@ public class BluetoothFacade implements RpcReceiver {
 
     mAndroidFacade = androidFacade;
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    mBluetoothService = new BluetoothService(mHandler);
+    mBluetoothService = new BluetoothService(mHandler, null);
     mEventFacade = eventFacade;
   }
 
