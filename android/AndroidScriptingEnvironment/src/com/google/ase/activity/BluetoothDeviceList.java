@@ -22,6 +22,7 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -47,6 +48,28 @@ public class BluetoothDeviceList extends ListActivity {
   }
 
   private final DeviceListAdapter mDeviceListAdapter = new DeviceListAdapter();
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    CustomizeWindow
+        .requestCustomTitle(this, "Bluetooth Devices", R.layout.bluetooth_device_manager);
+    setResult(RESULT_CANCELED);
+    setListAdapter(mDeviceListAdapter);
+    getListView().setOnItemClickListener(mOnItemClickListener);
+    AseAnalytics.trackActivity(this);
+  }
+
+  private final OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+      DeviceInfo device = (DeviceInfo) mDeviceListAdapter.getItem(position);
+      final Intent result = new Intent();
+      result.putExtra(Constants.EXTRA_DEVICE_ADDRESS, device.mmAddress);
+      setResult(RESULT_OK, result);
+      finish();
+    }
+  };
 
   private class DeviceListAdapter extends BaseAdapter implements DeviceListener {
     List<DeviceInfo> mmDeviceList;
@@ -76,13 +99,13 @@ public class BluetoothDeviceList extends ListActivity {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
+    public View getView(int position, View convertView, ViewGroup viewGroup) {
       final DeviceInfo device = mmDeviceList.get(position);
-
-      final TextView textView = new TextView(BluetoothDeviceList.this);
-      textView.setText(device.mmName + " (" + device.mmAddress + ")");
-
-      return textView;
+      final TextView view = new TextView(BluetoothDeviceList.this);
+      view.setPadding(2, 2, 2, 2);
+      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+      view.setText(device.mmName + " (" + device.mmAddress + ")");
+      return view;
     }
 
     @Override
@@ -93,32 +116,5 @@ public class BluetoothDeviceList extends ListActivity {
     @Override
     public void scanDone() {
     }
-  }
-
-  private final OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-      DeviceInfo device = (DeviceInfo) mDeviceListAdapter.getItem(position);
-      final Intent result = new Intent();
-      result.putExtra(Constants.EXTRA_DEVICE_ADDRESS, device.mmAddress);
-      setResult(RESULT_OK, result);
-      finish();
-    }
-  };
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    CustomizeWindow
-        .requestCustomTitle(this, "Bluetooth Devices", R.layout.bluetooth_device_manager);
-    setResult(RESULT_CANCELED);
-    setListAdapter(mDeviceListAdapter);
-    getListView().setOnItemClickListener(mOnItemClickListener);
-    AseAnalytics.trackActivity(this);
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
   }
 }
