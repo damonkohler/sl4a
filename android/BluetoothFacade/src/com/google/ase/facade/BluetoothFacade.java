@@ -38,26 +38,24 @@ public class BluetoothFacade implements RpcReceiver {
 
   AndroidFacade mAndroidFacade;
   BluetoothAdapter mBluetoothAdapter;
-  BluetoothServer mBluetoothService;
-  EventFacade mEventFacade;
+  BluetoothServer mBluetoothServer;
 
   public BluetoothFacade(AndroidFacade androidFacade, EventFacade eventFacade) {
     mAndroidFacade = androidFacade;
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    mBluetoothService = new BluetoothServer(null);
-    mEventFacade = eventFacade;
+    mBluetoothServer = new BluetoothServer(eventFacade);
   }
 
   @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")
   public boolean bluetoothConnect(
       @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
     Intent deviceChooserIntent = new Intent();
-    deviceChooserIntent.setComponent(Constants.BLUETOOTH_DEVICE_MANAGER_COMPONENT_NAME);
+    deviceChooserIntent.setComponent(Constants.BLUETOOTH_DEVICE_LIST_COMPONENT_NAME);
     Intent result = mAndroidFacade.startActivityForResult(deviceChooserIntent);
     if (result != null && result.hasExtra(Constants.EXTRA_DEVICE_ADDRESS)) {
       String address = result.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
       BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-      mBluetoothService.connect(device, UUID.fromString(uuid));
+      mBluetoothServer.connect(device, UUID.fromString(uuid));
       return true;
     }
     return false;
@@ -66,7 +64,7 @@ public class BluetoothFacade implements RpcReceiver {
   @Rpc(description = "Listens for and accepts a Bluetooth connection.")
   public void bluetoothAccept(
       @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
-    mBluetoothService.start(UUID.fromString(uuid));
+    mBluetoothServer.start(UUID.fromString(uuid));
   }
 
   @Rpc(description = "Requests that the device be discoverable for Bluetooth connections.")
@@ -82,19 +80,19 @@ public class BluetoothFacade implements RpcReceiver {
 
   @Rpc(description = "Sends bytes over the currently open Bluetooth connection.")
   public void bluetoothWrite(@RpcParameter(name = "bytes") String bytes) throws IOException {
-    mBluetoothService.getOutputStream().write(bytes.getBytes());
+    mBluetoothServer.getOutputStream().write(bytes.getBytes());
   }
 
   @Rpc(description = "Returns True if the next read is guaranteed not to block.")
   public Boolean bluetoothReady() throws IOException {
-    return mBluetoothService.getReader().ready();
+    return mBluetoothServer.getReader().ready();
   }
 
   @Rpc(description = "Read up to bufferSize bytes.")
   public String bluetoothRead(
       @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize) throws IOException {
     char[] buffer = new char[bufferSize];
-    int bytesRead = mBluetoothService.getReader().read(buffer);
+    int bytesRead = mBluetoothServer.getReader().read(buffer);
     if (bytesRead == -1) {
       AseLog.e("Read failed.");
       throw new IOException("Read failed.");
@@ -104,12 +102,12 @@ public class BluetoothFacade implements RpcReceiver {
 
   @Rpc(description = "Read the next line.")
   public String bluetoothReadLine() throws IOException {
-    return mBluetoothService.getReader().readLine();
+    return mBluetoothServer.getReader().readLine();
   }
 
   @Rpc(description = "Returns the name of the connected device.")
   public String bluetoothGetConnectedDeviceName() {
-    return mBluetoothService.getDeviceName();
+    return mBluetoothServer.getDeviceName();
   }
 
   // The following RPCs belong in the SettingsFacade namespace.
@@ -147,6 +145,6 @@ public class BluetoothFacade implements RpcReceiver {
 
   @Override
   public void shutdown() {
-    mBluetoothService.stop();
+    mBluetoothServer.stop();
   }
 }

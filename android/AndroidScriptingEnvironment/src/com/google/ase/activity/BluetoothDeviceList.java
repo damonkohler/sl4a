@@ -25,14 +25,13 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.ase.AseAnalytics;
 import com.google.ase.Constants;
 import com.google.ase.R;
+import com.google.ase.bluetooth.BluetoothHelper;
 import com.google.ase.bluetooth.BluetoothHelper.DeviceListener;
 
 public class BluetoothDeviceList extends ListActivity {
@@ -47,28 +46,24 @@ public class BluetoothDeviceList extends ListActivity {
     }
   }
 
-  private final DeviceListAdapter mDeviceListAdapter = new DeviceListAdapter();
+  private final DeviceListAdapter mAdapter = new DeviceListAdapter();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    CustomizeWindow
-        .requestCustomTitle(this, "Bluetooth Devices", R.layout.bluetooth_device_manager);
-    setResult(RESULT_CANCELED);
-    setListAdapter(mDeviceListAdapter);
-    getListView().setOnItemClickListener(mOnItemClickListener);
+    CustomizeWindow.requestCustomTitle(this, "Bluetooth Devices", R.layout.bluetooth_device_list);
+    setListAdapter(mAdapter);
+    BluetoothHelper.findDevices(this, mAdapter);
     AseAnalytics.trackActivity(this);
   }
 
-  private final OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-      DeviceInfo device = (DeviceInfo) mDeviceListAdapter.getItem(position);
-      final Intent result = new Intent();
-      result.putExtra(Constants.EXTRA_DEVICE_ADDRESS, device.mmAddress);
-      setResult(RESULT_OK, result);
-      finish();
-    }
+  @Override
+  protected void onListItemClick(android.widget.ListView l, View v, int position, long id) {
+    DeviceInfo device = (DeviceInfo) mAdapter.getItem(position);
+    final Intent result = new Intent();
+    result.putExtra(Constants.EXTRA_DEVICE_ADDRESS, device.mmAddress);
+    setResult(RESULT_OK, result);
+    finish();
   };
 
   private class DeviceListAdapter extends BaseAdapter implements DeviceListener {
