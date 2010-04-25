@@ -17,6 +17,7 @@
 package com.google.ase.jsonrpc;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,17 +91,18 @@ public class JsonRpcServer extends Server {
   }
 
   @Override
-  protected void process(BufferedReader in, PrintWriter out) throws Exception {
+  protected void process(BufferedReader in, PrintWriter out) throws JSONException, IOException {
     String data;
     while ((data = in.readLine()) != null) {
       AseLog.v("Received: " + data);
+      JSONObject request = new JSONObject(data);
       JSONObject result = JsonRpcResult.empty();
       try {
-        result = call(data);
+        result = call(request);
       } catch (Exception e) {
         result = JsonRpcResult.error(e.getMessage());
-        throw e;
       } finally {
+        result.put("id", request.getInt("id"));
         out.write(result + "\n");
         out.flush();
         AseLog.v("Sent: " + result);
@@ -108,21 +110,18 @@ public class JsonRpcServer extends Server {
     }
   }
 
-  private JSONObject call(String json) throws JSONException, RpcError {
-    JSONObject jsonRequest = new JSONObject(json);
+  private JSONObject call(JSONObject request) throws JSONException, RpcError {
     // The JSON RPC spec says that id can be any object. To make our lives a
     // little easier, we'll assume it's always a number.
-    int id = jsonRequest.getInt("id");
-    String methodName = jsonRequest.getString("method");
-    JSONArray params = jsonRequest.getJSONArray("params");
+    String methodName = request.getString("method");
+    JSONArray params = request.getJSONArray("params");
     JSONObject result;
     RpcInfo rpcInfo = mKnownRpcs.get(methodName);
     if (rpcInfo == null) {
-      result = JsonRpcResult.error("Unknown RPC.");
+      throw new RpcError("Unknown RPC.");
     } else {
       result = rpcInfo.invoke(params);
     }
-    result.put("id", id);
     return result;
   }
 }

@@ -80,34 +80,50 @@ public class BluetoothFacade implements RpcReceiver {
 
   @Rpc(description = "Sends bytes over the currently open Bluetooth connection.")
   public void bluetoothWrite(@RpcParameter(name = "bytes") String bytes) throws IOException {
-    mBluetoothServer.getOutputStream().write(bytes.getBytes());
+    if (mBluetoothServer != null) {
+      mBluetoothServer.getOutputStream().write(bytes.getBytes());
+    } else {
+      throw new IOException("Bluetooth not ready.");
+    }
   }
 
   @Rpc(description = "Returns True if the next read is guaranteed not to block.")
   public Boolean bluetoothReady() throws IOException {
-    return mBluetoothServer.getReader().ready();
+    if (mBluetoothServer != null) {
+      return mBluetoothServer.getReader().ready();
+    }
+    throw new IOException("Bluetooth not ready.");
   }
 
   @Rpc(description = "Read up to bufferSize bytes.")
   public String bluetoothRead(
       @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize) throws IOException {
-    char[] buffer = new char[bufferSize];
-    int bytesRead = mBluetoothServer.getReader().read(buffer);
-    if (bytesRead == -1) {
-      AseLog.e("Read failed.");
-      throw new IOException("Read failed.");
+    if (mBluetoothServer != null) {
+      char[] buffer = new char[bufferSize];
+      int bytesRead = mBluetoothServer.getReader().read(buffer);
+      if (bytesRead == -1) {
+        AseLog.e("Read failed.");
+        throw new IOException("Read failed.");
+      }
+      return new String(buffer, 0, bytesRead);
     }
-    return new String(buffer, 0, bytesRead);
+    throw new IOException("Bluetooth not ready.");
   }
 
   @Rpc(description = "Read the next line.")
   public String bluetoothReadLine() throws IOException {
-    return mBluetoothServer.getReader().readLine();
+    if (mBluetoothServer != null) {
+      return mBluetoothServer.getReader().readLine();
+    }
+    throw new IOException("Bluetooth not ready.");
   }
 
   @Rpc(description = "Returns the name of the connected device.")
   public String bluetoothGetConnectedDeviceName() {
-    return mBluetoothServer.getDeviceName();
+    if (mBluetoothServer != null) {
+      return mBluetoothServer.getDeviceName();
+    }
+    return null;
   }
 
   // The following RPCs belong in the SettingsFacade namespace.

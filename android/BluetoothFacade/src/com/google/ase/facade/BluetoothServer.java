@@ -61,12 +61,18 @@ public class BluetoothServer {
     mState = State.IDLE;
   }
 
-  public OutputStream getOutputStream() {
-    return mOutputStream;
+  public OutputStream getOutputStream() throws IOException {
+    if (mOutputStream != null) {
+      return mOutputStream;
+    }
+    throw new IOException("Bluetooth not ready.");
   }
 
-  public BufferedReader getReader() {
-    return mReader;
+  public BufferedReader getReader() throws IOException {
+    if (mReader != null) {
+      return mReader;
+    }
+    throw new IOException("Bluetooth not ready.");
   }
 
   public String getDeviceName() {
@@ -354,8 +360,8 @@ public class BluetoothServer {
         AseLog.e("Bluetooth temp sockets not created.", e);
       }
 
-      mInputStream = tmpIn;
       mOutputStream = tmpOut;
+      mInputStream = tmpIn;
       try {
         mReader = new BufferedReader(new InputStreamReader(tmpIn, "ASCII"));
       } catch (IOException e) {
