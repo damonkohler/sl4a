@@ -10,6 +10,7 @@ droid.bluetoothAccept()
 def receiver():
   while True:
     print droid.bluetoothReadLine()
+    print droid.bluetoothRead()
     time.sleep(0.25)
 
 def sender():

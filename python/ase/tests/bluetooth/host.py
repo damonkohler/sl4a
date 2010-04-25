@@ -21,12 +21,12 @@ sock.connect((host, port))
 def receiver():
   while True:
     print sock.recv(5)
-    time.sleep(0.1)
+    time.sleep(0.25)
 
 def sender():
   while True:
     sock.send('test\n')
-    time.sleep(0.1)
+    time.sleep(0.25)
 
 receiver_thread = threading.Thread(target=receiver)
 receiver_thread.daemon = True
