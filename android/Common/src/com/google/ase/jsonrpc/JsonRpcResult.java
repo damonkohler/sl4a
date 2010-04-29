@@ -23,20 +23,21 @@ import com.google.ase.AseLog;
 
 /**
  * Represents a JSON RPC result.
- *
+ * 
  * @see http://json-rpc.org/wiki/specification
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class JsonRpcResult {
   private Object result;
   private Object error;
+
   // ID is left out because the current implementation of the server assumes
   // blocking methods and sets the ID automatically.
 
   /**
    * Sets the result object. Object must be marshalable to JSON.
-   *
+   * 
    * @see http://www.json.org/javadoc/org/json/JSONObject.html
    */
   public void setResult(Object result) {
@@ -45,7 +46,7 @@ public class JsonRpcResult {
 
   /**
    * Sets the error object. Object must be marshalable to JSON.
-   *
+   * 
    * @see http://www.json.org/javadoc/org/json/JSONObject.html
    */
   public void setError(Object error) {

@@ -18,14 +18,10 @@ package com.google.ase.jsonrpc;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.Intent;
-import android.os.Bundle;
 
 import com.google.ase.AseLog;
 import com.google.ase.rpc.MethodDescriptor;
@@ -81,15 +77,7 @@ public final class RpcInfo {
       AseLog.e("Invocation error.", e.getCause());
       throw new RpcError(e.getCause().getMessage());
     }
-    if (result instanceof Bundle) {
-      return JsonRpcResult.result(JsonResultBuilders.buildJsonBundle((Bundle) result));
-    } else if (result instanceof Intent) {
-      return JsonRpcResult.result(JsonResultBuilders.buildJsonIntent((Intent) result));
-    } else if (result instanceof List<?>) {
-      return JsonRpcResult.result(JsonResultBuilders.buildJsonList((List<?>) result));
-    } else {
-      return JsonRpcResult.result(result);
-    }
+    return JsonRpcResult.result(JsonResultBuilders.build(result));
   }
 
   /**

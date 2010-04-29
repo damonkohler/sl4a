@@ -18,14 +18,14 @@ package com.google.ase.jsonrpc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import junit.framework.TestCase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.google.ase.jsonrpc.JsonResultBuilders;
 
 import android.content.Intent;
 
@@ -39,10 +39,21 @@ public class JsonResultBuildersTest extends TestCase {
     objects.add(foo);
     objects.add(bar);
     objects.add(baz);
-    JSONArray result = JsonResultBuilders.buildJsonList(objects);
+    JSONArray result = (JSONArray) JsonResultBuilders.build(objects);
     assertEquals(result.get(0), foo);
     assertEquals(result.get(1), bar);
     assertEquals(result.get(2), baz);
+  }
+
+  public void testBuildJsonSet() throws JSONException {
+    Set<String> objects = new TreeSet<String>();
+    objects.add("foo");
+    objects.add("bar");
+    objects.add("baz");
+    JSONArray result = (JSONArray) JsonResultBuilders.build(objects);
+    assertEquals(result.get(0), "bar");
+    assertEquals(result.get(1), "baz");
+    assertEquals(result.get(2), "foo");
   }
 
   public void testBuildJsonIntent() throws JSONException {
@@ -51,9 +62,11 @@ public class JsonResultBuildersTest extends TestCase {
     Intent nestedIntent = new Intent();
     nestedIntent.putExtra("baz", 123);
     intent.putExtra("bar", nestedIntent);
-    JSONObject result = JsonResultBuilders.buildJsonIntent(intent);
-    assertEquals(result.get("foo"), "value");
-    Object nestedJson = result.get("bar");
-    assertEquals(((JSONObject) nestedJson).getInt("baz"), 123);
+    JSONObject result = (JSONObject) JsonResultBuilders.build(intent);
+    JSONObject extras = (JSONObject) result.get("extras");
+    assertEquals(extras.get("foo"), "value");
+    JSONObject nestedJson = (JSONObject) extras.get("bar");
+    JSONObject nestedExtras = (JSONObject) nestedJson.get("extras");
+    assertEquals(nestedExtras.getInt("baz"), 123);
   }
 }

@@ -16,7 +16,9 @@
 
 package com.google.ase.jsonrpc;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,69 +28,94 @@ import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
 
-import com.google.ase.AseLog;
-
 public class JsonResultBuilders {
   private JsonResultBuilders() {
     // This is a utility class.
   }
 
-  public static JSONObject buildJsonAddress(Address address) {
-    JSONObject result = new JSONObject();
-    try {
-      result.put("admin_area", address.getAdminArea());
-      result.put("country_code", address.getCountryCode());
-      result.put("country_name", address.getCountryName());
-      result.put("feature_name", address.getFeatureName());
-      result.put("phone", address.getPhone());
-      result.put("locality", address.getLocality());
-      result.put("postal_code", address.getPostalCode());
-      result.put("sub_admin_area", address.getSubAdminArea());
-      result.put("thoroughfare", address.getThoroughfare());
-      result.put("url", address.getUrl());
-    } catch (JSONException e) {
-      AseLog.e("Failed to build JSON for address: " + address, e);
-      return null;
+  public static Object build(Object data) throws JSONException {
+    if (data == null) {
+      return JSONObject.NULL;
     }
-    return result;
+    if (data instanceof Integer) {
+      return data;
+    }
+    if (data instanceof Float) {
+      return data;
+    }
+    if (data instanceof Double) {
+      return data;
+    }
+    if (data instanceof Long) {
+      return data;
+    }
+    if (data instanceof String) {
+      return data;
+    }
+    if (data instanceof Boolean) {
+      return data;
+    }
+    if (data instanceof JSONObject) {
+      return data;
+    }
+    if (data instanceof JSONArray) {
+      return data;
+    }
+    if (data instanceof Set<?>) {
+      List<Object> items = new ArrayList<Object>((Set<?>) data);
+      return buildJsonList(items);
+    }
+    if (data instanceof List<?>) {
+      return buildJsonList((List<?>) data);
+    }
+    if (data instanceof Address) {
+      return buildJsonAddress((Address) data);
+    }
+    if (data instanceof Bundle) {
+      return buildJsonBundle((Bundle) data);
+    }
+    if (data instanceof Intent) {
+      return buildJsonIntent((Intent) data);
+    }
+    throw new JSONException("Failed to build JSON result.");
   }
 
-  public static JSONObject buildJsonBundle(Bundle bundle) throws JSONException {
-    if (bundle == null) {
-      return null;
-    }
-    JSONObject result = new JSONObject();
-    for (String key : bundle.keySet()) {
-      result.put(key, bundle.get(key));
-    }
-    return result;
-  }
-
-  public static JSONObject buildJsonIntent(Intent data) throws JSONException {
-    JSONObject result = new JSONObject();
-    Bundle extras = data.getExtras();
-    if (extras != null) {
-      for (String key : extras.keySet()) {
-        Object value = extras.get(key);
-        if (value instanceof Intent) {
-          result.put(key, buildJsonIntent((Intent) value));
-        } else {
-          result.put(key, value);
-        }
-      }
-    }
-    return result;
-  }
-
-  public static <T> JSONArray buildJsonList(final List<T> list) {
+  private static <T> JSONArray buildJsonList(final List<T> list) throws JSONException {
     JSONArray result = new JSONArray();
     for (T item : list) {
-      if (item instanceof Address) {
-        result.put(buildJsonAddress((Address) item));
-      } else {
-        result.put(item);
-      }
+      result.put(build(item));
     }
     return result;
   }
+
+  private static JSONObject buildJsonAddress(Address address) throws JSONException {
+    JSONObject result = new JSONObject();
+    result.put("admin_area", address.getAdminArea());
+    result.put("country_code", address.getCountryCode());
+    result.put("country_name", address.getCountryName());
+    result.put("feature_name", address.getFeatureName());
+    result.put("phone", address.getPhone());
+    result.put("locality", address.getLocality());
+    result.put("postal_code", address.getPostalCode());
+    result.put("sub_admin_area", address.getSubAdminArea());
+    result.put("thoroughfare", address.getThoroughfare());
+    result.put("url", address.getUrl());
+    return result;
+  }
+
+  private static JSONObject buildJsonBundle(Bundle bundle) throws JSONException {
+    JSONObject result = new JSONObject();
+    for (String key : bundle.keySet()) {
+      result.put(key, build(bundle.get(key)));
+    }
+    return result;
+  }
+
+  private static JSONObject buildJsonIntent(Intent data) throws JSONException {
+    JSONObject result = new JSONObject();
+    result.put("data", data.getDataString());
+    result.put("extras", build(data.getExtras()));
+    return result;
+  }
+
 }
