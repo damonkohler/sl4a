@@ -40,7 +40,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.text.ClipboardManager;
@@ -367,7 +366,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Returns a list of packages running activities or services.", returns = "List of packages running activities.")
-  public Bundle getRunningPackages() {
+  public List<String> getRunningPackages() {
     Set<String> runningPackages = new HashSet<String>();
     List<ActivityManager.RunningAppProcessInfo> appProcesses =
         mActivityManager.getRunningAppProcesses();
@@ -379,9 +378,7 @@ public class AndroidFacade implements RpcReceiver {
     for (ActivityManager.RunningServiceInfo info : serviceProcesses) {
       runningPackages.add(info.service.getPackageName());
     }
-    Bundle result = new Bundle();
-    result.putStringArrayList("packages", new ArrayList<String>(runningPackages));
-    return result;
+    return new ArrayList<String>(runningPackages);
   }
 
   @Rpc(description = "Force stops a package.")
