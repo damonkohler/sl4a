@@ -77,7 +77,7 @@ public final class RpcInfo {
       AseLog.e("Invocation error.", e.getCause());
       throw new RpcError(e.getCause().getMessage());
     }
-    return JsonRpcResult.result(JsonResultBuilders.build(result));
+    return JsonRpcResult.result(result);
   }
 
   /**

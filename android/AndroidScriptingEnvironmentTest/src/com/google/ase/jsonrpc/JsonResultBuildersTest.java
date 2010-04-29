@@ -39,7 +39,7 @@ public class JsonResultBuildersTest extends TestCase {
     objects.add(foo);
     objects.add(bar);
     objects.add(baz);
-    JSONArray result = (JSONArray) JsonResultBuilders.build(objects);
+    JSONArray result = (JSONArray) JsonBuilder.build(objects);
     assertEquals(result.get(0), foo);
     assertEquals(result.get(1), bar);
     assertEquals(result.get(2), baz);
@@ -50,7 +50,7 @@ public class JsonResultBuildersTest extends TestCase {
     objects.add("foo");
     objects.add("bar");
     objects.add("baz");
-    JSONArray result = (JSONArray) JsonResultBuilders.build(objects);
+    JSONArray result = (JSONArray) JsonBuilder.build(objects);
     assertEquals(result.get(0), "bar");
     assertEquals(result.get(1), "baz");
     assertEquals(result.get(2), "foo");
@@ -62,7 +62,7 @@ public class JsonResultBuildersTest extends TestCase {
     Intent nestedIntent = new Intent();
     nestedIntent.putExtra("baz", 123);
     intent.putExtra("bar", nestedIntent);
-    JSONObject result = (JSONObject) JsonResultBuilders.build(intent);
+    JSONObject result = (JSONObject) JsonBuilder.build(intent);
     JSONObject extras = (JSONObject) result.get("extras");
     assertEquals(extras.get("foo"), "value");
     JSONObject nestedJson = (JSONObject) extras.get("bar");

@@ -100,7 +100,7 @@ public class JsonRpcServer extends Server {
       try {
         result = call(request);
       } catch (Exception e) {
-        result = JsonRpcResult.error(e.getMessage());
+        result = JsonRpcResult.error(e);
       } finally {
         result.put("id", request.getInt("id"));
         out.write(result + "\n");

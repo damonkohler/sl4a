@@ -28,8 +28,9 @@ import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
 
-public class JsonResultBuilders {
-  private JsonResultBuilders() {
+public class JsonBuilder {
+
+  private JsonBuilder() {
     // This is a utility class.
   }
 
