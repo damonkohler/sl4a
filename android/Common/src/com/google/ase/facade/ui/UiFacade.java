@@ -16,8 +16,9 @@
 
 package com.google.ase.facade.ui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -190,9 +191,9 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "This method provides list of items user selected.", returns = "Selected items")
-  public Set<Integer> dialogGetSelectedItems() {
+  public List<Integer> dialogGetSelectedItems() {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
-      return ((RunnableAlertDialog) mDialogTask).getSelectedItems();
+      return new ArrayList<Integer>(((RunnableAlertDialog) mDialogTask).getSelectedItems());
     } else {
       throw new AndroidRuntimeException("No dialog to add list to.");
     }
