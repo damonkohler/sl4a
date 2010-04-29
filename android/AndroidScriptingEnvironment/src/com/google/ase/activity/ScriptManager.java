@@ -236,7 +236,7 @@ public class ScriptManager extends ListActivity {
   private void deleteScript(final String scriptName) {
     AlertDialog.Builder alert = new AlertDialog.Builder(this);
     alert.setTitle("Delete Script");
-    alert.setMessage("Are you sure?");
+    alert.setMessage("Would you like to delete " + scriptName + "?");
     alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int whichButton) {
         ScriptStorageAdapter.deleteScript(scriptName);
@@ -256,21 +256,21 @@ public class ScriptManager extends ListActivity {
     RequestCode request = RequestCode.values()[requestCode];
     if (resultCode == RESULT_OK) {
       switch (request) {
-        case QRCODE_ADD:
-          String contents[] = data.getStringExtra("SCAN_RESULT").split("\n", 2);
-          String title = contents[0];
-          String body = contents[1];
-          ScriptStorageAdapter.writeScript(title, body);
-          break;
-        default:
-          break;
+      case QRCODE_ADD:
+        String contents[] = data.getStringExtra("SCAN_RESULT").split("\n", 2);
+        String title = contents[0];
+        String body = contents[1];
+        ScriptStorageAdapter.writeScript(title, body);
+        break;
+      default:
+        break;
       }
     } else {
       switch (request) {
-        case QRCODE_ADD:
-          break;
-        default:
-          break;
+      case QRCODE_ADD:
+        break;
+      default:
+        break;
       }
     }
     mAdapter.notifyDataSetInvalidated();
