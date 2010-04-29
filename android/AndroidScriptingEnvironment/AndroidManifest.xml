@@ -202,4 +202,5 @@
     android:name="android.hardware.camera.autofocus" />
   <uses-sdk
     android:minSdkVersion="3"></uses-sdk>
+<uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
 </manifest>

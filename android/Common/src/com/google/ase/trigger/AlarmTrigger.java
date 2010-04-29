@@ -16,6 +16,8 @@
 
 package com.google.ase.trigger;
 
+import android.content.Context;
+
 import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
 public class AlarmTrigger extends Trigger {
@@ -28,7 +30,7 @@ public class AlarmTrigger extends Trigger {
   }
   
   @Override
-  public void beforeTrigger(TriggerInfo info) {
+  public void beforeTrigger(Context context, TriggerInfo info) {
     // This trigger will only fire once: remove it from the repository.
     info.remove();
   }

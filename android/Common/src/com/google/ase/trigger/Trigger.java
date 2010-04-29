@@ -40,11 +40,11 @@ public class Trigger implements Serializable {
   }
 
   /** Invoked just after the trigger is invoked */
-  public void afterTrigger(TriggerInfo info) {
+  public void afterTrigger(Context context, TriggerInfo info) {
   }
 
   /** Invoked before the trigger is invoked */
-  public void beforeTrigger(TriggerInfo info) {
+  public void beforeTrigger(Context context, TriggerInfo info) {
   }
 
   /** Returns the name of the script to execute */

@@ -35,6 +35,7 @@ import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
 import com.google.ase.exception.AseException;
 import com.google.ase.terminal.Terminal;
+import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
 /**
@@ -47,6 +48,7 @@ public class AseService extends Service {
   private AndroidProxy mAndroidProxy;
   private ScriptLauncher mLauncher;
   private final StringBuilder mNotificationMessage;
+  private TriggerInfo mTriggerInfo;
 
   public AseService() {
     mNotificationMessage = new StringBuilder();
@@ -55,11 +57,12 @@ public class AseService extends Service {
   @Override
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
+    mTriggerInfo = getTriggerInfo(intent);
+    notifyTriggerOfStart();
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
       launchServer(intent);
       showNotification();
     } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)) {
-      maybeNotifyTriggerBefore(intent);
       launchServer(intent);
       launchInterpreter(intent);
       showNotification();
@@ -69,16 +72,6 @@ public class AseService extends Service {
       showNotification();
     } else if (intent.getAction().equals(Constants.ACTION_KILL_SERVICE)) {
       stopSelf();
-    }
-  }
-
-  /** If the intent is launched by a trigger, runs the beforeTrigger handler. */
-  private void maybeNotifyTriggerBefore(Intent intent) {
-    AseApplication app = (AseApplication) getApplication();
-    final long triggerId = intent.getLongExtra(Constants.EXTRA_TRIGGER_ID, -1);
-    final TriggerInfo trigger = app.getTriggerRepository().getById(triggerId);
-    if (trigger != null) {
-      trigger.getTrigger().beforeTrigger(trigger);
     }
   }
 
@@ -144,12 +137,40 @@ public class AseService extends Service {
     if (mLauncher != null) {
       mLauncher.getProcess().kill();
     }
+    notifyTriggerOfShutDown();
     if (mAndroidProxy != null) {
       mAndroidProxy.shutdown();
     }
     NotificationManager manager =
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     manager.cancelAll();
+  }
+  
+  /** Returns the {@link TriggerInfo} for the given intent, or null if none exists. */
+  private TriggerInfo getTriggerInfo(Intent intent) {
+    final AseApplication application = (AseApplication) getApplication();
+    final long triggerId = intent.getLongExtra(Constants.EXTRA_TRIGGER_ID, -1);
+    return application.getTriggerRepository().getById(triggerId);
+  }
+
+  private void notifyTriggerOfShutDown() {
+    if (mTriggerInfo != null) {
+      final Trigger trigger = mTriggerInfo.getTrigger();
+      if (trigger != null) {
+        trigger.afterTrigger(this, mTriggerInfo);
+      }
+    }
+  }
+
+  private void notifyTriggerOfStart() {
+    if (mTriggerInfo != null) {
+      final Trigger trigger = mTriggerInfo.getTrigger();
+      if (trigger != null) {
+        trigger.beforeTrigger(this, mTriggerInfo);
+      } else {
+        AseLog.w("Found TriggerInfo object without Trigger.");
+      }
+    }
   }
 
   @Override
