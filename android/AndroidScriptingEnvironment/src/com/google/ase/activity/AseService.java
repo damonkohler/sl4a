@@ -58,6 +58,9 @@ public class AseService extends Service {
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
     mTriggerInfo = getTriggerInfo(intent);
+    if (mTriggerInfo != null) {
+      AseLog.e("Trigger = " + mTriggerInfo.getId());
+    }
     notifyTriggerOfStart();
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
       launchServer(intent);

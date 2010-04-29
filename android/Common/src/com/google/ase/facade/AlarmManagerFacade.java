@@ -99,7 +99,7 @@ public class AlarmManagerFacade implements RpcReceiver {
 
   @Rpc(description = "cancels all scheduled regular executions of a given script")
   public void cancelRepeating(@RpcParameter(name = "script") String script) {
-    mAlarmManager.cancelRepeating(script);
+    mAlarmManager.cancelByScriptName(script);
   }
 
   /** Returns the current time, in seconds since epoch. */

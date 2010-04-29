@@ -107,7 +107,7 @@ public class AlarmTriggerManager {
    * @param script
    *          name of the script whose scheduled invocation to cancel
    */
-  public void cancelRepeating(final String script) {
+  public void cancelByScriptName(final String script) {
     mTriggerRepository.removeTriggers(new TriggerRepository.TriggerFilter() {
       @Override
       public boolean matches(TriggerInfo info) {
@@ -120,6 +120,17 @@ public class AlarmTriggerManager {
         }
       }
     });
+  }
+  
+  /**
+   * Cancels the scheduled execution of the trigger with the given id.
+   * 
+   * @param triggerId id of the trigger to cancel
+   */
+  public void cancelById(final long triggerId) {
+    final TriggerInfo info = mTriggerRepository.getById(triggerId);
+    mAlarmManager.cancel(IntentBuilders.buildTriggerIntent(mContext, info));
+    mTriggerRepository.removeTrigger(triggerId);
   }
 
   private long convertSecondsToMilliseconds(double seconds) {

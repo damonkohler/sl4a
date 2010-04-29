@@ -20,6 +20,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Parcelable;
 
 import com.google.ase.trigger.TriggerRepository.TriggerInfo;
@@ -111,6 +112,8 @@ public class IntentBuilders {
   public static PendingIntent buildTriggerIntent(Context context, TriggerInfo info) {
     final Intent intent = buildStartInBackgroundIntent(info.getTrigger().getScriptName());
     intent.putExtra(Constants.EXTRA_TRIGGER_ID, info.getId());
+    intent.setData(Uri.fromParts("trigger", info.getTrigger().getScriptName().toLowerCase(),
+        "" + info.getId()));
     intent.setComponent(Constants.ASE_SERVICE_COMPONENT_NAME);
     return PendingIntent.getService(context, EXECUTE_SCRIPT_REQUEST_CODE, intent,
         PendingIntent.FLAG_UPDATE_CURRENT);

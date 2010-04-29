@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.google.ase.ActivityFlinger;
 import com.google.ase.AseAnalytics;
@@ -130,10 +131,15 @@ public class TriggerManager extends ListActivity {
     }
 
     if (item.getItemId() == ContextMenuId.REMOVE.getId()) {
-      mAlarmTriggerManager.cancelRepeating(triggerInfo.getTrigger().getScriptName());
+      mAlarmTriggerManager.cancelById(triggerInfo.getId());
     }
     mAdapter.notifyDataSetInvalidated();
     return true;
+  }
+  
+  @Override
+  public void onListItemClick(ListView l, View v, int position, long id) {
+    mAdapter.notifyDataSetInvalidated();
   }
 
   private class TriggerListObserver extends DataSetObserver {
@@ -151,7 +157,7 @@ public class TriggerManager extends ListActivity {
     }
 
     @Override
-    public Object getItem(int position) {
+    public TriggerInfo getItem(int position) {
       return mTriggerInfoList.get(position);
     }
 
