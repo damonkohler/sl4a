@@ -57,11 +57,14 @@ public class AseService extends Service {
   @Override
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
-    mTriggerInfo = getTriggerInfo(intent);
-    if (mTriggerInfo != null) {
-      AseLog.e("Trigger = " + mTriggerInfo.getId());
+
+    // TODO: Right now, only one interpreter execution is supported concurrently.
+    //       When this changes, we need to support multiple trigger notifications as well.
+    if (mTriggerInfo == null) {
+      mTriggerInfo = getTriggerInfo(intent);
+      notifyTriggerOfStart();
     }
-    notifyTriggerOfStart();
+
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
       launchServer(intent);
       showNotification();

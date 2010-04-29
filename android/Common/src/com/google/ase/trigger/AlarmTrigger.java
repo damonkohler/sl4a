@@ -31,6 +31,7 @@ public class AlarmTrigger extends Trigger {
   
   @Override
   public void beforeTrigger(Context context, TriggerInfo info) {
+    super.beforeTrigger(context, info);
     // This trigger will only fire once: remove it from the repository.
     info.remove();
   }
