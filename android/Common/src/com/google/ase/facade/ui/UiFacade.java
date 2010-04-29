@@ -61,22 +61,20 @@ public class UiFacade implements RpcReceiver {
   @Rpc(description = "Create a spinner progress dialog.")
   public void dialogCreateSpinnerProgress(@RpcParameter(name = "Title") @RpcOptional String title,
       @RpcParameter(name = "Message") @RpcOptional String message,
-      @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max,
-      @RpcParameter(name = "cancelable") @RpcDefault("false") Boolean cancelable) {
+      @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
-        new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, max, title, message, cancelable);
+        new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, max, title, message, true);
   }
 
   @Rpc(description = "Create a horizontal progress dialog.")
   public void dialogCreateHorizontalProgress(
       @RpcParameter(name = "Title") @RpcOptional String title,
       @RpcParameter(name = "Message") @RpcOptional String message,
-      @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max,
-      @RpcParameter(name = "cancelable") @RpcDefault("false") Boolean cancelable) {
+      @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
-        new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title, message, cancelable);
+        new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title, message, true);
   }
 
   @Rpc(description = "Create alert dialog.")
