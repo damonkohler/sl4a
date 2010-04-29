@@ -64,6 +64,59 @@ public class JsonRpcServer {
   private Thread mServerThread;
   private final CopyOnWriteArraySet<Thread> mNetworkThreads;
 
+  private final class ConnectionThread extends Thread {
+    private final Socket mmSocket;
+    private BufferedReader mmReader;
+    private PrintWriter mmWriter;
+
+    private ConnectionThread(Socket sock) {
+      mmSocket = sock;
+    }
+
+    @Override
+    public void run() {
+      AseLog.v("Server thread " + getId() + " started.");
+      try {
+        mmReader = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()));
+        mmWriter = new PrintWriter(mmSocket.getOutputStream(), true);
+        process();
+      } catch (Exception e) {
+        AseLog.e("Server error.", e);
+      } finally {
+        mNetworkThreads.remove(this);
+        AseLog.v("Server thread " + getId() + " died.");
+      }
+    }
+
+    private void process() throws JSONException, IOException {
+      String data;
+      while ((data = mmReader.readLine()) != null) {
+        AseLog.v("Received: " + data);
+        JSONObject request = new JSONObject(data);
+        int id = request.getInt("id");
+        String method = request.getString("method");
+        JSONArray params = request.getJSONArray("params");
+        RpcInfo rpc = mKnownRpcs.get(method);
+        if (rpc == null) {
+          send(JsonRpcResult.error(id, new RpcError("Unknown RPC.")));
+          continue;
+        }
+        try {
+          send(JsonRpcResult.result(id, rpc.invoke(params)));
+        } catch (Throwable t) {
+          AseLog.e("Invocation error.", t);
+          send(JsonRpcResult.error(id, t));
+        }
+      }
+    }
+
+    private void send(JSONObject result) {
+      mmWriter.write(result + "\n");
+      mmWriter.flush();
+      AseLog.v("Sent: " + result);
+    }
+  }
+
   /**
    * Construct a {@link JsonRpcServer} connected to the provided {@link RpcReceiver}s.
    * 
@@ -165,59 +218,9 @@ public class JsonRpcServer {
   }
 
   private void startConnectionThread(final Socket sock) {
-    final Thread networkThread = new Thread() {
-      @Override
-      public void run() {
-        AseLog.v("Server thread " + getId() + " started.");
-        try {
-          BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-          PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
-          process(in, out);
-        } catch (Exception e) {
-          AseLog.e("Server error.", e);
-        } finally {
-          mNetworkThreads.remove(this);
-          AseLog.v("Server thread " + getId() + " died.");
-        }
-      }
-    };
-
+    Thread networkThread = new ConnectionThread(sock);
     mNetworkThreads.add(networkThread);
     networkThread.start();
-  }
-
-  private void process(BufferedReader in, PrintWriter out) throws JSONException, IOException {
-    String data;
-    while ((data = in.readLine()) != null) {
-      AseLog.v("Received: " + data);
-      JSONObject request = new JSONObject(data);
-      JSONObject result = JsonRpcResult.empty();
-      try {
-        result = call(request);
-      } catch (Exception e) {
-        result = JsonRpcResult.error(e);
-      } finally {
-        result.put("id", request.getInt("id"));
-        out.write(result + "\n");
-        out.flush();
-        AseLog.v("Sent: " + result);
-      }
-    }
-  }
-
-  private JSONObject call(JSONObject request) throws JSONException, RpcError {
-    // The JSON RPC spec says that id can be any object. To make our lives a
-    // little easier, we'll assume it's always a number.
-    String methodName = request.getString("method");
-    JSONArray params = request.getJSONArray("params");
-    JSONObject result;
-    RpcInfo rpcInfo = mKnownRpcs.get(methodName);
-    if (rpcInfo == null) {
-      throw new RpcError("Unknown RPC.");
-    } else {
-      result = rpcInfo.invoke(params);
-    }
-    return result;
   }
 
   public void shutdown() {

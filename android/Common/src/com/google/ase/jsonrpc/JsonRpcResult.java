@@ -32,22 +32,25 @@ public class JsonRpcResult {
     // Utility class.
   }
 
-  public static JSONObject empty() throws JSONException {
+  public static JSONObject empty(int id) throws JSONException {
     JSONObject json = new JSONObject();
+    json.put("id", id);
     json.put("result", JSONObject.NULL);
     json.put("error", JSONObject.NULL);
     return json;
   }
 
-  public static JSONObject result(Object data) throws JSONException {
+  public static JSONObject result(int id, Object data) throws JSONException {
     JSONObject json = new JSONObject();
+    json.put("id", id);
     json.put("result", JsonBuilder.build(data));
     json.put("error", JSONObject.NULL);
     return json;
   }
 
-  public static JSONObject error(Throwable t) throws JSONException {
+  public static JSONObject error(int id, Throwable t) throws JSONException {
     JSONObject json = new JSONObject();
+    json.put("id", id);
     json.put("result", JSONObject.NULL);
     json.put("error", t.getMessage());
     return json;

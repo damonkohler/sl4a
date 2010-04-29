@@ -21,7 +21,6 @@ import java.lang.reflect.Type;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.ase.AseLog;
 import com.google.ase.rpc.MethodDescriptor;
@@ -53,7 +52,7 @@ public final class RpcInfo {
    * @throws RpcError
    * @throws JSONException
    */
-  public JSONObject invoke(final JSONArray parameters) throws RpcError, JSONException {
+  public Object invoke(final JSONArray parameters) throws RpcError, JSONException {
     final Type[] parameterTypes = mMethodDescriptor.getGenericParameterTypes();
     final Object[] args = new Object[parameterTypes.length];
     final Annotation annotations[][] = mMethodDescriptor.getParameterAnnotations();
@@ -77,7 +76,7 @@ public final class RpcInfo {
       AseLog.e("Invocation error.", e.getCause());
       throw new RpcError(e.getCause().getMessage());
     }
-    return JsonRpcResult.result(result);
+    return result;
   }
 
   /**
