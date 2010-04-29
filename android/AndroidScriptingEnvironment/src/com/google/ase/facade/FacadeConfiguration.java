@@ -59,6 +59,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SmsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(CameraFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(PowerManagerFacade.class));
 
     // Bluetooth is not available before Android 2.0.
     try {
@@ -122,6 +123,7 @@ public class FacadeConfiguration {
     receivers.add(new AlarmManagerFacade(service, eventFacade, triggerRepository));
     receivers.add(new SmsFacade(service));
     receivers.add(new CameraFacade());
+    receivers.add(new PowerManagerFacade(service));
 
     // Bluetooth is not available before Android 2.0.
     try {
