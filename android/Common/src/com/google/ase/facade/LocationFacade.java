@@ -16,9 +16,14 @@
 
 package com.google.ase.facade;
 
+import java.io.IOException;
+import java.util.List;
+
 import android.app.Service;
 import android.content.Context;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -32,14 +37,17 @@ import com.google.ase.rpc.RpcParameter;
 /**
  * This facade exposes the LocationManager related functionality.
  * 
- * @author Damon Kohler (damonkohler@gmail.com) Felix Arends (felix.arends@gmail.com)
+ * @author Damon Kohler (damonkohler@gmail.com)
+ * @author Felix Arends (felix.arends@gmail.com)
  */
-public class LocationManagerFacade implements RpcReceiver {
+public class LocationFacade implements RpcReceiver {
   EventFacade mEventFacade;
   Service mService;
 
   private Location mLocation;
   private final LocationManager mLocationManager;
+  private final Geocoder mGeocoder;
+
   private final LocationListener mLocationListener = new LocationListener() {
     @Override
     public void onLocationChanged(Location location) {
@@ -60,9 +68,10 @@ public class LocationManagerFacade implements RpcReceiver {
     }
   };
 
-  public LocationManagerFacade(Service service, EventFacade eventFacade) {
-    this.mEventFacade = eventFacade;
-    this.mService = service;
+  public LocationFacade(Service service, EventFacade eventFacade) {
+    mService = service;
+    mEventFacade = eventFacade;
+    mGeocoder = new Geocoder(mService);
     mLocationManager = (LocationManager) service.getSystemService(Context.LOCATION_SERVICE);
   }
 
@@ -104,5 +113,14 @@ public class LocationManagerFacade implements RpcReceiver {
       location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
     }
     return location;
+  }
+
+  @Rpc(description = "Returns a list of addresses for the given latitude and longitude.", returns = "A list of addresses.")
+  public List<Address> geocode(
+      @RpcParameter(name = "latitude") Double latitude,
+      @RpcParameter(name = "longitude") Double longitude,
+      @RpcParameter(name = "maxResults", description = "max. no. of results") @RpcDefault("1") Integer maxResults)
+      throws IOException {
+    return mGeocoder.getFromLocation(latitude, longitude, maxResults);
   }
 }

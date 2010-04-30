@@ -16,7 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -37,8 +36,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -77,7 +74,6 @@ public class AndroidFacade implements RpcReceiver {
   private final ActivityManager mActivityManager;
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
-  private final Geocoder mGeocoder;
   private final TextToSpeechFacade mTts;
 
   private final Resources mResources;
@@ -101,7 +97,6 @@ public class AndroidFacade implements RpcReceiver {
     mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);
     mNotificationManager =
         (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
-    mGeocoder = new Geocoder(mService);
     mTts = new TextToSpeechFacade(service);
     mResources = resources;
   }
@@ -118,15 +113,6 @@ public class AndroidFacade implements RpcReceiver {
     ClipboardManager clipboard =
         (ClipboardManager) mService.getSystemService(Context.CLIPBOARD_SERVICE);
     return clipboard.getText().toString();
-  }
-
-  @Rpc(description = "Returns a list of addresses for the given latitude and longitude.", returns = "A list of addresses.")
-  public List<Address> geocode(
-      @RpcParameter(name = "latitude") Double latitude,
-      @RpcParameter(name = "longitude") Double longitude,
-      @RpcParameter(name = "maxResults", description = "max. no. of results") @RpcDefault("1") Integer maxResults)
-      throws IOException {
-    return mGeocoder.getFromLocation(latitude, longitude, maxResults);
   }
 
   Intent startActivityForResult(final Intent intent) {

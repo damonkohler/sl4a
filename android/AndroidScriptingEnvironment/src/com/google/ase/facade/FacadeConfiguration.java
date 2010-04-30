@@ -54,7 +54,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(AlarmManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SensorManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(EventFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(LocationManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(LocationFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SettingsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SmsFacade.class));
@@ -118,7 +118,7 @@ public class FacadeConfiguration {
     receivers.add(new TextToSpeechFacade(service));
     receivers.add(new SpeechRecognitionFacade(androidFacade));
     receivers.add(new SensorManagerFacade(service, eventFacade));
-    receivers.add(new LocationManagerFacade(service, eventFacade));
+    receivers.add(new LocationFacade(service, eventFacade));
     receivers.add(new TelephonyManagerFacade(service, eventFacade));
     receivers.add(new AlarmManagerFacade(service, eventFacade, triggerRepository));
     receivers.add(new SmsFacade(service));
