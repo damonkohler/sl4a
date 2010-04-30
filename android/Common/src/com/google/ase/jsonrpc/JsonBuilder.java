@@ -175,5 +175,4 @@ public class JsonBuilder {
     result.put("capabilities", scanResult.capabilities);
     return result;
   }
-
 }

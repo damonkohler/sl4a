@@ -2,32 +2,50 @@ package com.google.ase.facade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
 
-public class ActivityManagerFacade implements RpcReceiver {
+public class ApplicationManagerFacade implements RpcReceiver {
 
   private final Service mService;
   private final AndroidFacade mAndroidFacade;
   private final ActivityManager mActivityManager;
+  private final PackageManager mPackageManager;
 
-  public ActivityManagerFacade(Service service, AndroidFacade androidFacade) {
+  public ApplicationManagerFacade(Service service, AndroidFacade androidFacade) {
     mService = service;
     mAndroidFacade = androidFacade;
     mActivityManager = (ActivityManager) mService.getSystemService(Context.ACTIVITY_SERVICE);
+    mPackageManager = mService.getPackageManager();
   }
 
-  @Rpc(description = "Start activity with the given class name (i.e. Browser, Maps, etc.).")
+  @Rpc(description = "Returns a list of all launchable application class names.")
+  public Map<String, String> getLaunchableApplications() {
+    Intent intent = new Intent(Intent.ACTION_MAIN);
+    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+    List<ResolveInfo> resolveInfos = mPackageManager.queryIntentActivities(intent, 0);
+    Map<String, String> applications = new HashMap<String, String>();
+    for (ResolveInfo info : resolveInfos) {
+      applications.put(info.loadLabel(mPackageManager).toString(), info.activityInfo.name);
+    }
+    return applications;
+  }
+
+  @Rpc(description = "Start activity with the given class name.")
   public void launch(@RpcParameter(name = "className") String className) {
     Intent intent = new Intent(Intent.ACTION_MAIN);
     String packageName = className.substring(0, className.lastIndexOf("."));

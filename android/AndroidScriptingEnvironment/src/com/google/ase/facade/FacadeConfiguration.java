@@ -61,7 +61,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(CameraFacade.class));
     list.addAll(MethodDescriptor.collectFrom(PowerManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(WifiFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(ActivityManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(ApplicationManagerFacade.class));
 
     // Bluetooth is not available before Android 2.0.
     try {
@@ -127,7 +127,7 @@ public class FacadeConfiguration {
     receivers.add(new CameraFacade());
     receivers.add(new PowerManagerFacade(service));
     receivers.add(new WifiFacade(service));
-    receivers.add(new ActivityManagerFacade(service, androidFacade));
+    receivers.add(new ApplicationManagerFacade(service, androidFacade));
 
     // Bluetooth is not available before Android 2.0.
     try {
