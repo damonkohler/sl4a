@@ -16,15 +16,9 @@
 
 package com.google.ase.facade;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -71,7 +65,6 @@ public class AndroidFacade implements RpcReceiver {
   private final Intent mIntent;
   private final Queue<FutureActivityTask> mTaskQueue;
 
-  private final ActivityManager mActivityManager;
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
   private final TextToSpeechFacade mTts;
@@ -93,7 +86,6 @@ public class AndroidFacade implements RpcReceiver {
     mService = service;
     mIntent = intent;
     mTaskQueue = ((AseApplication) mService.getApplication()).getTaskQueue();
-    mActivityManager = (ActivityManager) mService.getSystemService(Context.ACTIVITY_SERVICE);
     mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);
     mNotificationManager =
         (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -157,7 +149,7 @@ public class AndroidFacade implements RpcReceiver {
     return startActivityForResult(Intent.ACTION_PICK, uri);
   }
 
-  private void startActivity(final Intent intent) {
+  void startActivity(final Intent intent) {
     try {
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       mService.startActivity(intent);
@@ -179,14 +171,6 @@ public class AndroidFacade implements RpcReceiver {
   @Rpc(description = "Start activity with view action by URI (i.e. browser, contacts, etc.).")
   public void view(@RpcParameter(name = "uri") String uri) {
     startActivity(Intent.ACTION_VIEW, uri);
-  }
-
-  @Rpc(description = "Start activity with the given class name (i.e. Browser, Maps, etc.).")
-  public void launch(@RpcParameter(name = "className") String className) {
-    Intent intent = new Intent(Intent.ACTION_MAIN);
-    String packageName = className.substring(0, className.lastIndexOf("."));
-    intent.setClassName(packageName, className);
-    startActivity(intent);
   }
 
   @Rpc(description = "Vibrates the phone or a specified duration in milliseconds.")
@@ -349,28 +333,6 @@ public class AndroidFacade implements RpcReceiver {
   @Rpc(description = "Returns an extra value that was specified in the launch intent.", returns = "The extra value.")
   public Object getExtra(@RpcParameter(name = "name") String name) {
     return mIntent.getExtras().get(name);
-  }
-
-  @Rpc(description = "Returns a list of packages running activities or services.", returns = "List of packages running activities.")
-  public List<String> getRunningPackages() {
-    Set<String> runningPackages = new HashSet<String>();
-    List<ActivityManager.RunningAppProcessInfo> appProcesses =
-        mActivityManager.getRunningAppProcesses();
-    for (ActivityManager.RunningAppProcessInfo info : appProcesses) {
-      runningPackages.addAll(Arrays.asList(info.pkgList));
-    }
-    List<ActivityManager.RunningServiceInfo> serviceProcesses =
-        mActivityManager.getRunningServices(Integer.MAX_VALUE);
-    for (ActivityManager.RunningServiceInfo info : serviceProcesses) {
-      runningPackages.add(info.service.getPackageName());
-    }
-    return new ArrayList<String>(runningPackages);
-  }
-
-  @Rpc(description = "Force stops a package.")
-  public void forceStopPackage(
-      @RpcParameter(name = "packageName", description = "name of package") String packageName) {
-    mActivityManager.restartPackage(packageName);
   }
 
   /**
