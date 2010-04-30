@@ -18,7 +18,9 @@ package com.google.ase.jsonrpc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +39,7 @@ public class JsonBuilder {
     // This is a utility class.
   }
 
+  @SuppressWarnings("unchecked")
   public static Object build(Object data) throws JSONException {
     if (data == null) {
       return JSONObject.NULL;
@@ -86,6 +89,10 @@ public class JsonBuilder {
     }
     if (data instanceof Event) {
       return buildJsonEvent((Event) data);
+    }
+    if (data instanceof Map<?, ?>) {
+      // TODO(damonkohler): I would like to make this a checked cast if possible.
+      return buildJsonMap((Map<String, ?>) data);
     }
     throw new JSONException("Failed to build JSON result.");
   }
@@ -144,6 +151,14 @@ public class JsonBuilder {
     JSONObject result = new JSONObject();
     result.put("name", event.getName());
     result.put("data", build(event.getData()));
+    return result;
+  }
+
+  private static JSONObject buildJsonMap(Map<String, ?> map) throws JSONException {
+    JSONObject result = new JSONObject();
+    for (Entry<String, ?> entry : map.entrySet()) {
+      result.put(entry.getKey(), build(entry.getValue()));
+    }
     return result;
   }
 }

@@ -17,12 +17,13 @@
 package com.google.ase.facade;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Service;
 import android.content.Context;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -41,18 +42,17 @@ import com.google.ase.rpc.RpcParameter;
  * @author Felix Arends (felix.arends@gmail.com)
  */
 public class LocationFacade implements RpcReceiver {
-  EventFacade mEventFacade;
-  Service mService;
-
-  private Location mLocation;
+  private final EventFacade mEventFacade;
+  private final Service mService;
+  private final Map<String, Location> mLocationUpdates;
   private final LocationManager mLocationManager;
   private final Geocoder mGeocoder;
 
   private final LocationListener mLocationListener = new LocationListener() {
     @Override
     public void onLocationChanged(Location location) {
-      mLocation = location;
-      mEventFacade.postEvent("location", mLocation);
+      mLocationUpdates.put(location.getProvider(), location);
+      mEventFacade.postEvent("location", mLocationUpdates);
     }
 
     @Override
@@ -73,6 +73,7 @@ public class LocationFacade implements RpcReceiver {
     mEventFacade = eventFacade;
     mGeocoder = new Geocoder(mService);
     mLocationManager = (LocationManager) service.getSystemService(Context.LOCATION_SERVICE);
+    mLocationUpdates = new HashMap<String, Location>();
   }
 
   @Override
@@ -82,35 +83,30 @@ public class LocationFacade implements RpcReceiver {
 
   @Rpc(description = "Starts collecting location data.")
   public void startLocating(
-      @RpcParameter(name = "accuracy", description = "String accuracy (\"fine\", \"coarse\")") @RpcDefault("coarse") String accuracy,
-      @RpcParameter(name = "minDistance", description = "minimum time between updates (milli-seconds)") @RpcDefault("60000") Integer minUpdateTimeMs,
-      @RpcParameter(name = "minUpdateDistance", description = "minimum distance between updates (meters)") @RpcDefault("30") Integer minUpdateDistanceM) {
-    Criteria criteria = new Criteria();
-    if (accuracy == "coarse") {
-      criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-    } else if (accuracy == "fine") {
-      criteria.setAccuracy(Criteria.ACCURACY_FINE);
+      @RpcParameter(name = "minDistance", description = "minimum time between updates in milliseconds") @RpcDefault("60000") Integer minUpdateTime,
+      @RpcParameter(name = "minUpdateDistance", description = "minimum distance between updates in meters") @RpcDefault("30") Integer minUpdateDistance) {
+    for (String provider : mLocationManager.getAllProviders()) {
+      mLocationManager.requestLocationUpdates(provider, minUpdateTime, minUpdateDistance,
+          mLocationListener, mService.getMainLooper());
     }
-    mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(criteria, true),
-        minUpdateTimeMs, minUpdateDistanceM, mLocationListener, mService.getMainLooper());
   }
 
-  @Rpc(description = "Returns the current location.", returns = "A map of location information.")
-  public Location readLocation() {
-    return mLocation;
+  @Rpc(description = "Returns the current location as indicated by all available providers.", returns = "A map of location information by provider.")
+  public Map<String, Location> readLocation() {
+    return mLocationUpdates;
   }
 
   @Rpc(description = "Stops collecting location data.")
   public void stopLocating() {
     mLocationManager.removeUpdates(mLocationListener);
-    mLocation = null;
+    mLocationUpdates.clear();
   }
 
-  @Rpc(description = "Returns the last known location of the device.", returns = "A map of location information.")
-  public Location getLastKnownLocation() {
-    Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-    if (location == null) {
-      location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+  @Rpc(description = "Returns the last known location of the device.", returns = "A map of location information by provider.")
+  public Map<String, Location> getLastKnownLocation() {
+    Map<String, Location> location = new HashMap<String, Location>();
+    for (String provider : mLocationManager.getAllProviders()) {
+      location.put(provider, mLocationManager.getLastKnownLocation(provider));
     }
     return location;
   }
@@ -119,7 +115,7 @@ public class LocationFacade implements RpcReceiver {
   public List<Address> geocode(
       @RpcParameter(name = "latitude") Double latitude,
       @RpcParameter(name = "longitude") Double longitude,
-      @RpcParameter(name = "maxResults", description = "max. no. of results") @RpcDefault("1") Integer maxResults)
+      @RpcParameter(name = "maxResults", description = "maximum number of results") @RpcDefault("1") Integer maxResults)
       throws IOException {
     return mGeocoder.getFromLocation(latitude, longitude, maxResults);
   }
