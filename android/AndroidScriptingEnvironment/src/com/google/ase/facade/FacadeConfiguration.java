@@ -60,6 +60,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(SmsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(CameraFacade.class));
     list.addAll(MethodDescriptor.collectFrom(PowerManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(WifiFacade.class));
 
     // Bluetooth is not available before Android 2.0.
     try {
@@ -101,17 +102,17 @@ public class FacadeConfiguration {
     TriggerRepository triggerRepository =
         ((AseApplication) service.getApplication()).getTriggerRepository();
 
-    AndroidFacade androidFacade =
-        new AndroidFacade(service, intent, new AndroidFacade.Resources() {
-          @Override
-          public int getAseLogo48() {
-            return R.drawable.ase_logo_48;
-          }
-        });
+    AndroidFacade androidFacade = new AndroidFacade(service, intent, new AndroidFacade.Resources() {
+      @Override
+      public int getAseLogo48() {
+        return R.drawable.ase_logo_48;
+      }
+    });
+
     EventFacade eventFacade = new EventFacade(service);
+
     receivers.add(androidFacade);
     receivers.add(eventFacade);
-
     receivers.add(new SettingsFacade(service));
     receivers.add(new UiFacade(service));
     receivers.add(new MediaFacade());
@@ -124,6 +125,7 @@ public class FacadeConfiguration {
     receivers.add(new SmsFacade(service));
     receivers.add(new CameraFacade());
     receivers.add(new PowerManagerFacade(service));
+    receivers.add(new WifiFacade(service));
 
     // Bluetooth is not available before Android 2.0.
     try {

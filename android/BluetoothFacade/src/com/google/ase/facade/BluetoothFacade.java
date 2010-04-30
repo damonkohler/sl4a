@@ -126,8 +126,6 @@ public class BluetoothFacade implements RpcReceiver {
     return null;
   }
 
-  // The following RPCs belong in the SettingsFacade namespace.
-
   @Rpc(description = "Checks Bluetooth state.", returns = "True if Bluetooth is enabled.")
   public Boolean checkBluetoothState() {
     return mBluetoothAdapter.isEnabled();

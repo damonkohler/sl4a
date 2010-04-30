@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 
 import com.google.ase.facade.Event;
@@ -93,6 +94,9 @@ public class JsonBuilder {
     if (data instanceof Map<?, ?>) {
       // TODO(damonkohler): I would like to make this a checked cast if possible.
       return buildJsonMap((Map<String, ?>) data);
+    }
+    if (data instanceof ScanResult) {
+      return buildJsonScanResult((ScanResult) data);
     }
     throw new JSONException("Failed to build JSON result.");
   }
@@ -161,4 +165,15 @@ public class JsonBuilder {
     }
     return result;
   }
+
+  private static JSONObject buildJsonScanResult(ScanResult scanResult) throws JSONException {
+    JSONObject result = new JSONObject();
+    result.put("bssid", scanResult.BSSID);
+    result.put("ssid", scanResult.SSID);
+    result.put("frequency", scanResult.frequency);
+    result.put("level", scanResult.level);
+    result.put("capabilities", scanResult.capabilities);
+    return result;
+  }
+
 }

@@ -20,7 +20,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.net.wifi.WifiManager;
 import android.provider.Settings.SettingNotFoundException;
 
 import com.google.ase.jsonrpc.RpcReceiver;
@@ -40,7 +39,6 @@ public class SettingsFacade implements RpcReceiver {
 
   private final Service mService;
   private final AudioManager mAudio;
-  private final WifiManager mWifi;
 
   /**
    * Creates a new SettingsFacade.
@@ -50,7 +48,6 @@ public class SettingsFacade implements RpcReceiver {
    */
   public SettingsFacade(Service service) {
     mService = service;
-    mWifi = (WifiManager) mService.getSystemService(Context.WIFI_SERVICE);
     mAudio = (AudioManager) mService.getSystemService(Context.AUDIO_SERVICE);
   }
 
@@ -119,21 +116,6 @@ public class SettingsFacade implements RpcReceiver {
   @Rpc(description = "Sets the ringer volume.")
   public void setRingerVolume(@RpcParameter(name = "volume") Integer volume) {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
-  }
-
-  @Rpc(description = "Checks Wifi state.", returns = "True if Wifi is enabled.")
-  public Boolean checkWifiState() {
-    return mWifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
-        || mWifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
-  }
-
-  @Rpc(description = "Toggle Wifi on and off.", returns = "True if Wifi is enabled.")
-  public Boolean toggleWifiState(@RpcParameter(name = "enabled") @RpcOptional Boolean enabled) {
-    if (enabled == null) {
-      enabled = !checkWifiState();
-    }
-    mWifi.setWifiEnabled(enabled);
-    return enabled;
   }
 
   @Override
