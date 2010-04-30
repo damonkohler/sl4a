@@ -26,7 +26,10 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.location.Address;
+import android.location.Location;
 import android.os.Bundle;
+
+import com.google.ase.facade.Event;
 
 public class JsonBuilder {
 
@@ -72,11 +75,17 @@ public class JsonBuilder {
     if (data instanceof Address) {
       return buildJsonAddress((Address) data);
     }
+    if (data instanceof Location) {
+      return buildJsonLocation((Location) data);
+    }
     if (data instanceof Bundle) {
       return buildJsonBundle((Bundle) data);
     }
     if (data instanceof Intent) {
       return buildJsonIntent((Intent) data);
+    }
+    if (data instanceof Event) {
+      return buildJsonEvent((Event) data);
     }
     throw new JSONException("Failed to build JSON result.");
   }
@@ -104,6 +113,18 @@ public class JsonBuilder {
     return result;
   }
 
+  private static JSONObject buildJsonLocation(Location location) throws JSONException {
+    JSONObject result = new JSONObject();
+    result.put("altitude", location.getAltitude());
+    result.put("latitude", location.getLatitude());
+    result.put("longitude", location.getLongitude());
+    result.put("time", location.getTime());
+    result.put("accuracy", location.getAccuracy());
+    result.put("speed", location.getSpeed());
+    result.put("provider", location.getProvider());
+    return result;
+  }
+
   private static JSONObject buildJsonBundle(Bundle bundle) throws JSONException {
     JSONObject result = new JSONObject();
     for (String key : bundle.keySet()) {
@@ -119,4 +140,10 @@ public class JsonBuilder {
     return result;
   }
 
+  private static JSONObject buildJsonEvent(Event event) throws JSONException {
+    JSONObject result = new JSONObject();
+    result.put("name", event.getName());
+    result.put("data", build(event.getData()));
+    return result;
+  }
 }

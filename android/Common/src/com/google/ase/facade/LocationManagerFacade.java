@@ -30,21 +30,20 @@ import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
 
 /**
- * This facade exposes the LocationManager related functionality. 
+ * This facade exposes the LocationManager related functionality.
  * 
- * @author Damon Kohler (damonkohler@gmail.com)
- *         Felix Arends (felix.arends@gmail.com)
+ * @author Damon Kohler (damonkohler@gmail.com) Felix Arends (felix.arends@gmail.com)
  */
 public class LocationManagerFacade implements RpcReceiver {
   EventFacade mEventFacade;
   Service mService;
-  
-  private Bundle mLocation;
+
+  private Location mLocation;
   private final LocationManager mLocationManager;
   private final LocationListener mLocationListener = new LocationListener() {
     @Override
     public void onLocationChanged(Location location) {
-      mLocation = buildLocationBundle(location);
+      mLocation = location;
       mEventFacade.postEvent("location", mLocation);
     }
 
@@ -64,7 +63,7 @@ public class LocationManagerFacade implements RpcReceiver {
   public LocationManagerFacade(Service service, EventFacade eventFacade) {
     this.mEventFacade = eventFacade;
     this.mService = service;
-    mLocationManager = (LocationManager)service.getSystemService(Context.LOCATION_SERVICE);
+    mLocationManager = (LocationManager) service.getSystemService(Context.LOCATION_SERVICE);
   }
 
   @Override
@@ -88,10 +87,7 @@ public class LocationManagerFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Returns the current location.", returns = "A map of location information.")
-  // TODO(damonkohler): It might be nice to have a version of this method that
-  // automatically starts locating and keeps locating until no more requests are
-  // received for before some time out.
-  public Bundle readLocation() {
+  public Location readLocation() {
     return mLocation;
   }
 
@@ -102,23 +98,11 @@ public class LocationManagerFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Returns the last known location of the device.", returns = "A map of location information.")
-  public Bundle getLastKnownLocation() {
+  public Location getLastKnownLocation() {
     Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     if (location == null) {
       location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
     }
-    return buildLocationBundle(location);
-  } 
-
-  private Bundle buildLocationBundle(Location location) {
-    Bundle bundle = new Bundle();
-    bundle.putDouble("altitude", location.getAltitude());
-    bundle.putDouble("latitude", location.getLatitude());
-    bundle.putDouble("longitude", location.getLongitude());
-    bundle.putLong("time", location.getTime());
-    bundle.putFloat("accuracy", location.getAccuracy());
-    bundle.putFloat("speed", location.getSpeed());
-    bundle.putString("provider", location.getProvider());
-    return bundle;
+    return location;
   }
 }

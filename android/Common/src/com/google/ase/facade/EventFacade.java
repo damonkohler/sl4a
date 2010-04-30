@@ -21,7 +21,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.app.Service;
 import android.content.Context;
-import android.os.Bundle;
 
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
@@ -39,7 +38,7 @@ public class EventFacade implements RpcReceiver {
    * exceeded.
    */
   private static final int MAX_QUEUE_SIZE = 1024;
-  final Queue<Bundle> mEventQueue = new ConcurrentLinkedQueue<Bundle>();
+  final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
   final Context mService;
 
   public EventFacade(final Service service) {
@@ -47,30 +46,18 @@ public class EventFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Receives the most recent event (i.e. location or sensor update, etc.)", returns = "Map of event properties.")
-  public Bundle receiveEvent() {
+  public Event receiveEvent() {
     return mEventQueue.poll();
   }
 
   /**
    * Posts an event on the event queue.
    */
-  void postEvent(String name, Bundle bundle) {
-    Bundle event = new Bundle(bundle);
-    event.putString("name", name);
-    mEventQueue.add(event);
+  void postEvent(String name, Object data) {
+    mEventQueue.add(new Event(name, data));
     if (mEventQueue.size() > MAX_QUEUE_SIZE) {
       mEventQueue.remove();
     }
-  }
-
-  /**
-   * Posts a simple event to the event queue.
-   */
-  void postEvent(String name, String message) {
-    Bundle event = new Bundle();
-    event.putString("name", name);
-    event.putString("message", message);
-    mEventQueue.add(event);
   }
 
   @Override
