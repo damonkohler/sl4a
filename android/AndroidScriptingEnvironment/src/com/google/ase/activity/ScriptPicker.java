@@ -34,7 +34,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.ase.AseAnalytics;
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
@@ -58,7 +57,6 @@ public class ScriptPicker extends ListActivity {
     mAdapter = new ScriptPickerAdapter();
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
-    setResult(RESULT_CANCELED); // Default to canceled if we were started for result.
     AseAnalytics.trackActivity(this);
   }
 
@@ -80,8 +78,6 @@ public class ScriptPicker extends ListActivity {
               }
               if (intent != null) {
                 setResult(RESULT_OK, intent);
-              } else {
-                setResult(RESULT_CANCELED, null);
               }
               finish();
             }
@@ -108,8 +104,6 @@ public class ScriptPicker extends ListActivity {
               }
               if (intent != null) {
                 setResult(RESULT_OK, intent);
-              } else {
-                setResult(RESULT_CANCELED, null);
               }
               finish();
             }
@@ -119,18 +113,28 @@ public class ScriptPicker extends ListActivity {
     }
 
     if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
-      Intent intent = new Intent();
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
-      // Set the description of the action.
+      final Intent intent = new Intent();
       if (script.getName().length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
         intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName().substring(0,
             com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH));
       } else {
         intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName());
       }
-      setResult(RESULT_OK, intent);
-      AseLog.v("Returned launch intent for " + script.getName() + " to Locale: " + intent.toURI());
-      finish();
+
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setItems(new CharSequence[] { "Start in Terminal", "Start in Background" },
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              Bundle storeAndForwardExtras = new Bundle();
+              storeAndForwardExtras.putString(Constants.EXTRA_SCRIPT_NAME, script.getName());
+              storeAndForwardExtras.putBoolean(Constants.EXTRA_LAUNCH_IN_BACKGROUND, (which == 1));
+              intent.putExtra(com.twofortyfouram.Intent.EXTRA_BUNDLE, storeAndForwardExtras);
+              setResult(RESULT_OK, intent);
+              finish();
+            }
+          });
+      builder.show();
       return;
     }
   }

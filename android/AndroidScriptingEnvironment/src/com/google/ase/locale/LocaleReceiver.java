@@ -30,6 +30,13 @@ public class LocaleReceiver extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     String scriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     Log.v("LocaleReceiver", "Locale initiated launch of " + scriptName);
-    context.startActivity(IntentBuilders.buildStartInTerminalIntent(scriptName));
+    Intent launchIntent;
+    if (intent.getBooleanExtra(Constants.EXTRA_LAUNCH_IN_BACKGROUND, false)) {
+      launchIntent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
+    } else {
+      launchIntent = IntentBuilders.buildStartInTerminalIntent(scriptName);
+    }
+    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    context.startActivity(launchIntent);
   }
 }

@@ -50,6 +50,8 @@ public class Constants {
   public static final String EXTRA_PROXY_PORT = "com.google.ase.extra.PROXY_PORT";
   public static final String EXTRA_IS_NEW_SCRIPT = "com.google.ase.extra.IS_NEW_SCRIPT";
   public static final String EXTRA_TRIGGER_ID = "com.google.ase.extra.EXTRA_TRIGGER_ID";
+  public static final String EXTRA_LAUNCH_IN_BACKGROUND =
+      "com.google.ase.extra.EXTRA_LAUNCH_IN_BACKGROUND";
 
   // BluetoothDeviceManager
   public static final String EXTRA_DEVICE_ADDRESS = "com.google.ase.extra.device_address";
