@@ -111,6 +111,9 @@ public class AndroidFacade implements RpcReceiver {
     FutureActivityTask task = new FutureActivityTask() {
       @Override
       public void run(Activity activity, FutureIntent result) {
+        // TODO(damonkohler): Throwing an exception here (e.g. specifying a non-existent activity)
+        // causes a force close. There needs to be a way to pass back an error condition from the
+        // helper.
         activity.startActivityForResult(intent, 0);
       }
     };
