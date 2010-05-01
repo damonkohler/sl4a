@@ -158,7 +158,7 @@ public class AndroidFacade implements RpcReceiver {
     }
   }
 
-  @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
+  @Rpc(description = "Starts an activity.")
   public void startActivity(@RpcParameter(name = "action") final String action,
       @RpcParameter(name = "uri") @RpcOptional final String uri) {
     Intent intent = new Intent(action);

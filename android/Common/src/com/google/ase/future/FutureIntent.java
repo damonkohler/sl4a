@@ -17,7 +17,6 @@
 package com.google.ase.future;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -26,7 +25,7 @@ import android.content.Intent;
 
 /**
  * FutureIntent represents an eventual Intent result object for asynchronous operations.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class FutureIntent implements Future<Intent> {
@@ -45,14 +44,13 @@ public class FutureIntent implements Future<Intent> {
   }
 
   @Override
-  public Intent get() throws InterruptedException, ExecutionException {
+  public Intent get() throws InterruptedException {
     mLatch.await();
     return mIntent;
   }
 
   @Override
-  public Intent get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException,
-      TimeoutException {
+  public Intent get(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
     mLatch.await(timeout, unit);
     return mIntent;
   }

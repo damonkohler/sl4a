@@ -32,7 +32,7 @@ import com.google.ase.future.FutureIntent;
  * This {@link Activity} is launched by the {@link AseService} in order to perform operations that a
  * {@link Service} is unable to do. For example: start another activity for result, show dialogs,
  * etc.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class AseServiceHelper extends Activity {
