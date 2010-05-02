@@ -257,10 +257,7 @@ public class ScriptManager extends ListActivity {
     if (resultCode == RESULT_OK) {
       switch (request) {
       case QRCODE_ADD:
-        String contents[] = data.getStringExtra("SCAN_RESULT").split("\n", 2);
-        String title = contents[0];
-        String body = contents[1];
-        ScriptStorageAdapter.writeScript(title, body);
+        writeScriptFromBarcode(data);
         break;
       default:
         break;
@@ -274,6 +271,22 @@ public class ScriptManager extends ListActivity {
       }
     }
     mAdapter.notifyDataSetInvalidated();
+  }
+
+  private void writeScriptFromBarcode(Intent data) {
+    String result = data.getStringExtra("SCAN_RESULT");
+    if (result == null) {
+      AseLog.e(this, "Invalid QR code content.");
+      return;
+    }
+    String contents[] = result.split("\n", 2);
+    if (contents.length != 2) {
+      AseLog.e(this, "Invalid QR code content.");
+      return;
+    }
+    String title = contents[0];
+    String body = contents[1];
+    ScriptStorageAdapter.writeScript(title, body);
   }
 
   private class ScriptListObserver extends DataSetObserver {
