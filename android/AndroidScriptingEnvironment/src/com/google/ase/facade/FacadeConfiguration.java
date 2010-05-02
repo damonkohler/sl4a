@@ -49,7 +49,6 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(AndroidFacade.class));
     list.addAll(MethodDescriptor.collectFrom(MediaFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SpeechRecognitionFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(TextToSpeechFacade.class));
     list.addAll(MethodDescriptor.collectFrom(TelephonyManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(AlarmManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SensorManagerFacade.class));
@@ -63,11 +62,19 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(WifiFacade.class));
     list.addAll(MethodDescriptor.collectFrom(ApplicationManagerFacade.class));
 
-    // Bluetooth is not available before Android 2.0.
+    // Bluetooth is not available before API level 5.
     try {
       list.addAll(MethodDescriptor.collectFrom(BluetoothFacade.class));
     } catch (Throwable t) {
       AseLog.e("Bluetooth not available.", t);
+    }
+
+    // TTS is not available before API level 4. For earlier platforms, we rely on Eyes-Free.
+    try {
+      list.addAll(MethodDescriptor.collectFrom(TextToSpeechFacade.class));
+    } catch (Throwable t) {
+      AseLog.e("TTS not available. Falling back to Eyes-Free project for TTS support.", t);
+      list.addAll(MethodDescriptor.collectFrom(EyesFreeFacade.class));
     }
 
     for (MethodDescriptor rpc : list) {
@@ -117,7 +124,6 @@ public class FacadeConfiguration {
     receivers.add(new SettingsFacade(service));
     receivers.add(new UiFacade(service));
     receivers.add(new MediaFacade());
-    receivers.add(new TextToSpeechFacade(service));
     receivers.add(new SpeechRecognitionFacade(androidFacade));
     receivers.add(new SensorManagerFacade(service, eventFacade));
     receivers.add(new LocationFacade(service, eventFacade));
@@ -134,6 +140,14 @@ public class FacadeConfiguration {
       receivers.add(new BluetoothFacade(androidFacade, eventFacade));
     } catch (Throwable t) {
       AseLog.e("Bluetooth not available.", t);
+    }
+
+    // TTS is not available before API level 4. For earlier platforms, we rely on Eyes-Free.
+    try {
+      receivers.add(new TextToSpeechFacade(service));
+    } catch (Throwable t) {
+      AseLog.e("TTS not available. Falling back to Eyes-Free project for TTS support.", t);
+      receivers.add(new EyesFreeFacade(service));
     }
 
     return new JsonRpcServer(receivers);

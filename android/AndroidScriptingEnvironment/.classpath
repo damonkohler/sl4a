@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="libs/locale_platform.jar"/>
 	<classpathentry kind="lib" path="/Common/libs/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="/Common/libs/libGoogleAnalytics.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TextToSpeechFacade"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

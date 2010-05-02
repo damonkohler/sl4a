@@ -67,7 +67,7 @@ public class AndroidFacade implements RpcReceiver {
 
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
-  private final TextToSpeechFacade mTts;
+  private final EyesFreeFacade mTts;
 
   private final Resources mResources;
 
@@ -89,7 +89,7 @@ public class AndroidFacade implements RpcReceiver {
     mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);
     mNotificationManager =
         (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
-    mTts = new TextToSpeechFacade(service);
+    mTts = new EyesFreeFacade(service);
     mResources = resources;
   }
 

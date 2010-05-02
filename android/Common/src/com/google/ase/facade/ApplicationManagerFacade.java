@@ -21,16 +21,14 @@ import com.google.ase.rpc.RpcParameter;
 
 public class ApplicationManagerFacade implements RpcReceiver {
 
-  private final Service mService;
   private final AndroidFacade mAndroidFacade;
   private final ActivityManager mActivityManager;
   private final PackageManager mPackageManager;
 
   public ApplicationManagerFacade(Service service, AndroidFacade androidFacade) {
-    mService = service;
     mAndroidFacade = androidFacade;
-    mActivityManager = (ActivityManager) mService.getSystemService(Context.ACTIVITY_SERVICE);
-    mPackageManager = mService.getPackageManager();
+    mActivityManager = (ActivityManager) service.getSystemService(Context.ACTIVITY_SERVICE);
+    mPackageManager = service.getPackageManager();
   }
 
   @Rpc(description = "Returns a list of all launchable application class names.")

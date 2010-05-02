@@ -1,0 +1,57 @@
+/*
+ * Copyright (C) 2009 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package com.google.ase.facade;
+
+import java.util.List;
+
+import android.app.Service;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+
+import com.google.ase.exception.AseRuntimeException;
+import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcParameter;
+
+public class EyesFreeFacade implements RpcReceiver {
+
+  private final Service mService;
+  private final PackageManager mPackageManager;
+
+  public EyesFreeFacade(Service service) {
+    mService = service;
+    mPackageManager = service.getPackageManager();
+  }
+
+  @Rpc(description = "Speaks the provided message via TTS.")
+  public void speak(@RpcParameter(name = "message") String message) {
+    Intent intent = new Intent("com.google.tts.makeBagel");
+    intent.putExtra("message", message);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    List<ResolveInfo> infos = mPackageManager.queryIntentActivities(intent, 0);
+    if (infos.size() > 0) {
+      mService.startActivity(intent);
+    } else {
+      throw new AseRuntimeException("Eyes-Free is not installed.");
+    }
+  }
+
+  @Override
+  public void shutdown() {
+  }
+}
