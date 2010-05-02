@@ -360,7 +360,7 @@ public class AndroidFacade implements RpcReceiver {
     emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] { recipientAddress });
     emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
     emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
-    mService.startActivity(emailIntent);
+    startActivity(emailIntent);
   }
 
   /**
