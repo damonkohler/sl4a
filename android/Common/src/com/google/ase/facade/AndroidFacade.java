@@ -16,6 +16,8 @@
 
 package com.google.ase.facade;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Queue;
 
 import android.app.Activity;
@@ -289,8 +291,9 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Calls a phone number.")
-  public void callNumber(@RpcParameter(name = "phone number") final String number) {
-    call("tel:" + number);
+  public void callNumber(@RpcParameter(name = "phone number") final String number)
+      throws UnsupportedEncodingException {
+    call("tel:" + URLEncoder.encode(number, "ASCII"));
   }
 
   @Rpc(description = "Opens a map search for query (e.g. pizza, 123 My Street).")
