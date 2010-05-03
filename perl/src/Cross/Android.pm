@@ -1,4 +1,4 @@
-# Copyright (C) 2009 Google Inc.
+# Copyright (C) 2009-2010 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,7 @@
 
 #
 # Author: Jarkko Hietaniemi <jhi@google.com>
+# Sawyer X <xsawyerx@gmail.com>
 #
 
 package Android;
@@ -22,7 +23,7 @@ use strict;
 
 use vars qw($VERSION $AUTOLOAD);
 
-$VERSION = 0.001;
+$VERSION = 0.002;
 
 use IO::Socket;
 use JSON;
@@ -158,7 +159,7 @@ sub do_rpc {
             if (defined $result) {
                 if (ref $result eq 'HASH') {
                     if (defined $result->{error}) {
-                        $error = to_json($result->{error});
+                        $error = to_json( { error => $result->{error} } );
                     } else {
                         $success = 1;
                     }
