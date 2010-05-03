@@ -77,7 +77,7 @@ public class JsonRpcServer {
     public void run() {
       AseLog.v("Server thread " + getId() + " started.");
       try {
-        mmReader = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()));
+        mmReader = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()), 8192);
         mmWriter = new PrintWriter(mmSocket.getOutputStream(), true);
         process();
       } catch (Exception e) {

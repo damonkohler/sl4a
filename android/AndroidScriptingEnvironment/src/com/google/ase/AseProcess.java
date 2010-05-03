@@ -73,7 +73,7 @@ public class AseProcess {
     mFd = Exec.createSubprocess(binary, arg1, arg2, pid);
     mPid = pid[0];
     mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
-    mIn = new BufferedReader(new InputStreamReader(new FileInputStream(mFd)));
+    mIn = new BufferedReader(new InputStreamReader(new FileInputStream(mFd)), 8192);
 
     new Thread(new Runnable() {
       public void run() {
