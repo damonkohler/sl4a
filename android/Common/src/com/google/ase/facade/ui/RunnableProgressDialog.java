@@ -21,7 +21,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureIntent;
+import com.google.ase.future.FutureResult;
 
 /**
  * Wrapper class for progress dialog running in separate thread
@@ -46,7 +46,7 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
   }
 
   @Override
-  public void run(Activity activity, FutureIntent result) {
+  public void run(Activity activity, FutureResult result) {
     mActivity = activity;
     mDialog = new ProgressDialog(activity);
     mDialog.setProgressStyle(mStyle);

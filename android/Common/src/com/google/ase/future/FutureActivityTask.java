@@ -20,14 +20,14 @@ package com.google.ase.future;
 import android.app.Activity;
 
 /**
- * Encapsulates an {@link Activity} and a {@link FutureIntent}.
+ * Encapsulates an {@link Activity} and a {@link FutureResult}.
  *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public abstract class FutureActivityTask {
-  private final FutureIntent mResult = new FutureIntent();
+  private final FutureResult mResult = new FutureResult();
 
-  public abstract void run(final Activity activity, final FutureIntent result);
+  public abstract void run(final Activity activity, final FutureResult result);
 
   public Runnable getRunnable(final Activity activity) {
     return new Runnable() {
@@ -38,7 +38,7 @@ public abstract class FutureActivityTask {
     };
   }
 
-  public FutureIntent getResult() {
+  public FutureResult getResult() {
     return mResult;
   }
 }

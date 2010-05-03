@@ -21,20 +21,18 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import android.content.Intent;
-
 /**
  * FutureIntent represents an eventual Intent result object for asynchronous operations.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class FutureIntent implements Future<Intent> {
+public class FutureResult implements Future<Object> {
 
   private final CountDownLatch mLatch = new CountDownLatch(1);
-  private Intent mIntent;
+  private Object mResult;
 
-  public void set(Intent intent) {
-    mIntent = intent;
+  public void set(Object result) {
+    mResult = result;
     mLatch.countDown();
   }
 
@@ -44,15 +42,15 @@ public class FutureIntent implements Future<Intent> {
   }
 
   @Override
-  public Intent get() throws InterruptedException {
+  public Object get() throws InterruptedException {
     mLatch.await();
-    return mIntent;
+    return mResult;
   }
 
   @Override
-  public Intent get(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
+  public Object get(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
     mLatch.await(timeout, unit);
-    return mIntent;
+    return mResult;
   }
 
   @Override
@@ -62,7 +60,7 @@ public class FutureIntent implements Future<Intent> {
 
   @Override
   public boolean isDone() {
-    return mIntent == null;
+    return mResult == null;
   }
 
 }

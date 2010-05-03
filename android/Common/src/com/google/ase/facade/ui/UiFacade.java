@@ -31,6 +31,7 @@ import com.google.ase.AseApplication;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
+import com.google.ase.future.FutureResult;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
@@ -157,7 +158,7 @@ public class UiFacade implements RpcReceiver {
     }
   }
 
-  @Rpc(description = "Set dialog single choice items and selected item")
+  @Rpc(description = "Set dialog single choice items and selected item.")
   public void dialogSetSingleChoiceItems(
       @RpcParameter(name = "items") JSONArray items,
       @RpcParameter(name = "selected", description = "selected item index") @RpcDefault("0") Integer selected) {
@@ -168,7 +169,7 @@ public class UiFacade implements RpcReceiver {
     }
   }
 
-  @Rpc(description = "Set dialog multi choice items and selection")
+  @Rpc(description = "Set dialog multiple choice items and selection.")
   public void dialogSetMultiChoiceItems(
       @RpcParameter(name = "items") JSONArray items,
       @RpcParameter(name = "selected", description = "list of selected items") @RpcOptional JSONArray selected)
@@ -180,10 +181,11 @@ public class UiFacade implements RpcReceiver {
     }
   }
 
-  @Rpc(description = "Returns dialog response.", returns = "User response")
-  public Intent dialogGetResponse() {
+  @Rpc(description = "Returns dialog response.")
+  public Object dialogGetResponse() {
     try {
-      return ((FutureActivityTask) mDialogTask).getResult().get();
+      FutureResult result = ((FutureActivityTask) mDialogTask).getResult();
+      return result.get();
     } catch (Exception e) {
       throw new AndroidRuntimeException(e);
     }

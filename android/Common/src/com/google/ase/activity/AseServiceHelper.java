@@ -26,7 +26,7 @@ import android.os.Handler;
 
 import com.google.ase.AseApplication;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureIntent;
+import com.google.ase.future.FutureResult;
 
 /**
  * This {@link Activity} is launched by the {@link AseService} in order to perform operations that a
@@ -36,7 +36,7 @@ import com.google.ase.future.FutureIntent;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class AseServiceHelper extends Activity {
-  FutureIntent mResult;
+  FutureResult mResult;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

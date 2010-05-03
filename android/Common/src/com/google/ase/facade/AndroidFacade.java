@@ -46,7 +46,7 @@ import com.google.ase.AseLog;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureIntent;
+import com.google.ase.future.FutureResult;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
@@ -112,7 +112,7 @@ public class AndroidFacade implements RpcReceiver {
   Intent startActivityForResult(final Intent intent) {
     FutureActivityTask task = new FutureActivityTask() {
       @Override
-      public void run(Activity activity, FutureIntent result) {
+      public void run(Activity activity, FutureResult result) {
         // TODO(damonkohler): Throwing an exception here (e.g. specifying a non-existent activity)
         // causes a force close. There needs to be a way to pass back an error condition from the
         // helper.
@@ -125,9 +125,9 @@ public class AndroidFacade implements RpcReceiver {
     } catch (Exception e) {
       AseLog.e("Failed to launch intent.", e);
     }
-    FutureIntent result = task.getResult();
+    FutureResult result = task.getResult();
     try {
-      return result.get();
+      return (Intent) result.get();
     } catch (Exception e) {
       throw new AseRuntimeException(e);
     }
@@ -197,7 +197,7 @@ public class AndroidFacade implements RpcReceiver {
       final boolean password) {
     FutureActivityTask task = new FutureActivityTask() {
       @Override
-      public void run(final Activity activity, final FutureIntent result) {
+      public void run(final Activity activity, final FutureResult result) {
         final EditText input = new EditText(activity);
         if (password) {
           input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -210,9 +210,7 @@ public class AndroidFacade implements RpcReceiver {
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int whichButton) {
-            Intent intent = new Intent();
-            intent.putExtra("result", input.getText().toString());
-            result.set(intent);
+            result.set(input.getText().toString());
             activity.finish();
           }
         });
@@ -234,12 +232,12 @@ public class AndroidFacade implements RpcReceiver {
       AseLog.e("Failed to launch intent.", e);
     }
 
-    FutureIntent result = task.getResult();
+    FutureResult result = task.getResult();
     try {
       if (result.get() == null) {
         return null;
       } else {
-        return result.get().getStringExtra("result");
+        return (String) result.get();
       }
     } catch (Exception e) {
       AseLog.e("Failed to display dialog.", e);

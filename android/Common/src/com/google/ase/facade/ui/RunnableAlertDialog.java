@@ -16,6 +16,8 @@
 
 package com.google.ase.facade.ui;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -27,11 +29,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
-import android.content.Intent;
 
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureIntent;
+import com.google.ase.future.FutureResult;
 
 /**
  * Wrapper class for alert dialog running in separate thread.
@@ -39,7 +40,7 @@ import com.google.ase.future.FutureIntent;
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
 class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
-  private FutureIntent mResult;
+  private FutureResult mResult;
   private Activity mActivity;
 
   private AlertDialog mDialog;
@@ -148,7 +149,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   }
 
   @Override
-  public void run(final Activity activity, FutureIntent result) {
+  public void run(final Activity activity, FutureResult result) {
     mActivity = activity;
     mResult = result;
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -161,49 +162,49 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     }
     if (mItems != null) {
       switch (mListType) {
-        // Add single choice menu items to dialog.
-        case SINGLE_CHOICE:
-          builder.setSingleChoiceItems(mItems, mSelectedItems.iterator().next(),
-              new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int item) {
-                  mSelectedItems.clear();
+      // Add single choice menu items to dialog.
+      case SINGLE_CHOICE:
+        builder.setSingleChoiceItems(mItems, mSelectedItems.iterator().next(),
+            new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int item) {
+                mSelectedItems.clear();
+                mSelectedItems.add(item);
+              }
+            });
+        break;
+      // Add multiple choice items to the dialog.
+      case MULTI_CHOICE:
+        boolean[] selectedItems = new boolean[mItems.length];
+        for (int i : mSelectedItems) {
+          selectedItems[i] = true;
+        }
+        builder.setMultiChoiceItems(mItems, selectedItems,
+            new DialogInterface.OnMultiChoiceClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int item, boolean isChecked) {
+                if (isChecked) {
                   mSelectedItems.add(item);
+                } else {
+                  mSelectedItems.remove(item);
                 }
-              });
-          break;
-        // Add multiple choice items to the dialog.
-        case MULTI_CHOICE:
-          boolean[] selectedItems = new boolean[mItems.length];
-          for (int i : mSelectedItems) {
-            selectedItems[i] = true;
+              }
+            });
+        break;
+      // Add standard, menu-like, items to dialog.
+      default:
+        builder.setItems(mItems, new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int item) {
+            Map<String, Integer> result = new HashMap<String, Integer>();
+            result.put("item", item);
+            mResult.set(result);
+            // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory
+            // leak.
+            dialog.dismiss();
+            activity.finish();
           }
-          builder.setMultiChoiceItems(mItems, selectedItems,
-              new DialogInterface.OnMultiChoiceClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int item, boolean isChecked) {
-                  if (isChecked) {
-                    mSelectedItems.add(item);
-                  } else {
-                    mSelectedItems.remove(item);
-                  }
-                }
-              });
-          break;
-        // Add standard, menu-like, items to dialog.
-        default:
-          builder.setItems(mItems, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-              Intent intent = new Intent();
-              intent.putExtra("item", item);
-              mResult.set(intent);
-              // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory
-              // leak.
-              dialog.dismiss();
-              activity.finish();
-            }
-          });
-          break;
+        });
+        break;
       }
     }
     configureButtons(builder, activity);
@@ -215,9 +216,9 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
-        Intent intent = new Intent();
-        intent.putExtra("canceled", true);
-        mResult.set(intent);
+        Map<String, Boolean> result = new HashMap<String, Boolean>();
+        result.put("canceled", true);
+        mResult.set(result);
         // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
         dialog.dismiss();
         activity.finish();
@@ -229,19 +230,19 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        Intent intent = new Intent();
+        Map<String, String> result = new HashMap<String, String>();
         switch (which) {
-          case DialogInterface.BUTTON_POSITIVE:
-            intent.putExtra("which", "positive");
-            break;
-          case DialogInterface.BUTTON_NEGATIVE:
-            intent.putExtra("which", "negative");
-            break;
-          case DialogInterface.BUTTON_NEUTRAL:
-            intent.putExtra("which", "neutral");
-            break;
+        case DialogInterface.BUTTON_POSITIVE:
+          result.put("which", "positive");
+          break;
+        case DialogInterface.BUTTON_NEGATIVE:
+          result.put("which", "negative");
+          break;
+        case DialogInterface.BUTTON_NEUTRAL:
+          result.put("which", "neutral");
+          break;
         }
-        mResult.set(intent);
+        mResult.set(result);
         // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
         dialog.dismiss();
         activity.finish();
