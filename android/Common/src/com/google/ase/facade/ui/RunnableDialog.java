@@ -16,6 +16,8 @@
 
 package com.google.ase.facade.ui;
 
+import java.util.concurrent.CountDownLatch;
+
 import android.app.Dialog;
 
 public interface RunnableDialog {
@@ -28,4 +30,9 @@ public interface RunnableDialog {
    * Dismiss the {@link Dialog} and close {@link AseActivity}.
    */
   public void dismissDialog();
+
+  /**
+   * Returns the {@link CountDownLatch} that is counted down when the dialog is shown.
+   */
+  public CountDownLatch getShowLatch();
 }

@@ -94,10 +94,11 @@ public class UiFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Show dialog.")
-  public void dialogShow() {
-    if (mDialogTask != null) {
+  public void dialogShow() throws InterruptedException {
+    if (mDialogTask != null && mDialogTask.getDialog() == null) {
       mTaskQueue.offer((FutureActivityTask) mDialogTask);
       launchHelper();
+      mDialogTask.getShowLatch().await();
     } else {
       throw new AndroidRuntimeException("No dialog to show.");
     }

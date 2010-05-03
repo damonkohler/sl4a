@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CountDownLatch;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +41,9 @@ import com.google.ase.future.FutureResult;
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
 class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
+
+  private final CountDownLatch mShowLatch;
+
   private FutureResult mResult;
   private Activity mActivity;
 
@@ -60,6 +64,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   }
 
   public RunnableAlertDialog(String title, String message) {
+    mShowLatch = new CountDownLatch(1);
     mTitle = title;
     mMessage = message;
     mListType = ListType.MENU;
@@ -210,6 +215,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     configureButtons(builder, activity);
     addOnCancelListener(builder, activity);
     mDialog = builder.show();
+    mShowLatch.countDown();
   }
 
   private Builder addOnCancelListener(final AlertDialog.Builder builder, final Activity activity) {
@@ -263,5 +269,10 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   public void dismissDialog() {
     mDialog.dismiss();
     mActivity.finish();
+  }
+
+  @Override
+  public CountDownLatch getShowLatch() {
+    return mShowLatch;
   }
 }

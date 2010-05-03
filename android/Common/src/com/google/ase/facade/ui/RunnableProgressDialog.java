@@ -16,6 +16,8 @@
 
 package com.google.ase.facade.ui;
 
+import java.util.concurrent.CountDownLatch;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -25,19 +27,24 @@ import com.google.ase.future.FutureResult;
 
 /**
  * Wrapper class for progress dialog running in separate thread
- *
+ * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
 class RunnableProgressDialog extends FutureActivityTask implements RunnableDialog {
+
+  private final CountDownLatch mShowLatch;
+
   private ProgressDialog mDialog;
+  private Activity mActivity;
+
   private final int mStyle;
   private final int mMax;
   private final String mTitle;
   private final String mMessage;
   private final Boolean mCancelable;
-  private Activity mActivity;
 
   public RunnableProgressDialog(int style, int max, String title, String message, boolean cancelable) {
+    mShowLatch = new CountDownLatch(1);
     mStyle = style;
     mMax = max;
     mTitle = title;
@@ -55,6 +62,7 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
     mDialog.setTitle(mTitle);
     mDialog.setMessage(mMessage);
     mDialog.show();
+    mShowLatch.countDown();
   }
 
   @Override
@@ -66,5 +74,10 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
   public void dismissDialog() {
     mDialog.dismiss();
     mActivity.finish();
+  }
+
+  @Override
+  public CountDownLatch getShowLatch() {
+    return mShowLatch;
   }
 }
