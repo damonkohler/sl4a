@@ -108,6 +108,11 @@ public class SettingsFacade implements RpcReceiver {
     return enabled;
   }
 
+  @Rpc(description = "Returns the maximum ringer volume.")
+  public int getMaxRingerVolume() {
+    return mAudio.getStreamMaxVolume(AudioManager.STREAM_RING);
+  }
+
   @Rpc(description = "Returns the current ringer volume.")
   public int getRingerVolume() {
     return mAudio.getStreamVolume(AudioManager.STREAM_RING);
@@ -116,6 +121,11 @@ public class SettingsFacade implements RpcReceiver {
   @Rpc(description = "Sets the ringer volume.")
   public void setRingerVolume(@RpcParameter(name = "volume") Integer volume) {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
+  }
+
+  @Rpc(description = "Returns the maximum media volume.")
+  public int getMaxMediaVolume() {
+    return mAudio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
   }
 
   @Rpc(description = "Returns the current media volume.")
