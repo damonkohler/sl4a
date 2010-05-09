@@ -167,22 +167,22 @@ public class ApiBrowser extends ListActivity {
     RequestCode request = RequestCode.values()[requestCode];
     if (resultCode == RESULT_OK) {
       switch (request) {
-        case RPC_PROMPT:
-          MethodDescriptor rpc =
-              FacadeConfiguration.getMethodDescriptor(data
-                  .getStringExtra(Constants.EXTRA_API_PROMPT_RPC_NAME));
-          String[] values = data.getStringArrayExtra(Constants.EXTRA_API_PROMPT_VALUES);
-          insertText(rpc, values);
-          break;
-        default:
-          break;
+      case RPC_PROMPT:
+        MethodDescriptor rpc =
+            FacadeConfiguration.getMethodDescriptor(data
+                .getStringExtra(Constants.EXTRA_API_PROMPT_RPC_NAME));
+        String[] values = data.getStringArrayExtra(Constants.EXTRA_API_PROMPT_VALUES);
+        insertText(rpc, values);
+        break;
+      default:
+        break;
       }
     } else {
       switch (request) {
-        case RPC_PROMPT:
-          break;
-        default:
-          break;
+      case RPC_PROMPT:
+        break;
+      default:
+        break;
       }
     }
   }

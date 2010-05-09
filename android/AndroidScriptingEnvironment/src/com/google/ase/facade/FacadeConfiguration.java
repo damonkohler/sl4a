@@ -61,6 +61,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(WakeLockFacade.class));
     list.addAll(MethodDescriptor.collectFrom(WifiFacade.class));
     list.addAll(MethodDescriptor.collectFrom(ApplicationManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(ToneGeneratorFacade.class));
 
     // Bluetooth is not available before API level 5.
     try {
@@ -134,6 +135,7 @@ public class FacadeConfiguration {
     receivers.add(new WakeLockFacade(service));
     receivers.add(new WifiFacade(service));
     receivers.add(new ApplicationManagerFacade(service, androidFacade));
+    receivers.add(new ToneGeneratorFacade());
 
     // Bluetooth is not available before Android 2.0.
     try {
