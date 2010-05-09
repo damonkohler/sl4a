@@ -48,20 +48,18 @@ public class WakeLockFacade implements RpcReceiver {
 
     public WakeLockManager(Service service) {
       mmPowerManager = (PowerManager) service.getSystemService(Context.POWER_SERVICE);
-      WakeLock full =
-          mmPowerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,
-              WAKE_LOCK_TAG);
+      addWakeLock(WakeLockType.PARTIAL, PowerManager.PARTIAL_WAKE_LOCK);
+      addWakeLock(WakeLockType.FULL, PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE);
+      addWakeLock(WakeLockType.BRIGHT, PowerManager.SCREEN_BRIGHT_WAKE_LOCK
+          | PowerManager.ON_AFTER_RELEASE);
+      addWakeLock(WakeLockType.DIM, PowerManager.SCREEN_DIM_WAKE_LOCK
+          | PowerManager.ON_AFTER_RELEASE);
+    }
+
+    private void addWakeLock(WakeLockType type, int flags) {
+      WakeLock full = mmPowerManager.newWakeLock(flags, WAKE_LOCK_TAG);
       full.setReferenceCounted(false);
-      WakeLock partial = mmPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
-      partial.setReferenceCounted(false);
-      WakeLock bright =
-          mmPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
-              | PowerManager.ON_AFTER_RELEASE, WAKE_LOCK_TAG);
-      bright.setReferenceCounted(false);
-      WakeLock dim =
-          mmPowerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK
-              | PowerManager.ON_AFTER_RELEASE, WAKE_LOCK_TAG);
-      dim.setReferenceCounted(false);
+      mmLocks.put(type, full);
     }
 
     public void acquire(WakeLockType type) {
