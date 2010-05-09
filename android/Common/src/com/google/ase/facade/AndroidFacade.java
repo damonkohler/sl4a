@@ -32,9 +32,11 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.provider.Contacts.People;
 import android.text.ClipboardManager;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -309,9 +311,17 @@ public class AndroidFacade implements RpcReceiver {
     return pick("content://contacts/people");
   }
 
-  @Rpc(description = "Displays a list of phone numbers to pick from.", returns = "A map of result values.")
-  public Intent pickPhone() {
-    return pick("content://contacts/phones");
+  @Rpc(description = "Displays a list of phone numbers to pick from.", returns = "The selected phone number.")
+  public String pickPhone() {
+    Intent data = pick("content://contacts/phones");
+    Uri phoneData = data.getData();
+    Cursor c = mService.getContentResolver().query(phoneData, null, null, null, null);
+    String result = "";
+    if (c.moveToFirst()) {
+      result = c.getString(c.getColumnIndexOrThrow(People.NUMBER));
+    }
+    c.close();
+    return result;
   }
 
   @Rpc(description = "Starts the barcode scanner.", returns = "A map of result values.")
