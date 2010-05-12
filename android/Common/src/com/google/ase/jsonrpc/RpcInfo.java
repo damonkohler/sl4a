@@ -22,7 +22,6 @@ import java.lang.reflect.Type;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.google.ase.AseLog;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.RpcError;
 import com.google.ase.util.VisibleForTesting;
@@ -49,16 +48,18 @@ public final class RpcInfo {
    * @param parameters
    *          {@code JSONArray} containing the parameters
    * @return RPC response
-   * @throws RpcError
-   * @throws JSONException
+   * @throws Throwable
    */
-  public Object invoke(final JSONArray parameters) throws RpcError, JSONException {
+  public Object invoke(final JSONArray parameters) throws Throwable {
     final Type[] parameterTypes = mMethodDescriptor.getGenericParameterTypes();
     final Object[] args = new Object[parameterTypes.length];
     final Annotation annotations[][] = mMethodDescriptor.getParameterAnnotations();
 
     for (int i = 0; i < args.length; i++) {
       final Type parameterType = parameterTypes[i];
+      if (parameters.length() > args.length) {
+        throw new RpcError("Too many parameters specified.");
+      }
       if (i < parameters.length()) {
         // Parameter is specified.
         args[i] = convertParameter(parameters, i, parameterType);
@@ -72,9 +73,8 @@ public final class RpcInfo {
     Object result = null;
     try {
       result = mMethodDescriptor.getMethod().invoke(mReceiver, args);
-    } catch (Exception e) {
-      AseLog.e("Invocation error.", e.getCause());
-      throw new RpcError(e.getCause().getMessage());
+    } catch (Throwable t) {
+      throw t.getCause();
     }
     return result;
   }

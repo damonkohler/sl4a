@@ -25,13 +25,16 @@ import org.json.JSONObject;
 
 import android.app.Service;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.telephony.gsm.SmsManager;
 
+import com.google.ase.AseLog;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
@@ -60,21 +63,16 @@ public class SmsFacade implements RpcReceiver {
   }
 
   private Uri buildFolderUri(String folder) {
-    Uri.Builder builder = new Uri.Builder();
-    builder.scheme("content");
-    builder.path("sms");
-    if (folder != null) {
-      builder.appendPath(folder);
-    }
+    Uri.Builder builder = Uri.parse("content://sms").buildUpon();
+    builder.appendPath(folder);
     Uri uri = builder.build();
+    AseLog.v("Built SMS URI: " + uri);
     return uri;
   }
 
   private Uri buildMessageUri(Integer id) {
-    Uri.Builder builder = new Uri.Builder();
-    builder.scheme("content");
-    builder.path("sms");
-    builder.appendPath(String.valueOf(id));
+    Uri.Builder builder = Uri.parse("content://sms").buildUpon();
+    ContentUris.appendId(builder, id);
     Uri uri = builder.build();
     return uri;
   }
@@ -88,25 +86,29 @@ public class SmsFacade implements RpcReceiver {
 
   @Rpc(description = "Returns the number of messages.")
   public Integer smsGetMessageCount(@RpcParameter(name = "unreadOnly") Boolean unreadOnly,
-      @RpcParameter(name = "folder") @RpcOptional String folder) {
+      @RpcParameter(name = "folder") @RpcDefault("inbox") String folder) {
     Uri uri = buildFolderUri(folder);
     Integer result = 0;
     String selection = buildSelectionClause(unreadOnly);
     Cursor cursor = mContentResolver.query(uri, null, selection, null, null);
-    result = cursor.getCount();
-    cursor.close();
+    if (cursor != null) {
+      result = cursor.getCount();
+      cursor.close();
+    } else {
+      result = 0;
+    }
     return result;
   }
 
   @Rpc(description = "Returns a List of all message IDs.")
   public List<Integer> smsGetMessageIds(@RpcParameter(name = "unreadOnly") Boolean unreadOnly,
-      @RpcParameter(name = "folder") @RpcOptional String folder) {
+      @RpcParameter(name = "folder") @RpcDefault("inbox") String folder) {
     Uri uri = buildFolderUri(folder);
     List<Integer> result = new ArrayList<Integer>();
     String selection = buildSelectionClause(unreadOnly);
     String[] columns = { "_id" };
     Cursor cursor = mContentResolver.query(uri, columns, selection, null, null);
-    while (cursor.moveToNext()) {
+    while (cursor != null && cursor.moveToNext()) {
       result.add(cursor.getInt(0));
     }
     cursor.close();
@@ -115,13 +117,13 @@ public class SmsFacade implements RpcReceiver {
 
   @Rpc(description = "Returns a List of all messages.", returns = "a List of messages as Maps")
   public List<JSONObject> smsGetMessages(@RpcParameter(name = "unreadOnly") Boolean unreadOnly,
-      @RpcParameter(name = "folder") @RpcOptional String folder,
+      @RpcParameter(name = "folder") @RpcDefault("inbox") String folder,
       @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) throws JSONException {
     List<JSONObject> result = new ArrayList<JSONObject>();
     Uri uri = buildFolderUri(folder);
     String selection = buildSelectionClause(unreadOnly);
     String[] columns;
-    if (attributes.length() == 0) {
+    if (attributes == null || attributes.length() == 0) {
       // In case no attributes are specified we set the default ones.
       columns = new String[] { "_id", "address", "date", "body", "read" };
     } else {
@@ -132,7 +134,7 @@ public class SmsFacade implements RpcReceiver {
       }
     }
     Cursor cursor = mContentResolver.query(uri, columns, selection, null, null);
-    while (cursor.moveToNext()) {
+    while (cursor != null && cursor.moveToNext()) {
       JSONObject message = new JSONObject();
       for (int i = 0; i < columns.length; i++) {
         message.put(columns[i], cursor.getString(i));
@@ -161,13 +163,15 @@ public class SmsFacade implements RpcReceiver {
       }
     }
     Cursor cursor = mContentResolver.query(uri, columns, null, null, null);
-    if (cursor.getCount() == 1) {
+    if (cursor != null) {
       cursor.moveToFirst();
       for (int i = 0; i < columns.length; i++) {
         result.put(columns[i], cursor.getString(i));
       }
+      cursor.close();
+    } else {
+      result = null;
     }
-    cursor.close();
     return result;
   }
 
@@ -175,11 +179,15 @@ public class SmsFacade implements RpcReceiver {
   public List<String> smsGetAttributes() {
     List<String> result = new ArrayList<String>();
     Cursor cursor = mContentResolver.query(Uri.parse("content://sms"), null, null, null, null);
-    String[] columns = cursor.getColumnNames();
-    for (int i = 0; i < columns.length; i++) {
-      result.add(columns[i]);
+    if (cursor != null) {
+      String[] columns = cursor.getColumnNames();
+      for (int i = 0; i < columns.length; i++) {
+        result.add(columns[i]);
+      }
+      cursor.close();
+    } else {
+      result = null;
     }
-    cursor.close();
     return result;
   }
 
