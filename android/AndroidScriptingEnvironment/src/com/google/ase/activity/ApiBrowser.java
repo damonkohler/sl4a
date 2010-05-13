@@ -145,6 +145,9 @@ public class ApiBrowser extends ListActivity {
     }
 
     if (item.getItemId() == ContextMenuId.INSERT_TEXT.getId()) {
+      // There's no activity to track calls to insert (like there is for prompt) so we track it
+      // here instead.
+      AseAnalytics.track("ApiInsert");
       insertText(rpc, new String[0]);
     } else if (item.getItemId() == ContextMenuId.PROMPT_PARAMETERS.getId()) {
       Intent intent = new Intent(this, ApiPrompt.class);

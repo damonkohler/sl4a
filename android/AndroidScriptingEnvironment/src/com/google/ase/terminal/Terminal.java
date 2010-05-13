@@ -31,6 +31,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.ase.AseAnalytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
@@ -139,6 +140,8 @@ public class Terminal extends Activity {
     mKeyListener = new TermKeyListener();
     updatePreferences();
     startInterpreter();
+
+    AseAnalytics.trackActivity(this);
   }
 
   private void startInterpreter() {

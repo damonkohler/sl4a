@@ -40,11 +40,29 @@ public class AseAnalytics {
     mTracker.start("UA-158835-13", 20, context);
   }
 
-  public static void track(final String name) {
+  private static class PageNameBuilder {
+    private final StringBuilder mmName = new StringBuilder();
+
+    void add(String pathPart) {
+      mmName.append("/");
+      mmName.append(pathPart);
+    }
+
+    String build() {
+      return mmName.toString();
+    }
+  }
+
+  public static void track(String... nameParts) {
     if (mPrefs.getBoolean("usagetracking", false)) {
-      String url = String.format("/%s/%s", mAseVersion, name);
-      AseLog.v("Tracking " + url);
-      mTracker.trackPageView(url);
+      PageNameBuilder builder = new PageNameBuilder();
+      builder.add(mAseVersion);
+      for (String part : nameParts) {
+        builder.add(part);
+      }
+      String name = builder.build();
+      AseLog.v("Tracking " + name);
+      mTracker.trackPageView(name);
     }
   }
 

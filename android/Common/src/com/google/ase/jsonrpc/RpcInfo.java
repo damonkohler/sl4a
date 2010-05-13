@@ -22,6 +22,7 @@ import java.lang.reflect.Type;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.google.ase.AseAnalytics;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.RpcError;
 import com.google.ase.util.VisibleForTesting;
@@ -47,10 +48,13 @@ public final class RpcInfo {
    * 
    * @param parameters
    *          {@code JSONArray} containing the parameters
-   * @return RPC response
+   * @return result
    * @throws Throwable
    */
   public Object invoke(final JSONArray parameters) throws Throwable {
+    // Issue track call first in case of failure.
+    AseAnalytics.track("api", mMethodDescriptor.getName());
+
     final Type[] parameterTypes = mMethodDescriptor.getGenericParameterTypes();
     final Object[] args = new Object[parameterTypes.length];
     final Annotation annotations[][] = mMethodDescriptor.getParameterAnnotations();
@@ -61,7 +65,6 @@ public final class RpcInfo {
         throw new RpcError("Too many parameters specified.");
       }
       if (i < parameters.length()) {
-        // Parameter is specified.
         args[i] = convertParameter(parameters, i, parameterType);
       } else if (MethodDescriptor.hasDefaultValue(annotations[i])) {
         args[i] = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
