@@ -41,12 +41,11 @@ import com.google.ase.rpc.RpcParameter;
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com
  */
 public class ContactsFacade implements RpcReceiver {
-  private Service mService;
-  private ContentResolver mContentResolver;
-	
+  private static final Uri CONTACTS_URI = Uri.parse("content://contacts/people");
+  private final ContentResolver mContentResolver;
+
   public ContactsFacade(Service service) {
-    mService = service;
-    mContentResolver = mService.getContentResolver();
+    mContentResolver = service.getContentResolver();
   }
 
   private Uri buildUri(Integer id) {
@@ -54,10 +53,10 @@ public class ContactsFacade implements RpcReceiver {
     return uri;
   }
 
-  @Rpc(description = "Returns a List of all possible attributes for contact list.")
+  @Rpc(description = "Returns a List of all possible attributes for contacts.")
   public List<String> contactsGetAttributes() {
     List<String> result = new ArrayList<String>();
-    Cursor cursor = mContentResolver.query(Uri.parse("content://contacts/people"), null, null, null, null);
+    Cursor cursor = mContentResolver.query(CONTACTS_URI, null, null, null, null);
     if (cursor != null) {
       String[] columns = cursor.getColumnNames();
       for (int i = 0; i < columns.length; i++) {
@@ -75,14 +74,14 @@ public class ContactsFacade implements RpcReceiver {
   public List<Integer> contactsGetIds() {
     List<Integer> result = new ArrayList<Integer>();
     String[] columns = { "_id" };
-    Cursor cursor = mContentResolver.query(Uri.parse("content://contacts/people"), columns, null, null, null);
+    Cursor cursor = mContentResolver.query(CONTACTS_URI, columns, null, null, null);
     while (cursor != null && cursor.moveToNext()) {
       result.add(cursor.getInt(0));
     }
     cursor.close();
     return result;
   }
-  
+
   @Rpc(description = "Returns a List of all contacts.", returns = "a List of contacts as Maps")
   public List<JSONObject> contactsGet(
       @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) throws JSONException {
@@ -98,7 +97,7 @@ public class ContactsFacade implements RpcReceiver {
         columns[i] = attributes.getString(i);
       }
     }
-    Cursor cursor = mContentResolver.query(Uri.parse("content://contacts/people"), columns, null, null, null);
+    Cursor cursor = mContentResolver.query(CONTACTS_URI, columns, null, null, null);
     while (cursor != null && cursor.moveToNext()) {
       JSONObject message = new JSONObject();
       for (int i = 0; i < columns.length; i++) {
@@ -109,10 +108,9 @@ public class ContactsFacade implements RpcReceiver {
     cursor.close();
     return result;
   }
-  
-  @Rpc(description = "Returns contact attributes specified by Id.")
-  public JSONObject contactsGetById(
-      @RpcParameter(name = "id", description = "contact ID") Integer id,
+
+  @Rpc(description = "Returns contacts by ID.")
+  public JSONObject contactsGetById(@RpcParameter(name = "id") Integer id,
       @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) throws JSONException {
     JSONObject result = new JSONObject();
     Uri uri = buildUri(id);
@@ -139,12 +137,12 @@ public class ContactsFacade implements RpcReceiver {
     }
     return result;
   }
-  
+
   // TODO(MeanEYE.rcf): Add ability to narrow selection by providing named pairs of attributes.
   @Rpc(description = "Returns the number of contacts.")
   public Integer contactsGetCount() {
     Integer result = 0;
-    Cursor cursor = mContentResolver.query(Uri.parse("content://contacts/people"), null, null, null, null);
+    Cursor cursor = mContentResolver.query(CONTACTS_URI, null, null, null, null);
     if (cursor != null) {
       result = cursor.getCount();
       cursor.close();
@@ -153,7 +151,7 @@ public class ContactsFacade implements RpcReceiver {
     }
     return result;
   }
-  
+
   @Override
   public void shutdown() {
   }
