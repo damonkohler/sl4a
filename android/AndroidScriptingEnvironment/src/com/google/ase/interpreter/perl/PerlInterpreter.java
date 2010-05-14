@@ -24,7 +24,7 @@ import com.google.ase.language.PerlLanguage;
 
 /**
  * Represents the Perl interpreter.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class PerlInterpreter extends Interpreter {
@@ -77,6 +77,6 @@ public class PerlInterpreter extends Interpreter {
 
   @Override
   public int getVersion() {
-    return 3;
+    return 4;
   }
 }
