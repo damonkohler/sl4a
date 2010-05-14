@@ -152,7 +152,7 @@ public class SmsFacade implements RpcReceiver {
     JSONObject result = new JSONObject();
     Uri uri = buildMessageUri(id);
     String[] columns;
-    if (attributes.length() == 0) {
+    if (attributes == null || attributes.length() == 0) {
       // In case no attributes are specified we set the default ones.
       columns = new String[] { "_id", "address", "date", "body", "read" };
     } else {

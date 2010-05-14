@@ -57,6 +57,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(SettingsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(UiFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SmsFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(ContactsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(CameraFacade.class));
     list.addAll(MethodDescriptor.collectFrom(WakeLockFacade.class));
     list.addAll(MethodDescriptor.collectFrom(WifiFacade.class));
@@ -131,6 +132,7 @@ public class FacadeConfiguration {
     receivers.add(new TelephonyManagerFacade(service, eventFacade));
     receivers.add(new AlarmManagerFacade(service, eventFacade, triggerRepository));
     receivers.add(new SmsFacade(service));
+    receivers.add(new ContactsFacade(service));
     receivers.add(new CameraFacade());
     receivers.add(new WakeLockFacade(service));
     receivers.add(new WifiFacade(service));
