@@ -16,6 +16,7 @@
 
 package com.google.ase.facade;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Queue;
@@ -141,19 +142,19 @@ public class AndroidFacade implements RpcReceiver {
     mService.startActivity(helper);
   }
 
-  @Rpc(description = "Starts an activity for result and returns the result.", returns = "A map of result values.")
-  public Intent startActivityForResult(@RpcParameter(name = "action") final String action,
-      @RpcParameter(name = "uri") @RpcOptional final String uri) {
+  @Rpc(description = "Starts an activity for result and returns the result.", returns = "A Map representation of the result Intent.")
+  public Intent startActivityForResult(
+      @RpcParameter(name = "action") String action,
+      @RpcParameter(name = "uri") @RpcOptional String uri,
+      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type) {
     Intent intent = new Intent(action);
-    if (uri != null) {
-      intent.setData(Uri.parse(uri));
-    }
+    intent.setDataAndType(Uri.parse(uri), type);
     return startActivityForResult(intent);
   }
 
   @Rpc(description = "Display content to be picked by URI (e.g. contacts)", returns = "A map of result values.")
   public Intent pick(@RpcParameter(name = "uri") String uri) {
-    return startActivityForResult(Intent.ACTION_PICK, uri);
+    return startActivityForResult(Intent.ACTION_PICK, uri, null);
   }
 
   void startActivity(final Intent intent) {
@@ -166,18 +167,27 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Starts an activity.")
-  public void startActivity(@RpcParameter(name = "action") final String action,
-      @RpcParameter(name = "uri") @RpcOptional final String uri) {
+  public void startActivity(
+      @RpcParameter(name = "action") String action,
+      @RpcParameter(name = "uri") @RpcOptional String uri,
+      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type) {
     Intent intent = new Intent(action);
-    if (uri != null) {
-      intent.setData(Uri.parse(uri));
-    }
+    intent.setDataAndType(Uri.parse(uri), type);
     startActivity(intent);
   }
 
   @Rpc(description = "Start activity with view action by URI (i.e. browser, contacts, etc.).")
-  public void view(@RpcParameter(name = "uri") String uri) {
-    startActivity(Intent.ACTION_VIEW, uri);
+  public void view(
+      @RpcParameter(name = "uri") String uri,
+      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type) {
+    startActivity(Intent.ACTION_VIEW, uri, type);
+  }
+
+  @Rpc(description = "Opens the browser to display a local HTML file.")
+  public void viewHtml(
+      @RpcParameter(name = "path", description = "the path to the HTML file") String path) {
+    File html = new File(path);
+    view(html.toURI().toString(), "text/html");
   }
 
   @Rpc(description = "Vibrates the phone or a specified duration in milliseconds.")
@@ -277,7 +287,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Dials a contact/phone number by URI.")
   public void dial(@RpcParameter(name = "uri") final String uri) {
-    startActivity(Intent.ACTION_DIAL, uri);
+    startActivity(Intent.ACTION_DIAL, uri, null);
   }
 
   @Rpc(description = "Dials a phone number.")
@@ -287,7 +297,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Calls a contact/phone number by URI.")
   public void call(@RpcParameter(name = "uri") final String uri) {
-    startActivity(Intent.ACTION_CALL, uri);
+    startActivity(Intent.ACTION_CALL, uri, null);
   }
 
   @Rpc(description = "Calls a phone number.")
@@ -298,12 +308,12 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Opens a map search for query (e.g. pizza, 123 My Street).")
   public void map(@RpcParameter(name = "query, e.g. pizza, 123 My Street") String query) {
-    view("geo:0,0?q=" + query);
+    view("geo:0,0?q=" + query, null);
   }
 
   @Rpc(description = "Displays the contacts activity.")
   public void showContacts() {
-    view("content://contacts/people");
+    view("content://contacts/people", null);
   }
 
   @Rpc(description = "Displays a list of contacts to pick from.", returns = "A map of result values.")
@@ -324,19 +334,21 @@ public class AndroidFacade implements RpcReceiver {
     return result;
   }
 
-  @Rpc(description = "Starts the barcode scanner.", returns = "A map of result values.")
+  @Rpc(description = "Starts the barcode scanner.", returns = "A Map representation of the result Intent.")
   public Intent scanBarcode() {
-    return startActivityForResult("com.google.zxing.client.android.SCAN", null);
+    return startActivityForResult("com.google.zxing.client.android.SCAN", null, null);
   }
 
-  @Rpc(description = "Starts image capture.", returns = "A map of result values.")
+  @Rpc(description = "Starts image capture.", returns = "A Map representation of the result Intent.")
   public Intent captureImage() {
-    return startActivityForResult("android.media.action.IMAGE_CAPTURE", null);
+    return startActivityForResult("android.media.action.IMAGE_CAPTURE", null, null);
   }
 
   @Rpc(description = "Opens a web search for the given query.")
   public void webSearch(@RpcParameter(name = "query") String query) {
-    view("http://www.google.com/search?q=" + query);
+    Uri.Builder builder = Uri.parse("http://www.google.com/search").buildUpon();
+    builder.appendQueryParameter("q", query);
+    view(builder.build().toString(), null);
   }
 
   @Rpc(description = "Exits the activity or service running the script.")
