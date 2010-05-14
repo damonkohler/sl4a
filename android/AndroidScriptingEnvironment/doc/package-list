@@ -1,5 +1,6 @@
 com.google.ase
 com.google.ase.activity
+com.google.ase.bluetooth
 com.google.ase.dialog
 com.google.ase.exception
 com.google.ase.facade
@@ -23,3 +24,4 @@ com.google.ase.terminal
 com.google.ase.trigger
 com.google.ase.util
 com.google.ase.widget
+org.apache.taglibs.string.util
