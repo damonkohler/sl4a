@@ -72,13 +72,11 @@ public class AndroidFacade implements RpcReceiver {
 
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
-  private final EyesFreeFacade mTts;
 
   private final Resources mResources;
 
   @Override
   public void shutdown() {
-    mTts.shutdown();
   }
 
   /**
@@ -94,7 +92,6 @@ public class AndroidFacade implements RpcReceiver {
     mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);
     mNotificationManager =
         (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
-    mTts = new EyesFreeFacade(service);
     mResources = resources;
   }
 
