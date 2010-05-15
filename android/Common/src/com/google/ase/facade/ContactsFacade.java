@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.Contacts.People;
@@ -43,14 +44,36 @@ import com.google.ase.rpc.RpcParameter;
 public class ContactsFacade implements RpcReceiver {
   private static final Uri CONTACTS_URI = Uri.parse("content://contacts/people");
   private final ContentResolver mContentResolver;
+  private final Service mService;
+  private final CommonIntentsFacade mCommonIntentsFacade;
 
-  public ContactsFacade(Service service) {
+  public ContactsFacade(Service service, CommonIntentsFacade commonIntentsFacade) {
+    mService = service;
+    mCommonIntentsFacade = commonIntentsFacade;
     mContentResolver = service.getContentResolver();
   }
 
   private Uri buildUri(Integer id) {
     Uri uri = ContentUris.withAppendedId(People.CONTENT_URI, id);
     return uri;
+  }
+
+  @Rpc(description = "Displays a list of contacts to pick from.", returns = "A map of result values.")
+  public Intent pickContact() throws JSONException {
+    return mCommonIntentsFacade.pick("content://contacts/people");
+  }
+
+  @Rpc(description = "Displays a list of phone numbers to pick from.", returns = "The selected phone number.")
+  public String pickPhone() throws JSONException {
+    Intent data = mCommonIntentsFacade.pick("content://contacts/phones");
+    Uri phoneData = data.getData();
+    Cursor c = mService.getContentResolver().query(phoneData, null, null, null, null);
+    String result = "";
+    if (c.moveToFirst()) {
+      result = c.getString(c.getColumnIndexOrThrow(People.NUMBER));
+    }
+    c.close();
+    return result;
   }
 
   @Rpc(description = "Returns a List of all possible attributes for contacts.")

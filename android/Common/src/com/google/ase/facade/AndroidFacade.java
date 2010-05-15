@@ -16,10 +16,11 @@
 
 package com.google.ase.facade;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Queue;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,11 +34,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.provider.Contacts.People;
 import android.text.ClipboardManager;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -139,19 +138,52 @@ public class AndroidFacade implements RpcReceiver {
     mService.startActivity(helper);
   }
 
-  @Rpc(description = "Starts an activity for result and returns the result.", returns = "A Map representation of the result Intent.")
+  // TODO(damonkohler): It's unnecessary to add the complication of choosing between startActivity
+  // and startActivityForResult. It's probably better to just always use the ForResult version.
+  // However, this makes the call always blocking. We'd need to add an extra boolean parameter to
+  // indicate if we should wait for a result.
+  @Rpc(description = "Starts an activity and returns the result.", returns = "A Map representation of the result Intent.")
   public Intent startActivityForResult(
       @RpcParameter(name = "action") String action,
       @RpcParameter(name = "uri") @RpcOptional String uri,
-      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type) {
+      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
+      @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras)
+      throws JSONException {
     Intent intent = new Intent(action);
-    intent.setDataAndType(Uri.parse(uri), type);
+    intent.setDataAndType(uri != null ? Uri.parse(uri) : null, type);
+    putExtrasFromJsonObject(extras, intent);
     return startActivityForResult(intent);
   }
 
-  @Rpc(description = "Display content to be picked by URI (e.g. contacts)", returns = "A map of result values.")
-  public Intent pick(@RpcParameter(name = "uri") String uri) {
-    return startActivityForResult(Intent.ACTION_PICK, uri, null);
+  // TODO(damonkohler): Pull this out into proper argument deserialization and support
+  // complex/nested types being passed in.
+  private void putExtrasFromJsonObject(JSONObject extras, Intent intent) throws JSONException {
+    JSONArray names = extras.names();
+    for (int i = 0; i < names.length(); i++) {
+      String name = names.getString(i);
+      Object data = extras.get(name);
+      if (data == null) {
+        continue;
+      }
+      if (data instanceof Integer) {
+        intent.putExtra(name, (Integer) data);
+      }
+      if (data instanceof Float) {
+        intent.putExtra(name, (Float) data);
+      }
+      if (data instanceof Double) {
+        intent.putExtra(name, (Double) data);
+      }
+      if (data instanceof Long) {
+        intent.putExtra(name, (Long) data);
+      }
+      if (data instanceof String) {
+        intent.putExtra(name, (String) data);
+      }
+      if (data instanceof Boolean) {
+        intent.putExtra(name, (Boolean) data);
+      }
+    }
   }
 
   void startActivity(final Intent intent) {
@@ -167,24 +199,13 @@ public class AndroidFacade implements RpcReceiver {
   public void startActivity(
       @RpcParameter(name = "action") String action,
       @RpcParameter(name = "uri") @RpcOptional String uri,
-      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type) {
+      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
+      @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras)
+      throws JSONException {
     Intent intent = new Intent(action);
-    intent.setDataAndType(Uri.parse(uri), type);
+    intent.setDataAndType(uri != null ? Uri.parse(uri) : null, type);
+    putExtrasFromJsonObject(extras, intent);
     startActivity(intent);
-  }
-
-  @Rpc(description = "Start activity with view action by URI (i.e. browser, contacts, etc.).")
-  public void view(
-      @RpcParameter(name = "uri") String uri,
-      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type) {
-    startActivity(Intent.ACTION_VIEW, uri, type);
-  }
-
-  @Rpc(description = "Opens the browser to display a local HTML file.")
-  public void viewHtml(
-      @RpcParameter(name = "path", description = "the path to the HTML file") String path) {
-    File html = new File(path);
-    view(html.toURI().toString(), "text/html");
   }
 
   @Rpc(description = "Vibrates the phone or a specified duration in milliseconds.")
@@ -280,72 +301,6 @@ public class AndroidFacade implements RpcReceiver {
     notification.setLatestEventInfo(mService, title, ticker, contentIntent);
     notification.flags = Notification.FLAG_AUTO_CANCEL;
     mNotificationManager.notify(1, notification);
-  }
-
-  @Rpc(description = "Dials a contact/phone number by URI.")
-  public void dial(@RpcParameter(name = "uri") final String uri) {
-    startActivity(Intent.ACTION_DIAL, uri, null);
-  }
-
-  @Rpc(description = "Dials a phone number.")
-  public void dialNumber(@RpcParameter(name = "phone number") final String number) {
-    dial("tel:" + number);
-  }
-
-  @Rpc(description = "Calls a contact/phone number by URI.")
-  public void call(@RpcParameter(name = "uri") final String uri) {
-    startActivity(Intent.ACTION_CALL, uri, null);
-  }
-
-  @Rpc(description = "Calls a phone number.")
-  public void callNumber(@RpcParameter(name = "phone number") final String number)
-      throws UnsupportedEncodingException {
-    call("tel:" + URLEncoder.encode(number, "ASCII"));
-  }
-
-  @Rpc(description = "Opens a map search for query (e.g. pizza, 123 My Street).")
-  public void map(@RpcParameter(name = "query, e.g. pizza, 123 My Street") String query) {
-    view("geo:0,0?q=" + query, null);
-  }
-
-  @Rpc(description = "Displays the contacts activity.")
-  public void showContacts() {
-    view("content://contacts/people", null);
-  }
-
-  @Rpc(description = "Displays a list of contacts to pick from.", returns = "A map of result values.")
-  public Intent pickContact() {
-    return pick("content://contacts/people");
-  }
-
-  @Rpc(description = "Displays a list of phone numbers to pick from.", returns = "The selected phone number.")
-  public String pickPhone() {
-    Intent data = pick("content://contacts/phones");
-    Uri phoneData = data.getData();
-    Cursor c = mService.getContentResolver().query(phoneData, null, null, null, null);
-    String result = "";
-    if (c.moveToFirst()) {
-      result = c.getString(c.getColumnIndexOrThrow(People.NUMBER));
-    }
-    c.close();
-    return result;
-  }
-
-  @Rpc(description = "Starts the barcode scanner.", returns = "A Map representation of the result Intent.")
-  public Intent scanBarcode() {
-    return startActivityForResult("com.google.zxing.client.android.SCAN", null, null);
-  }
-
-  @Rpc(description = "Starts image capture.", returns = "A Map representation of the result Intent.")
-  public Intent captureImage() {
-    return startActivityForResult("android.media.action.IMAGE_CAPTURE", null, null);
-  }
-
-  @Rpc(description = "Opens a web search for the given query.")
-  public void webSearch(@RpcParameter(name = "query") String query) {
-    Uri.Builder builder = Uri.parse("http://www.google.com/search").buildUpon();
-    builder.appendQueryParameter("q", query);
-    view(builder.build().toString(), null);
   }
 
   @Rpc(description = "Exits the activity or service running the script.")
