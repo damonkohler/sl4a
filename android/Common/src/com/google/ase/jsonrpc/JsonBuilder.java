@@ -31,6 +31,8 @@ import android.location.Address;
 import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
+import android.telephony.CellLocation;
+import android.telephony.gsm.GsmCellLocation;
 
 import com.google.ase.facade.Event;
 
@@ -97,6 +99,9 @@ public class JsonBuilder {
     }
     if (data instanceof ScanResult) {
       return buildJsonScanResult((ScanResult) data);
+    }
+    if (data instanceof CellLocation) {
+      return buildJsonCellLocation((CellLocation) data);
     }
     throw new JSONException("Failed to build JSON result.");
   }
@@ -173,6 +178,17 @@ public class JsonBuilder {
     result.put("frequency", scanResult.frequency);
     result.put("level", scanResult.level);
     result.put("capabilities", scanResult.capabilities);
+    return result;
+  }
+
+  private static JSONObject buildJsonCellLocation(CellLocation cellLocation) throws JSONException {
+    JSONObject result = new JSONObject();
+    if (cellLocation instanceof GsmCellLocation) {
+      GsmCellLocation location = (GsmCellLocation) cellLocation;
+      result.put("lac", location.getLac());
+      result.put("cid", location.getCid());
+    }
+    // TODO(damonkohler): Add support for CdmaCellLocation. Not supported until API level 5.
     return result;
   }
 }

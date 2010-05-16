@@ -25,6 +25,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
@@ -109,5 +110,10 @@ public class PhoneFacade implements RpcReceiver {
   public void phoneDialNumber(@RpcParameter(name = "phone number") final String number)
       throws JSONException, UnsupportedEncodingException {
     phoneDial("tel:" + URLEncoder.encode(number, "ASCII"));
+  }
+
+  @Rpc(description = "Returns the current cell location.")
+  public CellLocation getCellLocation() {
+    return mTelephonyManager.getCellLocation();
   }
 }
