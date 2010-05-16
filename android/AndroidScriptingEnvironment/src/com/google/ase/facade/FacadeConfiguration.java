@@ -49,7 +49,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(AndroidFacade.class));
     list.addAll(MethodDescriptor.collectFrom(MediaFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SpeechRecognitionFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(TelephonyManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(PhoneFacade.class));
     list.addAll(MethodDescriptor.collectFrom(AlarmManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SensorManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(EventFacade.class));
@@ -64,6 +64,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(ApplicationManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(ToneGeneratorFacade.class));
     list.addAll(MethodDescriptor.collectFrom(CommonIntentsFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(PhoneFacade.class));
 
     // Bluetooth is not available before API level 5.
     try {
@@ -132,7 +133,7 @@ public class FacadeConfiguration {
     receivers.add(new SpeechRecognitionFacade(androidFacade));
     receivers.add(new SensorManagerFacade(service, eventFacade));
     receivers.add(new LocationFacade(service, eventFacade));
-    receivers.add(new TelephonyManagerFacade(service, eventFacade));
+    receivers.add(new PhoneFacade(service, androidFacade, eventFacade));
     receivers.add(new AlarmManagerFacade(service, eventFacade, triggerRepository));
     receivers.add(new SmsFacade(service));
     receivers.add(new ContactsFacade(service, commonIntentsFacade));

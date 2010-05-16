@@ -1,8 +1,6 @@
 package com.google.ase.facade;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,28 +25,6 @@ public class CommonIntentsFacade implements RpcReceiver {
 
   @Override
   public void shutdown() {
-  }
-
-  @Rpc(description = "Calls a contact/phone number by URI.")
-  public void call(@RpcParameter(name = "uri") final String uri) throws JSONException {
-    mAndroidFacade.startActivity(Intent.ACTION_CALL, uri, null, null);
-  }
-
-  @Rpc(description = "Calls a phone number.")
-  public void callNumber(@RpcParameter(name = "phone number") final String number)
-      throws UnsupportedEncodingException, JSONException {
-    call("tel:" + URLEncoder.encode(number, "ASCII"));
-  }
-
-  @Rpc(description = "Dials a contact/phone number by URI.")
-  public void dial(@RpcParameter(name = "uri") final String uri) throws JSONException {
-    mAndroidFacade.startActivity(Intent.ACTION_DIAL, uri, null, null);
-  }
-
-  @Rpc(description = "Dials a phone number.")
-  public void dialNumber(@RpcParameter(name = "phone number") final String number)
-      throws JSONException, UnsupportedEncodingException {
-    dial("tel:" + URLEncoder.encode(number, "ASCII"));
   }
 
   @Rpc(description = "Display content to be picked by URI (e.g. contacts)", returns = "A map of result values.")
