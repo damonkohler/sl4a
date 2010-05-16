@@ -17,6 +17,7 @@
 package com.google.ase.facade;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import android.media.MediaRecorder;
 
@@ -25,27 +26,39 @@ import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
 
 /**
- * A facade for media related RPCs.
+ * A facade for recording audio.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
- *
+ * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class MediaFacade implements RpcReceiver {
+public class RecorderFacade implements RpcReceiver {
   private final MediaRecorder mAudioRecorder = new MediaRecorder();
 
-  @Rpc(description = "Records an audio snippet and saves it to the given location.")
-  public void startAudioRecording(@RpcParameter(name = "targetPath") final String targetPath)
-      throws IOException, InterruptedException {
-    mAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+  @Rpc(description = "Records audio from the microphone and saves it to the given location.")
+  public void recorderStartMicrophone(@RpcParameter(name = "targetPath") String targetPath)
+      throws IOException {
+    startRecording(targetPath, MediaRecorder.AudioSource.MIC);
+  }
+
+  @Rpc(description = "Records audio from the phone and saves it to the given location.")
+  public void recorderStartPhone(@RpcParameter(name = "targetPath") String targetPath)
+      throws Exception {
+    // This is only possible starting with API level 4.
+    Field source = Class.forName("android.media.MediaRecorder$AudioSource").getField("VOICE_CALL");
+    startRecording(targetPath, source.getInt(null));
+  }
+
+  private void startRecording(String targetPath, int source) throws IOException {
+    mAudioRecorder.setAudioSource(source);
     mAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
     mAudioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
     mAudioRecorder.setOutputFile(targetPath);
     mAudioRecorder.prepare();
     mAudioRecorder.start();
   }
-  
-  @Rpc(description = "Stops a previously started recording of audio.")
-  public void stopAudioRecording() {
+
+  @Rpc(description = "Stops a previously started recording.")
+  public void recorderStop() {
     mAudioRecorder.stop();
     mAudioRecorder.reset();
   }

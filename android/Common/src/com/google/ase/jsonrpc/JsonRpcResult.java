@@ -52,11 +52,7 @@ public class JsonRpcResult {
     JSONObject json = new JSONObject();
     json.put("id", id);
     json.put("result", JSONObject.NULL);
-    String message = t.getMessage();
-    if (message == null) {
-      message = t.toString();
-    }
-    json.put("error", message);
+    json.put("error", t.toString());
     return json;
   }
 }

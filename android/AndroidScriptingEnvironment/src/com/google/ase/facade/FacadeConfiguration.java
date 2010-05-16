@@ -47,7 +47,7 @@ public class FacadeConfiguration {
   static {
     List<MethodDescriptor> list = new ArrayList<MethodDescriptor>();
     list.addAll(MethodDescriptor.collectFrom(AndroidFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(MediaFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(RecorderFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SpeechRecognitionFacade.class));
     list.addAll(MethodDescriptor.collectFrom(PhoneFacade.class));
     list.addAll(MethodDescriptor.collectFrom(AlarmManagerFacade.class));
@@ -129,7 +129,7 @@ public class FacadeConfiguration {
     receivers.add(commonIntentsFacade);
     receivers.add(new SettingsFacade(service));
     receivers.add(new UiFacade(service));
-    receivers.add(new MediaFacade());
+    receivers.add(new RecorderFacade());
     receivers.add(new SpeechRecognitionFacade(androidFacade));
     receivers.add(new SensorManagerFacade(service, eventFacade));
     receivers.add(new LocationFacade(service, eventFacade));
