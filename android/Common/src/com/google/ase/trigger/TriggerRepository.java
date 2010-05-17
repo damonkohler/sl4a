@@ -68,7 +68,7 @@ public class TriggerRepository {
 
   private final SharedPreferences mPreferences;
 
-  private final List<Trigger> mTriggers;
+  private List<Trigger> mTriggers;
 
   /** The unique {@link IdProvider} associated with this trigger repository. */
   private final IdProvider mIdProvider = new IdProvider();
@@ -82,8 +82,8 @@ public class TriggerRepository {
 
   public TriggerRepository(Context context) {
     mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    mTriggers = deserializeTriggers();
     mContext = context;
+    mTriggers = deserializeTriggers();
   }
 
   private synchronized List<Trigger> deserializeTriggers() {
@@ -102,9 +102,8 @@ public class TriggerRepository {
    * method of the trigger.
    */
   public synchronized void addTrigger(Trigger trigger) {
-    final List<Trigger> triggers = getAllTriggers();
-    triggers.add(trigger);
-    storeTriggers(triggers);
+    mTriggers.add(trigger);
+    storeTriggers(mTriggers);
     trigger.install();
   }
 
@@ -175,6 +174,7 @@ public class TriggerRepository {
         trigger.remove();
       }
     }
+    mTriggers = allTriggers;
     storeTriggers(allTriggers);
   }
 
