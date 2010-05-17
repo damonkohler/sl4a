@@ -47,9 +47,9 @@ public class FacadeConfiguration {
   static {
     List<MethodDescriptor> list = new ArrayList<MethodDescriptor>();
     list.addAll(MethodDescriptor.collectFrom(AndroidFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(MediaFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(RecorderFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SpeechRecognitionFacade.class));
-    list.addAll(MethodDescriptor.collectFrom(TelephonyManagerFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(PhoneFacade.class));
     list.addAll(MethodDescriptor.collectFrom(AlarmManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(SensorManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(EventFacade.class));
@@ -63,6 +63,8 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(WifiFacade.class));
     list.addAll(MethodDescriptor.collectFrom(ApplicationManagerFacade.class));
     list.addAll(MethodDescriptor.collectFrom(ToneGeneratorFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(CommonIntentsFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(PhoneFacade.class));
 
     // Bluetooth is not available before API level 5.
     try {
@@ -120,20 +122,22 @@ public class FacadeConfiguration {
     });
 
     EventFacade eventFacade = new EventFacade(service);
+    CommonIntentsFacade commonIntentsFacade = new CommonIntentsFacade(androidFacade);
 
     receivers.add(androidFacade);
     receivers.add(eventFacade);
+    receivers.add(commonIntentsFacade);
     receivers.add(new SettingsFacade(service));
     receivers.add(new UiFacade(service));
-    receivers.add(new MediaFacade());
+    receivers.add(new RecorderFacade());
     receivers.add(new SpeechRecognitionFacade(androidFacade));
     receivers.add(new SensorManagerFacade(service, eventFacade));
     receivers.add(new LocationFacade(service, eventFacade));
-    receivers.add(new TelephonyManagerFacade(service, eventFacade));
+    receivers.add(new PhoneFacade(service, androidFacade, eventFacade));
     receivers.add(new AlarmManagerFacade(service, eventFacade, triggerRepository));
     receivers.add(new SmsFacade(service));
-    receivers.add(new ContactsFacade(service));
-    receivers.add(new CameraFacade());
+    receivers.add(new ContactsFacade(service, commonIntentsFacade));
+    receivers.add(new CameraFacade(androidFacade));
     receivers.add(new WakeLockFacade(service));
     receivers.add(new WifiFacade(service));
     receivers.add(new ApplicationManagerFacade(service, androidFacade));

@@ -16,6 +16,9 @@
 
 package com.google.ase;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,6 +30,7 @@ public class AseAnalytics {
   private static GoogleAnalyticsTracker mTracker;
   private static SharedPreferences mPrefs;
   private static String mAseVersion;
+  private static ExecutorService mWorkPool;
 
   private AseAnalytics() {
     // Utility class.
@@ -36,8 +40,8 @@ public class AseAnalytics {
     mAseVersion = AseVersion.getVersion(context);
     mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     mTracker = GoogleAnalyticsTracker.getInstance();
-    // Start with a dispatch interval so that dispatches happen (hopefully?) in the background.
-    mTracker.start("UA-158835-13", 20, context);
+    mTracker.start("UA-158835-13", 10, context);
+    mWorkPool = Executors.newCachedThreadPool();
   }
 
   private static class PageNameBuilder {
@@ -53,16 +57,20 @@ public class AseAnalytics {
     }
   }
 
-  public static void track(String... nameParts) {
+  public static void track(final String... nameParts) {
     if (mPrefs.getBoolean("usagetracking", false)) {
-      PageNameBuilder builder = new PageNameBuilder();
-      builder.add(mAseVersion);
-      for (String part : nameParts) {
-        builder.add(part);
-      }
-      String name = builder.build();
-      AseLog.v("Tracking " + name);
-      mTracker.trackPageView(name);
+      mWorkPool.execute(new Runnable() {
+        public void run() {
+          PageNameBuilder builder = new PageNameBuilder();
+          builder.add(mAseVersion);
+          for (String part : nameParts) {
+            builder.add(part);
+          }
+          String name = builder.build();
+          AseLog.v("Tracking " + name);
+          mTracker.trackPageView(name);
+        };
+      });
     }
   }
 

@@ -16,15 +16,19 @@
 
 package com.google.ase.facade;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 
 import com.google.ase.AseLog;
 import com.google.ase.jsonrpc.RpcReceiver;
@@ -34,12 +38,18 @@ import com.google.ase.rpc.RpcParameter;
 
 public class CameraFacade implements RpcReceiver {
 
+  private final AndroidFacade mAndroidFacade;
+
   private class BooleanResult {
     boolean mmResult = false;
   }
 
+  public CameraFacade(AndroidFacade androidFacade) {
+    mAndroidFacade = androidFacade;
+  }
+
   @Rpc(description = "Take a picture and save it to the specified path.", returns = "A map of Booleans autoFocus and takePicture where True indicates success.")
-  public Bundle cameraTakePicture(@RpcParameter(name = "path") final String path,
+  public Bundle cameraCapturePicture(@RpcParameter(name = "path") final String path,
       @RpcParameter(name = "useAutoFocus") @RpcDefault("true") Boolean useAutoFocus)
       throws InterruptedException {
     final BooleanResult autoFocusResult = new BooleanResult();
@@ -107,5 +117,21 @@ public class CameraFacade implements RpcReceiver {
   @Override
   public void shutdown() {
     // Nothing to clean up.
+  }
+
+  @Rpc(description = "Starts the image capture application to take a picture and saves it to the specified path.")
+  public void cameraInteractiveCapturePicture(@RpcParameter(name = "path") final String path) {
+    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    File file = new File(path);
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+    mAndroidFacade.startActivityForResult(intent);
+  }
+
+  @Rpc(description = "Starts the video capture application to record a video and saves it to the specified path.")
+  public void cameraInteractiveCaptureVideo(@RpcParameter(name = "path") final String path) {
+    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+    File file = new File(path);
+    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+    mAndroidFacade.startActivityForResult(intent);
   }
 }
