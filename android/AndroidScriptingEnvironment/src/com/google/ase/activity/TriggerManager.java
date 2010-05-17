@@ -43,14 +43,14 @@ import com.google.ase.dialog.DurationPickerDialog;
 import com.google.ase.dialog.Help;
 import com.google.ase.dialog.DurationPickerDialog.DurationPickedListener;
 import com.google.ase.trigger.AlarmTriggerManager;
+import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository;
-import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
 public class TriggerManager extends ListActivity {
   private TriggerRepository mTriggerRepository;
   private AlarmTriggerManager mAlarmTriggerManager;
   private TriggerAdapter mAdapter;
-  private List<TriggerInfo> mTriggerInfoList;
+  private List<Trigger> mTriggerList;
 
   private static enum ContextMenuId {
     REMOVE;
@@ -72,7 +72,7 @@ public class TriggerManager extends ListActivity {
     CustomizeWindow.requestCustomTitle(this, "Triggers", R.layout.trigger_manager);
     mTriggerRepository = ((AseApplication) getApplication()).getTriggerRepository();
     mAlarmTriggerManager = new AlarmTriggerManager(this, mTriggerRepository);
-    mTriggerInfoList = mTriggerRepository.getAllTriggers();
+    mTriggerList = mTriggerRepository.getAllTriggers();
     mAdapter = new TriggerAdapter();
     mAdapter.registerDataSetObserver(new TriggerListObserver());
     setListAdapter(mAdapter);
@@ -124,19 +124,20 @@ public class TriggerManager extends ListActivity {
       return false;
     }
 
-    TriggerInfo triggerInfo = (TriggerInfo) mAdapter.getItem(info.position);
-    if (triggerInfo == null) {
+    Trigger trigger = (Trigger) mAdapter.getItem(info.position);
+    if (trigger == null) {
       AseLog.v("No trigger selected.");
       return false;
     }
 
     if (item.getItemId() == ContextMenuId.REMOVE.getId()) {
-      mAlarmTriggerManager.cancelById(triggerInfo.getId());
+      mAlarmTriggerManager.cancelById(trigger.getId());
     }
+
     mAdapter.notifyDataSetInvalidated();
     return true;
   }
-  
+
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
     mAdapter.notifyDataSetInvalidated();
@@ -145,7 +146,7 @@ public class TriggerManager extends ListActivity {
   private class TriggerListObserver extends DataSetObserver {
     @Override
     public void onInvalidated() {
-      mTriggerInfoList = mTriggerRepository.getAllTriggers();
+      mTriggerList = mTriggerRepository.getAllTriggers();
     }
   }
 
@@ -153,12 +154,12 @@ public class TriggerManager extends ListActivity {
 
     @Override
     public int getCount() {
-      return mTriggerInfoList.size();
+      return mTriggerList.size();
     }
 
     @Override
-    public TriggerInfo getItem(int position) {
-      return mTriggerInfoList.get(position);
+    public Trigger getItem(int position) {
+      return mTriggerList.get(position);
     }
 
     @Override
@@ -168,7 +169,7 @@ public class TriggerManager extends ListActivity {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-      return mTriggerInfoList.get(position).getTrigger().getView(TriggerManager.this);
+      return mTriggerList.get(position).getView(TriggerManager.this);
     }
   }
 

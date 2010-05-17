@@ -36,7 +36,6 @@ import com.google.ase.ScriptLauncher;
 import com.google.ase.exception.AseException;
 import com.google.ase.terminal.Terminal;
 import com.google.ase.trigger.Trigger;
-import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
@@ -48,7 +47,7 @@ public class AseService extends Service {
   private AndroidProxy mAndroidProxy;
   private ScriptLauncher mLauncher;
   private final StringBuilder mNotificationMessage;
-  private TriggerInfo mTriggerInfo;
+  private Trigger mTrigger;
 
   public AseService() {
     mNotificationMessage = new StringBuilder();
@@ -60,8 +59,8 @@ public class AseService extends Service {
 
     // TODO: Right now, only one interpreter execution is supported concurrently.
     //       When this changes, we need to support multiple trigger notifications as well.
-    if (mTriggerInfo == null) {
-      mTriggerInfo = getTriggerInfo(intent);
+    if (mTrigger == null) {
+      mTrigger = getTrigger(intent);
       notifyTriggerOfStart();
     }
 
@@ -153,29 +152,21 @@ public class AseService extends Service {
   }
   
   /** Returns the {@link TriggerInfo} for the given intent, or null if none exists. */
-  private TriggerInfo getTriggerInfo(Intent intent) {
+  private Trigger getTrigger(Intent intent) {
     final AseApplication application = (AseApplication) getApplication();
     final long triggerId = intent.getLongExtra(Constants.EXTRA_TRIGGER_ID, -1);
     return application.getTriggerRepository().getById(triggerId);
   }
 
   private void notifyTriggerOfShutDown() {
-    if (mTriggerInfo != null) {
-      final Trigger trigger = mTriggerInfo.getTrigger();
-      if (trigger != null) {
-        trigger.afterTrigger(this, mTriggerInfo);
-      }
+    if (mTrigger != null) {
+      mTrigger.afterTrigger(this);
     }
   }
 
   private void notifyTriggerOfStart() {
-    if (mTriggerInfo != null) {
-      final Trigger trigger = mTriggerInfo.getTrigger();
-      if (trigger != null) {
-        trigger.beforeTrigger(this, mTriggerInfo);
-      } else {
-        AseLog.w("Found TriggerInfo object without Trigger.");
-      }
+    if (mTrigger != null) {
+      mTrigger.beforeTrigger(this);
     }
   }
 

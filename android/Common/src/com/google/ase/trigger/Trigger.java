@@ -18,39 +18,55 @@ package com.google.ase.trigger;
 
 import java.io.Serializable;
 
+import android.app.Service;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.ase.trigger.TriggerRepository.TriggerInfo;
-
 /**
- * The interfaces implemented by trigger methods.
+ * The definition of the interface implemented by triggers. A trigger combines a script name with
+ * the description of an event that causes the trigger to fire.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
  * 
  */
-public class Trigger implements Serializable {
+public abstract class Trigger implements Serializable {
   private static final long serialVersionUID = 5190219422732210378L;
   private final String mScriptName;
+  private final long mId;
 
-  public Trigger(String scriptName) {
+  public Trigger(String scriptName, TriggerRepository.IdProvider idProvider) {
     mScriptName = scriptName;
+    mId = idProvider.getId();
   }
 
   /** Invoked just after the trigger is invoked */
-  public void afterTrigger(Context context, TriggerInfo info) {
+  public void afterTrigger(Service service) {
   }
 
   /** Invoked before the trigger is invoked */
-  public void beforeTrigger(Context context, TriggerInfo info) {
+  public void beforeTrigger(Service service) {
   }
 
   /** Returns the name of the script to execute */
-  public String getScriptName() {
+  public final String getScriptName() {
     return mScriptName;
   }
+  
+  /** Returns this trigger's id. */
+  public final long getId() {
+    return mId;
+  }
+
+  /** Installs the trigger. */
+  public abstract void install();
+
+  /** Removes the trigger. This does not remove the trigger from the repository. */
+  public abstract void remove();
+  
+  /** Initializes the transient variables of the trigger. */
+  public abstract void initializeTransients(final Context context);
 
   /** Creates a view to display this trigger in the trigger manager. */
   public View getView(Context context) {
@@ -60,5 +76,4 @@ public class Trigger implements Serializable {
     view.setText(getScriptName());
     return view;
   }
-
 }

@@ -16,30 +16,74 @@
 
 package com.google.ase.trigger;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 
-import com.google.ase.trigger.TriggerRepository.TriggerInfo;
+import com.google.ase.AseApplication;
+import com.google.ase.IntentBuilders;
 
+/**
+ * A trigger that fires at a specific fixed time.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ * 
+ */
 public class AlarmTrigger extends Trigger {
   private static final long serialVersionUID = 3175281973854075190L;
-  private final double mExecutionTime;
+  private final long mExecutionTimeMs;
+  private final boolean mWakeup;
 
-  public AlarmTrigger(double executionTime, String scriptName) {
-    super(scriptName);
-    mExecutionTime = executionTime;
+  private transient AlarmManager mAlarmManager;
+  private transient Context mContext;
+
+  /**
+   * @param scriptName
+   *          name of the script to execute
+   * @param executionTime
+   *          execution time in seconds since epoch
+   */
+  public AlarmTrigger(String scriptName, TriggerRepository.IdProvider idProvider, Context context,
+      long executionTimeMs, boolean wakeup) {
+    super(scriptName, idProvider);
+    mExecutionTimeMs = executionTimeMs;
+    mWakeup = wakeup;
+    initializeTransients(context);
   }
-  
+
   @Override
-  public void beforeTrigger(Context context, TriggerInfo info) {
-    super.beforeTrigger(context, info);
+  public void beforeTrigger(Service service) {
+    super.beforeTrigger(service);
+
     // This trigger will only fire once: remove it from the repository.
-    info.remove();
+    AseApplication application = (AseApplication)service.getApplication();
+    application.getTriggerRepository().removeTrigger(getId());
   }
 
   /**
    * Returns the execution time in seconds since epoch.
    */
-  public double getExecutionTime() {
-    return mExecutionTime;
+  public long getExecutionTimeMs() {
+    return mExecutionTimeMs;
+  }
+
+  @Override
+  public void install() {
+    final int alarmType = mWakeup ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, this);
+    mAlarmManager.set(alarmType, mExecutionTimeMs, pendingIntent);
+  }
+
+  @Override
+  public void remove() {
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, this);
+    mAlarmManager.cancel(pendingIntent);
+  }
+
+  @Override
+  public void initializeTransients(Context context) {
+    mContext = context;
+    mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
   }
 }

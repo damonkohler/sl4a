@@ -21,8 +21,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
@@ -42,35 +42,17 @@ import com.google.ase.AseLog;
  * 
  */
 public class TriggerRepository {
-  /** Holds trigger object and meta-information. */
-  public static class TriggerInfo implements Serializable {
-    private static final long serialVersionUID = 8103773194726113518L;
-    private final long mId;
-    private final Trigger mTrigger;
-    private transient TriggerRepository mRepository;
-
-    public TriggerInfo(TriggerRepository repository, long id, Trigger trigger) {
-      mRepository = repository;
-      mId = id;
-      mTrigger = trigger;
+  /**
+   * An object of this class is used to distribute unique ids to the triggers. It can be obtained
+   * using the {@link #getIdProvider} method of {@link TriggerRepository}.
+   */
+  public final class IdProvider {
+    long getId() {
+      return createNewId();
     }
 
-    public long getId() {
-      return mId;
-    }
-
-    public Trigger getTrigger() {
-      return mTrigger;
-    }
-    
-    private void setRepostiory(TriggerRepository repository) {
-      this.mRepository = repository;
-    }
-
-    /** Removes this trigger from the repository */
-    public void remove() {
-      mRepository.removeTrigger(mId);
-    }
+    private IdProvider() {
+    };
   }
 
   /**
@@ -86,30 +68,48 @@ public class TriggerRepository {
 
   private final SharedPreferences mPreferences;
 
+  private final List<Trigger> mTriggers;
+
+  /** The unique {@link IdProvider} associated with this trigger repository. */
+  private final IdProvider mIdProvider = new IdProvider();
+
+  private final Context mContext;
+
+  /** Interface for filters over triggers */
   public static interface TriggerFilter {
-    boolean matches(TriggerInfo trigger);
+    boolean matches(Trigger trigger);
   }
 
   public TriggerRepository(Context context) {
     mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    mTriggers = deserializeTriggers();
+    mContext = context;
   }
 
-  public synchronized List<TriggerInfo> getAllTriggers() {
+  private synchronized List<Trigger> deserializeTriggers() {
     final String triggers = mPreferences.getString(TRIGGERS_PREF_KEY, null);
-    return deserializeTriggersFromString(triggers);
+    List<Trigger> triggerInfos = deserializeTriggersFromString(triggers);
+    return triggerInfos;
   }
 
-  /** Adds a new trigger to the repository. */
-  public synchronized TriggerInfo addTrigger(Trigger trigger) {
-    final TriggerInfo info = new TriggerInfo(this, createNewId(), trigger);
-    final List<TriggerInfo> triggers = getAllTriggers();
-    triggers.add(info);
+  /** Returns a list of all triggers. The list is unmodifiable. */
+  public synchronized List<Trigger> getAllTriggers() {
+    return Collections.unmodifiableList(mTriggers);
+  }
+
+  /**
+   * Adds a new trigger to the repository. This function also calls the {@link Trigger.#install()}
+   * method of the trigger.
+   */
+  public synchronized void addTrigger(Trigger trigger) {
+    final List<Trigger> triggers = getAllTriggers();
+    triggers.add(trigger);
     storeTriggers(triggers);
-    return info;
+    trigger.install();
   }
 
   /** Writes the list of triggers to the shared preferences. */
-  private void storeTriggers(List<TriggerInfo> triggers) {
+  private void storeTriggers(List<Trigger> triggers) {
     SharedPreferences.Editor editor = mPreferences.edit();
     final String triggerValue = serializeTriggersToString(triggers);
     if (triggerValue != null) {
@@ -119,35 +119,29 @@ public class TriggerRepository {
   }
 
   /** Removes a specific trigger. */
-  public synchronized void removeTrigger(long id) {
-    List<TriggerInfo> triggers = getAllTriggers();
-
-    TriggerInfo itemToRemove = null;
-    for (TriggerInfo info : triggers) {
-      if (info.getId() == id) {
-        itemToRemove = info;
-        break;
+  public synchronized void removeTrigger(final long id) {
+    removeTriggers(new TriggerFilter() {
+      @Override
+      public boolean matches(Trigger trigger) {
+        return trigger.getId() == id;
       }
-    }
-
-    triggers.remove(itemToRemove);
-    storeTriggers(triggers);
+    });
   }
 
   /** Deserializes the list of triggers from a base 64 encoded string. */
   @SuppressWarnings("unchecked")
-  private List<TriggerInfo> deserializeTriggersFromString(String triggers) {
+  private List<Trigger> deserializeTriggersFromString(String triggers) {
     if (triggers == null) {
-      return new ArrayList<TriggerInfo>();
+      return new ArrayList<Trigger>();
     }
 
     try {
       final ByteArrayInputStream inputStream =
           new ByteArrayInputStream(Base64.decodeBase64(triggers.getBytes()));
       final ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-      List<TriggerInfo> result = (List<TriggerInfo>) objectInputStream.readObject();
-      for (TriggerInfo info : result) {
-        info.setRepostiory(this);
+      List<Trigger> result = (List<Trigger>) objectInputStream.readObject();
+      for (Trigger trigger : result) {
+        trigger.initializeTransients(mContext);
       }
       return result;
     } catch (IOException e) {
@@ -155,11 +149,11 @@ public class TriggerRepository {
     } catch (ClassNotFoundException e) {
       AseLog.e(e);
     }
-    return new ArrayList<TriggerInfo>();
+    return new ArrayList<Trigger>();
   }
 
   /** Serializes the list of triggers to a Base64 encoded string. */
-  private String serializeTriggersToString(List<TriggerInfo> triggers) {
+  private String serializeTriggersToString(List<Trigger> triggers) {
     try {
       final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       final ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
@@ -173,10 +167,12 @@ public class TriggerRepository {
 
   /** Removes all triggers that match the filters */
   public synchronized void removeTriggers(TriggerFilter triggerFilter) {
-    List<TriggerInfo> allTriggers = new ArrayList<TriggerInfo>();
-    for (TriggerInfo info : getAllTriggers()) {
-      if (!triggerFilter.matches(info)) {
-        allTriggers.add(info);
+    List<Trigger> allTriggers = new ArrayList<Trigger>();
+    for (Trigger trigger : getAllTriggers()) {
+      if (!triggerFilter.matches(trigger)) {
+        allTriggers.add(trigger);
+      } else {
+        trigger.remove();
       }
     }
     storeTriggers(allTriggers);
@@ -202,13 +198,18 @@ public class TriggerRepository {
   }
 
   /** Returns the {@link TriggerInfo} object with the given id. */
-  public TriggerInfo getById(long id) {
-    for (TriggerInfo info : getAllTriggers()) {
-      if (info.getId() == id) {
-        return info;
+  public Trigger getById(long id) {
+    for (Trigger trigger : getAllTriggers()) {
+      if (trigger.getId() == id) {
+        return trigger;
       }
     }
 
     return null;
+  }
+
+  /** Returns this repository's {@link IdProvider} */
+  public IdProvider getIdProvider() {
+    return mIdProvider;
   }
 }

@@ -16,55 +16,72 @@
 
 package com.google.ase.trigger;
 
+import com.google.ase.IntentBuilders;
+
+import android.app.AlarmManager;
+import android.app.Service;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-
-import com.google.ase.trigger.TriggerRepository.TriggerInfo;
 
 public abstract class RepeatingAlarmTrigger extends Trigger {
   private static final String WAKE_LOCK_TAG = "com.google.ase.trigger.RepeatingAlarmTrigger";
 
   /** The {@link WakeLock} held during the execution of the trigger. */
-  private WakeLock wakeLock = null;
+  private transient WakeLock mWakeLock = null;
+  protected transient AlarmManager mAlarmManager;
+  protected transient Context mContext;
+
+  /** Interval between executions of the alarm, in seconds. */
+  protected final long mIntervalMs;
+
+  /** Whether or not to wake up the device. */
+  protected final boolean mWakeUp;
+
+  public RepeatingAlarmTrigger(String scriptName, TriggerRepository.IdProvider idProvider,
+      Context context, long intervalMs, boolean wakeUp) {
+    super(scriptName, idProvider);
+    mIntervalMs = intervalMs;
+    mWakeUp = wakeUp;
+    initializeTransients(context);
+  }
 
   /** Obtains the wake lock. */
   @Override
-  public void afterTrigger(Context context, TriggerInfo info) {
-    super.afterTrigger(context, info);
-    wakeLock.release();
+  public void afterTrigger(Service service) {
+    super.afterTrigger(service);
+    mWakeLock.release();
   }
 
   /** Releases the wake lock. */
   @Override
-  public void beforeTrigger(Context context, TriggerInfo info) {
-    super.beforeTrigger(context, info);
-    PowerManager powerManager  = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-    wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
-    wakeLock.acquire();
+  public void beforeTrigger(Service service) {
+    super.beforeTrigger(service);
+    PowerManager powerManager = (PowerManager) service.getSystemService(Context.POWER_SERVICE);
+    mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
+    mWakeLock.acquire();
   }
 
   private static final long serialVersionUID = 7610406773988708932L;
 
-  /** Interval between executions of the alarm, in seconds. */
-  private final double mInterval;
-
-  /** Whether or not to wake up the device. */
-  private final boolean mWakeUp;
-
-  public RepeatingAlarmTrigger(String scriptName, double interval, boolean wakeUp) {
-    super(scriptName);
-    mInterval = interval;
-    mWakeUp = wakeUp;
-  }
-
-  /** Returns the interval between executions in seconds. */
-  public double getInterval() {
-    return mInterval;
+  /** Returns the interval between executions in milli-seconds. */
+  public long getInterval() {
+    return mIntervalMs;
   }
 
   /** Returns whether or not the device should be woken up by the alarm. */
   public boolean shouldWakeUp() {
     return mWakeUp;
+  }
+
+  @Override
+  public void initializeTransients(Context context) {
+    mContext = context;
+    mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+  }
+
+  @Override
+  public void remove() {
+    mAlarmManager.cancel(IntentBuilders.buildTriggerIntent(mContext, this));
   }
 }

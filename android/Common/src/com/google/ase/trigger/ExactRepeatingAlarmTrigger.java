@@ -16,16 +16,34 @@
 
 package com.google.ase.trigger;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 
-@SuppressWarnings("unused")
+import com.google.ase.IntentBuilders;
+import com.google.ase.trigger.TriggerRepository.IdProvider;
+
+/**
+ * A trigger that fires repeatedly with a fixed interval and starting time.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ * 
+ */
 public class ExactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
   private static final long serialVersionUID = -9125118724160624255L;
 
-  private final Double mFirstExecutionTimeS;
+  private final long mFirstExecutionTimeMs;
 
-  public ExactRepeatingAlarmTrigger(Double intervalS, String scriptName,
-      Double firstExecutionTimeS, boolean wakeUp) {
-    super(scriptName, intervalS, wakeUp);
-    mFirstExecutionTimeS = firstExecutionTimeS;
+  public ExactRepeatingAlarmTrigger(String scriptName, IdProvider idProvider, Context context,
+      long intervalMs, long firstExecutionTimeMs, boolean wakeUp) {
+    super(scriptName, idProvider, context, intervalMs, wakeUp);
+    mFirstExecutionTimeMs = firstExecutionTimeMs;
+  }
+
+  @Override
+  public void install() {
+    final int alarmType = mWakeUp ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, this);
+    mAlarmManager.setRepeating(alarmType, mFirstExecutionTimeMs, mIntervalMs, pendingIntent);
   }
 }

@@ -16,11 +16,34 @@
 
 package com.google.ase.trigger;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 
+import com.google.ase.IntentBuilders;
+import com.google.ase.trigger.TriggerRepository.IdProvider;
+
+/**
+ * A trigger that fires repeatedly with an approximate interval between events. This is a more
+ * power-efficient version of {@link ExactRepeatingAlarmTrigger} with the drawback that the interval
+ * is not respected as precisely.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ * 
+ */
 public class InexactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
   private static final long serialVersionUID = -9193318334645990578L;
 
-  public InexactRepeatingAlarmTrigger(String scriptName, Double interval, boolean wakeUp) {
-    super(scriptName, interval, wakeUp);
+  public InexactRepeatingAlarmTrigger(String scriptName, IdProvider idProvider, Context context,
+      long interval, boolean wakeUp) {
+    super(scriptName, idProvider, context, interval, wakeUp);
+  }
+
+  @Override
+  public void install() {
+    final int alarmType = mWakeUp ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, this);
+    long firstExecutionTime = System.currentTimeMillis() + mIntervalMs;
+    mAlarmManager.setInexactRepeating(alarmType, firstExecutionTime, mIntervalMs, pendingIntent);
   }
 }
