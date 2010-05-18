@@ -23,25 +23,25 @@ import com.google.ase.language.Language;
 import com.google.ase.rpc.MethodDescriptor;
 
 public abstract class Interpreter {
-  
-  private final Language language;
-  
+
+  private final Language mLanguage;
+
   public Interpreter(Language language) {
-    this.language = language;
+    mLanguage = language;
   }
 
   public final Language getLanguage() {
-    return language;
+    return mLanguage;
   }
 
   public final String getContentTemplate() {
     return getLanguage().getContentTemplate();
   }
-  
+
   public final String getRpcText(String content, MethodDescriptor rpc, String[] values) {
     return getLanguage().getRpcText(content, rpc, values);
   }
-  
+
   public boolean isInstalled() {
     return InterpreterConfiguration.checkInstalled(getName());
   }
@@ -69,7 +69,7 @@ public abstract class Interpreter {
   public String getInterpreterExtrasArchiveUrl() {
     return Constants.BASE_INSTALL_URL + getInterpreterExtrasArchiveName();
   }
-  
+
   public abstract InterpreterProcess buildProcess(String launchScript, int port);
 
   public abstract File getBinary();
