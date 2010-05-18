@@ -16,12 +16,10 @@
 
 package com.google.ase.interpreter;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.ase.Constants;
 import com.google.ase.interpreter.bsh.BshInterpreter;
 import com.google.ase.interpreter.jruby.JRubyInterpreter;
 import com.google.ase.interpreter.lua.LuaInterpreter;
@@ -33,7 +31,7 @@ import com.google.ase.interpreter.tcl.TclInterpreter;
 
 /**
  * Manages and provides access to the set of available interpreters.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class InterpreterConfiguration {
@@ -46,16 +44,6 @@ public class InterpreterConfiguration {
       Arrays.asList(new BshInterpreter(), new JRubyInterpreter(), new LuaInterpreter(),
           new PerlInterpreter(), new PythonInterpreter(), new RhinoInterpreter(),
           new ShInterpreter(), new TclInterpreter());
-
-  public static boolean checkInstalled(final String interpreterName) {
-    if (interpreterName.equals("sh")) {
-      // Shell is installed by the system.
-      return true;
-    }
-    File interpreterDirectory = new File(Constants.INTERPRETER_ROOT + interpreterName);
-    File interpreterExtrasDirectory = new File(Constants.INTERPRETER_EXTRAS_ROOT + interpreterName);
-    return interpreterDirectory.exists() || interpreterExtrasDirectory.exists();
-  }
 
   /**
    * Returns the list of all known interpreters.
@@ -70,7 +58,7 @@ public class InterpreterConfiguration {
   public static List<Interpreter> getInstalledInterpreters() {
     List<Interpreter> interpreters = new ArrayList<Interpreter>();
     for (Interpreter i : mSupportedInterpreters) {
-      if (checkInstalled(i.getName())) {
+      if (i.isInstalled()) {
         interpreters.add(i);
       }
     }
@@ -83,7 +71,7 @@ public class InterpreterConfiguration {
   public static List<Interpreter> getNotInstalledInterpreters() {
     List<Interpreter> interpreters = new ArrayList<Interpreter>();
     for (Interpreter i : mSupportedInterpreters) {
-      if (!checkInstalled(i.getName())) {
+      if (!i.isInstalled()) {
         interpreters.add(i);
       }
     }
@@ -91,8 +79,7 @@ public class InterpreterConfiguration {
   }
 
   /**
-   * Returns the interpreter matching the provided name or null if no
-   * interpreter was found.
+   * Returns the interpreter matching the provided name or null if no interpreter was found.
    */
   public static Interpreter getInterpreterByName(String interpreterName) {
     for (Interpreter i : mSupportedInterpreters) {
@@ -104,8 +91,8 @@ public class InterpreterConfiguration {
   }
 
   /**
-   * Returns the correct interpreter for the provided script name based on the
-   * script's extension or null if no interpreter was found.
+   * Returns the correct interpreter for the provided script name based on the script's extension or
+   * null if no interpreter was found.
    */
   public static Interpreter getInterpreterForScript(String scriptName) {
     int dotIndex = scriptName.lastIndexOf('.');

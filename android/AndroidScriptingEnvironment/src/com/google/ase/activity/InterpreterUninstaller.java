@@ -28,12 +28,6 @@ public class InterpreterUninstaller extends Activity {
       finish();
       return;
     }
-    if (!InterpreterConfiguration.checkInstalled(mName)) {
-      AseLog.e("Interpreter not installed.");
-      setResult(RESULT_CANCELED);
-      finish();
-      return;
-    }
     mInterpreter = InterpreterConfiguration.getInterpreterByName(mName);
     if (mInterpreter == null) {
       AseLog.e("No matching interpreter found for name: " + mName);
@@ -41,7 +35,12 @@ public class InterpreterUninstaller extends Activity {
       finish();
       return;
     }
-
+    if (!mInterpreter.isInstalled()) {
+      AseLog.e("Interpreter not installed.");
+      setResult(RESULT_CANCELED);
+      finish();
+      return;
+    }
     uninstall();
   }
 
@@ -69,13 +68,13 @@ public class InterpreterUninstaller extends Activity {
       public void run() {
         File extras = new File(Constants.INTERPRETER_EXTRAS_ROOT, mName);
         File root = new File(Constants.INTERPRETER_ROOT, mName);
-        File scriptsArchive = new File(Constants.DOWNLOAD_ROOT,
-            mInterpreter.getScriptsArchiveName());
+        File scriptsArchive =
+            new File(Constants.DOWNLOAD_ROOT, mInterpreter.getScriptsArchiveName());
         File archive = new File(Constants.DOWNLOAD_ROOT, mInterpreter.getInterpreterArchiveName());
         File extrasArchive =
             new File(Constants.DOWNLOAD_ROOT, mInterpreter.getInterpreterExtrasArchiveName());
-        List<File> directories = Arrays.asList(extras, root, scriptsArchive, archive,
-            extrasArchive);
+        List<File> directories =
+            Arrays.asList(extras, root, scriptsArchive, archive, extrasArchive);
         for (File directory : directories) {
           delete(directory);
         }

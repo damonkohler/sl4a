@@ -43,7 +43,13 @@ public abstract class Interpreter {
   }
 
   public boolean isInstalled() {
-    return InterpreterConfiguration.checkInstalled(getName());
+    if (getName().equals("sh")) {
+      // Shell is installed by the system.
+      return true;
+    }
+    File interpreterDirectory = new File(Constants.INTERPRETER_ROOT + getName());
+    File interpreterExtrasDirectory = new File(Constants.INTERPRETER_EXTRAS_ROOT + getName());
+    return interpreterDirectory.exists() || interpreterExtrasDirectory.exists();
   }
 
   public String getInterpreterArchiveName() {

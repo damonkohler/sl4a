@@ -30,7 +30,7 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 
 /**
  * Activity for installing interpreters.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class InterpreterInstaller extends Activity {
@@ -41,8 +41,8 @@ public class InterpreterInstaller extends Activity {
   private Interpreter mInterpreter;
 
   private static enum RequestCode {
-    DOWNLOAD_INTERPRETER, DOWNLOAD_INTERPRETER_EXTRAS, DOWNLOAD_SCRIPTS,
-    EXTRACT_INTERPRETER, EXTRACT_INTERPRETER_EXTRAS, EXTRACT_SCRIPTS
+    DOWNLOAD_INTERPRETER, DOWNLOAD_INTERPRETER_EXTRAS, DOWNLOAD_SCRIPTS, EXTRACT_INTERPRETER,
+    EXTRACT_INTERPRETER_EXTRAS, EXTRACT_SCRIPTS
   }
 
   @Override
@@ -55,15 +55,15 @@ public class InterpreterInstaller extends Activity {
       finish();
       return;
     }
-    if (InterpreterConfiguration.checkInstalled(mName)) {
-      AseLog.e("Interpreter already installed.");
+    mInterpreter = InterpreterConfiguration.getInterpreterByName(mName);
+    if (mInterpreter == null) {
+      AseLog.e("No matching interpreter found for name: " + mName);
       setResult(RESULT_CANCELED);
       finish();
       return;
     }
-    mInterpreter = InterpreterConfiguration.getInterpreterByName(mName);
-    if (mInterpreter == null) {
-      AseLog.e("No matching interpreter found for name: " + mName);
+    if (mInterpreter.isInstalled()) {
+      AseLog.e("Interpreter already installed.");
       setResult(RESULT_CANCELED);
       finish();
       return;
@@ -98,24 +98,24 @@ public class InterpreterInstaller extends Activity {
 
   private void extractInterpreter() {
     Intent intent = new Intent(this, ZipExtractor.class);
-    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT,
-        mInterpreter.getInterpreterArchiveName()).getAbsolutePath());
+    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mInterpreter
+        .getInterpreterArchiveName()).getAbsolutePath());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.INTERPRETER_ROOT);
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER.ordinal());
   }
 
   private void extractInterpreterExtras() {
     Intent intent = new Intent(this, ZipExtractor.class);
-    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT,
-        mInterpreter.getInterpreterExtrasArchiveName()).getAbsolutePath());
+    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mInterpreter
+        .getInterpreterExtrasArchiveName()).getAbsolutePath());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.INTERPRETER_EXTRAS_ROOT);
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER_EXTRAS.ordinal());
   }
 
   private void extractScripts() {
     Intent intent = new Intent(this, ZipExtractor.class);
-    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT,
-        mInterpreter.getScriptsArchiveName()).getAbsolutePath());
+    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mInterpreter
+        .getScriptsArchiveName()).getAbsolutePath());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.SCRIPTS_ROOT);
     startActivityForResult(intent, RequestCode.EXTRACT_SCRIPTS.ordinal());
   }
@@ -129,92 +129,92 @@ public class InterpreterInstaller extends Activity {
       // This switch handles failure cases. If a step is expected to succeed, it will cause the
       // installation to abort.
       switch (request) {
-        case DOWNLOAD_INTERPRETER:
-          if (mInterpreter.hasInterpreterArchive()) {
-            AseLog.e("Downloading interpreter failed.");
-            abort();
-            return;
-          }
-          break;
-        case DOWNLOAD_INTERPRETER_EXTRAS:
-          if (mInterpreter.hasInterpreterExtrasArchive()) {
-            AseLog.e("Downloading interpreter extras failed.");
-            abort();
-            return;
-          }
-          break;
-        case DOWNLOAD_SCRIPTS:
-          if (mInterpreter.hasScriptsArchive()) {
-            AseLog.e("Downloading scripts failed.");
-            abort();
-            return;
-          }
-          break;
-        case EXTRACT_INTERPRETER:
-          if (mInterpreter.hasInterpreterArchive()) {
-            AseLog.e("Extracting interpreter failed.");
-            abort();
-            return;
-          }
-          break;
-        case EXTRACT_INTERPRETER_EXTRAS:
-          if (mInterpreter.hasInterpreterExtrasArchive()) {
-            AseLog.e("Extracting interpreter extras failed.");
-            abort();
-            return;
-          }
-          break;
-        case EXTRACT_SCRIPTS:
-          if (mInterpreter.hasScriptsArchive()) {
-            AseLog.e("Extracting scripts failed.");
-            abort();
-            return;
-          }
-          break;
-        default:
-          AseLog.e("Unknown installation state.");
+      case DOWNLOAD_INTERPRETER:
+        if (mInterpreter.hasInterpreterArchive()) {
+          AseLog.e("Downloading interpreter failed.");
           abort();
           return;
+        }
+        break;
+      case DOWNLOAD_INTERPRETER_EXTRAS:
+        if (mInterpreter.hasInterpreterExtrasArchive()) {
+          AseLog.e("Downloading interpreter extras failed.");
+          abort();
+          return;
+        }
+        break;
+      case DOWNLOAD_SCRIPTS:
+        if (mInterpreter.hasScriptsArchive()) {
+          AseLog.e("Downloading scripts failed.");
+          abort();
+          return;
+        }
+        break;
+      case EXTRACT_INTERPRETER:
+        if (mInterpreter.hasInterpreterArchive()) {
+          AseLog.e("Extracting interpreter failed.");
+          abort();
+          return;
+        }
+        break;
+      case EXTRACT_INTERPRETER_EXTRAS:
+        if (mInterpreter.hasInterpreterExtrasArchive()) {
+          AseLog.e("Extracting interpreter extras failed.");
+          abort();
+          return;
+        }
+        break;
+      case EXTRACT_SCRIPTS:
+        if (mInterpreter.hasScriptsArchive()) {
+          AseLog.e("Extracting scripts failed.");
+          abort();
+          return;
+        }
+        break;
+      default:
+        AseLog.e("Unknown installation state.");
+        abort();
+        return;
       }
     }
 
     // This switch defines the progression of installation steps.
     switch (request) {
-      case DOWNLOAD_INTERPRETER:
-        downloadInterpreterExtras();
-        break;
-      case DOWNLOAD_INTERPRETER_EXTRAS:
-        downloadScripts();
-        break;
-      case DOWNLOAD_SCRIPTS:
-        extractInterpreter();
-        break;
-      case EXTRACT_INTERPRETER:
-        if (!chmodIntepreter()) {
-          abort();
-          return;
-        }
-        extractInterpreterExtras();
-        break;
-      case EXTRACT_INTERPRETER_EXTRAS:
-        extractScripts();
-        break;
-      case EXTRACT_SCRIPTS:
-        AseLog.v(this, "Installation successful.");
-        setResult(RESULT_OK);
-        finish();
-        return;
-      default:
-        AseLog.e(this, "Unknown installation state.");
+    case DOWNLOAD_INTERPRETER:
+      downloadInterpreterExtras();
+      break;
+    case DOWNLOAD_INTERPRETER_EXTRAS:
+      downloadScripts();
+      break;
+    case DOWNLOAD_SCRIPTS:
+      extractInterpreter();
+      break;
+    case EXTRACT_INTERPRETER:
+      if (!chmodIntepreter()) {
         abort();
         return;
+      }
+      extractInterpreterExtras();
+      break;
+    case EXTRACT_INTERPRETER_EXTRAS:
+      extractScripts();
+      break;
+    case EXTRACT_SCRIPTS:
+      AseLog.v(this, "Installation successful.");
+      setResult(RESULT_OK);
+      finish();
+      return;
+    default:
+      AseLog.e(this, "Unknown installation state.");
+      abort();
+      return;
     }
   }
 
   /**
    * After extracting the interpreter, we need to mark the binary (if there is one) as executable.
    * In addition, all parent directories must be marked as executable.
-   *
+   * 
    * @return true if the chmod was successful or unnecessary
    */
   private boolean chmodIntepreter() {
@@ -222,9 +222,8 @@ public class InterpreterInstaller extends Activity {
       return true;
     }
     // Chmod up the directory tree to the top of our data directory.
-    for (File pathPart = mInterpreter.getBinary();
-         pathPart != null && !pathPart.getName().equals("com.google.ase");
-         pathPart = pathPart.getParentFile()) {
+    for (File pathPart = mInterpreter.getBinary(); pathPart != null
+        && !pathPart.getName().equals("com.google.ase"); pathPart = pathPart.getParentFile()) {
       if (!chmodWithRetries(pathPart, "755", MAX_CHMOD_RETRIES)) {
         return false;
       }
@@ -251,7 +250,7 @@ public class InterpreterInstaller extends Activity {
   private boolean chmod(File path, String mode) {
     String[] command =
         new String[] { "/system/bin/sh", "-c",
-            String.format("chmod %s %s", mode, path.getAbsolutePath()) };
+          String.format("chmod %s %s", mode, path.getAbsolutePath()) };
     Process process;
     int exitValue;
     try {

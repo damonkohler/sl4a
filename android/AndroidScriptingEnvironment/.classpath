@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="/Common/libs/libGoogleAnalytics.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TextToSpeechFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Interpreter"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/PythonInterpreter"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
