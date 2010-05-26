@@ -85,6 +85,15 @@ public class UiFacade implements RpcReceiver {
     mDialogTask = new RunnableAlertDialog(title, message);
   }
 
+  @Rpc(description = "Create SeekBar dialog.")
+  public void dialogCreateSeekBar(@RpcParameter(name = "Current value") @RpcDefault("50") Integer progress,
+      @RpcParameter(name = "Maximum value") @RpcDefault("100") Integer max, 
+      @RpcParameter(name = "Title") String title,
+      @RpcParameter(name = "Message") String message) {
+    dialogDismiss(); // Dismiss any existing dialog.
+    mDialogTask = new RunnableSeekBarDialog(progress, max, title, message);
+  }
+
   @Rpc(description = "Dismiss dialog.")
   public void dialogDismiss() {
     if (mDialogTask != null) {
@@ -126,6 +135,8 @@ public class UiFacade implements RpcReceiver {
   public void dialogSetPositiveButtonText(@RpcParameter(name = "text") String text) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setPositiveButtonText(text);
+    } else if (mDialogTask != null && mDialogTask instanceof RunnableSeekBarDialog) {
+      ((RunnableSeekBarDialog) mDialogTask).setPositiveButtonText(text);
     } else {
       throw new AndroidRuntimeException("No dialog to add button to.");
     }
@@ -135,6 +146,8 @@ public class UiFacade implements RpcReceiver {
   public void dialogSetNegativeButtonText(@RpcParameter(name = "text") String text) {
     if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
       ((RunnableAlertDialog) mDialogTask).setNegativeButtonText(text);
+    } else if (mDialogTask != null && mDialogTask instanceof RunnableSeekBarDialog) {
+      ((RunnableSeekBarDialog) mDialogTask).setNegativeButtonText(text);
     } else {
       throw new AndroidRuntimeException("No dialog to add button to.");
     }
