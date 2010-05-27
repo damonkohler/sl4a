@@ -5,6 +5,7 @@ import java.io.File;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,7 +15,6 @@ import com.google.ase.Constants;
 import com.google.ase.activity.InterpreterInstaller;
 import com.google.ase.activity.InterpreterUninstaller;
 import com.google.ase.interpreter.python.PythonInterpreter;
-import com.google.ase.interpreter.python.PythonInterpreterProcess;
 
 public class Main extends Activity {
   private PythonInterpreter mInterpreter;
@@ -85,11 +85,27 @@ public class Main extends Activity {
     return result;
   }
 
+  private File getPythonHome() {
+    return new File(getFilesDir(), "python");
+  }
+
+  private File getPythonExtras() {
+    return new File(Environment.getExternalStorageDirectory(), "ase/extras/python");
+  }
+
+  private File getScriptsRoot() {
+    return new File(Environment.getExternalStorageDirectory(), "ase/scripts");
+  }
+
+  private File getPythonTemp() {
+    return new File(Environment.getExternalStorageDirectory(), "ase/extras/python/tmp");
+  }
+
   private void buildEnvironmentBundle(Bundle environment) {
-    environment.putString("PYTHONHOME", PythonInterpreterProcess.PYTHON_HOME);
-    environment.putString("PYTHONPATH", PythonInterpreterProcess.PYTHON_EXTRAS + ":"
-        + Constants.SCRIPTS_ROOT);
-    File tmp = new File(PythonInterpreterProcess.PYTHON_EXTRAS + "tmp/");
+    environment.putString("PYTHONHOME", getPythonHome().getAbsolutePath());
+    environment.putString("PYTHONPATH", getPythonExtras().getAbsolutePath() + ":"
+        + getScriptsRoot());
+    File tmp = getPythonTemp();
     if (!tmp.isDirectory()) {
       tmp.mkdir();
     }
