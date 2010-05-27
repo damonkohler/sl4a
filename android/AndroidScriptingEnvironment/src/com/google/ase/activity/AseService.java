@@ -48,6 +48,7 @@ public class AseService extends Service {
   private ScriptLauncher mLauncher;
   private final StringBuilder mNotificationMessage;
   private Trigger mTrigger;
+  private final int mNotificationId = NotificationIdFactory.createId();
 
   public AseService() {
     mNotificationMessage = new StringBuilder();
@@ -133,7 +134,7 @@ public class AseService extends Service {
     notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
     NotificationManager manager =
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    manager.notify(0, notification);
+    manager.notify(mNotificationId, notification);
   }
 
   @Override
@@ -148,7 +149,7 @@ public class AseService extends Service {
     }
     NotificationManager manager =
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    manager.cancelAll();
+    manager.cancel(mNotificationId);
   }
   
   /** Returns the {@link TriggerInfo} for the given intent, or null if none exists. */
