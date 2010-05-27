@@ -56,6 +56,12 @@ public class TriggerService extends Service {
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
 
+    if (intent.getAction() != null &&
+        Constants.ACTION_KILL_SERVICE.compareTo(intent.getAction()) == 0) {
+      stopSelf();
+      return;
+    }
+
     AseApplication application = (AseApplication) this.getApplication();
     mTriggerRepository = application.getTriggerRepository();
     initializeTriggers();
@@ -65,10 +71,11 @@ public class TriggerService extends Service {
     setForeground(true);
 
     Notification notification =
-        new Notification(R.drawable.ase_logo_48, "ASE is running...", System.currentTimeMillis());
+        new Notification(R.drawable.ase_logo_48, "ASE Trigger Service is running...", System
+            .currentTimeMillis());
     notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
     notification.contentView.setTextViewText(R.id.notification_title, "ASE Trigger Service");
-    Intent notificationIntent = new Intent(this, AseService.class);
+    Intent notificationIntent = new Intent(this, TriggerService.class);
     notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
     notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
     notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
