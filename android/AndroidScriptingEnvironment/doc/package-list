@@ -1,6 +1,7 @@
 com.google.ase
 com.google.ase.activity
 com.google.ase.bluetooth
+com.google.ase.condition
 com.google.ase.dialog
 com.google.ase.exception
 com.google.ase.facade
