@@ -308,9 +308,9 @@ public class AndroidFacade implements RpcReceiver {
     mService.stopSelf();
   }
 
-  @Rpc(description = "Returns an extra value that was specified in the launch intent.", returns = "The extra value.")
-  public Object getExtra(@RpcParameter(name = "name") String name) {
-    return mIntent.getExtras().get(name);
+  @Rpc(description = "Returns the intent that launched the script.")
+  public Object getIntent() {
+    return mIntent;
   }
 
   /**
