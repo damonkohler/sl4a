@@ -16,7 +16,31 @@ public class RingerModeCondition implements Condition {
   private Context mContext;
   private final Configuration mConfiguration;
   private boolean mInCondition;
+  
+  /** Our broadcast receiver dealing with changes to the ringer mode. */
+  private final BroadcastReceiver ringerModeBroadcastReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      int ringerMode = intent.getIntExtra(AudioManager.EXTRA_RINGER_MODE, -1);
 
+      switch (ringerMode) {
+      case AudioManager.RINGER_MODE_NORMAL:
+      case AudioManager.RINGER_MODE_SILENT:
+      case AudioManager.RINGER_MODE_VIBRATE:
+        if (mConfiguration.getMode() == ringerMode && !mInCondition) {
+          invokeBegin();
+          mInCondition = true;
+        } else if (mInCondition) {
+          mInCondition = false;
+          invokeEnd();
+        }
+      default:
+        AseLog.e("Invalid ringer mode.");
+      }
+    }
+  };
+
+  /** Configuration of the RingerModeCondition.  Stores the mode on which to trigger. */
   public static class Configuration implements ConditionConfiguration {
     int mmMode;
 
@@ -64,28 +88,8 @@ public class RingerModeCondition implements Condition {
       invokeEnd();
     }
 
-    mContext.registerReceiver(new BroadcastReceiver() {
-
-      @Override
-      public void onReceive(Context context, Intent intent) {
-        int ringerMode = intent.getIntExtra(AudioManager.EXTRA_RINGER_MODE, -1);
-
-        switch (ringerMode) {
-        case AudioManager.RINGER_MODE_NORMAL:
-        case AudioManager.RINGER_MODE_SILENT:
-        case AudioManager.RINGER_MODE_VIBRATE:
-          if (mConfiguration.getMode() == ringerMode && !mInCondition) {
-            invokeBegin();
-            mInCondition = true;
-          } else if (mInCondition) {
-            mInCondition = false;
-            invokeEnd();
-          }
-        default:
-          AseLog.e("Invalid ringer mode.");
-        }
-      }
-    }, new IntentFilter(AudioManager.RINGER_MODE_CHANGED_ACTION));
+    mContext.registerReceiver(ringerModeBroadcastReceiver, new IntentFilter(
+        AudioManager.RINGER_MODE_CHANGED_ACTION));
   }
 
   private void invokeBegin() {
@@ -102,5 +106,6 @@ public class RingerModeCondition implements Condition {
 
   @Override
   public void stop() {
+    mContext.unregisterReceiver(ringerModeBroadcastReceiver);
   }
 }
