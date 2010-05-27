@@ -26,8 +26,7 @@ import com.google.ase.AseLog;
 import com.google.ase.trigger.ConditionListener;
 
 public class RingerModeCondition implements Condition {
-  private ConditionListener mBeginListener;
-  private ConditionListener mEndListener;
+  private ConditionListener mConditionListener;
   private final AudioManager mAudioManager;
   private Context mContext;
   private final Configuration mConfiguration;
@@ -44,11 +43,11 @@ public class RingerModeCondition implements Condition {
       case AudioManager.RINGER_MODE_SILENT:
       case AudioManager.RINGER_MODE_VIBRATE:
         if (mConfiguration.getMode() == ringerMode && !mInCondition) {
-          invokeBegin(null);
+          invokeListener(null);
           mInCondition = true;
         } else if (mInCondition) {
           mInCondition = false;
-          invokeEnd(null);
+          invokeListener(null);
         }
       default:
         AseLog.e("Invalid ringer mode.");
@@ -85,38 +84,27 @@ public class RingerModeCondition implements Condition {
   }
 
   @Override
-  public void addBeginListener(ConditionListener listener) {
-    mBeginListener = listener;
-  }
-
-  @Override
-  public void addEndListener(ConditionListener listener) {
-    mEndListener = listener;
+  public void addListener(ConditionListener listener) {
+    mConditionListener = listener;
   }
 
   @Override
   public void start() {
     if (mAudioManager.getRingerMode() == mConfiguration.getMode()) {
       mInCondition = true;
-      invokeBegin(null);
+      invokeListener(null);
     } else {
       mInCondition = false;
-      invokeEnd(null);
+      invokeListener(null);
     }
 
     mContext.registerReceiver(ringerModeBroadcastReceiver, new IntentFilter(
         AudioManager.RINGER_MODE_CHANGED_ACTION));
   }
 
-  private void invokeBegin(Bundle state) {
-    if (mBeginListener != null) {
-      mBeginListener.run(state);
-    }
-  }
-
-  private void invokeEnd(Bundle state) {
-    if (mEndListener != null) {
-      mEndListener.run(state);
+  private void invokeListener(Bundle state) {
+    if (mConditionListener != null) {
+      mConditionListener.run(state);
     }
   }
 

@@ -42,17 +42,7 @@ public class ConditionTrigger extends Trigger {
   public void initializeTransients(final Context context) {
     mCondition = mConditionConfiguration.getCondition(context);
 
-    mCondition.addBeginListener(new ConditionListener() {
-      @Override
-      public void run(Bundle state) {
-        Intent intent = IntentBuilders.buildStartInBackgroundIntent(getScriptName());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(EXTRA_CONDITION_STATE, state);
-        context.startActivity(intent);
-      }
-    });
-
-    mCondition.addEndListener(new ConditionListener() {
+    mCondition.addListener(new ConditionListener() {
       @Override
       public void run(Bundle state) {
         Intent intent = IntentBuilders.buildStartInBackgroundIntent(getScriptName());
