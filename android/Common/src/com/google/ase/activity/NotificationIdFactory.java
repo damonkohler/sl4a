@@ -28,10 +28,10 @@ public final class NotificationIdFactory {
   
   public static final NotificationIdFactory INSTANCE = new NotificationIdFactory();
 
-  public static synchronized int createId() {
+  public synchronized int createId() {
     return mNextId++;
   }
-  
+
   private NotificationIdFactory() {
   }
 }
