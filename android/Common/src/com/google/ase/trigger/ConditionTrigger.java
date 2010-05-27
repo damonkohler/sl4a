@@ -25,6 +25,13 @@ import com.google.ase.IntentBuilders;
 import com.google.ase.condition.Condition;
 import com.google.ase.condition.ConditionConfiguration;
 
+/**
+ * A {@link ConditionTrigger} object combines a trigger with a condition. When the condition fires,
+ * the trigger is invoked. The {@link ConditionTrigger} object takes care of proper serialization of
+ * the condition configuration.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ */
 public class ConditionTrigger extends Trigger {
   private static final long serialVersionUID = 5415193311156216064L;
   private static final String EXTRA_CONDITION_STATE = "condition_state";
