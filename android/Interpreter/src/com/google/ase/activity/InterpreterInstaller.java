@@ -36,7 +36,7 @@ import com.google.ase.interpreter.InterpreterConfiguration;
  */
 public class InterpreterInstaller extends Activity {
 
-  private static final int MAX_CHMOD_RETRIES = 5;
+  private static final int PERMISSIONS = 0755;
 
   private String mName;
   private Interpreter mInterpreter;
@@ -226,7 +226,9 @@ public class InterpreterInstaller extends Activity {
     for (File pathPart = mInterpreter.getBinary(); pathPart != null
         && !pathPart.getName().equals("com.google.ase"); pathPart = pathPart.getParentFile()) {
       try {
-        if (chmod(pathPart, 00755) == 0) {
+        int errno = chmod(pathPart, PERMISSIONS);
+        if (errno != 0) {
+          AseLog.e("chmod failed with errno " + errno + " for " + pathPart);
           return false;
         }
       } catch (Exception e) {
@@ -241,7 +243,7 @@ public class InterpreterInstaller extends Activity {
     Class<?> fileUtils = Class.forName("android.os.FileUtils");
     Method setPermissions =
         fileUtils.getMethod("setPermissions", String.class, int.class, int.class, int.class);
-    return (Integer) setPermissions.invoke(null, path.getAbsolutePath(), mode, 0, 0);
+    return (Integer) setPermissions.invoke(null, path.getAbsolutePath(), mode, -1, -1);
   }
 
   private void abort() {
