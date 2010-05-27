@@ -16,10 +16,14 @@ public class RingerModeCondition implements Condition {
   private Context mContext;
   private final Configuration mConfiguration;
   private boolean mInCondition;
-  
+
   public static class Configuration implements ConditionConfiguration {
     int mmMode;
-    
+
+    /**
+     * @param mode
+     *          the mode on which to trigger: see {@link AudioManager#RINGER_MODE_NORMAL} etc.
+     */
     public Configuration(int mode) {
       mmMode = mode;
     }
@@ -73,7 +77,7 @@ public class RingerModeCondition implements Condition {
           if (mConfiguration.getMode() == ringerMode && !mInCondition) {
             invokeBegin();
             mInCondition = true;
-          } else if (mInCondition){
+          } else if (mInCondition) {
             mInCondition = false;
             invokeEnd();
           }

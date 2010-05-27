@@ -127,7 +127,7 @@ public class FacadeConfiguration {
     receivers.add(androidFacade);
     receivers.add(eventFacade);
     receivers.add(commonIntentsFacade);
-    receivers.add(new SettingsFacade(service));
+    receivers.add(new SettingsFacade(service, triggerRepository));
     receivers.add(new UiFacade(service));
     receivers.add(new RecorderFacade());
     receivers.add(new SpeechRecognitionFacade(androidFacade));
