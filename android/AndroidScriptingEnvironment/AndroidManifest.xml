@@ -125,6 +125,8 @@
       android:configChanges="keyboardHidden|orientation" />
     <service
       android:name=".activity.AseService" />
+    <service
+      android:name=".activity.TriggerService" />
     <activity
       android:name=".activity.InterpreterManager"
       android:launchMode="singleTask"

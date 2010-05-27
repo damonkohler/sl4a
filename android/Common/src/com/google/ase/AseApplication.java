@@ -20,6 +20,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.app.Application;
+import android.app.Service;
 
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.trigger.TriggerRepository;
@@ -30,6 +31,8 @@ public class AseApplication extends Application {
       new ConcurrentLinkedQueue<FutureActivityTask>();
 
   private TriggerRepository mTriggerRepository;
+  
+  private Service mTriggerService;
 
   public Queue<FutureActivityTask> getTaskQueue() {
     return mTaskQueue;
@@ -37,6 +40,10 @@ public class AseApplication extends Application {
 
   public TriggerRepository getTriggerRepository() {
     return mTriggerRepository;
+  }
+  
+  public Service getTriggerService() {
+    return mTriggerService;
   }
 
   @Override
@@ -50,5 +57,9 @@ public class AseApplication extends Application {
   public void onTerminate() {
     super.onTerminate();
     AseAnalytics.stop();
+  }
+
+  public void setTriggerService(Service triggerService) {
+    mTriggerService = triggerService;
   }
 }

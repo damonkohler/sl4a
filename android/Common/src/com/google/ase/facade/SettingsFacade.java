@@ -22,10 +22,13 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.provider.Settings.SettingNotFoundException;
 
+import com.google.ase.condition.RingerModeCondition;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+import com.google.ase.trigger.ConditionTrigger;
+import com.google.ase.trigger.TriggerRepository;
 
 /**
  * Exposes phone settings functionality.
@@ -39,6 +42,8 @@ public class SettingsFacade implements RpcReceiver {
 
   private final Service mService;
   private final AudioManager mAudio;
+  private final TriggerRepository mTriggerRepository;
+  private final Service mTriggerService;
 
   /**
    * Creates a new SettingsFacade.
@@ -46,9 +51,11 @@ public class SettingsFacade implements RpcReceiver {
    * @param service
    *          is the {@link Context} the APIs will run under
    */
-  public SettingsFacade(Service service) {
+  public SettingsFacade(Service service, Service triggerService, TriggerRepository triggerRepository) {
     mService = service;
     mAudio = (AudioManager) mService.getSystemService(Context.AUDIO_SERVICE);
+    mTriggerRepository = triggerRepository;
+    mTriggerService = triggerService;
   }
 
   @Rpc(description = "Set the screen timeout to this number of seconds.", returns = "The original screen timeout.")
@@ -121,6 +128,14 @@ public class SettingsFacade implements RpcReceiver {
   @Rpc(description = "Sets the ringer volume.")
   public void setRingerVolume(@RpcParameter(name = "volume") Integer volume) {
     mAudio.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
+  }
+
+  @Rpc(description = "Schedules a script for execution when the ringe volume is set to silent.")
+  public void onRingerSilent(
+      @RpcParameter(name = "scriptName", description = "script to execute when the ringer volume is set to silent, or set to anything other than silent") String scriptName) {
+    mTriggerRepository.addTrigger(new ConditionTrigger(scriptName, mTriggerRepository
+        .getIdProvider(), mTriggerService, new RingerModeCondition.Configuration(
+        AudioManager.RINGER_MODE_SILENT)));
   }
 
   @Rpc(description = "Returns the maximum media volume.")

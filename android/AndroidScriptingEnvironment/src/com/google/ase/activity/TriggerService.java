@@ -26,12 +26,9 @@ import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository;
 
 public class TriggerService extends Service {
-  private final TriggerRepository mTriggerRepository;
-  
+  private TriggerRepository mTriggerRepository;
+
   public TriggerService() {
-    AseApplication application = (AseApplication) this.getApplication();
-    mTriggerRepository = application.getTriggerRepository();
-    initializeTriggers();
   }
 
   private void initializeTriggers() {
@@ -45,6 +42,12 @@ public class TriggerService extends Service {
   @Override
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
+
+    AseApplication application = (AseApplication) this.getApplication();
+    mTriggerRepository = application.getTriggerRepository();
+    initializeTriggers();
+
+    ((AseApplication) getApplication()).setTriggerService(this);
   }
 
   @Override
