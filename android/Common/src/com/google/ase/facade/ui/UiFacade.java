@@ -85,11 +85,11 @@ public class UiFacade implements RpcReceiver {
     mDialogTask = new RunnableAlertDialog(title, message);
   }
 
-  @Rpc(description = "Create SeekBar dialog.")
-  public void dialogCreateSeekBar(@RpcParameter(name = "Current value") @RpcDefault("50") Integer progress,
-      @RpcParameter(name = "Maximum value") @RpcDefault("100") Integer max, 
-      @RpcParameter(name = "Title") String title,
-      @RpcParameter(name = "Message") String message) {
+  @Rpc(description = "Create seek bar dialog.")
+  public void dialogCreateSeekBar(
+      @RpcParameter(name = "Starting value") @RpcDefault("50") Integer progress,
+      @RpcParameter(name = "Maximum value") @RpcDefault("100") Integer max,
+      @RpcParameter(name = "Title") String title, @RpcParameter(name = "Message") String message) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask = new RunnableSeekBarDialog(progress, max, title, message);
   }

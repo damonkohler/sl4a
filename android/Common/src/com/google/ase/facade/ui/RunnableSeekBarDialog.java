@@ -16,15 +16,10 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureResult;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,12 +29,16 @@ import android.content.DialogInterface;
 import android.util.AndroidRuntimeException;
 import android.widget.SeekBar;
 
+import com.google.ase.AseLog;
+import com.google.ase.future.FutureActivityTask;
+import com.google.ase.future.FutureResult;
+
 /**
  * Wrapper class for dialog box with seek bar.
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-public class RunnableSeekBarDialog extends FutureActivityTask implements RunnableDialog{
+public class RunnableSeekBarDialog extends FutureActivityTask implements RunnableDialog {
 
   private final CountDownLatch mShowLatch;
 
@@ -53,7 +52,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
   private final int mMax;
   private final String mTitle;
   private final String mMessage;
-  
+
   private String mPositiveButtonText;
   private String mNegativeButtonText;
 
@@ -64,7 +63,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
     mTitle = title;
     mMessage = message;
   }
-  
+
   public void setPositiveButtonText(String text) {
     mPositiveButtonText = text;
   }
@@ -72,7 +71,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
   public void setNegativeButtonText(String text) {
     mNegativeButtonText = text;
   }
-  
+
   @Override
   public void run(Activity activity, FutureResult result) {
     mActivity = activity;
@@ -94,13 +93,18 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
     mDialog = builder.show();
     mShowLatch.countDown();
   }
-  
+
   private Builder addOnCancelListener(final AlertDialog.Builder builder, final Activity activity) {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
-        Map<String, Boolean> result = new HashMap<String, Boolean>();
-        result.put("canceled", true);
+        JSONObject result = new JSONObject();
+        try {
+          result.put("canceled", true);
+          result.put("progress", mSeekBar.getProgress());
+        } catch (JSONException e) {
+          AseLog.e(e);
+        }
         mResult.set(result);
         // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
         dialog.dismiss();
@@ -108,7 +112,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
       }
     });
   }
-  
+
   private void configureButtons(final AlertDialog.Builder builder, final Activity activity) {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
@@ -145,7 +149,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
       builder.setPositiveButton(mPositiveButtonText, buttonListener);
     }
   }
-  
+
   @Override
   public Dialog getDialog() {
     return mDialog;
@@ -154,7 +158,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
   @Override
   public void dismissDialog() {
     mDialog.dismiss();
-    mActivity.finish();  
+    mActivity.finish();
   }
 
   @Override
