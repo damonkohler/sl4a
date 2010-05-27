@@ -25,6 +25,11 @@ import com.google.ase.trigger.ConditionTrigger;
 import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository;
 
+/**
+ * The trigger service takes care of installing triggers serialized to the preference storage.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com) Damon Kohler (damonkohler@gmail.com)
+ */
 public class TriggerService extends Service {
   private TriggerRepository mTriggerRepository;
 
