@@ -48,10 +48,17 @@ public class AseService extends Service {
   private ScriptLauncher mLauncher;
   private final StringBuilder mNotificationMessage;
   private Trigger mTrigger;
-  private final int mNotificationId = NotificationIdFactory.createId();
+  private int mNotificationId;
 
   public AseService() {
     mNotificationMessage = new StringBuilder();
+  }
+  
+  @Override
+  public void onCreate() {
+    AseApplication application = (AseApplication) getApplication();
+    mNotificationId = application.getNewNotificationId();
+    showNotification();
   }
 
   @Override
@@ -67,15 +74,12 @@ public class AseService extends Service {
 
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
       launchServer(intent);
-      showNotification();
     } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)) {
       launchServer(intent);
       launchInterpreter(intent);
-      showNotification();
     } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
       launchServer(intent);
       launchTerminal(intent);
-      showNotification();
     } else if (intent.getAction().equals(Constants.ACTION_KILL_SERVICE)) {
       stopSelf();
     }

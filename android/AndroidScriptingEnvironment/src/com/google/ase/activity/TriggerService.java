@@ -16,6 +16,7 @@
 
 package com.google.ase.activity;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,6 +28,7 @@ import android.widget.RemoteViews;
 
 import com.google.ase.AseApplication;
 import com.google.ase.Constants;
+import com.google.ase.IntentBuilders;
 import com.google.ase.R;
 import com.google.ase.trigger.ConditionTrigger;
 import com.google.ase.trigger.Trigger;
@@ -35,11 +37,18 @@ import com.google.ase.trigger.TriggerRepository;
 /**
  * The trigger service takes care of installing triggers serialized to the preference storage.
  * 
+ * The service also installs an alarm that keeps it running, unless the user force-quits
+ * the service.
+ * 
+ * When no triggers are installed the service shuts down silently as to not consume resources
+ * unnecessarily.
+ * 
  * @author Felix Arends (felix.arends@gmail.com) Damon Kohler (damonkohler@gmail.com)
  */
 public class TriggerService extends Service {
   private TriggerRepository mTriggerRepository;
-  private static final int mTriggerServiceNotificationId = NotificationIdFactory.createId();
+  private static int mTriggerServiceNotificationId;
+  private static final long TRIGGER_SERVICE_PING_MILLIS = 10 * 1000 * 60;
 
   public TriggerService() {
   }
@@ -51,19 +60,15 @@ public class TriggerService extends Service {
       }
     }
   }
-
+  
   @Override
-  public void onStart(Intent intent, int startId) {
-    super.onStart(intent, startId);
-
-    if (intent.getAction() != null &&
-        Constants.ACTION_KILL_SERVICE.compareTo(intent.getAction()) == 0) {
-      stopSelf();
-      return;
-    }
+  public void onCreate() {
+    super.onCreate();
 
     AseApplication application = (AseApplication) this.getApplication();
+    mTriggerServiceNotificationId = application.getNewNotificationId();
     mTriggerRepository = application.getTriggerRepository();
+    
     initializeTriggers();
 
     ((AseApplication) getApplication()).setTriggerService(this);
@@ -82,6 +87,32 @@ public class TriggerService extends Service {
     NotificationManager manager =
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     manager.notify(mTriggerServiceNotificationId, notification);
+    
+    installAlarm();
+  }
+
+  @Override
+  public void onStart(Intent intent, int startId) {
+    super.onStart(intent, startId);
+
+    if (intent.getAction() != null &&
+        Constants.ACTION_KILL_SERVICE.compareTo(intent.getAction()) == 0) {
+      uninstallAlarm();
+      stopSelf();
+      return;
+    }
+  }
+
+  private void installAlarm() {
+    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+        + TRIGGER_SERVICE_PING_MILLIS, TRIGGER_SERVICE_PING_MILLIS, IntentBuilders
+        .buildTriggerServicePendingIntent(this));
+  }
+
+  private void uninstallAlarm() {
+    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    alarmManager.cancel(IntentBuilders.buildTriggerServicePendingIntent(this));
   }
 
   @Override

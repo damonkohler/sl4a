@@ -23,8 +23,10 @@ package com.google.ase.activity;
  * @author Felix Arends (felix.arends@gmail.com)
  * 
  */
-public class NotificationIdFactory {
+public final class NotificationIdFactory {
   private static int mNextId = 1;
+  
+  public static final NotificationIdFactory INSTANCE = new NotificationIdFactory();
 
   public static synchronized int createId() {
     return mNextId++;
