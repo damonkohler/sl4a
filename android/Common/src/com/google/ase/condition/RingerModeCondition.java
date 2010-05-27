@@ -26,11 +26,12 @@ import com.google.ase.AseLog;
 import com.google.ase.trigger.ConditionListener;
 
 public class RingerModeCondition implements Condition {
+  private static final String RINGER_MODE_STATE_EXTRA = "ringer_mode";
   private ConditionListener mConditionListener;
   private final AudioManager mAudioManager;
   private Context mContext;
   private final Configuration mConfiguration;
-  private boolean mInCondition;
+  private int mPreviousRingerMode;
   
   /** Our broadcast receiver dealing with changes to the ringer mode. */
   private final BroadcastReceiver ringerModeBroadcastReceiver = new BroadcastReceiver() {
@@ -42,12 +43,11 @@ public class RingerModeCondition implements Condition {
       case AudioManager.RINGER_MODE_NORMAL:
       case AudioManager.RINGER_MODE_SILENT:
       case AudioManager.RINGER_MODE_VIBRATE:
-        if (mConfiguration.getMode() == ringerMode && !mInCondition) {
-          invokeListener(null);
-          mInCondition = true;
-        } else if (mInCondition) {
-          mInCondition = false;
-          invokeListener(null);
+        if (mPreviousRingerMode != ringerMode) {
+          mPreviousRingerMode = ringerMode;
+          invokeListener();
+        } else {
+          ringerMode = mConfiguration.getMode();
         }
       default:
         AseLog.e("Invalid ringer mode.");
@@ -90,20 +90,16 @@ public class RingerModeCondition implements Condition {
 
   @Override
   public void start() {
-    if (mAudioManager.getRingerMode() == mConfiguration.getMode()) {
-      mInCondition = true;
-      invokeListener(null);
-    } else {
-      mInCondition = false;
-      invokeListener(null);
-    }
-
+    mPreviousRingerMode = mAudioManager.getRingerMode();
+    invokeListener();
     mContext.registerReceiver(ringerModeBroadcastReceiver, new IntentFilter(
         AudioManager.RINGER_MODE_CHANGED_ACTION));
   }
 
-  private void invokeListener(Bundle state) {
+  private void invokeListener() {
     if (mConditionListener != null) {
+      Bundle state = new Bundle();
+      state.putInt(RINGER_MODE_STATE_EXTRA, mPreviousRingerMode);
       mConditionListener.run(state);
     }
   }
