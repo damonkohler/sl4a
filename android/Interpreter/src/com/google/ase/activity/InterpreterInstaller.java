@@ -17,6 +17,7 @@
 package com.google.ase.activity;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -224,48 +225,23 @@ public class InterpreterInstaller extends Activity {
     // Chmod up the directory tree to the top of our data directory.
     for (File pathPart = mInterpreter.getBinary(); pathPart != null
         && !pathPart.getName().equals("com.google.ase"); pathPart = pathPart.getParentFile()) {
-      if (!chmodWithRetries(pathPart, "755", MAX_CHMOD_RETRIES)) {
+      try {
+        if (chmod(pathPart, 00755) == 0) {
+          return false;
+        }
+      } catch (Exception e) {
+        AseLog.e(e);
         return false;
       }
     }
     return true;
   }
 
-  private boolean chmodWithRetries(File path, String mode, int times) {
-    boolean success = false;
-    for (int attemptNumber = 0; attemptNumber < MAX_CHMOD_RETRIES; attemptNumber++) {
-      if (chmod(path, mode)) {
-        success = true;
-        break;
-      }
-      try {
-        Thread.sleep(100);
-      } catch (InterruptedException e) {
-        AseLog.e(e);
-      }
-    }
-    return success;
-  }
-
-  private boolean chmod(File path, String mode) {
-    String[] command =
-        new String[] { "/system/bin/sh", "-c",
-          String.format("chmod %s %s", mode, path.getAbsolutePath()) };
-    Process process;
-    int exitValue;
-    try {
-      process = Runtime.getRuntime().exec(command);
-      exitValue = process.waitFor();
-    } catch (Exception e) {
-      AseLog.e(e);
-      return false;
-    }
-    if (exitValue != 0) {
-      AseLog.e(String.format("chmod %s %s exited with code %d", path.getAbsolutePath(), mode,
-          process.exitValue()));
-      return false;
-    }
-    return true;
+  private int chmod(File path, int mode) throws Exception {
+    Class<?> fileUtils = Class.forName("android.os.FileUtils");
+    Method setPermissions =
+        fileUtils.getMethod("setPermissions", String.class, int.class, int.class, int.class);
+    return (Integer) setPermissions.invoke(null, path.getAbsolutePath(), mode, 0, 0);
   }
 
   private void abort() {
