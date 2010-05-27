@@ -46,6 +46,7 @@ public class ConditionTrigger extends Trigger {
       @Override
       public void run() {
         Intent intent = IntentBuilders.buildStartInBackgroundIntent(getScriptName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         // TODO: add extras, check background or foreground
         context.startActivity(intent);
       }
@@ -55,6 +56,7 @@ public class ConditionTrigger extends Trigger {
       @Override
       public void run() {
         Intent intent = IntentBuilders.buildStartInBackgroundIntent(getScriptName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         // TODO: add extras, check background or foreground
         context.startActivity(intent);
       }

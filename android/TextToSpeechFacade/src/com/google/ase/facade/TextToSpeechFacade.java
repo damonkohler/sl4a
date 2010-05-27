@@ -22,7 +22,6 @@ import android.app.Service;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 
-import com.google.ase.AseLog;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
@@ -44,11 +43,6 @@ public class TextToSpeechFacade implements RpcReceiver {
 
   @Override
   public void shutdown() {
-    try {
-      mOnInitLock.await();
-    } catch (InterruptedException e) {
-      AseLog.e(e);
-    }
     mTts.shutdown();
   }
 

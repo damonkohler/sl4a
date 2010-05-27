@@ -72,5 +72,7 @@ public class Constants {
       new ComponentName("com.google.ase", "com.google.ase.activity.AseServiceLauncher");
   public static final ComponentName BLUETOOTH_DEVICE_LIST_COMPONENT_NAME =
       new ComponentName("com.google.ase", "com.google.ase.activity.BluetoothDeviceList");
+  public static final ComponentName TRIGGER_SERVICE_COMPONENT_NAME =
+      new ComponentName("com.google.ase", "com.google.ase.activity.TriggerService");
 
 }

@@ -32,6 +32,12 @@ public class IntentBuilders {
   private IntentBuilders() {
     // Utility class.
   }
+  
+  public static Intent buildTriggerServiceIntent() {
+    Intent intent = new Intent();
+    intent.setComponent(Constants.TRIGGER_SERVICE_COMPONENT_NAME);
+    return intent;
+  }
 
   /**
    * Builds an intent that will launch a script in the background.

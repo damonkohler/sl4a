@@ -93,6 +93,8 @@ public class ScriptManager extends ListActivity {
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     setResult(RESULT_CANCELED); // Default to canceled if we were started for result.
     AseAnalytics.trackActivity(this);
+
+    startService(IntentBuilders.buildTriggerServiceIntent());
   }
 
   @Override

@@ -113,6 +113,8 @@ public class FacadeConfiguration {
     List<RpcReceiver> receivers = new ArrayList<RpcReceiver>();
     TriggerRepository triggerRepository =
         ((AseApplication) service.getApplication()).getTriggerRepository();
+    Service triggerService =
+        ((AseApplication) service.getApplication()).getTriggerService();
 
     AndroidFacade androidFacade = new AndroidFacade(service, intent, new AndroidFacade.Resources() {
       @Override
@@ -127,7 +129,7 @@ public class FacadeConfiguration {
     receivers.add(androidFacade);
     receivers.add(eventFacade);
     receivers.add(commonIntentsFacade);
-    receivers.add(new SettingsFacade(service, triggerRepository));
+    receivers.add(new SettingsFacade(service, triggerService, triggerRepository));
     receivers.add(new UiFacade(service));
     receivers.add(new RecorderFacade());
     receivers.add(new SpeechRecognitionFacade(androidFacade));

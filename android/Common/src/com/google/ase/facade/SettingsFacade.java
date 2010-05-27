@@ -43,6 +43,7 @@ public class SettingsFacade implements RpcReceiver {
   private final Service mService;
   private final AudioManager mAudio;
   private final TriggerRepository mTriggerRepository;
+  private final Service mTriggerService;
 
   /**
    * Creates a new SettingsFacade.
@@ -50,10 +51,11 @@ public class SettingsFacade implements RpcReceiver {
    * @param service
    *          is the {@link Context} the APIs will run under
    */
-  public SettingsFacade(Service service, TriggerRepository triggerRepository) {
+  public SettingsFacade(Service service, Service triggerService, TriggerRepository triggerRepository) {
     mService = service;
     mAudio = (AudioManager) mService.getSystemService(Context.AUDIO_SERVICE);
     mTriggerRepository = triggerRepository;
+    mTriggerService = triggerService;
   }
 
   @Rpc(description = "Set the screen timeout to this number of seconds.", returns = "The original screen timeout.")
@@ -132,7 +134,8 @@ public class SettingsFacade implements RpcReceiver {
   public void onRingerSilent(
       @RpcParameter(name = "scriptName", description = "script to execute when the ringer volume is set to silent, or set to anything other than silent") String scriptName) {
     mTriggerRepository.addTrigger(new ConditionTrigger(scriptName, mTriggerRepository
-        .getIdProvider(), mService, new RingerModeCondition.Configuration(AudioManager.RINGER_MODE_SILENT)));
+        .getIdProvider(), mTriggerService, new RingerModeCondition.Configuration(
+        AudioManager.RINGER_MODE_SILENT)));
   }
 
   @Rpc(description = "Returns the maximum media volume.")
