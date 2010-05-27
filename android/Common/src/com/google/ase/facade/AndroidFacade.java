@@ -151,7 +151,9 @@ public class AndroidFacade implements RpcReceiver {
       throws JSONException {
     Intent intent = new Intent(action);
     intent.setDataAndType(uri != null ? Uri.parse(uri) : null, type);
-    putExtrasFromJsonObject(extras, intent);
+    if (extras != null) {
+      putExtrasFromJsonObject(extras, intent);
+    }
     return startActivityForResult(intent);
   }
 
@@ -204,7 +206,9 @@ public class AndroidFacade implements RpcReceiver {
       throws JSONException {
     Intent intent = new Intent(action);
     intent.setDataAndType(uri != null ? Uri.parse(uri) : null, type);
-    putExtrasFromJsonObject(extras, intent);
+    if (extras != null) {
+      putExtrasFromJsonObject(extras, intent);
+    }
     startActivity(intent);
   }
 
