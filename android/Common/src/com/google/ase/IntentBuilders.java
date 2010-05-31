@@ -32,7 +32,7 @@ public class IntentBuilders {
   private IntentBuilders() {
     // Utility class.
   }
-  
+
   public static Intent buildTriggerServiceIntent() {
     Intent intent = new Intent();
     intent.setComponent(Constants.TRIGGER_SERVICE_COMPONENT_NAME);
@@ -108,8 +108,8 @@ public class IntentBuilders {
   /**
    * Creates a pending intent that can be used to execute the trigger with the given id.
    * 
-   * @param service
-   *          the service under whose authority to launch the intent
+   * @param context
+   *          the context under whose authority to launch the intent
    * @param info
    *          {@link Trigger} trigger to run
    * 
@@ -118,9 +118,23 @@ public class IntentBuilders {
   public static PendingIntent buildTriggerIntent(Context context, Trigger trigger) {
     final Intent intent = buildStartInBackgroundIntent(trigger.getScriptName());
     intent.putExtra(Constants.EXTRA_TRIGGER_ID, trigger.getId());
-    intent.setData(Uri.fromParts("trigger", trigger.getScriptName().toLowerCase(),
-        "" + trigger.getId()));
+    intent.setData(Uri.fromParts("trigger", trigger.getScriptName().toLowerCase(), ""
+        + trigger.getId()));
     intent.setComponent(Constants.ASE_SERVICE_COMPONENT_NAME);
+    return PendingIntent.getService(context, EXECUTE_SCRIPT_REQUEST_CODE, intent,
+        PendingIntent.FLAG_UPDATE_CURRENT);
+  }
+
+  /**
+   * Creates a pending intent that can be used to start the trigger service.
+   * 
+   * @param context
+   *          the context under whose authority to launch the intent
+   * 
+   * @return {@link PendingIntent} object for running the trigger service
+   */
+  public static PendingIntent buildTriggerServicePendingIntent(Context context) {
+    final Intent intent = buildTriggerServiceIntent();
     return PendingIntent.getService(context, EXECUTE_SCRIPT_REQUEST_CODE, intent,
         PendingIntent.FLAG_UPDATE_CURRENT);
   }

@@ -19,13 +19,22 @@ package com.google.ase.trigger;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.google.ase.IntentBuilders;
 import com.google.ase.condition.Condition;
 import com.google.ase.condition.ConditionConfiguration;
 
+/**
+ * A {@link ConditionTrigger} object combines a trigger with a condition. When the condition fires,
+ * the trigger is invoked. The {@link ConditionTrigger} object takes care of proper serialization of
+ * the condition configuration.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ */
 public class ConditionTrigger extends Trigger {
   private static final long serialVersionUID = 5415193311156216064L;
+  private static final String EXTRA_CONDITION_STATE = "condition_state";
   private final ConditionConfiguration mConditionConfiguration;
   private transient Condition mCondition;
 
@@ -40,24 +49,12 @@ public class ConditionTrigger extends Trigger {
   public void initializeTransients(final Context context) {
     mCondition = mConditionConfiguration.getCondition(context);
 
-    // TODO: possibly register only one listener.
-
-    mCondition.addBeginListener(new ConditionListener() {
+    mCondition.addListener(new ConditionListener() {
       @Override
-      public void run() {
+      public void run(Bundle state) {
         Intent intent = IntentBuilders.buildStartInBackgroundIntent(getScriptName());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        // TODO: add extras, check background or foreground
-        context.startActivity(intent);
-      }
-    });
-
-    mCondition.addEndListener(new ConditionListener() {
-      @Override
-      public void run() {
-        Intent intent = IntentBuilders.buildStartInBackgroundIntent(getScriptName());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        // TODO: add extras, check background or foreground
+        intent.putExtra(EXTRA_CONDITION_STATE, state);
         context.startActivity(intent);
       }
     });

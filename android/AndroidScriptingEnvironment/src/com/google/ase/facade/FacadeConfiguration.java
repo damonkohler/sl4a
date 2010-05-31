@@ -35,7 +35,7 @@ import com.google.ase.trigger.TriggerRepository;
 
 /**
  * Encapsulates the list of supported facades and their construction.
- * 
+ *
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Igor Karp (igor.v.karp@gmail.com)
  */
@@ -81,6 +81,13 @@ public class FacadeConfiguration {
       list.addAll(MethodDescriptor.collectFrom(EyesFreeFacade.class));
     }
 
+    // SignalStrength is not available before API level 7.
+    try {
+      list.addAll(MethodDescriptor.collectFrom(SignalStrengthFacade.class));
+    } catch (Throwable t) {
+      AseLog.e("SignalStrength not available", t);
+    }
+
     for (MethodDescriptor rpc : list) {
       sRpcs.put(rpc.getName(), rpc);
     }
@@ -102,7 +109,7 @@ public class FacadeConfiguration {
 
   /**
    * Returns a {@link JsonRpcServer} with all facades configured.
-   * 
+   *
    * @param service
    *          service to configure facades with
    * @param intent
@@ -158,6 +165,13 @@ public class FacadeConfiguration {
     } catch (Throwable t) {
       AseLog.e("TTS not available. Falling back to Eyes-Free project for TTS support.", t);
       receivers.add(new EyesFreeFacade(service));
+    }
+
+    // SignalStrength is not available before API level 7.
+    try {
+      receivers.add(new SignalStrengthFacade(service, eventFacade));
+    } catch (Throwable t) {
+      AseLog.e("SignalStrength not available", t);
     }
 
     return new JsonRpcServer(receivers);

@@ -212,4 +212,8 @@ public class TriggerRepository {
   public IdProvider getIdProvider() {
     return mIdProvider;
   }
+
+  public boolean isEmpty() {
+    return mTriggers.isEmpty();
+  }
 }

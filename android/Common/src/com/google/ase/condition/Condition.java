@@ -33,10 +33,7 @@ import com.google.ase.trigger.ConditionListener;
  */
 public interface Condition {
   /** Adds a listener for the event that the condition starts to hold. */
-  public void addBeginListener(ConditionListener listener);
-
-  /** Adds a listener for the event that the condition stops holding. */
-  public void addEndListener(ConditionListener listener);
+  public void addListener(ConditionListener listener);
 
   /** Starts observing the condition. */
   public void start();
