@@ -295,14 +295,13 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")
   public void notify(
-      @RpcParameter(name = "message") String message,
-      @RpcParameter(name = "title", description = "title") @RpcDefault("ASE Notification") final String title,
-      @RpcParameter(name = "ticker", description = "ticker") @RpcDefault("ASE Notification") final String ticker) {
+      @RpcParameter(name = "title", description = "title") String title,
+      @RpcParameter(name = "message") String message) {
     Notification notification =
-        new Notification(mResources.getAseLogo48(), ticker, System.currentTimeMillis());
+        new Notification(mResources.getAseLogo48(), message, System.currentTimeMillis());
     // This contentIntent is a noop.
     PendingIntent contentIntent = PendingIntent.getService(mService, 0, new Intent(), 0);
-    notification.setLatestEventInfo(mService, title, ticker, contentIntent);
+    notification.setLatestEventInfo(mService, title, message, contentIntent);
     notification.flags = Notification.FLAG_AUTO_CANCEL;
     mNotificationManager.notify(1, notification);
   }
