@@ -85,6 +85,8 @@ public class RingerModeCondition implements Condition {
   }
 
   public static class Factory implements ConditionFactory {
+    private static final long serialVersionUID = 7593570695879937214L;
+
     @Override
     public Condition create(Context context) {
       return new RingerModeCondition(context);
