@@ -35,7 +35,7 @@ import com.google.ase.trigger.TriggerRepository;
 
 /**
  * Encapsulates the list of supported facades and their construction.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Igor Karp (igor.v.karp@gmail.com)
  */
@@ -65,6 +65,7 @@ public class FacadeConfiguration {
     list.addAll(MethodDescriptor.collectFrom(ToneGeneratorFacade.class));
     list.addAll(MethodDescriptor.collectFrom(CommonIntentsFacade.class));
     list.addAll(MethodDescriptor.collectFrom(PhoneFacade.class));
+    list.addAll(MethodDescriptor.collectFrom(ConditionManagerFacade.class));
 
     // Bluetooth is not available before API level 5.
     try {
@@ -109,7 +110,7 @@ public class FacadeConfiguration {
 
   /**
    * Returns a {@link JsonRpcServer} with all facades configured.
-   *
+   * 
    * @param service
    *          service to configure facades with
    * @param intent
@@ -120,8 +121,7 @@ public class FacadeConfiguration {
     List<RpcReceiver> receivers = new ArrayList<RpcReceiver>();
     TriggerRepository triggerRepository =
         ((AseApplication) service.getApplication()).getTriggerRepository();
-    Service triggerService =
-        ((AseApplication) service.getApplication()).getTriggerService();
+    Service triggerService = ((AseApplication) service.getApplication()).getTriggerService();
 
     AndroidFacade androidFacade = new AndroidFacade(service, intent, new AndroidFacade.Resources() {
       @Override
@@ -136,7 +136,7 @@ public class FacadeConfiguration {
     receivers.add(androidFacade);
     receivers.add(eventFacade);
     receivers.add(commonIntentsFacade);
-    receivers.add(new SettingsFacade(service, triggerService, triggerRepository));
+    receivers.add(new SettingsFacade(service));
     receivers.add(new UiFacade(service));
     receivers.add(new RecorderFacade());
     receivers.add(new SpeechRecognitionFacade(androidFacade));
@@ -151,6 +151,7 @@ public class FacadeConfiguration {
     receivers.add(new WifiFacade(service));
     receivers.add(new ApplicationManagerFacade(service, androidFacade));
     receivers.add(new ToneGeneratorFacade());
+    receivers.add(new ConditionManagerFacade(triggerService, triggerRepository));
 
     // Bluetooth is not available before Android 2.0.
     try {

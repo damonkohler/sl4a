@@ -29,25 +29,21 @@ public class RingerModeCondition implements Condition {
   private static final String RINGER_MODE_STATE_EXTRA = "ringer_mode";
   private ConditionListener mConditionListener;
   private final AudioManager mAudioManager;
-  private Context mContext;
-  private final Configuration mConfiguration;
-  private int mPreviousRingerMode;
-  
+  private final Context mContext;
+  private int mRingerMode;
+
   /** Our broadcast receiver dealing with changes to the ringer mode. */
-  private final BroadcastReceiver ringerModeBroadcastReceiver = new BroadcastReceiver() {
+  private final BroadcastReceiver mRingerModeBroadcastReceiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
-      int ringerMode = intent.getIntExtra(AudioManager.EXTRA_RINGER_MODE, -1);
-
-      switch (ringerMode) {
+      int newRingerMode = intent.getIntExtra(AudioManager.EXTRA_RINGER_MODE, -1);
+      switch (newRingerMode) {
       case AudioManager.RINGER_MODE_NORMAL:
       case AudioManager.RINGER_MODE_SILENT:
       case AudioManager.RINGER_MODE_VIBRATE:
-        if (mPreviousRingerMode != ringerMode) {
-          mPreviousRingerMode = ringerMode;
+        if (mRingerMode != newRingerMode) {
+          mRingerMode = newRingerMode;
           invokeListener();
-        } else {
-          ringerMode = mConfiguration.getMode();
         }
       default:
         AseLog.e("Invalid ringer mode.");
@@ -55,32 +51,9 @@ public class RingerModeCondition implements Condition {
     }
   };
 
-  /** Configuration of the RingerModeCondition.  Stores the mode on which to trigger. */
-  public static class Configuration implements ConditionConfiguration {
-    int mmMode;
-
-    /**
-     * @param mode
-     *          the mode on which to trigger: see {@link AudioManager#RINGER_MODE_NORMAL} etc.
-     */
-    public Configuration(int mode) {
-      mmMode = mode;
-    }
-
-    public int getMode() {
-      return mmMode;
-    }
-
-    @Override
-    public Condition getCondition(Context context) {
-      return new RingerModeCondition(context, this);
-    }
-  }
-
-  private RingerModeCondition(Context context, Configuration configuration) {
+  private RingerModeCondition(Context context) {
     mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     mContext = context;
-    mConfiguration = configuration;
   }
 
   @Override
@@ -90,22 +63,22 @@ public class RingerModeCondition implements Condition {
 
   @Override
   public void start() {
-    mPreviousRingerMode = mAudioManager.getRingerMode();
+    mRingerMode = mAudioManager.getRingerMode();
     invokeListener();
-    mContext.registerReceiver(ringerModeBroadcastReceiver, new IntentFilter(
+    mContext.registerReceiver(mRingerModeBroadcastReceiver, new IntentFilter(
         AudioManager.RINGER_MODE_CHANGED_ACTION));
   }
 
   private void invokeListener() {
     if (mConditionListener != null) {
       Bundle state = new Bundle();
-      state.putInt(RINGER_MODE_STATE_EXTRA, mPreviousRingerMode);
+      state.putInt(RINGER_MODE_STATE_EXTRA, mRingerMode);
       mConditionListener.run(state);
     }
   }
 
   @Override
   public void stop() {
-    mContext.unregisterReceiver(ringerModeBroadcastReceiver);
+    mContext.unregisterReceiver(mRingerModeBroadcastReceiver);
   }
 }
