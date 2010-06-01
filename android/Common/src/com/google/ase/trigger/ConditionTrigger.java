@@ -16,7 +16,6 @@
 
 package com.google.ase.trigger;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,10 +38,9 @@ public class ConditionTrigger extends Trigger {
   private transient Condition mCondition;
 
   public ConditionTrigger(String scriptName, TriggerRepository.IdProvider idProvider,
-      Service service, ConditionConfiguration conditionConfiguration) {
+      ConditionConfiguration conditionConfiguration) {
     super(scriptName, idProvider);
     mConditionConfiguration = conditionConfiguration;
-    initializeTransients(service);
   }
 
   @Override
