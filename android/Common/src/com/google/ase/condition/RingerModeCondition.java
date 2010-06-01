@@ -27,9 +27,11 @@ import com.google.ase.trigger.ConditionListener;
 
 public class RingerModeCondition implements Condition {
   private static final String RINGER_MODE_STATE_EXTRA = "ringer_mode";
-  private ConditionListener mConditionListener;
+
   private final AudioManager mAudioManager;
   private final Context mContext;
+
+  private ConditionListener mConditionListener;
   private int mRingerMode;
 
   /** Our broadcast receiver dealing with changes to the ringer mode. */
@@ -46,7 +48,7 @@ public class RingerModeCondition implements Condition {
           invokeListener();
         }
       default:
-        AseLog.e("Invalid ringer mode.");
+        AseLog.e("Invalid ringer mode: " + newRingerMode);
       }
     }
   };
@@ -80,5 +82,12 @@ public class RingerModeCondition implements Condition {
   @Override
   public void stop() {
     mContext.unregisterReceiver(mRingerModeBroadcastReceiver);
+  }
+
+  public static class Factory implements ConditionFactory {
+    @Override
+    public Condition create(Context context) {
+      return new RingerModeCondition(context);
+    }
   }
 }

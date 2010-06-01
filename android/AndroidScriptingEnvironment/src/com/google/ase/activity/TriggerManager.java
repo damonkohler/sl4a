@@ -19,6 +19,7 @@ package com.google.ase.activity;
 import java.util.List;
 
 import android.app.ListActivity;
+import android.app.Service;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -39,10 +40,12 @@ import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
+import com.google.ase.condition.RingerModeCondition;
 import com.google.ase.dialog.DurationPickerDialog;
 import com.google.ase.dialog.Help;
 import com.google.ase.dialog.DurationPickerDialog.DurationPickedListener;
 import com.google.ase.trigger.AlarmTriggerManager;
+import com.google.ase.trigger.ConditionTrigger;
 import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository;
 
@@ -51,6 +54,7 @@ public class TriggerManager extends ListActivity {
   private AlarmTriggerManager mAlarmTriggerManager;
   private TriggerAdapter mAdapter;
   private List<Trigger> mTriggerList;
+  private Service mTriggerService;
 
   private static enum ContextMenuId {
     REMOVE;
@@ -60,7 +64,7 @@ public class TriggerManager extends ListActivity {
   }
 
   private static enum MenuId {
-    SCHEDULE_REPEATING, HELP, SCHEDULE_INEXACT_REPEATING;
+    SCHEDULE_REPEATING, SCHEDULE_INEXACT_REPEATING, RINGER_MODE_CONDITION, HELP;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -71,6 +75,7 @@ public class TriggerManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Triggers", R.layout.trigger_manager);
     mTriggerRepository = ((AseApplication) getApplication()).getTriggerRepository();
+    mTriggerService = ((AseApplication) getApplication()).getTriggerService();
     mAlarmTriggerManager = new AlarmTriggerManager(this, mTriggerRepository);
     mTriggerList = mTriggerRepository.getAllTriggers();
     mAdapter = new TriggerAdapter();
@@ -84,11 +89,14 @@ public class TriggerManager extends ListActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    SubMenu subMenu = menu.addSubMenu("Add");
-    subMenu.setIcon(android.R.drawable.ic_menu_add);
-    subMenu.add(Menu.NONE, MenuId.SCHEDULE_REPEATING.getId(), Menu.NONE, "Repeating");
-    subMenu.add(Menu.NONE, MenuId.SCHEDULE_INEXACT_REPEATING.getId(), Menu.NONE,
+    SubMenu addRepeating = menu.addSubMenu("Add Repeating");
+    addRepeating.setIcon(android.R.drawable.ic_menu_add);
+    addRepeating.add(Menu.NONE, MenuId.SCHEDULE_REPEATING.getId(), Menu.NONE, "Repeating");
+    addRepeating.add(Menu.NONE, MenuId.SCHEDULE_INEXACT_REPEATING.getId(), Menu.NONE,
         "Power Efficient Repeating");
+    SubMenu addCondition = menu.addSubMenu("Add Condition");
+    addCondition.setIcon(android.R.drawable.ic_menu_add);
+    addCondition.add(Menu.NONE, MenuId.RINGER_MODE_CONDITION.getId(), Menu.NONE, "Ringer Mode");
     return true;
   }
 
@@ -97,14 +105,10 @@ public class TriggerManager extends ListActivity {
     int itemId = item.getItemId();
     if (itemId == MenuId.HELP.getId()) {
       Help.show(this);
-    } else if (itemId == MenuId.SCHEDULE_REPEATING.getId()) {
+    } else if (itemId != Menu.NONE) {
       Intent intent = new Intent(this, ScriptPicker.class);
       intent.setAction(Intent.ACTION_PICK);
-      startActivityForResult(intent, 0);
-    } else if (itemId == MenuId.SCHEDULE_INEXACT_REPEATING.getId()) {
-      Intent intent = new Intent(this, ScriptPicker.class);
-      intent.setAction(Intent.ACTION_PICK);
-      startActivityForResult(intent, 1);
+      startActivityForResult(intent, itemId);
     }
     return true;
   }
@@ -124,7 +128,7 @@ public class TriggerManager extends ListActivity {
       return false;
     }
 
-    Trigger trigger = (Trigger) mAdapter.getItem(info.position);
+    Trigger trigger = mAdapter.getItem(info.position);
     if (trigger == null) {
       AseLog.v("No trigger selected.");
       return false;
@@ -177,8 +181,7 @@ public class TriggerManager extends ListActivity {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (resultCode == RESULT_OK) {
       final String scriptName = data.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-      switch (requestCode) {
-      case 0:
+      if (requestCode == MenuId.SCHEDULE_REPEATING.getId()) {
         DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
             new DurationPickedListener() {
               @Override
@@ -191,8 +194,7 @@ public class TriggerManager extends ListActivity {
               public void onCancel() {
               }
             });
-        break;
-      case 1:
+      } else if (requestCode == MenuId.SCHEDULE_INEXACT_REPEATING.getId()) {
         DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
             new DurationPickedListener() {
               @Override
@@ -205,9 +207,10 @@ public class TriggerManager extends ListActivity {
               public void onCancel() {
               }
             });
-        break;
-      default:
-        break;
+      } else if (requestCode == MenuId.RINGER_MODE_CONDITION.getId()) {
+        mTriggerRepository.addTrigger(new ConditionTrigger(scriptName, mTriggerRepository
+            .getIdProvider(), mTriggerService, new RingerModeCondition.Factory()));
+        mAdapter.notifyDataSetInvalidated();
       }
     }
   }
