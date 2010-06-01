@@ -24,6 +24,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -54,6 +55,16 @@ public class TriggerRepository {
     private IdProvider() {
     };
   }
+
+  /**
+   * An interface for objects that are notified when a trigger is added to the repository.
+   */
+  public interface AddTriggerListener {
+    void onAddTrigger(Trigger trigger);
+  }
+  
+  private CopyOnWriteArrayList<AddTriggerListener> addTriggerListeners =
+      new CopyOnWriteArrayList<AddTriggerListener>();
 
   /**
    * The list of triggers is serialzied to the shared preferences entry with this name.
@@ -104,7 +115,11 @@ public class TriggerRepository {
   public synchronized void addTrigger(Trigger trigger) {
     mTriggers.add(trigger);
     storeTriggers(mTriggers);
-    trigger.install();
+    notifyOnTriggerAdd();
+  }
+
+  private void notifyOnTriggerAdd() {
+    
   }
 
   /** Writes the list of triggers to the shared preferences. */

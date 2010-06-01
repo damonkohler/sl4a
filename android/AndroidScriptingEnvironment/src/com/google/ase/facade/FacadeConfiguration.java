@@ -121,7 +121,6 @@ public class FacadeConfiguration {
     List<RpcReceiver> receivers = new ArrayList<RpcReceiver>();
     TriggerRepository triggerRepository =
         ((AseApplication) service.getApplication()).getTriggerRepository();
-    Service triggerService = ((AseApplication) service.getApplication()).getTriggerService();
 
     AndroidFacade androidFacade = new AndroidFacade(service, intent, new AndroidFacade.Resources() {
       @Override
@@ -151,7 +150,7 @@ public class FacadeConfiguration {
     receivers.add(new WifiFacade(service));
     receivers.add(new ApplicationManagerFacade(service, androidFacade));
     receivers.add(new ToneGeneratorFacade());
-    receivers.add(new ConditionManagerFacade(triggerService, triggerRepository));
+    receivers.add(new ConditionManagerFacade(triggerRepository));
 
     // Bluetooth is not available before Android 2.0.
     try {

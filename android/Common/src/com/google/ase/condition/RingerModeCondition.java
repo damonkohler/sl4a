@@ -25,6 +25,13 @@ import android.os.Bundle;
 import com.google.ase.AseLog;
 import com.google.ase.trigger.ConditionListener;
 
+/**
+ * This condition invokes a trigger whenever the ringer mode changes. The "ringer_mode" element in
+ * the "state" map of the extras passed to the trigger script contains the new ringer mode.
+ * 
+ * @author Felix Arends (felix.arends@gmail.com)
+ * 
+ */
 public class RingerModeCondition implements Condition {
   private static final String RINGER_MODE_STATE_EXTRA = "ringer_mode";
 
