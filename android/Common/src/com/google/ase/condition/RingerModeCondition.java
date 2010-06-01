@@ -23,15 +23,13 @@ import android.media.AudioManager;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
-import com.google.ase.trigger.ConditionListener;
 
-public class RingerModeCondition implements Condition {
+public class RingerModeCondition extends Condition {
   private static final String RINGER_MODE_STATE_EXTRA = "ringer_mode";
 
   private final AudioManager mAudioManager;
   private final Context mContext;
 
-  private ConditionListener mConditionListener;
   private int mRingerMode;
 
   /** Our broadcast receiver dealing with changes to the ringer mode. */
@@ -44,8 +42,7 @@ public class RingerModeCondition implements Condition {
       case AudioManager.RINGER_MODE_SILENT:
       case AudioManager.RINGER_MODE_VIBRATE:
         if (mRingerMode != newRingerMode) {
-          mRingerMode = newRingerMode;
-          invokeListener();
+          updateRingerMode(newRingerMode);
         }
       default:
         AseLog.e("Invalid ringer mode: " + newRingerMode);
@@ -58,25 +55,18 @@ public class RingerModeCondition implements Condition {
     mContext = context;
   }
 
-  @Override
-  public void addListener(ConditionListener listener) {
-    mConditionListener = listener;
+  private void updateRingerMode(int ringerMode) {
+    mRingerMode = ringerMode;
+    Bundle state = new Bundle();
+    state.putInt(RINGER_MODE_STATE_EXTRA, ringerMode);
+    updateState(state);
   }
 
   @Override
   public void start() {
-    mRingerMode = mAudioManager.getRingerMode();
-    invokeListener();
+    updateRingerMode(mAudioManager.getRingerMode());
     mContext.registerReceiver(mRingerModeBroadcastReceiver, new IntentFilter(
         AudioManager.RINGER_MODE_CHANGED_ACTION));
-  }
-
-  private void invokeListener() {
-    if (mConditionListener != null) {
-      Bundle state = new Bundle();
-      state.putInt(RINGER_MODE_STATE_EXTRA, mRingerMode);
-      mConditionListener.run(state);
-    }
   }
 
   @Override

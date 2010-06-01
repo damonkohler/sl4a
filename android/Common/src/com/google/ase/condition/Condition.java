@@ -16,6 +16,8 @@
 
 package com.google.ase.condition;
 
+import android.os.Bundle;
+
 import com.google.ase.trigger.ConditionListener;
 
 /**
@@ -31,13 +33,24 @@ import com.google.ase.trigger.ConditionListener;
  * @author Damon Kohler (damonkohler@gmail.com)
  * 
  */
-public interface Condition {
+public abstract class Condition {
+  private ConditionListener mConditionListener;
+
   /** Adds a listener for the event that the condition starts to hold. */
-  public void addListener(ConditionListener listener);
+  public void addListener(ConditionListener listener) {
+    mConditionListener = listener;
+  }
+
+  /** Invokes the listener with the updated state. */
+  protected void updateState(Bundle state) {
+    if (mConditionListener != null) {
+      mConditionListener.run(state);
+    }
+  }
 
   /** Starts observing the condition. */
-  public void start();
+  public abstract void start();
 
   /** Stops observing the condition. */
-  public void stop();
+  public abstract void stop();
 }
