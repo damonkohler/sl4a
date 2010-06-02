@@ -17,7 +17,6 @@
 package com.google.ase.activity;
 
 import java.io.File;
-import java.lang.reflect.Method;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,6 +25,7 @@ import android.os.Bundle;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
+import com.google.ase.FileUtils;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
 
@@ -226,7 +226,7 @@ public class InterpreterInstaller extends Activity {
     for (File pathPart = mInterpreter.getBinary(); pathPart != null
         && !pathPart.getName().equals("com.google.ase"); pathPart = pathPart.getParentFile()) {
       try {
-        int errno = chmod(pathPart, PERMISSIONS);
+        int errno = FileUtils.chmod(pathPart, PERMISSIONS);
         if (errno != 0) {
           AseLog.e("chmod failed with errno " + errno + " for " + pathPart);
           return false;
@@ -237,13 +237,6 @@ public class InterpreterInstaller extends Activity {
       }
     }
     return true;
-  }
-
-  private int chmod(File path, int mode) throws Exception {
-    Class<?> fileUtils = Class.forName("android.os.FileUtils");
-    Method setPermissions =
-        fileUtils.getMethod("setPermissions", String.class, int.class, int.class, int.class);
-    return (Integer) setPermissions.invoke(null, path.getAbsolutePath(), mode, -1, -1);
   }
 
   private void abort() {
