@@ -17,7 +17,6 @@
 package com.google.ase.activity;
 
 import java.io.File;
-import java.lang.reflect.Method;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,6 +25,7 @@ import android.os.Bundle;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
+import com.google.ase.FileUtils;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
 
@@ -35,9 +35,6 @@ import com.google.ase.interpreter.InterpreterConfiguration;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class InterpreterInstaller extends Activity {
-
-  private static final int PERMISSIONS = 0755;
-
   private String mName;
   private Interpreter mInterpreter;
 
@@ -63,7 +60,7 @@ public class InterpreterInstaller extends Activity {
       finish();
       return;
     }
-    if (mInterpreter.isInstalled()) {
+    if (mInterpreter.isInstalled(this)) {
       AseLog.e("Interpreter already installed.");
       setResult(RESULT_CANCELED);
       finish();
@@ -101,7 +98,7 @@ public class InterpreterInstaller extends Activity {
     Intent intent = new Intent(this, ZipExtractor.class);
     intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mInterpreter
         .getInterpreterArchiveName()).getAbsolutePath());
-    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.INTERPRETER_ROOT);
+    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, getFilesDir().getAbsolutePath());
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER.ordinal());
   }
 
@@ -212,38 +209,18 @@ public class InterpreterInstaller extends Activity {
     }
   }
 
-  /**
-   * After extracting the interpreter, we need to mark the binary (if there is one) as executable.
-   * In addition, all parent directories must be marked as executable.
-   * 
-   * @return true if the chmod was successful or unnecessary
-   */
   private boolean chmodIntepreter() {
-    if (mInterpreter.getBinary() == null) {
-      return true;
+    int dataChmodErrno;
+    boolean interpreterChmodSuccess;
+    try {
+      dataChmodErrno = FileUtils.chmod(getFilesDir(), 0755);
+      interpreterChmodSuccess =
+          FileUtils.recursiveChmod(new File(getFilesDir(), mInterpreter.getName()), 0755);
+    } catch (Exception e) {
+      AseLog.e(e);
+      return false;
     }
-    // Chmod up the directory tree to the top of our data directory.
-    for (File pathPart = mInterpreter.getBinary(); pathPart != null
-        && !pathPart.getName().equals("com.google.ase"); pathPart = pathPart.getParentFile()) {
-      try {
-        int errno = chmod(pathPart, PERMISSIONS);
-        if (errno != 0) {
-          AseLog.e("chmod failed with errno " + errno + " for " + pathPart);
-          return false;
-        }
-      } catch (Exception e) {
-        AseLog.e(e);
-        return false;
-      }
-    }
-    return true;
-  }
-
-  private int chmod(File path, int mode) throws Exception {
-    Class<?> fileUtils = Class.forName("android.os.FileUtils");
-    Method setPermissions =
-        fileUtils.getMethod("setPermissions", String.class, int.class, int.class, int.class);
-    return (Integer) setPermissions.invoke(null, path.getAbsolutePath(), mode, -1, -1);
+    return dataChmodErrno == 0 && interpreterChmodSuccess;
   }
 
   private void abort() {

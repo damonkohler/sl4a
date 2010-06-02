@@ -23,7 +23,7 @@ import com.google.ase.interpreter.InterpreterProcess;
 
 public class PythonInterpreterProcess extends InterpreterProcess {
 
-  public final static String PYTHON_HOME = "/data/data/com.google.ase/python";
+  public final static String PYTHON_HOME = "/data/data/com.google.ase/files/python";
   public final static String PYTHON_EXTRAS = Constants.SDCARD_ASE_ROOT + "extras/python/";
 
   public PythonInterpreterProcess(String launchScript, int port) {

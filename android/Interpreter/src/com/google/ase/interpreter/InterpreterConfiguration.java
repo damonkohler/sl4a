@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.content.Context;
+
 import com.google.ase.interpreter.bsh.BshInterpreter;
 import com.google.ase.interpreter.jruby.JRubyInterpreter;
 import com.google.ase.interpreter.lua.LuaInterpreter;
@@ -55,10 +57,10 @@ public class InterpreterConfiguration {
   /**
    * Returns the list of all installed interpreters.
    */
-  public static List<Interpreter> getInstalledInterpreters() {
+  public static List<Interpreter> getInstalledInterpreters(Context context) {
     List<Interpreter> interpreters = new ArrayList<Interpreter>();
     for (Interpreter i : mSupportedInterpreters) {
-      if (i.isInstalled()) {
+      if (i.isInstalled(context)) {
         interpreters.add(i);
       }
     }
@@ -68,10 +70,10 @@ public class InterpreterConfiguration {
   /**
    * Returns the list of all not installed interpreters.
    */
-  public static List<Interpreter> getNotInstalledInterpreters() {
+  public static List<Interpreter> getNotInstalledInterpreters(Context context) {
     List<Interpreter> interpreters = new ArrayList<Interpreter>();
     for (Interpreter i : mSupportedInterpreters) {
-      if (!i.isInstalled()) {
+      if (!i.isInstalled(context)) {
         interpreters.add(i);
       }
     }

@@ -30,7 +30,7 @@ import com.google.ase.language.TclLanguage;
  */
 public class TclInterpreter extends Interpreter {
 
-  private final static String TCL_BINARY = "/data/data/com.google.ase/tclsh/tclsh";
+  private final static String TCL_BINARY = "/data/data/com.google.ase/files/tclsh/tclsh";
 
   public TclInterpreter() {
     super(new TclLanguage());
