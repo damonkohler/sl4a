@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.ase.interpreter.Interpreter;
@@ -35,7 +36,7 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 
 /**
  * Manages storage and retrieval of scripts on the file system.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ScriptStorageAdapter {
@@ -92,21 +93,32 @@ public class ScriptStorageAdapter {
   /**
    * Returns a list of all available script {@link File}s.
    */
-  public static List<File> listScripts(boolean showAllFiles) {
+  public static List<File> listAllScripts() {
+    File dir = new File(Constants.SCRIPTS_ROOT);
+    if (dir.exists()) {
+      List<File> scripts = Arrays.asList(new File(Constants.SCRIPTS_ROOT).listFiles());
+      Collections.sort(scripts);
+      return scripts;
+    }
+    return new ArrayList<File>();
+  }
+
+  /**
+   * Returns a list of all script {@link File}s for which there is an interpreter installed.
+   */
+  public static List<File> listExecutableScripts(Context context) {
     File dir = new File(Constants.SCRIPTS_ROOT);
     if (dir.exists()) {
       // NOTE(damonkohler): Creating a LinkedList here is necessary in order to be able to filter it
       // later.
       List<File> scripts =
           new LinkedList<File>(Arrays.asList(new File(Constants.SCRIPTS_ROOT).listFiles()));
-      if (!showAllFiles) {
-        // Filter out any files that don't have interpreters installed.
-        for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
-          Interpreter interpreter =
-              InterpreterConfiguration.getInterpreterForScript(it.next().getName());
-          if (interpreter == null || !interpreter.isInstalled()) {
-            it.remove();
-          }
+      // Filter out any files that don't have interpreters installed.
+      for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
+        Interpreter interpreter =
+            InterpreterConfiguration.getInterpreterForScript(it.next().getName());
+        if (interpreter == null || !interpreter.isInstalled(context)) {
+          it.remove();
         }
       }
       Collections.sort(scripts);
@@ -117,7 +129,7 @@ public class ScriptStorageAdapter {
 
   /**
    * Returns the {@link File} object for the script or null if the script does not exist.
-   *
+   * 
    * @param name
    *          the name of the script to access
    */

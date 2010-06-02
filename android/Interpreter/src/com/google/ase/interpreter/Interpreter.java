@@ -18,6 +18,8 @@ package com.google.ase.interpreter;
 
 import java.io.File;
 
+import android.content.Context;
+
 import com.google.ase.Constants;
 import com.google.ase.language.Language;
 import com.google.ase.rpc.MethodDescriptor;
@@ -42,13 +44,14 @@ public abstract class Interpreter {
     return getLanguage().getRpcText(content, rpc, values);
   }
 
-  public boolean isInstalled() {
+  public boolean isInstalled(Context context) {
     if (getName().equals("sh")) {
       // Shell is installed by the system.
       return true;
     }
-    File interpreterDirectory = new File(Constants.INTERPRETER_ROOT + getName());
-    File interpreterExtrasDirectory = new File(Constants.INTERPRETER_EXTRAS_ROOT + getName());
+    File dataDirectory = context.getFilesDir().getParentFile();
+    File interpreterDirectory = new File(dataDirectory, getName());
+    File interpreterExtrasDirectory = new File(dataDirectory, getName());
     return interpreterDirectory.exists() || interpreterExtrasDirectory.exists();
   }
 

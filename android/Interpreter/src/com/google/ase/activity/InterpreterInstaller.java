@@ -60,7 +60,7 @@ public class InterpreterInstaller extends Activity {
       finish();
       return;
     }
-    if (mInterpreter.isInstalled()) {
+    if (mInterpreter.isInstalled(this)) {
       AseLog.e("Interpreter already installed.");
       setResult(RESULT_CANCELED);
       finish();
@@ -98,7 +98,8 @@ public class InterpreterInstaller extends Activity {
     Intent intent = new Intent(this, ZipExtractor.class);
     intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mInterpreter
         .getInterpreterArchiveName()).getAbsolutePath());
-    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.INTERPRETER_ROOT);
+    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, new File(getFilesDir().getParent(), mInterpreter
+        .getName()).getAbsolutePath());
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER.ordinal());
   }
 

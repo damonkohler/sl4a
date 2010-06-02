@@ -82,8 +82,7 @@ public class ScriptManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    mScriptList =
-        ScriptStorageAdapter.listScripts(mPreferences.getBoolean("show_all_files", false));
+    updateScriptsList();
     mAdapter = new ScriptManagerAdapter();
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
@@ -91,10 +90,16 @@ public class ScriptManager extends ListActivity {
     UsageTrackingConfirmation.show(this);
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
-    setResult(RESULT_CANCELED); // Default to canceled if we were started for result.
-    AseAnalytics.trackActivity(this);
-
     startService(IntentBuilders.buildTriggerServiceIntent());
+    AseAnalytics.trackActivity(this);
+  }
+
+  private void updateScriptsList() {
+    if (mPreferences.getBoolean("show_all_files", false)) {
+      mScriptList = ScriptStorageAdapter.listExecutableScripts(this);
+    } else {
+      mScriptList = ScriptStorageAdapter.listAllScripts();
+    }
   }
 
   @Override
@@ -131,7 +136,7 @@ public class ScriptManager extends ListActivity {
   private void buildMenuIdMaps() {
     mAddMenuIds = new HashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
-    List<Interpreter> installed = InterpreterConfiguration.getInstalledInterpreters();
+    List<Interpreter> installed = InterpreterConfiguration.getInstalledInterpreters(this);
     for (Interpreter interpreter : installed) {
       mAddMenuIds.put(i, interpreter);
       ++i;
@@ -294,8 +299,7 @@ public class ScriptManager extends ListActivity {
   private class ScriptListObserver extends DataSetObserver {
     @Override
     public void onInvalidated() {
-      mScriptList =
-          ScriptStorageAdapter.listScripts(mPreferences.getBoolean("show_all_files", false));
+      updateScriptsList();
     }
   }
 
