@@ -44,9 +44,9 @@ public class AlarmTrigger extends Trigger {
    * @param executionTime
    *          execution time in seconds since epoch
    */
-  public AlarmTrigger(String scriptName, TriggerRepository.IdProvider idProvider, Context context,
+  public AlarmTrigger(String scriptName, Context context,
       long executionTimeMs, boolean wakeup) {
-    super(scriptName, idProvider);
+    super(scriptName);
     mExecutionTimeMs = executionTimeMs;
     mWakeup = wakeup;
     initializeTransients(context);
@@ -69,9 +69,9 @@ public class AlarmTrigger extends Trigger {
   }
 
   @Override
-  public void install() {
+  public void install(Service service) {
     final int alarmType = mWakeup ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
-    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, this);
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(service, this);
     mAlarmManager.set(alarmType, mExecutionTimeMs, pendingIntent);
   }
 

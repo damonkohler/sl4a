@@ -17,6 +17,7 @@
 package com.google.ase.activity;
 
 import java.net.InetSocketAddress;
+import java.util.UUID;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -53,7 +54,7 @@ public class AseService extends Service {
   public AseService() {
     mNotificationMessage = new StringBuilder();
   }
-  
+
   @Override
   public void onCreate() {
     AseApplication application = (AseApplication) getApplication();
@@ -66,7 +67,7 @@ public class AseService extends Service {
     super.onStart(intent, startId);
 
     // TODO: Right now, only one interpreter execution is supported concurrently.
-    //       When this changes, we need to support multiple trigger notifications as well.
+    // When this changes, we need to support multiple trigger notifications as well.
     if (mTrigger == null) {
       mTrigger = getTrigger(intent);
       notifyTriggerOfStart();
@@ -155,12 +156,21 @@ public class AseService extends Service {
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     manager.cancel(mNotificationId);
   }
-  
+
   /** Returns the {@link TriggerInfo} for the given intent, or null if none exists. */
   private Trigger getTrigger(Intent intent) {
     final AseApplication application = (AseApplication) getApplication();
-    final long triggerId = intent.getLongExtra(Constants.EXTRA_TRIGGER_ID, -1);
-    return application.getTriggerRepository().getById(triggerId);
+    final String triggerIdExtra = intent.getStringExtra(Constants.EXTRA_TRIGGER_ID);
+    if (triggerIdExtra == null) {
+      return null;
+    }
+
+    try {
+      final UUID triggerId = UUID.fromString(triggerIdExtra);
+      return application.getTriggerRepository().getById(triggerId);
+    } catch (IllegalArgumentException e) {
+      return null;
+    }
   }
 
   private void notifyTriggerOfShutDown() {

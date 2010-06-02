@@ -30,9 +30,10 @@ import com.google.ase.AseApplication;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
-import com.google.ase.trigger.ConditionTrigger;
+import com.google.ase.trigger.EventTrigger;
 import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository;
+import com.google.ase.trigger.TriggerRepository.AddTriggerListener;
 
 /**
  * The trigger service takes care of installing triggers serialized to the preference storage.
@@ -50,13 +51,20 @@ public class TriggerService extends Service {
   private static int mTriggerServiceNotificationId;
   private static final long TRIGGER_SERVICE_PING_MILLIS = 10 * 1000 * 60;
 
+  private final AddTriggerListener addTriggerListener = new AddTriggerListener() {
+    @Override
+    public void onAddTrigger(Trigger trigger) {
+      trigger.install(TriggerService.this);
+    }
+  };
+
   public TriggerService() {
   }
 
   private void initializeTriggers() {
     for (Trigger trigger : mTriggerRepository.getAllTriggers()) {
-      if (trigger instanceof ConditionTrigger) {
-        trigger.install();
+      if (trigger instanceof EventTrigger) {
+        trigger.install(this);
       }
     }
   }
@@ -68,10 +76,9 @@ public class TriggerService extends Service {
     AseApplication application = (AseApplication) this.getApplication();
     mTriggerServiceNotificationId = application.getNewNotificationId();
     mTriggerRepository = application.getTriggerRepository();
-    
-    initializeTriggers();
+    mTriggerRepository.registerAddTriggerListener(addTriggerListener);
 
-    ((AseApplication) getApplication()).setTriggerService(this);
+    initializeTriggers();
 
     setForeground(true);
 

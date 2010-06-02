@@ -20,7 +20,6 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.app.Application;
-import android.app.Service;
 
 import com.google.ase.activity.NotificationIdFactory;
 import com.google.ase.future.FutureActivityTask;
@@ -35,8 +34,6 @@ public class AseApplication extends Application {
   
   private final NotificationIdFactory mNotificaitonIdFactory = NotificationIdFactory.INSTANCE;
   
-  private Service mTriggerService;
-
   public Queue<FutureActivityTask> getTaskQueue() {
     return mTaskQueue;
   }
@@ -45,10 +42,6 @@ public class AseApplication extends Application {
     return mTriggerRepository;
   }
   
-  public Service getTriggerService() {
-    return mTriggerService;
-  }
-
   @Override
   public void onCreate() {
     super.onCreate();
@@ -60,10 +53,6 @@ public class AseApplication extends Application {
   public void onTerminate() {
     super.onTerminate();
     AseAnalytics.stop();
-  }
-
-  public void setTriggerService(Service triggerService) {
-    mTriggerService = triggerService;
   }
 
   public int getNewNotificationId() {

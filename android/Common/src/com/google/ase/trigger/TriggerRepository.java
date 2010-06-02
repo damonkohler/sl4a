@@ -24,6 +24,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.codec.binary.Base64;
@@ -43,19 +44,6 @@ import com.google.ase.AseLog;
  * 
  */
 public class TriggerRepository {
-  /**
-   * An object of this class is used to distribute unique ids to the triggers. It can be obtained
-   * using the {@link #getIdProvider} method of {@link TriggerRepository}.
-   */
-  public final class IdProvider {
-    long getId() {
-      return createNewId();
-    }
-
-    private IdProvider() {
-    };
-  }
-
   /**
    * An interface for objects that are notified when a trigger is added to the repository.
    */
@@ -80,9 +68,6 @@ public class TriggerRepository {
   private final SharedPreferences mPreferences;
 
   private List<Trigger> mTriggers;
-
-  /** The unique {@link IdProvider} associated with this trigger repository. */
-  private final IdProvider mIdProvider = new IdProvider();
 
   private final Context mContext;
 
@@ -115,11 +100,14 @@ public class TriggerRepository {
   public synchronized void addTrigger(Trigger trigger) {
     mTriggers.add(trigger);
     storeTriggers(mTriggers);
-    notifyOnTriggerAdd();
+    notifyOnTriggerAdd(trigger);
   }
 
-  private void notifyOnTriggerAdd() {
-    
+  /** Notify all {@link AddTriggerListener}s that a {@link Trigger} was added. */
+  private void notifyOnTriggerAdd(Trigger trigger) {
+    for (AddTriggerListener listener : addTriggerListeners) {
+      listener.onAddTrigger(trigger);
+    }
   }
 
   /** Writes the list of triggers to the shared preferences. */
@@ -133,11 +121,11 @@ public class TriggerRepository {
   }
 
   /** Removes a specific trigger. */
-  public synchronized void removeTrigger(final long id) {
+  public synchronized void removeTrigger(final UUID id) {
     removeTriggers(new TriggerFilter() {
       @Override
       public boolean matches(Trigger trigger) {
-        return trigger.getId() == id;
+        return trigger.getId().equals(id);
       }
     });
   }
@@ -213,7 +201,7 @@ public class TriggerRepository {
   }
 
   /** Returns the {@link TriggerInfo} object with the given id. */
-  public Trigger getById(long id) {
+  public Trigger getById(UUID id) {
     for (Trigger trigger : getAllTriggers()) {
       if (trigger.getId() == id) {
         return trigger;
@@ -223,12 +211,13 @@ public class TriggerRepository {
     return null;
   }
 
-  /** Returns this repository's {@link IdProvider} */
-  public IdProvider getIdProvider() {
-    return mIdProvider;
-  }
-
+  /** Returns {@code true} iff the list of triggers is empty. */
   public boolean isEmpty() {
     return mTriggers.isEmpty();
+  }
+  
+  /** Registers a listener that is invoked when a new trigger gets added. */
+  public void registerAddTriggerListener(AddTriggerListener listener) {
+    addTriggerListeners.add(listener);
   }
 }

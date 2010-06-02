@@ -19,7 +19,6 @@ package com.google.ase.activity;
 import java.util.List;
 
 import android.app.ListActivity;
-import android.app.Service;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -40,12 +39,12 @@ import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
-import com.google.ase.condition.RingerModeCondition;
+import com.google.ase.condition.RingerModeEvent;
 import com.google.ase.dialog.DurationPickerDialog;
 import com.google.ase.dialog.Help;
 import com.google.ase.dialog.DurationPickerDialog.DurationPickedListener;
 import com.google.ase.trigger.AlarmTriggerManager;
-import com.google.ase.trigger.ConditionTrigger;
+import com.google.ase.trigger.EventTrigger;
 import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository;
 
@@ -54,7 +53,6 @@ public class TriggerManager extends ListActivity {
   private AlarmTriggerManager mAlarmTriggerManager;
   private TriggerAdapter mAdapter;
   private List<Trigger> mTriggerList;
-  private Service mTriggerService;
 
   private static enum ContextMenuId {
     REMOVE;
@@ -75,7 +73,6 @@ public class TriggerManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Triggers", R.layout.trigger_manager);
     mTriggerRepository = ((AseApplication) getApplication()).getTriggerRepository();
-    mTriggerService = ((AseApplication) getApplication()).getTriggerService();
     mAlarmTriggerManager = new AlarmTriggerManager(this, mTriggerRepository);
     mTriggerList = mTriggerRepository.getAllTriggers();
     mAdapter = new TriggerAdapter();
@@ -208,8 +205,7 @@ public class TriggerManager extends ListActivity {
               }
             });
       } else if (requestCode == MenuId.RINGER_MODE_CONDITION.getId()) {
-        mTriggerRepository.addTrigger(new ConditionTrigger(scriptName, mTriggerRepository
-            .getIdProvider(), mTriggerService, new RingerModeCondition.Factory()));
+        mTriggerRepository.addTrigger(new EventTrigger(scriptName, new RingerModeEvent.Factory()));
         mAdapter.notifyDataSetInvalidated();
       }
     }

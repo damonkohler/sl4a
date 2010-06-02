@@ -23,7 +23,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 
 import com.google.ase.AseLog;
-import com.google.ase.trigger.ConditionListener;
+import com.google.ase.trigger.EventListener;
 
 /**
  * This condition invokes a trigger whenever the ringer mode changes. The "ringer_mode" element in
@@ -32,13 +32,13 @@ import com.google.ase.trigger.ConditionListener;
  * @author Felix Arends (felix.arends@gmail.com)
  * 
  */
-public class RingerModeCondition implements Condition {
+public class RingerModeEvent implements Event {
   private static final String RINGER_MODE_STATE_EXTRA = "ringer_mode";
 
   private final AudioManager mAudioManager;
   private final Context mContext;
 
-  private ConditionListener mConditionListener;
+  private EventListener mConditionListener;
   private int mRingerMode;
 
   /** Our broadcast receiver dealing with changes to the ringer mode. */
@@ -60,13 +60,13 @@ public class RingerModeCondition implements Condition {
     }
   };
 
-  private RingerModeCondition(Context context) {
+  private RingerModeEvent(Context context) {
     mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     mContext = context;
   }
 
   @Override
-  public void addListener(ConditionListener listener) {
+  public void addListener(EventListener listener) {
     mConditionListener = listener;
   }
 
@@ -91,12 +91,12 @@ public class RingerModeCondition implements Condition {
     mContext.unregisterReceiver(mRingerModeBroadcastReceiver);
   }
 
-  public static class Factory implements ConditionFactory {
+  public static class Factory implements EventFactory {
     private static final long serialVersionUID = 7593570695879937214L;
 
     @Override
-    public Condition create(Context context) {
-      return new RingerModeCondition(context);
+    public Event create(Context context) {
+      return new RingerModeEvent(context);
     }
   }
 }

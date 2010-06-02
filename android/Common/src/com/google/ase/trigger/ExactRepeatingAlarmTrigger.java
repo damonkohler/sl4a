@@ -18,10 +18,10 @@ package com.google.ase.trigger;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 
 import com.google.ase.IntentBuilders;
-import com.google.ase.trigger.TriggerRepository.IdProvider;
 
 /**
  * A trigger that fires repeatedly with a fixed interval and starting time.
@@ -34,16 +34,16 @@ public class ExactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
 
   private final long mFirstExecutionTimeMs;
 
-  public ExactRepeatingAlarmTrigger(String scriptName, IdProvider idProvider, Context context,
+  public ExactRepeatingAlarmTrigger(String scriptName, Context context,
       long intervalMs, long firstExecutionTimeMs, boolean wakeUp) {
-    super(scriptName, idProvider, context, intervalMs, wakeUp);
+    super(scriptName, context, intervalMs, wakeUp);
     mFirstExecutionTimeMs = firstExecutionTimeMs;
   }
 
   @Override
-  public void install() {
+  public void install(Service service) {
     final int alarmType = mWakeUp ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
-    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, this);
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(service, this);
     mAlarmManager.setRepeating(alarmType, mFirstExecutionTimeMs, mIntervalMs, pendingIntent);
   }
 }

@@ -16,12 +16,12 @@
 
 package com.google.ase.condition;
 
-import com.google.ase.trigger.ConditionListener;
+import com.google.ase.trigger.EventListener;
 
 /**
- * This interace describes the capability of a "condition". A {@link Condition} object observes a
+ * This interace describes the capability of a "condition". A {@link Event} object observes a
  * particular condition (such as whether the ringer mode was changed to silent) and invokes
- * {@link ConditionListener} callbacks when the truth value of the condition changes. A
+ * {@link EventListener} callbacks when the truth value of the condition changes. A
  * "BeginListener" is a listener that is invoked when the condition starts to hold (e.g. ringer mode
  * change to silent) and an "EndListener" is a listener that is invoked when the condition ceases to
  * hold (e.g. ringer mode leaves silent setting). When the notion of beginning and ending do not
@@ -31,9 +31,9 @@ import com.google.ase.trigger.ConditionListener;
  * @author Damon Kohler (damonkohler@gmail.com)
  * 
  */
-public interface Condition {
+public interface Event {
   /** Adds a listener for the event that the condition starts to hold. */
-  public void addListener(ConditionListener listener);
+  public void addListener(EventListener listener);
 
   /** Starts observing the condition. */
   public void start();

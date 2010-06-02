@@ -16,6 +16,8 @@
 
 package com.google.ase.trigger;
 
+import java.util.UUID;
+
 import android.app.AlarmManager;
 import android.content.Context;
 
@@ -49,8 +51,8 @@ public class AlarmTriggerManager {
    *          wake up the device even when asleep
    */
   public void scheduleInexactRepeating(double interval, String script, boolean wakeUp) {
-    mTriggerRepository.addTrigger(new InexactRepeatingAlarmTrigger(script, mTriggerRepository
-        .getIdProvider(), mContext, convertSecondsToMilliseconds(interval), wakeUp));
+    mTriggerRepository.addTrigger(new InexactRepeatingAlarmTrigger(script, mContext,
+        convertSecondsToMilliseconds(interval), wakeUp));
   }
 
   /**
@@ -65,9 +67,8 @@ public class AlarmTriggerManager {
    */
   public void scheduleRepeating(Double interval, String script, boolean wakeup) {
     long firstExecutionTime = System.currentTimeMillis() + convertSecondsToMilliseconds(interval);
-    mTriggerRepository.addTrigger(new ExactRepeatingAlarmTrigger(script, mTriggerRepository
-        .getIdProvider(), mContext, convertSecondsToMilliseconds(interval), firstExecutionTime,
-        wakeup));
+    mTriggerRepository.addTrigger(new ExactRepeatingAlarmTrigger(script, mContext,
+        convertSecondsToMilliseconds(interval), firstExecutionTime, wakeup));
   }
 
   /**
@@ -81,8 +82,8 @@ public class AlarmTriggerManager {
    *          whether or not to wakeup the phone if its asleep
    */
   public void schedule(Double executionTimeS, String script, boolean wakeup) {
-    mTriggerRepository.addTrigger(new AlarmTrigger(script, mTriggerRepository.getIdProvider(),
-        mContext, convertSecondsToMilliseconds(executionTimeS), wakeup));
+    mTriggerRepository.addTrigger(new AlarmTrigger(script, mContext,
+        convertSecondsToMilliseconds(executionTimeS), wakeup));
   }
 
   /**
@@ -110,7 +111,7 @@ public class AlarmTriggerManager {
    * @param triggerId
    *          id of the trigger to cancel
    */
-  public void cancelById(final long triggerId) {
+  public void cancelById(final UUID triggerId) {
     mTriggerRepository.removeTrigger(triggerId);
   }
 

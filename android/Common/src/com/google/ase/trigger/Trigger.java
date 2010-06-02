@@ -17,6 +17,7 @@
 package com.google.ase.trigger;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import android.app.Service;
 import android.content.Context;
@@ -34,11 +35,11 @@ import android.widget.TextView;
 public abstract class Trigger implements Serializable {
   private static final long serialVersionUID = 5190219422732210378L;
   private final String mScriptName;
-  private final long mId;
+  private final UUID mId;
 
-  public Trigger(String scriptName, TriggerRepository.IdProvider idProvider) {
+  public Trigger(String scriptName) {
     mScriptName = scriptName;
-    mId = idProvider.getId();
+    mId = UUID.randomUUID();
   }
 
   /** Invoked just after the trigger is invoked */
@@ -53,14 +54,18 @@ public abstract class Trigger implements Serializable {
   public final String getScriptName() {
     return mScriptName;
   }
-  
+
   /** Returns this trigger's id. */
-  public final long getId() {
+  public final UUID getId() {
     return mId;
   }
 
-  /** Installs the trigger. */
-  public abstract void install();
+  /** 
+   * Installs the trigger.
+   * 
+   * @param service the {@link Service} owning the trigger
+   */
+  public abstract void install(Service service);
 
   /** Removes the trigger. This does not remove the trigger from the repository. */
   public abstract void remove();
