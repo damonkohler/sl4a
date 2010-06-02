@@ -16,9 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -30,7 +27,6 @@ import android.os.IBinder;
 import android.widget.RemoteViews;
 
 import com.google.ase.AseApplication;
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
@@ -84,44 +80,9 @@ public class TriggerService extends Service {
 
     initializeTriggers();
 
-    setForeground();
+    ServiceUtils.setForeground(this, mTriggerServiceNotificationId, createNotification());
 
     installAlarm();
-  }
-
-  /**
-   * Marks the service as a foreground service. This uses reflection to figure out whether the new
-   * APIs for marking a service as a foreground service are available. If not, it falls back to the
-   * old {@link #setForeground(boolean)} call.
-   */
-  private void setForeground() {
-    final Class<?>[] startForegroundSignature = new Class[] { int.class, Notification.class };
-    Method startForeground = null;
-    try {
-      startForeground = getClass().getMethod("startForeground", startForegroundSignature);
-
-      try {
-        startForeground.invoke(this, new Object[] { Integer.valueOf(mTriggerServiceNotificationId),
-          createNotification() });
-      } catch (IllegalArgumentException e) {
-        // Should not happen!
-        AseLog.e("Could not set TriggerService to foreground mode.", e);
-      } catch (IllegalAccessException e) {
-        // Should not happen!
-        AseLog.e("Could not set TriggerService to foreground mode.", e);
-      } catch (InvocationTargetException e) {
-        // Should not happen!
-        AseLog.e("Could not set TriggerService to foreground mode.", e);
-      }
-
-    } catch (NoSuchMethodException e) {
-      // Fall back on old API.
-      setForeground(true);
-
-      NotificationManager manager =
-          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-      manager.notify(mTriggerServiceNotificationId, createNotification());
-    }
   }
 
   /** Returns the notification to display whenever the service is running. */

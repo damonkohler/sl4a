@@ -85,7 +85,21 @@ public class AseService extends Service {
       return;
     }
 
-    showNotification();
+    ServiceUtils.setForeground(this, mNotificationId, createNotification());
+  }
+
+  private Notification createNotification() {
+    Notification notification =
+        new Notification(R.drawable.ase_logo_48, "ASE is running...", System.currentTimeMillis());
+    notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
+    notification.contentView.setTextViewText(R.id.notification_title, "ASE Service");
+    notification.contentView.setTextViewText(R.id.notification_message, mNotificationMessage
+        .toString());
+    Intent notificationIntent = new Intent(this, AseService.class);
+    notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
+    notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
+    return notification;
   }
 
   private void launchTerminal(Intent intent) {
@@ -126,22 +140,6 @@ public class AseService extends Service {
     InetSocketAddress address = mAndroidProxy.getAddress();
     mNotificationMessage.append(String.format("Running network service on: %s:%d", address
         .getHostName(), address.getPort()));
-  }
-
-  private void showNotification() {
-    Notification notification =
-        new Notification(R.drawable.ase_logo_48, "ASE is running...", System.currentTimeMillis());
-    notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
-    notification.contentView.setTextViewText(R.id.notification_title, "ASE Service");
-    notification.contentView.setTextViewText(R.id.notification_message, mNotificationMessage
-        .toString());
-    Intent notificationIntent = new Intent(this, AseService.class);
-    notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
-    notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
-    notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-    NotificationManager manager =
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    manager.notify(mNotificationId, notification);
   }
 
   @Override
