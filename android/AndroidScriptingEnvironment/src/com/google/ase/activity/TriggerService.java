@@ -16,6 +16,9 @@
 
 package com.google.ase.activity;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -27,6 +30,7 @@ import android.os.IBinder;
 import android.widget.RemoteViews;
 
 import com.google.ase.AseApplication;
+import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
@@ -38,8 +42,8 @@ import com.google.ase.trigger.TriggerRepository.AddTriggerListener;
 /**
  * The trigger service takes care of installing triggers serialized to the preference storage.
  * 
- * The service also installs an alarm that keeps it running, unless the user force-quits
- * the service.
+ * The service also installs an alarm that keeps it running, unless the user force-quits the
+ * service.
  * 
  * When no triggers are installed the service shuts down silently as to not consume resources
  * unnecessarily.
@@ -68,7 +72,7 @@ public class TriggerService extends Service {
       }
     }
   }
-  
+
   @Override
   public void onCreate() {
     super.onCreate();
@@ -80,8 +84,48 @@ public class TriggerService extends Service {
 
     initializeTriggers();
 
-    setForeground(true);
+    setForeground();
 
+    installAlarm();
+  }
+
+  /**
+   * Marks the service as a foreground service. This uses reflection to figure out whether the new
+   * APIs for marking a service as a foreground service are available. If not, it falls back to the
+   * old {@link #setForeground(boolean)} call.
+   */
+  private void setForeground() {
+    final Class<?>[] startForegroundSignature = new Class[] { int.class, Notification.class };
+    Method startForeground = null;
+    try {
+      startForeground = getClass().getMethod("startForeground", startForegroundSignature);
+
+      try {
+        startForeground.invoke(this, new Object[] { Integer.valueOf(mTriggerServiceNotificationId),
+          createNotification() });
+      } catch (IllegalArgumentException e) {
+        // Should not happen!
+        AseLog.e("Could not set TriggerService to foreground mode.", e);
+      } catch (IllegalAccessException e) {
+        // Should not happen!
+        AseLog.e("Could not set TriggerService to foreground mode.", e);
+      } catch (InvocationTargetException e) {
+        // Should not happen!
+        AseLog.e("Could not set TriggerService to foreground mode.", e);
+      }
+
+    } catch (NoSuchMethodException e) {
+      // Fall back on old API.
+      setForeground(true);
+
+      NotificationManager manager =
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+      manager.notify(mTriggerServiceNotificationId, createNotification());
+    }
+  }
+
+  /** Returns the notificaiton to display whenever the service is running. */
+  private Notification createNotification() {
     Notification notification =
         new Notification(R.drawable.ase_logo_48, "ASE Trigger Service is running...", System
             .currentTimeMillis());
@@ -91,19 +135,18 @@ public class TriggerService extends Service {
     notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
     notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
     notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-    NotificationManager manager =
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    manager.notify(mTriggerServiceNotificationId, notification);
-    
-    installAlarm();
+    // NotificationManager manager =
+    //    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    // manager.notify(mTriggerServiceNotificationId, notification);
+    return notification;
   }
 
   @Override
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
 
-    if (intent.getAction() != null &&
-        Constants.ACTION_KILL_SERVICE.compareTo(intent.getAction()) == 0) {
+    if (intent.getAction() != null
+        && Constants.ACTION_KILL_SERVICE.compareTo(intent.getAction()) == 0) {
       uninstallAlarm();
       stopSelf();
       return;
