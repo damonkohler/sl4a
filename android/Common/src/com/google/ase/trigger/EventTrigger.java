@@ -17,7 +17,6 @@
 package com.google.ase.trigger;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -45,21 +44,17 @@ public class EventTrigger extends Trigger {
   }
 
   @Override
-  public void initializeTransients(final Context context) {
-    mCondition = mConditionFactory.create(context);
+  public void install(final Service service) {
+    mCondition = mConditionFactory.create(service);
     mCondition.addListener(new EventListener() {
       @Override
       public void run(Bundle state) {
         Intent intent = IntentBuilders.buildStartInBackgroundIntent(getScriptName());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(EXTRA_CONDITION_STATE, state);
-        context.startActivity(intent);
+        service.startActivity(intent);
       }
     });
-  }
-
-  @Override
-  public void install(Service service) {
     mCondition.start();
   }
 

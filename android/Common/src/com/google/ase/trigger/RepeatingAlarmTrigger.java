@@ -30,19 +30,18 @@ public abstract class RepeatingAlarmTrigger extends Trigger {
   /** The {@link WakeLock} held during the execution of the trigger. */
   private transient WakeLock mWakeLock = null;
   protected transient AlarmManager mAlarmManager;
-  protected transient Context mContext;
+  protected transient Context mService;
 
   /** Interval between executions of the alarm, in seconds. */
   protected final long mIntervalMs;
 
   /** Whether or not to wake up the device. */
   protected final boolean mWakeUp;
-
-  public RepeatingAlarmTrigger(String scriptName, Context context, long intervalMs, boolean wakeUp) {
+  
+  public RepeatingAlarmTrigger(String scriptName, long intervalMs, boolean wakeUp) {
     super(scriptName);
     mIntervalMs = intervalMs;
     mWakeUp = wakeUp;
-    initializeTransients(context);
   }
 
   /** Obtains the wake lock. */
@@ -74,13 +73,19 @@ public abstract class RepeatingAlarmTrigger extends Trigger {
   }
 
   @Override
-  public void initializeTransients(Context context) {
-    mContext = context;
-    mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+  public final void install(Service service) {
+    mService = service;
+    mAlarmManager = (AlarmManager) service.getSystemService(Context.ALARM_SERVICE);
+    if (!isDeserializing()) {
+      installAlarm();
+    }
   }
+
+  /** Actuall installs the alarm. */
+  abstract protected void installAlarm();
 
   @Override
   public void remove() {
-    mAlarmManager.cancel(IntentBuilders.buildTriggerIntent(mContext, this));
+    mAlarmManager.cancel(IntentBuilders.buildTriggerIntent(mService, this));
   }
 }

@@ -51,7 +51,7 @@ public class AlarmTriggerManager {
    *          wake up the device even when asleep
    */
   public void scheduleInexactRepeating(double interval, String script, boolean wakeUp) {
-    mTriggerRepository.addTrigger(new InexactRepeatingAlarmTrigger(script, mContext,
+    mTriggerRepository.addTrigger(new InexactRepeatingAlarmTrigger(script,
         convertSecondsToMilliseconds(interval), wakeUp));
   }
 
@@ -67,7 +67,7 @@ public class AlarmTriggerManager {
    */
   public void scheduleRepeating(Double interval, String script, boolean wakeup) {
     long firstExecutionTime = System.currentTimeMillis() + convertSecondsToMilliseconds(interval);
-    mTriggerRepository.addTrigger(new ExactRepeatingAlarmTrigger(script, mContext,
+    mTriggerRepository.addTrigger(new ExactRepeatingAlarmTrigger(script,
         convertSecondsToMilliseconds(interval), firstExecutionTime, wakeup));
   }
 

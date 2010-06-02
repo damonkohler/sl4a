@@ -37,9 +37,16 @@ public abstract class Trigger implements Serializable {
   private final String mScriptName;
   private final UUID mId;
 
+  /**
+   * This is set to false in the constructor: this way we know that we are being deserialized if the
+   * value is still true.
+   */
+  private transient boolean mIsDeserializing = true;
+
   public Trigger(String scriptName) {
     mScriptName = scriptName;
     mId = UUID.randomUUID();
+    mIsDeserializing = false;
   }
 
   /** Invoked just after the trigger is invoked */
@@ -60,18 +67,26 @@ public abstract class Trigger implements Serializable {
     return mId;
   }
 
-  /** 
+  /**
    * Installs the trigger.
    * 
-   * @param service the {@link Service} owning the trigger
+   * @param service
+   *          the {@link Service} owning the trigger
    */
   public abstract void install(Service service);
 
   /** Removes the trigger. This does not remove the trigger from the repository. */
   public abstract void remove();
-  
-  /** Initializes the transient variables of the trigger. */
-  public abstract void initializeTransients(final Context context);
+
+  /**
+   * Retruns true iff this object is being deserialized. This method can be used by trigger
+   * implementations to figure out whether or not this is the first time that the install method is
+   * called. For alarms, e.g., this is useful, because they persist across multiple instantiations
+   * of the {@link TriggerService} service.
+   */
+  protected boolean isDeserializing() {
+    return mIsDeserializing;
+  }
 
   /** Creates a view to display this trigger in the trigger manager. */
   public View getView(Context context) {

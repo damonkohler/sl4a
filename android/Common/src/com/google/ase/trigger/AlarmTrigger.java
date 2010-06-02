@@ -36,7 +36,7 @@ public class AlarmTrigger extends Trigger {
   private final boolean mWakeup;
 
   private transient AlarmManager mAlarmManager;
-  private transient Context mContext;
+  private transient Service mService;
 
   /**
    * @param scriptName
@@ -44,12 +44,10 @@ public class AlarmTrigger extends Trigger {
    * @param executionTime
    *          execution time in seconds since epoch
    */
-  public AlarmTrigger(String scriptName, Context context,
-      long executionTimeMs, boolean wakeup) {
+  public AlarmTrigger(String scriptName, Context context, long executionTimeMs, boolean wakeup) {
     super(scriptName);
     mExecutionTimeMs = executionTimeMs;
     mWakeup = wakeup;
-    initializeTransients(context);
   }
 
   @Override
@@ -57,7 +55,7 @@ public class AlarmTrigger extends Trigger {
     super.beforeTrigger(service);
 
     // This trigger will only fire once: remove it from the repository.
-    AseApplication application = (AseApplication)service.getApplication();
+    AseApplication application = (AseApplication) service.getApplication();
     application.getTriggerRepository().removeTrigger(getId());
   }
 
@@ -72,18 +70,17 @@ public class AlarmTrigger extends Trigger {
   public void install(Service service) {
     final int alarmType = mWakeup ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
     final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(service, this);
-    mAlarmManager.set(alarmType, mExecutionTimeMs, pendingIntent);
+    mService = service;
+    mAlarmManager = (AlarmManager) service.getSystemService(Context.ALARM_SERVICE);
+
+    if (!isDeserializing()) {
+      mAlarmManager.set(alarmType, mExecutionTimeMs, pendingIntent);
+    }
   }
 
   @Override
   public void remove() {
-    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mContext, this);
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mService, this);
     mAlarmManager.cancel(pendingIntent);
-  }
-
-  @Override
-  public void initializeTransients(Context context) {
-    mContext = context;
-    mAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
   }
 }

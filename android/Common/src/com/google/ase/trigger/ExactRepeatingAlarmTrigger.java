@@ -18,8 +18,6 @@ package com.google.ase.trigger;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Context;
 
 import com.google.ase.IntentBuilders;
 
@@ -34,16 +32,16 @@ public class ExactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
 
   private final long mFirstExecutionTimeMs;
 
-  public ExactRepeatingAlarmTrigger(String scriptName, Context context,
-      long intervalMs, long firstExecutionTimeMs, boolean wakeUp) {
-    super(scriptName, context, intervalMs, wakeUp);
+  public ExactRepeatingAlarmTrigger(String scriptName, long intervalMs, long firstExecutionTimeMs,
+      boolean wakeUp) {
+    super(scriptName, intervalMs, wakeUp);
     mFirstExecutionTimeMs = firstExecutionTimeMs;
   }
 
   @Override
-  public void install(Service service) {
+  protected final void installAlarm() {
     final int alarmType = mWakeUp ? AlarmManager.RTC : AlarmManager.RTC_WAKEUP;
-    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(service, this);
+    final PendingIntent pendingIntent = IntentBuilders.buildTriggerIntent(mService, this);
     mAlarmManager.setRepeating(alarmType, mFirstExecutionTimeMs, mIntervalMs, pendingIntent);
   }
 }

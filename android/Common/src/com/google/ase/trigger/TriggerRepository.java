@@ -55,7 +55,7 @@ public class TriggerRepository {
       new CopyOnWriteArrayList<AddTriggerListener>();
 
   /**
-   * The list of triggers is serialzied to the shared preferences entry with this name.
+   * The list of triggers is serialized to the shared preferences entry with this name.
    */
   private static final String TRIGGERS_PREF_KEY = "TRIGGERS";
 
@@ -69,8 +69,6 @@ public class TriggerRepository {
 
   private List<Trigger> mTriggers;
 
-  private final Context mContext;
-
   /** Interface for filters over triggers */
   public static interface TriggerFilter {
     boolean matches(Trigger trigger);
@@ -78,7 +76,6 @@ public class TriggerRepository {
 
   public TriggerRepository(Context context) {
     mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    mContext = context;
     mTriggers = deserializeTriggers();
   }
 
@@ -142,9 +139,6 @@ public class TriggerRepository {
           new ByteArrayInputStream(Base64.decodeBase64(triggers.getBytes()));
       final ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
       List<Trigger> result = (List<Trigger>) objectInputStream.readObject();
-      for (Trigger trigger : result) {
-        trigger.initializeTransients(mContext);
-      }
       return result;
     } catch (IOException e) {
       AseLog.e(e);
