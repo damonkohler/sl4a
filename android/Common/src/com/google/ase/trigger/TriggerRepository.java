@@ -30,10 +30,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.codec.binary.Base64;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.ase.AseLog;
+import com.google.ase.IntentBuilders;
 
 /**
  * A repository maintaining all currently scheduled triggers. This includes, for example, alarms or
@@ -68,6 +70,8 @@ public class TriggerRepository {
   private final SharedPreferences mPreferences;
 
   private List<Trigger> mTriggers;
+  
+  private Context mContext;
 
   /** Interface for filters over triggers */
   public static interface TriggerFilter {
@@ -75,6 +79,7 @@ public class TriggerRepository {
   }
 
   public TriggerRepository(Context context) {
+    mContext = context;
     mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     mTriggers = deserializeTriggers();
   }
@@ -98,6 +103,13 @@ public class TriggerRepository {
     mTriggers.add(trigger);
     storeTriggers(mTriggers);
     notifyOnTriggerAdd(trigger);
+    ensureTriggerServiceRunning();
+  }
+
+  /** Ensures that the {@link TriggerService} is running */
+  private void ensureTriggerServiceRunning() {
+    Intent startTriggerServiceIntent = IntentBuilders.buildTriggerServiceIntent();
+    mContext.startService(startTriggerServiceIntent);
   }
 
   /** Notify all {@link AddTriggerListener}s that a {@link Trigger} was added. */
