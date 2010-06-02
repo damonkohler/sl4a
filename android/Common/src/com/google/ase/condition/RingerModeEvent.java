@@ -88,7 +88,14 @@ public class RingerModeEvent implements Event {
 
   @Override
   public void stop() {
-    mContext.unregisterReceiver(mRingerModeBroadcastReceiver);
+    try {
+      mContext.unregisterReceiver(mRingerModeBroadcastReceiver);
+    } catch (IllegalArgumentException e) {
+      // This occurs when the receiver wasn't even registered.
+      // We just ignore this. This occurs, for example, when
+      // the TriggerService is not running while stop() is being
+      // called.
+    }
   }
 
   public static class Factory implements EventFactory {
