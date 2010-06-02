@@ -80,7 +80,7 @@ public class TriggerService extends Service {
 
     initializeTriggers();
 
-    // setForeground(true);
+    setForeground(true);
 
     Notification notification =
         new Notification(R.drawable.ase_logo_48, "ASE Trigger Service is running...", System
