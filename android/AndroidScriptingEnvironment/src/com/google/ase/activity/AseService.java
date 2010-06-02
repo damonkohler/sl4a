@@ -59,7 +59,6 @@ public class AseService extends Service {
   public void onCreate() {
     AseApplication application = (AseApplication) getApplication();
     mNotificationId = application.getNewNotificationId();
-    showNotification();
   }
 
   @Override
@@ -83,7 +82,10 @@ public class AseService extends Service {
       launchTerminal(intent);
     } else if (intent.getAction().equals(Constants.ACTION_KILL_SERVICE)) {
       stopSelf();
+      return;
     }
+
+    showNotification();
   }
 
   private void launchTerminal(Intent intent) {

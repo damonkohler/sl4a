@@ -117,7 +117,7 @@ public class IntentBuilders {
    */
   public static PendingIntent buildTriggerIntent(Context context, Trigger trigger) {
     final Intent intent = buildStartInBackgroundIntent(trigger.getScriptName());
-    intent.putExtra(Constants.EXTRA_TRIGGER_ID, trigger.getId());
+    intent.putExtra(Constants.EXTRA_TRIGGER_ID, trigger.getId().toString());
     intent.setData(Uri.fromParts("trigger", trigger.getScriptName().toLowerCase(), ""
         + trigger.getId()));
     intent.setComponent(Constants.ASE_SERVICE_COMPONENT_NAME);

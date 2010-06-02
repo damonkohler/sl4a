@@ -197,7 +197,7 @@ public class TriggerRepository {
   /** Returns the {@link TriggerInfo} object with the given id. */
   public Trigger getById(UUID id) {
     for (Trigger trigger : getAllTriggers()) {
-      if (trigger.getId() == id) {
+      if (trigger.getId().equals(id)) {
         return trigger;
       }
     }
