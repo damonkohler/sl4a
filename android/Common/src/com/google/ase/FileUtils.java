@@ -37,4 +37,14 @@ public class FileUtils {
     return (Integer) setPermissions.invoke(null, path.getAbsolutePath(), mode, -1, -1);
   }
 
+  public static boolean recursiveChmod(File root, int mode) throws Exception {
+    boolean success = chmod(root, mode) == 0;
+    for (File path : root.listFiles()) {
+      if (path.isDirectory()) {
+        success = recursiveChmod(path, mode);
+      }
+      success &= (chmod(path, mode) == 0);
+    }
+    return success;
+  }
 }

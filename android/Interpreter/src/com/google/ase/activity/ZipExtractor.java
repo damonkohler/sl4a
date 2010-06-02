@@ -18,10 +18,8 @@ package com.google.ase.activity;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import android.app.Activity;
@@ -99,7 +97,7 @@ public class ZipExtractor extends Activity {
     dialog.show();
   }
 
-  private void unzip() throws ZipException, IOException, InterruptedException {
+  private void unzip() throws Exception {
     Enumeration<? extends ZipEntry> entries;
     ZipFile zip = new ZipFile(mInput);
     entries = zip.entries();

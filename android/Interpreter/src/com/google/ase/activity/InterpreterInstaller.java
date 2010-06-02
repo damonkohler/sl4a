@@ -35,9 +35,6 @@ import com.google.ase.interpreter.InterpreterConfiguration;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class InterpreterInstaller extends Activity {
-
-  private static final int PERMISSIONS = 0755;
-
   private String mName;
   private Interpreter mInterpreter;
 
@@ -212,31 +209,21 @@ public class InterpreterInstaller extends Activity {
     }
   }
 
-  /**
-   * After extracting the interpreter, we need to mark the binary (if there is one) as executable.
-   * In addition, all parent directories must be marked as executable.
-   * 
-   * @return true if the chmod was successful or unnecessary
-   */
   private boolean chmodIntepreter() {
-    if (mInterpreter.getBinary() == null) {
-      return true;
+    int dataChmodErrno;
+    boolean interpreterChmodSuccess;
+    try {
+      // TODO(damonkohler): It seems there's no method for getting our root data directory. However,
+      // the parent of the files directory should be equivalent.
+      File dataDirectory = getFilesDir().getParentFile();
+      dataChmodErrno = FileUtils.chmod(dataDirectory, 0755);
+      interpreterChmodSuccess =
+          FileUtils.recursiveChmod(new File(dataDirectory, mInterpreter.getName()), 0755);
+    } catch (Exception e) {
+      AseLog.e(e);
+      return false;
     }
-    // Chmod up the directory tree to the top of our data directory.
-    for (File pathPart = mInterpreter.getBinary(); pathPart != null
-        && !pathPart.getName().equals("com.google.ase"); pathPart = pathPart.getParentFile()) {
-      try {
-        int errno = FileUtils.chmod(pathPart, PERMISSIONS);
-        if (errno != 0) {
-          AseLog.e("chmod failed with errno " + errno + " for " + pathPart);
-          return false;
-        }
-      } catch (Exception e) {
-        AseLog.e(e);
-        return false;
-      }
-    }
-    return true;
+    return dataChmodErrno == 0 && interpreterChmodSuccess;
   }
 
   private void abort() {
