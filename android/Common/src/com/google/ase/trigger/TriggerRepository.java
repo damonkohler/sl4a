@@ -50,8 +50,8 @@ public class TriggerRepository {
   public interface AddTriggerListener {
     void onAddTrigger(Trigger trigger);
   }
-  
-  private CopyOnWriteArrayList<AddTriggerListener> addTriggerListeners =
+
+  private CopyOnWriteArrayList<AddTriggerListener> mAddTriggerListeners =
       new CopyOnWriteArrayList<AddTriggerListener>();
 
   /**
@@ -102,7 +102,7 @@ public class TriggerRepository {
 
   /** Notify all {@link AddTriggerListener}s that a {@link Trigger} was added. */
   private void notifyOnTriggerAdd(Trigger trigger) {
-    for (AddTriggerListener listener : addTriggerListeners) {
+    for (AddTriggerListener listener : mAddTriggerListeners) {
       listener.onAddTrigger(trigger);
     }
   }
@@ -209,9 +209,17 @@ public class TriggerRepository {
   public boolean isEmpty() {
     return mTriggers.isEmpty();
   }
-  
+
   /** Registers a listener that is invoked when a new trigger gets added. */
   public void registerAddTriggerListener(AddTriggerListener listener) {
-    addTriggerListeners.add(listener);
+    mAddTriggerListeners.add(listener);
+  }
+
+  /**
+   * Unregisters a previously registered listener. This is a no-op if the listener hasn't been
+   * registered.
+   */
+  public void unregisterAddListener(AddTriggerListener addTriggerListener) {
+    mAddTriggerListeners.remove(addTriggerListener);
   }
 }

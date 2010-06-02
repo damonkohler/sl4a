@@ -55,7 +55,7 @@ public class TriggerService extends Service {
   private static int mTriggerServiceNotificationId;
   private static final long TRIGGER_SERVICE_PING_MILLIS = 10 * 1000 * 60;
 
-  private final AddTriggerListener addTriggerListener = new AddTriggerListener() {
+  private final AddTriggerListener mAddTriggerListener = new AddTriggerListener() {
     @Override
     public void onAddTrigger(Trigger trigger) {
       trigger.install(TriggerService.this);
@@ -80,7 +80,7 @@ public class TriggerService extends Service {
     AseApplication application = (AseApplication) this.getApplication();
     mTriggerServiceNotificationId = application.getNewNotificationId();
     mTriggerRepository = application.getTriggerRepository();
-    mTriggerRepository.registerAddTriggerListener(addTriggerListener);
+    mTriggerRepository.registerAddTriggerListener(mAddTriggerListener);
 
     initializeTriggers();
 
@@ -170,6 +170,8 @@ public class TriggerService extends Service {
     NotificationManager manager =
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     manager.cancel(mTriggerServiceNotificationId);
+    
+    mTriggerRepository.unregisterAddListener(mAddTriggerListener);
   }
 
   @Override
