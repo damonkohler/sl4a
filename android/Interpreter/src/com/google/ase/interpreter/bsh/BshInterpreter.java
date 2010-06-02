@@ -23,7 +23,7 @@ import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.BeanShellLanguage;
 
 public class BshInterpreter extends Interpreter {
-  
+
   public BshInterpreter() {
     super(new BeanShellLanguage());
   }

@@ -74,7 +74,7 @@ public class InterpreterManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.interpreter_manager);
-    mInterpreterList = InterpreterConfiguration.getInstalledInterpreters();
+    mInterpreterList = InterpreterConfiguration.getInstalledInterpreters(this);
     mAdapter = new InterpreterManagerAdapter();
     mAdapter.registerDataSetObserver(new InterpreterListObserver());
     setListAdapter(mAdapter);
@@ -107,7 +107,7 @@ public class InterpreterManager extends ListActivity {
   private void buildMenuIdMaps() {
     mInstallerMenuIds = new HashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
-    List<Interpreter> notInstalled = InterpreterConfiguration.getNotInstalledInterpreters();
+    List<Interpreter> notInstalled = InterpreterConfiguration.getNotInstalledInterpreters(this);
     for (Interpreter interpreter : notInstalled) {
       mInstallerMenuIds.put(i, interpreter);
       ++i;
@@ -115,7 +115,7 @@ public class InterpreterManager extends ListActivity {
   }
 
   private void buildInstallLanguagesMenu(Menu menu) {
-    if (InterpreterConfiguration.getNotInstalledInterpreters().size() > 0) {
+    if (InterpreterConfiguration.getNotInstalledInterpreters(this).size() > 0) {
       SubMenu installMenu =
           menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
               android.R.drawable.ic_menu_add);
@@ -223,23 +223,23 @@ public class InterpreterManager extends ListActivity {
     RequestCode request = RequestCode.values()[requestCode];
     if (resultCode == RESULT_OK) {
       switch (request) {
-        case INSTALL_INTERPRETER:
-          break;
-        case UNINSTALL_INTERPRETER:
-          AseLog.v(this, "Uninstallation successful.");
-          break;
-        default:
-          break;
+      case INSTALL_INTERPRETER:
+        break;
+      case UNINSTALL_INTERPRETER:
+        AseLog.v(this, "Uninstallation successful.");
+        break;
+      default:
+        break;
       }
     } else {
       switch (request) {
-        case INSTALL_INTERPRETER:
-          break;
-        case UNINSTALL_INTERPRETER:
-          AseLog.v(this, "Uninstallation failed.");
-          break;
-        default:
-          break;
+      case INSTALL_INTERPRETER:
+        break;
+      case UNINSTALL_INTERPRETER:
+        AseLog.v(this, "Uninstallation failed.");
+        break;
+      default:
+        break;
       }
     }
     mAdapter.notifyDataSetInvalidated();
@@ -248,7 +248,7 @@ public class InterpreterManager extends ListActivity {
   private class InterpreterListObserver extends DataSetObserver {
     @Override
     public void onInvalidated() {
-      mInterpreterList = InterpreterConfiguration.getInstalledInterpreters();
+      mInterpreterList = InterpreterConfiguration.getInstalledInterpreters(InterpreterManager.this);
     }
   }
 

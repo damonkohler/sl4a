@@ -24,13 +24,13 @@ import com.google.ase.language.LuaLanguage;
 
 /**
  * Represents the Lua interpreter.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class LuaInterpreter extends Interpreter {
 
-  private final static String LUA_BIN = "/data/data/com.google.ase/lua/bin/lua";
-  
+  private final static String LUA_BIN = "/data/data/com.google.ase/files/lua/bin/lua";
+
   public LuaInterpreter() {
     super(new LuaLanguage());
   }

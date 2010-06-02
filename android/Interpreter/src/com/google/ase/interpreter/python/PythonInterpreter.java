@@ -29,7 +29,7 @@ import com.google.ase.language.PythonLanguage;
  */
 public class PythonInterpreter extends Interpreter {
 
-  private final static String PYTHON_BIN = "/data/data/com.google.ase/python/bin/python";
+  private final static String PYTHON_BIN = "/data/data/com.google.ase/files/python/bin/python";
 
   public PythonInterpreter() {
     super(new PythonLanguage());

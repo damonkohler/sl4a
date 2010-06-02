@@ -26,7 +26,7 @@ public class Main extends Activity {
     mInterpreter = new PythonInterpreter();
     Intent intent = getIntent();
     if (intent.getAction().equals(Constants.ACTION_DISCOVER_INTERPRETERS)) {
-      if (mInterpreter.isInstalled()) {
+      if (mInterpreter.isInstalled(this)) {
         setResult(RESULT_OK, buildResultIntent(mInterpreter));
       } else {
         setResult(RESULT_CANCELED);
@@ -36,7 +36,7 @@ public class Main extends Activity {
     }
     setContentView(R.layout.main);
     mButton = (Button) findViewById(R.id.button);
-    if (mInterpreter.isInstalled()) {
+    if (mInterpreter.isInstalled(this)) {
       prepareUninstallButton();
     } else {
       prepareInstallButton();

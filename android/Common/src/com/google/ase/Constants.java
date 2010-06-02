@@ -17,6 +17,7 @@
 package com.google.ase;
 
 import android.content.ComponentName;
+import android.os.Environment;
 
 public class Constants {
 
@@ -57,13 +58,13 @@ public class Constants {
   // BluetoothDeviceManager
   public static final String EXTRA_DEVICE_ADDRESS = "com.google.ase.extra.device_address";
 
-  public static final String SDCARD_ROOT = "/sdcard/";
+  public static final String SDCARD_ROOT =
+      Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
   public static final String DOWNLOAD_ROOT = SDCARD_ROOT;
   public static final String SDCARD_ASE_ROOT = SDCARD_ROOT + "ase/";
   public static final String ASE_DALVIK_CACHE_ROOT = SDCARD_ASE_ROOT + "dalvik-cache/";
   public static final String SCRIPTS_ROOT = SDCARD_ASE_ROOT + "scripts/";
   public static final String INTERPRETER_EXTRAS_ROOT = SDCARD_ASE_ROOT + "extras/";
-  public static final String INTERPRETER_ROOT = "/data/data/com.google.ase/";
   public static final String BASE_INSTALL_URL = "http://android-scripting.googlecode.com/files/";
 
   public static final ComponentName ASE_SERVICE_COMPONENT_NAME =
