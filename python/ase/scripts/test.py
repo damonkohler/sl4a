@@ -122,7 +122,7 @@ def test_vibrate():
 
 
 def test_notify():
-  result = droid.notify('Hello, world!')
+  result = droid.notify('Test Title', 'Hello, world!')
   return result.error is None
 
 
