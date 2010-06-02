@@ -23,7 +23,7 @@ import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.RubyLanguage;
 
 public class JRubyInterpreter extends Interpreter {
-  
+
   public JRubyInterpreter() {
     super(new RubyLanguage());
   }

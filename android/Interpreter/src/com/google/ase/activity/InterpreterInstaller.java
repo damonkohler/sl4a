@@ -98,8 +98,7 @@ public class InterpreterInstaller extends Activity {
     Intent intent = new Intent(this, ZipExtractor.class);
     intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mInterpreter
         .getInterpreterArchiveName()).getAbsolutePath());
-    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, new File(getFilesDir().getParent(), mInterpreter
-        .getName()).getAbsolutePath());
+    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, getFilesDir().getAbsolutePath());
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER.ordinal());
   }
 
@@ -214,12 +213,9 @@ public class InterpreterInstaller extends Activity {
     int dataChmodErrno;
     boolean interpreterChmodSuccess;
     try {
-      // TODO(damonkohler): It seems there's no method for getting our root data directory. However,
-      // the parent of the files directory should be equivalent.
-      File dataDirectory = getFilesDir().getParentFile();
-      dataChmodErrno = FileUtils.chmod(dataDirectory, 0755);
+      dataChmodErrno = FileUtils.chmod(getFilesDir(), 0755);
       interpreterChmodSuccess =
-          FileUtils.recursiveChmod(new File(dataDirectory, mInterpreter.getName()), 0755);
+          FileUtils.recursiveChmod(new File(getFilesDir(), mInterpreter.getName()), 0755);
     } catch (Exception e) {
       AseLog.e(e);
       return false;

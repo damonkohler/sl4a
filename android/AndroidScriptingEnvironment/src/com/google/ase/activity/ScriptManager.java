@@ -96,9 +96,9 @@ public class ScriptManager extends ListActivity {
 
   private void updateScriptsList() {
     if (mPreferences.getBoolean("show_all_files", false)) {
-      mScriptList = ScriptStorageAdapter.listExecutableScripts(this);
-    } else {
       mScriptList = ScriptStorageAdapter.listAllScripts();
+    } else {
+      mScriptList = ScriptStorageAdapter.listExecutableScripts(this);
     }
   }
 

@@ -59,7 +59,7 @@ public class Constants {
   public static final String EXTRA_DEVICE_ADDRESS = "com.google.ase.extra.device_address";
 
   public static final String SDCARD_ROOT =
-      Environment.getExternalStorageDirectory().getAbsolutePath();
+      Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
   public static final String DOWNLOAD_ROOT = SDCARD_ROOT;
   public static final String SDCARD_ASE_ROOT = SDCARD_ROOT + "ase/";
   public static final String ASE_DALVIK_CACHE_ROOT = SDCARD_ASE_ROOT + "dalvik-cache/";

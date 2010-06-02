@@ -49,7 +49,7 @@ public abstract class Interpreter {
       // Shell is installed by the system.
       return true;
     }
-    File dataDirectory = context.getFilesDir().getParentFile();
+    File dataDirectory = context.getFilesDir();
     File interpreterDirectory = new File(dataDirectory, getName());
     File interpreterExtrasDirectory = new File(dataDirectory, getName());
     return interpreterDirectory.exists() || interpreterExtrasDirectory.exists();

@@ -67,7 +67,7 @@ public class InterpreterUninstaller extends Activity {
       @Override
       public void run() {
         File extras = new File(Constants.INTERPRETER_EXTRAS_ROOT, mName);
-        File root = new File(getFilesDir().getParent(), mName);
+        File root = new File(getFilesDir(), mName);
         File scriptsArchive =
             new File(Constants.DOWNLOAD_ROOT, mInterpreter.getScriptsArchiveName());
         File archive = new File(Constants.DOWNLOAD_ROOT, mInterpreter.getInterpreterArchiveName());

@@ -49,7 +49,7 @@ public class ZipExtractor extends Activity {
     mOutput = new File(getIntent().getStringExtra(Constants.EXTRA_OUTPUT_PATH));
     if (!mOutput.exists()) {
       if (!mOutput.mkdirs()) {
-        AseLog.e(this, "Failed to make directories.");
+        AseLog.e(this, "Failed to make directories: " + mOutput.getAbsolutePath());
         setResult(RESULT_CANCELED);
         finish();
         return;
