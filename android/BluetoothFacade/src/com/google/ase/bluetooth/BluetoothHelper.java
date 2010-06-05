@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2010 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.google.ase.bluetooth;
 
 import java.util.Set;
@@ -10,8 +26,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 public class BluetoothHelper {
-  private BluetoothHelper() {
-  }
 
   public static interface DeviceListener {
     public void addBondedDevice(String name, String address);
@@ -21,27 +35,38 @@ public class BluetoothHelper {
     public void scanDone();
   }
 
-  public static void findDevices(final Context context, final DeviceListener listener) {
-    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-        final String action = intent.getAction();
+  private final Context mContext;
+  private final DeviceListener mListener;
+  private BroadcastReceiver mReceiver;
 
-        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-          // Get the BluetoothDevice object from the Intent
-          BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+  public BluetoothHelper(Context context, DeviceListener listener) {
+    mContext = context;
+    mListener = listener;
+  }
 
-          // If it's already paired, skip it, because it's been listed already
-          if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-            listener.addDevice(device.getName(), device.getAddress());
-          }
-        } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-          listener.scanDone();
-          context.unregisterReceiver(this);
+  private class BluetoothReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      final String action = intent.getAction();
+
+      if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+        // Get the BluetoothDevice object from the Intent
+        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+        // If it's already paired, skip it, because it's been listed already
+        if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+          mListener.addDevice(device.getName(), device.getAddress());
         }
+      } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+        context.unregisterReceiver(this);
+        mListener.scanDone();
       }
-    };
+    }
+  }
+
+  public void startDiscovery() {
+    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    mReceiver = new BluetoothReceiver();
 
     if (bluetoothAdapter.isDiscovering()) {
       bluetoothAdapter.cancelDiscovery();
@@ -49,20 +74,25 @@ public class BluetoothHelper {
 
     Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
     for (BluetoothDevice device : pairedDevices) {
-      listener.addBondedDevice(device.getName(), device.getAddress());
+      mListener.addBondedDevice(device.getName(), device.getAddress());
     }
 
     final IntentFilter deviceFoundFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-    context.registerReceiver(bluetoothReceiver, deviceFoundFilter);
+    mContext.registerReceiver(mReceiver, deviceFoundFilter);
 
     final IntentFilter discoveryFinishedFilter =
         new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-    context.registerReceiver(bluetoothReceiver, discoveryFinishedFilter);
+    mContext.registerReceiver(mReceiver, discoveryFinishedFilter);
 
     if (!bluetoothAdapter.isEnabled()) {
       bluetoothAdapter.enable();
     }
 
     bluetoothAdapter.startDiscovery();
+  }
+
+  public void cancel() {
+    mContext.unregisterReceiver(mReceiver);
+    mListener.scanDone();
   }
 }

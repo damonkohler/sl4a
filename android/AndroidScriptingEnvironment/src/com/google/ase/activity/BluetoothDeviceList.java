@@ -47,14 +47,24 @@ public class BluetoothDeviceList extends ListActivity {
   }
 
   private final DeviceListAdapter mAdapter = new DeviceListAdapter();
+  private final BluetoothHelper mBluetoothHelper = new BluetoothHelper(this, mAdapter);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Bluetooth Devices", R.layout.bluetooth_device_list);
     setListAdapter(mAdapter);
-    BluetoothHelper.findDevices(this, mAdapter);
     AseAnalytics.trackActivity(this);
+  }
+
+  @Override
+  protected void onStart() {
+    mBluetoothHelper.startDiscovery();
+  }
+
+  @Override
+  protected void onStop() {
+    mBluetoothHelper.cancel();
   }
 
   @Override
