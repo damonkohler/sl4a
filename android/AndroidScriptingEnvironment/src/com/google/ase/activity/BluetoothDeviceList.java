@@ -59,11 +59,13 @@ public class BluetoothDeviceList extends ListActivity {
 
   @Override
   protected void onStart() {
+    super.onStart();
     mBluetoothHelper.startDiscovery();
   }
 
   @Override
   protected void onStop() {
+    super.onStop();
     mBluetoothHelper.cancel();
   }
 
