@@ -44,21 +44,22 @@ public class TextToSpeechFacade implements RpcReceiver {
 
   @Override
   public void shutdown() {
-    waitForSpeechToFinish();
+    while (mTts.isSpeaking()) {
+      SystemClock.sleep(100);
+    }
     mTts.shutdown();
   }
 
-  private void waitForSpeechToFinish() {
-    if (mTts != null) {
-      while (mTts.isSpeaking()) {
-        SystemClock.sleep(100);
-      }
-    }
-  }
-
   @Rpc(description = "Speaks the provided message via TTS.")
-  public void speak(@RpcParameter(name = "message") String message) throws InterruptedException {
+  public void ttsSpeak(@RpcParameter(name = "message") String message) throws InterruptedException {
     mOnInitLock.await();
     mTts.speak(message, TextToSpeech.QUEUE_ADD, null);
   }
+
+  @Rpc(description = "Returns True if speech is currently in progress.")
+  public Boolean ttsIsSpeaking() throws InterruptedException {
+    mOnInitLock.await();
+    return mTts.isSpeaking();
+  }
+
 }

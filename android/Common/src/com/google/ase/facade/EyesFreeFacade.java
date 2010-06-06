@@ -39,7 +39,7 @@ public class EyesFreeFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Speaks the provided message via TTS.")
-  public void speak(@RpcParameter(name = "message") String message) {
+  public void ttsSpeak(@RpcParameter(name = "message") String message) {
     Intent intent = new Intent("com.google.tts.makeBagel");
     intent.putExtra("message", message);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
