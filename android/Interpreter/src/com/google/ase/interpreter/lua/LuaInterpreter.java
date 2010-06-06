@@ -29,7 +29,7 @@ import com.google.ase.language.LuaLanguage;
  */
 public class LuaInterpreter extends Interpreter {
 
-  private final static String LUA_BIN = "/data/data/com.google.ase/files/lua/bin/lua";
+  private final static String LUA_BIN = "/data/data/com.google.ase/lua/bin/lua";
 
   public LuaInterpreter() {
     super(new LuaLanguage());

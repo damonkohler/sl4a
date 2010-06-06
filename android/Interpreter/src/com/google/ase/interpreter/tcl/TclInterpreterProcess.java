@@ -24,7 +24,7 @@ import com.google.ase.interpreter.InterpreterProcess;
 
 public class TclInterpreterProcess extends InterpreterProcess {
 
-  private final static String TCL_HOME = "/data/data/com.google.ase/files/tclsh";
+  private final static String TCL_HOME = "/data/data/com.google.ase/tclsh";
   private final static String TCL_EXTRAS = Constants.SDCARD_ASE_ROOT + "extras/tcl/";
 
   public TclInterpreterProcess(String launchScript, int port) {

@@ -98,7 +98,8 @@ public class InterpreterInstaller extends Activity {
     Intent intent = new Intent(this, ZipExtractor.class);
     intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mInterpreter
         .getInterpreterArchiveName()).getAbsolutePath());
-    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, getFilesDir().getAbsolutePath());
+    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, InterpreterConfiguration.getInterpreterRoot(this)
+        .getAbsolutePath());
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER.ordinal());
   }
 
@@ -213,9 +214,10 @@ public class InterpreterInstaller extends Activity {
     int dataChmodErrno;
     boolean interpreterChmodSuccess;
     try {
-      dataChmodErrno = FileUtils.chmod(getFilesDir(), 0755);
+      dataChmodErrno = FileUtils.chmod(InterpreterConfiguration.getInterpreterRoot(this), 0755);
       interpreterChmodSuccess =
-          FileUtils.recursiveChmod(new File(getFilesDir(), mInterpreter.getName()), 0755);
+          FileUtils.recursiveChmod(InterpreterConfiguration.getInterpreterRoot(this, mInterpreter
+              .getName()), 0755);
     } catch (Exception e) {
       AseLog.e(e);
       return false;

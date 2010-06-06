@@ -16,6 +16,7 @@
 
 package com.google.ase.interpreter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -108,5 +109,13 @@ public class InterpreterConfiguration {
       }
     }
     return null;
+  }
+
+  public static File getInterpreterRoot(Context context) {
+    return context.getFilesDir().getParentFile();
+  }
+
+  public static File getInterpreterRoot(Context context, String interpreterName) {
+    return new File(getInterpreterRoot(context), interpreterName);
   }
 }

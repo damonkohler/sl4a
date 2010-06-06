@@ -29,7 +29,7 @@ import com.google.ase.language.PerlLanguage;
  */
 public class PerlInterpreter extends Interpreter {
 
-  private final static String PERL_BIN = "/data/data/com.google.ase/files/perl/perl";
+  private final static String PERL_BIN = "/data/data/com.google.ase/perl/perl";
 
   public PerlInterpreter() {
     super(new PerlLanguage());
