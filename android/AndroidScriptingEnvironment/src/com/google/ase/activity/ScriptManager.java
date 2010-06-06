@@ -42,7 +42,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.ase.ActivityFlinger;
-import com.google.ase.AseAnalytics;
+import com.google.ase.Analytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
@@ -91,7 +91,7 @@ public class ScriptManager extends ListActivity {
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     startService(IntentBuilders.buildTriggerServiceIntent());
-    AseAnalytics.trackActivity(this);
+    Analytics.trackActivity(this);
   }
 
   private void updateScriptsList() {

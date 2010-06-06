@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.LiveFolders;
 
-import com.google.ase.AseAnalytics;
+import com.google.ase.Analytics;
 import com.google.ase.R;
 
 public class ScriptsLiveFolder extends Activity {
@@ -25,7 +25,7 @@ public class ScriptsLiveFolder extends Activity {
     } else {
       setResult(RESULT_CANCELED);
     }
-    AseAnalytics.trackActivity(this);
+    Analytics.trackActivity(this);
     finish();
   }
 

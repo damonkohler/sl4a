@@ -33,7 +33,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.ase.AseAnalytics;
+import com.google.ase.Analytics;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
@@ -57,7 +57,7 @@ public class ScriptPicker extends ListActivity {
     mAdapter = new ScriptPickerAdapter();
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
-    AseAnalytics.trackActivity(this);
+    Analytics.trackActivity(this);
   }
 
   @Override

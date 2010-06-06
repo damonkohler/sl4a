@@ -39,7 +39,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.ase.AseAnalytics;
+import com.google.ase.Analytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
@@ -124,7 +124,7 @@ public class ScriptEditor extends Activity {
     mContentText.setFilters(filters.toArray(oldFilters));
     mContentText.addTextChangedListener(new ContentTextWatcher());
 
-    AseAnalytics.trackActivity(this);
+    Analytics.trackActivity(this);
   }
 
   @Override

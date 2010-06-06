@@ -26,13 +26,13 @@ import android.preference.PreferenceManager;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
-public class AseAnalytics {
+public class Analytics {
   private static GoogleAnalyticsTracker mTracker;
   private static SharedPreferences mPrefs;
   private static String mAseVersion;
   private static ExecutorService mWorkPool;
 
-  private AseAnalytics() {
+  private Analytics() {
     // Utility class.
   }
 
@@ -41,7 +41,7 @@ public class AseAnalytics {
     mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     mTracker = GoogleAnalyticsTracker.getInstance();
     mTracker.start("UA-158835-13", 10, context);
-    mWorkPool = Executors.newCachedThreadPool();
+    mWorkPool = Executors.newSingleThreadExecutor();
   }
 
   private static class PageNameBuilder {

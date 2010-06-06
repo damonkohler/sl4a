@@ -38,7 +38,7 @@ import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.google.ase.AseAnalytics;
+import com.google.ase.Analytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
@@ -82,7 +82,7 @@ public class ApiBrowser extends ListActivity {
     mAdapter = new ApiBrowserAdapter();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
-    AseAnalytics.trackActivity(this);
+    Analytics.trackActivity(this);
     setResult(RESULT_CANCELED);
   }
 
@@ -147,7 +147,7 @@ public class ApiBrowser extends ListActivity {
     if (item.getItemId() == ContextMenuId.INSERT_TEXT.getId()) {
       // There's no activity to track calls to insert (like there is for prompt) so we track it
       // here instead.
-      AseAnalytics.track("ApiInsert");
+      Analytics.track("ApiInsert");
       insertText(rpc, new String[0]);
     } else if (item.getItemId() == ContextMenuId.PROMPT_PARAMETERS.getId()) {
       Intent intent = new Intent(this, ApiPrompt.class);

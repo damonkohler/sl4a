@@ -46,13 +46,13 @@ public class AseApplication extends Application {
   public void onCreate() {
     super.onCreate();
     mTriggerRepository = new TriggerRepository(this);
-    AseAnalytics.start(this);
+    Analytics.start(this);
   }
 
   @Override
   public void onTerminate() {
     super.onTerminate();
-    AseAnalytics.stop();
+    Analytics.stop();
   }
 
   public int getNewNotificationId() {

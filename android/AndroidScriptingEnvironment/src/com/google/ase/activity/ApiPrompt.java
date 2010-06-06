@@ -32,7 +32,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.ase.AseAnalytics;
+import com.google.ase.Analytics;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.facade.FacadeConfiguration;
@@ -74,7 +74,7 @@ public class ApiPrompt extends Activity {
         finish();
       }
     });
-    AseAnalytics.trackActivity(this);
+    Analytics.trackActivity(this);
     setResult(RESULT_CANCELED);
   }
 

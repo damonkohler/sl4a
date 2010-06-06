@@ -28,7 +28,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.google.ase.AseAnalytics;
+import com.google.ase.Analytics;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.bluetooth.BluetoothHelper;
@@ -54,7 +54,7 @@ public class BluetoothDeviceList extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Bluetooth Devices", R.layout.bluetooth_device_list);
     setListAdapter(mAdapter);
-    AseAnalytics.trackActivity(this);
+    Analytics.trackActivity(this);
   }
 
   @Override

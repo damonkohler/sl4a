@@ -60,7 +60,7 @@ public class ScriptLauncher {
     }
     mProcess = mInterpreter.buildProcess(scriptPath, mAddress.getPort());
     mProcess.start();
-    AseAnalytics.track(mInterpreterName);
+    Analytics.track(mInterpreterName);
   }
 
   public void kill() {

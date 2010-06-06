@@ -31,7 +31,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.ase.AseAnalytics;
+import com.google.ase.Analytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
@@ -141,7 +141,7 @@ public class Terminal extends Activity {
     updatePreferences();
     startInterpreter();
 
-    AseAnalytics.trackActivity(this);
+    Analytics.trackActivity(this);
   }
 
   private void startInterpreter() {

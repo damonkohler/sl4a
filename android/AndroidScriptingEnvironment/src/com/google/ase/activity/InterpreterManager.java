@@ -44,7 +44,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.ase.ActivityFlinger;
-import com.google.ase.AseAnalytics;
+import com.google.ase.Analytics;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
@@ -81,7 +81,7 @@ public class InterpreterManager extends ListActivity {
     registerForContextMenu(getListView());
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
-    AseAnalytics.trackActivity(this);
+    Analytics.trackActivity(this);
   }
 
   @Override

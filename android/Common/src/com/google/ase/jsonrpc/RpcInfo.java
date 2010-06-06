@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.google.ase.AseAnalytics;
+import com.google.ase.Analytics;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.RpcError;
 import com.google.ase.util.VisibleForTesting;
@@ -53,7 +53,7 @@ public final class RpcInfo {
    */
   public Object invoke(final JSONArray parameters) throws Throwable {
     // Issue track call first in case of failure.
-    AseAnalytics.track("api", mMethodDescriptor.getName());
+    Analytics.track("api", mMethodDescriptor.getName());
 
     final Type[] parameterTypes = mMethodDescriptor.getGenericParameterTypes();
     final Object[] args = new Object[parameterTypes.length];
