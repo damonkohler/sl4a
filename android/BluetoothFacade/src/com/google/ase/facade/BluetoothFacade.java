@@ -88,7 +88,7 @@ public class BluetoothFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Returns True if the next read is guaranteed not to block.")
-  public Boolean bluetoothReady() throws IOException {
+  public Boolean bluetoothReadReady() throws IOException {
     if (mBluetoothServer != null) {
       return mBluetoothServer.getReader().ready();
     }

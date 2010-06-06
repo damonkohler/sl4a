@@ -37,11 +37,12 @@ public class BluetoothHelper {
 
   private final Context mContext;
   private final DeviceListener mListener;
-  private BroadcastReceiver mReceiver;
+  private final BroadcastReceiver mReceiver;
 
   public BluetoothHelper(Context context, DeviceListener listener) {
     mContext = context;
     mListener = listener;
+    mReceiver = new BluetoothReceiver();
   }
 
   private class BluetoothReceiver extends BroadcastReceiver {
@@ -58,7 +59,6 @@ public class BluetoothHelper {
           mListener.addDevice(device.getName(), device.getAddress());
         }
       } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-        context.unregisterReceiver(this);
         mListener.scanDone();
       }
     }
@@ -66,7 +66,6 @@ public class BluetoothHelper {
 
   public void startDiscovery() {
     BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    mReceiver = new BluetoothReceiver();
 
     if (bluetoothAdapter.isDiscovering()) {
       bluetoothAdapter.cancelDiscovery();

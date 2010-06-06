@@ -30,4 +30,4 @@ sender_thread = threading.Thread(target=sender)
 sender_thread.daemon = True
 sender_thread.start()
 
-time.sleep(2)
+time.sleep(10)
