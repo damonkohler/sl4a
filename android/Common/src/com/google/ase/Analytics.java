@@ -67,7 +67,6 @@ public class Analytics {
             builder.add(part);
           }
           String name = builder.build();
-          AseLog.v("Tracking " + name);
           mTracker.trackPageView(name);
         };
       });
