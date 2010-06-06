@@ -19,6 +19,7 @@ package com.google.ase.facade;
 import java.util.concurrent.CountDownLatch;
 
 import android.app.Service;
+import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 
@@ -43,12 +44,21 @@ public class TextToSpeechFacade implements RpcReceiver {
 
   @Override
   public void shutdown() {
+    waitForSpeechToFinish();
     mTts.shutdown();
+  }
+
+  private void waitForSpeechToFinish() {
+    if (mTts != null) {
+      while (mTts.isSpeaking()) {
+        SystemClock.sleep(100);
+      }
+    }
   }
 
   @Rpc(description = "Speaks the provided message via TTS.")
   public void speak(@RpcParameter(name = "message") String message) throws InterruptedException {
     mOnInitLock.await();
-    mTts.speak(message, 1, null);
+    mTts.speak(message, TextToSpeech.QUEUE_ADD, null);
   }
 }

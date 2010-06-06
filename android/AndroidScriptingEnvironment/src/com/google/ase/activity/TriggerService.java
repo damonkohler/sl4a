@@ -77,12 +77,14 @@ public class TriggerService extends Service {
     mTriggerServiceNotificationId = application.getNewNotificationId();
     mTriggerRepository = application.getTriggerRepository();
     mTriggerRepository.registerAddTriggerListener(mAddTriggerListener);
-
-    initializeTriggers();
-
-    ServiceUtils.setForeground(this, mTriggerServiceNotificationId, createNotification());
-
-    installAlarm();
+    
+    if (mTriggerRepository.isEmpty()) {
+      stopSelf();
+    } else {
+      initializeTriggers();
+      ServiceUtils.setForeground(this, mTriggerServiceNotificationId, createNotification());
+      installAlarm();
+    }
   }
 
   /** Returns the notification to display whenever the service is running. */
