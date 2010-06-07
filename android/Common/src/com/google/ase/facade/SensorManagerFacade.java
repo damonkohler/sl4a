@@ -32,8 +32,9 @@ import com.google.ase.rpc.RpcParameter;
 /**
  * Exposes the SensorManager related functionality.
  * 
- * @author Damon Kohler (damonkohler@gmail.com) Felix Arends
- *         (felix.arends@gmail.com)
+ * @author Damon Kohler (damonkohler@gmail.com) 
+ * @author Felix Arends (felix.arends@gmail.com)
+ * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
 public class SensorManagerFacade implements RpcReceiver {
   private final EventFacade mEventFacade;
@@ -43,139 +44,137 @@ public class SensorManagerFacade implements RpcReceiver {
   private SensorEventListener mSensorListener;
 
   public SensorManagerFacade(Service service, EventFacade eventFacade) {
-	mEventFacade = eventFacade;
-	mSensorManager = (SensorManager) service
-		.getSystemService(Context.SENSOR_SERVICE);
+    mEventFacade = eventFacade;
+    mSensorManager = (SensorManager) service.getSystemService(Context.SENSOR_SERVICE);
   }
 
   @Rpc(description = "Starts recording sensor data to be available for polling.")
   public void startSensing(
-	  @RpcParameter(name = "sampleSize", description = "number of samples for calculating average readings") @RpcDefault("5") Integer sampleSize) {
-	if (mSensorListener == null) {
-	  mSensorListener = new SensorValuesCollector(sampleSize);
-	  mSensorReadings = new Bundle();
-	  for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_ALL)) {
-		mSensorManager.registerListener(mSensorListener, sensor,
-			SensorManager.SENSOR_DELAY_NORMAL);
-	  }
-	}
+      @RpcParameter(name = "sampleSize", description = "number of samples for calculating average readings") @RpcDefault("5") Integer sampleSize) {
+    if (mSensorListener == null) {
+      mSensorListener = new SensorValuesCollector(sampleSize);
+      mSensorReadings = new Bundle();
+      for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_ALL)) {
+        mSensorManager.registerListener(mSensorListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+      }
+    }
   }
 
   @Rpc(description = "Starts recording sensor data to be available for polling.")
   public Bundle readSensors() {
-	synchronized (mSensorReadings) {
-	  if (mSensorReadings == null) {
-		return null;
-	  }
-	  return new Bundle(mSensorReadings);
-	}
+    synchronized (mSensorReadings) {
+      if (mSensorReadings == null) {
+        return null;
+      }
+      return new Bundle(mSensorReadings);
+    }
   }
 
   @Rpc(description = "Stops collecting sensor data.")
   public void stopSensing() {
-	if (mSensorManager == null) {
-	  return;
-	}
-	mSensorManager.unregisterListener(mSensorListener);
-	mSensorReadings = null;
-	mSensorListener = null;
+    if (mSensorManager == null) {
+      return;
+    }
+    mSensorManager.unregisterListener(mSensorListener);
+    mSensorReadings = null;
+    mSensorListener = null;
   }
 
   @Override
   public void shutdown() {
-	stopSensing();
+    stopSensing();
   }
 
   private class SensorValuesCollector implements SensorEventListener {
-	private final static int MATRIX_SIZE = 9;
+    private final static int MATRIX_SIZE = 9;
 
-	private final Average mmAzimuth, mmPitch, mmRoll;
-	private float[] mmGeomagneticValues, mmGravityValues, mmR, mmOrientation;
+    private final RollingAverage mmAzimuth, mmPitch, mmRoll;
+    private float[] mmGeomagneticValues, mmGravityValues, mmR, mmOrientation;
 
-	public SensorValuesCollector(int avgSampleSize) {
-	  mmAzimuth = new Average(avgSampleSize);
-	  mmPitch = new Average(avgSampleSize);
-	  mmRoll = new Average(avgSampleSize);
-	}
+    public SensorValuesCollector(int avgSampleSize) {
+      mmAzimuth = new RollingAverage(avgSampleSize);
+      mmPitch = new RollingAverage(avgSampleSize);
+      mmRoll = new RollingAverage(avgSampleSize);
+    }
 
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-	  synchronized (mSensorReadings) {
-		mSensorReadings.putInt("accuracy", accuracy);
-	  }
-	  mEventFacade.postEvent("sensors", mSensorReadings);
-	}
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+      synchronized (mSensorReadings) {
+        mSensorReadings.putInt("accuracy", accuracy);
+        mEventFacade.postEvent("sensors", mSensorReadings);
+      }
+    }
 
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-	  synchronized (mSensorReadings) {
-		switch (event.sensor.getType()) {
-		case Sensor.TYPE_ACCELEROMETER:
-		  mSensorReadings.putFloat("xforce", event.values[0]);
-		  mSensorReadings.putFloat("yforce", event.values[1]);
-		  mSensorReadings.putFloat("zforce", event.values[2]);
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+      synchronized (mSensorReadings) {
+        switch (event.sensor.getType()) {
+        case Sensor.TYPE_ACCELEROMETER:
+          mSensorReadings.putFloat("xforce", event.values[0]);
+          mSensorReadings.putFloat("yforce", event.values[1]);
+          mSensorReadings.putFloat("zforce", event.values[2]);
 
-		  mmGravityValues = event.values.clone();
-		  break;
-		case Sensor.TYPE_MAGNETIC_FIELD:
-		  mSensorReadings.putFloat("xmag", event.values[0]);
-		  mSensorReadings.putFloat("ymag", event.values[1]);
-		  mSensorReadings.putFloat("zmag", event.values[2]);
+          mmGravityValues = event.values.clone();
+          break;
+        case Sensor.TYPE_MAGNETIC_FIELD:
+          mSensorReadings.putFloat("xmag", event.values[0]);
+          mSensorReadings.putFloat("ymag", event.values[1]);
+          mSensorReadings.putFloat("zmag", event.values[2]);
 
-		  mmGeomagneticValues = event.values.clone();
-		  break;
-		case Sensor.TYPE_LIGHT:
-		  mSensorReadings.putFloat("light", event.values[0]);
-		  break;
-		}
+          mmGeomagneticValues = event.values.clone();
+          break;
+        case Sensor.TYPE_LIGHT:
+          mSensorReadings.putFloat("light", event.values[0]);
+          break;
+        }
 
-		if (mmGeomagneticValues != null && mmGravityValues != null) {
-		  if (mmR == null)
-			mmR = new float[MATRIX_SIZE];
-		  if (SensorManager.getRotationMatrix(mmR, null, mmGravityValues,
-			  mmGeomagneticValues)) {
-			if (mmOrientation == null)
-			  mmOrientation = new float[3];
-			SensorManager.getOrientation(mmR, mmOrientation);
-			mmAzimuth.add(mmOrientation[0]);
-			mmPitch.add(mmOrientation[1]);
-			mmRoll.add(mmOrientation[2]);
-			mSensorReadings.putDouble("azimuth", mmAzimuth.get());
-			mSensorReadings.putDouble("pitch", mmPitch.get());
-			mSensorReadings.putDouble("roll", mmRoll.get());
-		  }
-		}
-	  }
-	  mEventFacade.postEvent("sensors", mSensorReadings);
-	}
+        if (mmGeomagneticValues != null && mmGravityValues != null) {
+          if (mmR == null){
+            mmR = new float[MATRIX_SIZE];
+          }
+          if (SensorManager.getRotationMatrix(mmR, null, mmGravityValues, mmGeomagneticValues)) {
+            if (mmOrientation == null)
+              mmOrientation = new float[3];
+            SensorManager.getOrientation(mmR, mmOrientation);
+            mmAzimuth.add(mmOrientation[0]);
+            mmPitch.add(mmOrientation[1]);
+            mmRoll.add(mmOrientation[2]);
+            mSensorReadings.putDouble("azimuth", mmAzimuth.get());
+            mSensorReadings.putDouble("pitch", mmPitch.get());
+            mSensorReadings.putDouble("roll", mmRoll.get());
+          }
+        }
+        mEventFacade.postEvent("sensors", mSensorReadings); 
+      }
+    }
   }
 
-  static class Average {
-	private final int mmSampleSize;
-	private double mmData[];
-	private int mmIndex = 0;
-	private boolean mmFilled = false;
-	private double mmSum = 0.0;
+  static class RollingAverage {
+    private final int mmSampleSize;
+    private final double mmData[];
+    private int mmIndex = 0;
+    private boolean mmFilled = false;
+    private double mmSum = 0.0;
 
-	public Average(int sampleSize) {
-	  mmSampleSize = sampleSize;
-	  mmData = new double[mmSampleSize];
-	}
+    public RollingAverage(int sampleSize) {
+      mmSampleSize = sampleSize;
+      mmData = new double[mmSampleSize];
+    }
 
-	public void add(double value) {
-	  mmSum -= mmData[mmIndex];
-	  mmData[mmIndex] = value;
-	  mmSum += mmData[mmIndex];
-	  ++mmIndex;
-	  mmIndex %= mmSampleSize;
-	  mmFilled = (!mmFilled) ? mmIndex == 0 : mmFilled;
-	}
+    public void add(double value) {
+      mmSum -= mmData[mmIndex];
+      mmData[mmIndex] = value;
+      mmSum += mmData[mmIndex];
+      ++mmIndex;
+      mmIndex %= mmSampleSize;
+      mmFilled = (!mmFilled) ? mmIndex == 0 : mmFilled;
+    }
 
-	public double get() throws IllegalStateException {
-	  if (!mmFilled && mmIndex == 0) {
-		throw new IllegalStateException("No values to average.");
-	  }
-	  return (mmFilled) ? mmSum / mmSampleSize : mmSum / mmIndex;
-	}
+    public double get() throws IllegalStateException {
+      if (!mmFilled && mmIndex == 0) {
+        throw new IllegalStateException("No values to average.");
+      }
+      return (mmFilled) ? (mmSum / mmSampleSize) : (mmSum / mmIndex);
+    }
   }
 }

@@ -16,16 +16,27 @@
 
 package com.google.ase.facade;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.os.PowerManager;
 import android.provider.Settings.SettingNotFoundException;
+import android.view.WindowManager;
 
+import com.google.ase.AseApplication;
+import com.google.ase.AseLog;
+import com.google.ase.activity.AseServiceHelper;
+import com.google.ase.future.FutureActivityTask;
+import com.google.ase.future.FutureResult;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import java.lang.reflect.Method;
+import java.util.Queue;
 
 /**
  * Exposes phone settings functionality.
@@ -39,6 +50,7 @@ public class SettingsFacade implements RpcReceiver {
 
   private final Service mService;
   private final AudioManager mAudio;
+  private final PowerManager mPower;
 
   /**
    * Creates a new SettingsFacade.
@@ -49,9 +61,10 @@ public class SettingsFacade implements RpcReceiver {
   public SettingsFacade(Service service) {
     mService = service;
     mAudio = (AudioManager) mService.getSystemService(Context.AUDIO_SERVICE);
+    mPower = (PowerManager) mService.getSystemService(Context.POWER_SERVICE);
   }
 
-  @Rpc(description = "Set the screen timeout to this number of seconds.", returns = "The original screen timeout.")
+  @Rpc(description = "Sets the screen timeout to this number of seconds.", returns = "The original screen timeout.")
   public Integer setScreenTimeout(@RpcParameter(name = "value") Integer value) {
     Integer old_value = getScreenTimeout();
     android.provider.Settings.System.putInt(mService.getContentResolver(),
@@ -79,7 +92,7 @@ public class SettingsFacade implements RpcReceiver {
     }
   }
 
-  @Rpc(description = "Toggle airplane mode on and off.", returns = "True if airplane mode is enabled.")
+  @Rpc(description = "Toggles airplane mode on and off.", returns = "True if airplane mode is enabled.")
   public Boolean toggleAirplaneMode(@RpcParameter(name = "enabled") @RpcOptional Boolean enabled) {
     if (enabled == null) {
       enabled = !checkAirplaneMode();
@@ -98,7 +111,7 @@ public class SettingsFacade implements RpcReceiver {
     return mAudio.getRingerMode() == AudioManager.RINGER_MODE_SILENT;
   }
 
-  @Rpc(description = "Toggle ringer silent mode on and off.", returns = "True if ringer silent mode is enabled.")
+  @Rpc(description = "Toggles ringer silent mode on and off.", returns = "True if ringer silent mode is enabled.")
   public Boolean toggleRingerSilentMode(@RpcParameter(name = "enabled") @RpcOptional Boolean enabled) {
     if (enabled == null) {
       enabled = !checkRingerSilentMode();
@@ -138,6 +151,61 @@ public class SettingsFacade implements RpcReceiver {
     mAudio.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
   }
 
+  @Rpc(description = "Returns the screen backlight brightness.", returns = "the current screen brightness between 0 and 255")
+  public Integer getScreenBrightness() {
+    try {
+      return android.provider.Settings.System.getInt(mService.getContentResolver(),
+          android.provider.Settings.System.SCREEN_BRIGHTNESS);
+    } catch (SettingNotFoundException e) {
+      return 0;
+    }
+  }
+
+  @Rpc(description = "Sets the the screen backlight brightness.", returns = "the original screen brightness.")
+  public Integer setScreenBrightness(
+      @RpcParameter(name = "value", description = "brightness value between 0 and 255") Integer value) {
+    final int brightness = (value < 0) ? 0 : ((value > 255) ? 255 : value);
+    Integer old_value = getScreenBrightness();
+    android.provider.Settings.System.putInt(mService.getContentResolver(),
+        android.provider.Settings.System.SCREEN_BRIGHTNESS, brightness);
+
+    FutureActivityTask task = new FutureActivityTask() {
+      @Override
+      public void run(final Activity activity, FutureResult result) {
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+        lp.screenBrightness = brightness * 1.0f / 255;
+        activity.getWindow().setAttributes(lp);
+        result.set(null);
+        activity.finish();
+      }
+    };
+    
+    Queue<FutureActivityTask> mTaskQueue =
+        ((AseApplication) mService.getApplication()).getTaskQueue();
+    mTaskQueue.offer(task);
+
+    Intent helper = new Intent(mService, AseServiceHelper.class);
+    helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    mService.startActivity(helper);
+
+    FutureResult result = task.getResult();
+    return old_value;
+  }
+  
+  @Rpc(description = "Checks if the screen is on or off (requires API level 7).", returns = "True if the screen is currently on.")
+  public Boolean checkScreenOn() throws Exception {
+    Class<?> PowerManagerClass = mPower.getClass();
+    Boolean result = null;
+    try {
+      Method isScreenOn = PowerManagerClass.getMethod("isScreenOn");
+      result = (Boolean) isScreenOn.invoke(mPower);
+    } catch (Exception e) {
+      AseLog.e(e);
+      throw new UnsupportedOperationException("This feature is only available after Eclair.");
+    }
+    return result;
+  }
+  
   @Override
   public void shutdown() {
     // Nothing to do yet.
