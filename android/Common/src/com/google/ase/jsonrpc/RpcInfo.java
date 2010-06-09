@@ -59,11 +59,12 @@ public final class RpcInfo {
     final Object[] args = new Object[parameterTypes.length];
     final Annotation annotations[][] = mMethodDescriptor.getParameterAnnotations();
 
+    if (parameters.length() > args.length) {
+      throw new RpcError("Too many parameters specified.");
+    }
+
     for (int i = 0; i < args.length; i++) {
       final Type parameterType = parameterTypes[i];
-      if (parameters.length() > args.length) {
-        throw new RpcError("Too many parameters specified.");
-      }
       if (i < parameters.length()) {
         args[i] = convertParameter(parameters, i, parameterType);
       } else if (MethodDescriptor.hasDefaultValue(annotations[i])) {

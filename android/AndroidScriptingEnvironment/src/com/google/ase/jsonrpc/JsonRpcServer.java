@@ -30,10 +30,10 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +53,7 @@ public class JsonRpcServer {
   /**
    * A map of strings to known RPCs.
    */
-  private final Map<String, RpcInfo> mKnownRpcs = new ConcurrentHashMap<String, RpcInfo>();
+  private final Map<String, RpcInfo> mKnownRpcs = new HashMap<String, RpcInfo>();
 
   /**
    * The list of RPC receiving objects.
@@ -62,7 +62,8 @@ public class JsonRpcServer {
 
   private ServerSocket mServer;
   private Thread mServerThread;
-  private final CopyOnWriteArraySet<Thread> mNetworkThreads;
+  private final CopyOnWriteArrayList<ConnectionThread> mNetworkThreads;
+  private volatile boolean mStopServer = false;
 
   private final class ConnectionThread extends Thread {
     private final Socket mmSocket;
@@ -81,9 +82,14 @@ public class JsonRpcServer {
         mmWriter = new PrintWriter(mmSocket.getOutputStream(), true);
         process();
       } catch (Exception e) {
-        AseLog.e("Server error.", e);
+        if (!mStopServer) {
+          AseLog.e("Server error.", e);
+        }
       } finally {
-        mNetworkThreads.remove(this);
+        close();
+        if (!mStopServer) {
+          mNetworkThreads.remove(this);
+        }
         AseLog.v("Server thread " + getId() + " died.");
       }
     }
@@ -115,6 +121,24 @@ public class JsonRpcServer {
       mmWriter.flush();
       AseLog.v("Sent: " + result);
     }
+
+    private void close() {
+      if (mmSocket != null) {
+        try {
+          mmSocket.close();
+        } catch (IOException e) {
+        }
+      }
+      if (mmReader != null) {
+        try {
+          mmReader.close();
+        } catch (IOException e) {
+        }
+      }
+      if (mmWriter != null) {
+        mmWriter.close();
+      }
+    }
   }
 
   /**
@@ -124,7 +148,7 @@ public class JsonRpcServer {
    *          the {@link RpcReceiver}s to register with the server
    */
   public JsonRpcServer(List<RpcReceiver> receivers) {
-    mNetworkThreads = new CopyOnWriteArraySet<Thread>();
+    mNetworkThreads = new CopyOnWriteArrayList<ConnectionThread>();
     for (RpcReceiver receiver : receivers) {
       registerRpcReceiver(receiver);
     }
@@ -181,7 +205,7 @@ public class JsonRpcServer {
   }
 
   /**
-   * Starts the RPC server bound to the public facing address.
+   * data Starts the RPC server bound to the public facing address.
    * 
    * @return the port that was allocated by the OS
    */
@@ -202,12 +226,14 @@ public class JsonRpcServer {
     mServerThread = new Thread() {
       @Override
       public void run() {
-        while (true) {
+        while (!mStopServer) {
           try {
             Socket sock = mServer.accept();
             startConnectionThread(sock);
           } catch (IOException e) {
-            AseLog.e("Failed to accept connection.", e);
+            if (!mStopServer) {
+              AseLog.e("Failed to accept connection.", e);
+            }
           }
         }
       }
@@ -218,22 +244,27 @@ public class JsonRpcServer {
   }
 
   private void startConnectionThread(final Socket sock) {
-    Thread networkThread = new ConnectionThread(sock);
+    ConnectionThread networkThread = new ConnectionThread(sock);
     mNetworkThreads.add(networkThread);
     networkThread.start();
   }
 
   public void shutdown() {
-    // Interrupt the server thread to ensure that beyond this point there are
-    // no incoming requests.
-    mServerThread.interrupt();
-    // Since the server thread is not running, the mNetworkThreads set can only
-    // shrink from this point onward. We can just cancel all of the running
+    // Stop listening on the server socket to ensure that
+    // beyond this point there are no incoming requests.
+    mStopServer = true;
+    try {
+      mServer.close();
+    } catch (IOException e) {
+      AseLog.e("Failed to close server socket.", e);
+    }
+    // Since the server is not running, the mNetworkThreads set can only
+    // shrink from this point onward. We can just stop all of the running helper
     // threads. In the worst case, one of the running threads will already have
-    // shut down. Since this is a CopyOnWriteSet, we don't have to worry about
+    // shut down. Since this is a CopyOnWriteList, we don't have to worry about
     // concurrency issues while iterating over the set of threads.
-    for (Thread networkThread : mNetworkThreads) {
-      networkThread.interrupt();
+    for (ConnectionThread networkThread : mNetworkThreads) {
+      networkThread.close();
     }
     // Notify all RPC receiving objects. They may have to clean up some of their state.
     for (RpcReceiver receiver : mReceivers) {
