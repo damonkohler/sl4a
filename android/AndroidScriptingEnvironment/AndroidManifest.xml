@@ -2,8 +2,8 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.google.ase"
-  android:versionName="24"
-  android:versionCode="24">
+  android:versionName="25"
+  android:versionCode="25">
   <application
     android:debuggable="true"
     android:icon="@drawable/ase_logo_48"
