@@ -39,28 +39,42 @@ public class UrlDownloader extends Activity {
     @Override
     public void handleMessage(Message msg) {
       switch (msg.what) {
-        case MSG_REPORT_CONTENT_LENGTH:
-          if (msg.arg1 == -1) {
-            mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-          } else {
-            mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mDialog.setMax(msg.arg1);
-          }
-          mConnectingDialog.dismiss();
-          mDialog.show();
-          break;
-        case MSG_REPORT_PROGRESS:
-          mDialog.setProgress(msg.arg1);
-          break;
-        default:
-          throw new IllegalArgumentException("Unknown message id " + msg.what);
+      case MSG_REPORT_CONTENT_LENGTH:
+        mConnectingDialog.dismiss();
+        showDownloadingDialog(msg.arg1);
+        break;
+      case MSG_REPORT_PROGRESS:
+        mDialog.setProgress(msg.arg1);
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown message id " + msg.what);
       }
-    };
+    }
   };
+
+  private void showDownloadingDialog(int contentLength) {
+    mDialog = new ProgressDialog(this);
+    mDialog.setTitle("Downloading");
+    mDialog.setMessage(mFile.getName());
+    mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+      @Override
+      public void onCancel(DialogInterface dialog) {
+        mDownloader.interrupt();
+      }
+    });
+    if (contentLength == -1) {
+      mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    } else {
+      mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+      mDialog.setMax(contentLength);
+    }
+    mDialog.show();
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    showConnectingDialog();
     String url = getIntent().getStringExtra(Constants.EXTRA_URL);
     try {
       mUrl = new URL(url);
@@ -86,8 +100,6 @@ public class UrlDownloader extends Activity {
       return;
     }
     mProgressReportingOutputStream = new ProgressReportingOuputStream();
-    showConnectingDialog();
-    buildProgressDialog();
     startDownload();
   }
 
@@ -168,17 +180,5 @@ public class UrlDownloader extends Activity {
       }
     });
     mConnectingDialog.show();
-  }
-
-  private void buildProgressDialog() {
-    mDialog = new ProgressDialog(this);
-    mDialog.setTitle("Downloading");
-    mDialog.setMessage(mFile.getName());
-    mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-      @Override
-      public void onCancel(DialogInterface dialog) {
-        mDownloader.interrupt();
-      }
-    });
   }
 }
