@@ -66,7 +66,7 @@ def test_sensors():
 
 
 def test_speak():
-  result = droid.speak('Hello, world!')
+  result = droid.ttsSpeak('Hello, world!')
   return result.error is None
 
 
