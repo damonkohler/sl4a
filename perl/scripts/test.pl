@@ -50,8 +50,8 @@ my @tests = (
     finally { $droid->stopSensing() };
   } ],
 
-  [ speak => sub {
-    my $result = $droid->speak('Hello, Perl!');
+  [ ttsSpeak => sub {
+    my $result = $droid->ttsSpeak('Hello, Perl!');
     return not defined $result->{'error'};
   } ],
 
@@ -107,7 +107,7 @@ my @tests = (
   } ],
 
   [ notify => sub {
-    my $result = $droid->notify('Hello, Perl!');
+    my $result = $droid->notify('Test Title', 'Hello, Perl!');
     return not defined $result->{'error'};
   } ],
 
