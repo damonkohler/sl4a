@@ -96,9 +96,13 @@ public class ApiPrompt extends Activity {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      View item =
-          inflater.inflate(R.layout.api_prompt_item, parent, false /* do not attach to root */);
+      View item;
+      if (convertView == null) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        item = inflater.inflate(R.layout.api_prompt_item, parent, false /* do not attach to root */);
+      } else {
+        item = convertView;
+      }
       TextView description = (TextView) item.findViewById(R.id.api_prompt_item_description);
       EditText value = (EditText) item.findViewById(R.id.api_prompt_item_value);
       description.setText(mHints[position]);

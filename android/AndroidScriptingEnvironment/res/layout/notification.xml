@@ -17,12 +17,13 @@
       android:textSize="12dip"
       android:layout_alignParentLeft="true" />
     <TextView
+      android:id="@+id/notification_action"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textColor="#000"
       android:textSize="12dip"
       android:layout_alignParentRight="true"
-      android:text="Tap to stop." />
+      android:text="@string/notification_action_message"/>
   </RelativeLayout>
   <TextView
     android:id="@+id/notification_message"

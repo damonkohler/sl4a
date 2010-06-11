@@ -80,4 +80,12 @@ public class ScriptLauncher {
   public InterpreterProcess getProcess() {
     return mProcess;
   }
+  
+  public int getPid(){
+    return mProcess.getPid();
+  }
+  
+  public int getProxyPort() {
+    return mAddress.getPort();
+  }
 }

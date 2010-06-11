@@ -17,7 +17,18 @@
 package com.google.ase.activity;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -25,6 +36,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
@@ -34,7 +46,10 @@ import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
+import com.google.ase.ScriptProcess;
 import com.google.ase.exception.AseException;
+import com.google.ase.jsonrpc.JsonRpcResult;
+import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.terminal.Terminal;
 import com.google.ase.trigger.Trigger;
 
@@ -44,27 +59,47 @@ import com.google.ase.trigger.Trigger;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class AseService extends Service {
-
-  private AndroidProxy mAndroidProxy;
-  private ScriptLauncher mLauncher;
-  private final StringBuilder mNotificationMessage;
   private Trigger mTrigger;
-  private int mNotificationId;
+  private final Map<Integer, ScriptProcess> mProcessMap;
+  private NotificationManager mNotificationManager;
+  private Notification mNotification;
+  private final int mNotificationId;
+  private final IBinder mBinder;
+  private volatile int modCount = 0;
+
+  public class LocalBinder extends Binder {
+    AseService getService() {
+      return AseService.this;
+    }
+  }
 
   public AseService() {
-    mNotificationMessage = new StringBuilder();
+    NotificationIdFactory mFactory = NotificationIdFactory.INSTANCE;
+    mNotificationId = mFactory.createId();
+    mProcessMap = new ConcurrentHashMap<Integer, ScriptProcess>();
+    mBinder = new LocalBinder();
   }
 
   @Override
   public void onCreate() {
-    AseApplication application = (AseApplication) getApplication();
-    mNotificationId = application.getNewNotificationId();
+    mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    String notificationMessage = "Service is created.";
+    mNotification =
+        new Notification(R.drawable.ase_logo_48, "ASE is running...", System.currentTimeMillis());
+    mNotification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
+    mNotification.contentView.setTextViewText(R.id.notification_title, "ASE Service");
+    mNotification.contentView.setTextViewText(R.id.notification_message, notificationMessage);
+    mNotification.contentView.setTextViewText(R.id.notification_action, null);
+    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
+    Intent notificationIntent = new Intent(this, AseService.class);
+    mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    ServiceUtils.setForeground(this, mNotificationId, mNotification);
   }
 
   @Override
   public void onStart(Intent intent, int startId) {
-    super.onStart(intent, startId);
 
+    super.onStart(intent, startId);
     // TODO: Right now, only one interpreter execution is supported concurrently.
     // When this changes, we need to support multiple trigger notifications as well.
     if (mTrigger == null) {
@@ -72,89 +107,143 @@ public class AseService extends Service {
       notifyTriggerOfStart();
     }
 
-    if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
-      launchServer(intent);
-    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)) {
-      launchServer(intent);
-      launchInterpreter(intent);
-    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
-      launchServer(intent);
-      launchTerminal(intent);
-    } else if (intent.getAction().equals(Constants.ACTION_KILL_SERVICE)) {
-      stopSelf();
+    if (intent.getAction().equals(Constants.ACTION_KILL_PROCESS)) {
+      killProcess(intent);
+      if (mProcessMap.isEmpty()) {
+        stopSelf(startId);
+      }
       return;
     }
 
-    ServiceUtils.setForeground(this, mNotificationId, createNotification());
+    if (intent.getAction().equals(Constants.ACTION_SHOW_RUNNING_SCRIPTS)) {
+      showScriptProcesses();
+      return;
+    }
+
+    AndroidProxy serverProxy = null;
+    ScriptLauncher launcher = null;
+
+    if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
+      serverProxy = launchServer(intent);
+    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)) {
+      serverProxy = launchServer(intent);
+      launcher = launchInterpreter(intent, serverProxy.getAddress());
+      if (launcher == null) {
+        serverProxy.shutdown();
+        serverProxy = null;
+      }
+    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
+      serverProxy = launchServer(intent);
+      launchTerminal(intent, serverProxy.getAddress());
+    }
+
+    if (serverProxy != null) {
+      ScriptProcess process = new ScriptProcess(serverProxy, launcher);
+      addProcess(process);
+    }
   }
 
-  private Notification createNotification() {
-    Notification notification =
-        new Notification(R.drawable.ase_logo_48, "ASE is running...", System.currentTimeMillis());
-    notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
-    notification.contentView.setTextViewText(R.id.notification_title, "ASE Service");
-    notification.contentView.setTextViewText(R.id.notification_message, mNotificationMessage
-        .toString());
-    Intent notificationIntent = new Intent(this, AseService.class);
-    notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
-    notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
-    notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-    return notification;
+  private AndroidProxy launchServer(Intent intent) {
+    AndroidProxy androidProxy = new AndroidProxy(this, intent);
+    boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
+    if (usePublicIp) {
+      androidProxy.startPublic();
+    } else {
+      androidProxy.startLocal();
+    }
+    return androidProxy;
   }
 
-  private void launchTerminal(Intent intent) {
+  private ScriptLauncher launchInterpreter(Intent intent, InetSocketAddress address) {
+    ScriptLauncher launcher = new ScriptLauncher(intent, address);
+    try {
+      launcher.launch();
+    } catch (AseException e) {
+      AseLog.e(this, e.getMessage(), e);
+      return null;
+    }
+    return launcher;
+  }
+
+  private void launchTerminal(Intent intent, InetSocketAddress address) {
     Intent i = new Intent(this, Terminal.class);
     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     i.putExtras(intent);
-    i.putExtra(Constants.EXTRA_PROXY_PORT, mAndroidProxy.getAddress().getPort());
+    i.putExtra(Constants.EXTRA_PROXY_PORT, address.getPort());
     startActivity(i);
   }
 
-  private void launchInterpreter(Intent intent) {
-    if (mLauncher != null) {
-      return;
-    }
-    InetSocketAddress address = mAndroidProxy.getAddress();
-    mLauncher = new ScriptLauncher(intent, address);
-    try {
-      mLauncher.launch();
-    } catch (AseException e) {
-      AseLog.e(this, e.getMessage(), e);
-      stopSelf();
-      return;
-    }
-    mNotificationMessage.append("\nRunning script service: " + mLauncher.getScriptName());
+  private void showScriptProcesses() {
+    Intent i = new Intent(this, AseMonitor.class);
+    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(i);
   }
 
-  private void launchServer(Intent intent) {
-    if (mAndroidProxy != null) {
-      return;
+  private void addProcess(ScriptProcess process) {
+    mProcessMap.put(process.getPort(), process);
+    modCount++;
+    updateNotification();
+  }
+
+  private ScriptProcess removeProcess(int id) {
+    ScriptProcess process;
+    process = mProcessMap.remove(id);
+    if (process == null) {
+      return null;
     }
-    mAndroidProxy = new AndroidProxy(this, intent);
-    boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
-    if (usePublicIp) {
-      mAndroidProxy.startPublic();
+    modCount++;
+    updateNotification();
+    return process;
+  }
+
+  private void killProcess(Intent intent) {
+    int processId = intent.getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
+    notifyTriggerOfShutDown();
+    ScriptProcess process = removeProcess(processId);
+    if (process != null) {
+      process.kill();
+    }
+  }
+
+  public int getModCount() {
+    return modCount;
+  }
+
+  public List<ScriptProcess> getScriptProcessesList() {
+    ArrayList<ScriptProcess> result = new ArrayList<ScriptProcess>();
+    result.addAll(mProcessMap.values());
+    return result;
+  }
+
+  private void updateNotification() {
+    StringBuffer message = new StringBuffer();
+    Intent notificationIntent = new Intent(this, AseService.class);
+    mNotification.flags = 0;
+
+    if (mProcessMap.size() == 0) {
+      message.append("No running services.");
+      notificationIntent = null;
+      mNotification.flags |= Notification.FLAG_AUTO_CANCEL;
+      mNotification.contentView.setTextViewText(R.id.notification_action, null);
     } else {
-      mAndroidProxy.startLocal();
+      int numProcesses = mProcessMap.size();
+      message.append("Running ");
+      message.append(numProcesses);
+      message.append(numProcesses==1?" script.":" scripts.");
+      mNotification.contentView.setTextViewText(R.id.notification_action, getText(R.string.notification_action_message));
+      notificationIntent.setAction(Constants.ACTION_SHOW_RUNNING_SCRIPTS);
     }
-    InetSocketAddress address = mAndroidProxy.getAddress();
-    mNotificationMessage.append(String.format("Running network service on: %s:%d", address
-        .getHostName(), address.getPort()));
+
+    mNotification.contentView.setTextViewText(R.id.notification_message, message);
+    mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    mNotification.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
+
+    mNotificationManager.notify(mNotificationId, mNotification);
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
-    if (mLauncher != null) {
-      mLauncher.getProcess().kill();
-    }
-    notifyTriggerOfShutDown();
-    if (mAndroidProxy != null) {
-      mAndroidProxy.shutdown();
-    }
-    NotificationManager manager =
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    manager.cancel(mNotificationId);
   }
 
   /** Returns the {@link TriggerInfo} for the given intent, or null if none exists. */
@@ -187,6 +276,6 @@ public class AseService extends Service {
 
   @Override
   public IBinder onBind(Intent intent) {
-    return null;
+    return mBinder;
   }
 }

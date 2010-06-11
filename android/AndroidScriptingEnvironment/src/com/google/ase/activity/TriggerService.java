@@ -95,7 +95,7 @@ public class TriggerService extends Service {
     notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
     notification.contentView.setTextViewText(R.id.notification_title, "ASE Trigger Service");
     Intent notificationIntent = new Intent(this, TriggerService.class);
-    notificationIntent.setAction(Constants.ACTION_KILL_SERVICE);
+    notificationIntent.setAction(Constants.ACTION_KILL_PROCESS);
     notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
     notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
     return notification;
@@ -106,7 +106,7 @@ public class TriggerService extends Service {
     super.onStart(intent, startId);
 
     if (intent.getAction() != null
-        && Constants.ACTION_KILL_SERVICE.compareTo(intent.getAction()) == 0) {
+        && Constants.ACTION_KILL_PROCESS.compareTo(intent.getAction()) == 0) {
       uninstallAlarm();
       stopSelf();
       return;

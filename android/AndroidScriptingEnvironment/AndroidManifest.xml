@@ -151,7 +151,8 @@
       android:authorities="com.google.ase.provider.scriptprovider" />
     <uses-library
       android:name="android.test.runner" />
-  </application>
+    <activity android:name=".activity.AseMonitor" android:launchMode="singleInstance"></activity>
+</application>
   <uses-permission
     android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
   <uses-permission

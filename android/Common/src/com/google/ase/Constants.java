@@ -31,7 +31,9 @@ public class Constants {
   public static final String ACTION_SAVE_SCRIPT = "com.google.ase.action.SAVE_SCRIPT";
   public static final String ACTION_SAVE_AND_RUN_SCRIPT =
       "com.google.ase.action.SAVE_AND_RUN_SCRIPT";
-  public static final String ACTION_KILL_SERVICE = "com.google.ase.action.KILL_SERVICE";
+  public static final String ACTION_KILL_PROCESS = "com.google.ase.action.KILL_PROCESS";
+  public static final String ACTION_SHOW_RUNNING_SCRIPTS = 
+      "com.google.ase.action.SHOW_RUNNING_SCRIPTS";
   public static final String ACTION_CANCEL_NOTIFICATION =
       "com.google.ase.action.CANCEL_NOTIFICAITON";
   public static final String ACTION_ACTIVITY_RESULT = "com.google.ase.action.ACTIVITY_RESULT";
@@ -50,6 +52,7 @@ public class Constants {
   public static final String EXTRA_API_PROMPT_RPC_NAME = "com.google.ase.extra.API_PROMPT_RPC_NAME";
   public static final String EXTRA_API_PROMPT_VALUES = "com.google.ase.extra.API_PROMPT_VALUES";
   public static final String EXTRA_PROXY_PORT = "com.google.ase.extra.PROXY_PORT";
+  public static final String EXTRA_PROCESS_ID = "com.google.ase.extra.SCRIPT_PROCESS_ID";
   public static final String EXTRA_IS_NEW_SCRIPT = "com.google.ase.extra.IS_NEW_SCRIPT";
   public static final String EXTRA_TRIGGER_ID = "com.google.ase.extra.EXTRA_TRIGGER_ID";
   public static final String EXTRA_LAUNCH_IN_BACKGROUND =

@@ -41,6 +41,8 @@
   <string name="default_value_color_preference">1</string>
   <string name="default_value_controlkey_preference">0</string>
   <string name="no_scripts_message">Start adding scripts and interpreters by pressing the menu button.</string>
+  <string name="notification_action_message">Tap to open Script Monitor.</string>
+  <string name="no_running_scripts_message">There are no currently running scripts.</string>
 <string name="no_triggers_message">No triggers.</string>
 <string name="no_bluetooth_devices_message">No bluetooth devices found.</string>
 </resources>
