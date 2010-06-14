@@ -122,7 +122,7 @@
     <activity
       android:name=".activity.AseServiceHelper"
       android:theme="@android:style/Theme.Translucent.NoTitleBar"
-      android:configChanges="keyboardHidden|orientation" />
+      android:configChanges="keyboardHidden|orientation" android:launchMode="singleTask"/>
     <service
       android:name=".activity.AseService" />
     <service

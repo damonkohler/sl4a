@@ -68,7 +68,7 @@ public class AseService extends Service {
   private volatile int modCount = 0;
 
   public class LocalBinder extends Binder {
-    AseService getService() {
+   public AseService getService() {
       return AseService.this;
     }
   }
@@ -122,22 +122,24 @@ public class AseService extends Service {
 
     AndroidProxy serverProxy = null;
     ScriptLauncher launcher = null;
-
+        
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
       serverProxy = launchServer(intent);
-    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)) {
+    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)
+        || intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
+      
       serverProxy = launchServer(intent);
       launcher = launchInterpreter(intent, serverProxy.getAddress());
       if (launcher == null) {
         serverProxy.shutdown();
         serverProxy = null;
+        return;
       }
-    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
-      serverProxy = launchServer(intent);
-      launchTerminal(intent, serverProxy.getAddress());
-    }
-
-    if (serverProxy != null) {
+      
+      if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
+        launchTerminal(intent, serverProxy.getAddress());
+      }
+      
       ScriptProcess process = new ScriptProcess(serverProxy, launcher);
       addProcess(process);
     }
@@ -213,6 +215,10 @@ public class AseService extends Service {
     ArrayList<ScriptProcess> result = new ArrayList<ScriptProcess>();
     result.addAll(mProcessMap.values());
     return result;
+  }
+  
+  public ScriptProcess getScriptProcess(int processPort){
+    return mProcessMap.get(processPort);
   }
 
   private void updateNotification() {

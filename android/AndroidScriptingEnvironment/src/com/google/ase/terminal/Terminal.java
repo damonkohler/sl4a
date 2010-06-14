@@ -21,11 +21,14 @@ import java.net.InetSocketAddress;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -36,6 +39,7 @@ import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
+import com.google.ase.ScriptProcess;
 import com.google.ase.activity.AsePreferences;
 import com.google.ase.activity.AseService;
 import com.google.ase.exception.AseException;
@@ -114,9 +118,26 @@ public class Terminal extends Activity {
   private InterpreterProcess mInterpreterProcess; // Convenience member.
   private ScriptLauncher mLauncher;
 
+  private AseService mService;
+  private int mProcessPort;
+
+  private ServiceConnection mConnection = new ServiceConnection() {
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+      mService = ((AseService.LocalBinder) service).getService();
+      startTerminal();
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+      mService = null;
+    }
+  };
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    bindService(new Intent(this, AseService.class), mConnection, 0);
 
     // TODO(damonkohler): Until we are able to save and return state, it's better to just die.
     if (savedInstanceState != null) {
@@ -124,36 +145,39 @@ public class Terminal extends Activity {
       finish();
       return;
     }
-
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    setContentView(R.layout.term);
-
-    int port = getIntent().getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
-    if (port == 0) {
+    mProcessPort = getIntent().getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
+    if (mProcessPort == 0) {
       AseLog.e(this, "No proxy port specified.");
       finish();
       return;
     }
-    mLauncher = new ScriptLauncher(getIntent(), new InetSocketAddress(port));
-
-    mEmulatorView = (EmulatorView) findViewById(EMULATOR_VIEW);
-    mKeyListener = new TermKeyListener();
-    updatePreferences();
-    startInterpreter();
-
     Analytics.trackActivity(this);
   }
 
-  private void startInterpreter() {
-    try {
-      mLauncher.launch();
-    } catch (AseException e) {
-      AseLog.e(this, "Failed to launch script.", e);
+  private void startTerminal() {
+    ScriptProcess process = mService.getScriptProcess(mProcessPort);
+    
+    if (process == null) {
+      AseLog.e(this, "Process does not exist.");
       finish();
       return;
     }
+    
+    mLauncher = process.getLauncher();
+
+    if (mLauncher == null) {
+      AseLog.e(this, "Process is running in server mode only.");
+      finish();
+      return;
+    }
+    
+    setContentView(R.layout.term);
     mInterpreterProcess = mLauncher.getProcess();
+    mEmulatorView = (EmulatorView) findViewById(EMULATOR_VIEW);
     mEmulatorView.attachInterpreterProcess(mInterpreterProcess);
+    mKeyListener = new TermKeyListener();
+    updatePreferences();
   }
 
   private void updatePreferences() {
@@ -180,8 +204,10 @@ public class Terminal extends Activity {
   public void onResume() {
     super.onResume();
     // Typically, onResume is called after we update our preferences.
-    updatePreferences();
-    mEmulatorView.update();
+    if (mEmulatorView != null) {
+      updatePreferences();
+      mEmulatorView.update();
+    }
   }
 
   @Override
@@ -269,7 +295,7 @@ public class Terminal extends Activity {
           mInterpreterProcess.print('O');
         } else {
           mInterpreterProcess.print('[');
-        }
+        }   
         mInterpreterProcess.print(code);
       }
     }
@@ -332,9 +358,7 @@ public class Terminal extends Activity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    if (mInterpreterProcess != null) {
-      mInterpreterProcess.kill();
-    }
+    unbindService(mConnection);
     Intent intent = new Intent(this, AseService.class);
     intent.setAction(Constants.ACTION_KILL_PROCESS);
     intent.putExtra(Constants.EXTRA_PROXY_PORT, mLauncher.getProxyPort());

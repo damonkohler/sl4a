@@ -37,31 +37,34 @@ import com.google.ase.Analytics;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptProcess;
-
+import com.google.ase.terminal.Terminal;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
+/**
+ * An activity that allows to monitor running scripts. 
+ * 
+ * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
+ */
 public class AseMonitor extends ListActivity {
-  
-  private final static int UPDATE_INTERVAL = 1;
-  
+
+  private final static int UPDATE_INTERVAL_SECS = 1;
+
   private List<ScriptProcess> mProcessList;
   private ScriptMonitorAdapter mAdapter;
   private AseService mService;
-  
+
   private final Handler mHandler = new Handler();
   private final Timer mTimer = new Timer();
   private final ScriptListAdapter mUpdater = new ScriptListAdapter();
-  
-  
+
   private ServiceConnection mConnection = new ServiceConnection() {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
       mService = ((AseService.LocalBinder) service).getService();
-      mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL * 1000);
+      mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
     }
 
     @Override
@@ -86,42 +89,45 @@ public class AseMonitor extends ListActivity {
     setListAdapter(mAdapter);
     Analytics.trackActivity(this);
   }
-  
+
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
     final ScriptProcess script = (ScriptProcess) list.getItemAtPosition(position);
 
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setItems(new CharSequence[] { "Open in Terminal", "Stop Script" },
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              Intent intent = null;
-              if (which == 0) {
-                // TODO(Alexey): attach a terminal to a runnign script
-              } else {
-                intent = new Intent(AseMonitor.this, AseService.class);
-                intent.setAction(Constants.ACTION_KILL_PROCESS);
-                intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
-                startService(intent);
-              }
-              finish();
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setItems(new CharSequence[] { "Open in Terminal", "Stop Script" },
+        new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            Intent intent = null;
+            if (which == 0) {
+              intent = new Intent(AseMonitor.this, Terminal.class);
+//              intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+              intent.putExtras(intent);
+              intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
+              startActivity(intent);
+            } else {
+              intent = new Intent(AseMonitor.this, AseService.class);
+              intent.setAction(Constants.ACTION_KILL_PROCESS);
+              intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
+              startService(intent);
             }
-          });
-      builder.show();
+          }
+        });
+    builder.show();
   }
 
   @Override
-  public void onDestroy(){
+  public void onDestroy() {
     super.onDestroy();
     mTimer.cancel();
     unbindService(mConnection);
   }
-  
 
-  private class ScriptListAdapter extends TimerTask{
+  private class ScriptListAdapter extends TimerTask {
     private int mmExpectedModCount = 0;
     private volatile List<ScriptProcess> mmList;
+
     @Override
     public void run() {
       if (mService == null) {
@@ -134,17 +140,17 @@ public class AseMonitor extends ListActivity {
       }
       mHandler.post(mNotifier);
     }
-    
-    private List<ScriptProcess> getFreshProcessList(){
+
+    private List<ScriptProcess> getFreshProcessList() {
       return mmList;
     }
   }
-  
+
   private class ScriptMonitorAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-      if(mProcessList == null){
+      if (mProcessList == null) {
         return 0;
       }
       return mProcessList.size();
@@ -164,7 +170,8 @@ public class AseMonitor extends ListActivity {
     public View getView(int position, View convertView, ViewGroup parent) {
       View itemView;
       if (convertView == null) {
-        LayoutInflater inflater = (LayoutInflater) AseMonitor.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater =
+            (LayoutInflater) AseMonitor.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         itemView = inflater.inflate(R.layout.script_monitor_list_item, parent, false);
       } else {
         itemView = convertView;
@@ -172,8 +179,10 @@ public class AseMonitor extends ListActivity {
       ScriptProcess process = mProcessList.get(position);
       ((TextView) itemView.findViewById(R.id.process_title)).setText(process.getScriptName());
       ((TextView) itemView.findViewById(R.id.process_age)).setText(process.getUptime());
-      ((TextView) itemView.findViewById(R.id.process_details)).setText(process.getServerName()+":"+process.getPort());
-      ((TextView) itemView.findViewById(R.id.process_status)).setText(process.getState()+"("+process.getPID()+")");
+      ((TextView) itemView.findViewById(R.id.process_details)).setText(process.getServerName()
+          + ":" + process.getPort());
+      ((TextView) itemView.findViewById(R.id.process_status)).setText(process.getState() + "("
+          + process.getPID() + ")");
       return itemView;
     }
   }
