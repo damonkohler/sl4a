@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 
+import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
 
@@ -35,7 +36,7 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
   private final CountDownLatch mShowLatch;
 
   private ProgressDialog mDialog;
-  private Activity mActivity;
+  private AseServiceHelper mActivity;
 
   private final int mStyle;
   private final int mMax;
@@ -53,7 +54,7 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
   }
 
   @Override
-  public void run(Activity activity, FutureResult result) {
+  public void run(AseServiceHelper activity, FutureResult result) {
     mActivity = activity;
     mDialog = new ProgressDialog(activity);
     mDialog.setProgressStyle(mStyle);
@@ -73,7 +74,7 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
   @Override
   public void dismissDialog() {
     mDialog.dismiss();
-    mActivity.finish();
+    mActivity.taskDone(getTaskId());
   }
 
   @Override

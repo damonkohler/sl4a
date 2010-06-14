@@ -16,7 +16,6 @@
 
 package com.google.ase.facade;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -171,12 +170,12 @@ public class SettingsFacade implements RpcReceiver {
 
     FutureActivityTask task = new FutureActivityTask() {
       @Override
-      public void run(final Activity activity, FutureResult result) {
+      public void run(final AseServiceHelper activity, FutureResult result) {
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         lp.screenBrightness = brightness * 1.0f / 255;
         activity.getWindow().setAttributes(lp);
         result.set(null);
-        activity.finish();
+        activity.taskDone(getTaskId());
       }
     };
     

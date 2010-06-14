@@ -111,11 +111,11 @@ public class AndroidFacade implements RpcReceiver {
   Intent startActivityForResult(final Intent intent) {
     FutureActivityTask task = new FutureActivityTask() {
       @Override
-      public void run(Activity activity, FutureResult result) {
+      public void run(AseServiceHelper activity, FutureResult result) {
         // TODO(damonkohler): Throwing an exception here (e.g. specifying a non-existent activity)
         // causes a force close. There needs to be a way to pass back an error condition from the
         // helper.
-        activity.startActivityForResult(intent, 0);
+        activity.startActivityForResult(intent, this.getTaskId());
       }
     };
     mTaskQueue.offer(task);
@@ -229,9 +229,9 @@ public class AndroidFacade implements RpcReceiver {
 
   private String getInputFromAlertDialog(final String title, final String message,
       final boolean password) {
-    FutureActivityTask task = new FutureActivityTask() {
+    final FutureActivityTask task = new FutureActivityTask() {
       @Override
-      public void run(final Activity activity, final FutureResult result) {
+      public void run(final AseServiceHelper activity, final FutureResult result) {
         final EditText input = new EditText(activity);
         if (password) {
           input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -245,14 +245,14 @@ public class AndroidFacade implements RpcReceiver {
           @Override
           public void onClick(DialogInterface dialog, int whichButton) {
             result.set(input.getText().toString());
-            activity.finish();
+            activity.taskDone(getTaskId());
           }
         });
         alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
           @Override
           public void onCancel(DialogInterface arg0) {
             result.set(null);
-            activity.finish();
+            activity.taskDone(getTaskId());
           }
         });
         alert.show();
@@ -312,7 +312,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Exits the activity or service running the script.")
   public void exit() {
-    mService.stopSelf();
+    mService.stopSelf();//XXX
   }
 
   @Rpc(description = "Returns the intent that launched the script.")

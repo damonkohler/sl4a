@@ -30,6 +30,7 @@ import android.util.AndroidRuntimeException;
 import android.widget.SeekBar;
 
 import com.google.ase.AseLog;
+import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
 
@@ -45,7 +46,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
   private AlertDialog mDialog;
   private SeekBar mSeekBar;
 
-  private Activity mActivity;
+  private AseServiceHelper mActivity;
   private FutureResult mResult;
 
   private final int mProgress;
@@ -73,7 +74,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
   }
 
   @Override
-  public void run(Activity activity, FutureResult result) {
+  public void run(AseServiceHelper activity, FutureResult result) {
     mActivity = activity;
     mResult = result;
     mSeekBar = new SeekBar(activity);
@@ -94,7 +95,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
     mShowLatch.countDown();
   }
 
-  private Builder addOnCancelListener(final AlertDialog.Builder builder, final Activity activity) {
+  private Builder addOnCancelListener(final AlertDialog.Builder builder, final AseServiceHelper activity) {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
@@ -108,12 +109,12 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
         mResult.set(result);
         // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
         dialog.dismiss();
-        activity.finish();
+        activity.taskDone(getTaskId());
       }
     });
   }
 
-  private void configureButtons(final AlertDialog.Builder builder, final Activity activity) {
+  private void configureButtons(final AlertDialog.Builder builder, final AseServiceHelper activity) {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -139,7 +140,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
         mResult.set(result);
         // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
         dialog.dismiss();
-        activity.finish();
+        activity.taskDone(getTaskId());
       }
     };
     if (mNegativeButtonText != null) {
@@ -158,7 +159,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
   @Override
   public void dismissDialog() {
     mDialog.dismiss();
-    mActivity.finish();
+    mActivity.taskDone(getTaskId());
   }
 
   @Override

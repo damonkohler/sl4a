@@ -16,7 +16,10 @@
 
 package com.google.ase.activity;
 
+import java.util.HashMap;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.Activity;
 import android.app.Service;
@@ -36,25 +39,40 @@ import com.google.ase.future.FutureResult;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class AseServiceHelper extends Activity {
-  FutureResult mResult;
+  Queue<FutureActivityTask> mTaskQueue;
+  private Handler mHandler;
+  private HashMap<Integer, FutureResult> mResultMap;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    mHandler = new Handler();
+    mTaskQueue = ((AseApplication) getApplication()).getTaskQueue();
+    mResultMap = new HashMap<Integer, FutureResult>();
     setPersistent(true);
-    Queue<FutureActivityTask> taskQueue = ((AseApplication) getApplication()).getTaskQueue();
-    FutureActivityTask task = taskQueue.poll();
-    mResult = task.getResult();
-    Handler handler = new Handler();
-    handler.post(task.getRunnable(this));
+  }
+
+  public void taskDone(int taskId) {
+    mResultMap.remove(taskId);
+    if (mResultMap.isEmpty()) {
+      finish();
+    }
+  }
+
+  @Override
+  protected void onStart() {
+    FutureActivityTask task = mTaskQueue.poll();
+    mHandler.post(task.getRunnable(this));
+    FutureResult result = task.getResult();
+    mResultMap.put(task.getTaskId(), result);
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == 0) {
-      // TODO(damonkohler): Also return resultCode if necessary.
-      mResult.set(data);
-      finish();
+    FutureResult result = mResultMap.get(requestCode);
+    if (result != null) {
+      result.set(data);
+      taskDone(requestCode);
     }
   }
 }

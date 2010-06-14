@@ -31,6 +31,7 @@ import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 
+import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
@@ -45,7 +46,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   private final CountDownLatch mShowLatch;
 
   private FutureResult mResult;
-  private Activity mActivity;
+  private AseServiceHelper mActivity;
 
   private AlertDialog mDialog;
   private final String mTitle;
@@ -154,7 +155,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   }
 
   @Override
-  public void run(final Activity activity, FutureResult result) {
+  public void run(final AseServiceHelper activity, FutureResult result) {
     mActivity = activity;
     mResult = result;
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -206,7 +207,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
             // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory
             // leak.
             dialog.dismiss();
-            activity.finish();
+            activity.taskDone(getTaskId());
           }
         });
         break;
@@ -218,7 +219,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     mShowLatch.countDown();
   }
 
-  private Builder addOnCancelListener(final AlertDialog.Builder builder, final Activity activity) {
+  private Builder addOnCancelListener(final AlertDialog.Builder builder, final AseServiceHelper activity) {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
@@ -227,12 +228,12 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
         mResult.set(result);
         // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
         dialog.dismiss();
-        activity.finish();
+        activity.taskDone(getTaskId());
       }
     });
   }
 
-  private void configureButtons(final AlertDialog.Builder builder, final Activity activity) {
+  private void configureButtons(final AlertDialog.Builder builder, final AseServiceHelper activity) {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -251,7 +252,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
         mResult.set(result);
         // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
         dialog.dismiss();
-        activity.finish();
+        activity.taskDone(getTaskId());
       }
     };
     if (mNegativeButtonText != null) {
@@ -268,7 +269,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   @Override
   public void dismissDialog() {
     mDialog.dismiss();
-    mActivity.finish();
+    mActivity.taskDone(getTaskId());
   }
 
   @Override

@@ -16,20 +16,25 @@
 
 package com.google.ase.future;
 
+import com.google.ase.activity.AseServiceHelper;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.Activity;
 
 /**
  * Encapsulates an {@link Activity} and a {@link FutureResult}.
- *
+ * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public abstract class FutureActivityTask {
+  private final static AtomicInteger mNextFutureTaskId = new AtomicInteger(0);
   private final FutureResult mResult = new FutureResult();
+  private final int myTaskId = mNextFutureTaskId.incrementAndGet();
 
-  public abstract void run(final Activity activity, final FutureResult result);
+  public abstract void run(final AseServiceHelper activity, final FutureResult result);
 
-  public Runnable getRunnable(final Activity activity) {
+  public Runnable getRunnable(final AseServiceHelper activity) {
     return new Runnable() {
       @Override
       public void run() {
@@ -40,5 +45,9 @@ public abstract class FutureActivityTask {
 
   public FutureResult getResult() {
     return mResult;
+  }
+
+  public int getTaskId() {
+    return myTaskId;
   }
 }
