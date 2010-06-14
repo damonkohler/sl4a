@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+    <RelativeLayout
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content">
+      
+      <TextView
+      android:id="@+id/process_title"
+      android:textSize="16sp"
+      android:textStyle="bold"
+      android:textColor="#FFF"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+      <TextView
+      android:id="@+id/process_age"
+      android:layout_alignParentRight="true"
+      android:gravity="right"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+    </RelativeLayout>
+    <RelativeLayout
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content">
+       <TextView
+      android:id="@+id/process_details"
+      android:gravity="left"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+      <TextView
+      android:id="@+id/process_status"
+      android:layout_alignParentRight="true"
+      android:gravity="right"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+    </RelativeLayout>  
+</LinearLayout>

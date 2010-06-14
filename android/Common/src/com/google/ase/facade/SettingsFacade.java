@@ -66,10 +66,10 @@ public class SettingsFacade implements RpcReceiver {
 
   @Rpc(description = "Sets the screen timeout to this number of seconds.", returns = "The original screen timeout.")
   public Integer setScreenTimeout(@RpcParameter(name = "value") Integer value) {
-    Integer old_value = getScreenTimeout();
+    Integer oldValue = getScreenTimeout();
     android.provider.Settings.System.putInt(mService.getContentResolver(),
         android.provider.Settings.System.SCREEN_OFF_TIMEOUT, value * 1000);
-    return old_value;
+    return oldValue;
   }
 
   @Rpc(description = "Returns the current screen timeout in seconds.", returns = "the current screen timeout in seconds.")
@@ -165,7 +165,7 @@ public class SettingsFacade implements RpcReceiver {
   public Integer setScreenBrightness(
       @RpcParameter(name = "value", description = "brightness value between 0 and 255") Integer value) {
     final int brightness = (value < 0) ? 0 : ((value > 255) ? 255 : value);
-    Integer old_value = getScreenBrightness();
+    Integer oldValue = getScreenBrightness();
     android.provider.Settings.System.putInt(mService.getContentResolver(),
         android.provider.Settings.System.SCREEN_BRIGHTNESS, brightness);
 
@@ -180,24 +180,24 @@ public class SettingsFacade implements RpcReceiver {
       }
     };
     
-    Queue<FutureActivityTask> mTaskQueue =
+    Queue<FutureActivityTask> taskQueue =
         ((AseApplication) mService.getApplication()).getTaskQueue();
-    mTaskQueue.offer(task);
+    taskQueue.offer(task);
 
     Intent helper = new Intent(mService, AseServiceHelper.class);
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     mService.startActivity(helper);
 
     FutureResult result = task.getResult();
-    return old_value;
+    return oldValue;
   }
   
   @Rpc(description = "Checks if the screen is on or off (requires API level 7).", returns = "True if the screen is currently on.")
   public Boolean checkScreenOn() throws Exception {
-    Class<?> PowerManagerClass = mPower.getClass();
+    Class<?> powerManagerClass = mPower.getClass();
     Boolean result = null;
     try {
-      Method isScreenOn = PowerManagerClass.getMethod("isScreenOn");
+      Method isScreenOn = powerManagerClass.getMethod("isScreenOn");
       result = (Boolean) isScreenOn.invoke(mPower);
     } catch (Exception e) {
       AseLog.e(e);

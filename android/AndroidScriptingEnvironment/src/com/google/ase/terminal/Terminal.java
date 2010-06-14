@@ -335,7 +335,6 @@ public class Terminal extends Activity {
     if (mInterpreterProcess != null) {
       mInterpreterProcess.kill();
     }
-    //XXX replace with aidl
     Intent intent = new Intent(this, AseService.class);
     intent.setAction(Constants.ACTION_KILL_PROCESS);
     intent.putExtra(Constants.EXTRA_PROXY_PORT, mLauncher.getProxyPort());

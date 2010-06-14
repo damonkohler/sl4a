@@ -221,23 +221,20 @@ public class AseService extends Service {
     mNotification.flags = 0;
 
     if (mProcessMap.size() == 0) {
-      message.append("No running services.");
+      message.append(getText(R.string.no_running_scripts_message));
       notificationIntent = null;
       mNotification.flags |= Notification.FLAG_AUTO_CANCEL;
       mNotification.contentView.setTextViewText(R.id.notification_action, null);
     } else {
       int numProcesses = mProcessMap.size();
-      message.append("Running ");
+      message.append(getText(R.string.script_number_message));
       message.append(numProcesses);
-      message.append(numProcesses==1?" script.":" scripts.");
       mNotification.contentView.setTextViewText(R.id.notification_action, getText(R.string.notification_action_message));
       notificationIntent.setAction(Constants.ACTION_SHOW_RUNNING_SCRIPTS);
     }
-
     mNotification.contentView.setTextViewText(R.id.notification_message, message);
     mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
     mNotification.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-
     mNotificationManager.notify(mNotificationId, mNotification);
   }
 
