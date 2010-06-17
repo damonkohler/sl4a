@@ -18,17 +18,10 @@ package com.google.ase.activity;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReentrantLock;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -48,8 +41,6 @@ import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
 import com.google.ase.ScriptProcess;
 import com.google.ase.exception.AseException;
-import com.google.ase.jsonrpc.JsonRpcResult;
-import com.google.ase.jsonrpc.JsonRpcServer;
 import com.google.ase.terminal.Terminal;
 import com.google.ase.trigger.Trigger;
 
