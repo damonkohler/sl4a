@@ -18,8 +18,6 @@ package com.google.ase.activity;
 
 import java.util.HashMap;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.Activity;
 import android.app.Service;
@@ -61,6 +59,7 @@ public class AseServiceHelper extends Activity {
 
   @Override
   protected void onStart() {
+    super.onStart();
     FutureActivityTask task = mTaskQueue.poll();
     mHandler.post(task.getRunnable(this));
     FutureResult result = task.getResult();
