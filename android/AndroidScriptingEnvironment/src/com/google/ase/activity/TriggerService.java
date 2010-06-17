@@ -30,7 +30,6 @@ import com.google.ase.AseApplication;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
-import com.google.ase.trigger.EventTrigger;
 import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository;
 import com.google.ase.trigger.TriggerRepository.AddTriggerListener;
@@ -63,9 +62,7 @@ public class TriggerService extends Service {
 
   private void initializeTriggers() {
     for (Trigger trigger : mTriggerRepository.getAllTriggers()) {
-      if (trigger instanceof EventTrigger) {
-        trigger.install(this);
-      }
+      trigger.install(this);
     }
   }
 
@@ -77,7 +74,7 @@ public class TriggerService extends Service {
     mTriggerServiceNotificationId = application.getNewNotificationId();
     mTriggerRepository = application.getTriggerRepository();
     mTriggerRepository.registerAddTriggerListener(mAddTriggerListener);
-    
+
     if (mTriggerRepository.isEmpty()) {
       stopSelf();
     } else {
@@ -94,9 +91,8 @@ public class TriggerService extends Service {
             .currentTimeMillis());
     notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
     notification.contentView.setTextViewText(R.id.notification_title, "ASE Trigger Service");
-    Intent notificationIntent = new Intent(this, TriggerService.class);
-    notificationIntent.setAction(Constants.ACTION_KILL_PROCESS);
-    notification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    Intent notificationIntent = new Intent(this, TriggerManager.class);
+    notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
     notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
     return notification;
   }

@@ -17,8 +17,6 @@
 
 package com.google.ase.terminal;
 
-import java.net.InetSocketAddress;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -42,7 +40,6 @@ import com.google.ase.ScriptLauncher;
 import com.google.ase.ScriptProcess;
 import com.google.ase.activity.AsePreferences;
 import com.google.ase.activity.AseService;
-import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterProcess;
 
 /**
@@ -121,7 +118,7 @@ public class Terminal extends Activity {
   private AseService mService;
   private int mProcessPort;
 
-  private ServiceConnection mConnection = new ServiceConnection() {
+  private final ServiceConnection mConnection = new ServiceConnection() {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
       mService = ((AseService.LocalBinder) service).getService();
@@ -157,13 +154,13 @@ public class Terminal extends Activity {
 
   private void startTerminal() {
     ScriptProcess process = mService.getScriptProcess(mProcessPort);
-    
+
     if (process == null) {
       AseLog.e(this, "Process does not exist.");
       finish();
       return;
     }
-    
+
     mLauncher = process.getLauncher();
 
     if (mLauncher == null) {
@@ -171,7 +168,7 @@ public class Terminal extends Activity {
       finish();
       return;
     }
-    
+
     setContentView(R.layout.term);
     mInterpreterProcess = mLauncher.getProcess();
     mEmulatorView = (EmulatorView) findViewById(EMULATOR_VIEW);
@@ -295,7 +292,7 @@ public class Terminal extends Activity {
           mInterpreterProcess.print('O');
         } else {
           mInterpreterProcess.print('[');
-        }   
+        }
         mInterpreterProcess.print(code);
       }
     }

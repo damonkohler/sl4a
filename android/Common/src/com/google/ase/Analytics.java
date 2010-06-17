@@ -59,7 +59,7 @@ public class Analytics {
 
   public static void track(final String... nameParts) {
     if (mPrefs.getBoolean("usagetracking", false)) {
-      mWorkPool.execute(new Runnable() {
+      mWorkPool.submit(new Runnable() {
         public void run() {
           PageNameBuilder builder = new PageNameBuilder();
           builder.add(mAseVersion);
@@ -79,6 +79,7 @@ public class Analytics {
   }
 
   public static void stop() {
+    mWorkPool.shutdownNow();
     mTracker.stop();
   }
 }
