@@ -86,7 +86,7 @@ public class BluetoothServer {
    *          An integer defining the current connection state
    */
   private synchronized void setState(State state) {
-    AseLog.v("Bluetooth set changed from " + mState + " to " + state);
+    AseLog.v("Bluetooth state changed from " + mState + " to " + state);
     switch (state) {
     case CONNECTED:
       mEventFacade.postEvent("bluetooth", "connected");
