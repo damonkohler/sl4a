@@ -62,7 +62,7 @@ public class AseServiceHelper extends Activity {
     super.onStart();
     FutureActivityTask task = mTaskQueue.poll();
     mHandler.post(task.getRunnable(this));
-    FutureResult result = task.getResult();
+    FutureResult result = task.getFutureResult();
     mResultMap.put(task.getTaskId(), result);
   }
 

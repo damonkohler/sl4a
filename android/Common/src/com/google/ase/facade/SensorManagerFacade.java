@@ -32,7 +32,7 @@ import com.google.ase.rpc.RpcParameter;
 /**
  * Exposes the SensorManager related functionality.
  * 
- * @author Damon Kohler (damonkohler@gmail.com) 
+ * @author Damon Kohler (damonkohler@gmail.com)
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
@@ -88,8 +88,14 @@ public class SensorManagerFacade implements RpcReceiver {
   private class SensorValuesCollector implements SensorEventListener {
     private final static int MATRIX_SIZE = 9;
 
-    private final RollingAverage mmAzimuth, mmPitch, mmRoll;
-    private float[] mmGeomagneticValues, mmGravityValues, mmR, mmOrientation;
+    private final RollingAverage mmAzimuth;
+    private final RollingAverage mmPitch;
+    private final RollingAverage mmRoll;
+
+    private float[] mmGeomagneticValues;
+    private float[] mmGravityValues;
+    private float[] mmR;
+    private float[] mmOrientation;
 
     public SensorValuesCollector(int avgSampleSize) {
       mmAzimuth = new RollingAverage(avgSampleSize);
@@ -129,7 +135,7 @@ public class SensorManagerFacade implements RpcReceiver {
         }
 
         if (mmGeomagneticValues != null && mmGravityValues != null) {
-          if (mmR == null){
+          if (mmR == null) {
             mmR = new float[MATRIX_SIZE];
           }
           if (SensorManager.getRotationMatrix(mmR, null, mmGravityValues, mmGeomagneticValues)) {
@@ -144,7 +150,7 @@ public class SensorManagerFacade implements RpcReceiver {
             mSensorReadings.putDouble("roll", mmRoll.get());
           }
         }
-        mEventFacade.postEvent("sensors", mSensorReadings); 
+        mEventFacade.postEvent("sensors", mSensorReadings);
       }
     }
   }

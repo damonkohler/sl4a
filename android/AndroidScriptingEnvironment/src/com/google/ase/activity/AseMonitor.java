@@ -34,6 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.ase.Analytics;
+import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptProcess;
@@ -54,7 +55,7 @@ public class AseMonitor extends ListActivity {
 
   private List<ScriptProcess> mProcessList;
   private ScriptMonitorAdapter mAdapter;
-  private AseService mService;
+  private volatile AseService mService;
 
   private final Handler mHandler = new Handler();
   private final Timer mTimer = new Timer();
@@ -102,7 +103,6 @@ public class AseMonitor extends ListActivity {
             Intent intent = null;
             if (which == 0) {
               intent = new Intent(AseMonitor.this, Terminal.class);
-//              intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
               intent.putExtras(intent);
               intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
               startActivity(intent);
@@ -115,6 +115,22 @@ public class AseMonitor extends ListActivity {
           }
         });
     builder.show();
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    mTimer.cancel();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    try {
+      mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
+    } catch (IllegalStateException e) {
+      AseLog.e(this, e.getMessage(), e);
+    }
   }
 
   @Override
@@ -131,6 +147,9 @@ public class AseMonitor extends ListActivity {
     @Override
     public void run() {
       if (mService == null) {
+        mmList.clear();
+        mTimer.cancel();
+        mHandler.post(mNotifier);
         return;
       }
       int freshModCount = mService.getModCount();

@@ -198,7 +198,7 @@ public class UiFacade implements RpcReceiver {
   @Rpc(description = "Returns dialog response.")
   public Object dialogGetResponse() {
     try {
-      FutureResult result = ((FutureActivityTask) mDialogTask).getResult();
+      FutureResult result = ((FutureActivityTask) mDialogTask).getFutureResult();
       return result.get();
     } catch (Exception e) {
       throw new AndroidRuntimeException(e);

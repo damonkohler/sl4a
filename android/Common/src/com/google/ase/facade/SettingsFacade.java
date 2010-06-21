@@ -163,7 +163,12 @@ public class SettingsFacade implements RpcReceiver {
   @Rpc(description = "Sets the the screen backlight brightness.", returns = "the original screen brightness.")
   public Integer setScreenBrightness(
       @RpcParameter(name = "value", description = "brightness value between 0 and 255") Integer value) {
-    final int brightness = (value < 0) ? 0 : ((value > 255) ? 255 : value);
+    if (value < 0) {
+      value = 0;
+    } else if (value > 255) {
+      value = 255;
+    }
+    final int brightness = value;
     Integer oldValue = getScreenBrightness();
     android.provider.Settings.System.putInt(mService.getContentResolver(),
         android.provider.Settings.System.SCREEN_BRIGHTNESS, brightness);
@@ -187,7 +192,6 @@ public class SettingsFacade implements RpcReceiver {
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     mService.startActivity(helper);
 
-    FutureResult result = task.getResult();
     return oldValue;
   }
   

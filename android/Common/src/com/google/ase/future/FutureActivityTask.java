@@ -43,7 +43,7 @@ public abstract class FutureActivityTask {
     };
   }
 
-  public FutureResult getResult() {
+  public FutureResult getFutureResult() {
     return mResult;
   }
 

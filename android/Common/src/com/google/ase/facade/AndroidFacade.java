@@ -124,7 +124,7 @@ public class AndroidFacade implements RpcReceiver {
     } catch (Exception e) {
       AseLog.e("Failed to launch intent.", e);
     }
-    FutureResult result = task.getResult();
+    FutureResult result = task.getFutureResult();
     try {
       return (Intent) result.get();
     } catch (Exception e) {
@@ -266,7 +266,7 @@ public class AndroidFacade implements RpcReceiver {
       AseLog.e("Failed to launch intent.", e);
     }
 
-    FutureResult result = task.getResult();
+    FutureResult result = task.getFutureResult();
     try {
       if (result.get() == null) {
         return null;
