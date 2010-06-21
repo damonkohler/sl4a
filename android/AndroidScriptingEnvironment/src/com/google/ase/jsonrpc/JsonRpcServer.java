@@ -125,12 +125,14 @@ public class JsonRpcServer {
         try {
           mmSocket.close();
         } catch (IOException e) {
+          AseLog.e(e.getMessage(), e);
         }
       }
       if (mmReader != null) {
         try {
           mmReader.close();
         } catch (IOException e) {
+          AseLog.e(e.getMessage(), e);
         }
       }
       if (mmWriter != null) {

@@ -80,6 +80,19 @@ public class AseService extends Service {
     ServiceUtils.setForeground(this, mNotificationId, mNotification);
   }
 
+  private void createNotification() {
+    String notificationMessage = "Service is created.";
+    mNotification =
+        new Notification(R.drawable.ase_logo_48, "ASE is running...", System.currentTimeMillis());
+    mNotification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
+    mNotification.contentView.setTextViewText(R.id.notification_title, "ASE Service");
+    mNotification.contentView.setTextViewText(R.id.notification_message, notificationMessage);
+    mNotification.contentView.setTextViewText(R.id.notification_action, null);
+    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
+    Intent notificationIntent = new Intent(this, AseService.class);
+    mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+  }
+
   @Override
   public void onStart(Intent intent, int startId) {
 
@@ -202,19 +215,6 @@ public class AseService extends Service {
   
   public ScriptProcess getScriptProcess(int processPort){
     return mProcessMap.get(processPort);
-  }
-
-  private void createNotification() {
-    String notificationMessage = "Service is created.";
-    mNotification =
-        new Notification(R.drawable.ase_logo_48, "ASE is running...", System.currentTimeMillis());
-    mNotification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
-    mNotification.contentView.setTextViewText(R.id.notification_title, "ASE Service");
-    mNotification.contentView.setTextViewText(R.id.notification_message, notificationMessage);
-    mNotification.contentView.setTextViewText(R.id.notification_action, null);
-    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-    Intent notificationIntent = new Intent(this, AseService.class);
-    mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
   }
 
   private void updateNotification() {

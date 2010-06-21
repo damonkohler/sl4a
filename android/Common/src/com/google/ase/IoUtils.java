@@ -45,10 +45,12 @@ public class IoUtils {
       try {
         out.close();
       } catch (IOException e) {
+        AseLog.e(e.getMessage(), e);
       }
       try {
         in.close();
       } catch (IOException e) {
+        AseLog.e(e.getMessage(), e);
       }
     }
     return count;

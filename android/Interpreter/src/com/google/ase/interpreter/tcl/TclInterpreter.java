@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2009 Google Inc. Copyright (C) 2010 Pat Thoyts
+ * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2010 Pat Thoyts.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +17,7 @@
 
 package com.google.ase.interpreter.tcl;
 
-import com.google.ase.interpreter.AseDefaultInterpreter;
+import com.google.ase.interpreter.DefaultInterpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.TclLanguage;
 
@@ -27,7 +28,7 @@ import java.io.File;
  * 
  * @author Pat Thoyts (patthoyts@users.sourceforge.net)
  */
-public class TclInterpreter extends AseDefaultInterpreter {
+public class TclInterpreter extends DefaultInterpreter {
 
   private final static String TCL_BINARY = "/data/data/com.google.ase/tclsh/tclsh";
 

@@ -45,7 +45,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * An activity that allows to monitor running scripts. 
+ * An activity that allows to monitor running scripts.
  * 
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
@@ -71,13 +71,6 @@ public class AseMonitor extends ListActivity {
     @Override
     public void onServiceDisconnected(ComponentName name) {
       mService = null;
-    }
-  };
-
-  private final Runnable mNotifier = new Runnable() {
-    public void run() {
-      mProcessList = mUpdater.getFreshProcessList();
-      mAdapter.notifyDataSetChanged();
     }
   };
 
@@ -129,7 +122,7 @@ public class AseMonitor extends ListActivity {
     try {
       mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
     } catch (IllegalStateException e) {
-      AseLog.e(this, e.getMessage(), e);
+      AseLog.e(e.getMessage(), e);
     }
   }
 
@@ -149,15 +142,19 @@ public class AseMonitor extends ListActivity {
       if (mService == null) {
         mmList.clear();
         mTimer.cancel();
-        mHandler.post(mNotifier);
-        return;
+      } else {
+        int freshModCount = mService.getModCount();
+        if (freshModCount != mmExpectedModCount) {
+          mmExpectedModCount = freshModCount;
+          mmList = mService.getScriptProcessesList();
+        }
       }
-      int freshModCount = mService.getModCount();
-      if (freshModCount != mmExpectedModCount) {
-        mmExpectedModCount = freshModCount;
-        mmList = mService.getScriptProcessesList();
-      }
-      mHandler.post(mNotifier);
+      mHandler.post(new Runnable() {
+        public void run() {
+          mProcessList = mUpdater.getFreshProcessList();
+          mAdapter.notifyDataSetChanged();
+        }
+      });
     }
 
     private List<ScriptProcess> getFreshProcessList() {

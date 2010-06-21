@@ -16,9 +16,15 @@
         <category
           android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
+      <intent-filter>
+        <action
+          android:name="com.google.ase.DISCOVER_INTERPRETERS" />
+        <category
+          android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
     </activity>
     <activity
-      android:name="com.google.ase.activity.InterpreterInstaller"
+      android:name=".PythonInstaller"
       android:configChanges="keyboardHidden|orientation"
       android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     <activity
@@ -33,8 +39,14 @@
       android:name="com.google.ase.activity.ZipExtractor"
       android:configChanges="keyboardHidden|orientation"
       android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    <provider
+      android:authorities="com.googlecode.pythonforandroid.pythonprovider"
+      android:name=".PythonProvider" />
   </application>
   <uses-sdk
     android:minSdkVersion="3" />
-<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+  <uses-permission
+    android:name="android.permission.INTERNET"></uses-permission>
+  <uses-permission
+    android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>

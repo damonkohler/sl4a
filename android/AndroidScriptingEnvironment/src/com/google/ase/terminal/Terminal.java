@@ -111,7 +111,7 @@ public class Terminal extends Activity {
   private int mControlKeyCode;
 
   private SharedPreferences mPreferences;
-  
+
   private StringBuffer mBuffer = new StringBuffer();
   private InterpreterProcess mInterpreterProcess; // Convenience member.
   private ScriptLauncher mLauncher;
@@ -172,7 +172,7 @@ public class Terminal extends Activity {
 
     setContentView(R.layout.term);
     mInterpreterProcess = mLauncher.getProcess();
-    if(mBuffer.length()!=0){
+    if (mBuffer.length() != 0) {
       mInterpreterProcess.print(mBuffer.toString());
       mBuffer.setLength(0);
     }
@@ -232,7 +232,7 @@ public class Terminal extends Activity {
     // Translate the keyCode into an ASCII character.
     int letter = mKeyListener.keyDown(keyCode, event);
     if (letter > -1) {
-      print((char)letter);
+      print((char) letter);
     }
     return true;
   }
@@ -292,22 +292,22 @@ public class Terminal extends Activity {
           code = 'C';
           break;
         }
-          print((char) 27); // ESC
+        print((char) 27); // ESC
         if (mEmulatorView.getKeypadApplicationMode()) {
           print('O');
         } else {
           print('[');
-        }   
-          print(code);
+        }
+        print(code);
       }
     }
     return true;
   }
-  
-  private void print(char c){
-    if(mInterpreterProcess!=null){
+
+  private void print(char c) {
+    if (mInterpreterProcess != null) {
       mInterpreterProcess.print(c);
-    }else{
+    } else {
       mBuffer.append(c);
     }
   }

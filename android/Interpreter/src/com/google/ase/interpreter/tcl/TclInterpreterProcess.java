@@ -1,13 +1,13 @@
 /*
  * Copyright (C) 2009 Google Inc.
- * Copyright (C) 2010 Pat Thoyts
- *
+ * Copyright (C) 2010 Pat Thoyts.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,10 +17,10 @@
 
 package com.google.ase.interpreter.tcl;
 
-import java.io.File;
-
 import com.google.ase.Constants;
 import com.google.ase.interpreter.InterpreterProcess;
+
+import java.io.File;
 
 public class TclInterpreterProcess extends InterpreterProcess {
 
@@ -47,7 +47,7 @@ public class TclInterpreterProcess extends InterpreterProcess {
   @Override
   protected String getInterpreterCommand() {
     TclInterpreter interpreter = new TclInterpreter();
-    String str = interpreter.getBinary()+"%s";
-    return String.format(str, (mLaunchScript == null)?"":" "+mLaunchScript);
+    String str = interpreter.getBinary() + "%s";
+    return String.format(str, (mLaunchScript == null) ? "" : " " + mLaunchScript);
   }
 }

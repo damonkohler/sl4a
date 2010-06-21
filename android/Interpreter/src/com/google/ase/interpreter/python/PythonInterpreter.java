@@ -16,7 +16,7 @@
 
 package com.google.ase.interpreter.python;
 
-import com.google.ase.interpreter.AseDefaultInterpreter;
+import com.google.ase.interpreter.DefaultInterpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.PythonLanguage;
 
@@ -27,7 +27,7 @@ import java.io.File;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class PythonInterpreter extends AseDefaultInterpreter {
+public class PythonInterpreter extends DefaultInterpreter {
 
   private final static String PYTHON_BIN = "/data/data/com.google.ase/python/bin/python";
 

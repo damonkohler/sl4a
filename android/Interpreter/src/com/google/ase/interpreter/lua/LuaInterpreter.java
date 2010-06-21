@@ -16,7 +16,7 @@
 
 package com.google.ase.interpreter.lua;
 
-import com.google.ase.interpreter.AseDefaultInterpreter;
+import com.google.ase.interpreter.DefaultInterpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.LuaLanguage;
 
@@ -27,7 +27,7 @@ import java.io.File;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class LuaInterpreter extends AseDefaultInterpreter {
+public class LuaInterpreter extends DefaultInterpreter {
 
   private final static String LUA_BIN = "/data/data/com.google.ase/lua/bin/lua";
 

@@ -16,11 +16,11 @@
 
 package com.google.ase.interpreter.rhino;
 
-import com.google.ase.interpreter.AseDefaultInterpreter;
+import com.google.ase.interpreter.DefaultInterpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.JavaScriptLanguage;
 
-public class RhinoInterpreter extends AseDefaultInterpreter {
+public class RhinoInterpreter extends DefaultInterpreter {
 
   private final static String RHINO_BIN =
       "dalvikvm -Xss128k -classpath /sdcard/ase/extras/rhino/rhino1_7R2-dex.jar "

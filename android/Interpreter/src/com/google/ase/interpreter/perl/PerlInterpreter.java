@@ -16,7 +16,7 @@
 
 package com.google.ase.interpreter.perl;
 
-import com.google.ase.interpreter.AseDefaultInterpreter;
+import com.google.ase.interpreter.DefaultInterpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.PerlLanguage;
 
@@ -27,7 +27,7 @@ import java.io.File;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class PerlInterpreter extends AseDefaultInterpreter {
+public class PerlInterpreter extends DefaultInterpreter {
 
   private final static String PERL_BIN = "/data/data/com.google.ase/perl/perl";
 

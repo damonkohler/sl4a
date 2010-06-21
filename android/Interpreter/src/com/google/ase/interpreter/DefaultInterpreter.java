@@ -7,11 +7,11 @@ import com.google.ase.rpc.MethodDescriptor;
 
 import java.io.File;
 
-public abstract class AseDefaultInterpreter implements Interpreter {
+public abstract class DefaultInterpreter implements Interpreter {
 
   private final Language mLanguage;
 
-  public AseDefaultInterpreter(Language language) {
+  public DefaultInterpreter(Language language) {
     mLanguage = language;
   }
 

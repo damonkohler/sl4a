@@ -16,11 +16,11 @@
 
 package com.google.ase.interpreter.jruby;
 
-import com.google.ase.interpreter.AseDefaultInterpreter;
+import com.google.ase.interpreter.DefaultInterpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.RubyLanguage;
 
-public class JRubyInterpreter extends AseDefaultInterpreter {
+public class JRubyInterpreter extends DefaultInterpreter {
 
   private final static String JRUBY_BIN =
       "dalvikvm -Xss128k "

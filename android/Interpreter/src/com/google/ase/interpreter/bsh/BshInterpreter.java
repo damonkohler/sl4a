@@ -16,11 +16,11 @@
 
 package com.google.ase.interpreter.bsh;
 
-import com.google.ase.interpreter.AseDefaultInterpreter;
+import com.google.ase.interpreter.DefaultInterpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.BeanShellLanguage;
 
-public class BshInterpreter extends AseDefaultInterpreter {
+public class BshInterpreter extends DefaultInterpreter {
 
   private final static String BSH_BIN =
       "dalvikvm -classpath /sdcard/ase/extras/bsh/bsh-2.0b4-dx.jar bsh.Interpreter";
