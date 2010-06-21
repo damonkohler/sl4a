@@ -1,42 +1,38 @@
 package com.googlecode.pythonforandroid;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
-import com.google.ase.activity.InterpreterInstaller;
 import com.google.ase.activity.InterpreterUninstaller;
-import com.google.ase.interpreter.InterpreterConfiguration;
-import com.google.ase.interpreter.python.PythonInterpreter;
+import com.google.ase.interpreter.InterpreterDescriptor;
+import com.google.ase.interpreter.InterpreterUtils;
+
 
 public class Main extends Activity {
-  private PythonInterpreter mInterpreter;
+  private SharedPreferences mPreferences;
+  private InterpreterDescriptor mDescriptor;
   private Button mButton;
+  
+  static final String ID = Main.class.getPackage().getName();
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    mInterpreter = new PythonInterpreter();
+    super.onCreate(savedInstanceState);    
+    mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    mDescriptor = new PythonDescriptor();
     Intent intent = getIntent();
-    if (intent.getAction().equals(Constants.ACTION_DISCOVER_INTERPRETERS)) {
-      if (mInterpreter.isInstalled(this)) {
-        setResult(RESULT_OK, buildResultIntent(mInterpreter));
-      } else {
-        setResult(RESULT_CANCELED);
-      }
-      finish();
-      return;
-    }
     setContentView(R.layout.main);
     mButton = (Button) findViewById(R.id.button);
-    if (mInterpreter.isInstalled(this)) {
+    if (checkInstalled()) {
       prepareUninstallButton();
     } else {
       prepareInstallButton();
@@ -63,64 +59,42 @@ public class Main extends Activity {
     });
   }
 
+  private void sendBroadcast(boolean isInterpreterInstalled) {
+    Intent intent = new Intent();
+    intent.setData(Uri.parse("package:" + ID));
+    if (isInterpreterInstalled) {
+      intent.setAction(Constants.ACTION_INTERPRETER_ADDED);
+    } else {
+      intent.setAction(Constants.ACTION_INTERPRETER_REMOVED);
+    }
+    this.sendBroadcast(intent);
+  }
+
   private void install() {
-    Intent intent = new Intent(this, InterpreterInstaller.class);
-    intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, mInterpreter.getName());
+    Intent intent = new Intent(this, PythonInstaller.class);
+    intent.putExtra(Constants.EXTRA_INTERPRETER_DESCRIPTION, InterpreterUtils.bundle(mDescriptor));
     startActivityForResult(intent, 0);
   }
 
   private void uninstall() {
     Intent intent = new Intent(this, InterpreterUninstaller.class);
-    intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, mInterpreter.getName());
+    intent.putExtra(Constants.EXTRA_INTERPRETER_DESCRIPTION, InterpreterUtils.bundle(mDescriptor));
     startActivityForResult(intent, 1);
   }
-
-  private Intent buildResultIntent(PythonInterpreter interpreter) {
-    Intent result = new Intent();
-    Bundle description = buildDescriptionBundle(interpreter);
-    result.putExtra("description", description);
-    Bundle environment = new Bundle();
-    buildEnvironmentBundle(environment);
-    result.putExtra("environment", environment);
-    return result;
+  
+  private void updatePreferences(boolean isInstalled){
+    SharedPreferences.Editor editor = mPreferences.edit();
+    editor.putBoolean(ID, isInstalled);
+    editor.commit();
+    sendBroadcast(isInstalled);
   }
-
-  private File getPythonHome() {
-    return InterpreterConfiguration.getInterpreterRoot(this, "python");
+  
+  protected boolean checkInstalled() {
+    boolean isInstalled = mPreferences.getBoolean(ID, false);
+    sendBroadcast(isInstalled);
+    return isInstalled;
   }
-
-  private File getPythonExtras() {
-    return new File(Constants.INTERPRETER_EXTRAS_ROOT, "python");
-  }
-
-  private File getPythonTemp() {
-    return new File(Constants.INTERPRETER_EXTRAS_ROOT, "python/tmp");
-  }
-
-  private void buildEnvironmentBundle(Bundle environment) {
-    environment.putString("PYTHONHOME", getPythonHome().getAbsolutePath());
-    environment.putString("PYTHONPATH", getPythonExtras().getAbsolutePath() + ":"
-        + Constants.SCRIPTS_ROOT);
-    File tmp = getPythonTemp();
-    if (!tmp.isDirectory()) {
-      tmp.mkdir();
-    }
-    environment.putString("TEMP", tmp.getAbsolutePath());
-  }
-
-  private Bundle buildDescriptionBundle(PythonInterpreter interpreter) {
-    Bundle description = new Bundle();
-    description.putString("name", interpreter.getName());
-    description.putString("niceName", interpreter.getNiceName());
-    description.putString("extension", interpreter.getExtension());
-    description.putString("binaryAbsolutePath", interpreter.getBinary().getAbsolutePath());
-    description.putBoolean("hasInterpreterArchive", interpreter.hasInterpreterArchive());
-    description
-        .putBoolean("hasInterpreterExtrasArchive", interpreter.hasInterpreterExtrasArchive());
-    description.putBoolean("hasScriptsArchive", interpreter.hasScriptsArchive());
-    return description;
-  }
-
+    
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == 0) {
@@ -128,6 +102,7 @@ public class Main extends Activity {
       if (resultCode != RESULT_OK) {
         AseLog.v(this, "Installation failed.");
       } else {
+        updatePreferences(true);
         prepareUninstallButton();
       }
     } else {
@@ -135,6 +110,7 @@ public class Main extends Activity {
       if (resultCode != RESULT_OK) {
         AseLog.v(this, "Uninstallation failed.");
       } else {
+        updatePreferences(false);
         prepareInstallButton();
       }
     }

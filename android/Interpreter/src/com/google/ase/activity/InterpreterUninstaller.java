@@ -1,9 +1,5 @@
 package com.google.ase.activity;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
@@ -11,31 +7,40 @@ import android.os.Bundle;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
-import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterDescriptor;
+import com.google.ase.interpreter.InterpreterUtils;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class InterpreterUninstaller extends Activity {
-  private String mName;
-  private Interpreter mInterpreter;
+
+  protected InterpreterDescriptor mDescriptor;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mName = getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
-    if (mName == null) {
+    
+    Bundle descriptionBundle = getIntent().getBundleExtra(Constants.EXTRA_INTERPRETER_DESCRIPTION);
+    
+    if (descriptionBundle == null) {
+      AseLog.e("Interpreter description not provided.");
+      setResult(RESULT_CANCELED);
+      finish();
+      return;
+    }
+    
+    mDescriptor = InterpreterUtils.unbundle(descriptionBundle);
+    
+    if (mDescriptor.getName() == null) {
       AseLog.e("Interpreter not specified.");
       setResult(RESULT_CANCELED);
       finish();
       return;
     }
-    mInterpreter = InterpreterConfiguration.getInterpreterByName(mName);
-    if (mInterpreter == null) {
-      AseLog.e("No matching interpreter found for name: " + mName);
-      setResult(RESULT_CANCELED);
-      finish();
-      return;
-    }
-    if (!mInterpreter.isInstalled(this)) {
+    
+    if (!InterpreterUtils.isInstalled(this, mDescriptor)) {
       AseLog.e("Interpreter not installed.");
       setResult(RESULT_CANCELED);
       finish();
@@ -58,7 +63,7 @@ public class InterpreterUninstaller extends Activity {
 
   private void uninstall() {
     final ProgressDialog dialog = new ProgressDialog(this);
-    dialog.setMessage("Uninstalling " + mInterpreter.getNiceName());
+    dialog.setMessage("Uninstalling " + mDescriptor.getNiceName());
     dialog.setIndeterminate(true);
     dialog.setCancelable(false);
     dialog.show();
@@ -66,13 +71,14 @@ public class InterpreterUninstaller extends Activity {
     new Thread() {
       @Override
       public void run() {
-        File extras = new File(Constants.INTERPRETER_EXTRAS_ROOT, mName);
-        File root = InterpreterConfiguration.getInterpreterRoot(InterpreterUninstaller.this, mName);
+        File extras = new File(Constants.INTERPRETER_EXTRAS_ROOT, mDescriptor.getName());
+        File root =
+            InterpreterUtils.getInterpreterRoot(InterpreterUninstaller.this, mDescriptor.getName());
         File scriptsArchive =
-            new File(Constants.DOWNLOAD_ROOT, mInterpreter.getScriptsArchiveName());
-        File archive = new File(Constants.DOWNLOAD_ROOT, mInterpreter.getInterpreterArchiveName());
+            new File(Constants.DOWNLOAD_ROOT, mDescriptor.getScriptsArchiveName());
+        File archive = new File(Constants.DOWNLOAD_ROOT, mDescriptor.getInterpreterArchiveName());
         File extrasArchive =
-            new File(Constants.DOWNLOAD_ROOT, mInterpreter.getInterpreterExtrasArchiveName());
+            new File(Constants.DOWNLOAD_ROOT, mDescriptor.getExtrasArchiveName());
         List<File> directories =
             Arrays.asList(extras, root, scriptsArchive, archive, extrasArchive);
         for (File directory : directories) {

@@ -16,8 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -26,17 +24,19 @@ import android.os.Bundle;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.FileUtils;
-import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterDescriptor;
+import com.google.ase.interpreter.InterpreterUtils;
+
+import java.io.File;
 
 /**
  * Activity for installing interpreters.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class InterpreterInstaller extends Activity {
-  private String mName;
-  private Interpreter mInterpreter;
+//TODO() make abstract
+public abstract class InterpreterInstaller extends Activity {
+  protected InterpreterDescriptor mDescriptor;
 
   private static enum RequestCode {
     DOWNLOAD_INTERPRETER, DOWNLOAD_INTERPRETER_EXTRAS, DOWNLOAD_SCRIPTS, EXTRACT_INTERPRETER,
@@ -46,27 +46,32 @@ public class InterpreterInstaller extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mName = getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
-    if (mName == null) {
+    
+    Bundle descriptionBundle = getIntent().getBundleExtra(Constants.EXTRA_INTERPRETER_DESCRIPTION);
+    
+    if (descriptionBundle == null) {
+      AseLog.e("Interpreter description not provided.");
+      setResult(RESULT_CANCELED);
+      finish();
+      return;
+    }
+    
+    mDescriptor = InterpreterUtils.unbundle(descriptionBundle);
+    
+    if (mDescriptor.getName() == null) {
       AseLog.e("Interpreter not specified.");
       setResult(RESULT_CANCELED);
       finish();
       return;
     }
-    mInterpreter = InterpreterConfiguration.getInterpreterByName(mName);
-    if (mInterpreter == null) {
-      AseLog.e("No matching interpreter found for name: " + mName);
-      setResult(RESULT_CANCELED);
-      finish();
-      return;
-    }
-    if (mInterpreter.isInstalled(this)) {
+
+    if (isInstalled()) {
       AseLog.e("Interpreter already installed.");
       setResult(RESULT_CANCELED);
       finish();
       return;
     }
-    if (mInterpreter.hasInterpreterArchive()) {
+    if (mDescriptor.hasInterpreterArchive()) {
       downloadInterpreter();
     } else {
       downloadInterpreterExtras();
@@ -75,45 +80,45 @@ public class InterpreterInstaller extends Activity {
 
   private void downloadInterpreter() {
     Intent intent = new Intent(this, UrlDownloader.class);
-    intent.putExtra(Constants.EXTRA_URL, mInterpreter.getInterpreterArchiveUrl());
+    intent.putExtra(Constants.EXTRA_URL, mDescriptor.getInterpreterArchiveUrl());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.DOWNLOAD_ROOT);
     startActivityForResult(intent, RequestCode.DOWNLOAD_INTERPRETER.ordinal());
   }
 
   private void downloadInterpreterExtras() {
     Intent intent = new Intent(this, UrlDownloader.class);
-    intent.putExtra(Constants.EXTRA_URL, mInterpreter.getInterpreterExtrasArchiveUrl());
+    intent.putExtra(Constants.EXTRA_URL, mDescriptor.getExtrasArchiveUrl());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.DOWNLOAD_ROOT);
     startActivityForResult(intent, RequestCode.DOWNLOAD_INTERPRETER_EXTRAS.ordinal());
   }
 
   private void downloadScripts() {
     Intent intent = new Intent(this, UrlDownloader.class);
-    intent.putExtra(Constants.EXTRA_URL, mInterpreter.getScriptsArchiveUrl());
+    intent.putExtra(Constants.EXTRA_URL, mDescriptor.getScriptsArchiveUrl());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.DOWNLOAD_ROOT);
     startActivityForResult(intent, RequestCode.DOWNLOAD_SCRIPTS.ordinal());
   }
 
   private void extractInterpreter() {
     Intent intent = new Intent(this, ZipExtractor.class);
-    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mInterpreter
+    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mDescriptor
         .getInterpreterArchiveName()).getAbsolutePath());
-    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, InterpreterConfiguration.getInterpreterRoot(this)
+    intent.putExtra(Constants.EXTRA_OUTPUT_PATH, InterpreterUtils.getInterpreterRoot(this)
         .getAbsolutePath());
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER.ordinal());
   }
 
   private void extractInterpreterExtras() {
     Intent intent = new Intent(this, ZipExtractor.class);
-    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mInterpreter
-        .getInterpreterExtrasArchiveName()).getAbsolutePath());
+    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mDescriptor
+        .getExtrasArchiveName()).getAbsolutePath());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.INTERPRETER_EXTRAS_ROOT);
     startActivityForResult(intent, RequestCode.EXTRACT_INTERPRETER_EXTRAS.ordinal());
   }
 
   private void extractScripts() {
     Intent intent = new Intent(this, ZipExtractor.class);
-    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mInterpreter
+    intent.putExtra(Constants.EXTRA_INPUT_PATH, new File(Constants.DOWNLOAD_ROOT, mDescriptor
         .getScriptsArchiveName()).getAbsolutePath());
     intent.putExtra(Constants.EXTRA_OUTPUT_PATH, Constants.SCRIPTS_ROOT);
     startActivityForResult(intent, RequestCode.EXTRACT_SCRIPTS.ordinal());
@@ -129,42 +134,42 @@ public class InterpreterInstaller extends Activity {
       // installation to abort.
       switch (request) {
       case DOWNLOAD_INTERPRETER:
-        if (mInterpreter.hasInterpreterArchive()) {
+        if (mDescriptor.hasInterpreterArchive()) {
           AseLog.e("Downloading interpreter failed.");
           abort();
           return;
         }
         break;
       case DOWNLOAD_INTERPRETER_EXTRAS:
-        if (mInterpreter.hasInterpreterExtrasArchive()) {
+        if (mDescriptor.hasExtrasArchive()) {
           AseLog.e("Downloading interpreter extras failed.");
           abort();
           return;
         }
         break;
       case DOWNLOAD_SCRIPTS:
-        if (mInterpreter.hasScriptsArchive()) {
+        if (mDescriptor.hasScriptsArchive()) {
           AseLog.e("Downloading scripts failed.");
           abort();
           return;
         }
         break;
       case EXTRACT_INTERPRETER:
-        if (mInterpreter.hasInterpreterArchive()) {
+        if (mDescriptor.hasInterpreterArchive()) {
           AseLog.e("Extracting interpreter failed.");
           abort();
           return;
         }
         break;
       case EXTRACT_INTERPRETER_EXTRAS:
-        if (mInterpreter.hasInterpreterExtrasArchive()) {
+        if (mDescriptor.hasExtrasArchive()) {
           AseLog.e("Extracting interpreter extras failed.");
           abort();
           return;
         }
         break;
       case EXTRACT_SCRIPTS:
-        if (mInterpreter.hasScriptsArchive()) {
+        if (mDescriptor.hasScriptsArchive()) {
           AseLog.e("Extracting scripts failed.");
           abort();
           return;
@@ -199,11 +204,14 @@ public class InterpreterInstaller extends Activity {
       extractScripts();
       break;
     case EXTRACT_SCRIPTS:
-      AseLog.v(this, "Installation successful.");
-      setResult(RESULT_OK);
-      finish();
-      return;
-    default:
+      if(setup()){
+        AseLog.v(this, "Installation successful.");
+        setResult(RESULT_OK);
+        finish();
+        return; 
+      }
+        //$FALL-THROUGH$
+      default:
       AseLog.e(this, "Unknown installation state.");
       abort();
       return;
@@ -214,9 +222,10 @@ public class InterpreterInstaller extends Activity {
     int dataChmodErrno;
     boolean interpreterChmodSuccess;
     try {
-      dataChmodErrno = FileUtils.chmod(InterpreterConfiguration.getInterpreterRoot(this), 0755);
+      dataChmodErrno = FileUtils.chmod(InterpreterUtils.getInterpreterRoot(this), 0755);
       interpreterChmodSuccess =
-          FileUtils.recursiveChmod(InterpreterConfiguration.getInterpreterRoot(this, mInterpreter
+          FileUtils.recursiveChmod(
+              InterpreterUtils.getInterpreterRoot(this, mDescriptor
               .getName()), 0755);
     } catch (Exception e) {
       AseLog.e(e);
@@ -235,4 +244,8 @@ public class InterpreterInstaller extends Activity {
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
   }
+ 
+  protected abstract boolean setup();
+
+  protected abstract boolean isInstalled();
 }
