@@ -16,6 +16,12 @@
 
 package com.google.ase;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterConfiguration;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -27,12 +33,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import android.content.Context;
-import android.util.Log;
-
-import com.google.ase.interpreter.Interpreter;
-import com.google.ase.interpreter.InterpreterConfiguration;
 
 /**
  * Manages storage and retrieval of scripts on the file system.
@@ -106,7 +106,7 @@ public class ScriptStorageAdapter {
   /**
    * Returns a list of all script {@link File}s for which there is an interpreter installed.
    */
-  public static List<File> listExecutableScripts(Context context) {
+  public static List<File> listExecutableScripts(Context context, InterpreterConfiguration config) {
     File dir = new File(Constants.SCRIPTS_ROOT);
     if (dir.exists()) {
       // NOTE(damonkohler): Creating a LinkedList here is necessary in order to be able to filter it
@@ -115,8 +115,7 @@ public class ScriptStorageAdapter {
           new LinkedList<File>(Arrays.asList(new File(Constants.SCRIPTS_ROOT).listFiles()));
       // Filter out any files that don't have interpreters installed.
       for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
-        Interpreter interpreter =
-            InterpreterConfiguration.getInterpreterForScript(it.next().getName());
+        Interpreter interpreter = config.getInterpreterForScript(it.next().getName());
         if (interpreter == null || !interpreter.isInstalled(context)) {
           it.remove();
         }

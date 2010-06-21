@@ -16,11 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -40,6 +35,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.ase.Analytics;
+import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
@@ -47,6 +43,11 @@ import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
 import com.google.ase.dialog.Help;
 import com.google.ase.interpreter.InterpreterConfiguration;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A text editor for scripts.
@@ -60,6 +61,7 @@ public class ScriptEditor extends Activity {
   private boolean mScheduleMoveLeft;
   private String mLastSavedContent;
   private SharedPreferences mPreferences;
+  private InterpreterConfiguration mConfiguration;
 
   private static enum MenuId {
     SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP;
@@ -124,6 +126,8 @@ public class ScriptEditor extends Activity {
     mContentText.setFilters(filters.toArray(oldFilters));
     mContentText.addTextChangedListener(new ContentTextWatcher());
 
+    mConfiguration = ((AseApplication) this.getApplication()).getInterpreterConfiguration();
+
     Analytics.trackActivity(this);
   }
 
@@ -164,8 +168,8 @@ public class ScriptEditor extends Activity {
       startActivity(new Intent(this, AsePreferences.class));
     } else if (item.getItemId() == MenuId.API_BROWSER.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
-      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, InterpreterConfiguration
-          .getInterpreterForScript(mNameText.getText().toString()).getName());
+      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, mConfiguration.getInterpreterForScript(
+          mNameText.getText().toString()).getName());
       intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());
       startActivityForResult(intent, RequestCode.RPC_HELP.ordinal());
     } else if (item.getItemId() == MenuId.HELP.getId()) {
@@ -248,8 +252,8 @@ public class ScriptEditor extends Activity {
         int dend) {
       if (end - start == 1) {
         String auto =
-            InterpreterConfiguration.getInterpreterForScript(mNameText.getText().toString())
-                .getLanguage().autoClose(source.charAt(start));
+            mConfiguration.getInterpreterForScript(mNameText.getText().toString()).getLanguage()
+                .autoClose(source.charAt(start));
         if (auto != null) {
           mScheduleMoveLeft = true;
           return auto;

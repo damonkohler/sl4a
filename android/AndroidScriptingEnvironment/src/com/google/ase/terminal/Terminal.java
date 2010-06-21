@@ -111,7 +111,8 @@ public class Terminal extends Activity {
   private int mControlKeyCode;
 
   private SharedPreferences mPreferences;
-
+  
+  private StringBuffer mBuffer = new StringBuffer();
   private InterpreterProcess mInterpreterProcess; // Convenience member.
   private ScriptLauncher mLauncher;
 
@@ -171,6 +172,10 @@ public class Terminal extends Activity {
 
     setContentView(R.layout.term);
     mInterpreterProcess = mLauncher.getProcess();
+    if(mBuffer.length()!=0){
+      mInterpreterProcess.print(mBuffer.toString());
+      mBuffer.setLength(0);
+    }
     mEmulatorView = (EmulatorView) findViewById(EMULATOR_VIEW);
     mEmulatorView.attachInterpreterProcess(mInterpreterProcess);
     mKeyListener = new TermKeyListener();
@@ -227,7 +232,7 @@ public class Terminal extends Activity {
     // Translate the keyCode into an ASCII character.
     int letter = mKeyListener.keyDown(keyCode, event);
     if (letter > -1) {
-      mInterpreterProcess.print((char) letter);
+      print((char)letter);
     }
     return true;
   }
@@ -269,7 +274,7 @@ public class Terminal extends Activity {
     if (down) {
       if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
         // TODO(damonkohler): If center is our control key, why are we printing \r?
-        mInterpreterProcess.print('\r');
+        print('\r');
       } else {
         char code;
         switch (keyCode) {
@@ -287,16 +292,24 @@ public class Terminal extends Activity {
           code = 'C';
           break;
         }
-        mInterpreterProcess.print((char) 27); // ESC
+          print((char) 27); // ESC
         if (mEmulatorView.getKeypadApplicationMode()) {
-          mInterpreterProcess.print('O');
+          print('O');
         } else {
-          mInterpreterProcess.print('[');
-        }
-        mInterpreterProcess.print(code);
+          print('[');
+        }   
+          print(code);
       }
     }
     return true;
+  }
+  
+  private void print(char c){
+    if(mInterpreterProcess!=null){
+      mInterpreterProcess.print(c);
+    }else{
+      mBuffer.append(c);
+    }
   }
 
   @Override
@@ -356,9 +369,5 @@ public class Terminal extends Activity {
   protected void onDestroy() {
     super.onDestroy();
     unbindService(mConnection);
-    Intent intent = new Intent(this, AseService.class);
-    intent.setAction(Constants.ACTION_KILL_PROCESS);
-    intent.putExtra(Constants.EXTRA_PROXY_PORT, mLauncher.getProxyPort());
-    startService(intent);
   }
 }

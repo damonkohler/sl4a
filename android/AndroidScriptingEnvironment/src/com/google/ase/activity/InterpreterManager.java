@@ -16,13 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -45,17 +38,28 @@ import android.widget.TextView;
 
 import com.google.ase.ActivityFlinger;
 import com.google.ase.Analytics;
+import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.dialog.Help;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class InterpreterManager extends ListActivity {
 
   private InterpreterManagerAdapter mAdapter;
+  private InterpreterListObserver mObserver;
   private List<Interpreter> mInterpreterList;
+  private InterpreterConfiguration mConfiguration;
 
   private static enum RequestCode {
     INSTALL_INTERPRETER, UNINSTALL_INTERPRETER
@@ -74,9 +78,12 @@ public class InterpreterManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.interpreter_manager);
-    mInterpreterList = InterpreterConfiguration.getInstalledInterpreters(this);
+    mConfiguration = ((AseApplication) this.getApplication()).getInterpreterConfiguration();
+    mInterpreterList = mConfiguration.getInstalledInterpreters();
     mAdapter = new InterpreterManagerAdapter();
-    mAdapter.registerDataSetObserver(new InterpreterListObserver());
+    mObserver = new InterpreterListObserver();
+    mConfiguration.registerObserver(mObserver);
+    mAdapter.registerDataSetObserver(mObserver);
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     ActivityFlinger.attachView(getListView(), this);
@@ -107,7 +114,7 @@ public class InterpreterManager extends ListActivity {
   private void buildMenuIdMaps() {
     mInstallerMenuIds = new HashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
-    List<Interpreter> notInstalled = InterpreterConfiguration.getNotInstalledInterpreters(this);
+    List<Interpreter> notInstalled = mConfiguration.getNotInstalledInterpreters();
     for (Interpreter interpreter : notInstalled) {
       mInstallerMenuIds.put(i, interpreter);
       ++i;
@@ -115,7 +122,7 @@ public class InterpreterManager extends ListActivity {
   }
 
   private void buildInstallLanguagesMenu(Menu menu) {
-    if (InterpreterConfiguration.getNotInstalledInterpreters(this).size() > 0) {
+    if (mConfiguration.getNotInstalledInterpreters().size() > 0) {
       SubMenu installMenu =
           menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
               android.R.drawable.ic_menu_add);
@@ -148,7 +155,7 @@ public class InterpreterManager extends ListActivity {
       });
       dialog.show();
     } else if (mInstallerMenuIds.containsKey(itemId)) {
-      // Install selected interpreter.
+      // Install selected interpreter
       Interpreter interpreter = mInstallerMenuIds.get(itemId);
       installInterpreter(interpreter);
     } else if (itemId == MenuId.PREFERENCES.getId()) {
@@ -245,10 +252,26 @@ public class InterpreterManager extends ListActivity {
     mAdapter.notifyDataSetInvalidated();
   }
 
-  private class InterpreterListObserver extends DataSetObserver {
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    mConfiguration.unregisterObserver(mObserver);
+  }
+
+  private class InterpreterListObserver extends DataSetObserver implements ConfigurationObserver {
     @Override
     public void onInvalidated() {
-      mInterpreterList = InterpreterConfiguration.getInstalledInterpreters(InterpreterManager.this);
+      mInterpreterList = mConfiguration.getInstalledInterpreters();
+    }
+
+    @Override
+    public void onChanged() {
+      mInterpreterList = mConfiguration.getInstalledInterpreters();
+    }
+
+    @Override
+    public void onConfigurationChanged() {
+      mAdapter.notifyDataSetChanged();
     }
   }
 

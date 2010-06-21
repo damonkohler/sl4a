@@ -16,15 +16,15 @@
 
 package com.google.ase;
 
-import java.io.File;
-import java.net.InetSocketAddress;
-
 import android.content.Intent;
 
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterProcess;
+
+import java.io.File;
+import java.net.InetSocketAddress;
 
 public class ScriptLauncher {
 
@@ -34,14 +34,14 @@ public class ScriptLauncher {
   private final InetSocketAddress mAddress;
   private InterpreterProcess mProcess;
 
-  public ScriptLauncher(Intent intent, InetSocketAddress address) {
+  public ScriptLauncher(Intent intent, InetSocketAddress address, InterpreterConfiguration config) {
     mScriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     if (mScriptName != null) {
-      mInterpreter = InterpreterConfiguration.getInterpreterForScript(mScriptName);
+      mInterpreter = config.getInterpreterForScript(mScriptName);
       mInterpreterName = mInterpreter.getName();
     } else {
       mInterpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
-      mInterpreter = InterpreterConfiguration.getInterpreterByName(mInterpreterName);
+      mInterpreter = config.getInterpreterByName(mInterpreterName);
     }
     mAddress = address;
   }

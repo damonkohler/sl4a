@@ -16,14 +16,15 @@
 
 package com.google.ase;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import android.app.Application;
 
 import com.google.ase.activity.NotificationIdFactory;
 import com.google.ase.future.FutureActivityTask;
+import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.trigger.TriggerRepository;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AseApplication extends Application {
 
@@ -31,9 +32,11 @@ public class AseApplication extends Application {
       new ConcurrentLinkedQueue<FutureActivityTask>();
 
   private TriggerRepository mTriggerRepository;
-  
+
   private final NotificationIdFactory mNotificaitonIdFactory = NotificationIdFactory.INSTANCE;
-  
+
+  private InterpreterConfiguration mConfiguration;
+
   public Queue<FutureActivityTask> getTaskQueue() {
     return mTaskQueue;
   }
@@ -41,11 +44,12 @@ public class AseApplication extends Application {
   public TriggerRepository getTriggerRepository() {
     return mTriggerRepository;
   }
-  
+
   @Override
   public void onCreate() {
     super.onCreate();
     mTriggerRepository = new TriggerRepository(this);
+    mConfiguration = new InterpreterConfiguration(this);
     Analytics.start(this);
   }
 
@@ -57,5 +61,9 @@ public class AseApplication extends Application {
 
   public int getNewNotificationId() {
     return mNotificaitonIdFactory.createId();
+  }
+
+  public InterpreterConfiguration getInterpreterConfiguration() {
+    return mConfiguration;
   }
 }

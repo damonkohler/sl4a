@@ -16,11 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -43,6 +38,7 @@ import android.widget.TextView;
 
 import com.google.ase.ActivityFlinger;
 import com.google.ase.Analytics;
+import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
@@ -52,6 +48,12 @@ import com.google.ase.dialog.Help;
 import com.google.ase.dialog.UsageTrackingConfirmation;
 import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Manages creation, deletion, and execution of stored scripts.
@@ -64,6 +66,8 @@ public class ScriptManager extends ListActivity {
   private ScriptManagerAdapter mAdapter;
   private SharedPreferences mPreferences;
   private HashMap<Integer, Interpreter> mAddMenuIds;
+  private ScriptListObserver mObserver;
+  private InterpreterConfiguration mConfiguration;
 
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
@@ -82,9 +86,12 @@ public class ScriptManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    updateScriptsList();
     mAdapter = new ScriptManagerAdapter();
-    mAdapter.registerDataSetObserver(new ScriptListObserver());
+    mObserver = new ScriptListObserver();
+    mAdapter.registerDataSetObserver(mObserver);
+    mConfiguration = ((AseApplication) this.getApplication()).getInterpreterConfiguration();
+    mConfiguration.registerObserver(mObserver);
+    updateScriptsList();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     UsageTrackingConfirmation.show(this);
@@ -98,7 +105,7 @@ public class ScriptManager extends ListActivity {
     if (mPreferences.getBoolean("show_all_files", false)) {
       mScriptList = ScriptStorageAdapter.listAllScripts();
     } else {
-      mScriptList = ScriptStorageAdapter.listExecutableScripts(this);
+      mScriptList = ScriptStorageAdapter.listExecutableScripts(this, mConfiguration);
     }
   }
 
@@ -136,7 +143,7 @@ public class ScriptManager extends ListActivity {
   private void buildMenuIdMaps() {
     mAddMenuIds = new HashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
-    List<Interpreter> installed = InterpreterConfiguration.getInstalledInterpreters(this);
+    List<Interpreter> installed = mConfiguration.getInstalledInterpreters();
     for (Interpreter interpreter : installed) {
       mAddMenuIds.put(i, interpreter);
       ++i;
@@ -296,10 +303,26 @@ public class ScriptManager extends ListActivity {
     ScriptStorageAdapter.writeScript(title, body);
   }
 
-  private class ScriptListObserver extends DataSetObserver {
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    mConfiguration.unregisterObserver(mObserver);
+  }
+
+  private class ScriptListObserver extends DataSetObserver implements ConfigurationObserver {
     @Override
     public void onInvalidated() {
       updateScriptsList();
+    }
+
+    @Override
+    public void onChanged() {
+      updateScriptsList();
+    }
+
+    @Override
+    public void onConfigurationChanged() {
+      mAdapter.notifyDataSetChanged();
     }
   }
 

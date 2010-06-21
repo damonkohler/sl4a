@@ -32,17 +32,19 @@ public class Constants {
   public static final String ACTION_SAVE_AND_RUN_SCRIPT =
       "com.google.ase.action.SAVE_AND_RUN_SCRIPT";
   public static final String ACTION_KILL_PROCESS = "com.google.ase.action.KILL_PROCESS";
-  public static final String ACTION_SHOW_RUNNING_SCRIPTS = 
+  public static final String ACTION_SHOW_RUNNING_SCRIPTS =
       "com.google.ase.action.SHOW_RUNNING_SCRIPTS";
   public static final String ACTION_CANCEL_NOTIFICATION =
       "com.google.ase.action.CANCEL_NOTIFICAITON";
   public static final String ACTION_ACTIVITY_RESULT = "com.google.ase.action.ACTIVITY_RESULT";
   public static final String ACTION_LAUNCH_SERVER = "com.google.ase.action.LAUNCH_SERVER";
-  public static final String ACTION_DISCOVER_INTERPRETERS = "com.google.ase.DISCOVER_INTERPRETERS";
+
 
   public static final String EXTRA_SCRIPT_NAME = "com.google.ase.extra.SCRIPT_NAME";
   public static final String EXTRA_SCRIPT_CONTENT = "com.google.ase.extra.SCRIPT_CONTENT";
   public static final String EXTRA_INTERPRETER_NAME = "com.google.ase.extra.INTERPRETER_NAME";
+  public static final String EXTRA_INTERPRETER_DESCRIPTION =
+      "com.google.ase.extra.INTERPRETER_DESCRIPTION";
   public static final String EXTRA_INPUT_PATH = "com.google.ase.extra.INPUT_PATH";
   public static final String EXTRA_OUTPUT_PATH = "com.google.ase.extra.OUTPUT_PATH";
   public static final String EXTRA_URL = "com.google.ase.extra.URL";
@@ -79,4 +81,13 @@ public class Constants {
   public static final ComponentName TRIGGER_SERVICE_COMPONENT_NAME =
       new ComponentName("com.google.ase", "com.google.ase.activity.TriggerService");
 
+  // Interpreters discovery mechanism
+  public static final String ACTION_DISCOVER_INTERPRETERS = "com.google.ase.DISCOVER_INTERPRETERS";
+  // Interpreters broadcasts
+  public static final String ACTION_INTERPRETER_ADDED = "com.google.ase.INTERPRETER_ADDED";
+  public static final String ACTION_INTERPRETER_REMOVED = "com.google.ase.INTERPRETER_REMOVED";
+  // Interpreter content provider
+  public static final String PROVIDER_BASE = "com.google.ase.base";
+  public static final String PROVIDER_ENV = "com.google.ase.env";
+  public static final String PROVIDER_LANG = "com.google.ase.lang";
 }

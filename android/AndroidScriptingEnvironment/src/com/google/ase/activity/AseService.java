@@ -16,12 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -41,8 +35,16 @@ import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
 import com.google.ase.ScriptProcess;
 import com.google.ase.exception.AseException;
+import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.terminal.Terminal;
 import com.google.ase.trigger.Trigger;
+
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
@@ -74,16 +76,7 @@ public class AseService extends Service {
   @Override
   public void onCreate() {
     mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    String notificationMessage = "Service is created.";
-    mNotification =
-        new Notification(R.drawable.ase_logo_48, "ASE is running...", System.currentTimeMillis());
-    mNotification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
-    mNotification.contentView.setTextViewText(R.id.notification_title, "ASE Service");
-    mNotification.contentView.setTextViewText(R.id.notification_message, notificationMessage);
-    mNotification.contentView.setTextViewText(R.id.notification_action, null);
-    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-    Intent notificationIntent = new Intent(this, AseService.class);
-    mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    createNotification();
     ServiceUtils.setForeground(this, mNotificationId, mNotification);
   }
 
@@ -120,8 +113,10 @@ public class AseService extends Service {
         || intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
       
       serverProxy = launchServer(intent);
-      launcher = launchInterpreter(intent, serverProxy.getAddress());
-      if (launcher == null) {
+      try {
+        launcher = launchInterpreter(intent, serverProxy.getAddress());
+      } catch (AseException e) {
+        AseLog.e(this, e.getMessage(), e);
         serverProxy.shutdown();
         serverProxy = null;
         return;
@@ -147,14 +142,11 @@ public class AseService extends Service {
     return androidProxy;
   }
 
-  private ScriptLauncher launchInterpreter(Intent intent, InetSocketAddress address) {
-    ScriptLauncher launcher = new ScriptLauncher(intent, address);
-    try {
-      launcher.launch();
-    } catch (AseException e) {
-      AseLog.e(this, e.getMessage(), e);
-      return null;
-    }
+  private ScriptLauncher launchInterpreter(Intent intent, InetSocketAddress address)
+      throws AseException {
+    InterpreterConfiguration config = ((AseApplication)this.getApplication()).getInterpreterConfiguration();
+    ScriptLauncher launcher = new ScriptLauncher(intent, address, config);
+    launcher.launch();
     return launcher;
   }
 
@@ -210,6 +202,19 @@ public class AseService extends Service {
   
   public ScriptProcess getScriptProcess(int processPort){
     return mProcessMap.get(processPort);
+  }
+
+  private void createNotification() {
+    String notificationMessage = "Service is created.";
+    mNotification =
+        new Notification(R.drawable.ase_logo_48, "ASE is running...", System.currentTimeMillis());
+    mNotification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
+    mNotification.contentView.setTextViewText(R.id.notification_title, "ASE Service");
+    mNotification.contentView.setTextViewText(R.id.notification_message, notificationMessage);
+    mNotification.contentView.setTextViewText(R.id.notification_action, null);
+    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
+    Intent notificationIntent = new Intent(this, AseService.class);
+    mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
   }
 
   private void updateNotification() {
