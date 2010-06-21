@@ -25,12 +25,13 @@ public class LuaInterpreterProcess extends InterpreterProcess {
   }
 
   @Override
-  protected void writeInterpreterCommand() {
+  protected String getInterpreterCommand() {
     LuaInterpreter interpreter = new LuaInterpreter();
-    print(interpreter.getBinary().getAbsolutePath());
-    if (mLaunchScript != null) {
-      print(" " + mLaunchScript);
-    }
-    print("\n");
+    String str = interpreter.getBinary()+"%s";
+    return String.format(str, (mLaunchScript == null)?"":" "+mLaunchScript);
+  }
+
+  @Override
+  protected void buildEnvironment() {
   }
 }

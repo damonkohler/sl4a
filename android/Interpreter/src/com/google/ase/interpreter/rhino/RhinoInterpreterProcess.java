@@ -20,11 +20,10 @@ import java.io.File;
 
 import com.google.ase.Constants;
 import com.google.ase.interpreter.InterpreterProcess;
+import com.google.ase.interpreter.python.PythonInterpreter;
 
 public class RhinoInterpreterProcess extends InterpreterProcess {
-  private final static String RHINO_BIN =
-      "dalvikvm -Xss128k -classpath /sdcard/ase/extras/rhino/rhino1_7R2-dex.jar "
-          + "org.mozilla.javascript.tools.shell.Main -O -1";
+
 
   public RhinoInterpreterProcess(String launchScript, int port) {
     super(launchScript, port);
@@ -40,11 +39,9 @@ public class RhinoInterpreterProcess extends InterpreterProcess {
   }
 
   @Override
-  protected void writeInterpreterCommand() {
-    print(RHINO_BIN);
-    if (mLaunchScript != null) {
-      print(" " + mLaunchScript);
-    }
-    print("\n");
+  protected String getInterpreterCommand() {
+    RhinoInterpreter interpreter = new RhinoInterpreter();
+    String str = interpreter.getBinary()+"%s";
+    return String.format(str, (mLaunchScript == null)?"":" "+mLaunchScript);
   }
 }

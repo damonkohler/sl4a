@@ -25,14 +25,13 @@ public class PerlInterpreterProcess extends InterpreterProcess {
   }
 
   @Override
-  protected void writeInterpreterCommand() {
+  protected String getInterpreterCommand() {
     PerlInterpreter interpreter = new PerlInterpreter();
-    print(interpreter.getBinary().getAbsolutePath());
-    if (mLaunchScript != null) {
-      print(" " + mLaunchScript);
-    } else {
-      print(" -de 1");
-    }
-    print("\n");
+    String str = interpreter.getBinary()+"%s";
+    return String.format(str, (mLaunchScript == null)?" -de 1":" "+mLaunchScript);
+  }
+
+  @Override
+  protected void buildEnvironment() { 
   }
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2009 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,18 +16,18 @@
 
 package com.google.ase.interpreter.python;
 
-import java.io.File;
-
-import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.AseDefaultInterpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.PythonLanguage;
+
+import java.io.File;
 
 /**
  * Represents the Python interpreter.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class PythonInterpreter extends Interpreter {
+public class PythonInterpreter extends AseDefaultInterpreter {
 
   private final static String PYTHON_BIN = "/data/data/com.google.ase/python/bin/python";
 
@@ -55,28 +55,26 @@ public class PythonInterpreter extends Interpreter {
     return "Python 2.6.2";
   }
 
-  @Override
   public boolean hasInterpreterArchive() {
     return true;
   }
 
-  @Override
-  public boolean hasInterpreterExtrasArchive() {
+  public boolean hasExtrasArchive() {
     return true;
   }
 
-  @Override
   public boolean hasScriptsArchive() {
     return true;
   }
 
   @Override
-  public File getBinary() {
-    return new File(PYTHON_BIN);
+  public String getBinary() {
+    return new File(PYTHON_BIN).getAbsolutePath();
   }
 
   @Override
   public int getVersion() {
     return 7;
   }
+
 }

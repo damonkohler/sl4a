@@ -1,13 +1,12 @@
 /*
- * Copyright (C) 2009 Google Inc.
- * Copyright (C) 2010 Pat Thoyts
- *
+ * Copyright (C) 2009 Google Inc. Copyright (C) 2010 Pat Thoyts
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,18 +16,18 @@
 
 package com.google.ase.interpreter.tcl;
 
-import java.io.File;
-
-import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.AseDefaultInterpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.TclLanguage;
+
+import java.io.File;
 
 /**
  * Represents the Tcl interpreter.
  * 
  * @author Pat Thoyts (patthoyts@users.sourceforge.net)
  */
-public class TclInterpreter extends Interpreter {
+public class TclInterpreter extends AseDefaultInterpreter {
 
   private final static String TCL_BINARY = "/data/data/com.google.ase/tclsh/tclsh";
 
@@ -56,24 +55,21 @@ public class TclInterpreter extends Interpreter {
     return "Tcl 8.6b2";
   }
 
-  @Override
   public boolean hasInterpreterArchive() {
     return true;
   }
 
-  @Override
-  public boolean hasInterpreterExtrasArchive() {
+  public boolean hasExtrasArchive() {
     return true;
   }
 
-  @Override
   public boolean hasScriptsArchive() {
     return true;
   }
 
   @Override
-  public File getBinary() {
-    return new File(TCL_BINARY);
+  public String getBinary() {
+    return new File(TCL_BINARY).getAbsolutePath();
   }
 
   @Override

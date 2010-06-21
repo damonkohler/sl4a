@@ -23,8 +23,7 @@ import com.google.ase.interpreter.InterpreterProcess;
 
 public class BshInterpreterProcess extends InterpreterProcess {
 
-  private final static String BSH_BIN =
-      "dalvikvm -classpath /sdcard/ase/extras/bsh/bsh-2.0b4-dx.jar bsh.Interpreter";
+
 
   public BshInterpreterProcess(String launchScript, int port) {
     super(launchScript, port);
@@ -40,11 +39,9 @@ public class BshInterpreterProcess extends InterpreterProcess {
   }
 
   @Override
-  protected void writeInterpreterCommand() {
-    print(BSH_BIN);
-    if (mLaunchScript != null) {
-      print(" " + mLaunchScript);
-    }
-    print("\n");
+  protected String getInterpreterCommand() {
+    BshInterpreter interpreter = new BshInterpreter();
+    String str = interpreter.getBinary()+"%s";
+    return String.format(str, (mLaunchScript == null)?"":" "+mLaunchScript);
   }
 }

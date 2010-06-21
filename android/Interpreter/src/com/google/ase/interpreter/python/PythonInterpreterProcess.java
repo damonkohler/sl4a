@@ -42,12 +42,9 @@ public class PythonInterpreterProcess extends InterpreterProcess {
   }
 
   @Override
-  protected void writeInterpreterCommand() {
+  protected String getInterpreterCommand() {
     PythonInterpreter interpreter = new PythonInterpreter();
-    print(interpreter.getBinary().getAbsolutePath());
-    if (mLaunchScript != null) {
-      print(" " + mLaunchScript);
-    }
-    print("\n");
+    String str = interpreter.getBinary()+"%s";
+    return String.format(str, (mLaunchScript == null)?"":" "+mLaunchScript);
   }
 }

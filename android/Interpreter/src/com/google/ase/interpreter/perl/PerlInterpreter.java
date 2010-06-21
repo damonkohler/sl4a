@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2009 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -16,18 +16,18 @@
 
 package com.google.ase.interpreter.perl;
 
-import java.io.File;
-
-import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.AseDefaultInterpreter;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.PerlLanguage;
+
+import java.io.File;
 
 /**
  * Represents the Perl interpreter.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class PerlInterpreter extends Interpreter {
+public class PerlInterpreter extends AseDefaultInterpreter {
 
   private final static String PERL_BIN = "/data/data/com.google.ase/perl/perl";
 
@@ -55,28 +55,26 @@ public class PerlInterpreter extends Interpreter {
     return "Perl 5.10.1";
   }
 
-  @Override
   public boolean hasInterpreterArchive() {
     return true;
   }
 
-  @Override
-  public boolean hasInterpreterExtrasArchive() {
+  public boolean hasExtrasArchive() {
     return true;
   }
 
-  @Override
   public boolean hasScriptsArchive() {
     return true;
   }
 
   @Override
-  public File getBinary() {
-    return new File(PERL_BIN);
+  public String getBinary() {
+    return new File(PERL_BIN).getAbsolutePath();
   }
 
   @Override
   public int getVersion() {
     return 6;
   }
+
 }
