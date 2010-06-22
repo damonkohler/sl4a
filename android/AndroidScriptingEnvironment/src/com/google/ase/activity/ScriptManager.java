@@ -46,7 +46,7 @@ import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
 import com.google.ase.dialog.Help;
 import com.google.ase.dialog.UsageTrackingConfirmation;
-import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
@@ -65,7 +65,7 @@ public class ScriptManager extends ListActivity {
   private List<File> mScriptList;
   private ScriptManagerAdapter mAdapter;
   private SharedPreferences mPreferences;
-  private HashMap<Integer, Interpreter> mAddMenuIds;
+  private HashMap<Integer, InterpreterExecutionDescriptor> mAddMenuIds;
   private ScriptListObserver mObserver;
   private InterpreterConfiguration mConfiguration;
 
@@ -141,10 +141,10 @@ public class ScriptManager extends ListActivity {
   }
 
   private void buildMenuIdMaps() {
-    mAddMenuIds = new HashMap<Integer, Interpreter>();
+    mAddMenuIds = new HashMap<Integer, InterpreterExecutionDescriptor>();
     int i = MenuId.values().length + Menu.FIRST;
-    List<Interpreter> installed = mConfiguration.getInstalledInterpreters();
-    for (Interpreter interpreter : installed) {
+    List<InterpreterExecutionDescriptor> installed = mConfiguration.getInstalledInterpreters();
+    for (InterpreterExecutionDescriptor interpreter : installed) {
       mAddMenuIds.put(i, interpreter);
       ++i;
     }
@@ -154,7 +154,7 @@ public class ScriptManager extends ListActivity {
     Menu addMenu =
         menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
             android.R.drawable.ic_menu_add);
-    for (Entry<Integer, Interpreter> entry : mAddMenuIds.entrySet()) {
+    for (Entry<Integer, InterpreterExecutionDescriptor> entry : mAddMenuIds.entrySet()) {
       addMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
     }
     addMenu.add(Menu.NONE, MenuId.QRCODE_ADD.getId(), Menu.NONE, "Scan Barcode");
@@ -172,7 +172,7 @@ public class ScriptManager extends ListActivity {
     } else if (mAddMenuIds.containsKey(itemId)) {
       // Add a new script.
       Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
-      Interpreter interpreter = mAddMenuIds.get(itemId);
+      InterpreterExecutionDescriptor interpreter = mAddMenuIds.get(itemId);
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, interpreter.getExtension());
       intent.putExtra(Constants.EXTRA_SCRIPT_CONTENT, interpreter.getContentTemplate());
       intent.putExtra(Constants.EXTRA_IS_NEW_SCRIPT, true);

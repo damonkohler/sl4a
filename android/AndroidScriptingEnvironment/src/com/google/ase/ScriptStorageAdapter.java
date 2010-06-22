@@ -19,8 +19,9 @@ package com.google.ase;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterConstants;
+import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -54,9 +55,9 @@ public class ScriptStorageAdapter {
       return;
     }
 
-    File scriptsDirectory = new File(Constants.SCRIPTS_ROOT);
+    File scriptsDirectory = new File(InterpreterConstants.SCRIPTS_ROOT);
     if (!scriptsDirectory.exists()) {
-      AseLog.v("Creating scripts directory: " + Constants.SCRIPTS_ROOT);
+      AseLog.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
       if (!scriptsDirectory.mkdirs()) {
         AseLog.e("Failed to create scripts directory.");
       }
@@ -94,9 +95,9 @@ public class ScriptStorageAdapter {
    * Returns a list of all available script {@link File}s.
    */
   public static List<File> listAllScripts() {
-    File dir = new File(Constants.SCRIPTS_ROOT);
+    File dir = new File(InterpreterConstants.SCRIPTS_ROOT);
     if (dir.exists()) {
-      List<File> scripts = Arrays.asList(new File(Constants.SCRIPTS_ROOT).listFiles());
+      List<File> scripts = Arrays.asList(new File(InterpreterConstants.SCRIPTS_ROOT).listFiles());
       Collections.sort(scripts);
       return scripts;
     }
@@ -107,15 +108,16 @@ public class ScriptStorageAdapter {
    * Returns a list of all script {@link File}s for which there is an interpreter installed.
    */
   public static List<File> listExecutableScripts(Context context, InterpreterConfiguration config) {
-    File dir = new File(Constants.SCRIPTS_ROOT);
+    File dir = new File(InterpreterConstants.SCRIPTS_ROOT);
     if (dir.exists()) {
       // NOTE(damonkohler): Creating a LinkedList here is necessary in order to be able to filter it
       // later.
       List<File> scripts =
-          new LinkedList<File>(Arrays.asList(new File(Constants.SCRIPTS_ROOT).listFiles()));
+          new LinkedList<File>(Arrays.asList(new File(InterpreterConstants.SCRIPTS_ROOT)
+              .listFiles()));
       // Filter out any files that don't have interpreters installed.
       for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
-        Interpreter interpreter = config.getInterpreterForScript(it.next().getName());
+        InterpreterExecutionDescriptor interpreter = config.getInterpreterForScript(it.next().getName());
         if (interpreter == null || !interpreter.isInstalled(context)) {
           it.remove();
         }
@@ -141,7 +143,7 @@ public class ScriptStorageAdapter {
   }
 
   private static File getScript(String name) {
-    return new File(Constants.SCRIPTS_ROOT, name);
+    return new File(InterpreterConstants.SCRIPTS_ROOT, name);
   }
 
   /**

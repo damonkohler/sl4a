@@ -18,7 +18,7 @@ package com.google.ase.interpreter.shell;
 
 import android.content.Context;
 
-import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterProcess;
 import com.google.ase.language.Language;
 import com.google.ase.language.ShellLanguage;
@@ -29,7 +29,7 @@ import com.google.ase.rpc.MethodDescriptor;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class ShellInterpreter implements Interpreter {
+public class ShellInterpreter implements InterpreterExecutionDescriptor {
 
   private final Language mShellLanguage;
 

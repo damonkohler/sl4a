@@ -40,7 +40,7 @@ import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.facade.FacadeConfiguration;
-import com.google.ase.interpreter.Interpreter;
+import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.ParameterDescriptor;
@@ -196,7 +196,7 @@ public class ApiBrowser extends ListActivity {
     InterpreterConfiguration config =
         ((AseApplication) this.getApplication()).getInterpreterConfiguration();
 
-    Interpreter interpreter =
+    InterpreterExecutionDescriptor interpreter =
         config.getInterpreterByName(getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));
     String rpcHelpText = interpreter.getRpcText(scriptText, rpc, values);
 
