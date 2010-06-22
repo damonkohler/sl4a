@@ -11,16 +11,13 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
-import com.google.ase.Constants;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class InterpreterProvider extends ContentProvider implements InterpreterStrings{
+public abstract class InterpreterProvider extends ContentProvider {
 
   protected static final int BASE = 1;
   protected static final int ENVVARS = 2;
-  protected static final int LANGUAGE = 3;
   
   protected InterpreterDescriptor mDescriptor;
   protected Context mContext;
@@ -33,9 +30,8 @@ public abstract class InterpreterProvider extends ContentProvider implements Int
   protected InterpreterProvider(){
     matcher = new UriMatcher(UriMatcher.NO_MATCH);
     String auth = this.getClass().getName().toLowerCase();
-    matcher.addURI(auth,Constants.PROVIDER_BASE,BASE );
-    matcher.addURI(auth,Constants.PROVIDER_ENV,ENVVARS );
-    matcher.addURI(auth,Constants.PROVIDER_LANG,LANGUAGE );
+    matcher.addURI(auth, InterpreterConstants.PROVIDER_BASE, BASE);
+    matcher.addURI(auth, InterpreterConstants.PROVIDER_ENV, ENVVARS);
   }
 
   @Override
@@ -78,9 +74,6 @@ public abstract class InterpreterProvider extends ContentProvider implements Int
       case ENVVARS:
         map = getEnvironmentSettings();
         break;
-      case LANGUAGE:
-        map = getLanguageSettings();
-        break;
       default:
         map = null;
     }
@@ -111,13 +104,13 @@ public abstract class InterpreterProvider extends ContentProvider implements Int
   protected Map<String, Object> getSettings(){
     Map<String, Object> values = new HashMap<String, Object>();
     
-    values.put(NAME, mDescriptor.getName());
-    values.put(NICE_NAME, mDescriptor.getNiceName());   
-    values.put(EXTENSION, mDescriptor.getExtension());
-    values.put(BIN, mDescriptor.getBinary());  
-    values.put(EXECUTE, mDescriptor.getEmptyCommand());
-    values.put(EMPTY, mDescriptor.getExecuteParams());
-    values.put(PATH, InterpreterUtils.getInterpreterRoot(mContext, mDescriptor.getName())
+    values.put(InterpreterStrings.NAME, mDescriptor.getName());
+    values.put(InterpreterStrings.NICE_NAME, mDescriptor.getNiceName());   
+    values.put(InterpreterStrings.EXTENSION, mDescriptor.getExtension());
+    values.put(InterpreterStrings.BIN, mDescriptor.getBinary());  
+    values.put(InterpreterStrings.EXECUTE, mDescriptor.getEmptyCommand());
+    values.put(InterpreterStrings.EMPTY, mDescriptor.getExecuteParams());
+    values.put(InterpreterStrings.PATH, InterpreterUtils.getInterpreterRoot(mContext, mDescriptor.getName())
         .getAbsolutePath());
     
     return values;
@@ -126,7 +119,4 @@ public abstract class InterpreterProvider extends ContentProvider implements Int
   protected abstract InterpreterDescriptor getDescriptor();
 
   protected abstract Map<String, String> getEnvironmentSettings();
-  
-  protected abstract Map<String, String> getLanguageSettings();
-
 }

@@ -3,8 +3,6 @@ package com.google.ase.interpreter;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.google.ase.Constants;
-
 import java.io.File;
 
 public class InterpreterUtils {
@@ -23,14 +21,14 @@ public class InterpreterUtils {
 
   public static boolean isInstalled(Context context, String name) {
     File interpreterDirectory = getInterpreterRoot(context, name);
-    File interpreterExtrasDirectory = new File(Constants.INTERPRETER_EXTRAS_ROOT, name);
+    File interpreterExtrasDirectory = new File(InterpreterConstants.INTERPRETER_EXTRAS_ROOT, name);
     return interpreterDirectory.exists() || interpreterExtrasDirectory.exists();
   }
 
   public static boolean isInstalled(Context context, InterpreterDescriptor descriptor) {
     File interpreterDirectory = getInterpreterRoot(context, descriptor.getName());
     File interpreterExtrasDirectory =
-        new File(Constants.INTERPRETER_EXTRAS_ROOT, descriptor.getName());
+        new File(InterpreterConstants.INTERPRETER_EXTRAS_ROOT, descriptor.getName());
     return interpreterDirectory.exists() || interpreterExtrasDirectory.exists();
   }
 
