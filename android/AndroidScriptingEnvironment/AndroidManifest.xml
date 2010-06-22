@@ -94,18 +94,6 @@
       android:name=".activity.BluetoothDeviceList"
       android:configChanges="keyboardHidden|orientation" />
     <activity
-      android:name=".activity.InterpreterUninstaller"
-      android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-    <activity
-      android:name=".activity.UrlDownloader"
-      android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-    <activity
-      android:name=".activity.ZipExtractor"
-      android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-    <activity
       android:name=".activity.AseServiceLauncher"
       android:taskAffinity=""
       android:theme="@android:style/Theme.Translucent.NoTitleBar">

@@ -9,7 +9,8 @@
 	<classpathentry kind="lib" path="/Common/libs/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="/Common/libs/libGoogleAnalytics.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TextToSpeechFacade"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Interpreter"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SignalStrengthFacade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/InterpreterForAndroid"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
