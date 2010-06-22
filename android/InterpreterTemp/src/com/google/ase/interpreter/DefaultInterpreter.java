@@ -2,20 +2,20 @@ package com.google.ase.interpreter;
 
 import android.content.Context;
 
-import com.google.ase.language.Language;
+import com.google.ase.language.LanguageDescriptor;
 import com.google.ase.rpc.MethodDescriptor;
 
 import java.io.File;
 
-public abstract class DefaultInterpreter implements Interpreter {
+public abstract class DefaultInterpreter implements InterpreterExecutionDescriptor {
 
-  private final Language mLanguage;
+  private final LanguageDescriptor mLanguage;
 
-  public DefaultInterpreter(Language language) {
+  public DefaultInterpreter(LanguageDescriptor language) {
     mLanguage = language;
   }
 
-  public final Language getLanguage() {
+  public final LanguageDescriptor getLanguage() {
     return mLanguage;
   }
 
