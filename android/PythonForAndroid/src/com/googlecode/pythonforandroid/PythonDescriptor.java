@@ -16,12 +16,11 @@
 
 package com.googlecode.pythonforandroid;
 
-import com.google.ase.Constants;
-import com.google.ase.interpreter.InterpreterDescriptor;
+import com.google.ase.interpreter.AseHostedInterpreter;
 
 import java.io.File;
 
-public class PythonDescriptor implements InterpreterDescriptor {
+public class PythonDescriptor extends AseHostedInterpreter {
 
   private static final String PYTHON_BIN = "/data/data/com.google.ase/python/bin/python";
 
@@ -57,36 +56,11 @@ public class PythonDescriptor implements InterpreterDescriptor {
     return new File(PYTHON_BIN).getAbsolutePath();
   }
 
-  public String getInterpreterArchiveName() {
-    return String.format("%s_r%s.zip", getName(), getVersion());
-  }
 
-  public String getExtrasArchiveName() {
-    return String.format("%s_extras_r%s.zip", getName(), getVersion());
-  }
-
-  public String getScriptsArchiveName() {
-    return String.format("%s_scripts_r%s.zip", getName(), getVersion());
-  }
-
-  public String getInterpreterArchiveUrl() {
-    return Constants.BASE_INSTALL_URL + getInterpreterArchiveName();
-  }
-
-  public String getExtrasArchiveUrl() {
-    return Constants.BASE_INSTALL_URL + getExtrasArchiveName();
-  }
-
-  public String getScriptsArchiveUrl() {
-    return Constants.BASE_INSTALL_URL + getScriptsArchiveName();
-  }
-
-  @Override
   public String getEmptyCommand() {
     return "";
   }
 
-  @Override
   public String getExecuteParams() {
     return " ";
   }

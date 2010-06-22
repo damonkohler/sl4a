@@ -8,7 +8,7 @@
     android:icon="@drawable/icon"
     android:label="@string/app_name">
     <activity
-      android:name=".Main"
+      android:name=".PythonMain"
       android:label="@string/app_name">
       <intent-filter>
         <action
@@ -28,7 +28,7 @@
       android:configChanges="keyboardHidden|orientation"
       android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     <activity
-      android:name="com.google.ase.activity.InterpreterUninstaller"
+      android:name=".PythonUninstaller"
       android:configChanges="keyboardHidden|orientation"
       android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     <activity
