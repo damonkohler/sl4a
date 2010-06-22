@@ -24,14 +24,10 @@ import android.content.DialogInterface.OnClickListener;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,36 +35,24 @@ import android.widget.TextView;
 import com.google.ase.ActivityFlinger;
 import com.google.ase.Analytics;
 import com.google.ase.AseApplication;
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.dialog.Help;
-import com.google.ase.interpreter.Interpreter;
 import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 public class InterpreterManager extends ListActivity {
 
   private InterpreterManagerAdapter mAdapter;
   private InterpreterListObserver mObserver;
-  private List<Interpreter> mInterpreterList;
+  private List<InterpreterExecutionDescriptor> mInterpreterList;
   private InterpreterConfiguration mConfiguration;
 
-  private static enum RequestCode {
-    INSTALL_INTERPRETER, UNINSTALL_INTERPRETER
-  }
-
-  private HashMap<Integer, Interpreter> mInstallerMenuIds;
-
   private static enum MenuId {
-    HELP, ADD, DELETE, NETWORK, PREFERENCES;
+    HELP, NETWORK, PREFERENCES;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -100,8 +84,6 @@ public class InterpreterManager extends ListActivity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     menu.clear();
-    buildMenuIdMaps();
-    buildInstallLanguagesMenu(menu);
     menu.add(Menu.NONE, MenuId.NETWORK.getId(), Menu.NONE, "Start Server").setIcon(
         android.R.drawable.ic_menu_share);
     menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
@@ -109,35 +91,6 @@ public class InterpreterManager extends ListActivity {
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
     return super.onPrepareOptionsMenu(menu);
-  }
-
-  private void buildMenuIdMaps() {
-    mInstallerMenuIds = new HashMap<Integer, Interpreter>();
-    int i = MenuId.values().length + Menu.FIRST;
-    List<Interpreter> notInstalled = mConfiguration.getNotInstalledInterpreters();
-    for (Interpreter interpreter : notInstalled) {
-      mInstallerMenuIds.put(i, interpreter);
-      ++i;
-    }
-  }
-
-  private void buildInstallLanguagesMenu(Menu menu) {
-    if (mConfiguration.getNotInstalledInterpreters().size() > 0) {
-      SubMenu installMenu =
-          menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
-              android.R.drawable.ic_menu_add);
-      List<Entry<Integer, Interpreter>> interpreters = new ArrayList<Entry<Integer, Interpreter>>();
-      interpreters.addAll(mInstallerMenuIds.entrySet());
-      Collections.sort(interpreters, new Comparator<Entry<Integer, Interpreter>>() {
-        @Override
-        public int compare(Entry<Integer, Interpreter> arg0, Entry<Integer, Interpreter> arg1) {
-          return arg0.getValue().getNiceName().compareTo(arg1.getValue().getNiceName());
-        }
-      });
-      for (Entry<Integer, Interpreter> entry : interpreters) {
-        installMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
-      }
-    }
   }
 
   @Override
@@ -154,10 +107,6 @@ public class InterpreterManager extends ListActivity {
         }
       });
       dialog.show();
-    } else if (mInstallerMenuIds.containsKey(itemId)) {
-      // Install selected interpreter
-      Interpreter interpreter = mInstallerMenuIds.get(itemId);
-      installInterpreter(interpreter);
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, AsePreferences.class));
     }
@@ -171,13 +120,7 @@ public class InterpreterManager extends ListActivity {
     startService(intent);
   }
 
-  private void installInterpreter(Interpreter interpreter) {
-    Intent intent = new Intent(this, InterpreterInstaller.class);
-    intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
-    startActivityForResult(intent, RequestCode.INSTALL_INTERPRETER.ordinal());
-  }
-
-  private void launchTerminal(Interpreter interpreter) {
+  private void launchTerminal(InterpreterExecutionDescriptor interpreter) {
     Intent intent = new Intent(this, AseService.class);
     intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
     intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
@@ -186,70 +129,9 @@ public class InterpreterManager extends ListActivity {
 
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    Interpreter interpreter = (Interpreter) list.getItemAtPosition(position);
+    InterpreterExecutionDescriptor interpreter =
+        (InterpreterExecutionDescriptor) list.getItemAtPosition(position);
     launchTerminal(interpreter);
-  }
-
-  @Override
-  public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-    menu.add(Menu.NONE, MenuId.DELETE.getId(), Menu.NONE, "Uninstall");
-  }
-
-  @Override
-  public boolean onContextItemSelected(MenuItem item) {
-    AdapterView.AdapterContextMenuInfo info;
-    try {
-      info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-    } catch (ClassCastException e) {
-      AseLog.e("Bad MenuInfo", e);
-      return false;
-    }
-
-    Interpreter interpreter = (Interpreter) mAdapter.getItem(info.position);
-    if (interpreter == null) {
-      AseLog.v(this, "No interpreter selected.");
-      return false;
-    }
-
-    if (!interpreter.isUninstallable()) {
-      AseLog.v(this, "Cannot uninstall " + interpreter.getNiceName());
-      return true;
-    }
-
-    int itemId = item.getItemId();
-    if (itemId == MenuId.DELETE.getId()) {
-      Intent intent = new Intent(this, InterpreterUninstaller.class);
-      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
-      startActivityForResult(intent, RequestCode.UNINSTALL_INTERPRETER.ordinal());
-    }
-    return true;
-  }
-
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    RequestCode request = RequestCode.values()[requestCode];
-    if (resultCode == RESULT_OK) {
-      switch (request) {
-      case INSTALL_INTERPRETER:
-        break;
-      case UNINSTALL_INTERPRETER:
-        AseLog.v(this, "Uninstallation successful.");
-        break;
-      default:
-        break;
-      }
-    } else {
-      switch (request) {
-      case INSTALL_INTERPRETER:
-        break;
-      case UNINSTALL_INTERPRETER:
-        AseLog.v(this, "Uninstallation failed.");
-        break;
-      default:
-        break;
-      }
-    }
-    mAdapter.notifyDataSetInvalidated();
   }
 
   @Override
