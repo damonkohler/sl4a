@@ -25,7 +25,6 @@ import java.util.concurrent.CountDownLatch;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.AlertDialog.Builder;
@@ -219,7 +218,8 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     mShowLatch.countDown();
   }
 
-  private Builder addOnCancelListener(final AlertDialog.Builder builder, final AseServiceHelper activity) {
+  private Builder addOnCancelListener(final AlertDialog.Builder builder,
+      final AseServiceHelper activity) {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {

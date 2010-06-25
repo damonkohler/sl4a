@@ -21,7 +21,6 @@ import java.util.concurrent.CountDownLatch;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.AlertDialog.Builder;
@@ -95,7 +94,8 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
     mShowLatch.countDown();
   }
 
-  private Builder addOnCancelListener(final AlertDialog.Builder builder, final AseServiceHelper activity) {
+  private Builder addOnCancelListener(final AlertDialog.Builder builder,
+      final AseServiceHelper activity) {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {

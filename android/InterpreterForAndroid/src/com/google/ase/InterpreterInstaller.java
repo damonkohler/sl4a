@@ -16,6 +16,13 @@
 
 package com.google.ase;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ExecutionException;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -27,13 +34,6 @@ import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterConstants;
 import com.google.ase.interpreter.InterpreterDescriptor;
 import com.google.ase.interpreter.InterpreterUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Activity for installing interpreters.
@@ -58,32 +58,31 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   }
 
   // executed in the UI thread
-  private Runnable taskStarter = new Runnable() {
+  private final Runnable taskStarter = new Runnable() {
     @Override
     public void run() {
       RequestCode task = taskQueue.peek();
-      String in, out;
       try {
         AsyncTask<Void, Integer, Long> newTask = null;
         switch (task) {
-          case DOWNLOAD_INTERPRETER:
-            newTask = downloadInterpreter();
-            break;
-          case DOWNLOAD_INTERPRETER_EXTRAS:
-            newTask = downloadInterpreterExtras();
-            break;
-          case DOWNLOAD_SCRIPTS:
-            newTask = downloadScripts();
-            break;
-          case EXTRACT_INTERPRETER:
-            newTask = extractInterpreter();
-            break;
-          case EXTRACT_INTERPRETER_EXTRAS:
-            newTask = extractInterpreterExtras();
-            break;
-          case EXTRACT_SCRIPTS:
-            newTask = extractScripts();
-            break;
+        case DOWNLOAD_INTERPRETER:
+          newTask = downloadInterpreter();
+          break;
+        case DOWNLOAD_INTERPRETER_EXTRAS:
+          newTask = downloadInterpreterExtras();
+          break;
+        case DOWNLOAD_SCRIPTS:
+          newTask = downloadScripts();
+          break;
+        case EXTRACT_INTERPRETER:
+          newTask = extractInterpreter();
+          break;
+        case EXTRACT_INTERPRETER_EXTRAS:
+          newTask = extractInterpreterExtras();
+          break;
+        case EXTRACT_SCRIPTS:
+          newTask = extractScripts();
+          break;
         }
         taskHolder = newTask.execute();
       } catch (AseException e) {
@@ -97,7 +96,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   };
 
   // executed in the background
-  private Runnable taskWorker = new Runnable() {
+  private final Runnable taskWorker = new Runnable() {
     @Override
     public void run() {
       RequestCode request = taskQueue.remove();
@@ -127,24 +126,24 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
       }
       // something went wrong...
       switch (request) {
-        case DOWNLOAD_INTERPRETER:
-          AseLog.e("Downloading interpreter failed.");
-          break;
-        case DOWNLOAD_INTERPRETER_EXTRAS:
-          AseLog.e("Downloading interpreter extras failed.");
-          break;
-        case DOWNLOAD_SCRIPTS:
-          AseLog.e("Downloading scripts failed.");
-          break;
-        case EXTRACT_INTERPRETER:
-          AseLog.e("Extracting interpreter failed.");
-          break;
-        case EXTRACT_INTERPRETER_EXTRAS:
-          AseLog.e("Extracting interpreter extras failed.");
-          break;
-        case EXTRACT_SCRIPTS:
-          AseLog.e("Extracting scripts failed.");
-          break;
+      case DOWNLOAD_INTERPRETER:
+        AseLog.e("Downloading interpreter failed.");
+        break;
+      case DOWNLOAD_INTERPRETER_EXTRAS:
+        AseLog.e("Downloading interpreter extras failed.");
+        break;
+      case DOWNLOAD_SCRIPTS:
+        AseLog.e("Downloading scripts failed.");
+        break;
+      case EXTRACT_INTERPRETER:
+        AseLog.e("Extracting interpreter failed.");
+        break;
+      case EXTRACT_INTERPRETER_EXTRAS:
+        AseLog.e("Extracting interpreter extras failed.");
+        break;
+      case EXTRACT_SCRIPTS:
+        AseLog.e("Extracting scripts failed.");
+        break;
       }
       Looper.myLooper().quit();
     }

@@ -18,7 +18,6 @@ package com.google.ase.facade.ui;
 
 import java.util.concurrent.CountDownLatch;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 

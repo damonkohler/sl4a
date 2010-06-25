@@ -22,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -294,8 +293,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   @Rpc(description = "Displays a notification that will be canceled when the user clicks on it.")
-  public void notify(
-      @RpcParameter(name = "title", description = "title") String title,
+  public void notify(@RpcParameter(name = "title", description = "title") String title,
       @RpcParameter(name = "message") String message) {
     Notification notification =
         new Notification(mResources.getAseLogo48(), message, System.currentTimeMillis());
@@ -303,7 +301,7 @@ public class AndroidFacade implements RpcReceiver {
     PendingIntent contentIntent = PendingIntent.getService(mService, 0, new Intent(), 0);
     notification.setLatestEventInfo(mService, title, message, contentIntent);
     notification.flags = Notification.FLAG_AUTO_CANCEL;
-    
+
     // Get a unique notification id from the application.
     AseApplication application = (AseApplication) mService.getApplication();
     final int notificationId = application.getNewNotificationId();
@@ -312,7 +310,7 @@ public class AndroidFacade implements RpcReceiver {
 
   @Rpc(description = "Exits the activity or service running the script.")
   public void exit() {
-    mService.stopSelf();//XXX
+    mService.stopSelf();// XXX
   }
 
   @Rpc(description = "Returns the intent that launched the script.")
