@@ -1,6 +1,5 @@
 package com.google.ase.interpreter;
 
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,16 +17,15 @@ public abstract class InterpreterProvider extends ContentProvider {
 
   protected static final int BASE = 1;
   protected static final int ENVVARS = 2;
-  
+
   protected InterpreterDescriptor mDescriptor;
   protected Context mContext;
   protected UriMatcher matcher;
   private SharedPreferences mPreferences;
-  
 
   public static final String MIME = "vnd.android.cursor.item/vnd.googlecode.interpreter";
-  
-  protected InterpreterProvider(){
+
+  protected InterpreterProvider() {
     matcher = new UriMatcher(UriMatcher.NO_MATCH);
     String auth = this.getClass().getName().toLowerCase();
     matcher.addURI(auth, InterpreterConstants.PROVIDER_BASE, BASE);
@@ -60,14 +58,14 @@ public abstract class InterpreterProvider extends ContentProvider {
   @Override
   public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
       String sortOrder) {
-    
+
     if (!isInterpreterInstalled()) {
       return null;
     }
-    
+
     Map<String, ? extends Object> map;
-    
-    switch ( matcher.match(uri) ) {
+
+    switch (matcher.match(uri)) {
       case BASE:
         map = getSettings();
         break;
@@ -77,7 +75,7 @@ public abstract class InterpreterProvider extends ContentProvider {
       default:
         map = null;
     }
-    
+
     return buildCursorFromMap(map);
   }
 
@@ -87,32 +85,30 @@ public abstract class InterpreterProvider extends ContentProvider {
   }
 
   protected boolean isInterpreterInstalled() {
-    String packageName = getClass().getPackage().getName();
-    return mPreferences.getBoolean(packageName, false);
+    return mPreferences.getBoolean(InterpreterConstants.INSTALL_PREF, false);
   }
-  
-  
-  protected Cursor buildCursorFromMap(Map<String, ? extends Object> map){
-    if(map==null){
+
+  protected Cursor buildCursorFromMap(Map<String, ? extends Object> map) {
+    if (map == null) {
       return null;
     }
     MatrixCursor cursor = new MatrixCursor(map.keySet().toArray(new String[map.size()]));
     cursor.addRow(map.values());
     return cursor;
   }
-  
-  protected Map<String, Object> getSettings(){
+
+  protected Map<String, Object> getSettings() {
     Map<String, Object> values = new HashMap<String, Object>();
-    
+
     values.put(InterpreterStrings.NAME, mDescriptor.getName());
-    values.put(InterpreterStrings.NICE_NAME, mDescriptor.getNiceName());   
+    values.put(InterpreterStrings.NICE_NAME, mDescriptor.getNiceName());
     values.put(InterpreterStrings.EXTENSION, mDescriptor.getExtension());
-    values.put(InterpreterStrings.BIN, mDescriptor.getBinary());  
-    values.put(InterpreterStrings.EXECUTE, mDescriptor.getEmptyCommand());
-    values.put(InterpreterStrings.EMPTY, mDescriptor.getExecuteParams());
-    values.put(InterpreterStrings.PATH, InterpreterUtils.getInterpreterRoot(mContext, mDescriptor.getName())
-        .getAbsolutePath());
-    
+    values.put(InterpreterStrings.EMPTY_PARAMS, mDescriptor.getEmptyParams());
+    values.put(InterpreterStrings.EXECUTE_PARAMS, mDescriptor.getExecuteParams());
+    values.put(InterpreterStrings.EXECUTE, mDescriptor.getExecuteCommand());
+    values.put(InterpreterStrings.PATH, mDescriptor.getPath(mContext));
+    values.put(InterpreterStrings.BIN, mDescriptor.getBinary());
+
     return values;
   }
 

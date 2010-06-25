@@ -1,5 +1,7 @@
 package com.google.ase.interpreter;
 
+import android.content.Context;
+
 public interface InterpreterDescriptor {
 
   public String getName();
@@ -12,7 +14,11 @@ public interface InterpreterDescriptor {
 
   public String getBinary();
   
-  public String getEmptyCommand();
+  public String getPath(Context context);
+
+  public String getExecuteCommand();
+
+  public String getEmptyParams();
   
   public String getExecuteParams();
 

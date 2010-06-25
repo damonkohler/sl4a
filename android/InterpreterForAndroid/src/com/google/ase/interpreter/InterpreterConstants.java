@@ -4,11 +4,6 @@ import android.os.Environment;
 
 public interface InterpreterConstants {
 
-  public static final String EXTRA_INPUT_PATH = "com.google.ase.extra.INPUT_PATH";
-  public static final String EXTRA_OUTPUT_PATH = "com.google.ase.extra.OUTPUT_PATH";
-
-  public static final String EXTRA_URL = "com.google.ase.extra.URL";
-
   public static final String SDCARD_ROOT =
       Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
   public static final String DOWNLOAD_ROOT = SDCARD_ROOT;
@@ -32,5 +27,7 @@ public interface InterpreterConstants {
   // Interpreter content provider
   public static final String PROVIDER_BASE = "com.google.ase.base";
   public static final String PROVIDER_ENV = "com.google.ase.env";
+
+  public static final String INSTALL_PREF = "ASE.interpreter.installed";
 
 }
