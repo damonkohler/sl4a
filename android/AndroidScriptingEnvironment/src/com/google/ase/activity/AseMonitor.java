@@ -56,21 +56,25 @@ public class AseMonitor extends ListActivity {
   private List<ScriptProcess> mProcessList;
   private ScriptMonitorAdapter mAdapter;
   private volatile AseService mService;
+  private boolean isConnected = false;
 
   private final Handler mHandler = new Handler();
   private final Timer mTimer = new Timer();
-  private final ScriptListAdapter mUpdater = new ScriptListAdapter();
+  private ScriptListAdapter mUpdater;
 
   private ServiceConnection mConnection = new ServiceConnection() {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
       mService = ((AseService.LocalBinder) service).getService();
+      mUpdater = new ScriptListAdapter();
       mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
+      isConnected = true;
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
       mService = null;
+      isConnected = false;
     }
   };
 
@@ -113,16 +117,20 @@ public class AseMonitor extends ListActivity {
   @Override
   public void onPause() {
     super.onPause();
-    mTimer.cancel();
+    mUpdater.cancel();
+    mTimer.purge();
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    try {
-      mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
-    } catch (IllegalStateException e) {
-      AseLog.e(e.getMessage(), e);
+    if (isConnected) {
+      try {
+        mUpdater = new ScriptListAdapter();
+        mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
+      } catch (IllegalStateException e) {
+        AseLog.e(e.getMessage(), e);
+      }
     }
   }
 

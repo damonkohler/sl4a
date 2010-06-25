@@ -41,6 +41,7 @@ public class ScriptProcess {
   private final AndroidProxy mProxy;
   private final long mStartTime;
   private volatile State myState;
+  private final String mName;
 
   public ScriptProcess(AndroidProxy proxy, ScriptLauncher launcher) {
     myState = State.ALIVE;
@@ -48,6 +49,13 @@ public class ScriptProcess {
     mServerPort = proxy.getAddress().getPort();
     mLauncher = launcher;
     mProxy = proxy;
+    if (launcher == null) {
+      mName = "Server mode";
+    } else if (launcher.getScriptName() != null) {
+      mName = launcher.getScriptName();
+    } else {
+      mName = launcher.getInterpreterName();
+    }
   }
 
   public int getPort() {
@@ -67,10 +75,7 @@ public class ScriptProcess {
   }
 
   public String getScriptName() {
-    if (mLauncher == null) {
-      return "Server mode";
-    }
-    return mLauncher.getScriptName();
+    return mName;
   }
 
   public String getServerName() {

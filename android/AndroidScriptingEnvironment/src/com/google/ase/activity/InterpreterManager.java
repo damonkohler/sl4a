@@ -42,6 +42,7 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InterpreterManager extends ListActivity {
@@ -63,10 +64,9 @@ public class InterpreterManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.interpreter_manager);
     mConfiguration = ((AseApplication) this.getApplication()).getInterpreterConfiguration();
-    mInterpreterList = mConfiguration.getInstalledInterpreters();
+    mInterpreterList = new ArrayList<InterpreterExecutionDescriptor>();
     mAdapter = new InterpreterManagerAdapter();
     mObserver = new InterpreterListObserver();
-    mConfiguration.registerObserver(mObserver);
     mAdapter.registerDataSetObserver(mObserver);
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
@@ -76,9 +76,21 @@ public class InterpreterManager extends ListActivity {
   }
 
   @Override
+  public void onStart() {
+    super.onStart();
+    mConfiguration.registerObserver(mObserver);
+  }
+
+  @Override
   protected void onResume() {
     super.onResume();
     mAdapter.notifyDataSetInvalidated();
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    mConfiguration.unregisterObserver(mObserver);
   }
 
   @Override

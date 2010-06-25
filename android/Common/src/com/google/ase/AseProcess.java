@@ -16,14 +16,15 @@
 
 package com.google.ase;
 
+import android.os.Process;
+
 import java.io.BufferedReader;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-
-import android.os.Process;
+import java.io.Reader;
 
 public class AseProcess {
 
@@ -31,7 +32,7 @@ public class AseProcess {
   protected FileDescriptor mFd;
 
   protected PrintStream mOut;
-  protected BufferedReader mIn;
+  protected Reader mIn;
 
   public AseProcess() {
   }
@@ -53,7 +54,7 @@ public class AseProcess {
   }
 
   public BufferedReader getIn() {
-    return mIn;
+    return new BufferedReader(mIn, 8192);
   }
 
   public void error(Object obj) {
@@ -73,7 +74,7 @@ public class AseProcess {
     mFd = Exec.createSubprocess(binary, arg1, arg2, pid);
     mPid = pid[0];
     mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
-    mIn = new BufferedReader(new InputStreamReader(new FileInputStream(mFd)), 8192);
+    mIn = new InputStreamReader(new FileInputStream(mFd));
 
     new Thread(new Runnable() {
       public void run() {

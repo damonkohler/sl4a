@@ -12,15 +12,17 @@ import java.util.Map;
 
 public class Interpreter implements InterpreterExecutionDescriptor, InterpreterStrings {
 
-  private static String[] mapKeys = { NAME, NICE_NAME, EXTENSION, BIN, PATH, EMPTY, EXECUTE };
+  private static String[] mapKeys =
+      { NAME, NICE_NAME, EXTENSION, BIN, PATH, EXECUTE, EMPTY_PARAMS, EXECUTE_PARAMS };
 
   private final String mExtension;
   private final String mName;
   private final String mNiceName;
   private final String mPath;
-  private final String mBin;
-  private final String mEmptyCommand;
-  private final String mExecuteCommand;
+  private final String mBinary;
+  private final String mEmptyParams;
+  private final String mExecuteParams;
+  private final String mExecute;
   private final Map<String, String> mEnvvars;
 
   private final Language mLanguage;
@@ -37,10 +39,11 @@ public class Interpreter implements InterpreterExecutionDescriptor, InterpreterS
     mName = data.get(NAME);
     mNiceName = data.get(NICE_NAME);
     mExtension = data.get(EXTENSION);
-    mBin = data.get(BIN);
-    mPath = data.get(PATH);
-    mEmptyCommand = data.get(EMPTY);
-    mExecuteCommand = data.get(EXECUTE);
+    mBinary = data.get(BIN);
+    mPath = new File(data.get(PATH)).getAbsolutePath() + "/";
+    mEmptyParams = data.get(EMPTY_PARAMS);
+    mExecuteParams = data.get(EXECUTE_PARAMS);
+    mExecute = data.get(EXECUTE);
 
     mLanguage = SupportedLanguages.getLanguageByExtention(mExtension);
 
@@ -52,7 +55,7 @@ public class Interpreter implements InterpreterExecutionDescriptor, InterpreterS
   }
 
   public String getBinary() {
-    return mBin;
+    return mBinary;
   }
 
   public String getPath() {
@@ -84,7 +87,7 @@ public class Interpreter implements InterpreterExecutionDescriptor, InterpreterS
   }
 
   public boolean isInstalled(Context context) {
-    boolean pathCheck = mPath != null && new File(mPath).exists();
+    boolean pathCheck = mPath != null && new File(mPath, mBinary).exists();
     return pathCheck || InterpreterUtils.isInstalled(context, getName());
   }
 
@@ -107,8 +110,13 @@ public class Interpreter implements InterpreterExecutionDescriptor, InterpreterS
 
     @Override
     protected String getInterpreterCommand() {
-      String cmd = getBinary() + "%s";
-      return String.format(cmd, (mLaunchScript == null) ? mEmptyCommand : mExecuteCommand);
+      String action = null;
+      if(mLaunchScript == null){
+        action = mEmptyParams;
+      }else{
+        action = String.format(mExecuteParams, mLaunchScript);
+      }
+      return String.format(mExecute, mPath, mBinary, action);
     }
   }
 

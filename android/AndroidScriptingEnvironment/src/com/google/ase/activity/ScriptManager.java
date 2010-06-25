@@ -46,11 +46,12 @@ import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
 import com.google.ase.dialog.Help;
 import com.google.ase.dialog.UsageTrackingConfirmation;
-import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -90,8 +91,7 @@ public class ScriptManager extends ListActivity {
     mObserver = new ScriptListObserver();
     mAdapter.registerDataSetObserver(mObserver);
     mConfiguration = ((AseApplication) this.getApplication()).getInterpreterConfiguration();
-    mConfiguration.registerObserver(mObserver);
-    updateScriptsList();
+    mScriptList = new ArrayList<File>();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     UsageTrackingConfirmation.show(this);
@@ -107,6 +107,18 @@ public class ScriptManager extends ListActivity {
     } else {
       mScriptList = ScriptStorageAdapter.listExecutableScripts(this, mConfiguration);
     }
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    mConfiguration.unregisterObserver(mObserver);
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+    mConfiguration.registerObserver(mObserver);
   }
 
   @Override
