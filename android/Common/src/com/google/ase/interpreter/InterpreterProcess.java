@@ -16,13 +16,15 @@
 
 package com.google.ase.interpreter;
 
+import com.google.ase.AseLog;
+import com.google.ase.AseProcess;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.ase.AseLog;
-import com.google.ase.AseProcess;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -47,6 +49,7 @@ public abstract class InterpreterProcess extends AseProcess {
   public InterpreterProcess(String launchScript, int port) {
     mLaunchScript = launchScript;
     mEnvironment.put("AP_PORT", Integer.toString(port));
+    mLog = new StringBuffer();
   }
 
   public void start() {
@@ -81,13 +84,171 @@ public abstract class InterpreterProcess extends AseProcess {
   // Should normally be overridden. As is, just the shell will pop up.
   protected abstract String getInterpreterCommand(); 
 
-
-
   /**
    * Called before execution to allow interpreters to modify the environment map as necessary.
    */
 //Should normally be overridden. As is, the only environment variable will be the AP_PORT.
   protected abstract void buildEnvironment();
-    
+
+
+  @Override
+  public BufferedReader getIn() {
+    return new LoggingBufferedReader(mIn, 8192);
+  }
   
+  private final StringBuffer mLog;
+
+  private volatile int mLogLength = 0;
+
+
+  private class LoggingBufferedReader extends BufferedReader {
+    private boolean skipLF = false;
+
+    // TODO(Alexey): Use persistent storage
+    // replace with circular log, see ConnectBot
+    private int mmPos = 0;
+
+    public LoggingBufferedReader(Reader in) {
+      super(in);
+    }
+
+    public LoggingBufferedReader(Reader in, int size) {
+      super(in, size);
+    }
+
+    @Override
+    public int read() throws IOException {
+      if (mmPos == mLogLength) {
+        return read1();
+      } else {
+        int c = mLog.charAt(mmPos);
+        mmPos++;
+        return c;
+      }
+    }
+
+    private int read1() throws IOException {
+      int c;
+      synchronized (lock) {
+        // check again
+        if (mmPos < mLogLength) {
+          c = mLog.charAt(mmPos);
+        } else {
+          c = (char) super.read();
+          mLog.append(Character.valueOf((char) c));
+          mLogLength++;
+        }
+      }
+      mmPos++;
+      return c;
+    }
+
+    @Override
+    public int read(char cbuf[], int off, int len) throws IOException {
+      if (mmPos == mLogLength) {
+        return read1(cbuf, off, len);
+      } else {
+        int count = 0;
+        int end = Math.min(mLogLength, mmPos + len);
+        mLog.getChars(mmPos, end, cbuf, off);
+        count = end - mmPos;
+        len -= count;
+        off += count;
+        mmPos += count;
+        if (len > 0) {
+          int read = read1(cbuf, off, len);
+          if (read < 0) {
+            return read;
+          }
+          count += read;
+        }
+        return count;
+      }
+    }
+
+    private int read1(char cbuf[], int off, int len) throws IOException {
+      int count = 0;
+      synchronized (lock) {
+        if (mmPos < mLogLength) {
+          int end = Math.min(mLogLength, mmPos + len);
+          mLog.getChars(mmPos, end, cbuf, off);
+          count = end - mmPos;
+          len -= count;
+          off += count;
+          mmPos += count;
+        }
+        if (len > 0) {
+          int read = super.read(cbuf, off, len);
+          if (read < 0) {
+            return read;
+          }
+          mLog.append(cbuf, off, read);
+          mLogLength += read;
+          mmPos += read;
+          count += read;
+        }
+      }
+      return count;
+    }
+
+    @Override
+    public String readLine() throws IOException {
+      if (mmPos == mLogLength) {
+        return readLine1();
+      } else {
+        StringBuffer buffer = new StringBuffer();
+        while (mmPos < mLogLength) {
+          char nextChar = mLog.charAt(mmPos);
+          mmPos++;
+          if (skipLF) {
+            skipLF = false;
+            if (nextChar == '\n') {
+              continue;
+            }
+          }
+          buffer.append(nextChar);
+          if (nextChar == '\n') {
+            return buffer.toString();
+          }
+          if (nextChar == '\r') {
+            skipLF = true;
+            return buffer.toString();
+          }
+        }
+        buffer.append(readLine1());
+        return buffer.toString();
+      }
+    }
+
+    private String readLine1() throws IOException {
+      StringBuffer buffer = new StringBuffer();
+      synchronized (lock) {
+        while (mmPos < mLogLength) {
+          char nextChar = mLog.charAt(mmPos);
+          mmPos++;
+          if (skipLF) {
+            skipLF = false;
+            if (nextChar == '\n') {
+              continue;
+            }
+          }
+          buffer.append(nextChar);
+          if (nextChar == '\n') {
+            return buffer.toString();
+          }
+          if (nextChar == '\r') {
+            skipLF = true;
+            return buffer.toString();
+          }
+        }
+        String str = super.readLine();
+        if (skipLF && str.length() == 1 && str.charAt(0) == '\n') {
+          skipLF = false;
+          str = super.readLine();
+        }
+        return buffer.append(str).toString();
+      }
+    }
+  }
+
 }

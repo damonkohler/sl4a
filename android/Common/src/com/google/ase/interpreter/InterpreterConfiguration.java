@@ -127,6 +127,7 @@ public class InterpreterConfiguration {
             return;
           }
           mInterpreterSet.remove(interpreter);
+          mmDiscoveredInterpreters.remove(packageName);
           for (ConfigurationObserver observer : mObserverSet) {
             observer.onConfigurationChanged();
           }
@@ -145,6 +146,9 @@ public class InterpreterConfiguration {
       ProviderInfo provider = packInfo.providers[0];
       
       Map<String, String> interpreterMap = getMap(provider, InterpreterConstants.PROVIDER_BASE);
+      if (interpreterMap == null) {
+        return null; // Apparently, the interpreter is not installed yet.
+      }
       Map<String, String> environmentMap = getMap(provider, InterpreterConstants.PROVIDER_ENV);
 
       InterpreterExecutionDescriptor interpreter = null;
