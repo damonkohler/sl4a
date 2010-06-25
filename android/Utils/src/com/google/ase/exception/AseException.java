@@ -19,8 +19,16 @@ package com.google.ase.exception;
 @SuppressWarnings("serial")
 public class AseException extends Exception {
 
+  public AseException(Exception e) {
+    super(e);
+  }
+
   public AseException(String message) {
     super(message);
+  }
+
+  public AseException(String message, Exception e) {
+    super(message, e);
   }
 
 }
