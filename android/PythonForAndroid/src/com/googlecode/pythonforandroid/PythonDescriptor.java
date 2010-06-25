@@ -18,11 +18,9 @@ package com.googlecode.pythonforandroid;
 
 import com.google.ase.interpreter.AseHostedInterpreter;
 
-import java.io.File;
-
 public class PythonDescriptor extends AseHostedInterpreter {
 
-  private static final String PYTHON_BIN = "/data/data/com.google.ase/python/bin/python";
+  private static final String PYTHON_BIN = "bin/python";
 
   public String getExtension() {
     return ".py";
@@ -53,16 +51,15 @@ public class PythonDescriptor extends AseHostedInterpreter {
   }
 
   public String getBinary() {
-    return new File(PYTHON_BIN).getAbsolutePath();
+    return PYTHON_BIN;
   }
 
-
-  public String getEmptyCommand() {
+  public String getEmptyParams() {
     return "";
   }
 
   public String getExecuteParams() {
-    return " ";
+    return " %s";
   }
 
 }

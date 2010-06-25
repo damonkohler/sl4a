@@ -9,7 +9,7 @@
     android:label="@string/app_name">
     <activity
       android:name=".PythonMain"
-      android:label="@string/app_name">
+      android:label="@string/app_name" android:configChanges="keyboardHidden|orientation">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />
@@ -23,22 +23,6 @@
           android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    <activity
-      android:name=".PythonInstaller"
-      android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-    <activity
-      android:name=".PythonUninstaller"
-      android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-    <activity
-      android:name="com.google.ase.activity.UrlDownloader"
-      android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-    <activity
-      android:name="com.google.ase.activity.ZipExtractor"
-      android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     <provider
       android:authorities="com.googlecode.pythonforandroid.pythonprovider"
       android:name=".PythonProvider" />
