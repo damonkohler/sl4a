@@ -19,12 +19,12 @@ package com.google.ase.activity;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.google.ase.AseLog;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
+
+import com.google.ase.AseLog;
 
 /**
  * A utility class supplying helper methods for {@link Service} objects.
@@ -32,26 +32,30 @@ import android.content.Context;
  * @author Felix Arends (felix.arends@gmail.com)
  */
 public class ServiceUtils {
-  private ServiceUtils() { }
-  
+  private ServiceUtils() {
+  }
+
   /**
    * Marks the service as a foreground service. This uses reflection to figure out whether the new
    * APIs for marking a service as a foreground service are available. If not, it falls back to the
    * old {@link #setForeground(boolean)} call.
    * 
-   * @param service the service to put in foreground mode
-   * @param notificationId id of the notification to show
-   * @param notification the notification to show
+   * @param service
+   *          the service to put in foreground mode
+   * @param notificationId
+   *          id of the notification to show
+   * @param notification
+   *          the notification to show
    */
-  public static void setForeground(Service service, Integer notificationId, Notification notification) {
+  public static void setForeground(Service service, Integer notificationId,
+      Notification notification) {
     final Class<?>[] startForegroundSignature = new Class[] { int.class, Notification.class };
     Method startForeground = null;
     try {
       startForeground = service.getClass().getMethod("startForeground", startForegroundSignature);
 
       try {
-        startForeground.invoke(service, new Object[] { notificationId,
-          notification });
+        startForeground.invoke(service, new Object[] { notificationId, notification });
       } catch (IllegalArgumentException e) {
         // Should not happen!
         AseLog.e("Could not set TriggerService to foreground mode.", e);

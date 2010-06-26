@@ -25,7 +25,7 @@ package com.google.ase.activity;
  */
 public final class NotificationIdFactory {
   private static int mNextId = 1;
-  
+
   public static final NotificationIdFactory INSTANCE = new NotificationIdFactory();
 
   public synchronized int createId() {

@@ -16,13 +16,13 @@
 
 package com.google.ase.trigger;
 
-import com.google.ase.IntentBuilders;
-
 import android.app.AlarmManager;
 import android.app.Service;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+
+import com.google.ase.IntentBuilders;
 
 public abstract class RepeatingAlarmTrigger extends Trigger {
   private static final String WAKE_LOCK_TAG = "com.google.ase.trigger.RepeatingAlarmTrigger";
@@ -37,7 +37,7 @@ public abstract class RepeatingAlarmTrigger extends Trigger {
 
   /** Whether or not to wake up the device. */
   protected final boolean mWakeUp;
-  
+
   public RepeatingAlarmTrigger(String scriptName, long intervalMs, boolean wakeUp) {
     super(scriptName);
     mIntervalMs = intervalMs;

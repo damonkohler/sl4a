@@ -16,15 +16,15 @@
 
 package com.google.ase.interpreter;
 
-import com.google.ase.AseLog;
-import com.google.ase.AseProcess;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.google.ase.AseLog;
+import com.google.ase.AseProcess;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -82,24 +82,22 @@ public abstract class InterpreterProcess extends AseProcess {
    * Writes the command to the shell that starts the interpreter.
    */
   // Should normally be overridden. As is, just the shell will pop up.
-  protected abstract String getInterpreterCommand(); 
+  protected abstract String getInterpreterCommand();
 
   /**
    * Called before execution to allow interpreters to modify the environment map as necessary.
    */
-//Should normally be overridden. As is, the only environment variable will be the AP_PORT.
+  // Should normally be overridden. As is, the only environment variable will be the AP_PORT.
   protected abstract void buildEnvironment();
-
 
   @Override
   public BufferedReader getIn() {
     return new LoggingBufferedReader(mIn, 8192);
   }
-  
+
   private final StringBuffer mLog;
 
   private volatile int mLogLength = 0;
-
 
   private class LoggingBufferedReader extends BufferedReader {
     private boolean skipLF = false;

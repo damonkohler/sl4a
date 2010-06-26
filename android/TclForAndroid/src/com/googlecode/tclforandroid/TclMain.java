@@ -9,8 +9,6 @@ import com.google.ase.activity.Main;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterDescriptor;
 
-
-
 public class TclMain extends Main {
 
   @Override
@@ -30,5 +28,4 @@ public class TclMain extends Main {
     return new TclUninstaller(descriptor, context, listener);
   }
 
-  
 }

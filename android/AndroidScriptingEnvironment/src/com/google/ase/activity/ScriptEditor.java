@@ -16,6 +16,11 @@
 
 package com.google.ase.activity;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -43,11 +48,6 @@ import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
 import com.google.ase.dialog.Help;
 import com.google.ase.interpreter.InterpreterConfiguration;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A text editor for scripts.
@@ -126,7 +126,7 @@ public class ScriptEditor extends Activity {
     mContentText.setFilters(filters.toArray(oldFilters));
     mContentText.addTextChangedListener(new ContentTextWatcher());
 
-    mConfiguration = ((AseApplication) this.getApplication()).getInterpreterConfiguration();
+    mConfiguration = ((AseApplication) getApplication()).getInterpreterConfiguration();
 
     Analytics.trackActivity(this);
   }

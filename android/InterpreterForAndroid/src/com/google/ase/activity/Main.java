@@ -41,8 +41,9 @@ public abstract class Main extends Activity {
   protected abstract InterpreterInstaller getInterpreterInstaller(InterpreterDescriptor descriptor,
       Context context, AsyncTaskListener<Boolean> listener) throws AseException;
 
-  protected abstract InterpreterUninstaller getInterpreterUninstaller(InterpreterDescriptor descriptor,
-      Context context, AsyncTaskListener<Boolean> listener) throws AseException;
+  protected abstract InterpreterUninstaller getInterpreterUninstaller(
+      InterpreterDescriptor descriptor, Context context, AsyncTaskListener<Boolean> listener)
+      throws AseException;
 
   protected enum RunningTask {
     INSTALL, UNINSTALL
@@ -55,14 +56,14 @@ public abstract class Main extends Activity {
     public void onTaskFinished(Boolean result, String message) {
       if (result) {
         switch (CurrentTask) {
-          case INSTALL:
-            updatePreferences(true);
-            prepareUninstallButton();
-            break;
-          case UNINSTALL:
-            updatePreferences(false);
-            prepareInstallButton();
-            break;
+        case INSTALL:
+          updatePreferences(true);
+          prepareUninstallButton();
+          break;
+        case UNINSTALL:
+          updatePreferences(false);
+          prepareInstallButton();
+          break;
         }
       }
       AseLog.v(Main.this, message);

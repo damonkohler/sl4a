@@ -16,6 +16,10 @@
 
 package com.google.ase.activity;
 
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -39,10 +43,6 @@ import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptProcess;
 import com.google.ase.terminal.Terminal;
-
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * An activity that allows to monitor running scripts.
@@ -195,7 +195,7 @@ public class AseMonitor extends ListActivity {
       View itemView;
       if (convertView == null) {
         LayoutInflater inflater =
-            (LayoutInflater) AseMonitor.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         itemView = inflater.inflate(R.layout.script_monitor_list_item, parent, false);
       } else {
         itemView = convertView;

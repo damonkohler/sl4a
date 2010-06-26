@@ -16,6 +16,12 @@
 
 package com.google.ase.activity;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -49,12 +55,6 @@ import com.google.ase.dialog.UsageTrackingConfirmation;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * Manages creation, deletion, and execution of stored scripts.
@@ -90,7 +90,7 @@ public class ScriptManager extends ListActivity {
     mAdapter = new ScriptManagerAdapter();
     mObserver = new ScriptListObserver();
     mAdapter.registerDataSetObserver(mObserver);
-    mConfiguration = ((AseApplication) this.getApplication()).getInterpreterConfiguration();
+    mConfiguration = ((AseApplication) getApplication()).getInterpreterConfiguration();
     mScriptList = new ArrayList<File>();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());

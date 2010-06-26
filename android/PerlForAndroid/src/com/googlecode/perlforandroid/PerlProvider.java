@@ -1,9 +1,9 @@
 package com.googlecode.perlforandroid;
 
+import java.util.Map;
+
 import com.google.ase.interpreter.InterpreterDescriptor;
 import com.google.ase.interpreter.InterpreterProvider;
-
-import java.util.Map;
 
 public class PerlProvider extends InterpreterProvider {
 

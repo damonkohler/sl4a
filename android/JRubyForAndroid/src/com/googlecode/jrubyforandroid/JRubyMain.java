@@ -9,8 +9,6 @@ import com.google.ase.activity.Main;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterDescriptor;
 
-
-
 public class JRubyMain extends Main {
 
   @Override
@@ -29,5 +27,5 @@ public class JRubyMain extends Main {
       Context context, AsyncTaskListener<Boolean> listener) throws AseException {
     return new JRubyUninstaller(descriptor, context, listener);
   }
-  
+
 }

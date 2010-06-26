@@ -29,6 +29,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -210,7 +211,7 @@ class EmulatorView extends View implements OnGestureListener {
 
   /**
    * Sets the text size, which in turn sets the number of rows and columns
-   *
+   * 
    * @param fontSize
    *          the new font size, in pixels.
    */
@@ -267,7 +268,7 @@ class EmulatorView extends View implements OnGestureListener {
 
   /**
    * Accept a sequence of bytes (typically from the pseudo-tty) and process them.
-   *
+   * 
    * @param receiveBuffer
    *          a byte array containing bytes to be processed
    * @param base
@@ -283,7 +284,7 @@ class EmulatorView extends View implements OnGestureListener {
 
   /**
    * Page the terminal view (scroll it up or down by delta screenfulls.)
-   *
+   * 
    * @param delta
    *          the number of screens to scroll. Positive means scroll down, negative means scroll up.
    */
@@ -296,7 +297,7 @@ class EmulatorView extends View implements OnGestureListener {
 
   /**
    * Page the terminal view horizontally.
-   *
+   * 
    * @param deltaColumns
    *          the number of columns to scroll. Positive scrolls to the right.
    */
@@ -466,7 +467,7 @@ class EmulatorView extends View implements OnGestureListener {
     outAttrs.imeOptions |=
         EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_FLAG_NO_ENTER_ACTION
             | EditorInfo.IME_ACTION_NONE;
-    outAttrs.inputType = EditorInfo.TYPE_NULL;
+    outAttrs.inputType = InputType.TYPE_NULL;
     return new BaseInputConnection(this, false);
   }
 

@@ -114,7 +114,7 @@ public class AndroidFacade implements RpcReceiver {
         // TODO(damonkohler): Throwing an exception here (e.g. specifying a non-existent activity)
         // causes a force close. There needs to be a way to pass back an error condition from the
         // helper.
-        activity.startActivityForResult(intent, this.getTaskId());
+        activity.startActivityForResult(intent, getTaskId());
       }
     };
     mTaskQueue.offer(task);
@@ -356,8 +356,9 @@ public class AndroidFacade implements RpcReceiver {
     } catch (NameNotFoundException e) {
       pInfo = null;
     }
-    if (pInfo != null)
+    if (pInfo != null) {
       result = pInfo.versionCode;
+    }
     return result;
   }
 
@@ -377,8 +378,9 @@ public class AndroidFacade implements RpcReceiver {
     } catch (NameNotFoundException e) {
       pInfo = null;
     }
-    if (pInfo != null)
+    if (pInfo != null) {
       result = "" + pInfo.versionName;
+    }
     return result;
   }
 
@@ -392,8 +394,9 @@ public class AndroidFacade implements RpcReceiver {
   public boolean requiredVersion(@RpcParameter(name = "requiredVersion") final Integer version) {
     boolean result = false;
     int packageVersion = getPackageVersionCode("com.google.ase");
-    if (version > -1)
+    if (version > -1) {
       result = (packageVersion >= version);
+    }
     return result;
   }
 }

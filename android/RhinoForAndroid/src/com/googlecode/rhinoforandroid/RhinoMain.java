@@ -9,8 +9,6 @@ import com.google.ase.activity.Main;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterDescriptor;
 
-
-
 public class RhinoMain extends Main {
 
   @Override
@@ -30,5 +28,4 @@ public class RhinoMain extends Main {
     return new RhinoUninstaller(descriptor, context, listener);
   }
 
-  
 }

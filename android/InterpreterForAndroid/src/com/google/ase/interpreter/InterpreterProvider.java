@@ -1,5 +1,8 @@
 package com.google.ase.interpreter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,9 +12,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class InterpreterProvider extends ContentProvider {
 
@@ -66,14 +66,14 @@ public abstract class InterpreterProvider extends ContentProvider {
     Map<String, ? extends Object> map;
 
     switch (matcher.match(uri)) {
-      case BASE:
-        map = getSettings();
-        break;
-      case ENVVARS:
-        map = getEnvironmentSettings();
-        break;
-      default:
-        map = null;
+    case BASE:
+      map = getSettings();
+      break;
+    case ENVVARS:
+      map = getEnvironmentSettings();
+      break;
+    default:
+      map = null;
     }
 
     return buildCursorFromMap(map);

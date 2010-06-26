@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.provider.LiveFolders;
 
 import com.google.ase.IntentBuilders;
@@ -61,7 +62,7 @@ public class ScriptProvider extends ContentProvider {
   @Override
   public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
       String sortOrder) {
-    String[] columns = { LiveFolders._ID, LiveFolders.NAME, LiveFolders.INTENT };
+    String[] columns = { BaseColumns._ID, LiveFolders.NAME, LiveFolders.INTENT };
     MatrixCursor cursor = new MatrixCursor(columns);
     int index = 0;
     for (File script : ScriptStorageAdapter.listAllScripts()) {

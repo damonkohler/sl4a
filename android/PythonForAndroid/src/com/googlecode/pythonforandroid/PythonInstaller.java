@@ -1,5 +1,7 @@
 package com.googlecode.pythonforandroid;
 
+import java.io.File;
+
 import android.content.Context;
 
 import com.google.ase.AseLog;
@@ -8,8 +10,6 @@ import com.google.ase.InterpreterInstaller;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterConstants;
 import com.google.ase.interpreter.InterpreterDescriptor;
-
-import java.io.File;
 
 public class PythonInstaller extends InterpreterInstaller {
 

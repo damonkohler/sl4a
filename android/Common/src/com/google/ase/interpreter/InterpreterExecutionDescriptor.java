@@ -28,9 +28,9 @@ public interface InterpreterExecutionDescriptor {
   public String getContentTemplate();
 
   public String getRpcText(String content, MethodDescriptor rpc, String[] values);
-  
+
   public String getPath();
-  
+
   public InterpreterProcess buildProcess(String launchScript, int port);
 
   public String getBinary();
@@ -44,5 +44,5 @@ public interface InterpreterExecutionDescriptor {
   public boolean isInstalled(Context context);
 
   public boolean isUninstallable();
-  
+
 }

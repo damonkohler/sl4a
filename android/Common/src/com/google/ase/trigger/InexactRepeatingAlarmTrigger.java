@@ -32,8 +32,7 @@ import com.google.ase.IntentBuilders;
 public class InexactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
   private static final long serialVersionUID = -9193318334645990578L;
 
-  public InexactRepeatingAlarmTrigger(String scriptName, long interval,
-      boolean wakeUp) {
+  public InexactRepeatingAlarmTrigger(String scriptName, long interval, boolean wakeUp) {
     super(scriptName, interval, wakeUp);
   }
 

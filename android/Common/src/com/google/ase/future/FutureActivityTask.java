@@ -16,11 +16,11 @@
 
 package com.google.ase.future;
 
-import com.google.ase.activity.AseServiceHelper;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.Activity;
+
+import com.google.ase.activity.AseServiceHelper;
 
 /**
  * Encapsulates an {@link Activity} and a {@link FutureResult}.

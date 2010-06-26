@@ -139,8 +139,9 @@ public class SensorManagerFacade implements RpcReceiver {
             mmR = new float[MATRIX_SIZE];
           }
           if (SensorManager.getRotationMatrix(mmR, null, mmGravityValues, mmGeomagneticValues)) {
-            if (mmOrientation == null)
+            if (mmOrientation == null) {
               mmOrientation = new float[3];
+            }
             SensorManager.getOrientation(mmR, mmOrientation);
             mmAzimuth.add(mmOrientation[0]);
             mmPitch.add(mmOrientation[1]);

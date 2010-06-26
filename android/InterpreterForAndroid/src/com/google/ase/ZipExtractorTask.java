@@ -16,14 +16,6 @@
 
 package com.google.ase;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.os.AsyncTask;
-
-import com.google.ase.exception.AseException;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,6 +23,14 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.os.AsyncTask;
+
+import com.google.ase.exception.AseException;
 
 /**
  * Activity for extracting ZIP files.
@@ -51,7 +51,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
     private ProgressReportingOutputStream(File f) throws FileNotFoundException {
       super(f);
     }
-    
+
     @Override
     public void write(byte[] buffer, int offset, int count) throws IOException {
       super.write(buffer, offset, count);
@@ -165,8 +165,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
           destination.getParentFile().mkdirs();
         }
         ProgressReportingOutputStream outStream = new ProgressReportingOutputStream(destination);
-        extractedSize +=
-            IoUtils.copy(zip.getInputStream(entry), outStream);
+        extractedSize += IoUtils.copy(zip.getInputStream(entry), outStream);
         outStream.close();
       }
     } catch (Exception e) {

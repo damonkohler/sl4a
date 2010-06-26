@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.Contacts.People;
+import android.provider.Contacts.PhonesColumns;
 
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
@@ -70,7 +71,7 @@ public class ContactsFacade implements RpcReceiver {
     Cursor c = mService.getContentResolver().query(phoneData, null, null, null, null);
     String result = "";
     if (c.moveToFirst()) {
-      result = c.getString(c.getColumnIndexOrThrow(People.NUMBER));
+      result = c.getString(c.getColumnIndexOrThrow(PhonesColumns.NUMBER));
     }
     c.close();
     return result;

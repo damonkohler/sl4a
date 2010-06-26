@@ -1,8 +1,8 @@
 package com.google.ase.interpreter;
 
-import android.content.Context;
-
 import java.io.File;
+
+import android.content.Context;
 
 public abstract class AseHostedInterpreter implements InterpreterDescriptor {
 

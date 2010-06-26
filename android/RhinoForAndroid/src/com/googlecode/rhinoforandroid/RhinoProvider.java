@@ -1,11 +1,11 @@
 package com.googlecode.rhinoforandroid;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.ase.interpreter.InterpreterConstants;
 import com.google.ase.interpreter.InterpreterDescriptor;
 import com.google.ase.interpreter.InterpreterProvider;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class RhinoProvider extends InterpreterProvider {
 

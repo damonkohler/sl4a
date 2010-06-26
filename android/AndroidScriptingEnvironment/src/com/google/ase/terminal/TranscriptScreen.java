@@ -77,7 +77,7 @@ public class TranscriptScreen implements Screen {
 
   /**
    * Create a transcript screen.
-   *
+   * 
    * @param columns
    *          the width of the screen in characters.
    * @param totalRows
@@ -111,7 +111,7 @@ public class TranscriptScreen implements Screen {
    * the screen being 0..mScreenRows-1 Internal coordinate system: 0..mScreenRows-1 rows of mData
    * are the visible rows. mScreenRows..mActiveRows - 1 are the transcript, stored as a circular
    * buffer.
-   *
+   * 
    * @param row
    *          a row in the external coordinate system.
    * @return The row corresponding to the input argument in the private coordinate system.
@@ -140,7 +140,7 @@ public class TranscriptScreen implements Screen {
 
   /**
    * Store byte b into the screen at location (x, y)
-   *
+   * 
    * @param x
    *          X coordinate (also known as column)
    * @param y
@@ -163,7 +163,7 @@ public class TranscriptScreen implements Screen {
   /**
    * Scroll the screen down one line. To scroll the whole screen of a 24 line screen, the arguments
    * would be (0, 24).
-   *
+   * 
    * @param topMargin
    *          First line that is scrolled.
    * @param bottomMargin
@@ -245,7 +245,7 @@ public class TranscriptScreen implements Screen {
    * Block copy characters from one position in the screen to another. The two positions can
    * overlap. All characters of the source and destination must be within the bounds of the screen,
    * or else an InvalidParemeterException will be thrown.
-   *
+   * 
    * @param sx
    *          source X coordinate
    * @param sy
@@ -286,7 +286,7 @@ public class TranscriptScreen implements Screen {
    * Block set characters. All characters must be within the bounds of the screen, or else and
    * InvalidParemeterException will be thrown. Typically this is called with a "val" argument of 32
    * to clear a block of characters.
-   *
+   * 
    * @param sx
    *          source X
    * @param sy
@@ -314,7 +314,7 @@ public class TranscriptScreen implements Screen {
 
   /**
    * Draw a row of text. Out-of-bounds rows are blank, not errors.
-   *
+   * 
    * @param row
    *          The row of text to draw.
    * @param canvas
@@ -372,7 +372,7 @@ public class TranscriptScreen implements Screen {
 
   /**
    * Get the count of active rows.
-   *
+   * 
    * @return the count of active rows.
    */
   public int getActiveRows() {
@@ -381,7 +381,7 @@ public class TranscriptScreen implements Screen {
 
   /**
    * Get the count of active transcript rows.
-   *
+   * 
    * @return the count of active transcript rows.
    */
   public int getActiveTranscriptRows() {

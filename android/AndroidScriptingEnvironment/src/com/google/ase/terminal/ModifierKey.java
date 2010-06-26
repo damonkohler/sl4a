@@ -36,49 +36,49 @@ class ModifierKey {
 
   public void onPress() {
     switch (mState) {
-      case PRESSED:
-        // This is a repeat before use.
-        break;
-      case RELEASED:
-        mState = LOCKED;
-        break;
-      case USED:
-        // This is a repeat after use.
-        break;
-      case LOCKED:
-        mState = UNPRESSED;
-        break;
-      default:
-        mState = PRESSED;
-        break;
+    case PRESSED:
+      // This is a repeat before use.
+      break;
+    case RELEASED:
+      mState = LOCKED;
+      break;
+    case USED:
+      // This is a repeat after use.
+      break;
+    case LOCKED:
+      mState = UNPRESSED;
+      break;
+    default:
+      mState = PRESSED;
+      break;
     }
   }
 
   public void onRelease() {
     switch (mState) {
-      case USED:
-        mState = UNPRESSED;
-        break;
-      case PRESSED:
-        mState = RELEASED;
-        break;
-      default:
-        // Leave state alone.
-        break;
+    case USED:
+      mState = UNPRESSED;
+      break;
+    case PRESSED:
+      mState = RELEASED;
+      break;
+    default:
+      // Leave state alone.
+      break;
     }
   }
 
   public void adjustAfterKeypress() {
     switch (mState) {
-      case PRESSED:
-        mState = USED;
-        break;
-      case RELEASED:
-        mState = UNPRESSED;
-        break;
-      default:
-        // Leave state alone.
-        break;
+    case PRESSED:
+      mState = USED;
+      break;
+    case RELEASED:
+      mState = UNPRESSED;
+      break;
+    default:
+      // Leave state alone.
+      break;
     }
   }
 

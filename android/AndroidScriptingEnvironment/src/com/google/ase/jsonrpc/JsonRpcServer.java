@@ -16,14 +16,6 @@
 
 package com.google.ase.jsonrpc;
 
-import com.google.ase.AseLog;
-import com.google.ase.rpc.MethodDescriptor;
-import com.google.ase.rpc.RpcError;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,6 +34,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.google.ase.AseLog;
+import com.google.ase.rpc.MethodDescriptor;
+import com.google.ase.rpc.RpcError;
 
 /**
  * A JSON RPC server that forwards RPC calls to a specified receiver object.

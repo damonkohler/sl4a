@@ -1,5 +1,9 @@
 package com.google.ase;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,10 +16,6 @@ import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterConstants;
 import com.google.ase.interpreter.InterpreterDescriptor;
 import com.google.ase.interpreter.InterpreterUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class InterpreterUninstaller extends AsyncTask<Void, Void, Boolean> {
 

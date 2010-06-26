@@ -110,8 +110,8 @@ public class ActivityFlinger {
     private final Class<?> mActivityClass;
 
     private StartActivityRunnable(Context context, Class<?> activity) {
-      this.mContext = context;
-      this.mActivityClass = activity;
+      mContext = context;
+      mActivityClass = activity;
     }
 
     @Override

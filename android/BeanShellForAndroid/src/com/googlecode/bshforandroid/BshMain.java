@@ -9,8 +9,6 @@ import com.google.ase.activity.Main;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterDescriptor;
 
-
-
 public class BshMain extends Main {
 
   @Override
@@ -20,7 +18,7 @@ public class BshMain extends Main {
 
   @Override
   protected InterpreterInstaller getInterpreterInstaller(InterpreterDescriptor descriptor,
-      Context context, AsyncTaskListener<Boolean> listener) throws AseException{
+      Context context, AsyncTaskListener<Boolean> listener) throws AseException {
     return new BshInstaller(descriptor, context, listener);
   }
 
@@ -30,5 +28,4 @@ public class BshMain extends Main {
     return new BshUninstaller(descriptor, context, listener);
   }
 
-  
 }

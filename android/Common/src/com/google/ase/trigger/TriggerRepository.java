@@ -70,7 +70,7 @@ public class TriggerRepository {
   private final SharedPreferences mPreferences;
 
   private List<Trigger> mTriggers;
-  
+
   private Context mContext;
 
   /** Interface for filters over triggers */

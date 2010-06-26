@@ -47,7 +47,7 @@ public class PythonLanguage extends Language {
   protected String getTrue() {
     return "True";
   }
-  
+
   @Override
   protected String getFalse() {
     return "False";

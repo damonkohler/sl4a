@@ -16,6 +16,12 @@
 
 package com.google.ase.activity;
 
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -39,13 +45,6 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.terminal.Terminal;
 import com.google.ase.trigger.Trigger;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * A service that allows scripts and the RPC server to run in the background.
  * 
@@ -61,7 +60,7 @@ public class AseService extends Service {
   private volatile int modCount = 0;
 
   public class LocalBinder extends Binder {
-   public AseService getService() {
+    public AseService getService() {
       return AseService.this;
     }
   }
@@ -119,12 +118,12 @@ public class AseService extends Service {
 
     AndroidProxy serverProxy = null;
     ScriptLauncher launcher = null;
-        
+
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
       serverProxy = launchServer(intent);
     } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)
         || intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
-      
+
       serverProxy = launchServer(intent);
       try {
         launcher = launchInterpreter(intent, serverProxy.getAddress());
@@ -134,11 +133,11 @@ public class AseService extends Service {
         serverProxy = null;
         return;
       }
-      
+
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
         launchTerminal(intent, serverProxy.getAddress());
       }
-      
+
       ScriptProcess process = new ScriptProcess(serverProxy, launcher);
       addProcess(process);
     }
@@ -157,7 +156,8 @@ public class AseService extends Service {
 
   private ScriptLauncher launchInterpreter(Intent intent, InetSocketAddress address)
       throws AseException {
-    InterpreterConfiguration config = ((AseApplication)this.getApplication()).getInterpreterConfiguration();
+    InterpreterConfiguration config =
+        ((AseApplication) getApplication()).getInterpreterConfiguration();
     ScriptLauncher launcher = new ScriptLauncher(intent, address, config);
     launcher.launch();
     return launcher;
@@ -212,8 +212,8 @@ public class AseService extends Service {
     result.addAll(mProcessMap.values());
     return result;
   }
-  
-  public ScriptProcess getScriptProcess(int processPort){
+
+  public ScriptProcess getScriptProcess(int processPort) {
     return mProcessMap.get(processPort);
   }
 
@@ -231,7 +231,8 @@ public class AseService extends Service {
       int numProcesses = mProcessMap.size();
       message.append(getText(R.string.script_number_message));
       message.append(numProcesses);
-      mNotification.contentView.setTextViewText(R.id.notification_action, getText(R.string.notification_action_message));
+      mNotification.contentView.setTextViewText(R.id.notification_action,
+          getText(R.string.notification_action_message));
       notificationIntent.setAction(Constants.ACTION_SHOW_RUNNING_SCRIPTS);
     }
     mNotification.contentView.setTextViewText(R.id.notification_message, message);

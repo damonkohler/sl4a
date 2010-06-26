@@ -98,8 +98,10 @@ public class ApiPrompt extends Activity {
     public View getView(int position, View convertView, ViewGroup parent) {
       View item;
       if (convertView == null) {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        item = inflater.inflate(R.layout.api_prompt_item, parent, false /* do not attach to root */);
+        LayoutInflater inflater =
+            (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        item =
+            inflater.inflate(R.layout.api_prompt_item, parent, false /* do not attach to root */);
       } else {
         item = convertView;
       }

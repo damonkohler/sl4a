@@ -28,10 +28,10 @@ import com.google.ase.rpc.ParameterDescriptor;
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 public abstract class Language {
-  
-  private final static Map<Character, String> AUTO_CLOSE_MAP = buildAutoCloseMap(
-      '[', "[]", '{', "{}", '(', "()", '\'', "''", '"', "\"\"");
-  
+
+  private final static Map<Character, String> AUTO_CLOSE_MAP =
+      buildAutoCloseMap('[', "[]", '{', "{}", '(', "()", '\'', "''", '"', "\"\"");
+
   /** Returns the initial template for newly created script. */
   public String getContentTemplate() {
     StringBuilder content = new StringBuilder(getImportStatement());
@@ -41,7 +41,7 @@ public abstract class Language {
     content.append(getRpcReceiverDeclaration(getDefaultRpcReceiver()));
     return content.toString();
   }
-  
+
   /** Returns the Android package import statement. */
   protected String getImportStatement() {
     return "";
@@ -56,39 +56,39 @@ public abstract class Language {
   protected String getDefaultRpcReceiver() {
     return "droid";
   }
-  
+
   /**
-   * Returns the string containing opening and closing tokens if the input is an
-   * opening token. Returns {@code null} otherwise.
+   * Returns the string containing opening and closing tokens if the input is an opening token.
+   * Returns {@code null} otherwise.
    */
   public String autoClose(char token) {
     return AUTO_CLOSE_MAP.get(token);
   }
 
   /** Returns the RPC call text with given parameter values. */
-  public final String getRpcText(String content, MethodDescriptor rpc,
-      String[] values) {
-    return getMethodCallText(getRpcReceiverName(content), rpc.getName(),
-        rpc.getParameterValues(values));
+  public final String getRpcText(String content, MethodDescriptor rpc, String[] values) {
+    return getMethodCallText(getRpcReceiverName(content), rpc.getName(), rpc
+        .getParameterValues(values));
   }
 
   /** Returns the RPC receiver found in the given script. */
   protected String getRpcReceiverName(String content) {
     return getDefaultRpcReceiver();
   }
-  
-  /** Returns the method call text in the language.*/
+
+  /** Returns the method call text in the language. */
   protected String getMethodCallText(String receiver, String method,
       ParameterDescriptor[] parameters) {
-    StringBuilder result = new StringBuilder().append(getApplyReceiverText(receiver))
-        .append(getApplyOperatorText()).append(method).append(getLeftParametersText());
+    StringBuilder result =
+        new StringBuilder().append(getApplyReceiverText(receiver)).append(getApplyOperatorText())
+            .append(method).append(getLeftParametersText());
     String separator = "";
     for (ParameterDescriptor parameter : parameters) {
       result.append(separator).append(getValueText(parameter));
       separator = getParameterSeparator();
     }
     result.append(getRightParametersText());
-    
+
     return result.toString();
   }
 
@@ -116,7 +116,7 @@ public abstract class Language {
   protected String getParameterSeparator() {
     return ", ";
   }
-  
+
   /** Returns the text of the quotation. */
   protected String getQuote() {
     return "\"";
@@ -149,16 +149,16 @@ public abstract class Language {
       return parameter.getValue();
     }
   }
-  
+
   /** Returns the null value suitable for code generation. */
   private String getNullValueText() {
-    return getNull(); 
+    return getNull();
   }
 
   /** Returns the string parameter value suitable for code generation. */
   protected String getStringValueText(String value) {
     // TODO(igorkarp): do not quote expressions once they could be detected.
-    return getQuote() + value + getQuote(); 
+    return getQuote() + value + getQuote();
   }
 
   /** Returns the boolean parameter value suitable for code generation. */

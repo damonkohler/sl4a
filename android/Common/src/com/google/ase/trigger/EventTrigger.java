@@ -25,9 +25,9 @@ import com.google.ase.condition.Event;
 import com.google.ase.condition.EventFactory;
 
 /**
- * A {@link EventTrigger} object combines a trigger with a condition. When the condition fires,
- * the trigger is invoked. The {@link EventTrigger} object takes care of proper serialization of
- * the condition configuration.
+ * A {@link EventTrigger} object combines a trigger with a condition. When the condition fires, the
+ * trigger is invoked. The {@link EventTrigger} object takes care of proper serialization of the
+ * condition configuration.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
  */

@@ -16,15 +16,15 @@
 
 package com.google.ase;
 
+import java.io.File;
+import java.net.InetSocketAddress;
+
 import android.content.Intent;
 
 import com.google.ase.exception.AseException;
-import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterProcess;
-
-import java.io.File;
-import java.net.InetSocketAddress;
 
 public class ScriptLauncher {
 
@@ -80,11 +80,11 @@ public class ScriptLauncher {
   public InterpreterProcess getProcess() {
     return mProcess;
   }
-  
-  public int getPid(){
+
+  public int getPid() {
     return mProcess.getPid();
   }
-  
+
   public int getProxyPort() {
     return mAddress.getPort();
   }

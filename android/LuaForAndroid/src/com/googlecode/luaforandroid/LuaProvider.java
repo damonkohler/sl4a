@@ -1,9 +1,9 @@
 package com.googlecode.luaforandroid;
 
+import java.util.Map;
+
 import com.google.ase.interpreter.InterpreterDescriptor;
 import com.google.ase.interpreter.InterpreterProvider;
-
-import java.util.Map;
 
 public class LuaProvider extends InterpreterProvider {
 

@@ -12,7 +12,7 @@ import com.google.ase.rpc.Rpc;
 
 /**
  * Exposes SignalStrength functionality.
- *
+ * 
  * @author Joerg Zieren (joerg.zieren@gmail.com)
  */
 public class SignalStrengthFacade implements RpcReceiver {

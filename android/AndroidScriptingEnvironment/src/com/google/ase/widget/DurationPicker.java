@@ -113,7 +113,7 @@ public class DurationPicker extends FrameLayout {
    * Set the current hour.
    */
   public void setCurrentDay(Integer currentDay) {
-    this.mCurrentDay = currentDay;
+    mCurrentDay = currentDay;
     updateDayDisplay();
   }
 

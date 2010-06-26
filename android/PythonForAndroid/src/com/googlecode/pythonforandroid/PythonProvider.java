@@ -1,15 +1,15 @@
 package com.googlecode.pythonforandroid;
 
-import com.google.ase.interpreter.InterpreterConstants;
-import com.google.ase.interpreter.InterpreterDescriptor;
-import com.google.ase.interpreter.InterpreterProvider;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.ase.interpreter.InterpreterConstants;
+import com.google.ase.interpreter.InterpreterDescriptor;
+import com.google.ase.interpreter.InterpreterProvider;
+
 public class PythonProvider extends InterpreterProvider {
-  
+
   private static final String ENV_HOME = "PYTHONHOME";
   private static final String ENV_PATH = "PYTHONPATH";
   private static final String ENV_TEMP = "TEMP";
@@ -18,7 +18,7 @@ public class PythonProvider extends InterpreterProvider {
   protected InterpreterDescriptor getDescriptor() {
     return new PythonDescriptor();
   }
-  
+
   private String getHome() {
     File parent = mContext.getFilesDir().getParentFile();
     File file = new File(parent, mDescriptor.getName());

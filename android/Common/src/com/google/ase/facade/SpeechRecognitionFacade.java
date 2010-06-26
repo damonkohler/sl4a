@@ -40,7 +40,7 @@ public class SpeechRecognitionFacade implements RpcReceiver {
    *          a helper object that launches activities in a blocking manner
    */
   public SpeechRecognitionFacade(final AndroidFacade facade) {
-    this.mAndroidFacade = facade;
+    mAndroidFacade = facade;
   }
 
   @Rpc(description = "Recognizes user's speech and returns the most likely result.", returns = "An empty string in case the speech cannot be recongnized.")

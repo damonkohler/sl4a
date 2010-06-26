@@ -21,11 +21,11 @@ import com.google.ase.trigger.EventListener;
 /**
  * This interace describes the capability of a "condition". A {@link Event} object observes a
  * particular condition (such as whether the ringer mode was changed to silent) and invokes
- * {@link EventListener} callbacks when the truth value of the condition changes. A
- * "BeginListener" is a listener that is invoked when the condition starts to hold (e.g. ringer mode
- * change to silent) and an "EndListener" is a listener that is invoked when the condition ceases to
- * hold (e.g. ringer mode leaves silent setting). When the notion of beginning and ending do not
- * make sense, the BeginListener notifies the listeners that the event has happened.
+ * {@link EventListener} callbacks when the truth value of the condition changes. A "BeginListener"
+ * is a listener that is invoked when the condition starts to hold (e.g. ringer mode change to
+ * silent) and an "EndListener" is a listener that is invoked when the condition ceases to hold
+ * (e.g. ringer mode leaves silent setting). When the notion of beginning and ending do not make
+ * sense, the BeginListener notifies the listeners that the event has happened.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Damon Kohler (damonkohler@gmail.com)

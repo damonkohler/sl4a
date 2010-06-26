@@ -25,16 +25,13 @@ public class RhinoDescriptor extends AseHostedInterpreter {
 
   private final static String RHINO_BIN = "rhino1_7R2-dex.jar";
 
-
   public String getExtension() {
     return ".js";
   }
 
-
   public String getName() {
     return "rhino";
   }
-
 
   public String getNiceName() {
     return "Rhino 1.7R2";

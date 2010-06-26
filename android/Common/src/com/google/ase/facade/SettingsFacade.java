@@ -16,6 +16,9 @@
 
 package com.google.ase.facade;
 
+import java.lang.reflect.Method;
+import java.util.Queue;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -33,9 +36,6 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
-
-import java.lang.reflect.Method;
-import java.util.Queue;
 
 /**
  * Exposes phone settings functionality.
@@ -183,7 +183,7 @@ public class SettingsFacade implements RpcReceiver {
         activity.taskDone(getTaskId());
       }
     };
-    
+
     Queue<FutureActivityTask> taskQueue =
         ((AseApplication) mService.getApplication()).getTaskQueue();
     taskQueue.offer(task);
@@ -194,7 +194,7 @@ public class SettingsFacade implements RpcReceiver {
 
     return oldValue;
   }
-  
+
   @Rpc(description = "Checks if the screen is on or off (requires API level 7).", returns = "True if the screen is currently on.")
   public Boolean checkScreenOn() throws Exception {
     Class<?> powerManagerClass = mPower.getClass();
@@ -208,7 +208,7 @@ public class SettingsFacade implements RpcReceiver {
     }
     return result;
   }
-  
+
   @Override
   public void shutdown() {
     // Nothing to do yet.

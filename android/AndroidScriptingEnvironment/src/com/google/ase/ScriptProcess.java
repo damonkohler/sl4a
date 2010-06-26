@@ -61,7 +61,7 @@ public class ScriptProcess {
   public int getPort() {
     return mServerPort;
   }
-  
+
   public int getPID() {
     return mLauncher.getPid();
   }
@@ -69,8 +69,8 @@ public class ScriptProcess {
   public long getStartTime() {
     return mStartTime;
   }
-  
-  public ScriptLauncher getLauncher(){
+
+  public ScriptLauncher getLauncher() {
     return mLauncher;
   }
 
@@ -124,8 +124,7 @@ public class ScriptProcess {
     int seconds = (int) (ms % 60000) / 1000;
     if (days != 0) {
       buffer.append(String.format("%02d:%02d:", days, hours));
-    }
-    else if (hours != 0) {
+    } else if (hours != 0) {
       buffer.append(String.format("%02d:", hours));
     }
     buffer.append(String.format("%02d:%02d", minutes, seconds));

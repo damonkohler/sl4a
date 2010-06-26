@@ -9,8 +9,6 @@ import com.google.ase.activity.Main;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterDescriptor;
 
-
-
 public class PythonMain extends Main {
 
   @Override
@@ -29,6 +27,4 @@ public class PythonMain extends Main {
       Context context, AsyncTaskListener<Boolean> listener) throws AseException {
     return new PythonUninstaller(descriptor, context, listener);
   }
-
-  
 }

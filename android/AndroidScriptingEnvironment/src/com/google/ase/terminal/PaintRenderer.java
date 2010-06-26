@@ -82,4 +82,3 @@ class PaintRenderer extends BaseTextRenderer {
 
   private static final char[] EXAMPLE_CHAR = { 'X' };
 }
-

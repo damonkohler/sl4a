@@ -16,6 +16,9 @@
 
 package com.google.ase.activity;
 
+import java.io.File;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -38,9 +41,6 @@ import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
 import com.google.ase.interpreter.InterpreterConfiguration;
 
-import java.io.File;
-import java.util.List;
-
 /**
  * Presents available scripts and returns the selected one.
  * 
@@ -56,7 +56,7 @@ public class ScriptPicker extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
-    mConfiguration = ((AseApplication) this.getApplication()).getInterpreterConfiguration();
+    mConfiguration = ((AseApplication) getApplication()).getInterpreterConfiguration();
     mScriptList = ScriptStorageAdapter.listExecutableScripts(this, mConfiguration);
     mAdapter = new ScriptPickerAdapter();
     mAdapter.registerDataSetObserver(new ScriptListObserver());

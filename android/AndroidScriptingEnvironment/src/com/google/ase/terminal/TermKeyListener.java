@@ -38,7 +38,7 @@ class TermKeyListener {
 
   /**
    * Handle a keyDown event.
-   *
+   * 
    * @param keyCode
    *          the keycode of the keyDown event
    * @return the ASCII byte to transmit to the pty, or -1 if this event does not produce an ASCII
@@ -48,32 +48,32 @@ class TermKeyListener {
     int result = -1;
 
     switch (keyCode) {
-      case KeyEvent.KEYCODE_ALT_RIGHT:
-      case KeyEvent.KEYCODE_ALT_LEFT:
-        mAltKey.onPress();
-        break;
+    case KeyEvent.KEYCODE_ALT_RIGHT:
+    case KeyEvent.KEYCODE_ALT_LEFT:
+      mAltKey.onPress();
+      break;
 
-      case KeyEvent.KEYCODE_SHIFT_LEFT:
-      case KeyEvent.KEYCODE_SHIFT_RIGHT:
-        mShiftKey.onPress();
-        break;
+    case KeyEvent.KEYCODE_SHIFT_LEFT:
+    case KeyEvent.KEYCODE_SHIFT_RIGHT:
+      mShiftKey.onPress();
+      break;
 
-      case KeyEvent.KEYCODE_ENTER:
-        // Convert newlines into returns. The vt100 sends a '\r' when the 'Return' key is pressed,
-        // but our KeyEvent translates this as a '\n'.
-        result = '\r';
-        break;
+    case KeyEvent.KEYCODE_ENTER:
+      // Convert newlines into returns. The vt100 sends a '\r' when the 'Return' key is pressed,
+      // but our KeyEvent translates this as a '\n'.
+      result = '\r';
+      break;
 
-      case KeyEvent.KEYCODE_DEL:
-        // Convert DEL into 127 (instead of 8)
-        result = 127;
-        break;
+    case KeyEvent.KEYCODE_DEL:
+      // Convert DEL into 127 (instead of 8)
+      result = 127;
+      break;
 
-      default:
-        int methaShiftOn = mShiftKey.isActive() ? KeyEvent.META_SHIFT_ON : 0;
-        int metaAltOn = mAltKey.isActive() ? KeyEvent.META_ALT_ON : 0;
-        result = event.getUnicodeChar(methaShiftOn | metaAltOn);
-        break;
+    default:
+      int methaShiftOn = mShiftKey.isActive() ? KeyEvent.META_SHIFT_ON : 0;
+      int metaAltOn = mAltKey.isActive() ? KeyEvent.META_ALT_ON : 0;
+      result = event.getUnicodeChar(methaShiftOn | metaAltOn);
+      break;
     }
 
     if (mControlKey.isActive()) {
@@ -106,23 +106,23 @@ class TermKeyListener {
 
   /**
    * Handle a keyUp event.
-   *
+   * 
    * @param keyCode
    *          the keyCode of the keyUp event
    */
   public void keyUp(int keyCode) {
     switch (keyCode) {
-      case KeyEvent.KEYCODE_ALT_LEFT:
-      case KeyEvent.KEYCODE_ALT_RIGHT:
-        mAltKey.onRelease();
-        break;
-      case KeyEvent.KEYCODE_SHIFT_LEFT:
-      case KeyEvent.KEYCODE_SHIFT_RIGHT:
-        mShiftKey.onRelease();
-        break;
-      default:
-        // Ignore other keyUps
-        break;
+    case KeyEvent.KEYCODE_ALT_LEFT:
+    case KeyEvent.KEYCODE_ALT_RIGHT:
+      mAltKey.onRelease();
+      break;
+    case KeyEvent.KEYCODE_SHIFT_LEFT:
+    case KeyEvent.KEYCODE_SHIFT_RIGHT:
+      mShiftKey.onRelease();
+      break;
+    default:
+      // Ignore other keyUps
+      break;
     }
   }
 }

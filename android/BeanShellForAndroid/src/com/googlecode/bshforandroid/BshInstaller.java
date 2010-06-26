@@ -1,5 +1,7 @@
 package com.googlecode.bshforandroid;
 
+import java.io.File;
+
 import android.content.Context;
 
 import com.google.ase.AseLog;
@@ -8,8 +10,6 @@ import com.google.ase.InterpreterInstaller;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterConstants;
 import com.google.ase.interpreter.InterpreterDescriptor;
-
-import java.io.File;
 
 public class BshInstaller extends InterpreterInstaller {
 
@@ -22,9 +22,9 @@ public class BshInstaller extends InterpreterInstaller {
   protected boolean setup() {
     File dalvikCache = new File(InterpreterConstants.ASE_DALVIK_CACHE_ROOT);
     if (!dalvikCache.isDirectory()) {
-      try{
+      try {
         dalvikCache.mkdir();
-      }catch(SecurityException e){
+      } catch (SecurityException e) {
         AseLog.e(mContext, "Setup failed.", e);
         return false;
       }

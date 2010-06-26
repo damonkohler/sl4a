@@ -17,9 +17,9 @@
 package com.google.ase.rpc;
 
 /**
- * A converter can take a String and turn it into an instance of type T
- * (the type parameter to the converter).
- *
+ * A converter can take a String and turn it into an instance of type T (the type parameter to the
+ * converter).
+ * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 public interface Converter<T> {

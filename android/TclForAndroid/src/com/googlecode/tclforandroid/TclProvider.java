@@ -1,12 +1,12 @@
 package com.googlecode.tclforandroid;
 
-import com.google.ase.interpreter.InterpreterConstants;
-import com.google.ase.interpreter.InterpreterDescriptor;
-import com.google.ase.interpreter.InterpreterProvider;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.ase.interpreter.InterpreterConstants;
+import com.google.ase.interpreter.InterpreterDescriptor;
+import com.google.ase.interpreter.InterpreterProvider;
 
 public class TclProvider extends InterpreterProvider {
 

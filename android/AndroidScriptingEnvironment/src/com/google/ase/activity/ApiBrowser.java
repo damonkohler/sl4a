@@ -16,6 +16,10 @@
 
 package com.google.ase.activity;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.MatrixCursor;
@@ -40,14 +44,10 @@ import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.facade.FacadeConfiguration;
-import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.ParameterDescriptor;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class ApiBrowser extends ListActivity {
 
@@ -194,7 +194,7 @@ public class ApiBrowser extends ListActivity {
   private void insertText(MethodDescriptor rpc, String[] values) {
     String scriptText = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_TEXT);
     InterpreterConfiguration config =
-        ((AseApplication) this.getApplication()).getInterpreterConfiguration();
+        ((AseApplication) getApplication()).getInterpreterConfiguration();
 
     InterpreterExecutionDescriptor interpreter =
         config.getInterpreterByName(getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));

@@ -16,6 +16,9 @@
 
 package com.google.ase.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -42,9 +45,6 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterExecutionDescriptor;
 import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class InterpreterManager extends ListActivity {
 
   private InterpreterManagerAdapter mAdapter;
@@ -63,7 +63,7 @@ public class InterpreterManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.interpreter_manager);
-    mConfiguration = ((AseApplication) this.getApplication()).getInterpreterConfiguration();
+    mConfiguration = ((AseApplication) getApplication()).getInterpreterConfiguration();
     mInterpreterList = new ArrayList<InterpreterExecutionDescriptor>();
     mAdapter = new InterpreterManagerAdapter();
     mObserver = new InterpreterListObserver();
