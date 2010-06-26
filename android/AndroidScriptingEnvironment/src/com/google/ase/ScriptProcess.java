@@ -18,43 +18,62 @@ package com.google.ase;
 
 import java.net.InetSocketAddress;
 
+import android.app.Service;
+
+import com.google.ase.trigger.Trigger;
+
 public class ScriptProcess {
 
   private static enum State {
-
     ALIVE("Alive"), DEAD("Dead");
 
-    private final String name;
+    private final String mName;
 
     State(String name) {
-      this.name = name;
+      mName = name;
     }
 
     @Override
     public String toString() {
-      return name;
+      return mName;
     }
   }
 
   private final int mServerPort;
   private final ScriptLauncher mLauncher;
+  private final Trigger mTrigger;
   private final AndroidProxy mProxy;
   private final long mStartTime;
   private volatile State myState;
   private final String mName;
 
-  public ScriptProcess(AndroidProxy proxy, ScriptLauncher launcher) {
+  public ScriptProcess(AndroidProxy proxy, ScriptLauncher launcher, Trigger trigger) {
+    mProxy = proxy;
+    mLauncher = launcher;
+    mTrigger = trigger;
+
     myState = State.ALIVE;
     mStartTime = System.currentTimeMillis();
     mServerPort = proxy.getAddress().getPort();
-    mLauncher = launcher;
-    mProxy = proxy;
+
     if (launcher == null) {
       mName = "Server mode";
     } else if (launcher.getScriptName() != null) {
       mName = launcher.getScriptName();
     } else {
       mName = launcher.getInterpreterName();
+    }
+  }
+
+  public void notifyTriggerOfShutDown(Service service) {
+    if (mTrigger != null) {
+      mTrigger.afterTrigger(service);
+    }
+  }
+
+  public void notifyTriggerOfStart(Service service) {
+    if (mTrigger != null) {
+      mTrigger.beforeTrigger(service);
     }
   }
 

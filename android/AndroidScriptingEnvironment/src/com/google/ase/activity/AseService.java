@@ -52,7 +52,6 @@ import com.google.ase.trigger.Trigger;
  */
 public class AseService extends Service {
 
-  private Trigger mTrigger;
   private final Map<Integer, ScriptProcess> mProcessMap;
   private NotificationManager mNotificationManager;
   private Notification mNotification;
@@ -96,12 +95,6 @@ public class AseService extends Service {
   @Override
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
-    // TODO: Right now, only one interpreter execution is supported concurrently.
-    // When this changes, we need to support multiple trigger notifications as well.
-    if (mTrigger == null) {
-      mTrigger = getTrigger(intent);
-      notifyTriggerOfStart();
-    }
 
     if (intent.getAction().equals(Constants.ACTION_KILL_PROCESS)) {
       killScriptProcess(intent);
@@ -138,7 +131,9 @@ public class AseService extends Service {
         launchTerminal(intent, serverProxy.getAddress());
       }
 
-      addScriptProcess(new ScriptProcess(serverProxy, launcher));
+      ScriptProcess scriptProcess = new ScriptProcess(serverProxy, launcher, getTrigger(intent));
+      addScriptProcess(scriptProcess);
+      scriptProcess.notifyTriggerOfStart(this);
     }
   }
 
@@ -181,7 +176,7 @@ public class AseService extends Service {
     updateNotification();
   }
 
-  private ScriptProcess removeProcess(int id) {
+  private ScriptProcess removeScriptProcess(int id) {
     ScriptProcess process;
     process = mProcessMap.remove(id);
     if (process == null) {
@@ -194,10 +189,10 @@ public class AseService extends Service {
 
   private void killScriptProcess(Intent intent) {
     int processId = intent.getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
-    notifyTriggerOfShutDown();
-    ScriptProcess process = removeProcess(processId);
-    if (process != null) {
-      process.kill();
+    ScriptProcess scriptProcess = removeScriptProcess(processId);
+    scriptProcess.notifyTriggerOfShutDown(this);
+    if (scriptProcess != null) {
+      scriptProcess.kill();
     }
   }
 
@@ -257,18 +252,6 @@ public class AseService extends Service {
       return application.getTriggerRepository().getById(triggerId);
     } catch (IllegalArgumentException e) {
       return null;
-    }
-  }
-
-  private void notifyTriggerOfShutDown() {
-    if (mTrigger != null) {
-      mTrigger.afterTrigger(this);
-    }
-  }
-
-  private void notifyTriggerOfStart() {
-    if (mTrigger != null) {
-      mTrigger.beforeTrigger(this);
     }
   }
 
