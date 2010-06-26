@@ -51,6 +51,7 @@ import com.google.ase.trigger.Trigger;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class AseService extends Service {
+
   private Trigger mTrigger;
   private final Map<Integer, ScriptProcess> mProcessMap;
   private NotificationManager mNotificationManager;
@@ -94,7 +95,6 @@ public class AseService extends Service {
 
   @Override
   public void onStart(Intent intent, int startId) {
-
     super.onStart(intent, startId);
     // TODO: Right now, only one interpreter execution is supported concurrently.
     // When this changes, we need to support multiple trigger notifications as well.
@@ -104,7 +104,7 @@ public class AseService extends Service {
     }
 
     if (intent.getAction().equals(Constants.ACTION_KILL_PROCESS)) {
-      killProcess(intent);
+      killScriptProcess(intent);
       if (mProcessMap.isEmpty()) {
         stopSelf(startId);
       }
@@ -112,7 +112,7 @@ public class AseService extends Service {
     }
 
     if (intent.getAction().equals(Constants.ACTION_SHOW_RUNNING_SCRIPTS)) {
-      showScriptProcesses();
+      showRunningScripts();
       return;
     }
 
@@ -126,7 +126,7 @@ public class AseService extends Service {
 
       serverProxy = launchServer(intent);
       try {
-        launcher = launchInterpreter(intent, serverProxy.getAddress());
+        launcher = launchScript(intent, serverProxy.getAddress());
       } catch (AseException e) {
         AseLog.e(this, e.getMessage(), e);
         serverProxy.shutdown();
@@ -138,8 +138,7 @@ public class AseService extends Service {
         launchTerminal(intent, serverProxy.getAddress());
       }
 
-      ScriptProcess process = new ScriptProcess(serverProxy, launcher);
-      addProcess(process);
+      addScriptProcess(new ScriptProcess(serverProxy, launcher));
     }
   }
 
@@ -154,8 +153,7 @@ public class AseService extends Service {
     return androidProxy;
   }
 
-  private ScriptLauncher launchInterpreter(Intent intent, InetSocketAddress address)
-      throws AseException {
+  private ScriptLauncher launchScript(Intent intent, InetSocketAddress address) throws AseException {
     InterpreterConfiguration config =
         ((AseApplication) getApplication()).getInterpreterConfiguration();
     ScriptLauncher launcher = new ScriptLauncher(intent, address, config);
@@ -171,13 +169,13 @@ public class AseService extends Service {
     startActivity(i);
   }
 
-  private void showScriptProcesses() {
+  private void showRunningScripts() {
     Intent i = new Intent(this, AseMonitor.class);
     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(i);
   }
 
-  private void addProcess(ScriptProcess process) {
+  private void addScriptProcess(ScriptProcess process) {
     mProcessMap.put(process.getPort(), process);
     modCount++;
     updateNotification();
@@ -194,7 +192,7 @@ public class AseService extends Service {
     return process;
   }
 
-  private void killProcess(Intent intent) {
+  private void killScriptProcess(Intent intent) {
     int processId = intent.getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
     notifyTriggerOfShutDown();
     ScriptProcess process = removeProcess(processId);
