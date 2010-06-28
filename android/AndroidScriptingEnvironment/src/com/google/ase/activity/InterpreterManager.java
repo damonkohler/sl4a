@@ -42,14 +42,14 @@ import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.dialog.Help;
 import com.google.ase.interpreter.InterpreterConfiguration;
-import com.google.ase.interpreter.InterpreterExecutionDescriptor;
+import com.google.ase.interpreter.InterpreterAgent;
 import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
 public class InterpreterManager extends ListActivity {
 
   private InterpreterManagerAdapter mAdapter;
   private InterpreterListObserver mObserver;
-  private List<InterpreterExecutionDescriptor> mInterpreterList;
+  private List<InterpreterAgent> mInterpreterList;
   private InterpreterConfiguration mConfiguration;
 
   private static enum MenuId {
@@ -64,7 +64,7 @@ public class InterpreterManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.interpreter_manager);
     mConfiguration = ((AseApplication) getApplication()).getInterpreterConfiguration();
-    mInterpreterList = new ArrayList<InterpreterExecutionDescriptor>();
+    mInterpreterList = new ArrayList<InterpreterAgent>();
     mAdapter = new InterpreterManagerAdapter();
     mObserver = new InterpreterListObserver();
     mAdapter.registerDataSetObserver(mObserver);
@@ -132,7 +132,7 @@ public class InterpreterManager extends ListActivity {
     startService(intent);
   }
 
-  private void launchTerminal(InterpreterExecutionDescriptor interpreter) {
+  private void launchTerminal(InterpreterAgent interpreter) {
     Intent intent = new Intent(this, AseService.class);
     intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
     intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
@@ -141,8 +141,8 @@ public class InterpreterManager extends ListActivity {
 
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    InterpreterExecutionDescriptor interpreter =
-        (InterpreterExecutionDescriptor) list.getItemAtPosition(position);
+    InterpreterAgent interpreter =
+        (InterpreterAgent) list.getItemAtPosition(position);
     launchTerminal(interpreter);
   }
 

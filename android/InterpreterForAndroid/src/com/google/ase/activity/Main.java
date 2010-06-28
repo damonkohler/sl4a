@@ -111,6 +111,7 @@ public abstract class Main extends Activity {
     super.onConfigurationChanged(newConfig);
   }
 
+  // TODO(alexey): Pull out to a layout XML?
   protected void setUI() {
     LinearLayout layout = new LinearLayout(this);
     layout.setOrientation(LinearLayout.VERTICAL);

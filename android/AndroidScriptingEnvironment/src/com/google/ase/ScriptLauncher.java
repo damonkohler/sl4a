@@ -23,14 +23,14 @@ import android.content.Intent;
 
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterConfiguration;
-import com.google.ase.interpreter.InterpreterExecutionDescriptor;
+import com.google.ase.interpreter.InterpreterAgent;
 import com.google.ase.interpreter.InterpreterProcess;
 
 public class ScriptLauncher {
 
   private final String mScriptName;
   private final String mInterpreterName;
-  private final InterpreterExecutionDescriptor mInterpreter;
+  private final InterpreterAgent mInterpreter;
   private final InetSocketAddress mAddress;
   private InterpreterProcess mProcess;
 

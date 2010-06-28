@@ -16,10 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.MatrixCursor;
@@ -45,9 +41,13 @@ import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.facade.FacadeConfiguration;
 import com.google.ase.interpreter.InterpreterConfiguration;
-import com.google.ase.interpreter.InterpreterExecutionDescriptor;
+import com.google.ase.interpreter.InterpreterAgent;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.ParameterDescriptor;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ApiBrowser extends ListActivity {
 
@@ -196,7 +196,7 @@ public class ApiBrowser extends ListActivity {
     InterpreterConfiguration config =
         ((AseApplication) getApplication()).getInterpreterConfiguration();
 
-    InterpreterExecutionDescriptor interpreter =
+    InterpreterAgent interpreter =
         config.getInterpreterByName(getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));
     String rpcHelpText = interpreter.getRpcText(scriptText, rpc, values);
 

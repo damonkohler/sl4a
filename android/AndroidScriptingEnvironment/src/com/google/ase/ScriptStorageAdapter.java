@@ -33,7 +33,7 @@ import android.util.Log;
 
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterConstants;
-import com.google.ase.interpreter.InterpreterExecutionDescriptor;
+import com.google.ase.interpreter.InterpreterAgent;
 
 /**
  * Manages storage and retrieval of scripts on the file system.
@@ -117,7 +117,7 @@ public class ScriptStorageAdapter {
               .listFiles()));
       // Filter out any files that don't have interpreters installed.
       for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
-        InterpreterExecutionDescriptor interpreter =
+        InterpreterAgent interpreter =
             config.getInterpreterForScript(it.next().getName());
         if (interpreter == null || !interpreter.isInstalled(context)) {
           it.remove();

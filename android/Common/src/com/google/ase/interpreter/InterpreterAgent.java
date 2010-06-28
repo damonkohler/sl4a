@@ -16,29 +16,22 @@
 
 package com.google.ase.interpreter;
 
-import android.content.Context;
+import com.google.ase.language.Language;
+import com.google.ase.rpc.MethodDescriptor;
+
 /**
- * Represents an executable interpreter.
+ * Instance of an interpreter available in the system. Provides additional language-specific
+ * support.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
-public interface InterpreterExecutionDescriptor {
+public interface InterpreterAgent extends InterpreterExecutionDescriptor {
 
-  public String getPath();
+  public Language getLanguage();
 
-  public InterpreterProcess buildProcess(String launchScript, int port);
+  public String getContentTemplate();
 
-  public String getBinary();
-
-  public String getExtension();
-
-  public String getName();
-
-  public String getNiceName();
-
-  public boolean isInstalled(Context context);
-
-  public boolean isUninstallable();
+  public String getRpcText(String content, MethodDescriptor rpc, String[] values);
 
 }

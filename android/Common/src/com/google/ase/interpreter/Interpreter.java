@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
-public class Interpreter implements InterpreterExecutionDescriptor, InterpreterStrings {
+public class Interpreter implements InterpreterAgent, InterpreterStrings {
 
   private static String[] mapKeys =
       { NAME, NICE_NAME, EXTENSION, BIN, PATH, EXECUTE, EMPTY_PARAMS, EXECUTE_PARAMS };
