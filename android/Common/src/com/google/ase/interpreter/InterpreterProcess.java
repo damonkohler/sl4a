@@ -100,7 +100,7 @@ public abstract class InterpreterProcess extends AseProcess {
   private volatile int mLogLength = 0;
 
   private class LoggingBufferedReader extends BufferedReader {
-    private boolean skipLF = false;
+    private boolean mmSkipLF = false;
 
     // TODO(Alexey): Use persistent storage
     // replace with circular log, see ConnectBot
@@ -198,8 +198,8 @@ public abstract class InterpreterProcess extends AseProcess {
         while (mmPos < mLogLength) {
           char nextChar = mLog.charAt(mmPos);
           mmPos++;
-          if (skipLF) {
-            skipLF = false;
+          if (mmSkipLF) {
+            mmSkipLF = false;
             if (nextChar == '\n') {
               continue;
             }
@@ -209,7 +209,7 @@ public abstract class InterpreterProcess extends AseProcess {
             return buffer.toString();
           }
           if (nextChar == '\r') {
-            skipLF = true;
+            mmSkipLF = true;
             return buffer.toString();
           }
         }
@@ -224,8 +224,8 @@ public abstract class InterpreterProcess extends AseProcess {
         while (mmPos < mLogLength) {
           char nextChar = mLog.charAt(mmPos);
           mmPos++;
-          if (skipLF) {
-            skipLF = false;
+          if (mmSkipLF) {
+            mmSkipLF = false;
             if (nextChar == '\n') {
               continue;
             }
@@ -235,13 +235,13 @@ public abstract class InterpreterProcess extends AseProcess {
             return buffer.toString();
           }
           if (nextChar == '\r') {
-            skipLF = true;
+            mmSkipLF = true;
             return buffer.toString();
           }
         }
         String str = super.readLine();
-        if (skipLF && str.length() == 1 && str.charAt(0) == '\n') {
-          skipLF = false;
+        if (mmSkipLF && str.length() == 1 && str.charAt(0) == '\n') {
+          mmSkipLF = false;
           str = super.readLine();
         }
         return buffer.append(str).toString();

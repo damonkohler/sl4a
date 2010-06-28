@@ -16,13 +16,6 @@
 
 package com.google.ase;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ExecutionException;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -34,6 +27,13 @@ import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterConstants;
 import com.google.ase.interpreter.InterpreterDescriptor;
 import com.google.ase.interpreter.InterpreterUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Activity for installing interpreters.
@@ -57,7 +57,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     EXTRACT_INTERPRETER_EXTRAS, EXTRACT_SCRIPTS
   }
 
-  // executed in the UI thread
+  // Executed in the UI thread.
   private final Runnable taskStarter = new Runnable() {
     @Override
     public void run() {
@@ -95,7 +95,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     }
   };
 
-  // executed in the background
+  // Executed in the background.
   private final Runnable taskWorker = new Runnable() {
     @Override
     public void run() {
@@ -103,16 +103,16 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
       try {
         if (taskHolder != null && taskHolder.get() != null) {
           taskHolder = null;
-          // postprocessing
+          // Postprocessing.
           if (request == RequestCode.EXTRACT_INTERPRETER && !chmodIntepreter()) {
-            // chmod returned false
+            // Chmod returned false.
             Looper.myLooper().quit();
           } else if (taskQueue.size() == 0) {
-            // we're done here
+            // We're done here.
             Looper.myLooper().quit();
             return;
           } else if (mainThreadHandler != null) {
-            // there's still some work to do
+            // There's still some work to do.
             mainThreadHandler.post(taskStarter);
             return;
           }
@@ -124,7 +124,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
       } catch (Exception e) {
         AseLog.e(e);
       }
-      // something went wrong...
+      // Something went wrong...
       switch (request) {
       case DOWNLOAD_INTERPRETER:
         AseLog.e("Downloading interpreter failed.");
@@ -222,13 +222,13 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     mBackgroundHandler = new Handler();
     mainThreadHandler.post(taskStarter);
     Looper.loop();
-    // have we executed all the tasks?
+    // Have we executed all the tasks?
     return (taskQueue.size() == 0);
   }
 
   @Override
   protected void onPostExecute(Boolean result) {
-    // final touches
+    // Final touches.
     if (mStartNewThread) {
       return;
     }

@@ -1,14 +1,15 @@
 package com.google.ase.interpreter;
 
-import java.io.File;
-import java.util.Map;
-
 import android.content.Context;
 
 import com.google.ase.exception.AseException;
 import com.google.ase.language.Language;
 import com.google.ase.language.SupportedLanguages;
 import com.google.ase.rpc.MethodDescriptor;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Interpreter implements InterpreterExecutionDescriptor, InterpreterStrings {
 
@@ -23,11 +24,11 @@ public class Interpreter implements InterpreterExecutionDescriptor, InterpreterS
   private final String mEmptyParams;
   private final String mExecuteParams;
   private final String mExecute;
-  private final Map<String, String> mEnvvars;
+  private final Map<String, String> mEnvironmentVariables;
 
   private final Language mLanguage;
 
-  public Interpreter(Map<String, String> data, Map<String, String> envvars) throws AseException {
+  public Interpreter(Map<String, String> data, Map<String, String> variables) throws AseException {
 
     for (String key : mapKeys) {
       if (data.get(key).equals(null)) {
@@ -47,7 +48,7 @@ public class Interpreter implements InterpreterExecutionDescriptor, InterpreterS
 
     mLanguage = SupportedLanguages.getLanguageByExtention(mExtension);
 
-    mEnvvars = envvars;
+    mEnvironmentVariables = new HashMap<String, String>(variables);
   }
 
   public InterpreterProcess buildProcess(String launchScript, int port) {
@@ -103,9 +104,7 @@ public class Interpreter implements InterpreterExecutionDescriptor, InterpreterS
 
     @Override
     protected void buildEnvironment() {
-      if (mEnvvars != null) {
-        mEnvironment.putAll(mEnvvars);
-      }
+      mEnvironment.putAll(mEnvironmentVariables);
     }
 
     @Override

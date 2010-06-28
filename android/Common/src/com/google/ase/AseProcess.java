@@ -16,6 +16,8 @@
 
 package com.google.ase;
 
+import android.os.Process;
+
 import java.io.BufferedReader;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -24,9 +26,9 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 
-import android.os.Process;
-
 public class AseProcess {
+
+  private static final int DEFAULT_BUFFER_SIZE = 8192;
 
   protected Integer mPid;
   protected FileDescriptor mFd;
@@ -54,7 +56,7 @@ public class AseProcess {
   }
 
   public BufferedReader getIn() {
-    return new BufferedReader(mIn, 8192);
+    return new BufferedReader(mIn, DEFAULT_BUFFER_SIZE);
   }
 
   public void error(Object obj) {

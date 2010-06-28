@@ -57,11 +57,11 @@ public abstract class Main extends Activity {
       if (result) {
         switch (CurrentTask) {
         case INSTALL:
-          updatePreferences(true);
+          setInstalled(true);
           prepareUninstallButton();
           break;
         case UNINSTALL:
-          updatePreferences(false);
+          setInstalled(false);
           prepareInstallButton();
           break;
         }
@@ -126,7 +126,7 @@ public abstract class Main extends Activity {
     });
   }
 
-  protected void sendBroadcast(boolean isInterpreterInstalled) {
+  protected void broadcastInstallationStateChange(boolean isInterpreterInstalled) {
     Intent intent = new Intent();
     intent.setData(Uri.parse("package:" + ID));
     if (isInterpreterInstalled) {
@@ -167,16 +167,16 @@ public abstract class Main extends Activity {
     uninstallTask.execute();
   }
 
-  protected void updatePreferences(boolean isInstalled) {
+  protected void setInstalled(boolean isInstalled) {
     SharedPreferences.Editor editor = mPreferences.edit();
     editor.putBoolean(InterpreterConstants.INSTALL_PREF, isInstalled);
     editor.commit();
-    sendBroadcast(isInstalled);
+    broadcastInstallationStateChange(isInstalled);
   }
 
   protected boolean checkInstalled() {
     boolean isInstalled = mPreferences.getBoolean(InterpreterConstants.INSTALL_PREF, false);
-    sendBroadcast(isInstalled);
+    broadcastInstallationStateChange(isInstalled);
     return isInstalled;
   }
 }

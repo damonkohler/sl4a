@@ -59,13 +59,13 @@ public class InterpreterConfiguration {
   }
 
   private class InterpreterListener extends BroadcastReceiver {
-    private final PackageManager mmPackMan;
+    private final PackageManager mmPackageManager;
     private final ContentResolver mmResolver;
     private final ExecutorService mmExecutor;
     private final Map<String, InterpreterExecutionDescriptor> mmDiscoveredInterpreters;
 
     private InterpreterListener(Context context) {
-      mmPackMan = context.getPackageManager();
+      mmPackageManager = context.getPackageManager();
       mmResolver = context.getContentResolver();
       mmExecutor = Executors.newSingleThreadExecutor();
       mmDiscoveredInterpreters = new HashMap<String, InterpreterExecutionDescriptor>();
@@ -79,7 +79,7 @@ public class InterpreterConfiguration {
           intent.addCategory(Intent.CATEGORY_LAUNCHER);
           List<InterpreterExecutionDescriptor> discoveredInterpreters =
               new ArrayList<InterpreterExecutionDescriptor>();
-          List<ResolveInfo> resolveInfos = mmPackMan.queryIntentActivities(intent, 0);
+          List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
           for (ResolveInfo info : resolveInfos) {
             InterpreterExecutionDescriptor interpreter =
                 buildInterpreter(info.activityInfo.packageName);
@@ -97,7 +97,7 @@ public class InterpreterConfiguration {
       });
     }
 
-    private void discover(final String packageName) {
+    private void addInterpreter(final String packageName) {
       if (mmDiscoveredInterpreters.containsKey(packageName)) {
         return;
       }
@@ -141,7 +141,7 @@ public class InterpreterConfiguration {
     private InterpreterExecutionDescriptor buildInterpreter(String packageName) {
       PackageInfo packInfo = null;
       try {
-        packInfo = mmPackMan.getPackageInfo(packageName, PackageManager.GET_PROVIDERS);
+        packInfo = mmPackageManager.getPackageInfo(packageName, PackageManager.GET_PROVIDERS);
       } catch (NameNotFoundException e) {
         return null;
       }
@@ -185,7 +185,7 @@ public class InterpreterConfiguration {
       final String action = intent.getAction();
       String packageName = intent.getData().getSchemeSpecificPart();
       if (action.equals(InterpreterConstants.ACTION_INTERPRETER_ADDED)) {
-        discover(packageName);
+        addInterpreter(packageName);
       } else if (action.equals(InterpreterConstants.ACTION_INTERPRETER_REMOVED)
           || action.equals(Intent.ACTION_PACKAGE_REMOVED)
           || action.equals(Intent.ACTION_PACKAGE_REPLACED)
