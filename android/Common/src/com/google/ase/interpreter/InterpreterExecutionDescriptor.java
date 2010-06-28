@@ -21,6 +21,12 @@ import android.content.Context;
 import com.google.ase.language.Language;
 import com.google.ase.rpc.MethodDescriptor;
 
+/**
+ * Represents an executable interpreter.
+ * 
+ * @author Damon Kohler (damonkohler@gmail.com)
+ * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
+ */
 public interface InterpreterExecutionDescriptor {
 
   public Language getLanguage();

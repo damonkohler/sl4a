@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2010 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,14 +16,6 @@
 
 package com.google.ase;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,10 +24,19 @@ import android.os.AsyncTask;
 
 import com.google.ase.exception.AseException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 /**
- * Activity for extracting ZIP files.
+ * AsyncTask for extracting ZIP files.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
+ * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
 public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
 

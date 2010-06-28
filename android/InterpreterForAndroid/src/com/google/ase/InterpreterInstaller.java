@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2010 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,9 +36,10 @@ import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Activity for installing interpreters.
+ * AsyncTask for installing interpreters.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
+ * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
 public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean> {
   protected final InterpreterDescriptor mDescriptor;

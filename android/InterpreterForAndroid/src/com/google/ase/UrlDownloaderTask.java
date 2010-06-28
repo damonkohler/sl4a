@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2010 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,15 @@
 
 package com.google.ase;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.content.res.Resources.NotFoundException;
+import android.os.AsyncTask;
+
+import com.google.ase.exception.AseException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -26,19 +35,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.content.res.Resources.NotFoundException;
-import android.os.AsyncTask;
-
-import com.google.ase.exception.AseException;
-
 /**
- * Activity for extracting ZIP files.
+ * AsyncTask for extracting ZIP files.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
+ * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
 public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
 
@@ -236,11 +237,13 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
           return -1;
         }
 
+        @SuppressWarnings("unused")
         @Override
         public InputStream getInputStream() throws IOException {
           return mResources.openRawResource(id);
         }
 
+        @SuppressWarnings("unused")
         @Override
         public void connect() throws IOException {
         }
