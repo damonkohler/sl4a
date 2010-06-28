@@ -16,13 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -45,6 +38,13 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.terminal.Terminal;
 import com.google.ase.trigger.Trigger;
 
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * A service that allows scripts and the RPC server to run in the background.
  * 
@@ -55,9 +55,15 @@ public class AseService extends Service {
   private final Map<Integer, ScriptProcess> mProcessMap;
   private NotificationManager mNotificationManager;
   private Notification mNotification;
-  private final int mNotificationId;
   private final IBinder mBinder;
   private volatile int modCount = 0;
+
+  private static final int mNotificationId;
+
+  static {
+    NotificationIdFactory factory = NotificationIdFactory.INSTANCE;
+    mNotificationId = factory.createId();
+  }
 
   public class LocalBinder extends Binder {
     public AseService getService() {
@@ -66,8 +72,6 @@ public class AseService extends Service {
   }
 
   public AseService() {
-    NotificationIdFactory mFactory = NotificationIdFactory.INSTANCE;
-    mNotificationId = mFactory.createId();
     mProcessMap = new ConcurrentHashMap<Integer, ScriptProcess>();
     mBinder = new LocalBinder();
   }
@@ -237,6 +241,7 @@ public class AseService extends Service {
   @Override
   public void onDestroy() {
     super.onDestroy();
+    mNotificationManager.cancel(mNotificationId);
   }
 
   /** Returns the {@link TriggerInfo} for the given intent, or null if none exists. */
