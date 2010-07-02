@@ -22,12 +22,13 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
 import com.google.ase.exception.AseRuntimeException;
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
 
 import java.util.List;
 
-public class EyesFreeFacade extends RpcReceiverFacade {
+public class EyesFreeFacade extends RpcReceiver {
 
   private final Service mService;
   private final PackageManager mPackageManager;

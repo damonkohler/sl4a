@@ -17,6 +17,7 @@
 package com.google.ase.jsonrpc;
 
 import com.google.ase.AseLog;
+import com.google.ase.facade.FacadeManager;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.RpcError;
 
@@ -62,7 +63,7 @@ public class JsonRpcServer {
   private final List<Class<? extends RpcReceiver>> mReceivers =
       new ArrayList<Class<? extends RpcReceiver>>();
 
-  private final RpcReceiverManager mManager;
+  private final FacadeManager mManager;
 
   private ServerSocket mServer;
   private Thread mServerThread;
@@ -151,7 +152,7 @@ public class JsonRpcServer {
    * @param receivers
    *          the {@link RpcReceiver}s to register with the server
    */
-  public JsonRpcServer(List<Class<? extends RpcReceiver>> receivers, RpcReceiverManager manager) {
+  public JsonRpcServer(List<Class<? extends RpcReceiver>> receivers, FacadeManager manager) {
     mManager = manager;
     mNetworkThreads = new CopyOnWriteArrayList<ConnectionThread>();
     for (Class<? extends RpcReceiver> receiver : receivers) {
@@ -166,11 +167,11 @@ public class JsonRpcServer {
    *          the receiving object
    */
   private void registerRpcReceiver(final Class<? extends RpcReceiver> receiverClass) {
-    
+
     Collection<MethodDescriptor> methodList = MethodDescriptor.collectFrom(receiverClass);
-    
+
     RpcInfo info = new RpcInfo(receiverClass, methodList, mManager);
-    
+
     for (MethodDescriptor m : methodList) {
       if (mKnownRpcs.containsKey(m.getName())) {
         // We already know an RPC of the same name. We don't catch this anywhere because this is a
@@ -277,7 +278,7 @@ public class JsonRpcServer {
     }
     // Notify all RPC receiving objects. They may have to clean up some of their state.
     for (Class<? extends RpcReceiver> receiverClass : mReceivers) {
-      RpcReceiver receiver = mManager.getReceiverInstance(receiverClass);
+      RpcReceiver receiver = mManager.getReceiver(receiverClass);
       if (receiver != null) {
         receiver.shutdown();
       }

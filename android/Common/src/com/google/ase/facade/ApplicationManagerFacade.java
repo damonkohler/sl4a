@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
 
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ApplicationManagerFacade extends RpcReceiverFacade {
+public class ApplicationManagerFacade extends RpcReceiver {
 
   private final AndroidFacade mAndroidFacade;
   private final ActivityManager mActivityManager;

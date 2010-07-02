@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.telephony.gsm.SmsManager;
 
 import com.google.ase.AseLog;
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
@@ -42,7 +43,7 @@ import java.util.List;
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-public class SmsFacade extends RpcReceiverFacade {
+public class SmsFacade extends RpcReceiver {
 
   private final Service mService;
   private final ContentResolver mContentResolver;

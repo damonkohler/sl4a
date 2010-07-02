@@ -25,9 +25,9 @@ import com.google.ase.AseApplication;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.facade.FacadeManager;
-import com.google.ase.facade.RpcReceiverFacade;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
@@ -44,7 +44,7 @@ import java.util.Set;
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-public class UiFacade extends RpcReceiverFacade {
+public class UiFacade extends RpcReceiver {
   private final Service mService;
   private final Queue<FutureActivityTask> mTaskQueue;
   private RunnableDialog mDialogTask;

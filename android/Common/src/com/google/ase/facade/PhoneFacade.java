@@ -24,6 +24,7 @@ import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
 
@@ -37,7 +38,7 @@ import java.net.URLEncoder;
  * 
  * @author Damon Kohler (damonkohler@gmail.com) Felix Arends (felix.arends@gmail.com)
  */
-public class PhoneFacade extends RpcReceiverFacade {
+public class PhoneFacade extends RpcReceiver {
   private final AndroidFacade mAndroidFacade;
   private final EventFacade mEventFacade;
   private final TelephonyManager mTelephonyManager;

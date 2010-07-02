@@ -1,12 +1,13 @@
 package com.google.ase.facade;
 
 import com.google.ase.condition.RingerModeEvent;
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
 import com.google.ase.trigger.EventTrigger;
 import com.google.ase.trigger.TriggerRepository;
 
-public class ConditionManagerFacade extends RpcReceiverFacade {
+public class ConditionManagerFacade extends RpcReceiver {
   private final TriggerRepository mTriggerRepository;
 
   public ConditionManagerFacade(FacadeManager manager) {

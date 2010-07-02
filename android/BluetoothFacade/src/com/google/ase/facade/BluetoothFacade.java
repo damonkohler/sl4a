@@ -22,6 +22,7 @@ import android.content.Intent;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
@@ -30,7 +31,7 @@ import com.google.ase.rpc.RpcParameter;
 import java.io.IOException;
 import java.util.UUID;
 
-public class BluetoothFacade extends RpcReceiverFacade {
+public class BluetoothFacade extends RpcReceiver {
 
   // UUID for ASE.
   private static final String DEFAULT_UUID = "457807c0-4897-11df-9879-0800200c9a66";

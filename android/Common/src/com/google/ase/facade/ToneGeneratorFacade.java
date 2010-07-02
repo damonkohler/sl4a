@@ -3,11 +3,12 @@ package com.google.ase.facade;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
 
-public class ToneGeneratorFacade extends RpcReceiverFacade {
+public class ToneGeneratorFacade extends RpcReceiver {
 
   private final ToneGenerator mToneGenerator;
 

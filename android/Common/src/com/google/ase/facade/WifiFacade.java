@@ -5,13 +5,14 @@ import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
 import java.util.List;
 
-public class WifiFacade extends RpcReceiverFacade {
+public class WifiFacade extends RpcReceiver {
 
   private final Service mService;
   private final WifiManager mWifi;

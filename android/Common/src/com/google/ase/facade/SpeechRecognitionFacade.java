@@ -19,6 +19,7 @@ package com.google.ase.facade;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
  * @author Felix Arends (felix.arends@gmail.com)
  * 
  */
-public class SpeechRecognitionFacade extends RpcReceiverFacade {
+public class SpeechRecognitionFacade extends RpcReceiver {
   private final AndroidFacade mAndroidFacade;
 
   /**

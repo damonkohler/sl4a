@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.provider.Contacts.People;
 import android.provider.Contacts.PhonesColumns;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
@@ -41,7 +42,7 @@ import java.util.List;
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com
  */
-public class ContactsFacade extends RpcReceiverFacade {
+public class ContactsFacade extends RpcReceiver {
   private static final Uri CONTACTS_URI = Uri.parse("content://contacts/people");
   private final ContentResolver mContentResolver;
   private final Service mService;
@@ -53,7 +54,6 @@ public class ContactsFacade extends RpcReceiverFacade {
     mContentResolver = mService.getContentResolver();
     mCommonIntentsFacade = manager.getFacade(CommonIntentsFacade.class);
   }
-
 
   private Uri buildUri(Integer id) {
     Uri uri = ContentUris.withAppendedId(People.CONTENT_URI, id);

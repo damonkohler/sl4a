@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.Contacts.People;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
@@ -14,7 +15,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-public class CommonIntentsFacade extends RpcReceiverFacade {
+public class CommonIntentsFacade extends RpcReceiver {
 
   private final AndroidFacade mAndroidFacade;
 

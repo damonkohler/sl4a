@@ -29,6 +29,7 @@ import com.google.ase.AseLog;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
@@ -41,7 +42,7 @@ import java.util.Queue;
  * 
  * @author Frank Spychalski (frank.spychalski@gmail.com)
  */
-public class SettingsFacade extends RpcReceiverFacade {
+public class SettingsFacade extends RpcReceiver {
 
   public static int AIRPLANE_MODE_OFF = 0;
   public static int AIRPLANE_MODE_ON = 1;

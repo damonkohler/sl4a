@@ -23,6 +23,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
@@ -34,7 +35,7 @@ import com.google.ase.rpc.RpcParameter;
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
-public class SensorManagerFacade extends RpcReceiverFacade {
+public class SensorManagerFacade extends RpcReceiver {
   private final EventFacade mEventFacade;
   private final SensorManager mSensorManager;
   private Bundle mSensorReadings;

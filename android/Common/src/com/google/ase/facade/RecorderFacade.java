@@ -18,6 +18,7 @@ package com.google.ase.facade;
 
 import android.media.MediaRecorder;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
 
@@ -30,7 +31,7 @@ import java.lang.reflect.Field;
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class RecorderFacade extends RpcReceiverFacade {
+public class RecorderFacade extends RpcReceiver {
 
   public RecorderFacade(FacadeManager manager) {
     super(manager);

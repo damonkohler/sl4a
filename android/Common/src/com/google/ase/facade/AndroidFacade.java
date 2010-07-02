@@ -42,6 +42,7 @@ import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
@@ -53,7 +54,7 @@ import org.json.JSONObject;
 
 import java.util.Queue;
 
-public class AndroidFacade extends RpcReceiverFacade {
+public class AndroidFacade extends RpcReceiver {
   /**
    * An instance of this interface is passed to the facade. From this object, the resource IDs can
    * be obtained.
@@ -87,8 +88,8 @@ public class AndroidFacade extends RpcReceiverFacade {
     mNotificationManager =
         (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
     mResources = manager.getAndroidFacadeResources();
-    
   }
+
   /**
    * Creates a new AndroidFacade that simplifies the interface to various Android APIs.
    * 

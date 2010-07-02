@@ -53,7 +53,7 @@ public class AseApplication extends Application {
     mConfiguration = new InterpreterConfiguration(this);
     mConfiguration.startDiscovering();
     mHandler = new Handler();
-    Analytics.start(this);
+    Analytics.start(this, "UA-158835-13");
   }
 
   @Override

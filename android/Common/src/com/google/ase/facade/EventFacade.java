@@ -18,6 +18,7 @@ package com.google.ase.facade;
 
 import android.content.Context;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 
 import java.util.Queue;
@@ -30,7 +31,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author Felix Arends (felix.arends@gmail.com)
  * 
  */
-public class EventFacade extends RpcReceiverFacade {
+public class EventFacade extends RpcReceiver {
   /**
    * The maximum length of the event queue. Old events will be discarded when this limit is
    * exceeded.

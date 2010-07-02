@@ -17,6 +17,7 @@
 package com.google.ase.jsonrpc;
 
 import com.google.ase.Analytics;
+import com.google.ase.facade.FacadeManager;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.RpcError;
 import com.google.ase.util.VisibleForTesting;
@@ -39,11 +40,11 @@ import java.util.Map;
 public final class RpcInfo {
   private RpcReceiver mReceiver;
   private final Class<? extends RpcReceiver> mReceiverClass;
-  private final RpcReceiverManager mManager;
+  private final FacadeManager mManager;
   private final Map<String, MethodDescriptor> mMethodMap;
 
   public RpcInfo(final Class<? extends RpcReceiver> receiverClass,
-      Collection<MethodDescriptor> methodList, RpcReceiverManager manager) {
+      Collection<MethodDescriptor> methodList, FacadeManager manager) {
     mReceiverClass = receiverClass;
     mManager = manager;
     mMethodMap = new HashMap<String, MethodDescriptor>();
@@ -87,12 +88,12 @@ public final class RpcInfo {
       } else if (MethodDescriptor.hasDefaultValue(annotations[i])) {
         args[i] = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
       } else {
-        throw new RpcError("Argument " + (i + 1) + " is not present");
+        throw new RpcError("Argument " + (i + 1) + " is mReceiverClassnot present");
       }
     }
-
+    // Delayed/lazy initialization.
     if (mReceiver == null) {
-      mReceiver = mManager.getReceiverInstance(mReceiverClass);
+      mReceiver = mManager.getReceiver(mReceiverClass);
       if (mReceiver == null) {
         throw new RpcError("Cannot create object for class " + mReceiverClass.getName());
       }

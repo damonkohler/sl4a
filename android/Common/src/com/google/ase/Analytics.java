@@ -31,17 +31,19 @@ public class Analytics {
   private static SharedPreferences mPrefs;
   private static String mAseVersion;
   private static ExecutorService mWorkPool;
+  private static volatile boolean started = false;
 
   private Analytics() {
     // Utility class.
   }
 
-  public static void start(Context context) {
+  public static void start(Context context, String analyticsID) {
     mAseVersion = AseVersion.getVersion(context);
     mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     mTracker = GoogleAnalyticsTracker.getInstance();
-    mTracker.start("UA-158835-13", 10, context);
+    mTracker.start(analyticsID, 10, context);
     mWorkPool = Executors.newSingleThreadExecutor();
+    started = true;
   }
 
   private static class PageNameBuilder {
@@ -58,7 +60,7 @@ public class Analytics {
   }
 
   public static void track(final String... nameParts) {
-    if (mTracker != null && mPrefs != null && mPrefs.getBoolean("usagetracking", false)) {
+    if (started && mPrefs.getBoolean("usagetracking", false)) {
       mWorkPool.submit(new Runnable() {
         public void run() {
           PageNameBuilder builder = new PageNameBuilder();
@@ -68,7 +70,7 @@ public class Analytics {
           }
           String name = builder.build();
           mTracker.trackPageView(name);
-        };
+        }
       });
     }
   }
@@ -79,10 +81,9 @@ public class Analytics {
   }
 
   public static void stop() {
-    if (mWorkPool != null) {
+    if (started) {
+      started = false;
       mWorkPool.shutdownNow();
-    }
-    if (mTracker != null) {
       mTracker.stop();
     }
   }

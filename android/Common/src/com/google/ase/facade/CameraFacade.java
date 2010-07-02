@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 
 import com.google.ase.AseLog;
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
@@ -35,7 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-public class CameraFacade extends RpcReceiverFacade {
+public class CameraFacade extends RpcReceiver {
 
   private final AndroidFacade mAndroidFacade;
 

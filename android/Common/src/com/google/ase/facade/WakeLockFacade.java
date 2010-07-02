@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 
 import java.util.HashMap;
@@ -33,7 +34,7 @@ import java.util.Map.Entry;
  * @author Felix Arends (felixarends@gmail.com)
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class WakeLockFacade extends RpcReceiverFacade {
+public class WakeLockFacade extends RpcReceiver {
 
   private final static String WAKE_LOCK_TAG = "com.google.ase.facade.PowerManagerFacade";
 
@@ -44,7 +45,6 @@ public class WakeLockFacade extends RpcReceiverFacade {
   private class WakeLockManager {
     private final PowerManager mmPowerManager;
     private final Map<WakeLockType, WakeLock> mmLocks = new HashMap<WakeLockType, WakeLock>();
-
 
     public WakeLockManager(Service service) {
       mmPowerManager = (PowerManager) service.getSystemService(Context.POWER_SERVICE);

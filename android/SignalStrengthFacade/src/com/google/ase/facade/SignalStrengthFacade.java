@@ -6,6 +6,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 
 /**
@@ -13,7 +14,7 @@ import com.google.ase.rpc.Rpc;
  * 
  * @author Joerg Zieren (joerg.zieren@gmail.com)
  */
-public class SignalStrengthFacade extends RpcReceiverFacade {
+public class SignalStrengthFacade extends RpcReceiver {
   private final TelephonyManager mTelephonyManager;
   private final EventFacade mEventFacade;
   private Bundle mSignalStrengths;

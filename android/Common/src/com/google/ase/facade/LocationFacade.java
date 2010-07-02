@@ -25,6 +25,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
@@ -40,7 +41,7 @@ import java.util.Map;
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Felix Arends (felix.arends@gmail.com)
  */
-public class LocationFacade extends RpcReceiverFacade {
+public class LocationFacade extends RpcReceiver {
   private final EventFacade mEventFacade;
   private final Service mService;
   private final Map<String, Location> mLocationUpdates;
