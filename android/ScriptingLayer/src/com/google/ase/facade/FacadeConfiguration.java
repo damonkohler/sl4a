@@ -41,7 +41,7 @@ public class FacadeConfiguration {
   private final static SortedMap<String, MethodDescriptor> sRpcs =
       new TreeMap<String, MethodDescriptor>();
   
-  private final static List<Class<? extends RpcReceiverFacade>> mFacadeClassList;
+  private final static List<Class<? extends RpcReceiver>> mFacadeClassList;
 
 
   static {
@@ -54,7 +54,7 @@ public class FacadeConfiguration {
       AseLog.e(e);
     }
 
-    mFacadeClassList = new ArrayList<Class<? extends RpcReceiverFacade>>();
+    mFacadeClassList = new ArrayList<Class<? extends RpcReceiver>>();
     mFacadeClassList.add(AndroidFacade.class);
     mFacadeClassList.add(RecorderFacade.class);
     mFacadeClassList.add(SpeechRecognitionFacade.class);
@@ -90,7 +90,7 @@ public class FacadeConfiguration {
       mFacadeClassList.add(SignalStrengthFacade.class);
     }
 
-    for (Class<? extends RpcReceiverFacade> recieverClass : mFacadeClassList) {
+    for (Class<? extends RpcReceiver> recieverClass : mFacadeClassList) {
       for (MethodDescriptor rpcMethod : MethodDescriptor.collectFrom(recieverClass)) {
         sRpcs.put(rpcMethod.getName(), rpcMethod);
       }
@@ -125,7 +125,6 @@ public class FacadeConfiguration {
 
     FacadeManager facadeManager = new FacadeManager(service, intent, mFacadeClassList);
 
-    return new JsonRpcServer(new ArrayList<Class<? extends RpcReceiver>>(mFacadeClassList),
-        facadeManager);
+    return new JsonRpcServer(mFacadeClassList, facadeManager);
   }
 }

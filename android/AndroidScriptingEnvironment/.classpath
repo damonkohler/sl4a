@@ -11,6 +11,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/TextToSpeechFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SignalStrengthFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ScriptsForAndroid"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ScriptingLayer"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
