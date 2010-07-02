@@ -16,21 +16,18 @@
 
 package com.google.ase.facade;
 
-import android.app.Service;
-import android.content.Intent;
-
-import com.google.ase.AseLog;
-import com.google.ase.facade.ui.UiFacade;
-import com.google.ase.jsonrpc.JsonRpcServer;
-import com.google.ase.jsonrpc.RpcReceiver;
-import com.google.ase.rpc.MethodDescriptor;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import com.google.ase.AseLog;
+import com.google.ase.facade.ui.UiFacade;
+import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.rpc.MethodDescriptor;
 
 /**
  * Encapsulates the list of supported facades and their construction.
@@ -40,58 +37,54 @@ import java.util.TreeMap;
  */
 public class FacadeConfiguration {
 
+  private final static Set<Class<? extends RpcReceiver>> sFacadeClassList;
   private final static SortedMap<String, MethodDescriptor> sRpcs =
       new TreeMap<String, MethodDescriptor>();
-  
-  private final static Set<Class<? extends RpcReceiver>> mFacadeClassList;
-
 
   static {
-
     int sdkVersion = 0;
-
     try {
       sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
     } catch (NumberFormatException e) {
       AseLog.e(e);
     }
 
-    mFacadeClassList = new HashSet<Class<? extends RpcReceiver>>();
-    mFacadeClassList.add(AlarmManagerFacade.class);
-    mFacadeClassList.add(AndroidFacade.class);
-    mFacadeClassList.add(ApplicationManagerFacade.class);
-    mFacadeClassList.add(CameraFacade.class);
-    mFacadeClassList.add(CommonIntentsFacade.class);
-    mFacadeClassList.add(ConditionManagerFacade.class);
-    mFacadeClassList.add(ContactsFacade.class);
-    mFacadeClassList.add(EventFacade.class);
-    mFacadeClassList.add(LocationFacade.class);
-    mFacadeClassList.add(PhoneFacade.class);
-    mFacadeClassList.add(RecorderFacade.class);
-    mFacadeClassList.add(SensorManagerFacade.class);
-    mFacadeClassList.add(SettingsFacade.class);
-    mFacadeClassList.add(SmsFacade.class);
-    mFacadeClassList.add(SpeechRecognitionFacade.class);
-    mFacadeClassList.add(ToneGeneratorFacade.class);
-    mFacadeClassList.add(WakeLockFacade.class);
-    mFacadeClassList.add(WifiFacade.class);
-    mFacadeClassList.add(UiFacade.class);
+    sFacadeClassList = new HashSet<Class<? extends RpcReceiver>>();
+    sFacadeClassList.add(AlarmManagerFacade.class);
+    sFacadeClassList.add(AndroidFacade.class);
+    sFacadeClassList.add(ApplicationManagerFacade.class);
+    sFacadeClassList.add(CameraFacade.class);
+    sFacadeClassList.add(CommonIntentsFacade.class);
+    sFacadeClassList.add(ConditionManagerFacade.class);
+    sFacadeClassList.add(ContactsFacade.class);
+    sFacadeClassList.add(EventFacade.class);
+    sFacadeClassList.add(LocationFacade.class);
+    sFacadeClassList.add(PhoneFacade.class);
+    sFacadeClassList.add(RecorderFacade.class);
+    sFacadeClassList.add(SensorManagerFacade.class);
+    sFacadeClassList.add(SettingsFacade.class);
+    sFacadeClassList.add(SmsFacade.class);
+    sFacadeClassList.add(SpeechRecognitionFacade.class);
+    sFacadeClassList.add(ToneGeneratorFacade.class);
+    sFacadeClassList.add(WakeLockFacade.class);
+    sFacadeClassList.add(WifiFacade.class);
+    sFacadeClassList.add(UiFacade.class);
 
     if (sdkVersion >= 4) {
-      mFacadeClassList.add(TextToSpeechFacade.class);
+      sFacadeClassList.add(TextToSpeechFacade.class);
     } else {
-      mFacadeClassList.add(EyesFreeFacade.class);
+      sFacadeClassList.add(EyesFreeFacade.class);
     }
 
     if (sdkVersion >= 5) {
-      mFacadeClassList.add(BluetoothFacade.class);
+      sFacadeClassList.add(BluetoothFacade.class);
     }
 
     if (sdkVersion >= 7) {
-      mFacadeClassList.add(SignalStrengthFacade.class);
+      sFacadeClassList.add(SignalStrengthFacade.class);
     }
 
-    for (Class<? extends RpcReceiver> recieverClass : mFacadeClassList) {
+    for (Class<? extends RpcReceiver> recieverClass : sFacadeClassList) {
       for (MethodDescriptor rpcMethod : MethodDescriptor.collectFrom(recieverClass)) {
         sRpcs.put(rpcMethod.getName(), rpcMethod);
       }
@@ -101,7 +94,6 @@ public class FacadeConfiguration {
   private FacadeConfiguration() {
     // Utility class.
   }
-
 
   /** Returns a list of {@link MethodDescriptor} objects for all facades. */
   public static List<MethodDescriptor> collectRpcDescriptors() {
@@ -113,19 +105,7 @@ public class FacadeConfiguration {
     return sRpcs.get(name);
   }
 
-  /**
-   * Returns a {@link JsonRpcServer} with all facades configured.
-   * 
-   * @param service
-   *          service to configure facades with
-   * @param intent
-   *          intent to configure facades with
-   * @return a new {@link JsonRpcServer} configured with all facades
-   */
-  public static JsonRpcServer buildJsonRpcServer(final Service service, Intent intent) {
-
-    FacadeManager facadeManager = new FacadeManager(service, intent, mFacadeClassList);
-
-    return new JsonRpcServer(mFacadeClassList, facadeManager);
+  public static Collection<Class<? extends RpcReceiver>> getFacadeClasses() {
+    return sFacadeClassList;
   }
 }

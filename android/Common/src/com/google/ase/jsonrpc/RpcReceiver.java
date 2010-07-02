@@ -2,13 +2,11 @@
 
 package com.google.ase.jsonrpc;
 
-/**
- * 
- * Ensures that all the subclasses agree on the common constructor.
- */
 public abstract class RpcReceiver {
+
   public RpcReceiver(RpcReceiverManager manager) {
-    // Required for reflection.
+    // To make reflection easier, we ensures that all the subclasses agree on this common
+    // constructor.
   }
 
   /** Invoked when the receiver is shut down. */

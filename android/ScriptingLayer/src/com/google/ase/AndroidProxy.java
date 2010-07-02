@@ -22,6 +22,7 @@ import android.app.Service;
 import android.content.Intent;
 
 import com.google.ase.facade.FacadeConfiguration;
+import com.google.ase.facade.FacadeManager;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
 public class AndroidProxy {
@@ -30,7 +31,9 @@ public class AndroidProxy {
   private final JsonRpcServer mJsonRpcServer;
 
   public AndroidProxy(Service service, Intent intent) {
-    mJsonRpcServer = FacadeConfiguration.buildJsonRpcServer(service, intent);
+    FacadeManager facadeManager =
+        new FacadeManager(service, intent, FacadeConfiguration.getFacadeClasses());
+    mJsonRpcServer = new JsonRpcServer(facadeManager);
   }
 
   public InetSocketAddress getAddress() {

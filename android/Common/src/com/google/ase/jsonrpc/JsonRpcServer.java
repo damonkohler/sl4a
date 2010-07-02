@@ -16,15 +16,6 @@
 
 package com.google.ase.jsonrpc;
 
-import com.google.ase.AseLog;
-import com.google.ase.facade.FacadeManager;
-import com.google.ase.rpc.MethodDescriptor;
-import com.google.ase.rpc.RpcError;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,8 +34,15 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.google.ase.AseLog;
+import com.google.ase.rpc.MethodDescriptor;
+import com.google.ase.rpc.RpcError;
 
 /**
  * A JSON RPC server that forwards RPC calls to a specified receiver object.
@@ -56,7 +54,7 @@ public class JsonRpcServer {
   /**
    * A map of strings to known RPCs.
    */
-  private final Map<String, RpcInfo> mKnownRpcs = new HashMap<String, RpcInfo>();
+  private final Map<String, MethodDescriptor> mKnownRpcs = new HashMap<String, MethodDescriptor>();
 
   /**
    * The list of RPC receiving objects.
@@ -64,7 +62,7 @@ public class JsonRpcServer {
   private final List<Class<? extends RpcReceiver>> mReceivers =
       new ArrayList<Class<? extends RpcReceiver>>();
 
-  private final FacadeManager mManager;
+  private final RpcReceiverManager mRpcReceiverManager;
 
   private ServerSocket mServer;
   private Thread mServerThread;
@@ -106,13 +104,13 @@ public class JsonRpcServer {
         int id = request.getInt("id");
         String method = request.getString("method");
         JSONArray params = request.getJSONArray("params");
-        RpcInfo rpc = mKnownRpcs.get(method);
+        MethodDescriptor rpc = mKnownRpcs.get(method);
         if (rpc == null) {
           send(JsonRpcResult.error(id, new RpcError("Unknown RPC.")));
           continue;
         }
         try {
-          send(JsonRpcResult.result(id, rpc.invoke(method, params)));
+          send(JsonRpcResult.result(id, rpc.invoke(mRpcReceiverManager, params)));
         } catch (Throwable t) {
           AseLog.e("Invocation error.", t);
           send(JsonRpcResult.error(id, t));
@@ -153,10 +151,10 @@ public class JsonRpcServer {
    * @param receivers
    *          the {@link RpcReceiver}s to register with the server
    */
-  public JsonRpcServer(Set<Class<? extends RpcReceiver>> receivers, FacadeManager manager) {
-    mManager = manager;
+  public JsonRpcServer(RpcReceiverManager manager) {
+    mRpcReceiverManager = manager;
     mNetworkThreads = new CopyOnWriteArrayList<ConnectionThread>();
-    for (Class<? extends RpcReceiver> receiver : receivers) {
+    for (Class<? extends RpcReceiver> receiver : manager.getRpcReceiverClasses()) {
       registerRpcReceiver(receiver);
     }
   }
@@ -168,18 +166,14 @@ public class JsonRpcServer {
    *          the receiving object
    */
   private void registerRpcReceiver(final Class<? extends RpcReceiver> receiverClass) {
-
     Collection<MethodDescriptor> methodList = MethodDescriptor.collectFrom(receiverClass);
-
-    RpcInfo info = new RpcInfo(receiverClass, methodList, mManager);
-
     for (MethodDescriptor m : methodList) {
       if (mKnownRpcs.containsKey(m.getName())) {
         // We already know an RPC of the same name. We don't catch this anywhere because this is a
         // programming error.
         throw new RuntimeException("An RPC with the name " + m.getName() + " is already known.");
       }
-      mKnownRpcs.put(m.getName(), info);
+      mKnownRpcs.put(m.getName(), m);
     }
     mReceivers.add(receiverClass);
   }
@@ -279,7 +273,7 @@ public class JsonRpcServer {
     }
     // Notify all RPC receiving objects. They may have to clean up some of their state.
     for (Class<? extends RpcReceiver> receiverClass : mReceivers) {
-      RpcReceiver receiver = mManager.getReceiver(receiverClass);
+      RpcReceiver receiver = mRpcReceiverManager.getReceiver(receiverClass);
       if (receiver != null) {
         receiver.shutdown();
       }

@@ -27,6 +27,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import com.google.ase.Analytics;
+import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.jsonrpc.RpcReceiverManager;
 import com.google.ase.util.VisibleForTesting;
 
 /**
@@ -38,8 +44,10 @@ public final class MethodDescriptor {
   private static final Map<Class<?>, Converter<?>> sConverters = populateConverters();
 
   private final Method mMethod;
+  private final Class<? extends RpcReceiver> mClass;
 
-  public MethodDescriptor(Method method) {
+  public MethodDescriptor(Class<? extends RpcReceiver> clazz, Method method) {
+    mClass = clazz;
     mMethod = method;
   }
 
@@ -49,15 +57,94 @@ public final class MethodDescriptor {
   }
 
   /** Collects all methods with {@code RPC} annotation from given class. */
-  public static Collection<MethodDescriptor> collectFrom(Class<?> clazz) {
+  public static Collection<MethodDescriptor> collectFrom(Class<? extends RpcReceiver> clazz) {
     List<MethodDescriptor> descriptors = new ArrayList<MethodDescriptor>();
     for (Method method : clazz.getMethods()) {
       if (method.isAnnotationPresent(Rpc.class)) {
-        descriptors.add(new MethodDescriptor(method));
+        descriptors.add(new MethodDescriptor(clazz, method));
+      }
+    }
+    return descriptors;
+  }
+
+  /**
+   * Invokes the call that belongs to this object with the given parameters. Wraps the response
+   * (possibly an exception) in a JSONObject.
+   * 
+   * @param parameters
+   *          {@code JSONArray} containing the parameters
+   * @return result
+   * @throws Throwable
+   */
+  public Object invoke(RpcReceiverManager manager, final JSONArray parameters)
+      throws Throwable {
+    // Issue track call first in case of failure.
+    Analytics.track("api", getName());
+
+    final Type[] parameterTypes = getGenericParameterTypes();
+    final Object[] args = new Object[parameterTypes.length];
+    final Annotation annotations[][] = getParameterAnnotations();
+
+    if (parameters.length() > args.length) {
+      throw new RpcError("Too many parameters specified.");
+    }
+
+    for (int i = 0; i < args.length; i++) {
+      final Type parameterType = parameterTypes[i];
+      if (i < parameters.length()) {
+        args[i] = convertParameter(parameters, i, parameterType);
+      } else if (MethodDescriptor.hasDefaultValue(annotations[i])) {
+        args[i] = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
+      } else {
+        throw new RpcError("Argument " + (i + 1) + " is mReceiverClassnot present");
       }
     }
 
-    return descriptors;
+    Object result = null;
+    try {
+      result = getMethod().invoke(manager.getReceiver(mClass), args);
+    } catch (Throwable t) {
+      throw t.getCause();
+    }
+    return result;
+  }
+
+  /**
+   * Converts a parameter from JSON into a Java Object.
+   * 
+   * @return TODO
+   */
+  // TODO(damonkohler): This signature is a bit weird (auto-refactored). The obvious alternative
+  // would be to work on one supplied parameter and return the converted parameter. However, that's
+  // problematic because you lose the ability to call the getXXX methods on the JSON array.
+  @VisibleForTesting
+  static Object convertParameter(final JSONArray parameters, int index, Type type)
+      throws JSONException, RpcError {
+    try {
+      // We must handle null and numbers explicitly because we cannot magically cast them. We
+      // also need to convert implicitly from numbers to bools.
+      if (parameters.isNull(index)) {
+        return null;
+      } else if (type == Boolean.class) {
+        try {
+          return parameters.getBoolean(index);
+        } catch (JSONException e) {
+          return new Boolean(parameters.getInt(index) != 0);
+        }
+      } else if (type == Long.class) {
+        return parameters.getLong(index);
+      } else if (type == Double.class) {
+        return parameters.getDouble(index);
+      } else if (type == Integer.class) {
+        return parameters.getInt(index);
+      } else {
+        // Magically cast the parameter to the right Java type.
+        return ((Class<?>) type).cast(parameters.get(index));
+      }
+    } catch (ClassCastException e) {
+      throw new RpcError("Argument " + (index + 1) + " should be of type "
+          + ((Class<?>) type).getSimpleName() + ".");
+    }
   }
 
   public Method getMethod() {
