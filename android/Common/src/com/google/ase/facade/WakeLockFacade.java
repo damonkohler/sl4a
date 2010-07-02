@@ -16,17 +16,16 @@
 
 package com.google.ase.facade;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import android.app.Service;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * A facade exposing some of the functionality of the PowerManager, in particular wake locks.
@@ -34,7 +33,7 @@ import com.google.ase.rpc.Rpc;
  * @author Felix Arends (felixarends@gmail.com)
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class WakeLockFacade implements RpcReceiver {
+public class WakeLockFacade extends RpcReceiverFacade {
 
   private final static String WAKE_LOCK_TAG = "com.google.ase.facade.PowerManagerFacade";
 
@@ -45,6 +44,7 @@ public class WakeLockFacade implements RpcReceiver {
   private class WakeLockManager {
     private final PowerManager mmPowerManager;
     private final Map<WakeLockType, WakeLock> mmLocks = new HashMap<WakeLockType, WakeLock>();
+
 
     public WakeLockManager(Service service) {
       mmPowerManager = (PowerManager) service.getSystemService(Context.POWER_SERVICE);
@@ -80,8 +80,9 @@ public class WakeLockFacade implements RpcReceiver {
 
   private final WakeLockManager mManager;
 
-  public WakeLockFacade(Service service) {
-    mManager = new WakeLockManager(service);
+  public WakeLockFacade(FacadeManager manager) {
+    super(manager);
+    mManager = new WakeLockManager(manager.getService());
   }
 
   @Rpc(description = "Acquires a full wake lock (CPU on, screen bright, keyboard bright).")

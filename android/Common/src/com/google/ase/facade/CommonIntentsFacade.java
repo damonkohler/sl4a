@@ -1,26 +1,26 @@
 package com.google.ase.facade;
 
-import java.io.File;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Contacts.People;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
-public class CommonIntentsFacade implements RpcReceiver {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+
+public class CommonIntentsFacade extends RpcReceiverFacade {
 
   private final AndroidFacade mAndroidFacade;
 
-  public CommonIntentsFacade(AndroidFacade androidFacade) {
-    mAndroidFacade = androidFacade;
+  public CommonIntentsFacade(FacadeManager manager) {
+    super(manager);
+    mAndroidFacade = manager.getFacade(AndroidFacade.class);
   }
 
   @Override

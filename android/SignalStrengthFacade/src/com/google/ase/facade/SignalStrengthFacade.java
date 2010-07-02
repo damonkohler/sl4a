@@ -1,13 +1,11 @@
 package com.google.ase.facade;
 
-import android.app.Service;
 import android.content.Context;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 
 /**
@@ -15,7 +13,7 @@ import com.google.ase.rpc.Rpc;
  * 
  * @author Joerg Zieren (joerg.zieren@gmail.com)
  */
-public class SignalStrengthFacade implements RpcReceiver {
+public class SignalStrengthFacade extends RpcReceiverFacade {
   private final TelephonyManager mTelephonyManager;
   private final EventFacade mEventFacade;
   private Bundle mSignalStrengths;
@@ -29,9 +27,11 @@ public class SignalStrengthFacade implements RpcReceiver {
     }
   };
 
-  public SignalStrengthFacade(Service service, EventFacade eventFacade) {
-    mEventFacade = eventFacade;
-    mTelephonyManager = (TelephonyManager) service.getSystemService(Context.TELEPHONY_SERVICE);
+  public SignalStrengthFacade(FacadeManager manager) {
+    super(manager);
+    mEventFacade = manager.getFacade(EventFacade.class);
+    mTelephonyManager =
+        (TelephonyManager) manager.getService().getSystemService(Context.TELEPHONY_SERVICE);
   }
 
   @Rpc(description = "Starts tracking signal strengths.")

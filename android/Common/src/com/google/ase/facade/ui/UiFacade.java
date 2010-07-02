@@ -16,12 +16,6 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.Queue;
-import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Intent;
@@ -30,26 +24,34 @@ import android.util.AndroidRuntimeException;
 import com.google.ase.AseApplication;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
+import com.google.ase.facade.FacadeManager;
+import com.google.ase.facade.RpcReceiverFacade;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.Queue;
+import java.util.Set;
 
 /**
  * UiFacade
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-public class UiFacade implements RpcReceiver {
+public class UiFacade extends RpcReceiverFacade {
   private final Service mService;
   private final Queue<FutureActivityTask> mTaskQueue;
   private RunnableDialog mDialogTask;
 
-  public UiFacade(Service service) {
-    mService = service;
+  public UiFacade(FacadeManager manager) {
+    super(manager);
+    mService = manager.getService();
     mTaskQueue = ((AseApplication) mService.getApplication()).getTaskQueue();
   }
 

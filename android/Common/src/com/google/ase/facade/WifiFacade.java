@@ -1,24 +1,24 @@
 package com.google.ase.facade;
 
-import java.util.List;
-
 import android.app.Service;
 import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
-public class WifiFacade implements RpcReceiver {
+import java.util.List;
+
+public class WifiFacade extends RpcReceiverFacade {
 
   private final Service mService;
   private final WifiManager mWifi;
 
-  public WifiFacade(Service service) {
-    mService = service;
+  public WifiFacade(FacadeManager manager) {
+    super(manager);
+    mService = manager.getService();
     mWifi = (WifiManager) mService.getSystemService(Context.WIFI_SERVICE);
   }
 

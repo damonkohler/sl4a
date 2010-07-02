@@ -16,16 +16,19 @@
 
 package com.google.ase.jsonrpc;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import com.google.ase.Analytics;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.RpcError;
 import com.google.ase.util.VisibleForTesting;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Instances of this class describe specific RPCs on the server. An RPC on the server is described
@@ -34,12 +37,19 @@ import com.google.ase.util.VisibleForTesting;
  * @author Felix Arends (felix.arends@gmail.com)
  */
 public final class RpcInfo {
-  private final Object mReceiver;
-  private final MethodDescriptor mMethodDescriptor;
+  private RpcReceiver mReceiver;
+  private final Class<? extends RpcReceiver> mReceiverClass;
+  private final RpcReceiverManager mManager;
+  private final Map<String, MethodDescriptor> mMethodMap;
 
-  public RpcInfo(final Object receiver, final MethodDescriptor methodDescriptor) {
-    mReceiver = receiver;
-    mMethodDescriptor = methodDescriptor;
+  public RpcInfo(final Class<? extends RpcReceiver> receiverClass,
+      Collection<MethodDescriptor> methodList, RpcReceiverManager manager) {
+    mReceiverClass = receiverClass;
+    mManager = manager;
+    mMethodMap = new HashMap<String, MethodDescriptor>();
+    for (MethodDescriptor descriptor : methodList) {
+      mMethodMap.put(descriptor.getName(), descriptor);
+    }
   }
 
   /**
@@ -51,13 +61,20 @@ public final class RpcInfo {
    * @return result
    * @throws Throwable
    */
-  public Object invoke(final JSONArray parameters) throws Throwable {
-    // Issue track call first in case of failure.
-    Analytics.track("api", mMethodDescriptor.getName());
+  public Object invoke(final String name, final JSONArray parameters) throws Throwable {
 
-    final Type[] parameterTypes = mMethodDescriptor.getGenericParameterTypes();
+    // Issue track call first in case of failure.
+    Analytics.track("api", name);
+
+    final MethodDescriptor methodDescriptor = mMethodMap.get(name);
+
+    if (methodDescriptor == null) {
+      throw new RpcError("Unknown RPC name: " + name);
+    }
+
+    final Type[] parameterTypes = methodDescriptor.getGenericParameterTypes();
     final Object[] args = new Object[parameterTypes.length];
-    final Annotation annotations[][] = mMethodDescriptor.getParameterAnnotations();
+    final Annotation annotations[][] = methodDescriptor.getParameterAnnotations();
 
     if (parameters.length() > args.length) {
       throw new RpcError("Too many parameters specified.");
@@ -74,9 +91,16 @@ public final class RpcInfo {
       }
     }
 
+    if (mReceiver == null) {
+      mReceiver = mManager.getReceiverInstance(mReceiverClass);
+      if (mReceiver == null) {
+        throw new RpcError("Cannot create object for class " + mReceiverClass.getName());
+      }
+    }
+
     Object result = null;
     try {
-      result = mMethodDescriptor.getMethod().invoke(mReceiver, args);
+      result = methodDescriptor.getMethod().invoke(mReceiver, args);
     } catch (Throwable t) {
       throw t.getCause();
     }

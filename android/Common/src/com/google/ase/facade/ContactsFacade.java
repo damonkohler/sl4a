@@ -16,13 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -32,27 +25,35 @@ import android.net.Uri;
 import android.provider.Contacts.People;
 import android.provider.Contacts.PhonesColumns;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides access to contacts related functionality.
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com
  */
-public class ContactsFacade implements RpcReceiver {
+public class ContactsFacade extends RpcReceiverFacade {
   private static final Uri CONTACTS_URI = Uri.parse("content://contacts/people");
   private final ContentResolver mContentResolver;
   private final Service mService;
   private final CommonIntentsFacade mCommonIntentsFacade;
 
-  public ContactsFacade(Service service, CommonIntentsFacade commonIntentsFacade) {
-    mService = service;
-    mCommonIntentsFacade = commonIntentsFacade;
-    mContentResolver = service.getContentResolver();
+  public ContactsFacade(FacadeManager manager) {
+    super(manager);
+    mService = manager.getService();
+    mContentResolver = mService.getContentResolver();
+    mCommonIntentsFacade = manager.getFacade(CommonIntentsFacade.class);
   }
+
 
   private Uri buildUri(Integer id) {
     Uri uri = ContentUris.withAppendedId(People.CONTENT_URI, id);

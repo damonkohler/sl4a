@@ -16,11 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Service;
 import android.content.Context;
 import android.location.Address;
@@ -30,10 +25,14 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This facade exposes the LocationManager related functionality.
@@ -41,7 +40,7 @@ import com.google.ase.rpc.RpcParameter;
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Felix Arends (felix.arends@gmail.com)
  */
-public class LocationFacade implements RpcReceiver {
+public class LocationFacade extends RpcReceiverFacade {
   private final EventFacade mEventFacade;
   private final Service mService;
   private final Map<String, Location> mLocationUpdates;
@@ -68,11 +67,12 @@ public class LocationFacade implements RpcReceiver {
     }
   };
 
-  public LocationFacade(Service service, EventFacade eventFacade) {
-    mService = service;
-    mEventFacade = eventFacade;
+  public LocationFacade(FacadeManager manager) {
+    super(manager);
+    mService = manager.getService();
+    mEventFacade = manager.getFacade(EventFacade.class);
     mGeocoder = new Geocoder(mService);
-    mLocationManager = (LocationManager) service.getSystemService(Context.LOCATION_SERVICE);
+    mLocationManager = (LocationManager) mService.getSystemService(Context.LOCATION_SERVICE);
     mLocationUpdates = new HashMap<String, Location>();
   }
 

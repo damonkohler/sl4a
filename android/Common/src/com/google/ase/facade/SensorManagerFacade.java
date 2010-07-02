@@ -16,7 +16,6 @@
 
 package com.google.ase.facade;
 
-import android.app.Service;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -24,7 +23,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
@@ -36,16 +34,17 @@ import com.google.ase.rpc.RpcParameter;
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
-public class SensorManagerFacade implements RpcReceiver {
+public class SensorManagerFacade extends RpcReceiverFacade {
   private final EventFacade mEventFacade;
   private final SensorManager mSensorManager;
   private Bundle mSensorReadings;
 
   private SensorEventListener mSensorListener;
 
-  public SensorManagerFacade(Service service, EventFacade eventFacade) {
-    mEventFacade = eventFacade;
-    mSensorManager = (SensorManager) service.getSystemService(Context.SENSOR_SERVICE);
+  public SensorManagerFacade(FacadeManager manager) {
+    super(manager);
+    mEventFacade = manager.getFacade(EventFacade.class);
+    mSensorManager = (SensorManager) manager.getService().getSystemService(Context.SENSOR_SERVICE);
   }
 
   @Rpc(description = "Starts recording sensor data to be available for polling.")

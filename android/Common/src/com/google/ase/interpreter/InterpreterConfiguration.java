@@ -210,6 +210,9 @@ public class InterpreterConfiguration {
     filter.addDataScheme("package");
     mListener = new InterpreterListener(mContext);
     mContext.registerReceiver(mListener, filter);
+  }
+
+  public void startDiscovering() {
     mListener.discoverAll();
   }
 

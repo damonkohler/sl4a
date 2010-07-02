@@ -16,14 +16,12 @@
 
 package com.google.ase.facade;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import android.app.Service;
 import android.content.Context;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * This facade exposes the functionality to read from the event queue as an RPC, and the
@@ -32,7 +30,7 @@ import com.google.ase.rpc.Rpc;
  * @author Felix Arends (felix.arends@gmail.com)
  * 
  */
-public class EventFacade implements RpcReceiver {
+public class EventFacade extends RpcReceiverFacade {
   /**
    * The maximum length of the event queue. Old events will be discarded when this limit is
    * exceeded.
@@ -41,8 +39,9 @@ public class EventFacade implements RpcReceiver {
   final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
   final Context mService;
 
-  public EventFacade(final Service service) {
-    mService = service;
+  public EventFacade(FacadeManager manager) {
+    super(manager);
+    mService = manager.getService();
   }
 
   @Rpc(description = "Receives the most recent event (i.e. location or sensor update, etc.)", returns = "Map of event properties.")

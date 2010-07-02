@@ -16,14 +16,13 @@
 
 package com.google.ase.facade;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-
 import android.media.MediaRecorder;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
 
 /**
  * A facade for recording audio.
@@ -31,7 +30,12 @@ import com.google.ase.rpc.RpcParameter;
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class RecorderFacade implements RpcReceiver {
+public class RecorderFacade extends RpcReceiverFacade {
+
+  public RecorderFacade(FacadeManager manager) {
+    super(manager);
+  }
+
   private final MediaRecorder mAudioRecorder = new MediaRecorder();
 
   @Rpc(description = "Records audio from the microphone and saves it to the given location.")

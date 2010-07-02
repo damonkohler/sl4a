@@ -16,15 +16,15 @@
 
 package com.google.ase;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Analytics {
   private static GoogleAnalyticsTracker mTracker;
@@ -58,7 +58,7 @@ public class Analytics {
   }
 
   public static void track(final String... nameParts) {
-    if (mPrefs.getBoolean("usagetracking", false)) {
+    if (mTracker != null && mPrefs != null && mPrefs.getBoolean("usagetracking", false)) {
       mWorkPool.submit(new Runnable() {
         public void run() {
           PageNameBuilder builder = new PageNameBuilder();
@@ -79,7 +79,11 @@ public class Analytics {
   }
 
   public static void stop() {
-    mWorkPool.shutdownNow();
-    mTracker.stop();
+    if (mWorkPool != null) {
+      mWorkPool.shutdownNow();
+    }
+    if (mTracker != null) {
+      mTracker.stop();
+    }
   }
 }

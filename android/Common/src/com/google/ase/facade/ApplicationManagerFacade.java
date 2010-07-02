@@ -1,5 +1,15 @@
 package com.google.ase.facade;
 
+import android.app.ActivityManager;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+
+import com.google.ase.rpc.Rpc;
+import com.google.ase.rpc.RpcParameter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,25 +18,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.app.ActivityManager;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-
-import com.google.ase.jsonrpc.RpcReceiver;
-import com.google.ase.rpc.Rpc;
-import com.google.ase.rpc.RpcParameter;
-
-public class ApplicationManagerFacade implements RpcReceiver {
+public class ApplicationManagerFacade extends RpcReceiverFacade {
 
   private final AndroidFacade mAndroidFacade;
   private final ActivityManager mActivityManager;
   private final PackageManager mPackageManager;
 
-  public ApplicationManagerFacade(Service service, AndroidFacade androidFacade) {
-    mAndroidFacade = androidFacade;
+  public ApplicationManagerFacade(FacadeManager manager) {
+    super(manager);
+    Service service = manager.getService();
+    mAndroidFacade = manager.getFacade(AndroidFacade.class);
     mActivityManager = (ActivityManager) service.getSystemService(Context.ACTIVITY_SERVICE);
     mPackageManager = service.getPackageManager();
   }

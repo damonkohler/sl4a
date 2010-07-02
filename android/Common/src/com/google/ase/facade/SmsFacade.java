@@ -16,13 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -32,25 +25,32 @@ import android.net.Uri;
 import android.telephony.gsm.SmsManager;
 
 import com.google.ase.AseLog;
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides access to SMS related functionality.
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-public class SmsFacade implements RpcReceiver {
+public class SmsFacade extends RpcReceiverFacade {
 
   private final Service mService;
   private final ContentResolver mContentResolver;
   private final SmsManager mSms;
 
-  public SmsFacade(Service service) {
-    mService = service;
+  public SmsFacade(FacadeManager manager) {
+    super(manager);
+    mService = manager.getService();
     mContentResolver = mService.getContentResolver();
     mSms = SmsManager.getDefault();
   }

@@ -16,12 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.util.Queue;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -48,13 +42,18 @@ import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
-public class AndroidFacade implements RpcReceiver {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Queue;
+
+public class AndroidFacade extends RpcReceiverFacade {
   /**
    * An instance of this interface is passed to the facade. From this object, the resource IDs can
    * be obtained.
@@ -64,7 +63,7 @@ public class AndroidFacade implements RpcReceiver {
   }
 
   private final Service mService;
-  private final Handler mHandler = new Handler();
+  private final Handler mHandler;
   private final Intent mIntent;
   private final Queue<FutureActivityTask> mTaskQueue;
 
@@ -77,21 +76,25 @@ public class AndroidFacade implements RpcReceiver {
   public void shutdown() {
   }
 
+  public AndroidFacade(FacadeManager manager) {
+    super(manager);
+    mService = manager.getService();
+    mIntent = manager.getIntent();
+    AseApplication application = ((AseApplication) mService.getApplication());
+    mTaskQueue = application.getTaskQueue();
+    mHandler = application.getUiThreadHandler();
+    mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);
+    mNotificationManager =
+        (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
+    mResources = manager.getAndroidFacadeResources();
+    
+  }
   /**
    * Creates a new AndroidFacade that simplifies the interface to various Android APIs.
    * 
    * @param service
    *          is the {@link Context} the APIs will run under
    */
-  public AndroidFacade(Service service, Intent intent, Resources resources) {
-    mService = service;
-    mIntent = intent;
-    mTaskQueue = ((AseApplication) mService.getApplication()).getTaskQueue();
-    mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);
-    mNotificationManager =
-        (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
-    mResources = resources;
-  }
 
   @Rpc(description = "Put text in the clipboard.")
   public void setClipboard(@RpcParameter(name = "text") String text) {

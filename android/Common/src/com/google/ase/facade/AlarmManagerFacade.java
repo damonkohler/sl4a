@@ -19,7 +19,6 @@ package com.google.ase.facade;
 import android.app.AlarmManager;
 import android.app.Service;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
@@ -33,11 +32,13 @@ import com.google.ase.trigger.TriggerRepository;
  * @author Felix Arends (felix.arends@gmail.com)
  * 
  */
-public class AlarmManagerFacade implements RpcReceiver {
+public class AlarmManagerFacade extends RpcReceiverFacade {
   final AlarmTriggerManager mAlarmManager;
 
-  public AlarmManagerFacade(Service service, EventFacade eventFacade,
-      TriggerRepository triggerRepository) {
+  public AlarmManagerFacade(FacadeManager manager) {
+    super(manager);
+    Service service = manager.getService();
+    TriggerRepository triggerRepository = manager.getTriggerRepository();
     mAlarmManager = new AlarmTriggerManager(service, triggerRepository);
   }
 

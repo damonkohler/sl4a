@@ -16,9 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.lang.reflect.Method;
-import java.util.Queue;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -32,17 +29,19 @@ import com.google.ase.AseLog;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import java.lang.reflect.Method;
+import java.util.Queue;
 
 /**
  * Exposes phone settings functionality.
  * 
  * @author Frank Spychalski (frank.spychalski@gmail.com)
  */
-public class SettingsFacade implements RpcReceiver {
+public class SettingsFacade extends RpcReceiverFacade {
 
   public static int AIRPLANE_MODE_OFF = 0;
   public static int AIRPLANE_MODE_ON = 1;
@@ -57,8 +56,9 @@ public class SettingsFacade implements RpcReceiver {
    * @param service
    *          is the {@link Context} the APIs will run under
    */
-  public SettingsFacade(Service service) {
-    mService = service;
+  public SettingsFacade(FacadeManager manager) {
+    super(manager);
+    mService = manager.getService();
     mAudio = (AudioManager) mService.getSystemService(Context.AUDIO_SERVICE);
     mPower = (PowerManager) mService.getSystemService(Context.POWER_SERVICE);
   }

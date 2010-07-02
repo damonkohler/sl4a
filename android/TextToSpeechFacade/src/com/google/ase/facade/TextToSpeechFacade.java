@@ -16,25 +16,24 @@
 
 package com.google.ase.facade;
 
-import java.util.concurrent.CountDownLatch;
-
-import android.app.Service;
 import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
 
-public class TextToSpeechFacade implements RpcReceiver {
+import java.util.concurrent.CountDownLatch;
+
+public class TextToSpeechFacade extends RpcReceiverFacade {
 
   private final TextToSpeech mTts;
   private final CountDownLatch mOnInitLock;
 
-  public TextToSpeechFacade(Service service) {
+  public TextToSpeechFacade(FacadeManager manager) {
+    super(manager);
     mOnInitLock = new CountDownLatch(1);
-    mTts = new TextToSpeech(service, new OnInitListener() {
+    mTts = new TextToSpeech(manager.getService(), new OnInitListener() {
       @Override
       public void onInit(int arg0) {
         mOnInitLock.countDown();

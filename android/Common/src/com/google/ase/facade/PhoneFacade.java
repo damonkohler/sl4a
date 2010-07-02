@@ -16,11 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-import org.json.JSONException;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -29,16 +24,20 @@ import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
+
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Exposes TelephonyManager funcitonality.
  * 
  * @author Damon Kohler (damonkohler@gmail.com) Felix Arends (felix.arends@gmail.com)
  */
-public class PhoneFacade implements RpcReceiver {
+public class PhoneFacade extends RpcReceiverFacade {
   private final AndroidFacade mAndroidFacade;
   private final EventFacade mEventFacade;
   private final TelephonyManager mTelephonyManager;
@@ -64,10 +63,12 @@ public class PhoneFacade implements RpcReceiver {
     }
   };
 
-  public PhoneFacade(Service service, AndroidFacade androidFacade, EventFacade eventFacade) {
-    mEventFacade = eventFacade;
-    mAndroidFacade = androidFacade;
+  public PhoneFacade(FacadeManager manager) {
+    super(manager);
+    Service service = manager.getService();
     mTelephonyManager = (TelephonyManager) service.getSystemService(Context.TELEPHONY_SERVICE);
+    mAndroidFacade = manager.getFacade(AndroidFacade.class);
+    mEventFacade = manager.getFacade(EventFacade.class);
   }
 
   @Override

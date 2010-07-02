@@ -16,26 +16,26 @@
 
 package com.google.ase.facade;
 
-import java.util.List;
-
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
 import com.google.ase.exception.AseRuntimeException;
-import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
 
-public class EyesFreeFacade implements RpcReceiver {
+import java.util.List;
+
+public class EyesFreeFacade extends RpcReceiverFacade {
 
   private final Service mService;
   private final PackageManager mPackageManager;
 
-  public EyesFreeFacade(Service service) {
-    mService = service;
-    mPackageManager = service.getPackageManager();
+  public EyesFreeFacade(FacadeManager manager) {
+    super(manager);
+    mService = manager.getService();
+    mPackageManager = mService.getPackageManager();
   }
 
   @Rpc(description = "Speaks the provided message via TTS.")

@@ -16,26 +16,28 @@
 
 package com.google.ase;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import android.app.Application;
+import android.os.Handler;
 
 import com.google.ase.activity.NotificationIdFactory;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.trigger.TriggerRepository;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 public class AseApplication extends Application {
 
   private final Queue<FutureActivityTask> mTaskQueue =
       new ConcurrentLinkedQueue<FutureActivityTask>();
 
-  private TriggerRepository mTriggerRepository;
+  protected TriggerRepository mTriggerRepository;
 
-  private final NotificationIdFactory mNotificaitonIdFactory = NotificationIdFactory.INSTANCE;
+  protected final NotificationIdFactory mNotificaitonIdFactory = NotificationIdFactory.INSTANCE;
 
-  private InterpreterConfiguration mConfiguration;
+  protected InterpreterConfiguration mConfiguration;
+  protected Handler mHandler;
 
   public Queue<FutureActivityTask> getTaskQueue() {
     return mTaskQueue;
@@ -47,15 +49,15 @@ public class AseApplication extends Application {
 
   @Override
   public void onCreate() {
-    super.onCreate();
     mTriggerRepository = new TriggerRepository(this);
     mConfiguration = new InterpreterConfiguration(this);
+    mConfiguration.startDiscovering();
+    mHandler = new Handler();
     Analytics.start(this);
   }
 
   @Override
   public void onTerminate() {
-    super.onTerminate();
     Analytics.stop();
   }
 
@@ -65,5 +67,9 @@ public class AseApplication extends Application {
 
   public InterpreterConfiguration getInterpreterConfiguration() {
     return mConfiguration;
+  }
+
+  public Handler getUiThreadHandler() {
+    return mHandler;
   }
 }
