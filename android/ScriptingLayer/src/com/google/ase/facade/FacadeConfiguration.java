@@ -26,7 +26,9 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.MethodDescriptor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -41,7 +43,7 @@ public class FacadeConfiguration {
   private final static SortedMap<String, MethodDescriptor> sRpcs =
       new TreeMap<String, MethodDescriptor>();
   
-  private final static List<Class<? extends RpcReceiver>> mFacadeClassList;
+  private final static Set<Class<? extends RpcReceiver>> mFacadeClassList;
 
 
   static {
@@ -54,27 +56,26 @@ public class FacadeConfiguration {
       AseLog.e(e);
     }
 
-    mFacadeClassList = new ArrayList<Class<? extends RpcReceiver>>();
-    mFacadeClassList.add(AndroidFacade.class);
-    mFacadeClassList.add(RecorderFacade.class);
-    mFacadeClassList.add(SpeechRecognitionFacade.class);
-    mFacadeClassList.add(PhoneFacade.class);
+    mFacadeClassList = new HashSet<Class<? extends RpcReceiver>>();
     mFacadeClassList.add(AlarmManagerFacade.class);
-    mFacadeClassList.add(SensorManagerFacade.class);
+    mFacadeClassList.add(AndroidFacade.class);
+    mFacadeClassList.add(ApplicationManagerFacade.class);
+    mFacadeClassList.add(CameraFacade.class);
+    mFacadeClassList.add(CommonIntentsFacade.class);
+    mFacadeClassList.add(ConditionManagerFacade.class);
+    mFacadeClassList.add(ContactsFacade.class);
     mFacadeClassList.add(EventFacade.class);
     mFacadeClassList.add(LocationFacade.class);
+    mFacadeClassList.add(PhoneFacade.class);
+    mFacadeClassList.add(RecorderFacade.class);
+    mFacadeClassList.add(SensorManagerFacade.class);
     mFacadeClassList.add(SettingsFacade.class);
-    mFacadeClassList.add(UiFacade.class);
     mFacadeClassList.add(SmsFacade.class);
-    mFacadeClassList.add(ContactsFacade.class);
-    mFacadeClassList.add(CameraFacade.class);
+    mFacadeClassList.add(SpeechRecognitionFacade.class);
+    mFacadeClassList.add(ToneGeneratorFacade.class);
     mFacadeClassList.add(WakeLockFacade.class);
     mFacadeClassList.add(WifiFacade.class);
-    mFacadeClassList.add(ApplicationManagerFacade.class);
-    mFacadeClassList.add(ToneGeneratorFacade.class);
-    mFacadeClassList.add(CommonIntentsFacade.class);
-    mFacadeClassList.add(PhoneFacade.class);
-    mFacadeClassList.add(ConditionManagerFacade.class);
+    mFacadeClassList.add(UiFacade.class);
 
     if (sdkVersion >= 4) {
       mFacadeClassList.add(TextToSpeechFacade.class);

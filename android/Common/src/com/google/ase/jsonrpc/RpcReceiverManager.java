@@ -5,16 +5,16 @@ import com.google.ase.AseLog;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class  RpcReceiverManager {
   protected final Map<Class<? extends RpcReceiver>, RpcReceiver> mClassObjectMap;
   protected final Class<? extends RpcReceiverManager> mThisClass = getClass();
   
-  public RpcReceiverManager(List<Class<? extends RpcReceiver>> classList) {
+  public RpcReceiverManager(Set<Class<? extends RpcReceiver>> classSet) {
     mClassObjectMap = new HashMap<Class<? extends RpcReceiver>, RpcReceiver>();
-    for (Class<? extends RpcReceiver> receiverClass : classList) {
+    for (Class<? extends RpcReceiver> receiverClass : classSet) {
       mClassObjectMap.put(receiverClass, null);
     }
   }

@@ -43,6 +43,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -152,7 +153,7 @@ public class JsonRpcServer {
    * @param receivers
    *          the {@link RpcReceiver}s to register with the server
    */
-  public JsonRpcServer(List<Class<? extends RpcReceiver>> receivers, FacadeManager manager) {
+  public JsonRpcServer(Set<Class<? extends RpcReceiver>> receivers, FacadeManager manager) {
     mManager = manager;
     mNetworkThreads = new CopyOnWriteArrayList<ConnectionThread>();
     for (Class<? extends RpcReceiver> receiver : receivers) {

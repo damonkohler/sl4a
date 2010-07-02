@@ -17,7 +17,6 @@
 package com.google.ase;
 
 import android.app.Application;
-import android.os.Handler;
 
 import com.google.ase.activity.NotificationIdFactory;
 import com.google.ase.future.FutureActivityTask;
@@ -37,7 +36,6 @@ public class AseApplication extends Application {
   protected final NotificationIdFactory mNotificaitonIdFactory = NotificationIdFactory.INSTANCE;
 
   protected InterpreterConfiguration mConfiguration;
-  protected Handler mHandler;
 
   public Queue<FutureActivityTask> getTaskQueue() {
     return mTaskQueue;
@@ -52,7 +50,6 @@ public class AseApplication extends Application {
     mTriggerRepository = new TriggerRepository(this);
     mConfiguration = new InterpreterConfiguration(this);
     mConfiguration.startDiscovering();
-    mHandler = new Handler();
     Analytics.start(this, "UA-158835-13");
   }
 
@@ -67,9 +64,5 @@ public class AseApplication extends Application {
 
   public InterpreterConfiguration getInterpreterConfiguration() {
     return mConfiguration;
-  }
-
-  public Handler getUiThreadHandler() {
-    return mHandler;
   }
 }

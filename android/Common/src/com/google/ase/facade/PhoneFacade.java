@@ -20,10 +20,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
+import com.google.ase.AseLog;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
@@ -32,6 +34,7 @@ import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Exposes TelephonyManager funcitonality.
@@ -43,26 +46,9 @@ public class PhoneFacade extends RpcReceiver {
   private final EventFacade mEventFacade;
   private final TelephonyManager mTelephonyManager;
   private Bundle mPhoneState;
-
-  private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
-    @Override
-    public void onCallStateChanged(int state, String incomingNumber) {
-      mPhoneState = new Bundle();
-      mPhoneState.putString("incomingNumber", incomingNumber);
-      switch (state) {
-      case TelephonyManager.CALL_STATE_IDLE:
-        mPhoneState.putString("state", "idle");
-        break;
-      case TelephonyManager.CALL_STATE_OFFHOOK:
-        mPhoneState.putString("state", "offhook");
-        break;
-      case TelephonyManager.CALL_STATE_RINGING:
-        mPhoneState.putString("state", "ringing");
-        break;
-      }
-      mEventFacade.postEvent("phone_state", mPhoneState);
-    }
-  };
+  private final Handler mHandler;
+  private PhoneStateListener mPhoneStateListener;
+  private final CountDownLatch mLatch = new CountDownLatch(1);
 
   public PhoneFacade(FacadeManager manager) {
     super(manager);
@@ -70,7 +56,40 @@ public class PhoneFacade extends RpcReceiver {
     mTelephonyManager = (TelephonyManager) service.getSystemService(Context.TELEPHONY_SERVICE);
     mAndroidFacade = manager.getFacade(AndroidFacade.class);
     mEventFacade = manager.getFacade(EventFacade.class);
+    mHandler = new Handler(service.getMainLooper());
+    mHandler.post(new Runnable() {
+      @Override
+      public void run() {
+        createPhoneStateListener();
+      }
+    });
   }
+
+  
+  private void createPhoneStateListener(){
+    mPhoneStateListener = new PhoneStateListener() {
+      @Override
+      public void onCallStateChanged(int state, String incomingNumber) {
+        mPhoneState = new Bundle();
+        mPhoneState.putString("incomingNumber", incomingNumber);
+        switch (state) {
+        case TelephonyManager.CALL_STATE_IDLE:
+          mPhoneState.putString("state", "idle");
+          break;
+        case TelephonyManager.CALL_STATE_OFFHOOK:
+          mPhoneState.putString("state", "offhook");
+          break;
+        case TelephonyManager.CALL_STATE_RINGING:
+          mPhoneState.putString("state", "ringing");
+          break;
+        }
+        mEventFacade.postEvent("phone_state", mPhoneState);
+      }
+    };
+
+    mLatch.countDown();
+  }
+
 
   @Override
   public void shutdown() {
@@ -79,6 +98,11 @@ public class PhoneFacade extends RpcReceiver {
 
   @Rpc(description = "Starts tracking phone state.")
   public void startTrackingPhoneState() {
+    try {
+      mLatch.await();
+    } catch (InterruptedException e) {
+      AseLog.e(e);
+    }
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
   }
 
@@ -89,6 +113,11 @@ public class PhoneFacade extends RpcReceiver {
 
   @Rpc(description = "Stops tracking phone state.")
   public void stopTrackingPhoneState() {
+    try {
+      mLatch.await();
+    } catch (InterruptedException e) {
+      AseLog.e(e);
+    }
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
   }
 

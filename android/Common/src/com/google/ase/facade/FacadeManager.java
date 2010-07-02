@@ -8,7 +8,7 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.jsonrpc.RpcReceiverManager;
 import com.google.ase.trigger.TriggerRepository;
 
-import java.util.List;
+import java.util.Set;
 
 public class FacadeManager extends RpcReceiverManager {
 
@@ -16,7 +16,7 @@ public class FacadeManager extends RpcReceiverManager {
   private final Intent mIntent;
   private final TriggerRepository mTriggerRepository;
 
-  public FacadeManager(Service service, Intent intent, List<Class<? extends RpcReceiver>> classList) {
+  public FacadeManager(Service service, Intent intent, Set<Class<? extends RpcReceiver>> classList) {
     super(classList);
 
     mService = service;
