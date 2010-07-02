@@ -25,9 +25,13 @@ import com.google.ase.interpreter.InterpreterConstants;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +54,7 @@ public class ScriptStorageAdapter {
    * Writes data to the script by name and overwrites any existing data.
    */
   public static void writeScript(String name, String data) {
-    if (name.length() == 0) {
+    if (name == null || name.length() == 0) {
       AseLog.e("No script name specified.");
       return;
     }
@@ -72,6 +76,35 @@ public class ScriptStorageAdapter {
     } catch (IOException e) {
       Log.e("Script Storage", "Failed to write script file.", e);
     }
+  }
+
+  // /XXX Temporary stuff!
+  public static File copyFromStream(String name, InputStream input) {
+    if (name == null || name.length() == 0) {
+      AseLog.e("No script name specified.");
+      return null;
+    }
+
+    File scriptsDirectory = new File(InterpreterConstants.SCRIPTS_ROOT);
+    if (!scriptsDirectory.exists()) {
+      AseLog.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
+      if (!scriptsDirectory.mkdirs()) {
+        AseLog.e("Failed to create scripts directory.");
+      }
+    }
+    File scriptFile = getScript(name);
+    OutputStream output;
+    try {
+      output = new FileOutputStream(scriptFile);
+      IoUtils.copy(input, output);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return scriptFile;
   }
 
   /**
