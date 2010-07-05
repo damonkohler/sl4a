@@ -18,7 +18,6 @@ package com.google.ase;
 
 import android.app.Application;
 
-import com.google.ase.activity.NotificationIdFactory;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.trigger.TriggerRepository;
@@ -32,8 +31,6 @@ public class AseApplication extends Application {
       new ConcurrentLinkedQueue<FutureActivityTask>();
 
   protected TriggerRepository mTriggerRepository;
-
-  protected final NotificationIdFactory mNotificaitonIdFactory = NotificationIdFactory.INSTANCE;
 
   protected InterpreterConfiguration mConfiguration;
 
@@ -50,17 +47,8 @@ public class AseApplication extends Application {
     mTriggerRepository = new TriggerRepository(this);
     mConfiguration = new InterpreterConfiguration(this);
     mConfiguration.startDiscovering();
-    Analytics.start(this, "UA-158835-13");
   }
 
-  @Override
-  public void onTerminate() {
-    Analytics.stop();
-  }
-
-  public int getNewNotificationId() {
-    return mNotificaitonIdFactory.createId();
-  }
 
   public InterpreterConfiguration getInterpreterConfiguration() {
     return mConfiguration;

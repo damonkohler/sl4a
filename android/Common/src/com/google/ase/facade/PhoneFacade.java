@@ -65,7 +65,6 @@ public class PhoneFacade extends RpcReceiver {
     });
   }
 
-  
   private void createPhoneStateListener(){
     mPhoneStateListener = new PhoneStateListener() {
       @Override
@@ -89,7 +88,6 @@ public class PhoneFacade extends RpcReceiver {
 
     mLatch.countDown();
   }
-
 
   @Override
   public void shutdown() {

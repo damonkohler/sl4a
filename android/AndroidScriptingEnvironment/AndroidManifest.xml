@@ -7,8 +7,7 @@
   <application
     android:debuggable="true"
     android:icon="@drawable/ase_logo_48"
-    android:label="@string/application_title"
-    android:name=".AseApplication">
+    android:label="@string/application_title" android:name=".AseCoreApplication">
     <activity
       android:name=".activity.ScriptManager"
       android:launchMode="singleTask"
