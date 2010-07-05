@@ -1,54 +1,77 @@
 package com.google.ase.language;
 
+import com.google.ase.AseLog;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class SupportedLanguages {
 
-  private enum KnownLanguage {
-    SHELL, BEANSHELL, JAVASCRIPT, LUA, PERL, PYTHON, RUBY, TCL
+  private static enum KnownLanguage {
+    SHELL(".sh", ShellLanguage.class), 
+    BEANSHELL(".bsh", BeanShellLanguage.class), 
+    JAVASCRIPT(".js", JavaScriptLanguage.class), 
+    LUA(".lua", LuaLanguage.class), 
+    PERL(".pl", PerlLanguage.class), 
+    PYTHON(".py", PythonLanguage.class),
+    RUBY(".rb", RubyLanguage.class),
+    TCL(".tcl", TclLanguage.class);
+
+    private final String mmExtension;
+    private final Class<? extends Language> mmClass;
+    
+    private KnownLanguage(String ext, Class<? extends Language> clazz) {
+      mmExtension = ext;
+      mmClass = clazz;
+    }
+    
+    private String getExtension(){
+      return mmExtension;
+    } 
+    
+    private Class<? extends Language> getLanguageClass() {
+      return mmClass;
+    }
   }
 
-  private static Map<String, KnownLanguage> mSupportedLanguages;
+  private static Map<String, Class<? extends Language>> sSupportedLanguages;
+
   static {
-    mSupportedLanguages = new HashMap<String, KnownLanguage>();
-
-    mSupportedLanguages.put(".sh", KnownLanguage.SHELL);
-    mSupportedLanguages.put(".bsh", KnownLanguage.BEANSHELL);
-    mSupportedLanguages.put(".js", KnownLanguage.JAVASCRIPT);
-    mSupportedLanguages.put(".lua", KnownLanguage.LUA);
-    mSupportedLanguages.put(".pl", KnownLanguage.PERL);
-    mSupportedLanguages.put(".py", KnownLanguage.PYTHON);
-    mSupportedLanguages.put(".rb", KnownLanguage.RUBY);
-    mSupportedLanguages.put(".tcl", KnownLanguage.TCL);
+    sSupportedLanguages = new HashMap<String, Class<? extends Language>>();
+    for (KnownLanguage lang : KnownLanguage.values()) {
+      sSupportedLanguages.put(lang.getExtension(), lang.getLanguageClass());
+    }
   }
 
-  public static Language getLanguageByExtention(String extention) {
-    extention = extention.toLowerCase();
-    if (!extention.startsWith(".")) {
-      extention = "." + extention;
+
+  public static Language getLanguageByExtension(String extension) {
+    extension = extension.toLowerCase();
+    if (!extension.startsWith(".")) {
+      extension = "." + extension;
     }
-    KnownLanguage language = mSupportedLanguages.get(extention);
-    switch (language) {
-    case SHELL:
-      return new ShellLanguage();
-    case BEANSHELL:
-      return new BeanShellLanguage();
-    case JAVASCRIPT:
-      return new JavaScriptLanguage();
-    case LUA:
-      return new LuaLanguage();
-    case PERL:
-      return new PerlLanguage();
-    case PYTHON:
-      return new PythonLanguage();
-    case RUBY:
-      return new RubyLanguage();
-    case TCL:
-      return new TclLanguage();
-    default:
-      return new Language() {
-      };
+    Language lang = null;
+
+    Class<? extends Language> clazz = sSupportedLanguages.get(extension);
+    if (clazz != null) {
+      try {
+        lang = clazz.newInstance();
+      } catch (IllegalAccessException e) {
+        AseLog.e(e);
+      } catch (InstantiationException e) {
+        AseLog.e(e);
+      }
     }
+    return lang;
+  }
+
+  public static boolean checkLanguageSupported(String name) {
+    String extension = name.toLowerCase();
+    int index = extension.lastIndexOf('.');
+    if (index < 0) {
+      extension = "." + extension;
+    } else if (index > 0) {
+      extension = extension.substring(index);
+    }
+    return sSupportedLanguages.containsKey(extension);
   }
 }
