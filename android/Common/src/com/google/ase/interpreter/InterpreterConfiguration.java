@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,6 +52,7 @@ public class InterpreterConfiguration {
 
   private final InterpreterListener mListener;
   private final Set<InterpreterAgent> mInterpreterSet;
+  private final Map<String, InterpreterAgent> mExtensionMap;
   private final Set<ConfigurationObserver> mObserverSet;
   private final Context mContext;
 
@@ -76,7 +78,6 @@ public class InterpreterConfiguration {
         @Override
         public void run() {
           Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
-          intent.addCategory(Intent.CATEGORY_LAUNCHER);
           List<InterpreterAgent> discoveredInterpreters =
               new ArrayList<InterpreterAgent>();
           List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
@@ -88,6 +89,7 @@ public class InterpreterConfiguration {
             }
             mmDiscoveredInterpreters.put(info.activityInfo.packageName, interpreter);
             discoveredInterpreters.add(interpreter);
+            mExtensionMap.put(interpreter.getExtension(), interpreter);
           }
           mInterpreterSet.addAll(discoveredInterpreters);
           for (ConfigurationObserver observer : mObserverSet) {
@@ -110,6 +112,7 @@ public class InterpreterConfiguration {
           }
           mmDiscoveredInterpreters.put(packageName, discoveredInterpreter);
           mInterpreterSet.add(discoveredInterpreter);
+          mExtensionMap.put(discoveredInterpreter.getExtension(), discoveredInterpreter);
           for (ConfigurationObserver observer : mObserverSet) {
             observer.onConfigurationChanged();
           }
@@ -129,6 +132,7 @@ public class InterpreterConfiguration {
             return;
           }
           mInterpreterSet.remove(interpreter);
+          mExtensionMap.remove(interpreter.getExtension());
           mmDiscoveredInterpreters.remove(packageName);
           for (ConfigurationObserver observer : mObserverSet) {
             observer.onConfigurationChanged();
@@ -199,7 +203,10 @@ public class InterpreterConfiguration {
   public InterpreterConfiguration(Context context) {
     mContext = context;
     mInterpreterSet = new CopyOnWriteArraySet<InterpreterAgent>();
-    mInterpreterSet.add(new ShellInterpreter());
+    mExtensionMap = new ConcurrentHashMap<String, InterpreterAgent>();
+    InterpreterAgent shell = new ShellInterpreter();
+    mInterpreterSet.add(shell);
+    mExtensionMap.put(shell.getExtension(), shell);
     mObserverSet = new CopyOnWriteArraySet<ConfigurationObserver>();
     IntentFilter filter = new IntentFilter();
     filter.addAction(InterpreterConstants.ACTION_INTERPRETER_ADDED);
@@ -285,12 +292,7 @@ public class InterpreterConfiguration {
       return null;
     }
     String ext = scriptName.substring(dotIndex);
-    for (InterpreterAgent i : mInterpreterSet) {
-      if (i.getExtension().equals(ext)) {
-        return i;
-      }
-    }
-    return null;
+    return mExtensionMap.get(ext);
   }
 
 }

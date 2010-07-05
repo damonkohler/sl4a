@@ -16,6 +16,14 @@
 
 package com.google.ase.jsonrpc;
 
+import com.google.ase.AseLog;
+import com.google.ase.rpc.MethodDescriptor;
+import com.google.ase.rpc.RpcError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,22 +35,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.google.ase.AseLog;
-import com.google.ase.rpc.MethodDescriptor;
-import com.google.ase.rpc.RpcError;
 
 /**
  * A JSON RPC server that forwards RPC calls to a specified receiver object.
@@ -55,12 +53,6 @@ public class JsonRpcServer {
    * A map of strings to known RPCs.
    */
   private final Map<String, MethodDescriptor> mKnownRpcs = new HashMap<String, MethodDescriptor>();
-
-  /**
-   * The list of RPC receiving objects.
-   */
-  private final List<Class<? extends RpcReceiver>> mReceivers =
-      new ArrayList<Class<? extends RpcReceiver>>();
 
   private final RpcReceiverManager mRpcReceiverManager;
 
@@ -175,7 +167,6 @@ public class JsonRpcServer {
       }
       mKnownRpcs.put(m.getName(), m);
     }
-    mReceivers.add(receiverClass);
   }
 
   private InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {
@@ -272,11 +263,6 @@ public class JsonRpcServer {
       networkThread.close();
     }
     // Notify all RPC receiving objects. They may have to clean up some of their state.
-    for (Class<? extends RpcReceiver> receiverClass : mReceivers) {
-      RpcReceiver receiver = mRpcReceiverManager.getReceiver(receiverClass);
-      if (receiver != null) {
-        receiver.shutdown();
-      }
-    }
+    mRpcReceiverManager.shutdown();
   }
 }
