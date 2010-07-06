@@ -16,8 +16,6 @@
 
 package com.google.ase;
 
-import java.net.InetSocketAddress;
-
 import android.app.Service;
 import android.content.Intent;
 
@@ -25,15 +23,27 @@ import com.google.ase.facade.FacadeConfiguration;
 import com.google.ase.facade.FacadeManager;
 import com.google.ase.jsonrpc.JsonRpcServer;
 
+import java.net.InetSocketAddress;
+import java.util.UUID;
+
 public class AndroidProxy {
 
   private InetSocketAddress mAddress;
   private final JsonRpcServer mJsonRpcServer;
+  private final UUID mSecret;
 
-  public AndroidProxy(Service service, Intent intent) {
+  public AndroidProxy(Service service, Intent intent, boolean keepSecret) {
     FacadeManager facadeManager =
         new FacadeManager(service, intent, FacadeConfiguration.getFacadeClasses());
-    mJsonRpcServer = new JsonRpcServer(facadeManager);
+
+    if (keepSecret) {
+      mSecret = UUID.randomUUID();
+    } else {
+      mSecret = null;
+    }
+
+    mJsonRpcServer = new JsonRpcServer(facadeManager, mSecret);
+
   }
 
   public InetSocketAddress getAddress() {
@@ -52,5 +62,10 @@ public class AndroidProxy {
 
   public void shutdown() {
     mJsonRpcServer.shutdown();
+  }
+  
+  // TODO(Alexey) : Restrict to package access;
+  public String getSecret() {
+    return mSecret.toString();
   }
 }

@@ -16,15 +16,16 @@
 
 package com.google.ase.interpreter;
 
+import com.google.ase.AseLog;
+import com.google.ase.AseProcess;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Map.Entry;
-
-import com.google.ase.AseLog;
-import com.google.ase.AseProcess;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -76,6 +77,7 @@ public abstract class InterpreterProcess extends AseProcess {
     for (Entry<String, String> e : mEnvironment.entrySet()) {
       println(String.format("export %s=\"%s\"", e.getKey(), e.getValue()));
     }
+    UUID reandom = UUID.randomUUID();
   }
 
   /**
@@ -99,6 +101,7 @@ public abstract class InterpreterProcess extends AseProcess {
 
   private volatile int mLogLength = 0;
 
+  // TODO(Alexey): Add Javadoc.
   private class LoggingBufferedReader extends BufferedReader {
     private boolean mmSkipLF = false;
 

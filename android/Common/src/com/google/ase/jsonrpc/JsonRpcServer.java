@@ -17,6 +17,7 @@
 package com.google.ase.jsonrpc;
 
 import com.google.ase.AseLog;
+import com.google.ase.exception.AseException;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.RpcError;
 
@@ -40,6 +41,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -61,6 +63,8 @@ public class JsonRpcServer {
   private final CopyOnWriteArrayList<ConnectionThread> mNetworkThreads;
   private volatile boolean mStopServer = false;
 
+  private final UUID mSecret;
+
   private final class ConnectionThread extends Thread {
     private final Socket mmSocket;
     private BufferedReader mmReader;
@@ -76,6 +80,10 @@ public class JsonRpcServer {
       try {
         mmReader = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()), 8192);
         mmWriter = new PrintWriter(mmSocket.getOutputStream(), true);
+        if (mSecret != null && !checkHandshake()) {
+          AseLog.e("Authentication failed.");
+          return;
+        }
         process();
       } catch (Exception e) {
         if (!mStopServer) {
@@ -116,6 +124,16 @@ public class JsonRpcServer {
       AseLog.v("Sent: " + result);
     }
 
+    private boolean checkHandshake() throws AseException {
+      try {
+        String data = mmReader.readLine();
+        UUID handshake = UUID.fromString(data);
+        return (mSecret.compareTo(handshake) == 0);
+      } catch (Exception e) {
+        throw new AseException("Handshake failed", e);
+      }
+    }
+
     private void close() {
       if (mmSocket != null) {
         try {
@@ -137,14 +155,16 @@ public class JsonRpcServer {
     }
   }
 
+
   /**
    * Construct a {@link JsonRpcServer} connected to the provided {@link RpcReceiver}s.
    * 
    * @param receivers
    *          the {@link RpcReceiver}s to register with the server
    */
-  public JsonRpcServer(RpcReceiverManager manager) {
+  public JsonRpcServer(RpcReceiverManager manager, UUID secret) {
     mRpcReceiverManager = manager;
+    mSecret = secret;
     mNetworkThreads = new CopyOnWriteArrayList<ConnectionThread>();
     for (Class<? extends RpcReceiver> receiver : manager.getRpcReceiverClasses()) {
       registerRpcReceiver(receiver);

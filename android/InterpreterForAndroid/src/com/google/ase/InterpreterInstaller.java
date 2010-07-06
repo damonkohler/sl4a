@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ExecutionException;
 
 /**
  * AsyncTask for installing interpreters.
@@ -118,10 +117,6 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
             return;
           }
         }
-      } catch (InterruptedException e) {
-        AseLog.e(e);
-      } catch (ExecutionException e) {
-        AseLog.e(e);
       } catch (Exception e) {
         AseLog.e(e);
       }
@@ -150,6 +145,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     }
   };
 
+  // TODO(Alexey): Add Javadoc.
   public InterpreterInstaller(InterpreterDescriptor descriptor, Context context,
       AsyncTaskListener<Boolean> listener) throws AseException {
 
@@ -186,14 +182,17 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
       taskQueue.offer(RequestCode.EXTRACT_SCRIPTS);
     }
 
-    boolean needSync = true;
-    try {
-      int sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
-      needSync = sdkVersion < 4;
-    } catch (NumberFormatException e) {
-    }
-    mStartNewThread = needSync;
+    mStartNewThread = isSyncRequired();
   }
+
+  private boolean isSyncRequired() {
+    try {
+      return Integer.parseInt(android.os.Build.VERSION.SDK) < 4;
+    } catch (NumberFormatException e) {
+      return true;
+    }
+  }
+
 
   @Override
   protected Boolean doInBackground(Void... params) {

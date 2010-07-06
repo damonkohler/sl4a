@@ -36,7 +36,7 @@ public class ScriptService extends Service {
     ScriptApplication app = (ScriptApplication) getApplication();
     InterpreterConfiguration config = app.getInterpreterConfiguration();
     Resources resources = getResources();
-    int id = R.raw.hello_world;
+    int id = R.raw.script;
     String name = resources.getText(id).toString();
     String fileName = name.substring(name.lastIndexOf('/') + 1, name.length());
 
@@ -50,7 +50,7 @@ public class ScriptService extends Service {
     // Copies script to disk(sdcard).
     File script = ScriptStorageAdapter.copyFromStream(fileName, resources.openRawResource(id));
 
-    AndroidProxy proxy = new AndroidProxy(this, null);
+    AndroidProxy proxy = new AndroidProxy(this, null, true);
     proxy.startLocal();
     ScriptLauncher launcher = new ScriptLauncher(script, proxy.getAddress(), config);
     try {

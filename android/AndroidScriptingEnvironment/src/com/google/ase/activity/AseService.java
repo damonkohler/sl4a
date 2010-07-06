@@ -117,11 +117,11 @@ public class AseService extends Service {
     ScriptLauncher launcher = null;
 
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
-      serverProxy = launchServer(intent);
+      serverProxy = launchServer(intent, false);
     } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)
         || intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
 
-      serverProxy = launchServer(intent);
+      serverProxy = launchServer(intent, true);
       try {
         launcher = launchScript(intent, serverProxy.getAddress());
       } catch (AseException e) {
@@ -141,8 +141,8 @@ public class AseService extends Service {
     }
   }
 
-  private AndroidProxy launchServer(Intent intent) {
-    AndroidProxy androidProxy = new AndroidProxy(this, intent);
+  private AndroidProxy launchServer(Intent intent, boolean requiresHandshanking) {
+    AndroidProxy androidProxy = new AndroidProxy(this, intent, requiresHandshanking);
     boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
     if (usePublicIp) {
       androidProxy.startPublic();
