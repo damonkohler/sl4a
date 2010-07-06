@@ -45,6 +45,7 @@ import android.widget.Toast;
 import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
 import com.google.ase.activity.AseServiceHelper;
+import com.google.ase.activity.NotificationIdFactory;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
@@ -307,8 +308,8 @@ public class AndroidFacade extends RpcReceiver {
     notification.flags = Notification.FLAG_AUTO_CANCEL;
 
     // Get a unique notification id from the application.
-    AseApplication application = (AseApplication) mService.getApplication();
-    final int notificationId = application.getNewNotificationId();
+    NotificationIdFactory notificaitonIdFactory = NotificationIdFactory.INSTANCE;
+    final int notificationId = notificaitonIdFactory.createId();
     mNotificationManager.notify(notificationId, notification);
   }
 

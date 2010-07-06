@@ -1,15 +1,15 @@
 package com.google.ase.jsonrpc;
 
+import com.google.ase.AseLog;
+
 import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.ase.AseLog;
-
 public abstract class RpcReceiverManager {
 
-  private final Map<Class<? extends RpcReceiver>, RpcReceiver> mReceivers;
+  protected final Map<Class<? extends RpcReceiver>, RpcReceiver> mReceivers;
 
   public RpcReceiverManager(Collection<Class<? extends RpcReceiver>> classList) {
     mReceivers = new HashMap<Class<? extends RpcReceiver>, RpcReceiver>();
@@ -38,5 +38,13 @@ public abstract class RpcReceiverManager {
     }
 
     return object;
+  }
+
+  public void shutdown() {
+    for (RpcReceiver receiver : mReceivers.values()) {
+      if (receiver != null) {
+        receiver.shutdown();
+      }
+    }
   }
 }

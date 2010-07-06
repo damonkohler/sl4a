@@ -17,7 +17,16 @@
 package com.google.ase.interpreter;
 
 /**
- * A collection of string for querying InterpreterProvider
+ * A collection of string for querying InterpreterProvider:
+ * 
+ * NAME - unique name of the interpreter;<br>
+ * NICE_NAME - display name of the interpreter;<br>
+ * EXTENSION - supported script file extension;<br>
+ * BIN - name (and path within working directory) of the interpreter executable;<br>
+ * PATH - path to the working directory of the interpreter;<br>
+ * EMPTY_PARAMS - specifies command line arguments when script name is not provided;<br>
+ * EXECUTE_PARAMS - specifies command line arguments to execute a script;<br>
+ * EXECUTE - execution command.<br>
  * 
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */

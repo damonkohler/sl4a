@@ -16,11 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -48,6 +43,11 @@ import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
 import com.google.ase.dialog.Help;
 import com.google.ase.interpreter.InterpreterConfiguration;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A text editor for scripts.
@@ -168,6 +168,7 @@ public class ScriptEditor extends Activity {
       startActivity(new Intent(this, AsePreferences.class));
     } else if (item.getItemId() == MenuId.API_BROWSER.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
+      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, mNameText.getText().toString());
       intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, mConfiguration.getInterpreterForScript(
           mNameText.getText().toString()).getName());
       intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());

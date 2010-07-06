@@ -69,7 +69,7 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
     mExecuteParams = data.get(EXECUTE_PARAMS);
     mExecute = data.get(EXECUTE);
 
-    mLanguage = SupportedLanguages.getLanguageByExtention(mExtension);
+    mLanguage = SupportedLanguages.getLanguageByExtension(mExtension);
 
     mEnvironmentVariables = new HashMap<String, String>(variables);
   }

@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<project default="main">
+	<target name="main">
+		<jar jarfile="../InterpreterForAndroidTemplate/lib/interpreter_r0.jar">
+			<fileset dir="bin" includes="**/*.class"/>
+			<fileset dir="../Utils/bin" includes="**/*.class"/>
+		</jar>
+	</target>
+</project>

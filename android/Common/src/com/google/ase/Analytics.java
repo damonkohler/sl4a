@@ -38,6 +38,9 @@ public class Analytics {
   }
 
   public static void start(Context context, String analyticsID) {
+    if (context == null || analyticsID == null) {
+      return;
+    }
     mAseVersion = AseVersion.getVersion(context);
     mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     mTracker = GoogleAnalyticsTracker.getInstance();
