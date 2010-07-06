@@ -44,7 +44,7 @@ public class SensorManagerFacade extends RpcReceiver {
 
   public SensorManagerFacade(FacadeManager manager) {
     super(manager);
-    mEventFacade = manager.getFacade(EventFacade.class);
+    mEventFacade = manager.getReceiver(EventFacade.class);
     mSensorManager = (SensorManager) manager.getService().getSystemService(Context.SENSOR_SERVICE);
   }
 

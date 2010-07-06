@@ -16,11 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Service;
 import android.content.Context;
 import android.location.Address;
@@ -34,6 +29,11 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This facade exposes the LocationManager related functionality.
@@ -71,7 +71,7 @@ public class LocationFacade extends RpcReceiver {
   public LocationFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
-    mEventFacade = manager.getFacade(EventFacade.class);
+    mEventFacade = manager.getReceiver(EventFacade.class);
     mGeocoder = new Geocoder(mService);
     mLocationManager = (LocationManager) mService.getSystemService(Context.LOCATION_SERVICE);
     mLocationUpdates = new HashMap<String, Location>();

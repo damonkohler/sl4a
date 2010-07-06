@@ -70,8 +70,7 @@ public class TriggerService extends Service {
   public void onCreate() {
     super.onCreate();
 
-    NotificationIdFactory notificaitonIdFactory = NotificationIdFactory.INSTANCE;
-    mTriggerServiceNotificationId = notificaitonIdFactory.createId();
+    mTriggerServiceNotificationId = NotificationIdFactory.create();
     AseApplication application = (AseApplication) getApplication();
     mTriggerRepository = application.getTriggerRepository();
     mTriggerRepository.registerAddTriggerListener(mAddTriggerListener);

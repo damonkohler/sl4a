@@ -16,13 +16,6 @@
 
 package com.google.ase;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ExecutionException;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -34,6 +27,13 @@ import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterConstants;
 import com.google.ase.interpreter.InterpreterDescriptor;
 import com.google.ase.interpreter.InterpreterUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ExecutionException;
 
 /**
  * AsyncTask for installing interpreters.
@@ -237,7 +237,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   }
 
   protected void finish(boolean result) {
-    result &= setup();
+    result = result && setup();
     if (result) {
       mListener.onTaskFinished(result, "Installation successful.");
     } else {

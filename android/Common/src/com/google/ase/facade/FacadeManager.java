@@ -48,8 +48,4 @@ public class FacadeManager extends RpcReceiverManager {
     };
   }
 
-  public <T extends RpcReceiver> T getFacade(Class<T> clazz) {
-    RpcReceiver receiver = getReceiver(clazz);
-    return clazz.cast(receiver);
-  }
 }

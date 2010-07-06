@@ -1,6 +1,7 @@
 package com.google.ase.language;
 
 import com.google.ase.AseLog;
+import com.google.ase.exception.AseException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,27 +9,23 @@ import java.util.Map;
 public class SupportedLanguages {
 
   private static enum KnownLanguage {
-    SHELL(".sh", ShellLanguage.class), 
-    BEANSHELL(".bsh", BeanShellLanguage.class), 
-    JAVASCRIPT(".js", JavaScriptLanguage.class), 
-    LUA(".lua", LuaLanguage.class), 
-    PERL(".pl", PerlLanguage.class), 
-    PYTHON(".py", PythonLanguage.class),
-    RUBY(".rb", RubyLanguage.class),
+    SHELL(".sh", ShellLanguage.class), BEANSHELL(".bsh", BeanShellLanguage.class), JAVASCRIPT(
+        ".js", JavaScriptLanguage.class), LUA(".lua", LuaLanguage.class), PERL(".pl",
+        PerlLanguage.class), PYTHON(".py", PythonLanguage.class), RUBY(".rb", RubyLanguage.class),
     TCL(".tcl", TclLanguage.class);
 
     private final String mmExtension;
     private final Class<? extends Language> mmClass;
-    
+
     private KnownLanguage(String ext, Class<? extends Language> clazz) {
       mmExtension = ext;
       mmClass = clazz;
     }
-    
-    private String getExtension(){
+
+    private String getExtension() {
       return mmExtension;
-    } 
-    
+    }
+
     private Class<? extends Language> getLanguageClass() {
       return mmClass;
     }
@@ -38,16 +35,15 @@ public class SupportedLanguages {
 
   static {
     sSupportedLanguages = new HashMap<String, Class<? extends Language>>();
-    for (KnownLanguage lang : KnownLanguage.values()) {
-      sSupportedLanguages.put(lang.getExtension(), lang.getLanguageClass());
+    for (KnownLanguage language : KnownLanguage.values()) {
+      sSupportedLanguages.put(language.getExtension(), language.getLanguageClass());
     }
   }
 
-
-  public static Language getLanguageByExtension(String extension) {
+  public static Language getLanguageByExtension(String extension) throws AseException {
     extension = extension.toLowerCase();
     if (!extension.startsWith(".")) {
-      extension = "." + extension;
+      throw new AseException("Extension does not start with a dot: " + extension);
     }
     Language lang = null;
 

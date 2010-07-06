@@ -127,10 +127,9 @@ public class JsonRpcServer {
     private boolean checkHandshake() throws AseException {
       try {
         String data = mmReader.readLine();
-        UUID handshake = UUID.fromString(data);
-        return (mSecret.compareTo(handshake) == 0);
+        return mSecret.toString().equals(data);
       } catch (Exception e) {
-        throw new AseException("Handshake failed", e);
+        throw new AseException("Handshake failed!", e);
       }
     }
 
@@ -154,7 +153,6 @@ public class JsonRpcServer {
       }
     }
   }
-
 
   /**
    * Construct a {@link JsonRpcServer} connected to the provided {@link RpcReceiver}s.

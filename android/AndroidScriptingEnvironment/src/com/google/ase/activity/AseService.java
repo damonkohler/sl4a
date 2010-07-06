@@ -16,13 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -45,6 +38,13 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.terminal.Terminal;
 import com.google.ase.trigger.Trigger;
 
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * A service that allows scripts and the RPC server to run in the background.
  * 
@@ -58,12 +58,7 @@ public class AseService extends Service {
   private final IBinder mBinder;
   private volatile int modCount = 0;
 
-  private static final int mNotificationId;
-
-  static {
-    NotificationIdFactory factory = NotificationIdFactory.INSTANCE;
-    mNotificationId = factory.createId();
-  }
+  private static final int mNotificationId = NotificationIdFactory.create();
 
   public class LocalBinder extends Binder {
     public AseService getService() {
@@ -141,8 +136,8 @@ public class AseService extends Service {
     }
   }
 
-  private AndroidProxy launchServer(Intent intent, boolean requiresHandshanking) {
-    AndroidProxy androidProxy = new AndroidProxy(this, intent, requiresHandshanking);
+  private AndroidProxy launchServer(Intent intent, boolean requiresHandshake) {
+    AndroidProxy androidProxy = new AndroidProxy(this, intent, requiresHandshake);
     boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
     if (usePublicIp) {
       androidProxy.startPublic();

@@ -16,9 +16,6 @@
 
 package com.google.ase;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -26,27 +23,31 @@ import android.preference.PreferenceManager;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Analytics {
   private static GoogleAnalyticsTracker mTracker;
   private static SharedPreferences mPrefs;
   private static String mAseVersion;
   private static ExecutorService mWorkPool;
-  private static volatile boolean started = false;
+  private static volatile boolean mStarted = false;
 
   private Analytics() {
     // Utility class.
   }
 
-  public static void start(Context context, String analyticsID) {
-    if (context == null || analyticsID == null) {
+  // TODO(Alexey): Add Javadoc. "Also, it would be cool to wrap up the Analytics API into a facade."
+  public static synchronized void start(Context context, String analyticsAccountId) {
+    if (context == null || analyticsAccountId == null) {
       return;
     }
     mAseVersion = AseVersion.getVersion(context);
     mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     mTracker = GoogleAnalyticsTracker.getInstance();
-    mTracker.start(analyticsID, 10, context);
+    mTracker.start(analyticsAccountId, 10, context);
     mWorkPool = Executors.newSingleThreadExecutor();
-    started = true;
+    mStarted = true;
   }
 
   private static class PageNameBuilder {
@@ -63,7 +64,7 @@ public class Analytics {
   }
 
   public static void track(final String... nameParts) {
-    if (started && mPrefs.getBoolean("usagetracking", false)) {
+    if (mStarted && mPrefs.getBoolean("usagetracking", false)) {
       mWorkPool.submit(new Runnable() {
         public void run() {
           PageNameBuilder builder = new PageNameBuilder();
@@ -83,9 +84,9 @@ public class Analytics {
     track(name);
   }
 
-  public static void stop() {
-    if (started) {
-      started = false;
+  public static synchronized void stop() {
+    if (mStarted) {
+      mStarted = false;
       mWorkPool.shutdownNow();
       mTracker.stop();
     }

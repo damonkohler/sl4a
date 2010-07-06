@@ -16,12 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.util.Queue;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -54,6 +48,12 @@ import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Queue;
 
 public class AndroidFacade extends RpcReceiver {
   /**
@@ -308,8 +308,7 @@ public class AndroidFacade extends RpcReceiver {
     notification.flags = Notification.FLAG_AUTO_CANCEL;
 
     // Get a unique notification id from the application.
-    NotificationIdFactory notificaitonIdFactory = NotificationIdFactory.INSTANCE;
-    final int notificationId = notificaitonIdFactory.createId();
+    final int notificationId = NotificationIdFactory.create();
     mNotificationManager.notify(notificationId, notification);
   }
 

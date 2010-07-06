@@ -16,7 +16,6 @@
 
 package com.google.ase;
 
-
 public class AseCoreApplication extends AseApplication {
 
   @Override
@@ -29,6 +28,5 @@ public class AseCoreApplication extends AseApplication {
   public void onTerminate() {
     Analytics.stop();
   }
-
 
 }

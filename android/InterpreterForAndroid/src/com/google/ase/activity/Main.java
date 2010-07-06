@@ -71,13 +71,13 @@ public abstract class Main extends Activity {
     INSTALL, UNINSTALL
   }
 
-  protected volatile RunningTask CurrentTask = null;
+  protected volatile RunningTask mCurrentTask = null;
 
   protected final AsyncTaskListener<Boolean> mTaskListener = new AsyncTaskListener<Boolean>() {
     @Override
     public void onTaskFinished(Boolean result, String message) {
       if (result) {
-        switch (CurrentTask) {
+        switch (mCurrentTask) {
         case INSTALL:
           setInstalled(true);
           prepareUninstallButton();
@@ -89,7 +89,7 @@ public abstract class Main extends Activity {
         }
       }
       AseLog.v(Main.this, message);
-      CurrentTask = null;
+      mCurrentTask = null;
     }
   };
 
@@ -161,10 +161,10 @@ public abstract class Main extends Activity {
   }
 
   protected synchronized void install() {
-    if (CurrentTask != null) {
+    if (mCurrentTask != null) {
       return;
     }
-    CurrentTask = RunningTask.INSTALL;
+    mCurrentTask = RunningTask.INSTALL;
     InterpreterInstaller installTask;
     try {
       installTask = getInterpreterInstaller(mDescriptor, Main.this, mTaskListener);
@@ -176,10 +176,10 @@ public abstract class Main extends Activity {
   }
 
   protected synchronized void uninstall() {
-    if (CurrentTask != null) {
+    if (mCurrentTask != null) {
       return;
     }
-    CurrentTask = RunningTask.UNINSTALL;
+    mCurrentTask = RunningTask.UNINSTALL;
     InterpreterUninstaller uninstallTask;
     try {
       uninstallTask = getInterpreterUninstaller(mDescriptor, Main.this, mTaskListener);

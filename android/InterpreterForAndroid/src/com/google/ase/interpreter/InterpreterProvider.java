@@ -16,9 +16,6 @@
 
 package com.google.ase.interpreter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,16 +26,15 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A provider that can be queried to obtain execution-related interpreter info.
  * 
  * <p>
- * To create an interpreter apk, please extend this content provider and implement getDescriptor()
+ * To create an interpreter APK, please extend this content provider and implement getDescriptor()
  * and getEnvironmentSettings().<br>
- * getDescriptor() should return an instance instance of a class that implements interpreter
- * descriptor.<br>
- * getEnvironmentSettings() should return a map of environment variables names and their values (or
- * null if interpreter does not require any environment variables).<br>
  * Please declare the provider in the android manifest xml (the authority values has to be set to
  * your_package_name.provider_name).
  * 
@@ -62,6 +58,18 @@ public abstract class InterpreterProvider extends ContentProvider {
     matcher.addURI(auth, InterpreterConstants.PROVIDER_BASE, BASE);
     matcher.addURI(auth, InterpreterConstants.PROVIDER_ENV, ENVVARS);
   }
+
+  /**
+   * Should return an instance instance of a class that implements interpreter descriptor.
+   * 
+   */
+  protected abstract InterpreterDescriptor getDescriptor();
+
+  /**
+   * Should return a map of environment variables names and their values (or null if interpreter
+   * does not require any environment variables).
+   */
+  protected abstract Map<String, String> getEnvironmentSettings();
 
   @Override
   public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -142,8 +150,4 @@ public abstract class InterpreterProvider extends ContentProvider {
 
     return values;
   }
-
-  protected abstract InterpreterDescriptor getDescriptor();
-
-  protected abstract Map<String, String> getEnvironmentSettings();
 }

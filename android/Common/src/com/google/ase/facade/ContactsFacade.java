@@ -16,13 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -36,6 +29,13 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides access to contacts related functionality.
@@ -52,7 +52,7 @@ public class ContactsFacade extends RpcReceiver {
     super(manager);
     mService = manager.getService();
     mContentResolver = mService.getContentResolver();
-    mCommonIntentsFacade = manager.getFacade(CommonIntentsFacade.class);
+    mCommonIntentsFacade = manager.getReceiver(CommonIntentsFacade.class);
   }
 
   private Uri buildUri(Integer id) {

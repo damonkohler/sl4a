@@ -16,6 +16,14 @@
 
 package com.google.ase.rpc;
 
+import com.google.ase.Analytics;
+import com.google.ase.jsonrpc.RpcReceiver;
+import com.google.ase.jsonrpc.RpcReceiverManager;
+import com.google.ase.util.VisibleForTesting;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -26,14 +34,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import com.google.ase.Analytics;
-import com.google.ase.jsonrpc.RpcReceiver;
-import com.google.ase.jsonrpc.RpcReceiverManager;
-import com.google.ase.util.VisibleForTesting;
 
 /**
  * An adapter that wraps {@code Method}.
@@ -95,13 +95,13 @@ public final class MethodDescriptor {
       } else if (MethodDescriptor.hasDefaultValue(annotations[i])) {
         args[i] = MethodDescriptor.getDefaultValue(parameterType, annotations[i]);
       } else {
-        throw new RpcError("Argument " + (i + 1) + " is mReceiverClassnot present");
+        throw new RpcError("Argument " + (i + 1) + " is not present");
       }
     }
 
     Object result = null;
     try {
-      result = getMethod().invoke(manager.getReceiver(mClass), args);
+      result = manager.invoke(mClass, mMethod, args);
     } catch (Throwable t) {
       throw t.getCause();
     }

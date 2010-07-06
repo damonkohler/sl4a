@@ -30,7 +30,7 @@ public class SignalStrengthFacade extends RpcReceiver {
 
   public SignalStrengthFacade(FacadeManager manager) {
     super(manager);
-    mEventFacade = manager.getFacade(EventFacade.class);
+    mEventFacade = manager.getReceiver(EventFacade.class);
     mTelephonyManager =
         (TelephonyManager) manager.getService().getSystemService(Context.TELEPHONY_SERVICE);
   }

@@ -16,6 +16,8 @@
 
 package com.google.ase.activity;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Creates unique ids to identify the notifications created by the android scripting service and the
  * trigger service.
@@ -24,12 +26,10 @@ package com.google.ase.activity;
  * 
  */
 public final class NotificationIdFactory {
-  private static int mNextId = 1;
+  private static final AtomicInteger mNextId = new AtomicInteger(0);
 
-  public static final NotificationIdFactory INSTANCE = new NotificationIdFactory();
-
-  public synchronized int createId() {
-    return mNextId++;
+  public static int create() {
+    return mNextId.incrementAndGet();
   }
 
   private NotificationIdFactory() {

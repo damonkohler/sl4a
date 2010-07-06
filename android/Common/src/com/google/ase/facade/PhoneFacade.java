@@ -16,12 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.concurrent.CountDownLatch;
-
-import org.json.JSONException;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +29,12 @@ import com.google.ase.AseLog;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
+
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Exposes TelephonyManager funcitonality.
@@ -54,8 +54,8 @@ public class PhoneFacade extends RpcReceiver {
     super(manager);
     Service service = manager.getService();
     mTelephonyManager = (TelephonyManager) service.getSystemService(Context.TELEPHONY_SERVICE);
-    mAndroidFacade = manager.getFacade(AndroidFacade.class);
-    mEventFacade = manager.getFacade(EventFacade.class);
+    mAndroidFacade = manager.getReceiver(AndroidFacade.class);
+    mEventFacade = manager.getReceiver(EventFacade.class);
     mHandler = new Handler(service.getMainLooper());
     mHandler.post(new Runnable() {
       @Override

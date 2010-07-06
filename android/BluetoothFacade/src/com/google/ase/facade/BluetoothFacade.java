@@ -16,9 +16,6 @@
 
 package com.google.ase.facade;
 
-import java.io.IOException;
-import java.util.UUID;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -31,6 +28,9 @@ import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
 
+import java.io.IOException;
+import java.util.UUID;
+
 public class BluetoothFacade extends RpcReceiver {
 
   // UUID for ASE.
@@ -42,9 +42,9 @@ public class BluetoothFacade extends RpcReceiver {
 
   public BluetoothFacade(FacadeManager manager) {
     super(manager);
-    mAndroidFacade = manager.getFacade(AndroidFacade.class);
+    mAndroidFacade = manager.getReceiver(AndroidFacade.class);
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    mBluetoothServer = new BluetoothServer(manager.getFacade(EventFacade.class));
+    mBluetoothServer = new BluetoothServer(manager.getReceiver(EventFacade.class));
   }
 
   @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")
