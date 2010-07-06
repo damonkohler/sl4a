@@ -9,10 +9,15 @@ import java.util.Map;
 public class SupportedLanguages {
 
   private static enum KnownLanguage {
-    SHELL(".sh", ShellLanguage.class), BEANSHELL(".bsh", BeanShellLanguage.class), JAVASCRIPT(
-        ".js", JavaScriptLanguage.class), LUA(".lua", LuaLanguage.class), PERL(".pl",
-        PerlLanguage.class), PYTHON(".py", PythonLanguage.class), RUBY(".rb", RubyLanguage.class),
-    TCL(".tcl", TclLanguage.class);
+    SHELL(".sh", ShellLanguage.class), 
+    BEANSHELL(".bsh", BeanShellLanguage.class), 
+    JAVASCRIPT(".js", JavaScriptLanguage.class), 
+    LUA(".lua", LuaLanguage.class), 
+    PERL(".pl", PerlLanguage.class), 
+    PYTHON(".py", PythonLanguage.class), 
+    RUBY(".rb", RubyLanguage.class),
+    TCL(".tcl", TclLanguage.class),
+    PHP(".php", PhpLanguage.class);
 
     private final String mmExtension;
     private final Class<? extends Language> mmClass;
