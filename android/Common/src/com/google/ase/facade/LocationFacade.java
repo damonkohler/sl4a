@@ -16,6 +16,11 @@
 
 package com.google.ase.facade;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Service;
 import android.content.Context;
 import android.location.Address;
@@ -29,11 +34,6 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This facade exposes the LocationManager related functionality.

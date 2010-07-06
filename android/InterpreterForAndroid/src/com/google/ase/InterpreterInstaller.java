@@ -16,6 +16,13 @@
 
 package com.google.ase;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ExecutionException;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -27,12 +34,6 @@ import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterConstants;
 import com.google.ase.interpreter.InterpreterDescriptor;
 import com.google.ase.interpreter.InterpreterUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 /**
  * AsyncTask for installing interpreters.
@@ -117,6 +118,10 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
             return;
           }
         }
+      } catch (InterruptedException e) {
+        AseLog.e(e);
+      } catch (ExecutionException e) {
+        AseLog.e(e);
       } catch (Exception e) {
         AseLog.e(e);
       }
@@ -145,7 +150,6 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     }
   };
 
-  // TODO(Alexey): Add Javadoc.
   public InterpreterInstaller(InterpreterDescriptor descriptor, Context context,
       AsyncTaskListener<Boolean> listener) throws AseException {
 
@@ -182,17 +186,14 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
       taskQueue.offer(RequestCode.EXTRACT_SCRIPTS);
     }
 
-    mStartNewThread = isSyncRequired();
-  }
-
-  private boolean isSyncRequired() {
+    boolean needSync = true;
     try {
-      return Integer.parseInt(android.os.Build.VERSION.SDK) < 4;
+      int sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
+      needSync = sdkVersion < 4;
     } catch (NumberFormatException e) {
-      return true;
     }
+    mStartNewThread = needSync;
   }
-
 
   @Override
   protected Boolean doInBackground(Void... params) {

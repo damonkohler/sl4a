@@ -16,6 +16,12 @@
 
 package com.google.ase.facade;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.concurrent.CountDownLatch;
+
+import org.json.JSONException;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -29,12 +35,6 @@ import com.google.ase.AseLog;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
-
-import org.json.JSONException;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Exposes TelephonyManager funcitonality.
@@ -65,7 +65,7 @@ public class PhoneFacade extends RpcReceiver {
     });
   }
 
-  private void createPhoneStateListener(){
+  private void createPhoneStateListener() {
     mPhoneStateListener = new PhoneStateListener() {
       @Override
       public void onCallStateChanged(int state, String incomingNumber) {

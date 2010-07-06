@@ -16,6 +16,15 @@
 
 package com.google.ase.interpreter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -33,16 +42,6 @@ import com.google.ase.AseLog;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.shell.ShellInterpreter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * Manages and provides access to the set of available interpreters.
  * 
@@ -52,7 +51,6 @@ public class InterpreterConfiguration {
 
   private final InterpreterListener mListener;
   private final Set<InterpreterAgent> mInterpreterSet;
-  private final Map<String, InterpreterAgent> mExtensionMap;
   private final Set<ConfigurationObserver> mObserverSet;
   private final Context mContext;
 
@@ -78,18 +76,16 @@ public class InterpreterConfiguration {
         @Override
         public void run() {
           Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
-          List<InterpreterAgent> discoveredInterpreters =
-              new ArrayList<InterpreterAgent>();
+          intent.addCategory(Intent.CATEGORY_LAUNCHER);
+          List<InterpreterAgent> discoveredInterpreters = new ArrayList<InterpreterAgent>();
           List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
           for (ResolveInfo info : resolveInfos) {
-            InterpreterAgent interpreter =
-                buildInterpreter(info.activityInfo.packageName);
+            InterpreterAgent interpreter = buildInterpreter(info.activityInfo.packageName);
             if (interpreter == null) {
               continue;
             }
             mmDiscoveredInterpreters.put(info.activityInfo.packageName, interpreter);
             discoveredInterpreters.add(interpreter);
-            mExtensionMap.put(interpreter.getExtension(), interpreter);
           }
           mInterpreterSet.addAll(discoveredInterpreters);
           for (ConfigurationObserver observer : mObserverSet) {
@@ -112,7 +108,6 @@ public class InterpreterConfiguration {
           }
           mmDiscoveredInterpreters.put(packageName, discoveredInterpreter);
           mInterpreterSet.add(discoveredInterpreter);
-          mExtensionMap.put(discoveredInterpreter.getExtension(), discoveredInterpreter);
           for (ConfigurationObserver observer : mObserverSet) {
             observer.onConfigurationChanged();
           }
@@ -132,7 +127,6 @@ public class InterpreterConfiguration {
             return;
           }
           mInterpreterSet.remove(interpreter);
-          mExtensionMap.remove(interpreter.getExtension());
           mmDiscoveredInterpreters.remove(packageName);
           for (ConfigurationObserver observer : mObserverSet) {
             observer.onConfigurationChanged();
@@ -203,10 +197,7 @@ public class InterpreterConfiguration {
   public InterpreterConfiguration(Context context) {
     mContext = context;
     mInterpreterSet = new CopyOnWriteArraySet<InterpreterAgent>();
-    mExtensionMap = new ConcurrentHashMap<String, InterpreterAgent>();
-    InterpreterAgent shell = new ShellInterpreter();
-    mInterpreterSet.add(shell);
-    mExtensionMap.put(shell.getExtension(), shell);
+    mInterpreterSet.add(new ShellInterpreter());
     mObserverSet = new CopyOnWriteArraySet<ConfigurationObserver>();
     IntentFilter filter = new IntentFilter();
     filter.addAction(InterpreterConstants.ACTION_INTERPRETER_ADDED);
@@ -246,8 +237,7 @@ public class InterpreterConfiguration {
    * Returns the list of all installed interpreters.
    */
   public List<InterpreterAgent> getInstalledInterpreters() {
-    List<InterpreterAgent> interpreters =
-        new ArrayList<InterpreterAgent>();
+    List<InterpreterAgent> interpreters = new ArrayList<InterpreterAgent>();
     for (InterpreterAgent i : mInterpreterSet) {
       if (i.isInstalled(mContext)) {
         interpreters.add(i);
@@ -260,8 +250,7 @@ public class InterpreterConfiguration {
    * Returns the list of all not installed interpreters.
    */
   public List<InterpreterAgent> getNotInstalledInterpreters() {
-    List<InterpreterAgent> interpreters =
-        new ArrayList<InterpreterAgent>();
+    List<InterpreterAgent> interpreters = new ArrayList<InterpreterAgent>();
     for (InterpreterAgent i : mInterpreterSet) {
       if (!i.isInstalled(mContext)) {
         interpreters.add(i);
@@ -292,7 +281,12 @@ public class InterpreterConfiguration {
       return null;
     }
     String ext = scriptName.substring(dotIndex);
-    return mExtensionMap.get(ext);
+    for (InterpreterAgent i : mInterpreterSet) {
+      if (i.getExtension().equals(ext)) {
+        return i;
+      }
+    }
+    return null;
   }
 
 }

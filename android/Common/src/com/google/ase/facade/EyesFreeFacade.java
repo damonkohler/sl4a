@@ -16,6 +16,8 @@
 
 package com.google.ase.facade;
 
+import java.util.List;
+
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,8 +27,6 @@ import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
-
-import java.util.List;
 
 public class EyesFreeFacade extends RpcReceiver {
 

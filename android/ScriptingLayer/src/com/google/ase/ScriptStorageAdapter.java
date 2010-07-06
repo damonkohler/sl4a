@@ -16,13 +16,6 @@
 
 package com.google.ase;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.google.ase.interpreter.InterpreterAgent;
-import com.google.ase.interpreter.InterpreterConfiguration;
-import com.google.ase.interpreter.InterpreterConstants;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,6 +31,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.google.ase.interpreter.InterpreterAgent;
+import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.interpreter.InterpreterConstants;
 
 /**
  * Manages storage and retrieval of scripts on the file system.
@@ -151,8 +151,7 @@ public class ScriptStorageAdapter {
               .listFiles()));
       // Filter out any files that don't have interpreters installed.
       for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
-        InterpreterAgent interpreter =
-            config.getInterpreterForScript(it.next().getName());
+        InterpreterAgent interpreter = config.getInterpreterForScript(it.next().getName());
         if (interpreter == null || !interpreter.isInstalled(context)) {
           it.remove();
         }

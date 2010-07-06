@@ -16,6 +16,10 @@
 
 package com.google.ase.facade;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import android.app.Service;
 import android.content.Context;
 import android.os.PowerManager;
@@ -23,10 +27,6 @@ import android.os.PowerManager.WakeLock;
 
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * A facade exposing some of the functionality of the PowerManager, in particular wake locks.

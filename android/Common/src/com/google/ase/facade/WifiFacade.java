@@ -1,5 +1,7 @@
 package com.google.ase.facade;
 
+import java.util.List;
+
 import android.app.Service;
 import android.content.Context;
 import android.net.wifi.ScanResult;
@@ -9,8 +11,6 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
-
-import java.util.List;
 
 public class WifiFacade extends RpcReceiver {
 

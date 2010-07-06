@@ -16,6 +16,13 @@
 
 package com.google.ase.activity;
 
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -37,13 +44,6 @@ import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.terminal.Terminal;
 import com.google.ase.trigger.Trigger;
-
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
