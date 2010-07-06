@@ -15,6 +15,7 @@
  */
 
 var AP_PORT = java.lang.System.getenv("AP_PORT");
+var AP_HANDSHAKE = java.lang.System.getenv("AP_HANDSHAKE");
 
 load('/sdcard/ase/extras/rhino/json2.js');
 
@@ -47,4 +48,6 @@ function Android() {
     }
     return response.result;
   }
+
+  this._authenticate(String(AP_HANDSHAKE));
 }
