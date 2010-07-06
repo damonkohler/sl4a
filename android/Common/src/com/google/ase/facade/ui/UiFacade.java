@@ -16,6 +16,12 @@
 
 package com.google.ase.facade.ui;
 
+import java.util.Queue;
+import java.util.Set;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Intent;
@@ -32,12 +38,6 @@ import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.Queue;
-import java.util.Set;
 
 /**
  * UiFacade

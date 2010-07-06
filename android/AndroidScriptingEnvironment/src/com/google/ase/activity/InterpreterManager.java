@@ -16,6 +16,9 @@
 
 package com.google.ase.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -41,9 +44,6 @@ import com.google.ase.dialog.Help;
 import com.google.ase.interpreter.InterpreterAgent;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InterpreterManager extends ListActivity {
 
@@ -164,7 +164,7 @@ public class InterpreterManager extends ListActivity {
 
     @Override
     public void onConfigurationChanged() {
-      InterpreterManager.this.runOnUiThread(new Runnable() {
+      runOnUiThread(new Runnable() {
         @Override
         public void run() {
           mAdapter.notifyDataSetChanged();

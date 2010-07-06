@@ -16,15 +16,15 @@
 
 package com.google.ase;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import android.app.Application;
 
 import com.google.ase.activity.NotificationIdFactory;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.trigger.TriggerRepository;
-
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AseApplication extends Application {
 

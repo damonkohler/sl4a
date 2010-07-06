@@ -16,14 +16,14 @@
 
 package com.google.ase.facade;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+
 import android.media.MediaRecorder;
 
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
 
 /**
  * A facade for recording audio.

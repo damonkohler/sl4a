@@ -16,6 +16,8 @@
 
 package com.google.ase.facade;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 
@@ -23,8 +25,6 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
-
-import java.util.ArrayList;
 
 /**
  * A facade containing RPC implementations related to the speech-to-text functionality of Android.

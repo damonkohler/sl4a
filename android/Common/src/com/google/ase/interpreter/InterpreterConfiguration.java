@@ -16,6 +16,15 @@
 
 package com.google.ase.interpreter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -32,15 +41,6 @@ import android.net.Uri;
 import com.google.ase.AseLog;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.shell.ShellInterpreter;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Manages and provides access to the set of available interpreters.
@@ -77,12 +77,10 @@ public class InterpreterConfiguration {
         public void run() {
           Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
           intent.addCategory(Intent.CATEGORY_LAUNCHER);
-          List<InterpreterAgent> discoveredInterpreters =
-              new ArrayList<InterpreterAgent>();
+          List<InterpreterAgent> discoveredInterpreters = new ArrayList<InterpreterAgent>();
           List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
           for (ResolveInfo info : resolveInfos) {
-            InterpreterAgent interpreter =
-                buildInterpreter(info.activityInfo.packageName);
+            InterpreterAgent interpreter = buildInterpreter(info.activityInfo.packageName);
             if (interpreter == null) {
               continue;
             }
@@ -239,8 +237,7 @@ public class InterpreterConfiguration {
    * Returns the list of all installed interpreters.
    */
   public List<InterpreterAgent> getInstalledInterpreters() {
-    List<InterpreterAgent> interpreters =
-        new ArrayList<InterpreterAgent>();
+    List<InterpreterAgent> interpreters = new ArrayList<InterpreterAgent>();
     for (InterpreterAgent i : mInterpreterSet) {
       if (i.isInstalled(mContext)) {
         interpreters.add(i);
@@ -253,8 +250,7 @@ public class InterpreterConfiguration {
    * Returns the list of all not installed interpreters.
    */
   public List<InterpreterAgent> getNotInstalledInterpreters() {
-    List<InterpreterAgent> interpreters =
-        new ArrayList<InterpreterAgent>();
+    List<InterpreterAgent> interpreters = new ArrayList<InterpreterAgent>();
     for (InterpreterAgent i : mInterpreterSet) {
       if (!i.isInstalled(mContext)) {
         interpreters.add(i);

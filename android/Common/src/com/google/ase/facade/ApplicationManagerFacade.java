@@ -1,5 +1,13 @@
 package com.google.ase.facade;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
@@ -10,14 +18,6 @@ import android.content.pm.ResolveInfo;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class ApplicationManagerFacade extends RpcReceiver {
 

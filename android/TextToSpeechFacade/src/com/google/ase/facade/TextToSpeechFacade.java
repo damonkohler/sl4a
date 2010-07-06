@@ -16,6 +16,8 @@
 
 package com.google.ase.facade;
 
+import java.util.concurrent.CountDownLatch;
+
 import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -23,8 +25,6 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
-
-import java.util.concurrent.CountDownLatch;
 
 public class TextToSpeechFacade extends RpcReceiver {
 

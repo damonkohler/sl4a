@@ -1,5 +1,10 @@
 package com.google.ase.facade;
 
+import java.io.File;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,11 +14,6 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
 
 public class CommonIntentsFacade extends RpcReceiver {
 

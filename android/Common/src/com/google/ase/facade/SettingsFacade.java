@@ -16,6 +16,9 @@
 
 package com.google.ase.facade;
 
+import java.lang.reflect.Method;
+import java.util.Queue;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -33,9 +36,6 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
-
-import java.lang.reflect.Method;
-import java.util.Queue;
 
 /**
  * Exposes phone settings functionality.
