@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <project default="main">
 	<target name="main">
-		<jar jarfile="../ScriptForAndroidTemplate/libs/script_r0.jar">
+		<jar jarfile="../ScriptForAndroidTemplate/libs/script.jar">
 			<fileset dir="bin" includes="**/*.class"/> 
 			<fileset dir="../Common/bin" includes="**/*.class"/>
 			<fileset dir="../Utils/bin" includes="**/*.class"/>

@@ -16,7 +16,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/Ant_builder_script_jar.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/Script_jar_file_builder.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>

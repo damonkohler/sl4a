@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<project default="main">
+	<target name="main">
+		<zip destfile="../interpreter_for_android_template.zip" basedir="./" includes="**/*" excludes=".project,build.xml,gen/**,bin/**,.externalToolBuilders/**,.tmp/**">
+			<fileset dir="./.tmp" includes="*"/>
+		</zip>
+	</target>
+</project>
