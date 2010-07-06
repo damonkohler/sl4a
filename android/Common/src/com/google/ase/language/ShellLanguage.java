@@ -22,5 +22,4 @@ package com.google.ase.language;
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 public class ShellLanguage extends Language {
-
 }

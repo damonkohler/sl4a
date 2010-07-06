@@ -115,10 +115,9 @@ public class AseService extends Service {
       serverProxy = launchServer(intent, false);
     } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)
         || intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
-
       serverProxy = launchServer(intent, true);
       try {
-        launcher = launchScript(intent, serverProxy.getAddress());
+        launcher = launchScript(intent, serverProxy);
       } catch (AseException e) {
         AseLog.e(this, e.getMessage(), e);
         serverProxy.shutdown();
@@ -147,10 +146,10 @@ public class AseService extends Service {
     return androidProxy;
   }
 
-  private ScriptLauncher launchScript(Intent intent, InetSocketAddress address) throws AseException {
+  private ScriptLauncher launchScript(Intent intent, AndroidProxy proxy) throws AseException {
     InterpreterConfiguration config =
         ((AseApplication) getApplication()).getInterpreterConfiguration();
-    ScriptLauncher launcher = new ScriptLauncher(intent, address, config);
+    ScriptLauncher launcher = new ScriptLauncher(proxy, intent, config);
     launcher.launch();
     return launcher;
   }

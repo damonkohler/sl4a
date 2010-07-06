@@ -41,7 +41,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -63,7 +62,7 @@ public class JsonRpcServer {
   private final CopyOnWriteArrayList<ConnectionThread> mNetworkThreads;
   private volatile boolean mStopServer = false;
 
-  private final UUID mSecret;
+  private final String mHandshake;
 
   private final class ConnectionThread extends Thread {
     private final Socket mmSocket;
@@ -80,10 +79,7 @@ public class JsonRpcServer {
       try {
         mmReader = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()), 8192);
         mmWriter = new PrintWriter(mmSocket.getOutputStream(), true);
-        if (mSecret != null && !checkHandshake()) {
-          AseLog.e("Authentication failed.");
-          return;
-        }
+        checkHandshake();
         process();
       } catch (Exception e) {
         if (!mStopServer) {
@@ -118,19 +114,34 @@ public class JsonRpcServer {
       }
     }
 
+    private void checkHandshake() throws Exception {
+      String data = mmReader.readLine();
+      AseLog.v("Received: " + data);
+      JSONObject request = new JSONObject(data);
+      int id = request.getInt("id");
+
+      try {
+        String method = request.getString("method");
+        if (!method.equals("_authenticate")) {
+          throw new AseException(
+              "RPC method name does not match expected \"authenticate\", method = " + method);
+        }
+        JSONArray params = request.getJSONArray("params");
+        String handshake = params.getString(0);
+        if (!(mHandshake == null || mHandshake.equals(handshake))) {
+          throw new AseException("Handshake does not match.");
+        }
+      } catch (Exception e) {
+        send(JsonRpcResult.error(id, new RpcError("Authentication failed: " + e.getMessage())));
+        throw new AseException("Authentication failed", new Exception(e));
+      }
+      send(JsonRpcResult.result(id, true));
+    }
+
     private void send(JSONObject result) {
       mmWriter.write(result + "\n");
       mmWriter.flush();
       AseLog.v("Sent: " + result);
-    }
-
-    private boolean checkHandshake() throws AseException {
-      try {
-        String data = mmReader.readLine();
-        return mSecret.toString().equals(data);
-      } catch (Exception e) {
-        throw new AseException("Handshake failed!", e);
-      }
     }
 
     private void close() {
@@ -160,9 +171,9 @@ public class JsonRpcServer {
    * @param receivers
    *          the {@link RpcReceiver}s to register with the server
    */
-  public JsonRpcServer(RpcReceiverManager manager, UUID secret) {
+  public JsonRpcServer(RpcReceiverManager manager, String handshake) {
+    mHandshake = handshake;
     mRpcReceiverManager = manager;
-    mSecret = secret;
     mNetworkThreads = new CopyOnWriteArrayList<ConnectionThread>();
     for (Class<? extends RpcReceiver> receiver : manager.getRpcReceiverClasses()) {
       registerRpcReceiver(receiver);

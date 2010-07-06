@@ -52,7 +52,7 @@ public class ScriptService extends Service {
 
     AndroidProxy proxy = new AndroidProxy(this, null, true);
     proxy.startLocal();
-    ScriptLauncher launcher = new ScriptLauncher(script, proxy.getAddress(), config);
+    ScriptLauncher launcher = new ScriptLauncher(proxy, script, config);
     try {
       launcher.launch();
     } catch (AseException e) {

@@ -16,16 +16,16 @@
 
 package com.google.ase.interpreter;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 
 import com.google.ase.exception.AseException;
 import com.google.ase.language.Language;
 import com.google.ase.language.SupportedLanguages;
 import com.google.ase.rpc.MethodDescriptor;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Combines all the execution-related specs of a particular interpreter installed in the system.
@@ -74,8 +74,8 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
     mEnvironmentVariables = new HashMap<String, String>(variables);
   }
 
-  public InterpreterProcess buildProcess(String launchScript, int port) {
-    return new ProcessWrapper(launchScript, port);
+  public InterpreterProcess buildProcess(String launchScript, int port, String handshake) {
+    return new ProcessWrapper(launchScript, port, handshake);
   }
 
   public String getBinary() {
@@ -121,8 +121,8 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
 
   private class ProcessWrapper extends InterpreterProcess {
 
-    public ProcessWrapper(String launchScript, int port) {
-      super(launchScript, port);
+    public ProcessWrapper(String launchScript, int port, String handshake) {
+      super(launchScript, port, handshake);
     }
 
     @Override

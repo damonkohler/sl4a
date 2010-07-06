@@ -9,7 +9,7 @@ import java.util.Map;
 public class SupportedLanguages {
 
   private static enum KnownLanguage {
-    SHELL(".sh", ShellLanguage.class), 
+//    SHELL(".sh", ShellLanguage.class), // We don't really support Shell language
     BEANSHELL(".bsh", BeanShellLanguage.class), 
     JAVASCRIPT(".js", JavaScriptLanguage.class), 
     LUA(".lua", LuaLanguage.class), 

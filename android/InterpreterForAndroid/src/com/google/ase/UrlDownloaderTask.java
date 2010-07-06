@@ -45,11 +45,11 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
 
   private final ExtendedURL mUrl;
   private final File mFile;
-  private final OutputStream mProgressReportingOutputStream;
   private final ProgressDialog mDialog;
   private final Resources mResources;
 
   private Throwable mException;
+  private OutputStream mProgressReportingOutputStream;
 
   private final class ProgressReportingOutputStream extends FileOutputStream {
     private int mProgress = 0;
@@ -86,11 +86,6 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
     String name = mUrl.getFileName();
 
     mFile = new File(out, name);
-    try {
-      mProgressReportingOutputStream = new ProgressReportingOutputStream(mFile);
-    } catch (FileNotFoundException e) {
-      throw new AseException(e);
-    }
 
   }
 
@@ -176,6 +171,12 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
     if (mFile.exists() && contentLength == mFile.length()) {
       AseLog.v("Output file already exists. Skipping download.");
       return 0l;
+    }
+
+    try {
+      mProgressReportingOutputStream = new ProgressReportingOutputStream(mFile);
+    } catch (FileNotFoundException e) {
+      throw new AseException(e);
     }
 
     publishProgress(0, contentLength);

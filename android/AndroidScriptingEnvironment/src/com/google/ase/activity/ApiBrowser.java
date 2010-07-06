@@ -16,10 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.MatrixCursor;
@@ -46,8 +42,13 @@ import com.google.ase.R;
 import com.google.ase.facade.FacadeConfiguration;
 import com.google.ase.interpreter.InterpreterAgent;
 import com.google.ase.interpreter.InterpreterConfiguration;
+import com.google.ase.language.SupportedLanguages;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.ParameterDescriptor;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ApiBrowser extends ListActivity {
 
@@ -72,6 +73,7 @@ public class ApiBrowser extends ListActivity {
   private List<MethodDescriptor> mRpcDescriptors;
   private Set<Integer> mExpandedPositions;
   private ApiBrowserAdapter mAdapter;
+  private boolean mIsLanguageSupported;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,8 @@ public class ApiBrowser extends ListActivity {
     getListView().setFastScrollEnabled(true);
     mExpandedPositions = new HashSet<Integer>();
     mRpcDescriptors = FacadeConfiguration.collectRpcDescriptors();
+    String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    mIsLanguageSupported = SupportedLanguages.checkLanguageSupported(scriptName);
     mAdapter = new ApiBrowserAdapter();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
@@ -125,6 +129,9 @@ public class ApiBrowser extends ListActivity {
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+    if(!mIsLanguageSupported){
+      return;
+    }
     menu.add(Menu.NONE, ContextMenuId.INSERT_TEXT.getId(), Menu.NONE, "Insert");
     menu.add(Menu.NONE, ContextMenuId.PROMPT_PARAMETERS.getId(), Menu.NONE, "Prompt");
   }

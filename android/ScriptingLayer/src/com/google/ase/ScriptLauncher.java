@@ -16,15 +16,15 @@
 
 package com.google.ase;
 
-import java.io.File;
-import java.net.InetSocketAddress;
-
 import android.content.Intent;
 
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterAgent;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterProcess;
+
+import java.io.File;
+import java.net.InetSocketAddress;
 
 public class ScriptLauncher {
 
@@ -33,18 +33,20 @@ public class ScriptLauncher {
   private final InterpreterAgent mInterpreter;
   private final InetSocketAddress mAddress;
   private InterpreterProcess mProcess;
+  private final String mHandshake;
 
-  public ScriptLauncher(File script, InetSocketAddress address, InterpreterConfiguration config) {
+  public ScriptLauncher(AndroidProxy proxy, File script, InterpreterConfiguration config) {
     mScriptName = script.getName();
     if (mScriptName == null) {
       // throw exception
     }
     mInterpreter = config.getInterpreterForScript(mScriptName);
     mInterpreterName = mInterpreter.getName();
-    mAddress = address;
+    mAddress = proxy.getAddress();
+    mHandshake = proxy.getSecret();
   }
 
-  public ScriptLauncher(Intent intent, InetSocketAddress address, InterpreterConfiguration config) {
+  public ScriptLauncher(AndroidProxy proxy, Intent intent, InterpreterConfiguration config) {
     mScriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     if (mScriptName != null) {
       mInterpreter = config.getInterpreterForScript(mScriptName);
@@ -53,7 +55,8 @@ public class ScriptLauncher {
       mInterpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
       mInterpreter = config.getInterpreterByName(mInterpreterName);
     }
-    mAddress = address;
+    mAddress = proxy.getAddress();
+    mHandshake = proxy.getSecret();
   }
 
   public void launch() throws AseException {
@@ -68,7 +71,7 @@ public class ScriptLauncher {
       }
       scriptPath = script.getAbsolutePath();
     }
-    mProcess = mInterpreter.buildProcess(scriptPath, mAddress.getPort());
+    mProcess = mInterpreter.buildProcess(scriptPath, mAddress.getPort(), mHandshake);
     mProcess.start();
     Analytics.track(mInterpreterName);
   }

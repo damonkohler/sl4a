@@ -47,9 +47,12 @@ public abstract class InterpreterProcess extends AseProcess {
    * @param port
    *          the port that the AndroidProxy is listening on
    */
-  public InterpreterProcess(String launchScript, int port) {
+  public InterpreterProcess(String launchScript, int port, String handshake) {
     mLaunchScript = launchScript;
     mEnvironment.put("AP_PORT", Integer.toString(port));
+    if (handshake != null) {
+      mEnvironment.put("AP_HANDSHAKE", handshake);
+    }
     mLog = new StringBuffer();
   }
 
@@ -77,7 +80,7 @@ public abstract class InterpreterProcess extends AseProcess {
     for (Entry<String, String> e : mEnvironment.entrySet()) {
       println(String.format("export %s=\"%s\"", e.getKey(), e.getValue()));
     }
-    UUID reandom = UUID.randomUUID();
+    UUID.randomUUID();
   }
 
   /**

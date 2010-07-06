@@ -33,16 +33,16 @@ public class AndroidProxy {
   private final UUID mSecret;
 
   public AndroidProxy(Service service, Intent intent, boolean requiresHandshake) {
-    FacadeManager facadeManager =
-        new FacadeManager(service, intent, FacadeConfiguration.getFacadeClasses());
-
     if (requiresHandshake) {
       mSecret = UUID.randomUUID();
     } else {
       mSecret = null;
     }
 
-    mJsonRpcServer = new JsonRpcServer(facadeManager, mSecret);
+    FacadeManager facadeManager =
+        new FacadeManager(service, intent, FacadeConfiguration.getFacadeClasses());
+
+    mJsonRpcServer = new JsonRpcServer(facadeManager, getSecret());
 
   }
 
@@ -64,8 +64,10 @@ public class AndroidProxy {
     mJsonRpcServer.shutdown();
   }
 
-  // TODO(Alexey) : Restrict to package access;
-  public String getSecret() {
+  String getSecret() {
+    if (mSecret == null) {
+      return null;
+    }
     return mSecret.toString();
   }
 }
