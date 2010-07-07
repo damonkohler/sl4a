@@ -47,6 +47,11 @@ public class LuaDescriptor extends AseHostedInterpreter {
   }
 
   public int getVersion() {
+    return 1;
+  }
+
+  @Override
+  public int getScriptsVersion() {
     return 0;
   }
 
@@ -61,5 +66,4 @@ public class LuaDescriptor extends AseHostedInterpreter {
   public String getExecuteParams() {
     return " %s";
   }
-
 }

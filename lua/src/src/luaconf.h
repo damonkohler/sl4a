@@ -94,7 +94,7 @@
 	".\\?.dll;"  LUA_CDIR"?.dll;" LUA_CDIR"loadall.dll"
 
 #else // Modified for use with ASE.
-#define LUA_ROOT "/data/data/com.google.ase/lua/"
+#define LUA_ROOT "/data/data/com.googlecode.luaforandroid/lua/"
 #define LUA_LDIR LUA_ROOT "share/lua/5.1/"
 #define LUA_CDIR LUA_ROOT "lib/lua/5.1/"
 #define LUA_PATH_DEFAULT \

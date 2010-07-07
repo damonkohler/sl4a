@@ -16,6 +16,13 @@
 
 package com.google.ase;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
+
+import com.google.ase.exception.AseException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,13 +31,6 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
-
-import com.google.ase.exception.AseException;
 
 /**
  * AsyncTask for extracting ZIP files.
@@ -70,7 +70,8 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
       mDialog = null;
     }
     mUrl = new URL(url);
-    mFile = new File(out, mUrl.getFile());
+    String fileName = new File(mUrl.getFile()).getName();
+    mFile = new File(out, fileName);
   }
 
   @Override

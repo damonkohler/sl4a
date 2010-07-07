@@ -44,7 +44,8 @@ function rpc(client, method, ...)
 end
 
 local port = tonumber(os.getenv('AP_PORT'))
-local client = socket.connect('localhost', port)
+local host = os.getenv('AP_HOST')
+local client = socket.connect(host, port)
 local meta = {
   __index = function(t, key)
     return function(...)
@@ -54,6 +55,9 @@ local meta = {
 }
 
 setmetatable(P, meta)
+
+local handshake = os.getenv('AP_HANDSHAKE')
+P._authenticate(handshake)
 
 -- Workaround for no sleep function in Lua.
 function P.sleep(seconds)
