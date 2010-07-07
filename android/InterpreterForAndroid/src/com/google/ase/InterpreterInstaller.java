@@ -16,6 +16,14 @@
 
 package com.google.ase;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ExecutionException;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -28,13 +36,6 @@ import com.google.ase.interpreter.InterpreterConstants;
 import com.google.ase.interpreter.InterpreterDescriptor;
 import com.google.ase.interpreter.InterpreterUtils;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ExecutionException;
-
 /**
  * AsyncTask for installing interpreters.
  * 
@@ -42,9 +43,10 @@ import java.util.concurrent.ExecutionException;
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
 public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean> {
+
   protected final InterpreterDescriptor mDescriptor;
   protected final AsyncTaskListener<Boolean> mListener;
-  protected final Queue<RequestCode> taskQueue;
+  protected final Queue<RequestCode> mTaskQueue;
   protected final Context mContext;
 
   protected final Handler mainThreadHandler;
@@ -59,10 +61,10 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   }
 
   // Executed in the UI thread.
-  private final Runnable taskStarter = new Runnable() {
+  private final Runnable mTaskStarter = new Runnable() {
     @Override
     public void run() {
-      RequestCode task = taskQueue.peek();
+      RequestCode task = mTaskQueue.peek();
       try {
         AsyncTask<Void, Integer, Long> newTask = null;
         switch (task) {
@@ -86,7 +88,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
           break;
         }
         taskHolder = newTask.execute();
-      } catch (AseException e) {
+      } catch (Exception e) {
         AseLog.v(e.getMessage(), e);
       }
 
@@ -100,7 +102,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   private final Runnable taskWorker = new Runnable() {
     @Override
     public void run() {
-      RequestCode request = taskQueue.remove();
+      RequestCode request = mTaskQueue.remove();
       try {
         if (taskHolder != null && taskHolder.get() != null) {
           taskHolder = null;
@@ -108,13 +110,13 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
           if (request == RequestCode.EXTRACT_INTERPRETER && !chmodIntepreter()) {
             // Chmod returned false.
             Looper.myLooper().quit();
-          } else if (taskQueue.size() == 0) {
+          } else if (mTaskQueue.size() == 0) {
             // We're done here.
             Looper.myLooper().quit();
             return;
           } else if (mainThreadHandler != null) {
             // There's still some work to do.
-            mainThreadHandler.post(taskStarter);
+            mainThreadHandler.post(mTaskStarter);
             return;
           }
         }
@@ -161,7 +163,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
 
     mainThreadHandler = new Handler();
 
-    taskQueue = new LinkedList<RequestCode>();
+    mTaskQueue = new LinkedList<RequestCode>();
 
     if (mDescriptor == null) {
       throw new AseException("Interpreter description not provided.");
@@ -174,16 +176,16 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     }
 
     if (mDescriptor.hasInterpreterArchive()) {
-      taskQueue.offer(RequestCode.DOWNLOAD_INTERPRETER);
-      taskQueue.offer(RequestCode.EXTRACT_INTERPRETER);
+      mTaskQueue.offer(RequestCode.DOWNLOAD_INTERPRETER);
+      mTaskQueue.offer(RequestCode.EXTRACT_INTERPRETER);
     }
     if (mDescriptor.hasExtrasArchive()) {
-      taskQueue.offer(RequestCode.DOWNLOAD_INTERPRETER_EXTRAS);
-      taskQueue.offer(RequestCode.EXTRACT_INTERPRETER_EXTRAS);
+      mTaskQueue.offer(RequestCode.DOWNLOAD_INTERPRETER_EXTRAS);
+      mTaskQueue.offer(RequestCode.EXTRACT_INTERPRETER_EXTRAS);
     }
     if (mDescriptor.hasScriptsArchive()) {
-      taskQueue.offer(RequestCode.DOWNLOAD_SCRIPTS);
-      taskQueue.offer(RequestCode.EXTRACT_SCRIPTS);
+      mTaskQueue.offer(RequestCode.DOWNLOAD_SCRIPTS);
+      mTaskQueue.offer(RequestCode.EXTRACT_SCRIPTS);
     }
 
     boolean needSync = true;
@@ -202,7 +204,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
         @Override
         public void run() {
           executeInBackground();
-          final boolean result = (taskQueue.size() == 0);
+          final boolean result = (mTaskQueue.size() == 0);
           mainThreadHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -221,10 +223,10 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
       Looper.prepare();
     }
     mBackgroundHandler = new Handler();
-    mainThreadHandler.post(taskStarter);
+    mainThreadHandler.post(mTaskStarter);
     Looper.loop();
     // Have we executed all the tasks?
-    return (taskQueue.size() == 0);
+    return (mTaskQueue.size() == 0);
   }
 
   @Override
@@ -248,26 +250,21 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     }
   }
 
-  protected AsyncTask<Void, Integer, Long> download(String in, String out) throws AseException {
+  protected AsyncTask<Void, Integer, Long> download(String in) throws MalformedURLException {
+    String out = InterpreterConstants.DOWNLOAD_ROOT;
     return new UrlDownloaderTask(in, out, mContext);
   }
 
-  protected AsyncTask<Void, Integer, Long> downloadInterpreter() throws AseException {
-    String in = mDescriptor.getInterpreterArchiveUrl();
-    String out = InterpreterConstants.DOWNLOAD_ROOT;
-    return download(in, out);
+  protected AsyncTask<Void, Integer, Long> downloadInterpreter() throws MalformedURLException {
+    return download(mDescriptor.getInterpreterArchiveUrl());
   }
 
-  protected AsyncTask<Void, Integer, Long> downloadInterpreterExtras() throws AseException {
-    String in = mDescriptor.getExtrasArchiveUrl();
-    String out = InterpreterConstants.DOWNLOAD_ROOT;
-    return download(in, out);
+  protected AsyncTask<Void, Integer, Long> downloadInterpreterExtras() throws MalformedURLException {
+    return download(mDescriptor.getExtrasArchiveUrl());
   }
 
-  protected AsyncTask<Void, Integer, Long> downloadScripts() throws AseException {
-    String in = mDescriptor.getScriptsArchiveUrl();
-    String out = InterpreterConstants.DOWNLOAD_ROOT;
-    return download(in, out);
+  protected AsyncTask<Void, Integer, Long> downloadScripts() throws MalformedURLException {
+    return download(mDescriptor.getScriptsArchiveUrl());
   }
 
   protected AsyncTask<Void, Integer, Long> extract(String in, String out) throws AseException {
@@ -322,27 +319,27 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     List<File> directories = new ArrayList<File>();
 
     if (mDescriptor.hasInterpreterArchive()) {
-      if (!taskQueue.contains(RequestCode.DOWNLOAD_INTERPRETER)) {
+      if (!mTaskQueue.contains(RequestCode.DOWNLOAD_INTERPRETER)) {
         directories.add(new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor
             .getInterpreterArchiveName()));
       }
-      if (!taskQueue.contains(RequestCode.EXTRACT_INTERPRETER)) {
+      if (!mTaskQueue.contains(RequestCode.EXTRACT_INTERPRETER)) {
         directories.add(InterpreterUtils.getInterpreterRoot(mContext, mDescriptor.getName()));
       }
     }
 
     if (mDescriptor.hasExtrasArchive()) {
-      if (!taskQueue.contains(RequestCode.DOWNLOAD_INTERPRETER_EXTRAS)) {
+      if (!mTaskQueue.contains(RequestCode.DOWNLOAD_INTERPRETER_EXTRAS)) {
         directories.add(new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor
             .getExtrasArchiveName()));
       }
-      if (!taskQueue.contains(RequestCode.EXTRACT_INTERPRETER_EXTRAS)) {
+      if (!mTaskQueue.contains(RequestCode.EXTRACT_INTERPRETER_EXTRAS)) {
         directories.add(new File(InterpreterConstants.INTERPRETER_EXTRAS_ROOT, mDescriptor
             .getName()));
       }
     }
 
-    if (mDescriptor.hasScriptsArchive() && !taskQueue.contains(RequestCode.DOWNLOAD_SCRIPTS)) {
+    if (mDescriptor.hasScriptsArchive() && !mTaskQueue.contains(RequestCode.DOWNLOAD_SCRIPTS)) {
       directories.add(new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor
           .getScriptsArchiveName()));
     }

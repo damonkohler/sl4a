@@ -16,24 +16,21 @@
 
 package com.google.ase;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.content.res.Resources.NotFoundException;
-import android.os.AsyncTask;
-
-import com.google.ase.exception.AseException;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
+
+import com.google.ase.exception.AseException;
 
 /**
  * AsyncTask for extracting ZIP files.
@@ -43,10 +40,9 @@ import java.net.URLConnection;
  */
 public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
 
-  private final ExtendedURL mUrl;
+  private final URL mUrl;
   private final File mFile;
   private final ProgressDialog mDialog;
-  private final Resources mResources;
 
   private Throwable mException;
   private OutputStream mProgressReportingOutputStream;
@@ -66,27 +62,15 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
     }
   }
 
-  public UrlDownloaderTask(String url, String out, Context context) throws AseException {
+  public UrlDownloaderTask(String url, String out, Context context) throws MalformedURLException {
     super();
-
     if (context != null) {
       mDialog = new ProgressDialog(context);
-      mResources = context.getResources();
     } else {
       mDialog = null;
-      mResources = null;
     }
-
-    try {
-      mUrl = new ExtendedURL(url);
-    } catch (MalformedURLException e) {
-      throw new AseException("Cannot download malformed URL: " + url, e);
-    }
-
-    String name = mUrl.getFileName();
-
-    mFile = new File(out, name);
-
+    mUrl = new URL(url);
+    mFile = new File(out, mUrl.getFile());
   }
 
   @Override
@@ -189,68 +173,4 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
     AseLog.v("Download completed successfully.");
     return bytesCopied;
   }
-
-  private class ExtendedURL {
-    private static final String RAW_PROTOCOL = "raw://";
-    private final URL mmUrl;
-    private String mmFileName;
-    private int id = 0;
-
-    public ExtendedURL(String url) throws MalformedURLException {
-      if (url.startsWith(RAW_PROTOCOL)) {
-        mmUrl = null;
-        String str = url.substring(url.lastIndexOf('/') + 1, url.length());
-        id = Integer.parseInt(str);
-        str = mResources.getText(id).toString();
-        mmFileName = str.substring(str.lastIndexOf('/') + 1, str.length());
-      } else {
-        mmUrl = new URL(url);
-        mmFileName = new File(mmUrl.getFile()).getName();
-      }
-      if (mmFileName == null) {
-        throw new MalformedURLException("File name not specified: " + url);
-      }
-    }
-
-    public String getFileName() {
-      return mmFileName;
-    }
-
-    public URLConnection openConnection() throws IOException {
-      if (mmUrl != null) {
-        return mmUrl.openConnection();
-      }
-      if (id == 0) {
-        throw new IOException("Cannot resolve resource id for name: " + mmFileName);
-      }
-      return new URLConnection(null) {
-
-        @Override
-        public int getContentLength() {
-          try {
-            mResources.openRawResourceFd(id).getLength();
-          } catch (NotFoundException nfe) {
-            try {
-              return mResources.openRawResource(id).available();
-            } catch (Exception e) {
-            }
-          }
-          return -1;
-        }
-
-        @SuppressWarnings("unused")
-        @Override
-        public InputStream getInputStream() throws IOException {
-          return mResources.openRawResource(id);
-        }
-
-        @SuppressWarnings("unused")
-        @Override
-        public void connect() throws IOException {
-        }
-      };
-    }
-
-  }
-
 }

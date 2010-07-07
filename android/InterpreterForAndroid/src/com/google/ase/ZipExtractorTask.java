@@ -44,11 +44,9 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
   private final File mOutput;
   private final ProgressDialog mDialog;
   private Throwable mException;
-
   private int mProgress = 0;
 
   private final class ProgressReportingOutputStream extends FileOutputStream {
-
     private ProgressReportingOutputStream(File f) throws FileNotFoundException {
       super(f);
     }
@@ -75,7 +73,6 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
     } else {
       mDialog = null;
     }
-
   }
 
   @Override
