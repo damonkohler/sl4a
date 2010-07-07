@@ -50,6 +50,11 @@ public class PythonDescriptor extends AseHostedInterpreter {
     return 7;
   }
 
+  @Override
+  public int getExtrasVersion() {
+    return 8;
+  }
+
   public String getBinary() {
     return PYTHON_BIN;
   }
@@ -61,5 +66,4 @@ public class PythonDescriptor extends AseHostedInterpreter {
   public String getExecuteParams() {
     return " %s";
   }
-
 }

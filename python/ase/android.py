@@ -21,6 +21,8 @@ import socket
 import sys
 
 PORT = os.environ.get('AP_PORT')
+HOST = os.environ.get('AP_HOST')
+HANDSHAKE = os.environ.get('AP_HANDSHAKE')
 Result = collections.namedtuple('Result', 'id,result,error')
 
 
@@ -28,10 +30,11 @@ class Android(object):
 
   def __init__(self, addr=None):
     if addr is None:
-      addr = 'localhost', PORT
+      addr = HOST, PORT
     self.conn = socket.create_connection(addr)
     self.client = self.conn.makefile()
     self.id = 0
+    self._authenticate(HANDSHAKE)
 
   def _rpc(self, method, *args):
     data = {'id': self.id,
