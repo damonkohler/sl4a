@@ -237,15 +237,14 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   }
 
   protected void finish(boolean result) {
-    result = result && setup();
-    if (result) {
-      mListener.onTaskFinished(result, "Installation successful.");
+    if (result && setup()) {
+      mListener.onTaskFinished(true, "Installation successful.");
     } else {
       if (taskHolder != null) {
         taskHolder.cancel(true);
       }
       cleanup();
-      mListener.onTaskFinished(result, "Installation failed.");
+      mListener.onTaskFinished(false, "Installation failed.");
     }
   }
 

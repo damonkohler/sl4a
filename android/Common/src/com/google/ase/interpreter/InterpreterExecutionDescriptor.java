@@ -28,7 +28,8 @@ public interface InterpreterExecutionDescriptor {
 
   public String getPath();
 
-  public InterpreterProcess buildProcess(String launchScript, int port, String handshake);
+  public InterpreterProcess buildProcess(String launchScript, String host, int port,
+      String handshake);
 
   public String getBinary();
 

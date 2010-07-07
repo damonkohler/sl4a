@@ -48,6 +48,11 @@ public class BshDescriptor extends AseHostedInterpreter {
   }
 
   public int getVersion() {
+    return 2;
+  }
+
+  @Override
+  public int getScriptsVersion() {
     return 1;
   }
 

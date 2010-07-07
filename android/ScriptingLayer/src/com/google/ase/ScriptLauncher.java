@@ -71,7 +71,9 @@ public class ScriptLauncher {
       }
       scriptPath = script.getAbsolutePath();
     }
-    mProcess = mInterpreter.buildProcess(scriptPath, mAddress.getPort(), mHandshake);
+    mProcess =
+        mInterpreter.buildProcess(scriptPath, mAddress.getHostName(), mAddress.getPort(),
+            mHandshake);
     mProcess.start();
     Analytics.track(mInterpreterName);
   }

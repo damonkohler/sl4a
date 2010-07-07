@@ -13,6 +13,8 @@
 # the License.
 
 AP_PORT = ENV['AP_PORT']
+AP_HOST = ENV['AP_HOST']
+AP_HANDSHAKE = ENV['AP_HANDSHAKE']
 
 require 'json/pure'
 require 'socket'
@@ -26,8 +28,9 @@ end
 class Android
 
   def initialize()
-    @client = TCPSocket.new('localhost', AP_PORT)
+    @client = TCPSocket.new(AP_HOST, AP_PORT)
     @id = 0
+    _authenticate(AP_HANDSHAKE)
   end
 
   def rpc(method, *args)
@@ -43,3 +46,5 @@ class Android
   end
 
 end
+
+

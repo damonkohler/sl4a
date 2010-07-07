@@ -45,8 +45,8 @@ public class ShellInterpreter implements InterpreterAgent {
     return "sh";
   }
 
-  public InterpreterProcess buildProcess(String scriptName, int port, String handshake) {
-    return new ShellInterpreterProcess(scriptName, port, handshake);
+  public InterpreterProcess buildProcess(String scriptName, String host, int port, String handshake) {
+    return new ShellInterpreterProcess(scriptName, host, port, handshake);
   }
 
   public String getNiceName() {
@@ -99,8 +99,8 @@ public class ShellInterpreter implements InterpreterAgent {
 
   private class ShellInterpreterProcess extends InterpreterProcess {
 
-    public ShellInterpreterProcess(String launchScript, int port, String handshake) {
-      super(launchScript, port, handshake);
+    public ShellInterpreterProcess(String launchScript, String host, int port, String handshake) {
+      super(launchScript, host, port, handshake);
     }
 
     @Override

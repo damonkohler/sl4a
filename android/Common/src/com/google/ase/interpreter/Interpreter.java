@@ -71,11 +71,15 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
 
     mLanguage = SupportedLanguages.getLanguageByExtension(mExtension);
 
-    mEnvironmentVariables = new HashMap<String, String>(variables);
+    mEnvironmentVariables = new HashMap<String, String>();
+    if (variables != null) {
+      mEnvironmentVariables.putAll(variables);
+    }
   }
 
-  public InterpreterProcess buildProcess(String launchScript, int port, String handshake) {
-    return new ProcessWrapper(launchScript, port, handshake);
+  public InterpreterProcess buildProcess(String launchScript, String host, int port,
+      String handshake) {
+    return new ProcessWrapper(launchScript, host, port, handshake);
   }
 
   public String getBinary() {
@@ -121,8 +125,8 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
 
   private class ProcessWrapper extends InterpreterProcess {
 
-    public ProcessWrapper(String launchScript, int port, String handshake) {
-      super(launchScript, port, handshake);
+    public ProcessWrapper(String launchScript, String host, int port, String handshake) {
+      super(launchScript, host, port, handshake);
     }
 
     @Override

@@ -16,7 +16,9 @@ import org.json.*;
 
 Android() {
   String AP_PORT = System.getenv().get("AP_PORT");
-  Socket conn = new Socket("127.0.0.1", Integer.decode(AP_PORT));
+  String AP_HOST = System.getenv().get("AP_HOST");
+  String AP_HANDSHAKE = System.getenv().get("AP_HANDSHAKE");
+  Socket conn = new Socket(AP_HOST, Integer.decode(AP_PORT));
   BufferedReader in = new BufferedReader(
       new InputStreamReader(conn.getInputStream(), "8859_1"), 1 << 13);
   OutputStream out_stream = new BufferedOutputStream(
@@ -68,6 +70,8 @@ Android() {
     args.put(arg4);
     call(method, args);
   }
+  
+  call("_authenticate", AP_HANDSHAKE);
 
   return this;
 }

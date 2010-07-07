@@ -126,10 +126,12 @@ public class JsonRpcServer {
           throw new AseException(
               "RPC method name does not match expected \"authenticate\", method = " + method);
         }
-        JSONArray params = request.getJSONArray("params");
-        String handshake = params.getString(0);
-        if (!(mHandshake == null || mHandshake.equals(handshake))) {
-          throw new AseException("Handshake does not match.");
+        if (mHandshake != null) {
+          JSONArray params = request.getJSONArray("params");
+          String handshake = params.getString(0);
+          if (!mHandshake.equals(handshake)) {
+            throw new AseException("Handshake does not match.");
+          }
         }
       } catch (Exception e) {
         send(JsonRpcResult.error(id, new RpcError("Authentication failed: " + e.getMessage())));

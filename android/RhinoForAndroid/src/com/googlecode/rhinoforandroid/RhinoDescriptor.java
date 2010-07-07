@@ -54,6 +54,11 @@ public class RhinoDescriptor extends AseHostedInterpreter {
   }
 
   public int getVersion() {
+    return 1;
+  }
+
+  @Override
+  public int getScriptsVersion() {
     return 0;
   }
 

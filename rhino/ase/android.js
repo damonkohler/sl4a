@@ -15,6 +15,7 @@
  */
 
 var AP_PORT = java.lang.System.getenv("AP_PORT");
+var AP_HOST = java.lang.System.getenv(String(AP_HOST));
 var AP_HANDSHAKE = java.lang.System.getenv("AP_HANDSHAKE");
 
 load('/sdcard/ase/extras/rhino/json2.js');

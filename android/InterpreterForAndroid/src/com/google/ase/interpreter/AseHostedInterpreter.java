@@ -16,9 +16,9 @@
 
 package com.google.ase.interpreter;
 
-import java.io.File;
-
 import android.content.Context;
+
+import java.io.File;
 
 /**
  * A description of the interpreters hosted by the ASE project.
@@ -30,16 +30,28 @@ public abstract class AseHostedInterpreter implements InterpreterDescriptor {
 
   public static final String BASE_INSTALL_URL = "http://android-scripting.googlecode.com/files/";
 
+  public int getInterpreterVersion() {
+    return getVersion();
+  }
+
+  public int getExtrasVersion() {
+    return getVersion();
+  }
+
+  public int getScriptsVersion() {
+    return getVersion();
+  }
+
   public String getInterpreterArchiveName() {
-    return String.format("%s_r%s.zip", getName(), getVersion());
+    return String.format("%s_r%s.zip", getName(), getInterpreterVersion());
   }
 
   public String getExtrasArchiveName() {
-    return String.format("%s_extras_r%s.zip", getName(), getVersion());
+    return String.format("%s_extras_r%s.zip", getName(), getExtrasVersion());
   }
 
   public String getScriptsArchiveName() {
-    return String.format("%s_scripts_r%s.zip", getName(), getVersion());
+    return String.format("%s_scripts_r%s.zip", getName(), getScriptsVersion());
   }
 
   public String getInterpreterArchiveUrl() {
