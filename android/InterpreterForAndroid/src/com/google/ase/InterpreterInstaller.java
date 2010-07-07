@@ -44,7 +44,7 @@ import com.google.ase.interpreter.InterpreterUtils;
 public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean> {
 
   protected final InterpreterDescriptor mDescriptor;
-  protected final AsyncTaskListener<Boolean> mListener;
+  protected final AsyncTaskListener<Boolean> mTaskListener;
   protected final Queue<RequestCode> mTaskQueue;
   protected final Context mContext;
 
@@ -148,11 +148,11 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
 
   // TODO(Alexey): Add Javadoc.
   public InterpreterInstaller(InterpreterDescriptor descriptor, Context context,
-      AsyncTaskListener<Boolean> listener) throws AseException {
+      AsyncTaskListener<Boolean> taskListener) throws AseException {
     super();
     mDescriptor = descriptor;
     mContext = context;
-    mListener = listener;
+    mTaskListener = taskListener;
     mainThreadHandler = new Handler();
     mTaskQueue = new LinkedList<RequestCode>();
 
@@ -211,13 +211,13 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
 
   protected void finish(boolean result) {
     if (result && setup()) {
-      mListener.onTaskFinished(true, "Installation successful.");
+      mTaskListener.onTaskFinished(true, "Installation successful.");
     } else {
       if (mTaskHolder != null) {
         mTaskHolder.cancel(true);
       }
       cleanup();
-      mListener.onTaskFinished(false, "Installation failed.");
+      mTaskListener.onTaskFinished(false, "Installation failed.");
     }
   }
 
