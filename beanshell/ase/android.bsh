@@ -71,7 +71,9 @@ Android() {
     call(method, args);
   }
   
-  call("_authenticate", AP_HANDSHAKE);
+  JSONArray handshake = new JSONArray();
+  handshake.put(AP_HANDSHAKE);
+  call("_authenticate", handshake);
 
   return this;
 }

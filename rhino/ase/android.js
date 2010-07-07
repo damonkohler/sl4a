@@ -15,14 +15,14 @@
  */
 
 var AP_PORT = java.lang.System.getenv("AP_PORT");
-var AP_HOST = java.lang.System.getenv(String(AP_HOST));
+var AP_HOST = java.lang.System.getenv("AP_HOST");
 var AP_HANDSHAKE = java.lang.System.getenv("AP_HANDSHAKE");
 
 load('/sdcard/ase/extras/rhino/json2.js');
 
 function Android() {
 
-  this.connection = new java.net.Socket("127.0.0.1", AP_PORT),
+  this.connection = new java.net.Socket(String(AP_HOST), AP_PORT),
   this.input = new java.io.BufferedReader(
       new java.io.InputStreamReader(this.connection.getInputStream(), "8859_1"),
                                     1 << 13),

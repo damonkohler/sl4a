@@ -63,6 +63,7 @@ public class JsonRpcServer {
   private volatile boolean mStopServer = false;
 
   private final String mHandshake;
+  private boolean mPassedAuthentication = false;
 
   private final class ConnectionThread extends Thread {
     private final Socket mmSocket;
@@ -79,7 +80,6 @@ public class JsonRpcServer {
       try {
         mmReader = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()), 8192);
         mmWriter = new PrintWriter(mmSocket.getOutputStream(), true);
-        checkHandshake();
         process();
       } catch (Exception e) {
         if (!mStopServer) {
@@ -92,7 +92,7 @@ public class JsonRpcServer {
       }
     }
 
-    private void process() throws JSONException, IOException {
+    private void process() throws JSONException, IOException, AseException {
       String data;
       while ((data = mmReader.readLine()) != null) {
         AseLog.v("Received: " + data);
@@ -100,6 +100,13 @@ public class JsonRpcServer {
         int id = request.getInt("id");
         String method = request.getString("method");
         JSONArray params = request.getJSONArray("params");
+
+        if (!mPassedAuthentication) {
+          checkHandshake(id, method, params);
+          mPassedAuthentication = true;
+          continue;
+        }
+
         MethodDescriptor rpc = mKnownRpcs.get(method);
         if (rpc == null) {
           send(JsonRpcResult.error(id, new RpcError("Unknown RPC.")));
@@ -114,20 +121,14 @@ public class JsonRpcServer {
       }
     }
 
-    private void checkHandshake() throws Exception {
-      String data = mmReader.readLine();
-      AseLog.v("Received: " + data);
-      JSONObject request = new JSONObject(data);
-      int id = request.getInt("id");
-
+    private void checkHandshake(int id, String method, JSONArray params) throws JSONException,
+        AseException {
       try {
-        String method = request.getString("method");
         if (!method.equals("_authenticate")) {
           throw new AseException(
               "RPC method name does not match expected \"authenticate\", method = " + method);
         }
         if (mHandshake != null) {
-          JSONArray params = request.getJSONArray("params");
           String handshake = params.getString(0);
           if (!mHandshake.equals(handshake)) {
             throw new AseException("Handshake does not match.");
