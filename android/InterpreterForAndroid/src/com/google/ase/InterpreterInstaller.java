@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ExecutionException;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -52,8 +51,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   protected final Handler mainThreadHandler;
   protected Handler mBackgroundHandler;
 
-  protected volatile AsyncTask<Void, Integer, Long> taskHolder;
-  protected final boolean mStartNewThread;
+  protected volatile AsyncTask<Void, Integer, Long> mTaskHolder;
 
   protected static enum RequestCode {
     DOWNLOAD_INTERPRETER, DOWNLOAD_INTERPRETER_EXTRAS, DOWNLOAD_SCRIPTS, EXTRACT_INTERPRETER,
@@ -87,26 +85,26 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
           newTask = extractScripts();
           break;
         }
-        taskHolder = newTask.execute();
+        mTaskHolder = newTask.execute();
       } catch (Exception e) {
         AseLog.v(e.getMessage(), e);
       }
 
       if (mBackgroundHandler != null) {
-        mBackgroundHandler.post(taskWorker);
+        mBackgroundHandler.post(mTaskWorker);
       }
     }
   };
 
   // Executed in the background.
-  private final Runnable taskWorker = new Runnable() {
+  private final Runnable mTaskWorker = new Runnable() {
     @Override
     public void run() {
       RequestCode request = mTaskQueue.remove();
       try {
-        if (taskHolder != null && taskHolder.get() != null) {
-          taskHolder = null;
-          // Postprocessing.
+        if (mTaskHolder != null && mTaskHolder.get() != null) {
+          mTaskHolder = null;
+          // Post processing.
           if (request == RequestCode.EXTRACT_INTERPRETER && !chmodIntepreter()) {
             // Chmod returned false.
             Looper.myLooper().quit();
@@ -120,10 +118,6 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
             return;
           }
         }
-      } catch (InterruptedException e) {
-        AseLog.e(e);
-      } catch (ExecutionException e) {
-        AseLog.e(e);
       } catch (Exception e) {
         AseLog.e(e);
       }
@@ -152,17 +146,14 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     }
   };
 
+  // TODO(Alexey): Add Javadoc.
   public InterpreterInstaller(InterpreterDescriptor descriptor, Context context,
       AsyncTaskListener<Boolean> listener) throws AseException {
-
     super();
-
     mDescriptor = descriptor;
     mContext = context;
     mListener = listener;
-
     mainThreadHandler = new Handler();
-
     mTaskQueue = new LinkedList<RequestCode>();
 
     if (mDescriptor == null) {
@@ -187,63 +178,43 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
       mTaskQueue.offer(RequestCode.DOWNLOAD_SCRIPTS);
       mTaskQueue.offer(RequestCode.EXTRACT_SCRIPTS);
     }
-
-    boolean needSync = true;
-    try {
-      int sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
-      needSync = sdkVersion < 4;
-    } catch (NumberFormatException e) {
-    }
-    mStartNewThread = needSync;
   }
 
   @Override
   protected Boolean doInBackground(Void... params) {
-    if (mStartNewThread) {
-      new Thread(new Runnable() {
-        @Override
-        public void run() {
-          executeInBackground();
-          final boolean result = (mTaskQueue.size() == 0);
-          mainThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-              finish(result);
-            }
-          });
-        }
-      }).start();
-      return true;
-    }
-    return executeInBackground();
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        executeInBackground();
+        final boolean result = (mTaskQueue.size() == 0);
+        mainThreadHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            finish(result);
+          }
+        });
+      }
+    }).start();
+    return true;
   }
 
   private boolean executeInBackground() {
     if (Looper.myLooper() == null) {
       Looper.prepare();
     }
-    mBackgroundHandler = new Handler();
+    mBackgroundHandler = new Handler(Looper.myLooper());
     mainThreadHandler.post(mTaskStarter);
     Looper.loop();
     // Have we executed all the tasks?
     return (mTaskQueue.size() == 0);
   }
 
-  @Override
-  protected void onPostExecute(Boolean result) {
-    // Final touches.
-    if (mStartNewThread) {
-      return;
-    }
-    finish(result);
-  }
-
   protected void finish(boolean result) {
     if (result && setup()) {
       mListener.onTaskFinished(true, "Installation successful.");
     } else {
-      if (taskHolder != null) {
-        taskHolder.cancel(true);
+      if (mTaskHolder != null) {
+        mTaskHolder.cancel(true);
       }
       cleanup();
       mListener.onTaskFinished(false, "Installation failed.");

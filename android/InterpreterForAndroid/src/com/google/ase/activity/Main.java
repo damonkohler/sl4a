@@ -47,15 +47,11 @@ import com.google.ase.interpreter.InterpreterDescriptor;
 public abstract class Main extends Activity {
   protected final static float MARGIN_DIP = 3.0f;
 
+  protected final String mId = getClass().getPackage().getName();
+
   protected SharedPreferences mPreferences;
   protected InterpreterDescriptor mDescriptor;
   protected Button mButton;
-
-  protected final String ID = getID();
-
-  protected String getID() {
-    return getClass().getPackage().getName();
-  }
 
   protected abstract InterpreterDescriptor getDescriptor();
 
@@ -97,7 +93,7 @@ public abstract class Main extends Activity {
     super.onCreate(savedInstanceState);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     mDescriptor = getDescriptor();
-    setUI();
+    initializeViews();
     if (checkInstalled()) {
       prepareUninstallButton();
     } else {
@@ -105,8 +101,14 @@ public abstract class Main extends Activity {
     }
   }
 
+  @Override
+  protected void onStop() {
+    super.onStop();
+    finish();
+  }
+
   // TODO(alexey): Pull out to a layout XML?
-  protected void setUI() {
+  protected void initializeViews() {
     LinearLayout layout = new LinearLayout(this);
     layout.setOrientation(LinearLayout.VERTICAL);
     layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
@@ -145,13 +147,13 @@ public abstract class Main extends Activity {
 
   protected void broadcastInstallationStateChange(boolean isInterpreterInstalled) {
     Intent intent = new Intent();
-    intent.setData(Uri.parse("package:" + ID));
+    intent.setData(Uri.parse("package:" + mId));
     if (isInterpreterInstalled) {
       intent.setAction(InterpreterConstants.ACTION_INTERPRETER_ADDED);
     } else {
       intent.setAction(InterpreterConstants.ACTION_INTERPRETER_REMOVED);
     }
-    this.sendBroadcast(intent);
+    sendBroadcast(intent);
   }
 
   protected synchronized void install() {
