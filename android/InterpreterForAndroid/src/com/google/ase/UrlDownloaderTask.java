@@ -91,7 +91,7 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
 
   @Override
   protected void onPreExecute() {
-    AseLog.v("Downloading " + mUrl);
+    AseLog.v("Downloading " + mUrl.toString());
     if (mDialog != null) {
       mDialog.setTitle("Downloading");
       mDialog.setMessage(mFile.getName());
@@ -214,6 +214,14 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
 
     public String getFileName() {
       return mmFileName;
+    }
+
+    @Override
+    public String toString() {
+      if (mmUrl != null) {
+        return mmUrl.toString();
+      }
+      return RAW_PROTOCOL + id;
     }
 
     public URLConnection openConnection() throws IOException {

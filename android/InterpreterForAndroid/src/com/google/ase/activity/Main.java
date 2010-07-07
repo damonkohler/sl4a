@@ -107,6 +107,12 @@ public abstract class Main extends Activity {
   }
 
   @Override
+  protected void onStop() {
+    super.onStop();
+    finish();
+  }
+
+  @Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
   }

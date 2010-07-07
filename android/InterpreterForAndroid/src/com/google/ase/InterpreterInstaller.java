@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ExecutionException;
 
 /**
  * AsyncTask for installing interpreters.
@@ -51,7 +50,6 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   protected Handler mBackgroundHandler;
 
   protected volatile AsyncTask<Void, Integer, Long> taskHolder;
-  protected final boolean mStartNewThread;
 
   protected static enum RequestCode {
     DOWNLOAD_INTERPRETER, DOWNLOAD_INTERPRETER_EXTRAS, DOWNLOAD_SCRIPTS, EXTRACT_INTERPRETER,
@@ -118,10 +116,6 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
             return;
           }
         }
-      } catch (InterruptedException e) {
-        AseLog.e(e);
-      } catch (ExecutionException e) {
-        AseLog.e(e);
       } catch (Exception e) {
         AseLog.e(e);
       }
@@ -150,6 +144,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     }
   };
 
+  // TODO(Alexey): Add Javadoc.
   public InterpreterInstaller(InterpreterDescriptor descriptor, Context context,
       AsyncTaskListener<Boolean> listener) throws AseException {
 
@@ -185,55 +180,35 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
       taskQueue.offer(RequestCode.DOWNLOAD_SCRIPTS);
       taskQueue.offer(RequestCode.EXTRACT_SCRIPTS);
     }
-
-    boolean needSync = true;
-    try {
-      int sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
-      needSync = sdkVersion < 4;
-    } catch (NumberFormatException e) {
-    }
-    mStartNewThread = needSync;
   }
 
   @Override
   protected Boolean doInBackground(Void... params) {
-    if (mStartNewThread) {
-      new Thread(new Runnable() {
-        @Override
-        public void run() {
-          executeInBackground();
-          final boolean result = (taskQueue.size() == 0);
-          mainThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-              finish(result);
-            }
-          });
-        }
-      }).start();
-      return true;
-    }
-    return executeInBackground();
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        executeInBackground();
+        final boolean result = (taskQueue.size() == 0);
+        mainThreadHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            finish(result);
+          }
+        });
+      }
+    }).start();
+    return true;
   }
 
   private boolean executeInBackground() {
     if (Looper.myLooper() == null) {
       Looper.prepare();
     }
-    mBackgroundHandler = new Handler();
+    mBackgroundHandler = new Handler(Looper.myLooper());
     mainThreadHandler.post(taskStarter);
     Looper.loop();
     // Have we executed all the tasks?
     return (taskQueue.size() == 0);
-  }
-
-  @Override
-  protected void onPostExecute(Boolean result) {
-    // Final touches.
-    if (mStartNewThread) {
-      return;
-    }
-    finish(result);
   }
 
   protected void finish(boolean result) {

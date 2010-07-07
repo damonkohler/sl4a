@@ -38,9 +38,6 @@ public interface InterpreterConstants {
 
   public static final String SCRIPTS_ROOT = SDCARD_ASE_ROOT + "scripts/";
 
-  public static final String EXTRA_INTERPRETER_DESCRIPTION =
-      "com.google.ase.extra.INTERPRETER_DESCRIPTION";
-
   // Interpreters discovery mechanism
   public static final String ACTION_DISCOVER_INTERPRETERS = "com.google.ase.DISCOVER_INTERPRETERS";
   // Interpreters broadcasts
