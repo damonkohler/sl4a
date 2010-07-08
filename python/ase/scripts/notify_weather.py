@@ -12,9 +12,9 @@ def notify_weather(droid):
   """Display the weather at the current location in a notification."""
   print 'Finding ZIP code.'
   location = droid.getLastKnownLocation().result
-  if location['gps']:
+  if location['gps'] is not None:
     location = location['gps']
-  else
+  else:
     location = location['network']
   addresses = droid.geocode(location['latitude'], location['longitude'])
   zip = addresses.result[0]['postal_code']

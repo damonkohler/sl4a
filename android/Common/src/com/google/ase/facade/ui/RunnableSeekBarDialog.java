@@ -31,7 +31,7 @@ import android.widget.SeekBar;
 import com.google.ase.AseLog;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureResult;
+import com.google.ase.future.FutureObject;
 
 /**
  * Wrapper class for dialog box with seek bar.
@@ -46,7 +46,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
   private SeekBar mSeekBar;
 
   private AseServiceHelper mActivity;
-  private FutureResult mResult;
+  private FutureObject mResult;
 
   private final int mProgress;
   private final int mMax;
@@ -73,7 +73,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
   }
 
   @Override
-  public void run(AseServiceHelper activity, FutureResult result) {
+  public void run(AseServiceHelper activity, FutureObject result) {
     mActivity = activity;
     mResult = result;
     mSeekBar = new SeekBar(activity);

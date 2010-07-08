@@ -23,16 +23,16 @@ import android.app.Activity;
 import com.google.ase.activity.AseServiceHelper;
 
 /**
- * Encapsulates an {@link Activity} and a {@link FutureResult}.
+ * Encapsulates an {@link Activity} and a {@link FutureObject}.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public abstract class FutureActivityTask {
   private final static AtomicInteger mNextFutureTaskId = new AtomicInteger(0);
-  private final FutureResult mResult = new FutureResult();
+  private final FutureObject mResult = new FutureObject();
   private final int myTaskId = mNextFutureTaskId.incrementAndGet();
 
-  public abstract void run(final AseServiceHelper activity, final FutureResult result);
+  public abstract void run(final AseServiceHelper activity, final FutureObject result);
 
   public Runnable getRunnable(final AseServiceHelper activity) {
     return new Runnable() {
@@ -43,7 +43,7 @@ public abstract class FutureActivityTask {
     };
   }
 
-  public FutureResult getFutureResult() {
+  public FutureObject getFutureResult() {
     return mResult;
   }
 

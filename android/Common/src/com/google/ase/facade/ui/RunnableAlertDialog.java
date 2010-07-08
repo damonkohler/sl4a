@@ -33,7 +33,7 @@ import android.content.DialogInterface;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureResult;
+import com.google.ase.future.FutureObject;
 
 /**
  * Wrapper class for alert dialog running in separate thread.
@@ -44,7 +44,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
 
   private final CountDownLatch mShowLatch;
 
-  private FutureResult mResult;
+  private FutureObject mResult;
   private AseServiceHelper mActivity;
 
   private AlertDialog mDialog;
@@ -154,7 +154,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   }
 
   @Override
-  public void run(final AseServiceHelper activity, FutureResult result) {
+  public void run(final AseServiceHelper activity, FutureObject result) {
     mActivity = activity;
     mResult = result;
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);

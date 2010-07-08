@@ -27,7 +27,7 @@ import android.os.Handler;
 
 import com.google.ase.AseApplication;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureResult;
+import com.google.ase.future.FutureObject;
 
 /**
  * This {@link Activity} is launched by the {@link AseService} in order to perform operations that a
@@ -39,14 +39,14 @@ import com.google.ase.future.FutureResult;
 public class AseServiceHelper extends Activity {
   Queue<FutureActivityTask> mTaskQueue;
   private Handler mHandler;
-  private HashMap<Integer, FutureResult> mResultMap;
+  private HashMap<Integer, FutureObject> mResultMap;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mHandler = new Handler();
     mTaskQueue = ((AseApplication) getApplication()).getTaskQueue();
-    mResultMap = new HashMap<Integer, FutureResult>();
+    mResultMap = new HashMap<Integer, FutureObject>();
     setPersistent(true);
   }
 
@@ -62,13 +62,13 @@ public class AseServiceHelper extends Activity {
     super.onStart();
     FutureActivityTask task = mTaskQueue.poll();
     mHandler.post(task.getRunnable(this));
-    FutureResult result = task.getFutureResult();
+    FutureObject result = task.getFutureResult();
     mResultMap.put(task.getTaskId(), result);
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    FutureResult result = mResultMap.get(requestCode);
+    FutureObject result = mResultMap.get(requestCode);
     if (result != null) {
       result.set(data);
       taskDone(requestCode);

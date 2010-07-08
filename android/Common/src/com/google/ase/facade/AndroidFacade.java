@@ -42,7 +42,7 @@ import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.activity.NotificationIdFactory;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureResult;
+import com.google.ase.future.FutureObject;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
@@ -115,7 +115,7 @@ public class AndroidFacade extends RpcReceiver {
   Intent startActivityForResult(final Intent intent) {
     FutureActivityTask task = new FutureActivityTask() {
       @Override
-      public void run(AseServiceHelper activity, FutureResult result) {
+      public void run(AseServiceHelper activity, FutureObject result) {
         // TODO(damonkohler): Throwing an exception here (e.g. specifying a non-existent activity)
         // causes a force close. There needs to be a way to pass back an error condition from the
         // helper.
@@ -128,7 +128,7 @@ public class AndroidFacade extends RpcReceiver {
     } catch (Exception e) {
       AseLog.e("Failed to launch intent.", e);
     }
-    FutureResult result = task.getFutureResult();
+    FutureObject result = task.getFutureResult();
     try {
       return (Intent) result.get();
     } catch (Exception e) {
@@ -235,7 +235,7 @@ public class AndroidFacade extends RpcReceiver {
       final boolean password) {
     final FutureActivityTask task = new FutureActivityTask() {
       @Override
-      public void run(final AseServiceHelper activity, final FutureResult result) {
+      public void run(final AseServiceHelper activity, final FutureObject result) {
         final EditText input = new EditText(activity);
         if (password) {
           input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -270,7 +270,7 @@ public class AndroidFacade extends RpcReceiver {
       AseLog.e("Failed to launch intent.", e);
     }
 
-    FutureResult result = task.getFutureResult();
+    FutureObject result = task.getFutureResult();
     try {
       if (result.get() == null) {
         return null;

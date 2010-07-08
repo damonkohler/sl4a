@@ -23,7 +23,7 @@ import android.app.ProgressDialog;
 
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureResult;
+import com.google.ase.future.FutureObject;
 
 /**
  * Wrapper class for progress dialog running in separate thread
@@ -53,7 +53,7 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
   }
 
   @Override
-  public void run(AseServiceHelper activity, FutureResult result) {
+  public void run(AseServiceHelper activity, FutureObject result) {
     mActivity = activity;
     mDialog = new ProgressDialog(activity);
     mDialog.setProgressStyle(mStyle);

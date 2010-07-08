@@ -19,19 +19,18 @@ package com.google.ase.future;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * FutureIntent represents an eventual Intent result object for asynchronous operations.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class FutureResult implements Future<Object> {
+public class FutureResult<T> implements Future<T> {
 
   private final CountDownLatch mLatch = new CountDownLatch(1);
-  private Object mResult;
+  private T mResult;
 
-  public void set(Object result) {
+  public void set(T result) {
     mResult = result;
     mLatch.countDown();
   }
@@ -42,13 +41,13 @@ public class FutureResult implements Future<Object> {
   }
 
   @Override
-  public Object get() throws InterruptedException {
+  public T get() throws InterruptedException {
     mLatch.await();
     return mResult;
   }
 
   @Override
-  public Object get(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
+  public T get(long timeout, TimeUnit unit) throws InterruptedException {
     mLatch.await(timeout, unit);
     return mResult;
   }

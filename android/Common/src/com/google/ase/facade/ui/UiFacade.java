@@ -32,7 +32,7 @@ import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.facade.FacadeManager;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureResult;
+import com.google.ase.future.FutureObject;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
@@ -200,7 +200,7 @@ public class UiFacade extends RpcReceiver {
   @Rpc(description = "Returns dialog response.")
   public Object dialogGetResponse() {
     try {
-      FutureResult result = ((FutureActivityTask) mDialogTask).getFutureResult();
+      FutureObject result = ((FutureActivityTask) mDialogTask).getFutureResult();
       return result.get();
     } catch (Exception e) {
       throw new AndroidRuntimeException(e);

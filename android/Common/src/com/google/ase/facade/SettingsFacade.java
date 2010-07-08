@@ -31,7 +31,7 @@ import com.google.ase.AseApplication;
 import com.google.ase.AseLog;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureResult;
+import com.google.ase.future.FutureObject;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
@@ -176,7 +176,7 @@ public class SettingsFacade extends RpcReceiver {
 
     FutureActivityTask task = new FutureActivityTask() {
       @Override
-      public void run(final AseServiceHelper activity, FutureResult result) {
+      public void run(final AseServiceHelper activity, FutureObject result) {
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         lp.screenBrightness = brightness * 1.0f / 255;
         activity.getWindow().setAttributes(lp);
