@@ -23,6 +23,7 @@ import android.os.Looper;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
+import com.google.ase.MainThreadInitializationFactory;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
@@ -31,6 +32,7 @@ import com.google.ase.rpc.RpcParameter;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 public class BluetoothFacade extends RpcReceiver {
 
@@ -45,8 +47,14 @@ public class BluetoothFacade extends RpcReceiver {
     super(manager);
     mAndroidFacade = manager.getReceiver(AndroidFacade.class);
     Looper.prepare();
-    mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     mBluetoothServer = new BluetoothServer(manager.getReceiver(EventFacade.class));
+    mBluetoothAdapter =
+        MainThreadInitializationFactory.init(manager.getService(), new Callable<BluetoothAdapter>() {
+          @Override
+          public BluetoothAdapter call() throws Exception {
+            return BluetoothAdapter.getDefaultAdapter();
+          }
+        });
   }
 
   @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")

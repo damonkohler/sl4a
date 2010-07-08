@@ -87,14 +87,18 @@ public class AseService extends Service {
     mNotification.contentView.setTextViewText(R.id.notification_message, notificationMessage);
     mNotification.contentView.setTextViewText(R.id.notification_action, null);
     mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-    // Intent notificationIntent = new Intent(this, AseService.class);
-    // mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
     mNotification.contentIntent = PendingIntent.getService(this, 0, null, 0);
   }
 
   @Override
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
+
+    if (intent.getAction().equals(Constants.ACTION_KILL_ALL)) {
+      killAll();
+      stopSelf(startId);
+      return;
+    }
 
     if (intent.getAction().equals(Constants.ACTION_KILL_PROCESS)) {
       killScriptProcess(intent);
@@ -197,6 +201,16 @@ public class AseService extends Service {
 
   public int getModCount() {
     return modCount;
+  }
+
+  private void killAll() {
+    for (ScriptProcess scriptProcess : getScriptProcessesList()) {
+      scriptProcess = removeScriptProcess(scriptProcess.getPort());
+      scriptProcess.notifyTriggerOfShutDown(this);
+      if (scriptProcess != null) {
+        scriptProcess.kill();
+      }
+    }
   }
 
   public List<ScriptProcess> getScriptProcessesList() {

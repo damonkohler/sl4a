@@ -27,6 +27,7 @@ public interface Constants {
   public static final String ACTION_SAVE_AND_RUN_SCRIPT =
       "com.google.ase.action.SAVE_AND_RUN_SCRIPT";
   public static final String ACTION_KILL_PROCESS = "com.google.ase.action.KILL_PROCESS";
+  public static final String ACTION_KILL_ALL = "com.google.ase.action.KILL_ALL";
   public static final String ACTION_SHOW_RUNNING_SCRIPTS =
       "com.google.ase.action.SHOW_RUNNING_SCRIPTS";
   public static final String ACTION_CANCEL_NOTIFICATION =

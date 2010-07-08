@@ -16,10 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -31,6 +27,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -43,6 +41,10 @@ import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptProcess;
 import com.google.ase.terminal.Terminal;
+
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * An activity that allows to monitor running scripts.
@@ -139,6 +141,22 @@ public class AseMonitor extends ListActivity {
     super.onDestroy();
     mTimer.cancel();
     unbindService(mConnection);
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    menu.clear();
+    menu.add(Menu.NONE, 0, Menu.NONE, "Stop All Scripts").setIcon(
+        android.R.drawable.ic_menu_close_clear_cancel);
+    return super.onPrepareOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    Intent intent = new Intent(this, AseService.class);
+    intent.setAction(Constants.ACTION_KILL_ALL);
+    startService(intent);
+    return true;
   }
 
   private class ScriptListAdapter extends TimerTask {
