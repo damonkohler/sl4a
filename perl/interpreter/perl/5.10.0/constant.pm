@@ -4,7 +4,7 @@ use strict;
 use warnings::register;
 
 use vars qw($VERSION %declared);
-$VERSION = '1.17';
+$VERSION = '1.19';
 
 #=======================================================================
 
@@ -16,6 +16,20 @@ my %forced_into_main = map +($_, 1),
     qw{ STDIN STDOUT STDERR ARGV ARGVOUT ENV INC SIG };
 
 my %forbidden = (%keywords, %forced_into_main);
+
+my $str_end = $] >= 5.006 ? "\\z" : "\\Z";
+my $normal_constant_name = qr/^_?[^\W_0-9]\w*$str_end/;
+my $tolerable = qr/^[A-Za-z_]\w*$str_end/;
+my $boolean = qr/^[01]?$str_end/;
+
+BEGIN {
+    # We'd like to do use constant _CAN_PCS => $] > 5.009002
+    # but that's a bit tricky before we load the constant module :-)
+    # By doing this, we save 1 run time check for *every* call to import.
+    no strict 'refs';
+    my $const = $] > 5.009002;
+    *_CAN_PCS = sub () {$const};
+}
 
 #=======================================================================
 # import() - import symbols into user's namespace
@@ -31,10 +45,10 @@ sub import {
     my $constants;
     my $multiple  = ref $_[0];
     my $pkg = caller;
+    my $flush_mro;
     my $symtab;
-    my $str_end = $] >= 5.006 ? "\\z" : "\\Z";
 
-    if ($] > 5.009002) {
+    if (_CAN_PCS) {
 	no strict 'refs';
 	$symtab = \%{$pkg . '::'};
     };
@@ -56,7 +70,7 @@ sub import {
 	}
 
 	# Normal constant name
-	if ($name =~ /^_?[^\W_0-9]\w*$str_end/ and !$forbidden{$name}) {
+	if ($name =~ $normal_constant_name and !$forbidden{$name}) {
 	    # Everything is okay
 
 	# Name forced into main, but we're not in main. Fatal.
@@ -70,7 +84,7 @@ sub import {
 	    Carp::croak("Constant name '$name' begins with '__'");
 
 	# Maybe the name is tolerable
-	} elsif ($name =~ /^[A-Za-z_]\w*$str_end/) {
+	} elsif ($name =~ $tolerable) {
 	    # Then we'll warn only if you've asked for warnings
 	    if (warnings::enabled()) {
 		if ($keywords{$name}) {
@@ -83,7 +97,7 @@ sub import {
 
 	# Looks like a boolean
 	# use constant FRED == fred;
-	} elsif ($name =~ /^[01]?$str_end/) {
+	} elsif ($name =~ $boolean) {
             require Carp;
 	    if (@_) {
 		Carp::croak("Constant name '$name' is invalid");
@@ -103,14 +117,16 @@ sub import {
 	    $declared{$full_name}++;
 	    if ($multiple || @_ == 1) {
 		my $scalar = $multiple ? $constants->{$name} : $_[0];
-		if ($symtab && !exists $symtab->{$name}) {
+		# The constant serves to optimise this entire block out on
+		# 5.8 and earlier.
+		if (_CAN_PCS && $symtab && !exists $symtab->{$name}) {
 		    # No typeglob yet, so we can use a reference as space-
 		    # efficient proxy for a constant subroutine
 		    # The check in Perl_ck_rvconst knows that inlinable
 		    # constants from cv_const_sv are read only. So we have to:
 		    Internals::SvREADONLY($scalar, 1);
 		    $symtab->{$name} = \$scalar;
-		    mro::method_changed_in($pkg);
+		    ++$flush_mro;
 		} else {
 		    *$full_name = sub () { $scalar };
 		}
@@ -122,6 +138,8 @@ sub import {
 	    }
 	}
     }
+    # Flush the cache exactly once if we make any direct symbol table changes.
+    mro::method_changed_in($pkg) if _CAN_PCS && $flush_mro;
 }
 
 1;

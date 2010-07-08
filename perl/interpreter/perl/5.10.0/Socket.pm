@@ -1,11 +1,11 @@
 package Socket;
 
 our($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS);
-$VERSION = "1.82";
+$VERSION = "1.83";
 
 =head1 NAME
 
-Socket, sockaddr_in, sockaddr_un, inet_aton, inet_ntoa - load the C socket.h defines and structure manipulators 
+Socket, sockaddr_in, sockaddr_un, inet_aton, inet_ntoa, inet_pton, inet_ntop - load the C socket.h defines and structure manipulators 
 
 =head1 SYNOPSIS
 
@@ -171,6 +171,21 @@ Takes a sockaddr_un structure (as returned by pack_sockaddr_un())
 and returns the pathname.  Will croak if the structure does not
 have AF_UNIX in the right place.
 
+=item inet_pton ADDRESS_FAMILY, HOSTNAME
+
+Takes an address family, either AF_INET or AF_INET6, and a string giving
+the name of a host, and translates that to an opaque string
+(if programming in C, struct in_addr or struct in6_addr depending on the 
+address family passed in).  The host string may be a string hostname, such
+as 'www.perl.org', or an IP address.  If using an IP address, the type of
+IP address must be consistant with the address family passed into the function.
+
+=item inet_ntop ADDRESS_FAMILY, IP_ADDRESS
+
+Takes an address family, either AF_INET or AF_INET6, and a string 
+(an opaque string as returned by inet_aton() or inet_pton()) and
+translates it to an IPv4 or IPv6 address string.
+
 =back
 
 =cut
@@ -183,6 +198,7 @@ use XSLoader ();
 @ISA = qw(Exporter);
 @EXPORT = qw(
 	inet_aton inet_ntoa
+	inet_pton inet_ntop
 	sockaddr_family
 	pack_sockaddr_in unpack_sockaddr_in
 	pack_sockaddr_un unpack_sockaddr_un

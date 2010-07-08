@@ -44,11 +44,11 @@ sub import {
     return;
 }
 
-die "Perl lib version (5.10.1) doesn't match executable version ($])"
+die "Perl lib version (5.11.0) doesn't match executable version ($])"
     unless $^V;
 
-$^V eq 5.10.1
-    or die "Perl lib version (5.10.1) doesn't match executable version (" .
+$^V eq 5.11.0
+    or die "Perl lib version (5.11.0) doesn't match executable version (" .
 	sprintf("v%vd",$^V) . ")";
 
 
@@ -74,7 +74,7 @@ sub AUTOLOAD {
 
 # tie returns the object, so the value returned to require will be true.
 tie %Config, 'Config', {
-    archlibexp => '/data/data/com.google.ase/perl/5.10.0/arm-eabi-linux',
+    archlibexp => '/data/data/com.googlecode.perlforandroid/perl/5.10.0/arm-eabi-linux',
     archname => 'arm-eabi-linux',
     cc => 'agcc',
     d_readlink => 'define',
@@ -89,9 +89,9 @@ tie %Config, 'Config', {
     osname => 'linux',
     osvers => '2.6',
     path_sep => ':',
-    privlibexp => '/data/data/com.google.ase/perl/5.10.0',
+    privlibexp => '/data/data/com.googlecode.perlforandroid/perl/5.10.0',
     scriptdir => '/usr/bin',
-    sitearchexp => '/data/data/com.google.ase/perl/site_perl/5.10.0/arm-eabi-linux',
+    sitearchexp => '/data/data/com.googlecode.perlforandroid/perl/site_perl/5.10.0/arm-eabi-linux',
     sitelibexp => '/sdcard/ase/extras/perl/site_perl/5.10.0',
     useithreads => undef,
     usevendorprefix => undef,

@@ -23,7 +23,7 @@ use strict;
 
 use vars qw($VERSION $AUTOLOAD);
 
-$VERSION = 0.002;
+$VERSION = 0.003;
 
 use IO::Socket;
 use JSON;
@@ -42,7 +42,9 @@ my %Opt;
 
 # This BEGIN parses options, if any.
 BEGIN {
-    %Opt = (port => $ENV{AP_PORT} ? $ENV{AP_PORT} : 4321);
+    %Opt = (port => $ENV{AP_PORT} ? $ENV{AP_PORT} : 4321, 
+            host => $ENV{AP_HOST} ? $ENV{AP_HOST} : 'localhost', 
+            handshake => $ENV{AP_HANDSHAKE} ? $ENV{AP_HANDSHAKE} : '');
     GetOptions('port=i' => \$Opt{port},
                'server' => \$Opt{server},
                'request' => \$Opt{request},
@@ -82,17 +84,19 @@ sub new {
         print STDERR "$0: client: new() expected no arguments, got @_\n";
     }
     my $fh = IO::Socket::INET->new(Proto    => 'tcp',
-                                   PeerAddr => 'localhost',
+                                   PeerAddr => $Opt{host},
                                    PeerPort => $Opt{port})
         or die "$0: Cannot connect to server port $Opt{port} on localhost\n";
     $fh->autoflush(1);
     if ($Opt{trace}) {
         show_trace(qq[Android: server in port $Opt{port}]);
     }
-    bless {
+    my $self = bless {
         conn => $fh,
         id   => 0,
     }, $class;
+    $self->_authenticate($Opt{handshake});
+    return $self;
 }
 
 # One can use this to set the proxy object to display what's being

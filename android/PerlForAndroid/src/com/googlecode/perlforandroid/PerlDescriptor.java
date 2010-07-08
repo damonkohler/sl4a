@@ -51,6 +51,11 @@ public class PerlDescriptor extends AseHostedInterpreter {
   }
 
   public int getVersion() {
+    return 7;
+  }
+
+  @Override
+  public int getScriptsVersion() {
     return 6;
   }
 
@@ -61,5 +66,4 @@ public class PerlDescriptor extends AseHostedInterpreter {
   public String getExecuteParams() {
     return " %s";
   }
-
 }

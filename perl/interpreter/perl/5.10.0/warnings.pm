@@ -6,7 +6,7 @@
 
 package warnings;
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 # Verify that we're called correctly so that warnings will work.
 # see also strict.pm.
@@ -188,10 +188,14 @@ our %Offsets = (
     'untie'		=> 86,
     'utf8'		=> 88,
     'void'		=> 90,
+
+    # Warnings Categories added in Perl 5.011
+
+    'imprecision'	=> 92,
   );
 
 our %Bits = (
-    'all'		=> "\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x05", # [0..45]
+    'all'		=> "\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x55\x15", # [0..46]
     'ambiguous'		=> "\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00", # [29]
     'bareword'		=> "\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00", # [30]
     'closed'		=> "\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [6]
@@ -202,6 +206,7 @@ our %Bits = (
     'exec'		=> "\x00\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [7]
     'exiting'		=> "\x40\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [3]
     'glob'		=> "\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [4]
+    'imprecision'	=> "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10", # [46]
     'inplace'		=> "\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00", # [23]
     'internal'		=> "\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00", # [24]
     'io'		=> "\x00\x54\x55\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [5..11]
@@ -240,7 +245,7 @@ our %Bits = (
   );
 
 our %DeadBits = (
-    'all'		=> "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\x0a", # [0..45]
+    'all'		=> "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\x2a", # [0..46]
     'ambiguous'		=> "\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00\x00", # [29]
     'bareword'		=> "\x00\x00\x00\x00\x00\x00\x00\x20\x00\x00\x00\x00", # [30]
     'closed'		=> "\x00\x20\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [6]
@@ -251,6 +256,7 @@ our %DeadBits = (
     'exec'		=> "\x00\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [7]
     'exiting'		=> "\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [3]
     'glob'		=> "\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [4]
+    'imprecision'	=> "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x20", # [46]
     'inplace'		=> "\x00\x00\x00\x00\x00\x80\x00\x00\x00\x00\x00\x00", # [23]
     'internal'		=> "\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00", # [24]
     'io'		=> "\x00\xa8\xaa\x00\x00\x00\x00\x00\x00\x00\x00\x00", # [5..11]
@@ -289,14 +295,14 @@ our %DeadBits = (
   );
 
 $NONE     = "\0\0\0\0\0\0\0\0\0\0\0\0";
-$LAST_BIT = 92 ;
+$LAST_BIT = 94 ;
 $BYTES    = 12 ;
 
 $All = "" ; vec($All, $Offsets{'all'}, 2) = 3 ;
 
 sub Croaker
 {
-    require Carp::Heavy; # this initializes %CarpInternal
+    require Carp; # this initializes %CarpInternal
     local $Carp::CarpInternal{'warnings'};
     delete $Carp::CarpInternal{'warnings'};
     Carp::croak(@_);
@@ -447,7 +453,7 @@ sub __chk
 }
 
 sub _error_loc {
-    require Carp::Heavy;
+    require Carp;
     goto &Carp::short_error_loc; # don't introduce another stack frame
 }                                                             
 

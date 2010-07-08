@@ -15,7 +15,7 @@ BEGIN {
     $is_epoc = $^O eq 'epoc';
     $is_vms = $^O eq 'VMS';
     $is_macos = $^O eq 'MacOS';
-    $VERSION = '5.68';
+    $VERSION = '5.69';
 }
 
 AUTOLOAD {
@@ -376,7 +376,7 @@ can benefit from bug fixes.
 This package has the same copyright and license as the perl core:
 
              Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999,
-        2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+        2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
         by Larry Wall and others
     
 			    All rights reserved.
