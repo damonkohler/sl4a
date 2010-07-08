@@ -55,6 +55,11 @@ public class PythonDescriptor extends AseHostedInterpreter {
     return 8;
   }
 
+  @Override
+  public int getScriptsVersion() {
+    return 8;
+  }
+
   public String getBinary() {
     return PYTHON_BIN;
   }

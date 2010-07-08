@@ -11,7 +11,7 @@ _SERVER = 'talk.google.com', 5223
 
 def log(droid, message):
   print message
-  self.droid.speak(message)
+  self.droid.ttsSpeak(message)
 
 
 class SayChat(object):
@@ -37,7 +37,7 @@ class SayChat(object):
     jid = xmpp.protocol.JID(message.getFrom())
     username = jid.getNode()
     text = message.getBody()
-    self.droid.speak('%s says %s' % (username, text))
+    self.droid.ttsSpeak('%s says %s' % (username, text))
 
   def run(self):
     try:

@@ -50,11 +50,6 @@ public class LuaDescriptor extends AseHostedInterpreter {
     return 1;
   }
 
-  @Override
-  public int getScriptsVersion() {
-    return 0;
-  }
-
   public String getBinary() {
     return LUA_BIN;
   }

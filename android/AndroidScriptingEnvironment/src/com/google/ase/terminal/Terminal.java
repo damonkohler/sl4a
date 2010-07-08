@@ -114,6 +114,7 @@ public class Terminal extends Activity {
 
   private StringBuffer mBuffer = new StringBuffer();
   private InterpreterProcess mInterpreterProcess; // Convenience member.
+  private ScriptProcess mScriptProcess;
   private ScriptLauncher mLauncher;
 
   private AseService mService;
@@ -154,15 +155,15 @@ public class Terminal extends Activity {
   }
 
   private void startTerminal() {
-    ScriptProcess process = mService.getScriptProcess(mProcessPort);
+    mScriptProcess = mService.getScriptProcess(mProcessPort);
 
-    if (process == null) {
+    if (mScriptProcess == null) {
       AseLog.e(this, "Process does not exist.");
       finish();
       return;
     }
 
-    mLauncher = process.getLauncher();
+    mLauncher = mScriptProcess.getLauncher();
 
     if (mLauncher == null) {
       AseLog.e(this, "Process is running in server mode only.");
@@ -205,6 +206,10 @@ public class Terminal extends Activity {
   @Override
   public void onResume() {
     super.onResume();
+    if (mScriptProcess != null && !mScriptProcess.isAlive()) {
+      finish();
+      return;
+    }
     // Typically, onResume is called after we update our preferences.
     if (mEmulatorView != null) {
       updatePreferences();

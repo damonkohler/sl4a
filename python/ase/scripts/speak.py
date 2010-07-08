@@ -8,4 +8,4 @@ import android
 
 droid = android.Android()
 message = droid.getInput('TTS', 'What would you like to say?').result
-droid.speak(message)
+droid.ttsSpeak(message)

@@ -8,4 +8,4 @@ import android
 import time
 
 droid = android.Android()
-droid.speak(time.strftime("%_I %M %p on %A, %B %_e, %Y "))
+droid.ttsSpeak(time.strftime("%_I %M %p on %A, %B %_e, %Y "))

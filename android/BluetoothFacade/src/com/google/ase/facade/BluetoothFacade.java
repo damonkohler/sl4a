@@ -19,6 +19,7 @@ package com.google.ase.facade;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.os.Looper;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
@@ -43,6 +44,7 @@ public class BluetoothFacade extends RpcReceiver {
   public BluetoothFacade(FacadeManager manager) {
     super(manager);
     mAndroidFacade = manager.getReceiver(AndroidFacade.class);
+    Looper.prepare();
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     mBluetoothServer = new BluetoothServer(manager.getReceiver(EventFacade.class));
   }

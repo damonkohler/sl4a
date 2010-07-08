@@ -1,4 +1,4 @@
 import android
 
 droid = android.Android()
-droid.cameraTakePicture('/sdcard/foo.jpg')
+droid.cameraCapturePicture('/sdcard/foo.jpg')

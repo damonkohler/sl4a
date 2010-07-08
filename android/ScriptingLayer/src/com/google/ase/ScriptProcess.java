@@ -16,11 +16,11 @@
 
 package com.google.ase;
 
-import java.net.InetSocketAddress;
-
 import android.app.Service;
 
 import com.google.ase.trigger.Trigger;
+
+import java.net.InetSocketAddress;
 
 public class ScriptProcess {
 
@@ -82,6 +82,9 @@ public class ScriptProcess {
   }
 
   public int getPID() {
+    if (mLauncher == null) {
+      return 0;
+    }
     return mLauncher.getPid();
   }
 
@@ -103,6 +106,10 @@ public class ScriptProcess {
     }
     InetSocketAddress address = mProxy.getAddress();
     return address.getHostName();
+  }
+
+  public boolean isAlive() {
+    return myState.equals(State.ALIVE);
   }
 
   public String getState() {

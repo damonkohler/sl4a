@@ -87,8 +87,9 @@ public class AseService extends Service {
     mNotification.contentView.setTextViewText(R.id.notification_message, notificationMessage);
     mNotification.contentView.setTextViewText(R.id.notification_action, null);
     mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-    Intent notificationIntent = new Intent(this, AseService.class);
-    mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    // Intent notificationIntent = new Intent(this, AseService.class);
+    // mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    mNotification.contentIntent = PendingIntent.getService(this, 0, null, 0);
   }
 
   @Override
@@ -128,11 +129,11 @@ public class AseService extends Service {
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
         launchTerminal(intent, serverProxy.getAddress());
       }
-
-      ScriptProcess scriptProcess = new ScriptProcess(serverProxy, launcher, getTrigger(intent));
-      addScriptProcess(scriptProcess);
-      scriptProcess.notifyTriggerOfStart(this);
     }
+
+    ScriptProcess scriptProcess = new ScriptProcess(serverProxy, launcher, getTrigger(intent));
+    addScriptProcess(scriptProcess);
+    scriptProcess.notifyTriggerOfStart(this);
   }
 
   private AndroidProxy launchServer(Intent intent, boolean requiresHandshake) {

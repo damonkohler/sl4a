@@ -12,6 +12,10 @@ def say_weather(droid):
   """Speak the weather at the current location."""
   print 'Finding ZIP code.'
   location = droid.getLastKnownLocation().result
+  if location['gps']:
+    location = location['gps']
+  else
+    location = location['network']
   addresses = droid.geocode(location['latitude'], location['longitude'])
   zip = addresses.result[0]['postal_code']
   if zip is None:
@@ -21,7 +25,7 @@ def say_weather(droid):
     result = weather.fetch_weather(zip)
     # Format the result for speech.
     msg = '%(temperature)s degrees and %(conditions)s, in %(city)s.' % result
-  droid.speak(msg)
+  droid.ttsSpeak(msg)
 
 
 if __name__ == '__main__':
