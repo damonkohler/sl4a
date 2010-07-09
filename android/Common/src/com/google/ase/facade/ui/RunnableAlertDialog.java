@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.CountDownLatch;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,20 +31,14 @@ import android.content.DialogInterface;
 
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
-import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureObject;
+import com.google.ase.future.FutureResult;
 
 /**
  * Wrapper class for alert dialog running in separate thread.
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
-
-  private final CountDownLatch mShowLatch;
-
-  private FutureObject mResult;
-  private AseServiceHelper mActivity;
+class RunnableAlertDialog extends RunnableDialog {
 
   private AlertDialog mDialog;
   private final String mTitle;
@@ -64,7 +57,6 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   }
 
   public RunnableAlertDialog(String title, String message) {
-    mShowLatch = new CountDownLatch(1);
     mTitle = title;
     mMessage = message;
     mListType = ListType.MENU;
@@ -154,7 +146,7 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
   }
 
   @Override
-  public void run(final AseServiceHelper activity, FutureObject result) {
+  public void run(final AseServiceHelper activity, FutureResult<Object> result) {
     mActivity = activity;
     mResult = result;
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -264,16 +256,5 @@ class RunnableAlertDialog extends FutureActivityTask implements RunnableDialog {
     if (mNeutralButtonText != null) {
       builder.setNeutralButton(mNeutralButtonText, buttonListener);
     }
-  }
-
-  @Override
-  public void dismissDialog() {
-    mDialog.dismiss();
-    mActivity.taskDone(getTaskId());
-  }
-
-  @Override
-  public CountDownLatch getShowLatch() {
-    return mShowLatch;
   }
 }

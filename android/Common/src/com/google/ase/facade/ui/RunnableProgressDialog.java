@@ -16,26 +16,17 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.concurrent.CountDownLatch;
-
-import android.app.Dialog;
 import android.app.ProgressDialog;
 
 import com.google.ase.activity.AseServiceHelper;
-import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureObject;
+import com.google.ase.future.FutureResult;
 
 /**
  * Wrapper class for progress dialog running in separate thread
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-class RunnableProgressDialog extends FutureActivityTask implements RunnableDialog {
-
-  private final CountDownLatch mShowLatch;
-
-  private ProgressDialog mDialog;
-  private AseServiceHelper mActivity;
+class RunnableProgressDialog extends RunnableDialog {
 
   private final int mStyle;
   private final int mMax;
@@ -44,7 +35,6 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
   private final Boolean mCancelable;
 
   public RunnableProgressDialog(int style, int max, String title, String message, boolean cancelable) {
-    mShowLatch = new CountDownLatch(1);
     mStyle = style;
     mMax = max;
     mTitle = title;
@@ -53,31 +43,15 @@ class RunnableProgressDialog extends FutureActivityTask implements RunnableDialo
   }
 
   @Override
-  public void run(AseServiceHelper activity, FutureObject result) {
+  public void run(AseServiceHelper activity, FutureResult<Object> result) {
     mActivity = activity;
     mDialog = new ProgressDialog(activity);
-    mDialog.setProgressStyle(mStyle);
-    mDialog.setMax(mMax);
+    ((ProgressDialog) mDialog).setProgressStyle(mStyle);
+    ((ProgressDialog) mDialog).setMax(mMax);
     mDialog.setCancelable(mCancelable);
     mDialog.setTitle(mTitle);
-    mDialog.setMessage(mMessage);
+    ((ProgressDialog) mDialog).setMessage(mMessage);
     mDialog.show();
     mShowLatch.countDown();
-  }
-
-  @Override
-  public Dialog getDialog() {
-    return mDialog;
-  }
-
-  @Override
-  public void dismissDialog() {
-    mDialog.dismiss();
-    mActivity.taskDone(getTaskId());
-  }
-
-  @Override
-  public CountDownLatch getShowLatch() {
-    return mShowLatch;
   }
 }

@@ -20,19 +20,41 @@ import java.util.concurrent.CountDownLatch;
 
 import android.app.Dialog;
 
-public interface RunnableDialog {
+import com.google.ase.activity.AseServiceHelper;
+import com.google.ase.future.FutureActivityTask;
+import com.google.ase.future.FutureResult;
+
+abstract class RunnableDialog extends FutureActivityTask<Object> {
+
+  protected AseServiceHelper mActivity;
+  protected Dialog mDialog;
+  protected FutureResult<Object> mResult;
+  protected final CountDownLatch mShowLatch = new CountDownLatch(1);
+
   /**
    * Returns the wrapped {@link Dialog}.
    */
-  public Dialog getDialog();
+  public Dialog getDialog() {
+    return mDialog;
+  }
 
   /**
    * Dismiss the {@link Dialog} and close {@link AseActivity}.
    */
-  public void dismissDialog();
+  public void dismissDialog() {
+    mDialog.dismiss();
+    mActivity.taskDone(getTaskId());
+  }
 
   /**
    * Returns the {@link CountDownLatch} that is counted down when the dialog is shown.
    */
-  public CountDownLatch getShowLatch();
+  public CountDownLatch getShowLatch() {
+    return mShowLatch;
+  }
+
+  @Override
+  public FutureResult<Object> getFutureResult() {
+    return mResult;
+  }
 }

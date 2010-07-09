@@ -16,6 +16,12 @@
 
 package com.google.ase.facade;
 
+import java.util.Queue;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -42,18 +48,12 @@ import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.activity.NotificationIdFactory;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureObject;
+import com.google.ase.future.FutureResult;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Queue;
 
 public class AndroidFacade extends RpcReceiver {
   /**
@@ -67,7 +67,7 @@ public class AndroidFacade extends RpcReceiver {
   private final Service mService;
   private final Handler mHandler;
   private final Intent mIntent;
-  private final Queue<FutureActivityTask> mTaskQueue;
+  private final Queue<FutureActivityTask<?>> mTaskQueue;
 
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
@@ -113,9 +113,9 @@ public class AndroidFacade extends RpcReceiver {
   }
 
   Intent startActivityForResult(final Intent intent) {
-    FutureActivityTask task = new FutureActivityTask() {
+    FutureActivityTask<Intent> task = new FutureActivityTask<Intent>() {
       @Override
-      public void run(AseServiceHelper activity, FutureObject result) {
+      public void run(AseServiceHelper activity, FutureResult<Intent> result) {
         // TODO(damonkohler): Throwing an exception here (e.g. specifying a non-existent activity)
         // causes a force close. There needs to be a way to pass back an error condition from the
         // helper.
@@ -128,9 +128,9 @@ public class AndroidFacade extends RpcReceiver {
     } catch (Exception e) {
       AseLog.e("Failed to launch intent.", e);
     }
-    FutureObject result = task.getFutureResult();
+    FutureResult<Intent> result = task.getFutureResult();
     try {
-      return (Intent) result.get();
+      return result.get();
     } catch (Exception e) {
       throw new AseRuntimeException(e);
     }
@@ -233,9 +233,9 @@ public class AndroidFacade extends RpcReceiver {
 
   private String getInputFromAlertDialog(final String title, final String message,
       final boolean password) {
-    final FutureActivityTask task = new FutureActivityTask() {
+    final FutureActivityTask<String> task = new FutureActivityTask<String>() {
       @Override
-      public void run(final AseServiceHelper activity, final FutureObject result) {
+      public void run(final AseServiceHelper activity, final FutureResult<String> result) {
         final EditText input = new EditText(activity);
         if (password) {
           input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -270,12 +270,12 @@ public class AndroidFacade extends RpcReceiver {
       AseLog.e("Failed to launch intent.", e);
     }
 
-    FutureObject result = task.getFutureResult();
+    FutureResult<String> result = task.getFutureResult();
     try {
       if (result.get() == null) {
         return null;
       } else {
-        return (String) result.get();
+        return result.get();
       }
     } catch (Exception e) {
       AseLog.e("Failed to display dialog.", e);

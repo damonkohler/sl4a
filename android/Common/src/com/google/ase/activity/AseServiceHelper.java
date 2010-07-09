@@ -27,7 +27,7 @@ import android.os.Handler;
 
 import com.google.ase.AseApplication;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureObject;
+import com.google.ase.future.FutureResult;
 
 /**
  * This {@link Activity} is launched by the {@link AseService} in order to perform operations that a
@@ -37,16 +37,16 @@ import com.google.ase.future.FutureObject;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class AseServiceHelper extends Activity {
-  Queue<FutureActivityTask> mTaskQueue;
+  Queue<FutureActivityTask<?>> mTaskQueue;
   private Handler mHandler;
-  private HashMap<Integer, FutureObject> mResultMap;
+  private HashMap<Integer, FutureResult<?>> mResultMap;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mHandler = new Handler();
     mTaskQueue = ((AseApplication) getApplication()).getTaskQueue();
-    mResultMap = new HashMap<Integer, FutureObject>();
+    mResultMap = new HashMap<Integer, FutureResult<?>>();
     setPersistent(true);
   }
 
@@ -60,15 +60,16 @@ public class AseServiceHelper extends Activity {
   @Override
   protected void onStart() {
     super.onStart();
-    FutureActivityTask task = mTaskQueue.poll();
+    FutureActivityTask<?> task = mTaskQueue.poll();
     mHandler.post(task.getRunnable(this));
-    FutureObject result = task.getFutureResult();
+    FutureResult<?> result = task.getFutureResult();
     mResultMap.put(task.getTaskId(), result);
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    FutureObject result = mResultMap.get(requestCode);
+    @SuppressWarnings("unchecked")
+    FutureResult<Intent> result = (FutureResult<Intent>) mResultMap.get(requestCode);
     if (result != null) {
       result.set(data);
       taskDone(requestCode);

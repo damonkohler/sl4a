@@ -16,13 +16,10 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.concurrent.CountDownLatch;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.util.AndroidRuntimeException;
@@ -30,34 +27,24 @@ import android.widget.SeekBar;
 
 import com.google.ase.AseLog;
 import com.google.ase.activity.AseServiceHelper;
-import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureObject;
+import com.google.ase.future.FutureResult;
 
 /**
  * Wrapper class for dialog box with seek bar.
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-public class RunnableSeekBarDialog extends FutureActivityTask implements RunnableDialog {
+public class RunnableSeekBarDialog extends RunnableDialog {
 
-  private final CountDownLatch mShowLatch;
-
-  private AlertDialog mDialog;
   private SeekBar mSeekBar;
-
-  private AseServiceHelper mActivity;
-  private FutureObject mResult;
-
   private final int mProgress;
   private final int mMax;
   private final String mTitle;
   private final String mMessage;
-
   private String mPositiveButtonText;
   private String mNegativeButtonText;
 
   public RunnableSeekBarDialog(int progress, int max, String title, String message) {
-    mShowLatch = new CountDownLatch(1);
     mProgress = progress;
     mMax = max;
     mTitle = title;
@@ -73,7 +60,7 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
   }
 
   @Override
-  public void run(AseServiceHelper activity, FutureObject result) {
+  public void run(AseServiceHelper activity, FutureResult<Object> result) {
     mActivity = activity;
     mResult = result;
     mSeekBar = new SeekBar(activity);
@@ -149,21 +136,5 @@ public class RunnableSeekBarDialog extends FutureActivityTask implements Runnabl
     if (mPositiveButtonText != null) {
       builder.setPositiveButton(mPositiveButtonText, buttonListener);
     }
-  }
-
-  @Override
-  public Dialog getDialog() {
-    return mDialog;
-  }
-
-  @Override
-  public void dismissDialog() {
-    mDialog.dismiss();
-    mActivity.taskDone(getTaskId());
-  }
-
-  @Override
-  public CountDownLatch getShowLatch() {
-    return mShowLatch;
   }
 }

@@ -32,7 +32,7 @@ import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.facade.FacadeManager;
 import com.google.ase.future.FutureActivityTask;
-import com.google.ase.future.FutureObject;
+import com.google.ase.future.FutureResult;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
@@ -46,7 +46,7 @@ import com.google.ase.rpc.RpcParameter;
  */
 public class UiFacade extends RpcReceiver {
   private final Service mService;
-  private final Queue<FutureActivityTask> mTaskQueue;
+  private final Queue<FutureActivityTask<?>> mTaskQueue;
   private RunnableDialog mDialogTask;
 
   public UiFacade(FacadeManager manager) {
@@ -107,7 +107,7 @@ public class UiFacade extends RpcReceiver {
   @Rpc(description = "Show dialog.")
   public void dialogShow() throws InterruptedException {
     if (mDialogTask != null && mDialogTask.getDialog() == null) {
-      mTaskQueue.offer((FutureActivityTask) mDialogTask);
+      mTaskQueue.offer((FutureActivityTask<?>) mDialogTask);
       launchHelper();
       mDialogTask.getShowLatch().await();
     } else {
@@ -200,7 +200,7 @@ public class UiFacade extends RpcReceiver {
   @Rpc(description = "Returns dialog response.")
   public Object dialogGetResponse() {
     try {
-      FutureObject result = ((FutureActivityTask) mDialogTask).getFutureResult();
+      FutureResult<Object> result = mDialogTask.getFutureResult();
       return result.get();
     } catch (Exception e) {
       throw new AndroidRuntimeException(e);

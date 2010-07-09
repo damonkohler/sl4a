@@ -27,12 +27,12 @@ import com.google.ase.activity.AseServiceHelper;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public abstract class FutureActivityTask {
+public abstract class FutureActivityTask<T> implements FutureTask<T> {
   private final static AtomicInteger mNextFutureTaskId = new AtomicInteger(0);
-  private final FutureObject mResult = new FutureObject();
+  private final FutureResult<T> mResult = new FutureResult<T>();
   private final int myTaskId = mNextFutureTaskId.incrementAndGet();
 
-  public abstract void run(final AseServiceHelper activity, final FutureObject result);
+  public abstract void run(final AseServiceHelper activity, final FutureResult<T> result);
 
   public Runnable getRunnable(final AseServiceHelper activity) {
     return new Runnable() {
@@ -43,7 +43,7 @@ public abstract class FutureActivityTask {
     };
   }
 
-  public FutureObject getFutureResult() {
+  public FutureResult<T> getFutureResult() {
     return mResult;
   }
 

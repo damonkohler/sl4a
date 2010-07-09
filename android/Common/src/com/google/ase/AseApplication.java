@@ -27,14 +27,14 @@ import com.google.ase.trigger.TriggerRepository;
 
 public class AseApplication extends Application {
 
-  private final Queue<FutureActivityTask> mTaskQueue =
-      new ConcurrentLinkedQueue<FutureActivityTask>();
+  private final Queue<FutureActivityTask<?>> mTaskQueue =
+      new ConcurrentLinkedQueue<FutureActivityTask<?>>();
 
   protected TriggerRepository mTriggerRepository;
 
   protected InterpreterConfiguration mConfiguration;
 
-  public Queue<FutureActivityTask> getTaskQueue() {
+  public Queue<FutureActivityTask<?>> getTaskQueue() {
     return mTaskQueue;
   }
 
@@ -48,7 +48,6 @@ public class AseApplication extends Application {
     mConfiguration = new InterpreterConfiguration(this);
     mConfiguration.startDiscovering();
   }
-
 
   public InterpreterConfiguration getInterpreterConfiguration() {
     return mConfiguration;
