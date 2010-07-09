@@ -23,7 +23,7 @@ import android.os.Looper;
 
 import com.google.ase.AseLog;
 import com.google.ase.Constants;
-import com.google.ase.MainThreadInitializationFactory;
+import com.google.ase.MainThread;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
@@ -49,7 +49,7 @@ public class BluetoothFacade extends RpcReceiver {
     Looper.prepare();
     mBluetoothServer = new BluetoothServer(manager.getReceiver(EventFacade.class));
     mBluetoothAdapter =
-        MainThreadInitializationFactory.init(manager.getService(), new Callable<BluetoothAdapter>() {
+        MainThread.init(manager.getService(), new Callable<BluetoothAdapter>() {
           @Override
           public BluetoothAdapter call() throws Exception {
             return BluetoothAdapter.getDefaultAdapter();

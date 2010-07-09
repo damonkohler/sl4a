@@ -1,0 +1,3 @@
+set solib-search-path /home/raaar/Android/ASE/android/AndroidScriptingEnvironment/bin/ndk/local/armeabi
+directory /home/raaar/Android/NDK/build/platforms/android-3/arch-arm/usr/include
+directory /home/raaar/Android/ASE/android/AndroidScriptingEnvironment/jni

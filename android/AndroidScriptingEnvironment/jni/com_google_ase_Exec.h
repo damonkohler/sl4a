@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_google_ase_Exec
  * Method:    createSubprocess
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[I)Ljava/io/FileDescriptor;
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[I[Ljava/lang/String;)Ljava/io/FileDescriptor;
  */
 JNIEXPORT jobject JNICALL Java_com_google_ase_Exec_createSubprocess
-  (JNIEnv *, jclass, jstring, jstring, jstring, jintArray);
+  (JNIEnv *, jclass, jstring, jstring, jstring, jintArray, jobjectArray);
 
 /*
  * Class:     com_google_ase_Exec
@@ -30,14 +30,6 @@ JNIEXPORT void JNICALL Java_com_google_ase_Exec_setPtyWindowSize
  */
 JNIEXPORT jint JNICALL Java_com_google_ase_Exec_waitFor
   (JNIEnv *, jclass, jint);
-
-/*
- * Class:     com_google_ase_Exec
- * Method:    register
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_com_google_ase_Exec_register
-  (JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }

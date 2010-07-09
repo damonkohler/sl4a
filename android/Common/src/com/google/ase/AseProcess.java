@@ -16,6 +16,8 @@
 
 package com.google.ase;
 
+import android.os.Process;
+
 import java.io.BufferedReader;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -23,8 +25,6 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
-
-import android.os.Process;
 
 public class AseProcess {
 
@@ -71,9 +71,9 @@ public class AseProcess {
     getOut().println(obj);
   }
 
-  public void start(String binary, String arg1, String arg2) {
+  public void start(String binary, String arg1, String arg2, String[] envvars) {
     int[] pid = new int[1];
-    mFd = Exec.createSubprocess(binary, arg1, arg2, pid);
+    mFd = Exec.createSubprocess(binary, arg1, arg2, pid, envvars);
     mPid = pid[0];
     mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
     mIn = new InputStreamReader(new FileInputStream(mFd));

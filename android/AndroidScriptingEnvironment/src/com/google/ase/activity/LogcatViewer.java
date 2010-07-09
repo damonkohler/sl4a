@@ -16,11 +16,6 @@
 
 package com.google.ase.activity;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +34,11 @@ import com.google.ase.AseLog;
 import com.google.ase.AseProcess;
 import com.google.ase.R;
 import com.google.ase.dialog.Help;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class LogcatViewer extends ListActivity {
 
@@ -60,7 +60,7 @@ public class LogcatViewer extends ListActivity {
     @Override
     public void run() {
       mLogcatProcess = new AseProcess();
-      mLogcatProcess.start("/system/bin/logcat", null, null);
+      mLogcatProcess.start("/system/bin/logcat", null, null, null);
       try {
         BufferedReader br = mLogcatProcess.getIn();
         String line;
