@@ -9,7 +9,11 @@ import com.google.ase.future.FutureResult;
 
 import java.util.concurrent.Callable;
 
-public class MainThreadInitializationFactory {
+public class MainThread {
+
+  private MainThread() {
+    // Utility class.
+  }
 
   public static <T> T init(Service service, final Callable<T> task) {
     final FutureResult<T> result = new FutureResult<T>();

@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.Map.Entry;
 
 /**
@@ -58,7 +57,8 @@ public abstract class InterpreterProcess extends AseProcess {
   }
 
   public void start() {
-    super.start(SHELL_BIN, "-", null);
+    String[] envvars = getEnvironmentVariables();
+    super.start("/system/bin/sh", null, null, envvars);
 
     // Wait until the shell has produced some output before we start writing to it. This prevents
     // misplaced $ prompts in the output.
@@ -71,17 +71,17 @@ public abstract class InterpreterProcess extends AseProcess {
     } catch (InterruptedException e) {
       AseLog.e("Failed while waiting for mShellFd.", e);
     }
-
-    exportEnvironment();
     println(getInterpreterCommand());
   }
 
-  protected void exportEnvironment() {
+  protected String[] getEnvironmentVariables() {
     buildEnvironment();
+    String[] vars = new String[mEnvironment.size()];
+    int i = 0;
     for (Entry<String, String> e : mEnvironment.entrySet()) {
-      println(String.format("export %s=\"%s\"", e.getKey(), e.getValue()));
+      vars[i++] = String.format("%s=%s", e.getKey(), e.getValue());
     }
-    UUID.randomUUID();
+    return vars;
   }
 
   /**

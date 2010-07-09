@@ -24,7 +24,7 @@ import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-import com.google.ase.MainThreadInitializationFactory;
+import com.google.ase.MainThread;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
@@ -54,7 +54,7 @@ public class PhoneFacade extends RpcReceiver {
     mAndroidFacade = manager.getReceiver(AndroidFacade.class);
     mEventFacade = manager.getReceiver(EventFacade.class);
     mPhoneState = new Bundle();
-    mPhoneStateListener = MainThreadInitializationFactory.init(service, new Callable<PhoneStateListener>() {
+    mPhoneStateListener = MainThread.init(service, new Callable<PhoneStateListener>() {
       @Override
       public PhoneStateListener call() throws Exception {
         return new PhoneStateListener() {
