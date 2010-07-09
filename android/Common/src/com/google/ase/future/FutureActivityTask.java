@@ -27,7 +27,7 @@ import com.google.ase.activity.AseServiceHelper;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public abstract class FutureActivityTask<T> implements FutureTask<T> {
+public abstract class FutureActivityTask<T> {
   private final static AtomicInteger mNextFutureTaskId = new AtomicInteger(0);
   private final FutureResult<T> mResult = new FutureResult<T>();
   private final int myTaskId = mNextFutureTaskId.incrementAndGet();
