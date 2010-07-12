@@ -65,18 +65,23 @@ public interface InterpreterDescriptor {
    * returned by the getBinary()), and third - to the execution parameters (constructed using
    * getEmptyParams() or getExecuteParams()).
    */
-  public String getExecuteCommand();
+  public String getExecuteCommand(Context context);
 
   /**
    * Returns execution parameters in case when script name is not provided;
    */
-  public String getEmptyParams();
+  public String getEmptyParams(Context context);
 
   /**
    * Returns command line arguments to execute a with a given script (format string with one
    * argument).
    */
-  public String getExecuteParams();
+  public String getExecuteParams(Context context);
+
+  /**
+   * TODO(Alexey): Update Javadoc.
+   */
+  public String[] getExecuteArgs(Context context);
 
   // The following methods are required for installation:
 

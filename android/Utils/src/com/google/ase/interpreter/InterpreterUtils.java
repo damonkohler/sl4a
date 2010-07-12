@@ -16,9 +16,9 @@
 
 package com.google.ase.interpreter;
 
-import java.io.File;
-
 import android.content.Context;
+
+import java.io.File;
 
 public class InterpreterUtils {
 
@@ -27,6 +27,7 @@ public class InterpreterUtils {
   }
 
   public static File getInterpreterRoot(Context context) {
+    // TODO(Alexey): Get rid of hardcoded stuff.
     return context.getFilesDir().getParentFile();
   }
 

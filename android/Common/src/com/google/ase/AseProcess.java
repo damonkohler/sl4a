@@ -71,9 +71,9 @@ public class AseProcess {
     getOut().println(obj);
   }
 
-  public void start(String binary, String arg1, String arg2, String[] envvars) {
+  public void start(String binary, String[] args, String[] envvars) {
     int[] pid = new int[1];
-    mFd = Exec.createSubprocess(binary, arg1, arg2, pid, envvars);
+    mFd = Exec.createSubprocess(binary, args, envvars, pid);
     mPid = pid[0];
     mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
     mIn = new InputStreamReader(new FileInputStream(mFd));

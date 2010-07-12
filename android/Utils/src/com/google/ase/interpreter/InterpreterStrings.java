@@ -63,4 +63,9 @@ public interface InterpreterStrings {
    */
   public static final String EXECUTE = "execute";
 
+  /**
+   * Execution arguments.
+   */
+  public static final String ARGS = "arguments";
+
 }

@@ -28,6 +28,7 @@ public interface InterpreterConstants {
 
   public static final String SDCARD_ROOT =
       Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+
   public static final String DOWNLOAD_ROOT = SDCARD_ROOT;
 
   public static final String SDCARD_ASE_ROOT = SDCARD_ROOT + "ase/";
@@ -46,6 +47,7 @@ public interface InterpreterConstants {
   // Interpreter content provider
   public static final String PROVIDER_BASE = "com.google.ase.base";
   public static final String PROVIDER_ENV = "com.google.ase.env";
+  public static final String PROVIDER_ARGS = "com.google.ase.args";
 
   public static final String INSTALL_PREF = "ASE.interpreter.installed";
 

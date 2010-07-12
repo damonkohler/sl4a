@@ -16,15 +16,6 @@
 
 package com.google.ase.interpreter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -41,6 +32,16 @@ import android.net.Uri;
 import com.google.ase.AseLog;
 import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.shell.ShellInterpreter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Manages and provides access to the set of available interpreters.
@@ -151,9 +152,11 @@ public class InterpreterConfiguration {
       }
       Map<String, String> environmentMap = getMap(provider, InterpreterConstants.PROVIDER_ENV);
 
+      Map<String, String> argumentsMap = getMap(provider, InterpreterConstants.PROVIDER_ARGS);
+
       InterpreterAgent interpreter = null;
       try {
-        interpreter = new Interpreter(interpreterMap, environmentMap);
+        interpreter = new Interpreter(interpreterMap, environmentMap, argumentsMap);
       } catch (AseException e) {
         AseLog.e(e.getMessage(), e);
       } catch (Exception e) {
@@ -171,7 +174,7 @@ public class InterpreterConfiguration {
       }
       cursor.moveToFirst();
       int size = cursor.getColumnCount();
-      Map<String, String> map = new HashMap<String, String>(size);
+      Map<String, String> map = new LinkedHashMap<String, String>(size);
       for (int i = 0; i < size; i++) {
         map.put(cursor.getColumnName(i), cursor.getString(i));
       }

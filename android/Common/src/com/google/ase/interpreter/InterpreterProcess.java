@@ -16,7 +16,6 @@
 
 package com.google.ase.interpreter;
 
-import com.google.ase.AseLog;
 import com.google.ase.AseProcess;
 
 import java.io.BufferedReader;
@@ -32,8 +31,6 @@ import java.util.Map.Entry;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public abstract class InterpreterProcess extends AseProcess {
-
-  protected final static String SHELL_BIN = "/system/bin/sh";
 
   protected String mLaunchScript;
   protected Map<String, String> mEnvironment = new HashMap<String, String>();
@@ -57,21 +54,10 @@ public abstract class InterpreterProcess extends AseProcess {
   }
 
   public void start() {
-    String[] envvars = getEnvironmentVariables();
-    super.start("/system/bin/sh", null, null, envvars);
-
-    // Wait until the shell has produced some output before we start writing to it. This prevents
-    // misplaced $ prompts in the output.
-    try {
-      while (!mIn.ready()) {
-        Thread.sleep(1);
-      }
-    } catch (IOException e) {
-      AseLog.e("Failed while waiting for mShellFd.", e);
-    } catch (InterruptedException e) {
-      AseLog.e("Failed while waiting for mShellFd.", e);
-    }
-    println(getInterpreterCommand());
+    String command = getInterpreterCommand();
+    String[] arguments = getInterpreterArguments();
+    String[] environmentVariables = getEnvironmentVariables();
+    super.start(command, arguments, environmentVariables);
   }
 
   protected String[] getEnvironmentVariables() {
@@ -87,8 +73,9 @@ public abstract class InterpreterProcess extends AseProcess {
   /**
    * Writes the command to the shell that starts the interpreter.
    */
-  // Should normally be overridden. As is, just the shell will pop up.
   protected abstract String getInterpreterCommand();
+
+  protected abstract String[] getInterpreterArguments();
 
   /**
    * Called before execution to allow interpreters to modify the environment map as necessary.

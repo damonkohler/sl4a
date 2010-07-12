@@ -27,16 +27,17 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * A provider that can be queried to obtain execution-related interpreter info.
  * 
  * <p>
- * To create an interpreter APK, please extend this content provider and implement getDescriptor()
- * and getEnvironmentSettings().<br>
- * Please declare the provider in the android manifest xml (the authority values has to be set to
- * your_package_name.provider_name).
+ * To create an interpreter APK, please extend this content provider and
+ * implement getDescriptor() and getEnvironmentSettings().<br>
+ * Please declare the provider in the android manifest xml (the authority values
+ * has to be set to your_package_name.provider_name).
  * 
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
@@ -44,6 +45,7 @@ public abstract class InterpreterProvider extends ContentProvider {
 
   protected static final int BASE = 1;
   protected static final int ENVVARS = 2;
+  protected static final int ARGS = 3;
 
   protected InterpreterDescriptor mDescriptor;
   protected Context mContext;
@@ -57,17 +59,19 @@ public abstract class InterpreterProvider extends ContentProvider {
     String auth = this.getClass().getName().toLowerCase();
     matcher.addURI(auth, InterpreterConstants.PROVIDER_BASE, BASE);
     matcher.addURI(auth, InterpreterConstants.PROVIDER_ENV, ENVVARS);
+    matcher.addURI(auth, InterpreterConstants.PROVIDER_ARGS, ARGS);
   }
 
   /**
-   * Should return an instance instance of a class that implements interpreter descriptor.
+   * Should return an instance instance of a class that implements interpreter
+   * descriptor.
    * 
    */
   protected abstract InterpreterDescriptor getDescriptor();
 
   /**
-   * Should return a map of environment variables names and their values (or null if interpreter
-   * does not require any environment variables).
+   * Should return a map of environment variables names and their values (or
+   * null if interpreter does not require any environment variables).
    */
   protected abstract Map<String, String> getEnvironmentSettings();
 
@@ -105,14 +109,17 @@ public abstract class InterpreterProvider extends ContentProvider {
     Map<String, ? extends Object> map;
 
     switch (matcher.match(uri)) {
-    case BASE:
-      map = getSettings();
-      break;
-    case ENVVARS:
-      map = getEnvironmentSettings();
-      break;
-    default:
-      map = null;
+      case BASE:
+        map = getSettings();
+        break;
+      case ENVVARS:
+        map = getEnvironmentSettings();
+        break;
+      case ARGS:
+        map = getArguments();
+        break;
+      default:
+        map = null;
     }
 
     return buildCursorFromMap(map);
@@ -142,12 +149,24 @@ public abstract class InterpreterProvider extends ContentProvider {
     values.put(InterpreterStrings.NAME, mDescriptor.getName());
     values.put(InterpreterStrings.NICE_NAME, mDescriptor.getNiceName());
     values.put(InterpreterStrings.EXTENSION, mDescriptor.getExtension());
-    values.put(InterpreterStrings.EMPTY_PARAMS, mDescriptor.getEmptyParams());
-    values.put(InterpreterStrings.EXECUTE_PARAMS, mDescriptor.getExecuteParams());
-    values.put(InterpreterStrings.EXECUTE, mDescriptor.getExecuteCommand());
     values.put(InterpreterStrings.PATH, mDescriptor.getPath(mContext));
     values.put(InterpreterStrings.BIN, mDescriptor.getBinary());
+    values.put(InterpreterStrings.EXECUTE, mDescriptor.getExecuteCommand(mContext));
+    values.put(InterpreterStrings.EMPTY_PARAMS, mDescriptor.getEmptyParams(mContext));
+    values.put(InterpreterStrings.EXECUTE_PARAMS, mDescriptor.getExecuteParams(mContext));
 
+    return values;
+  }
+
+  protected Map<String, Object> getArguments() {
+    String[] arguments = mDescriptor.getExecuteArgs(mContext);
+    if (arguments == null) {
+      return null;
+    }
+    Map<String, Object> values = new LinkedHashMap<String, Object>();
+    for (String argument : arguments) {
+      values.put(argument, argument);
+    }
     return values;
   }
 }

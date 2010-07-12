@@ -37,7 +37,7 @@ import java.util.Map;
 public class Interpreter implements InterpreterAgent, InterpreterStrings {
 
   private static String[] mapKeys =
-      { NAME, NICE_NAME, EXTENSION, BIN, PATH, EXECUTE, EMPTY_PARAMS, EXECUTE_PARAMS };
+      { NAME, NICE_NAME, EXTENSION, BIN, PATH, EXECUTE, EMPTY_PARAMS, EXECUTE_PARAMS, ARGS };
 
   private final String mExtension;
   private final String mName;
@@ -47,14 +47,16 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
   private final String mEmptyParams;
   private final String mExecuteParams;
   private final String mExecute;
+  private final String[] mArguments;
   private final Map<String, String> mEnvironmentVariables;
 
   private final Language mLanguage;
 
-  public Interpreter(Map<String, String> data, Map<String, String> variables) throws AseException {
+  public Interpreter(Map<String, String> data, Map<String, String> variables,
+      Map<String, String> args) throws AseException {
 
     for (String key : mapKeys) {
-      if (data.get(key).equals(null)) {
+      if (data.get(key) == null && !(key.equals(EMPTY_PARAMS) || key.equals(ARGS))) {
         throw new AseException("Cannot create interpreter. Required parameter not specified: "
             + key);
       }
@@ -68,6 +70,15 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
     mEmptyParams = data.get(EMPTY_PARAMS);
     mExecuteParams = data.get(EXECUTE_PARAMS);
     mExecute = data.get(EXECUTE);
+    if (args == null) {
+      mArguments = null;
+    } else {
+      mArguments = new String[args.size()];
+      int i = 0;
+      for (String key : args.keySet()) {
+        mArguments[i++] = args.get(key);
+      }
+    }
 
     mLanguage = SupportedLanguages.getLanguageByExtension(mExtension);
 
@@ -136,13 +147,32 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
 
     @Override
     protected String getInterpreterCommand() {
+      return mExecute;
+    }
+
+    @Override
+    protected String[] getInterpreterArguments() {
       String action = null;
+
       if (mLaunchScript == null) {
         action = mEmptyParams;
       } else {
         action = String.format(mExecuteParams, mLaunchScript);
       }
-      return String.format(mExecute, mPath, mBinary, action);
+
+      if (mArguments == null) {
+        if (action == null) {
+          return null;
+        }
+        return new String[] { action };
+      }
+
+      String[] args = new String[mArguments.length + ((action != null) ? 1 : 0)];
+      System.arraycopy(mArguments, 0, args, 0, mArguments.length);
+      if (action != null) {
+        args[mArguments.length] = action;
+      }
+      return args;
     }
   }
 
