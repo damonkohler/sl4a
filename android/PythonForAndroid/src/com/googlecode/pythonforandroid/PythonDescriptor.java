@@ -63,12 +63,4 @@ public class PythonDescriptor extends AseHostedInterpreter {
   public String getBinary() {
     return PYTHON_BIN;
   }
-
-  public String getEmptyParams() {
-    return "";
-  }
-
-  public String getExecuteParams() {
-    return " %s";
-  }
 }

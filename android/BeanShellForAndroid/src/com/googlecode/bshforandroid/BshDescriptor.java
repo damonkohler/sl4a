@@ -16,10 +16,11 @@
 
 package com.googlecode.bshforandroid;
 
+import android.content.Context;
+
 import com.google.ase.interpreter.AseHostedInterpreter;
 
 public class BshDescriptor extends AseHostedInterpreter {
-  private final static String BSH_EXEC = "dalvikvm -classpath %s%s bsh.Interpreter %s";
 
   private final static String BSH_BIN = "bsh-2.0b4-dx.jar";
 
@@ -60,16 +61,17 @@ public class BshDescriptor extends AseHostedInterpreter {
     return BSH_BIN;
   }
 
-  public String getEmptyParams() {
-    return "";
-  }
-
-  public String getExecuteParams() {
-    return "%s";
+  @Override
+  public String getExecuteCommand(Context context) {
+    return DALVIKVM;
   }
 
   @Override
-  public String getExecuteCommand() {
-    return BSH_EXEC;
+  public String[] getExecuteArgs(Context context) {
+    String[] args =
+        { "-Xbootclasspath:/system/framework/core.jar", "-classpath",
+          super.getExecuteCommand(context), "bsh.Interpreter" };
+    return args;
   }
+
 }

@@ -30,7 +30,7 @@ import com.google.ase.rpc.MethodDescriptor;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ShellInterpreter implements InterpreterAgent {
-
+  private final static String SHELL_BIN = "/system/bin/sh";
   private final Language mShellLanguage;
 
   public ShellInterpreter() {
@@ -111,11 +111,12 @@ public class ShellInterpreter implements InterpreterAgent {
 
     @Override
     protected String getInterpreterCommand() {
-      if (mLaunchScript == null) {
-        return "";
-      } else {
-        return SHELL_BIN + " " + mLaunchScript;
-      }
+      return SHELL_BIN;
+    }
+
+    @Override
+    protected String[] getInterpreterArguments() {
+      return null;
     }
   }
 

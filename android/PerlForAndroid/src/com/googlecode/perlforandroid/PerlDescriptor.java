@@ -16,6 +16,8 @@
 
 package com.googlecode.perlforandroid;
 
+import android.content.Context;
+
 import com.google.ase.interpreter.AseHostedInterpreter;
 
 public class PerlDescriptor extends AseHostedInterpreter {
@@ -59,11 +61,8 @@ public class PerlDescriptor extends AseHostedInterpreter {
     return 6;
   }
 
-  public String getEmptyParams() {
-    return " -de 1";
-  }
-
-  public String getExecuteParams() {
-    return " %s";
+  @Override
+  public String getEmptyParams(Context context) {
+    return "-de 1";
   }
 }

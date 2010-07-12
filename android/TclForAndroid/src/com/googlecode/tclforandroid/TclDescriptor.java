@@ -55,12 +55,4 @@ public class TclDescriptor extends AseHostedInterpreter {
     return 1;
   }
 
-  public String getEmptyParams() {
-    return "";
-  }
-
-  public String getExecuteParams() {
-    return " %s";
-  }
-
 }

@@ -16,17 +16,14 @@
 
 package com.googlecode.jrubyforandroid;
 
+import android.content.Context;
+
 import com.google.ase.interpreter.AseHostedInterpreter;
 
 public class JRubyDescriptor extends AseHostedInterpreter {
 
-  private final static String JRUBY_EXEC =
-      "dalvikvm -Xss128k " + "-classpath %1$s%2$s org.jruby.Main -X-C "
-          +
-          // Fix include path.
-          "-e \"\\$LOAD_PATH.push('file:%1$s%2$s!/META-INF/jruby.home/lib/ruby/1.8'); "
-          + "require 'android'; %3$s";
-
+  private final static String JRUBY_PREFIX =
+      "-e $LOAD_PATH.push('file:%1$s/%2$s!/META-INF/jruby.home/lib/ruby/1.8'); require 'android'; %3$s";
   private final static String JRUBY_BIN = "jruby-complete-1.4.jar";
 
   public String getExtension() {
@@ -68,16 +65,28 @@ public class JRubyDescriptor extends AseHostedInterpreter {
     return JRUBY_BIN;
   }
 
-  public String getEmptyParams() {
-    return "require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start\"";
-  }
-
-  public String getExecuteParams() {
-    return "load('%s')\"";
+  @Override
+  public String getEmptyParams(Context context) {
+    return String.format(JRUBY_PREFIX, getPath(context), getBinary(),
+        "require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start");
   }
 
   @Override
-  public String getExecuteCommand() {
-    return JRUBY_EXEC;
+  public String getExecuteParams(Context context) {
+    return String.format(JRUBY_PREFIX, getPath(context), getBinary(), "load('%s')");
   }
+
+  @Override
+  public String getExecuteCommand(Context context) {
+    return DALVIKVM;
+  }
+
+  @Override
+  public String[] getExecuteArgs(Context context) {
+    String[] args =
+        { "-Xbootclasspath:/system/framework/core.jar", "-classpath",
+          super.getExecuteCommand(context), "org.jruby.Main", "-X-C" };
+    return args;
+  }
+
 }

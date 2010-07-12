@@ -36,17 +36,17 @@ public class FooDescriptor implements InterpreterDescriptor {
     return 0;
   }
 
-  public String getEmptyParams() {
+  public String getEmptyParams(Context context) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  public String getExecuteCommand() {
+  public String getExecuteCommand(Context context) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  public String getExecuteParams() {
+  public String getExecuteParams(Context context) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -92,6 +92,11 @@ public class FooDescriptor implements InterpreterDescriptor {
   }
 
   public String getScriptsArchiveUrl() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public String[] getExecuteArgs(Context arg0) {
     // TODO Auto-generated method stub
     return null;
   }

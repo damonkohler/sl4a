@@ -16,12 +16,11 @@
 
 package com.googlecode.rhinoforandroid;
 
+import android.content.Context;
+
 import com.google.ase.interpreter.AseHostedInterpreter;
 
 public class RhinoDescriptor extends AseHostedInterpreter {
-
-  private final static String RHINO_EXEC =
-      "dalvikvm -Xss128k -classpath %s%s org.mozilla.javascript.tools.shell.Main -O -1 %s";
 
   private final static String RHINO_BIN = "rhino1_7R2-dex.jar";
 
@@ -62,16 +61,16 @@ public class RhinoDescriptor extends AseHostedInterpreter {
     return 0;
   }
 
-  public String getEmptyParams() {
-    return "";
-  }
-
-  public String getExecuteParams() {
-    return "%s";
+  @Override
+  public String getExecuteCommand(Context context) {
+    return DALVIKVM;
   }
 
   @Override
-  public String getExecuteCommand() {
-    return RHINO_EXEC;
+  public String[] getExecuteArgs(Context context) {
+    String[] args =
+        { "-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
+          super.getExecuteCommand(context), "org.mozilla.javascript.tools.shell.Main", "-O", "-1" };
+    return args;
   }
 }

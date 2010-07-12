@@ -53,12 +53,4 @@ public class LuaDescriptor extends AseHostedInterpreter {
   public String getBinary() {
     return LUA_BIN;
   }
-
-  public String getEmptyParams() {
-    return "";
-  }
-
-  public String getExecuteParams() {
-    return " %s";
-  }
 }
