@@ -54,7 +54,7 @@ public class PhoneFacade extends RpcReceiver {
     mAndroidFacade = manager.getReceiver(AndroidFacade.class);
     mEventFacade = manager.getReceiver(EventFacade.class);
     mPhoneState = new Bundle();
-    mPhoneStateListener = MainThread.init(service, new Callable<PhoneStateListener>() {
+    mPhoneStateListener = MainThread.run(service, new Callable<PhoneStateListener>() {
       @Override
       public PhoneStateListener call() throws Exception {
         return new PhoneStateListener() {

@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <project default="main">
 	<target name="main">
+		<copy file="../AndroidScriptingEnvironment/libs/armeabi/libcom_google_ase_Exec.so" tofile="./libs/armeabi/libcom_google_ase_Exec.so" overwrite="true" />
 		<zip destfile="../script_for_android_template.zip" basedir="./" includes="**/*" excludes=".project,build.xml,gen/**,bin/**,.externalToolBuilders/**,.tmp/**">
 			<fileset dir="./.tmp" includes="*"/>
 		</zip>

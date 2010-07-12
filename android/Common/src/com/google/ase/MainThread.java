@@ -2,7 +2,7 @@
 
 package com.google.ase;
 
-import android.app.Service;
+import android.content.Context;
 import android.os.Handler;
 
 import com.google.ase.future.FutureResult;
@@ -15,9 +15,13 @@ public class MainThread {
     // Utility class.
   }
 
-  public static <T> T init(Service service, final Callable<T> task) {
+  /**
+   * Executed in the main thread, returns the result of an execution. Anything that runs here should
+   * finish quickly to avoid hanging the UI thread.
+   */
+  public static <T> T run(Context context, final Callable<T> task) {
     final FutureResult<T> result = new FutureResult<T>();
-    Handler handler = new Handler(service.getMainLooper());
+    Handler handler = new Handler(context.getMainLooper());
     handler.post(new Runnable() {
       @Override
       public void run() {
@@ -25,6 +29,7 @@ public class MainThread {
           result.set(task.call());
         } catch (Exception e) {
           AseLog.e(e);
+          result.set(null);
         }
       }
     });

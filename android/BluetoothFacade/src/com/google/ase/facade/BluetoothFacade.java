@@ -48,13 +48,12 @@ public class BluetoothFacade extends RpcReceiver {
     mAndroidFacade = manager.getReceiver(AndroidFacade.class);
     Looper.prepare();
     mBluetoothServer = new BluetoothServer(manager.getReceiver(EventFacade.class));
-    mBluetoothAdapter =
-        MainThread.init(manager.getService(), new Callable<BluetoothAdapter>() {
-          @Override
-          public BluetoothAdapter call() throws Exception {
-            return BluetoothAdapter.getDefaultAdapter();
-          }
-        });
+    mBluetoothAdapter = MainThread.run(manager.getService(), new Callable<BluetoothAdapter>() {
+      @Override
+      public BluetoothAdapter call() throws Exception {
+        return BluetoothAdapter.getDefaultAdapter();
+      }
+    });
   }
 
   @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")

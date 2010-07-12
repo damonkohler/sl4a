@@ -16,22 +16,21 @@
 
 package com.google.ase.facade.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureResult;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Wrapper class for alert dialog running in separate thread.
@@ -40,7 +39,6 @@ import com.google.ase.future.FutureResult;
  */
 class RunnableAlertDialog extends RunnableDialog {
 
-  private AlertDialog mDialog;
   private final String mTitle;
   private final String mMessage;
 
@@ -131,11 +129,6 @@ class RunnableAlertDialog extends RunnableDialog {
       }
       mListType = ListType.MULTI_CHOICE;
     }
-  }
-
-  @Override
-  public Dialog getDialog() {
-    return mDialog;
   }
 
   /**

@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
- * FutureIntent represents an eventual Intent result object for asynchronous operations.
+ * FutureResult represents an eventual execution result for asynchronous operations.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
