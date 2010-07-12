@@ -32,7 +32,7 @@
 #define LOG_TAG "Exec"
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-int CreateSubprocess(const char* cmd, char *args[], pid_t* pid, char *vars[]) {
+int CreateSubprocess(const char* cmd, char* args[], char* vars[], pid_t* pid) {
   char* devname;
   int ptm = open("/dev/ptmx", O_RDWR);
   if(ptm < 0){
@@ -118,44 +118,44 @@ int JNU_GetFdFromFileDescriptor(JNIEnv* env, jobject fileDescriptor) {
 }
 
 JNIEXPORT jobject JNICALL Java_com_google_ase_Exec_createSubprocess(
-    JNIEnv* env, jclass clazz, jstring cmd, jstring arg0, jstring arg1,
-    jintArray processIdArray, jobjectArray varArray) {
+    JNIEnv* env, jclass clazz, jstring cmd, jobjectArray argArray, jobjectArray varArray,
+    jintArray processIdArray) {
   char* cmd_native = JNU_GetStringNativeChars(env, cmd);
-  char* arg0_native = JNU_GetStringNativeChars(env, arg0);
-  char* arg1_native = JNU_GetStringNativeChars(env, arg1);
   pid_t pid;
   jsize len = 0;
+
+  if (argArray) {
+    len = env->GetArrayLength(argArray);
+  }
+  char* args[len + 2];
+  args[0] = cmd_native;
+  for (int j = 0; j < len; j++) {
+    jstring arg = (jstring) env->GetObjectArrayElement(argArray, j);
+    char* arg_native = JNU_GetStringNativeChars(env, arg);
+    args[j+1] = arg_native;
+  }
+  args[len+1] = NULL;
+
+  len=0;
   if (varArray) {
     len = env->GetArrayLength(varArray);
   }
-  char *envVars[len + 2];
-  char *path = getenv("PATH");
+  char* vars[len + 2];
+  char* path = getenv("PATH");
   if (path) {
-    char *path_env = (char *) malloc(strlen(path) + 6);
+    char* path_env = (char*) malloc(strlen(path) + 6);
     sprintf(path_env, "PATH=%s", path);
-    envVars[0] = path_env;
+    vars[0] = path_env;
   }
-  int i = envVars[0] ? 1 : 0;
+  int i = vars[0] ? 1 : 0;
   for (int j = 0; j < len; j++) {
     jstring var = (jstring) env->GetObjectArrayElement(varArray, j);
-    char *var_native = JNU_GetStringNativeChars(env, var);
-    envVars[i + j] = var_native;
+    char* var_native = JNU_GetStringNativeChars(env, var);
+    vars[i + j] = var_native;
   }
-  envVars[i + len + 1] = NULL;
+  vars[i + len] = NULL;
 
-  int args_length = 2 + (arg0_native != NULL) + (arg1_native != NULL);
-  char* arguments[args_length];
-  i = 0;
-  arguments[i++] = cmd_native;
-  if( arg0_native ){
-    arguments[i++] = arg0_native;
-  }
-  if( arg1_native ){
-    arguments[i++] = arg1_native;
-  }
-  arguments[i] = NULL;
-
-  int ptm = CreateSubprocess(cmd_native, arguments, &pid, envVars);
+  int ptm = CreateSubprocess(cmd_native, args, vars, &pid);
   if (processIdArray) {
     if (env->GetArrayLength(processIdArray) > 0) {
       jboolean isCopy;

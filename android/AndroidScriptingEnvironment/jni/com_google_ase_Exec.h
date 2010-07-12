@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[I[Ljava/lang/String;)Ljava/io/FileDescriptor;
  */
 JNIEXPORT jobject JNICALL Java_com_google_ase_Exec_createSubprocess
-  (JNIEnv *, jclass, jstring, jstring, jstring, jintArray, jobjectArray);
+  (JNIEnv *, jclass, jstring, jobjectArray, jobjectArray, jintArray);
 
 /*
  * Class:     com_google_ase_Exec
