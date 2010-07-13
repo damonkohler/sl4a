@@ -78,7 +78,7 @@ public class FooDescriptor implements InterpreterDescriptor {
     return null;
   }
 
-  public String[] getExecuteArgs(Context contex) {
+  public String[] getExecuteArgs(Context context) {
     return null;
   }
 

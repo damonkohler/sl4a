@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -83,6 +84,12 @@ public class AseProcess {
         AseLog.v("Waiting for " + mPid);
         int result = Exec.waitFor(mPid);
         AseLog.v("Subprocess exited with result code " + result);
+        mOut.close();
+        try {
+          mIn.close();
+        } catch (IOException e) {
+          AseLog.e(e);
+        }
         if (shutdownHook != null) {
           shutdownHook.run();
         }

@@ -129,22 +129,22 @@ JNIEXPORT jobject JNICALL Java_com_google_ase_Exec_createSubprocess(
   }
   char* args[len + 2];
   args[0] = cmd_native;
-  for (int j = 0; j < len; j++) {
-    jstring arg = (jstring) env->GetObjectArrayElement(argArray, j);
+  for (int i = 0; i < len; i++) {
+    jstring arg = (jstring) env->GetObjectArrayElement(argArray, i);
     char* arg_native = JNU_GetStringNativeChars(env, arg);
-    args[j+1] = arg_native;
+    args[i+1] = arg_native;
   }
   args[len+1] = NULL;
 
-  len=0;
+  len = 0;
   if (varArray) {
     len = env->GetArrayLength(varArray);
   }
   char* vars[len + 1];
-  for (int j = 0; j < len; j++) {
-    jstring var = (jstring) env->GetObjectArrayElement(varArray, j);
+  for (int i = 0; i < len; i++) {
+    jstring var = (jstring) env->GetObjectArrayElement(varArray, i);
     char* var_native = JNU_GetStringNativeChars(env, var);
-    vars[j] = var_native;
+    vars[i] = var_native;
   }
   vars[len] = NULL;
 

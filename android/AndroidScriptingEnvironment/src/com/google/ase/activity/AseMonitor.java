@@ -16,21 +16,22 @@
 
 package com.google.ase.activity;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -87,33 +88,8 @@ public class AseMonitor extends ListActivity {
     CustomizeWindow.requestCustomTitle(this, "Script Monitor", R.layout.script_monitor);
     mAdapter = new ScriptMonitorAdapter();
     setListAdapter(mAdapter);
+    registerForContextMenu(getListView());
     Analytics.trackActivity(this);
-  }
-
-  @Override
-  protected void onListItemClick(ListView list, View view, int position, long id) {
-    final ScriptProcess script = (ScriptProcess) list.getItemAtPosition(position);
-
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setItems(new CharSequence[] { "Open in Terminal", "Stop Script" },
-        new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            Intent intent = null;
-            if (which == 0) {
-              intent = new Intent(AseMonitor.this, Terminal.class);
-              intent.putExtras(intent);
-              intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
-              startActivity(intent);
-            } else {
-              intent = new Intent(AseMonitor.this, AseService.class);
-              intent.setAction(Constants.ACTION_KILL_PROCESS);
-              intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
-              startService(intent);
-            }
-          }
-        });
-    builder.show();
   }
 
   @Override
@@ -141,6 +117,56 @@ public class AseMonitor extends ListActivity {
     super.onDestroy();
     mTimer.cancel();
     unbindService(mConnection);
+  }
+
+  @Override
+  protected void onListItemClick(ListView list, View view, int position, long id) {
+    final ScriptProcess script = (ScriptProcess) list.getItemAtPosition(position);
+    Intent intent = new Intent(AseMonitor.this, Terminal.class);
+    intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
+    startActivity(intent);
+  }
+
+  @Override
+  public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+    String scriptName = null;
+    try {
+      AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+      ScriptProcess script = (ScriptProcess) mAdapter.getItem(info.position);
+      scriptName = script.getScriptName();
+    } catch (ClassCastException e) {
+      AseLog.e(e);
+    }
+
+    if (scriptName == null) {
+      menu.add(Menu.NONE, 0, Menu.NONE, "Stop Script");
+    } else {
+      menu.add(Menu.NONE, 0, Menu.NONE, "Stop " + scriptName);
+    }
+  }
+
+  @Override
+  public boolean onContextItemSelected(MenuItem item) {
+    AdapterView.AdapterContextMenuInfo info;
+    try {
+      info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    } catch (ClassCastException e) {
+      AseLog.e("Bad menuInfo", e);
+      return false;
+    }
+
+    final ScriptProcess script = (ScriptProcess) mAdapter.getItem(info.position);
+    if (script == null) {
+      AseLog.v("No script selected.");
+      return false;
+    }
+
+    Intent intent = new Intent(AseMonitor.this, AseService.class);
+    intent.setAction(Constants.ACTION_KILL_PROCESS);
+    intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
+    startService(intent);
+
+    return true;
   }
 
   @Override
