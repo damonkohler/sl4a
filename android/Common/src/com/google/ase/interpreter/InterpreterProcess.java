@@ -34,6 +34,7 @@ public abstract class InterpreterProcess extends AseProcess {
 
   protected String mLaunchScript;
   protected Map<String, String> mEnvironment = new HashMap<String, String>();
+  protected int mId;
 
   /**
    * Creates a new {@link InterpreterProcess}.
@@ -44,7 +45,9 @@ public abstract class InterpreterProcess extends AseProcess {
    *          the port that the AndroidProxy is listening on
    */
   public InterpreterProcess(String launchScript, String host, int port, String handshake) {
+    mId = port;
     mLaunchScript = launchScript;
+    mEnvironment.putAll(System.getenv());
     mEnvironment.put("AP_PORT", Integer.toString(port));
     mEnvironment.put("AP_HOST", host);
     if (handshake != null) {
@@ -53,11 +56,11 @@ public abstract class InterpreterProcess extends AseProcess {
     mLog = new StringBuffer();
   }
 
-  public void start() {
+  public void start(final Runnable shutdownHook) {
     String command = getInterpreterCommand();
     String[] arguments = getInterpreterArguments();
     String[] environmentVariables = getEnvironmentVariables();
-    super.start(command, arguments, environmentVariables);
+    super.start(command, arguments, environmentVariables, shutdownHook);
   }
 
   protected String[] getEnvironmentVariables() {

@@ -140,20 +140,13 @@ JNIEXPORT jobject JNICALL Java_com_google_ase_Exec_createSubprocess(
   if (varArray) {
     len = env->GetArrayLength(varArray);
   }
-  char* vars[len + 2];
-  char* path = getenv("PATH");
-  if (path) {
-    char* path_env = (char*) malloc(strlen(path) + 6);
-    sprintf(path_env, "PATH=%s", path);
-    vars[0] = path_env;
-  }
-  int i = vars[0] ? 1 : 0;
+  char* vars[len + 1];
   for (int j = 0; j < len; j++) {
     jstring var = (jstring) env->GetObjectArrayElement(varArray, j);
     char* var_native = JNU_GetStringNativeChars(env, var);
-    vars[i + j] = var_native;
+    vars[j] = var_native;
   }
-  vars[i + len] = NULL;
+  vars[len] = NULL;
 
   int ptm = CreateSubprocess(cmd_native, args, vars, &pid);
   if (processIdArray) {

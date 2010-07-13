@@ -71,7 +71,7 @@ public class AseProcess {
     getOut().println(obj);
   }
 
-  public void start(String binary, String[] args, String[] envvars) {
+  public void start(String binary, String[] args, String[] envvars, final Runnable shutdownHook) {
     int[] pid = new int[1];
     mFd = Exec.createSubprocess(binary, args, envvars, pid);
     mPid = pid[0];
@@ -83,6 +83,9 @@ public class AseProcess {
         AseLog.v("Waiting for " + mPid);
         int result = Exec.waitFor(mPid);
         AseLog.v("Subprocess exited with result code " + result);
+        if (shutdownHook != null) {
+          shutdownHook.run();
+        }
       }
     }).start();
   }

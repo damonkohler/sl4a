@@ -65,7 +65,6 @@ public abstract class InterpreterProvider extends ContentProvider {
   /**
    * Should return an instance instance of a class that implements interpreter
    * descriptor.
-   * 
    */
   protected abstract InterpreterDescriptor getDescriptor();
 

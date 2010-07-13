@@ -60,7 +60,7 @@ public class LogcatViewer extends ListActivity {
     @Override
     public void run() {
       mLogcatProcess = new AseProcess();
-      mLogcatProcess.start("/system/bin/logcat", null, null);
+      mLogcatProcess.start("/system/bin/logcat", null, null, null);
       try {
         BufferedReader br = mLogcatProcess.getIn();
         String line;

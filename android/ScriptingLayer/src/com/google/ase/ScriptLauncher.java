@@ -24,29 +24,27 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterProcess;
 
 import java.io.File;
-import java.net.InetSocketAddress;
 
 public class ScriptLauncher {
 
   private final String mScriptName;
   private final String mInterpreterName;
   private final InterpreterAgent mInterpreter;
-  private final InetSocketAddress mAddress;
   private InterpreterProcess mProcess;
-  private final String mHandshake;
+  private final AndroidProxy mProxy;
 
   public ScriptLauncher(AndroidProxy proxy, File script, InterpreterConfiguration config) {
+    mProxy = proxy;
     mScriptName = script.getName();
     if (mScriptName == null) {
       // throw exception
     }
     mInterpreter = config.getInterpreterForScript(mScriptName);
     mInterpreterName = mInterpreter.getName();
-    mAddress = proxy.getAddress();
-    mHandshake = proxy.getSecret();
   }
 
   public ScriptLauncher(AndroidProxy proxy, Intent intent, InterpreterConfiguration config) {
+    mProxy = proxy;
     mScriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     if (mScriptName != null) {
       mInterpreter = config.getInterpreterForScript(mScriptName);
@@ -55,11 +53,18 @@ public class ScriptLauncher {
       mInterpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
       mInterpreter = config.getInterpreterByName(mInterpreterName);
     }
-    mAddress = proxy.getAddress();
-    mHandshake = proxy.getSecret();
   }
 
   public void launch() throws AseException {
+    launch((new Runnable() {
+      @Override
+      public void run() {
+        mProxy.shutdown();
+      }
+    }));
+  }
+
+  public void launch(final Runnable shutdownHook) throws AseException {
     if (mScriptName == null && mInterpreter == null) {
       throw new AseException("Must specify either script or interpreter.");
     }
@@ -72,9 +77,9 @@ public class ScriptLauncher {
       scriptPath = script.getAbsolutePath();
     }
     mProcess =
-        mInterpreter.buildProcess(scriptPath, mAddress.getHostName(), mAddress.getPort(),
-            mHandshake);
-    mProcess.start();
+        mInterpreter.buildProcess(scriptPath, mProxy.getAddress().getHostName(), mProxy
+            .getAddress().getPort(), mProxy.getSecret());
+    mProcess.start(shutdownHook);
     Analytics.track(mInterpreterName);
   }
 
@@ -100,7 +105,4 @@ public class ScriptLauncher {
     return mProcess.getPid();
   }
 
-  public int getProxyPort() {
-    return mAddress.getPort();
-  }
 }

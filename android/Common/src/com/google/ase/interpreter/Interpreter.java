@@ -36,8 +36,8 @@ import java.util.Map;
  */
 public class Interpreter implements InterpreterAgent, InterpreterStrings {
 
-  private static String[] mapKeys =
-      { NAME, NICE_NAME, EXTENSION, BIN, PATH, EXECUTE, EMPTY_PARAMS, EXECUTE_PARAMS, ARGS };
+  private static String[] mRequiredKeys =
+      { NAME, NICE_NAME, EXTENSION, BIN, PATH, EXECUTE, EXECUTE_PARAMS };
 
   private final String mExtension;
   private final String mName;
@@ -54,9 +54,8 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
 
   public Interpreter(Map<String, String> data, Map<String, String> variables,
       Map<String, String> args) throws AseException {
-
-    for (String key : mapKeys) {
-      if (data.get(key) == null && !(key.equals(EMPTY_PARAMS) || key.equals(ARGS))) {
+    for (String key : mRequiredKeys) {
+      if (data.get(key) == null) {
         throw new AseException("Cannot create interpreter. Required parameter not specified: "
             + key);
       }

@@ -155,7 +155,16 @@ public class AseService extends Service {
     InterpreterConfiguration config =
         ((AseApplication) getApplication()).getInterpreterConfiguration();
     ScriptLauncher launcher = new ScriptLauncher(proxy, intent, config);
-    launcher.launch();
+    final int port = proxy.getAddress().getPort();
+    launcher.launch(new Runnable() {
+      @Override
+      public void run() {
+        Intent intent = new Intent(AseService.this, AseService.class);
+        intent.setAction(Constants.ACTION_KILL_PROCESS);
+        intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
+        startService(intent);
+      }
+    });
     return launcher;
   }
 
