@@ -35,11 +35,11 @@ import java.util.List;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.ase.interpreter.InterpreterAgent;
-import com.google.ase.interpreter.InterpreterConfiguration;
 
 import com.googlecode.android_scripting.IoUtils;
 import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.interpreter.InterpreterAgent;
+import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
 /**

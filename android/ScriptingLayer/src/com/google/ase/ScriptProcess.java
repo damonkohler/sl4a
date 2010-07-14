@@ -18,7 +18,7 @@ package com.google.ase;
 
 import android.app.Service;
 
-import com.google.ase.trigger.Trigger;
+import com.googlecode.android_scripting.trigger.Trigger;
 
 import java.net.InetSocketAddress;
 

@@ -20,8 +20,9 @@ import android.app.Service;
 import android.content.Intent;
 
 import com.google.ase.facade.FacadeConfiguration;
-import com.google.ase.facade.FacadeManager;
-import com.google.ase.jsonrpc.JsonRpcServer;
+
+import com.googlecode.android_scripting.facade.FacadeManager;
+import com.googlecode.android_scripting.jsonrpc.JsonRpcServer;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;

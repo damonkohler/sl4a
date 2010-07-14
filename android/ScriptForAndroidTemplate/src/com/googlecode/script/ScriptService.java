@@ -9,11 +9,11 @@ import android.os.IBinder;
 import com.google.ase.AndroidProxy;
 import com.google.ase.ScriptLauncher;
 import com.google.ase.ScriptStorageAdapter;
-import com.google.ase.interpreter.InterpreterAgent;
-import com.google.ase.interpreter.InterpreterConfiguration;
 
 import com.googlecode.android_scripting.Sl4aLog;
 import com.googlecode.android_scripting.exception.Sl4aException;
+import com.googlecode.android_scripting.interpreter.InterpreterAgent;
+import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 
 import java.io.File;
 

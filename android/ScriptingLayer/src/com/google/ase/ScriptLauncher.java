@@ -18,11 +18,13 @@ package com.google.ase;
 
 import android.content.Intent;
 
-import com.google.ase.interpreter.InterpreterAgent;
-import com.google.ase.interpreter.InterpreterConfiguration;
-import com.google.ase.interpreter.InterpreterProcess;
 
+import com.googlecode.android_scripting.Analytics;
+import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.exception.Sl4aException;
+import com.googlecode.android_scripting.interpreter.InterpreterAgent;
+import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 
 import java.io.File;
 

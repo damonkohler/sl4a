@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.googlecode.script"
-      android:versionCode="1"
-      android:versionName="1.0" xmlns:android="http://schemas.android.com/apk/res/android">
-    <application 
-        android:debuggable="true"
+<manifest
+  package="com.googlecode.script"
+  android:versionCode="1"
+  android:versionName="1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <application
+    android:debuggable="true"
     android:icon="@drawable/script_logo_48"
-    android:label="@string/app_name" android:name=".ScriptApplication">
-    <activity android:name=".ScriptActivity"
-        android:launchMode="singleTask"
-      android:configChanges="keyboardHidden|orientation" android:theme="@android:style/Theme.Translucent.NoTitleBar">
+    android:label="@string/app_name"
+    android:name=".ScriptApplication">
+    <activity
+      android:name=".ScriptActivity"
+      android:launchMode="singleTask"
+      android:configChanges="keyboardHidden|orientation"
+      android:theme="@android:style/Theme.Translucent.NoTitleBar">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />
@@ -16,15 +21,20 @@
           android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    <service android:name=".ScriptService" />
-
-<activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:launchMode="singleTask" android:configChanges="keyboardHidden|orientation" android:name="com.google.ase.activity.AseServiceHelper"></activity>
-</application>
-    <uses-sdk android:minSdkVersion="3" />
-
-
-<uses-permission android:name="android.permission.INTERNET"></uses-permission>
-<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
-
-<uses-permission android:name="android.permission.PERSISTENT_ACTIVITY"></uses-permission>
-</manifest> 
+    <service
+      android:name=".ScriptService" />
+    <activity
+      android:theme="@android:style/Theme.Translucent.NoTitleBar"
+      android:launchMode="singleTask"
+      android:configChanges="keyboardHidden|orientation"
+      android:name="com.googlecode.android_scripting.activity.AseServiceHelper"></activity>
+  </application>
+  <uses-sdk
+    android:minSdkVersion="3" />
+  <uses-permission
+    android:name="android.permission.INTERNET"></uses-permission>
+  <uses-permission
+    android:name="android.permission.VIBRATE"></uses-permission>
+  <uses-permission
+    android:name="android.permission.PERSISTENT_ACTIVITY"></uses-permission>
+</manifest>

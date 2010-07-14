@@ -5,7 +5,8 @@ import java.util.List;
 import org.apache.taglibs.string.util.StringW;
 
 import com.google.ase.facade.FacadeConfiguration;
-import com.google.ase.rpc.MethodDescriptor;
+
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
 
 public class TextDocumentationGenerator {
 

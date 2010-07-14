@@ -4,9 +4,9 @@ package com.googlecode.script;
 
 import android.content.Intent;
 
-import com.google.ase.AseApplication;
-import com.google.ase.interpreter.InterpreterConfiguration;
-import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
+import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
 public class ScriptApplication extends AseApplication implements ConfigurationObserver {
 

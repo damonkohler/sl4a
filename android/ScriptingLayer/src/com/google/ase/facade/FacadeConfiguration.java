@@ -24,11 +24,34 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.google.ase.facade.ui.UiFacade;
-import com.google.ase.jsonrpc.RpcReceiver;
-import com.google.ase.rpc.MethodDescriptor;
 
 import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.facade.AlarmManagerFacade;
+import com.googlecode.android_scripting.facade.AndroidFacade;
+import com.googlecode.android_scripting.facade.ApplicationManagerFacade;
+import com.googlecode.android_scripting.facade.BluetoothFacade;
+import com.googlecode.android_scripting.facade.CameraFacade;
+import com.googlecode.android_scripting.facade.CommonIntentsFacade;
+import com.googlecode.android_scripting.facade.ConditionManagerFacade;
+import com.googlecode.android_scripting.facade.ContactsFacade;
+import com.googlecode.android_scripting.facade.EventFacade;
+import com.googlecode.android_scripting.facade.EyesFreeFacade;
+import com.googlecode.android_scripting.facade.LocationFacade;
+import com.googlecode.android_scripting.facade.PhoneFacade;
+import com.googlecode.android_scripting.facade.PulseGeneratorFacade;
+import com.googlecode.android_scripting.facade.RecorderFacade;
+import com.googlecode.android_scripting.facade.SensorManagerFacade;
+import com.googlecode.android_scripting.facade.SettingsFacade;
+import com.googlecode.android_scripting.facade.SignalStrengthFacade;
+import com.googlecode.android_scripting.facade.SmsFacade;
+import com.googlecode.android_scripting.facade.SpeechRecognitionFacade;
+import com.googlecode.android_scripting.facade.TextToSpeechFacade;
+import com.googlecode.android_scripting.facade.ToneGeneratorFacade;
+import com.googlecode.android_scripting.facade.WakeLockFacade;
+import com.googlecode.android_scripting.facade.WifiFacade;
+import com.googlecode.android_scripting.facade.ui.UiFacade;
+import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
 
 /**
  * Encapsulates the list of supported facades and their construction.
