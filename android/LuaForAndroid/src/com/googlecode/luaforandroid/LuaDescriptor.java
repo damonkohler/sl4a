@@ -16,9 +16,9 @@
 
 package com.googlecode.luaforandroid;
 
-import com.google.ase.interpreter.AseHostedInterpreter;
+import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
-public class LuaDescriptor extends AseHostedInterpreter {
+public class LuaDescriptor extends Sl4aHostedInterpreter {
 
   private final static String LUA_BIN = "bin/lua";
 

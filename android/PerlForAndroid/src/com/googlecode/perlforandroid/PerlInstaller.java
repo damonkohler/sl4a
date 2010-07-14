@@ -2,9 +2,9 @@ package com.googlecode.perlforandroid;
 
 import android.content.Context;
 
-import com.google.ase.AsyncTaskListener;
-import com.google.ase.InterpreterInstaller;
 
+import com.googlecode.android_scripting.AsyncTaskListener;
+import com.googlecode.android_scripting.InterpreterInstaller;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 

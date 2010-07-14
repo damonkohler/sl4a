@@ -14,23 +14,19 @@
  * the License.
  */
 
-package com.google.ase.interpreter;
-
-import com.googlecode.android_scripting.interpreter.InterpreterConstants;
-import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
-import com.googlecode.android_scripting.interpreter.InterpreterUtils;
+package com.googlecode.android_scripting.interpreter;
 
 import android.content.Context;
 
 import java.io.File;
 
 /**
- * A description of the interpreters hosted by the ASE project.
+ * A description of the interpreters hosted by the SL4A project.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
-public abstract class AseHostedInterpreter implements InterpreterDescriptor {
+public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
 
   public static final String BASE_INSTALL_URL = "http://android-scripting.googlecode.com/files/";
   public static final String DALVIKVM = "/system/bin/dalvikvm";

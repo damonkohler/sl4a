@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase.interpreter;
+package com.googlecode.android_scripting.interpreter;
 
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;

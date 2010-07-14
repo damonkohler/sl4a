@@ -18,9 +18,9 @@ package com.googlecode.perlforandroid;
 
 import android.content.Context;
 
-import com.google.ase.interpreter.AseHostedInterpreter;
+import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
-public class PerlDescriptor extends AseHostedInterpreter {
+public class PerlDescriptor extends Sl4aHostedInterpreter {
 
   private final static String PERL = "perl";
 

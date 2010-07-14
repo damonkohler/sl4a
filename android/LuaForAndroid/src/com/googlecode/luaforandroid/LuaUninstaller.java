@@ -2,9 +2,9 @@ package com.googlecode.luaforandroid;
 
 import android.content.Context;
 
-import com.google.ase.AsyncTaskListener;
-import com.google.ase.InterpreterUninstaller;
 
+import com.googlecode.android_scripting.AsyncTaskListener;
+import com.googlecode.android_scripting.InterpreterUninstaller;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 

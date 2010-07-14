@@ -17,10 +17,10 @@
 
 package com.googlecode.tclforandroid;
 
-import com.google.ase.interpreter.InterpreterProvider;
 
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
+import com.googlecode.android_scripting.interpreter.InterpreterProvider;
 
 import java.io.File;
 import java.util.HashMap;

@@ -18,9 +18,9 @@ package com.googlecode.jrubyforandroid;
 
 import android.content.Context;
 
-import com.google.ase.interpreter.AseHostedInterpreter;
+import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
-public class JRubyDescriptor extends AseHostedInterpreter {
+public class JRubyDescriptor extends Sl4aHostedInterpreter {
 
   private final static String JRUBY_PREFIX =
       "-e $LOAD_PATH.push('file:%1$s/%2$s!/META-INF/jruby.home/lib/ruby/1.8'); require 'android'; %3$s";

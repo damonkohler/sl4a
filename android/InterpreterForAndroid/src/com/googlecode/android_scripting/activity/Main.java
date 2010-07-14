@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase.activity;
+package com.googlecode.android_scripting.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -34,10 +34,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.ase.AsyncTaskListener;
-import com.google.ase.InterpreterInstaller;
-import com.google.ase.InterpreterUninstaller;
 
+import com.googlecode.android_scripting.AsyncTaskListener;
+import com.googlecode.android_scripting.InterpreterInstaller;
+import com.googlecode.android_scripting.InterpreterUninstaller;
 import com.googlecode.android_scripting.Sl4aLog;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;

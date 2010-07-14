@@ -18,9 +18,9 @@ package com.googlecode.bshforandroid;
 
 import android.content.Context;
 
-import com.google.ase.interpreter.AseHostedInterpreter;
+import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
-public class BshDescriptor extends AseHostedInterpreter {
+public class BshDescriptor extends Sl4aHostedInterpreter {
 
   private final static String BSH_BIN = "bsh-2.0b4-dx.jar";
 

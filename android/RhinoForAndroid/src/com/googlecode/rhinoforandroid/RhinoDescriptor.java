@@ -18,9 +18,9 @@ package com.googlecode.rhinoforandroid;
 
 import android.content.Context;
 
-import com.google.ase.interpreter.AseHostedInterpreter;
+import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
-public class RhinoDescriptor extends AseHostedInterpreter {
+public class RhinoDescriptor extends Sl4aHostedInterpreter {
 
   private final static String RHINO_BIN = "rhino1_7R2-dex.jar";
 

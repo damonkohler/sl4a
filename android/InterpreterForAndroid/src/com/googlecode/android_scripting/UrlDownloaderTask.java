@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.googlecode.android_scripting;
 
 import android.app.ProgressDialog;
 import android.content.Context;

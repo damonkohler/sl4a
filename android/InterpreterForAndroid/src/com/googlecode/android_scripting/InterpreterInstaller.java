@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.googlecode.android_scripting;
 
 import java.io.File;
 import java.net.MalformedURLException;

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.googlecode.android_scripting;
 
 /**
  * This listener asynchronously receives a task result whenever it finishes. Should be implemented

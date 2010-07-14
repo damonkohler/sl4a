@@ -1,9 +1,9 @@
 package com.googlecode.luaforandroid;
 
-import com.google.ase.interpreter.InterpreterProvider;
 
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
+import com.googlecode.android_scripting.interpreter.InterpreterProvider;
 
 import java.util.HashMap;
 import java.util.Map;

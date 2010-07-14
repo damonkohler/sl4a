@@ -16,9 +16,9 @@
 
 package com.googlecode.pythonforandroid;
 
-import com.google.ase.interpreter.AseHostedInterpreter;
+import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
-public class PythonDescriptor extends AseHostedInterpreter {
+public class PythonDescriptor extends Sl4aHostedInterpreter {
 
   private static final String PYTHON_BIN = "bin/python";
 

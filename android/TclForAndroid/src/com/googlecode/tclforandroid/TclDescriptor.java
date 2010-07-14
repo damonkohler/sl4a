@@ -17,9 +17,9 @@
 
 package com.googlecode.tclforandroid;
 
-import com.google.ase.interpreter.AseHostedInterpreter;
+import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
-public class TclDescriptor extends AseHostedInterpreter {
+public class TclDescriptor extends Sl4aHostedInterpreter {
 
   private final static String TCL = "tclsh";
 
