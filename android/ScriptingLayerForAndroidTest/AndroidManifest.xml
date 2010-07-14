@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.google.ase.tests">
+  package="com.googlecode.android_scripting.tests">
   <application>
     <uses-library
       android:name="android.test.runner" />
@@ -10,6 +10,6 @@
     android:minSdkVersion="3" />
   <instrumentation
     android:name="android.test.InstrumentationTestRunner"
-    android:targetPackage="com.google.ase"
-    android:label="Tests for ASE." />
+    android:targetPackage="com.googlecode.android_scripting"
+    android:label="Tests for SL4A." />
 </manifest>
