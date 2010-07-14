@@ -33,7 +33,7 @@ import android.widget.ListView;
 
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
-import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.Sl4aLog;
@@ -72,7 +72,7 @@ public class TriggerManager extends ListActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Triggers", R.layout.trigger_manager);
-    mTriggerRepository = ((AseApplication) getApplication()).getTriggerRepository();
+    mTriggerRepository = ((Sl4aApplication) getApplication()).getTriggerRepository();
     mAlarmTriggerManager = new AlarmTriggerManager(this, mTriggerRepository);
     mTriggerList = mTriggerRepository.getAllTriggers();
     mAdapter = new TriggerAdapter();

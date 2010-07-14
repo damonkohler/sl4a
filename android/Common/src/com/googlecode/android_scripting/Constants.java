@@ -20,47 +20,70 @@ import android.content.ComponentName;
 
 public interface Constants {
 
-  public static final String ACTION_LAUNCH_SCRIPT = "com.google.ase.action.LAUNCH_SCRIPT";
-  public static final String ACTION_LAUNCH_TERMINAL = "com.google.ase.action.LAUNCH_TERMINAL";
-  public static final String ACTION_EDIT_SCRIPT = "com.google.ase.action.EDIT_SCRIPT";
-  public static final String ACTION_SAVE_SCRIPT = "com.google.ase.action.SAVE_SCRIPT";
+  public static final String ACTION_LAUNCH_SCRIPT =
+      "com.googlecode.android_scripting.action.LAUNCH_SCRIPT";
+  public static final String ACTION_LAUNCH_TERMINAL =
+      "com.googlecode.android_scripting.action.LAUNCH_TERMINAL";
+  public static final String ACTION_EDIT_SCRIPT =
+      "com.googlecode.android_scripting.action.EDIT_SCRIPT";
+  public static final String ACTION_SAVE_SCRIPT =
+      "com.googlecode.android_scripting.action.SAVE_SCRIPT";
   public static final String ACTION_SAVE_AND_RUN_SCRIPT =
-      "com.google.ase.action.SAVE_AND_RUN_SCRIPT";
-  public static final String ACTION_KILL_PROCESS = "com.google.ase.action.KILL_PROCESS";
-  public static final String ACTION_KILL_ALL = "com.google.ase.action.KILL_ALL";
+      "com.googlecode.android_scripting.action.SAVE_AND_RUN_SCRIPT";
+  public static final String ACTION_KILL_PROCESS =
+      "com.googlecode.android_scripting.action.KILL_PROCESS";
+  public static final String ACTION_KILL_ALL = "com.googlecode.android_scripting.action.KILL_ALL";
   public static final String ACTION_SHOW_RUNNING_SCRIPTS =
-      "com.google.ase.action.SHOW_RUNNING_SCRIPTS";
+      "com.googlecode.android_scripting.action.SHOW_RUNNING_SCRIPTS";
   public static final String ACTION_CANCEL_NOTIFICATION =
-      "com.google.ase.action.CANCEL_NOTIFICAITON";
-  public static final String ACTION_ACTIVITY_RESULT = "com.google.ase.action.ACTIVITY_RESULT";
-  public static final String ACTION_LAUNCH_SERVER = "com.google.ase.action.LAUNCH_SERVER";
+      "com.googlecode.android_scripting.action.CANCEL_NOTIFICAITON";
+  public static final String ACTION_ACTIVITY_RESULT =
+      "com.googlecode.android_scripting.action.ACTIVITY_RESULT";
+  public static final String ACTION_LAUNCH_SERVER =
+      "com.googlecode.android_scripting.action.LAUNCH_SERVER";
 
-  public static final String EXTRA_SCRIPT_NAME = "com.google.ase.extra.SCRIPT_NAME";
-  public static final String EXTRA_SCRIPT_CONTENT = "com.google.ase.extra.SCRIPT_CONTENT";
-  public static final String EXTRA_INTERPRETER_NAME = "com.google.ase.extra.INTERPRETER_NAME";
+  public static final String EXTRA_SCRIPT_NAME =
+      "com.googlecode.android_scripting.extra.SCRIPT_NAME";
+  public static final String EXTRA_SCRIPT_CONTENT =
+      "com.googlecode.android_scripting.extra.SCRIPT_CONTENT";
+  public static final String EXTRA_INTERPRETER_NAME =
+      "com.googlecode.android_scripting.extra.INTERPRETER_NAME";
 
-  public static final String EXTRA_USE_EXTERNAL_IP = "com.google.ase.extra.USE_PUBLIC_IP";
-  public static final String EXTRA_SCRIPT_TEXT = "com.google.ase.extra.SCRIPT_TEXT";
-  public static final String EXTRA_RPC_HELP_TEXT = "com.google.ase.extra.RPC_HELP_TEXT";
-  public static final String EXTRA_API_PROMPT_RPC_NAME = "com.google.ase.extra.API_PROMPT_RPC_NAME";
-  public static final String EXTRA_API_PROMPT_VALUES = "com.google.ase.extra.API_PROMPT_VALUES";
-  public static final String EXTRA_PROXY_PORT = "com.google.ase.extra.PROXY_PORT";
-  public static final String EXTRA_PROCESS_ID = "com.google.ase.extra.SCRIPT_PROCESS_ID";
-  public static final String EXTRA_IS_NEW_SCRIPT = "com.google.ase.extra.IS_NEW_SCRIPT";
-  public static final String EXTRA_TRIGGER_ID = "com.google.ase.extra.EXTRA_TRIGGER_ID";
+  public static final String EXTRA_USE_EXTERNAL_IP =
+      "com.googlecode.android_scripting.extra.USE_PUBLIC_IP";
+  public static final String EXTRA_SCRIPT_TEXT =
+      "com.googlecode.android_scripting.extra.SCRIPT_TEXT";
+  public static final String EXTRA_RPC_HELP_TEXT =
+      "com.googlecode.android_scripting.extra.RPC_HELP_TEXT";
+  public static final String EXTRA_API_PROMPT_RPC_NAME =
+      "com.googlecode.android_scripting.extra.API_PROMPT_RPC_NAME";
+  public static final String EXTRA_API_PROMPT_VALUES =
+      "com.googlecode.android_scripting.extra.API_PROMPT_VALUES";
+  public static final String EXTRA_PROXY_PORT = "com.googlecode.android_scripting.extra.PROXY_PORT";
+  public static final String EXTRA_PROCESS_ID =
+      "com.googlecode.android_scripting.extra.SCRIPT_PROCESS_ID";
+  public static final String EXTRA_IS_NEW_SCRIPT =
+      "com.googlecode.android_scripting.extra.IS_NEW_SCRIPT";
+  public static final String EXTRA_TRIGGER_ID =
+      "com.googlecode.android_scripting.extra.EXTRA_TRIGGER_ID";
   public static final String EXTRA_LAUNCH_IN_BACKGROUND =
-      "com.google.ase.extra.EXTRA_LAUNCH_IN_BACKGROUND";
+      "com.googlecode.android_scripting.extra.EXTRA_LAUNCH_IN_BACKGROUND";
 
   // BluetoothDeviceManager
-  public static final String EXTRA_DEVICE_ADDRESS = "com.google.ase.extra.device_address";
+  public static final String EXTRA_DEVICE_ADDRESS =
+      "com.googlecode.android_scripting.extra.device_address";
 
-  public static final ComponentName ASE_SERVICE_COMPONENT_NAME =
-      new ComponentName("com.google.ase", "com.google.ase.activity.AseService");
-  public static final ComponentName ASE_SERVICE_LAUNCHER_COMPONENT_NAME =
-      new ComponentName("com.google.ase", "com.google.ase.activity.AseServiceLauncher");
+  public static final ComponentName SL4A_SERVICE_COMPONENT_NAME =
+      new ComponentName("com.googlecode.android_scripting",
+          "com.googlecode.android_scripting.activity.Sl4aService");
+  public static final ComponentName SL4A_SERVICE_LAUNCHER_COMPONENT_NAME =
+      new ComponentName("com.googlecode.android_scripting",
+          "com.googlecode.android_scripting.activity.Sl4aServiceLauncher");
   public static final ComponentName BLUETOOTH_DEVICE_LIST_COMPONENT_NAME =
-      new ComponentName("com.google.ase", "com.google.ase.activity.BluetoothDeviceList");
+      new ComponentName("com.googlecode.android_scripting",
+          "com.googlecode.android_scripting.activity.BluetoothDeviceList");
   public static final ComponentName TRIGGER_SERVICE_COMPONENT_NAME =
-      new ComponentName("com.google.ase", "com.google.ase.activity.TriggerService");
+      new ComponentName("com.googlecode.android_scripting",
+          "com.googlecode.android_scripting.activity.TriggerService");
 
 }

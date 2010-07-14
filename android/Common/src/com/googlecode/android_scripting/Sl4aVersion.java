@@ -22,9 +22,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-public class AseVersion {
+public class Sl4aVersion {
 
-  private AseVersion() {
+  private Sl4aVersion() {
     // Utility class.
   }
 

@@ -16,17 +16,17 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import java.util.concurrent.CountDownLatch;
-
 import android.app.Dialog;
 
-import com.googlecode.android_scripting.activity.AseServiceHelper;
+import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
 
+import java.util.concurrent.CountDownLatch;
+
 abstract class RunnableDialog extends FutureActivityTask<Object> {
 
-  protected AseServiceHelper mActivity;
+  protected Sl4aServiceHelper mActivity;
   protected Dialog mDialog;
   protected FutureResult<Object> mResult;
   protected final CountDownLatch mShowLatch = new CountDownLatch(1);
@@ -39,7 +39,7 @@ abstract class RunnableDialog extends FutureActivityTask<Object> {
   }
 
   /**
-   * Dismiss the {@link Dialog} and close {@link AseActivity}.
+   * Dismiss the {@link Dialog} and close {@link Sl4aActivity}.
    */
   public void dismissDialog() {
     mDialog.dismiss();

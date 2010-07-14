@@ -25,7 +25,7 @@ import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 
-public class AseApplication extends Application {
+public class Sl4aApplication extends Application {
 
   private final Queue<FutureActivityTask<?>> mTaskQueue =
       new ConcurrentLinkedQueue<FutureActivityTask<?>>();

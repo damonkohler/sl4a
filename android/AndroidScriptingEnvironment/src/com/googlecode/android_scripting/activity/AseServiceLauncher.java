@@ -29,7 +29,7 @@ public class AseServiceLauncher extends Activity {
     super.onCreate(savedInstanceState);
     // Forward the intent that launched us to start the service.
     Intent intent = getIntent();
-    intent.setComponent(Constants.ASE_SERVICE_COMPONENT_NAME);
+    intent.setComponent(Constants.SL4A_SERVICE_COMPONENT_NAME);
     startService(intent);
     finish();
   }

@@ -28,9 +28,9 @@ import android.provider.Settings.SettingNotFoundException;
 import android.view.WindowManager;
 
 
-import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Sl4aLog;
-import com.googlecode.android_scripting.activity.AseServiceHelper;
+import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
@@ -177,7 +177,7 @@ public class SettingsFacade extends RpcReceiver {
 
     FutureActivityTask<Object> task = new FutureActivityTask<Object>() {
       @Override
-      public void run(final AseServiceHelper activity, FutureResult<Object> result) {
+      public void run(final Sl4aServiceHelper activity, FutureResult<Object> result) {
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         lp.screenBrightness = brightness * 1.0f / 255;
         activity.getWindow().setAttributes(lp);
@@ -187,10 +187,10 @@ public class SettingsFacade extends RpcReceiver {
     };
 
     Queue<FutureActivityTask<?>> taskQueue =
-        ((AseApplication) mService.getApplication()).getTaskQueue();
+        ((Sl4aApplication) mService.getApplication()).getTaskQueue();
     taskQueue.offer(task);
 
-    Intent helper = new Intent(mService, AseServiceHelper.class);
+    Intent helper = new Intent(mService, Sl4aServiceHelper.class);
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     mService.startActivity(helper);
 

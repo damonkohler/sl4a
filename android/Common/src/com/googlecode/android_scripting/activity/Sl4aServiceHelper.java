@@ -16,27 +16,27 @@
 
 package com.googlecode.android_scripting.activity;
 
-import java.util.HashMap;
-import java.util.Queue;
-
 import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
 
+import java.util.HashMap;
+import java.util.Queue;
+
 /**
- * This {@link Activity} is launched by the {@link AseService} in order to perform operations that a
- * {@link Service} is unable to do. For example: start another activity for result, show dialogs,
+ * This {@link Activity} is launched by the {@link Sl4aService} in order to perform operations that
+ * a {@link Service} is unable to do. For example: start another activity for result, show dialogs,
  * etc.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class AseServiceHelper extends Activity {
+public class Sl4aServiceHelper extends Activity {
   Queue<FutureActivityTask<?>> mTaskQueue;
   private Handler mHandler;
   private HashMap<Integer, FutureResult<?>> mResultMap;
@@ -45,7 +45,7 @@ public class AseServiceHelper extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mHandler = new Handler();
-    mTaskQueue = ((AseApplication) getApplication()).getTaskQueue();
+    mTaskQueue = ((Sl4aApplication) getApplication()).getTaskQueue();
     mResultMap = new HashMap<Integer, FutureResult<?>>();
     setPersistent(true);
   }

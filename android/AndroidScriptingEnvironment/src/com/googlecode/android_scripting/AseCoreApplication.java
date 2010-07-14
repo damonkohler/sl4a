@@ -17,9 +17,9 @@
 package com.googlecode.android_scripting;
 
 import com.googlecode.android_scripting.Analytics;
-import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.Sl4aApplication;
 
-public class AseCoreApplication extends AseApplication {
+public class AseCoreApplication extends Sl4aApplication {
 
   @Override
   public void onCreate() {

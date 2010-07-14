@@ -16,14 +16,14 @@
 
 package com.googlecode.android_scripting.language;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.ParameterDescriptor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Represents the programming language supported by the ASE.
+ * Represents the programming language supported by the SL4A.
  * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */

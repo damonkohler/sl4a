@@ -28,8 +28,8 @@ import android.content.Intent;
 import android.util.AndroidRuntimeException;
 
 
-import com.googlecode.android_scripting.AseApplication;
-import com.googlecode.android_scripting.activity.AseServiceHelper;
+import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.future.FutureActivityTask;
@@ -53,11 +53,11 @@ public class UiFacade extends RpcReceiver {
   public UiFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
-    mTaskQueue = ((AseApplication) mService.getApplication()).getTaskQueue();
+    mTaskQueue = ((Sl4aApplication) mService.getApplication()).getTaskQueue();
   }
 
   private void launchHelper() {
-    Intent helper = new Intent(mService, AseServiceHelper.class);
+    Intent helper = new Intent(mService, Sl4aServiceHelper.class);
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     mService.startActivity(helper);
   }

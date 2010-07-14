@@ -16,10 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import android.app.Service;
 import android.content.Context;
 import android.os.PowerManager;
@@ -27,6 +23,10 @@ import android.os.PowerManager.WakeLock;
 
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * A facade exposing some of the functionality of the PowerManager, in particular wake locks.
@@ -36,7 +36,8 @@ import com.googlecode.android_scripting.rpc.Rpc;
  */
 public class WakeLockFacade extends RpcReceiver {
 
-  private final static String WAKE_LOCK_TAG = "com.google.ase.facade.PowerManagerFacade";
+  private final static String WAKE_LOCK_TAG =
+      "com.googlecode.android_scripting.facade.PowerManagerFacade";
 
   private enum WakeLockType {
     FULL, PARTIAL, BRIGHT, DIM

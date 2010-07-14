@@ -29,7 +29,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 
-public class AseProcess {
+public class Sl4aProcess {
 
   private static final int DEFAULT_BUFFER_SIZE = 8192;
 
@@ -39,7 +39,7 @@ public class AseProcess {
   protected PrintStream mOut;
   protected Reader mIn;
 
-  public AseProcess() {
+  public Sl4aProcess() {
   }
 
   public Integer getPid() {

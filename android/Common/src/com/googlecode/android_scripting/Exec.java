@@ -65,6 +65,6 @@ public class Exec {
   public static native int waitFor(int processId);
 
   static {
-    System.loadLibrary("com_google_ase_Exec");
+    System.loadLibrary("com_googlecode_android_scripting_Exec");
   }
 }

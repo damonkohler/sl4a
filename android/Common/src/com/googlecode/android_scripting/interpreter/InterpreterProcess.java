@@ -16,7 +16,7 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import com.googlecode.android_scripting.AseProcess;
+import com.googlecode.android_scripting.Sl4aProcess;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import java.util.Map.Entry;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public abstract class InterpreterProcess extends AseProcess {
+public abstract class InterpreterProcess extends Sl4aProcess {
 
   protected String mLaunchScript;
   protected Map<String, String> mEnvironment = new HashMap<String, String>();

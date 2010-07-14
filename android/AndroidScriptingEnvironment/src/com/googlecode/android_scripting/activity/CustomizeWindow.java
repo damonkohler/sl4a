@@ -20,7 +20,7 @@ import android.app.Activity;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.googlecode.android_scripting.AseVersion;
+import com.googlecode.android_scripting.Sl4aVersion;
 import com.googlecode.android_scripting.R;
 
 public class CustomizeWindow {
@@ -34,6 +34,6 @@ public class CustomizeWindow {
     activity.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
     ((TextView) activity.findViewById(R.id.left_text)).setText(title);
     ((TextView) activity.findViewById(R.id.right_text)).setText("ASE r"
-        + AseVersion.getVersion(activity));
+        + Sl4aVersion.getVersion(activity));
   }
 }

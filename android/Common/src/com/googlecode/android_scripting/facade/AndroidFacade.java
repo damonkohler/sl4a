@@ -16,12 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.util.Queue;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -42,11 +36,10 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
-import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Sl4aLog;
-import com.googlecode.android_scripting.activity.AseServiceHelper;
 import com.googlecode.android_scripting.activity.NotificationIdFactory;
+import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
@@ -56,13 +49,19 @@ import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Queue;
+
 public class AndroidFacade extends RpcReceiver {
   /**
    * An instance of this interface is passed to the facade. From this object, the resource IDs can
    * be obtained.
    */
   public interface Resources {
-    int getAseLogo48();
+    int getSl4aLogo48();
   }
 
   private final Service mService;
@@ -83,7 +82,7 @@ public class AndroidFacade extends RpcReceiver {
     super(manager);
     mService = manager.getService();
     mIntent = manager.getIntent();
-    AseApplication application = ((AseApplication) mService.getApplication());
+    Sl4aApplication application = ((Sl4aApplication) mService.getApplication());
     mTaskQueue = application.getTaskQueue();
     mHandler = new Handler(mService.getMainLooper());
     mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);
@@ -116,7 +115,7 @@ public class AndroidFacade extends RpcReceiver {
   Intent startActivityForResult(final Intent intent) {
     FutureActivityTask<Intent> task = new FutureActivityTask<Intent>() {
       @Override
-      public void run(AseServiceHelper activity, FutureResult<Intent> result) {
+      public void run(Sl4aServiceHelper activity, FutureResult<Intent> result) {
         // TODO(damonkohler): Throwing an exception here (e.g. specifying a non-existent activity)
         // causes a force close. There needs to be a way to pass back an error condition from the
         // helper.
@@ -138,7 +137,7 @@ public class AndroidFacade extends RpcReceiver {
   }
 
   private void launchHelper() {
-    Intent helper = new Intent(mService, AseServiceHelper.class);
+    Intent helper = new Intent(mService, Sl4aServiceHelper.class);
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     mService.startActivity(helper);
   }
@@ -236,7 +235,7 @@ public class AndroidFacade extends RpcReceiver {
       final boolean password) {
     final FutureActivityTask<String> task = new FutureActivityTask<String>() {
       @Override
-      public void run(final AseServiceHelper activity, final FutureResult<String> result) {
+      public void run(final Sl4aServiceHelper activity, final FutureResult<String> result) {
         final EditText input = new EditText(activity);
         if (password) {
           input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -286,14 +285,14 @@ public class AndroidFacade extends RpcReceiver {
 
   @Rpc(description = "Queries the user for a text input.")
   public String getInput(
-      @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("ASE Input") final String title,
+      @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("SL4A Input") final String title,
       @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message) {
     return getInputFromAlertDialog(title, message, false);
   }
 
   @Rpc(description = "Queries the user for a password.")
   public String getPassword(
-      @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("ASE Password Input") final String title,
+      @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("SL4A Password Input") final String title,
       @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter password:") final String message) {
     return getInputFromAlertDialog(title, message, true);
   }
@@ -302,7 +301,7 @@ public class AndroidFacade extends RpcReceiver {
   public void notify(@RpcParameter(name = "title", description = "title") String title,
       @RpcParameter(name = "message") String message) {
     Notification notification =
-        new Notification(mResources.getAseLogo48(), message, System.currentTimeMillis());
+        new Notification(mResources.getSl4aLogo48(), message, System.currentTimeMillis());
     // This contentIntent is a noop.
     PendingIntent contentIntent = PendingIntent.getService(mService, 0, new Intent(), 0);
     notification.setLatestEventInfo(mService, title, message, contentIntent);
@@ -390,15 +389,15 @@ public class AndroidFacade extends RpcReceiver {
   }
 
   /**
-   * Check if ASE is higher or equal of specified version
+   * Check if SL4A is higher or equal of specified version
    * 
    * @param version
    * @return
    */
-  @Rpc(description = "Check if ASE is higher or equal of specified version")
+  @Rpc(description = "Check if SL4A is higher or equal of specified version")
   public boolean requiredVersion(@RpcParameter(name = "requiredVersion") final Integer version) {
     boolean result = false;
-    int packageVersion = getPackageVersionCode("com.google.ase");
+    int packageVersion = getPackageVersionCode("com.googlecode.android_scripting");
     if (version > -1) {
       result = (packageVersion >= version);
     }

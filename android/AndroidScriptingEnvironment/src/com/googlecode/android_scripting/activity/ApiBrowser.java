@@ -36,7 +36,7 @@ import android.widget.TextView;
 
 
 import com.googlecode.android_scripting.Analytics;
-import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.Sl4aLog;
@@ -202,7 +202,7 @@ public class ApiBrowser extends ListActivity {
   private void insertText(MethodDescriptor rpc, String[] values) {
     String scriptText = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_TEXT);
     InterpreterConfiguration config =
-        ((AseApplication) getApplication()).getInterpreterConfiguration();
+        ((Sl4aApplication) getApplication()).getInterpreterConfiguration();
 
     InterpreterAgent interpreter =
         config.getInterpreterByName(getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));

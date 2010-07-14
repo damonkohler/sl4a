@@ -28,7 +28,7 @@ import android.widget.RemoteViews;
 
 
 import com.googlecode.android_scripting.AndroidProxy;
-import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
@@ -154,7 +154,7 @@ public class AseService extends Service {
 
   private ScriptLauncher launchScript(Intent intent, AndroidProxy proxy) throws Sl4aException {
     InterpreterConfiguration config =
-        ((AseApplication) getApplication()).getInterpreterConfiguration();
+        ((Sl4aApplication) getApplication()).getInterpreterConfiguration();
     ScriptLauncher launcher = new ScriptLauncher(proxy, intent, config);
     final int port = proxy.getAddress().getPort();
     launcher.launch(new Runnable() {
@@ -265,7 +265,7 @@ public class AseService extends Service {
 
   /** Returns the {@link TriggerInfo} for the given intent, or null if none exists. */
   private Trigger getTrigger(Intent intent) {
-    final AseApplication application = (AseApplication) getApplication();
+    final Sl4aApplication application = (Sl4aApplication) getApplication();
     final String triggerIdExtra = intent.getStringExtra(Constants.EXTRA_TRIGGER_ID);
     if (triggerIdExtra == null) {
       return null;

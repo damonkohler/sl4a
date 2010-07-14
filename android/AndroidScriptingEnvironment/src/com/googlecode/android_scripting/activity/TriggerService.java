@@ -26,7 +26,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
-import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
@@ -71,7 +71,7 @@ public class TriggerService extends Service {
     super.onCreate();
 
     mTriggerServiceNotificationId = NotificationIdFactory.create();
-    AseApplication application = (AseApplication) getApplication();
+    Sl4aApplication application = (Sl4aApplication) getApplication();
     mTriggerRepository = application.getTriggerRepository();
     mTriggerRepository.registerAddTriggerListener(mAddTriggerListener);
 

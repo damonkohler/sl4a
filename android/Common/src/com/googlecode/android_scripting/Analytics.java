@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
 public class Analytics {
   private static GoogleAnalyticsTracker mTracker;
   private static SharedPreferences mPrefs;
-  private static String mAseVersion;
+  private static String mSl4aVersion;
   private static ExecutorService mWorkPool;
   private static volatile boolean mStarted = false;
 
@@ -42,7 +42,7 @@ public class Analytics {
     if (context == null || analyticsAccountId == null) {
       return;
     }
-    mAseVersion = AseVersion.getVersion(context);
+    mSl4aVersion = Sl4aVersion.getVersion(context);
     mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     mTracker = GoogleAnalyticsTracker.getInstance();
     mTracker.start(analyticsAccountId, 10, context);
@@ -68,7 +68,7 @@ public class Analytics {
       mWorkPool.submit(new Runnable() {
         public void run() {
           PageNameBuilder builder = new PageNameBuilder();
-          builder.add(mAseVersion);
+          builder.add(mSl4aVersion);
           for (String part : nameParts) {
             builder.add(part);
           }

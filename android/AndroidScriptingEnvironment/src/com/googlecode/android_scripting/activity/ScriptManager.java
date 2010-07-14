@@ -39,7 +39,7 @@ import android.widget.TextView;
 
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
-import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
@@ -91,7 +91,7 @@ public class ScriptManager extends ListActivity {
     mAdapter = new ScriptManagerAdapter();
     mObserver = new ScriptListObserver();
     mAdapter.registerDataSetObserver(mObserver);
-    mConfiguration = ((AseApplication) getApplication()).getInterpreterConfiguration();
+    mConfiguration = ((Sl4aApplication) getApplication()).getInterpreterConfiguration();
     mScriptList = new ArrayList<File>();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());

@@ -25,7 +25,8 @@ import android.os.PowerManager.WakeLock;
 import com.googlecode.android_scripting.IntentBuilders;
 
 public abstract class RepeatingAlarmTrigger extends Trigger {
-  private static final String WAKE_LOCK_TAG = "com.google.ase.trigger.RepeatingAlarmTrigger";
+  private static final String WAKE_LOCK_TAG =
+      "com.googlecode.android_scripting.trigger.RepeatingAlarmTrigger";
 
   /** The {@link WakeLock} held during the execution of the trigger. */
   private transient WakeLock mWakeLock = null;

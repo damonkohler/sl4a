@@ -3,7 +3,7 @@ package com.googlecode.android_scripting.facade;
 import android.app.Service;
 import android.content.Intent;
 
-import com.googlecode.android_scripting.AseApplication;
+import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
@@ -21,7 +21,7 @@ public class FacadeManager extends RpcReceiverManager {
     super(classList);
     mService = service;
     mIntent = intent;
-    mTriggerRepository = ((AseApplication) service.getApplication()).getTriggerRepository();
+    mTriggerRepository = ((Sl4aApplication) service.getApplication()).getTriggerRepository();
   }
 
   public Service getService() {
@@ -39,7 +39,7 @@ public class FacadeManager extends RpcReceiverManager {
   public AndroidFacade.Resources getAndroidFacadeResources() {
     return new AndroidFacade.Resources() {
       @Override
-      public int getAseLogo48() {
+      public int getSl4aLogo48() {
         // TODO(Alexey): As an alternative, ask application for resource ids.
         String packageName = mService.getApplication().getPackageName();
         return mService.getResources().getIdentifier("script_logo_48", "drawable", packageName);

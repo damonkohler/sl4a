@@ -47,7 +47,7 @@ public class IntentBuilders {
    * @return the intent that will launch the script
    */
   public static Intent buildStartInBackgroundIntent(String scriptName) {
-    final ComponentName componentName = Constants.ASE_SERVICE_LAUNCHER_COMPONENT_NAME;
+    final ComponentName componentName = Constants.SL4A_SERVICE_LAUNCHER_COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_SCRIPT);
@@ -63,7 +63,7 @@ public class IntentBuilders {
    * @return the intent that will launch the script
    */
   public static Intent buildStartInTerminalIntent(String scriptName) {
-    final ComponentName componentName = Constants.ASE_SERVICE_LAUNCHER_COMPONENT_NAME;
+    final ComponentName componentName = Constants.SL4A_SERVICE_LAUNCHER_COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
@@ -120,7 +120,7 @@ public class IntentBuilders {
     intent.putExtra(Constants.EXTRA_TRIGGER_ID, trigger.getId().toString());
     intent.setData(Uri.fromParts("trigger", trigger.getScriptName().toLowerCase(), ""
         + trigger.getId()));
-    intent.setComponent(Constants.ASE_SERVICE_COMPONENT_NAME);
+    intent.setComponent(Constants.SL4A_SERVICE_COMPONENT_NAME);
     return PendingIntent.getService(context, EXECUTE_SCRIPT_REQUEST_CODE, intent,
         PendingIntent.FLAG_UPDATE_CURRENT);
   }

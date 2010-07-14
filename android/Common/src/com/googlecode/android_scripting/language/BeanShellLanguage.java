@@ -26,7 +26,7 @@ public class BeanShellLanguage extends Language {
   @Override
   protected String getImportStatement() {
     // FIXME(igor.v.karp): this is interpreter specific
-    return "source(\"/sdcard/ase/extras/bsh/android.bsh\");\n";
+    return "source(\"/sdcard/sl4a/extras/bsh/android.bsh\");\n";
   }
 
   @Override
