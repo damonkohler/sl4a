@@ -21,7 +21,7 @@ public class JRubyInstaller extends InterpreterInstaller {
 
   @Override
   protected boolean setup() {
-    File dalvikCache = new File(InterpreterConstants.ASE_DALVIK_CACHE_ROOT);
+    File dalvikCache = new File(InterpreterConstants.SL4A_DALVIK_CACHE_ROOT);
     if (!dalvikCache.isDirectory()) {
       try {
         dalvikCache.mkdir();

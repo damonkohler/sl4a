@@ -66,7 +66,7 @@ public class TclProvider extends InterpreterProvider {
     settings.put(ENV_LIB, getExtras());
     settings.put(ENV_TEMP, getTemp());
     settings.put(ENV_SCRIPTS, InterpreterConstants.SCRIPTS_ROOT);
-    settings.put(ENV_HOME_GLOBAL, InterpreterConstants.SDCARD_ASE_ROOT);
+    settings.put(ENV_HOME_GLOBAL, InterpreterConstants.SDCARD_SL4A_ROOT);
     return settings;
   }
 

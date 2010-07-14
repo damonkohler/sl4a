@@ -31,24 +31,27 @@ public interface InterpreterConstants {
 
   public static final String DOWNLOAD_ROOT = SDCARD_ROOT;
 
-  public static final String SDCARD_ASE_ROOT = SDCARD_ROOT + "ase/";
+  public static final String SDCARD_SL4A_ROOT = SDCARD_ROOT + "sl4a/";
 
-  public static final String ASE_DALVIK_CACHE_ROOT = SDCARD_ASE_ROOT + "dalvik-cache/";
+  public static final String SL4A_DALVIK_CACHE_ROOT = SDCARD_SL4A_ROOT + "dalvik-cache/";
 
-  public static final String INTERPRETER_EXTRAS_ROOT = SDCARD_ASE_ROOT + "extras/";
+  public static final String INTERPRETER_EXTRAS_ROOT = SDCARD_SL4A_ROOT + "extras/";
 
-  public static final String SCRIPTS_ROOT = SDCARD_ASE_ROOT + "scripts/";
+  public static final String SCRIPTS_ROOT = SDCARD_SL4A_ROOT + "scripts/";
 
   // Interpreters discovery mechanism
-  public static final String ACTION_DISCOVER_INTERPRETERS = "com.google.ase.DISCOVER_INTERPRETERS";
+  public static final String ACTION_DISCOVER_INTERPRETERS =
+      "com.googlecode.android_scripting.DISCOVER_INTERPRETERS";
   // Interpreters broadcasts
-  public static final String ACTION_INTERPRETER_ADDED = "com.google.ase.INTERPRETER_ADDED";
-  public static final String ACTION_INTERPRETER_REMOVED = "com.google.ase.INTERPRETER_REMOVED";
+  public static final String ACTION_INTERPRETER_ADDED =
+      "com.googlecode.android_scripting.INTERPRETER_ADDED";
+  public static final String ACTION_INTERPRETER_REMOVED =
+      "com.googlecode.android_scripting.INTERPRETER_REMOVED";
   // Interpreter content provider
-  public static final String PROVIDER_BASE = "com.google.ase.base";
-  public static final String PROVIDER_ENV = "com.google.ase.env";
-  public static final String PROVIDER_ARGS = "com.google.ase.args";
+  public static final String PROVIDER_BASE = "com.googlecode.android_scripting.base";
+  public static final String PROVIDER_ENV = "com.googlecode.android_scripting.env";
+  public static final String PROVIDER_ARGS = "com.googlecode.android_scripting.args";
 
-  public static final String INSTALL_PREF = "ASE.interpreter.installed";
+  public static final String INSTALL_PREF = "SL4A.interpreter.installed";
 
 }

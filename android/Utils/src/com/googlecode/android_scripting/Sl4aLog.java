@@ -30,7 +30,7 @@ public class Sl4aLog {
     String fullClassName = stackTraceElements[4].getClassName();
     String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
     int lineNumber = stackTraceElements[4].getLineNumber();
-    return "ase." + className + ":" + lineNumber;
+    return "sl4a." + className + ":" + lineNumber;
   }
 
   private static void toast(Context context, String message) {
