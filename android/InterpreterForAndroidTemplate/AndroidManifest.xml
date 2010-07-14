@@ -11,7 +11,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.google.ase.DISCOVER_INTERPRETERS"/>
+                <action android:name="com.googlecode.android_scripting.DISCOVER_INTERPRETERS"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
     </activity>
