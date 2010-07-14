@@ -27,9 +27,9 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.LiveFolders;
 
-import com.google.ase.ScriptStorageAdapter;
 
 import com.googlecode.android_scripting.IntentBuilders;
+import com.googlecode.android_scripting.ScriptStorageAdapter;
 
 public class ScriptProvider extends ContentProvider {
 

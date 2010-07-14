@@ -32,12 +32,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.ase.ScriptLauncher;
-import com.google.ase.ScriptProcess;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.ScriptLauncher;
+import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.Sl4aLog;
 import com.googlecode.android_scripting.activity.AsePreferences;
 import com.googlecode.android_scripting.activity.AseService;

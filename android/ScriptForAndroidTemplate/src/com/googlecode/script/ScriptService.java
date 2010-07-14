@@ -6,10 +6,9 @@ import android.content.res.Resources;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.google.ase.AndroidProxy;
-import com.google.ase.ScriptLauncher;
-import com.google.ase.ScriptStorageAdapter;
-
+import com.googlecode.android_scripting.AndroidProxy;
+import com.googlecode.android_scripting.ScriptLauncher;
+import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.Sl4aLog;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;

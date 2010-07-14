@@ -34,13 +34,13 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.ase.ScriptStorageAdapter;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.AseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.Sl4aLog;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;

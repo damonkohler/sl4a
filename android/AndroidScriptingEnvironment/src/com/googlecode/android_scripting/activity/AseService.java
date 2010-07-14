@@ -26,13 +26,13 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
-import com.google.ase.AndroidProxy;
-import com.google.ase.ScriptLauncher;
-import com.google.ase.ScriptProcess;
 
+import com.googlecode.android_scripting.AndroidProxy;
 import com.googlecode.android_scripting.AseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.ScriptLauncher;
+import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.Sl4aLog;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase.facade;
+package com.googlecode.android_scripting.facade;
 
 import java.util.ArrayList;
 import java.util.Collection;

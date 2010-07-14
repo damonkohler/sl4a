@@ -21,8 +21,8 @@ import java.lang.reflect.Type;
 
 import android.test.AndroidTestCase;
 
-import com.google.ase.facade.FacadeConfiguration;
 
+import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;

@@ -34,13 +34,13 @@ import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.google.ase.facade.FacadeConfiguration;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.AseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.language.SupportedLanguages;

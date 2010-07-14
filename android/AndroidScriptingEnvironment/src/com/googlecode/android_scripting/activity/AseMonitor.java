@@ -36,11 +36,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.ase.ScriptProcess;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.Sl4aLog;
 import com.googlecode.android_scripting.terminal.Terminal;
 

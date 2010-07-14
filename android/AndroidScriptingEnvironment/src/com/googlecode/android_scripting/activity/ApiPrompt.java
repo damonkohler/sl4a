@@ -32,11 +32,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.ase.facade.FacadeConfiguration;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 
 /**
