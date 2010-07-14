@@ -2,7 +2,7 @@ package com.dummy.fooforandroid;
 
 import android.content.Context;
 
-import com.google.ase.interpreter.InterpreterDescriptor;
+import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 
 public class FooDescriptor implements InterpreterDescriptor {
 

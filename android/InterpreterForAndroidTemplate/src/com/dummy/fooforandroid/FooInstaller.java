@@ -2,15 +2,15 @@ package com.dummy.fooforandroid;
 
 import android.content.Context;
 
-import com.google.ase.AsyncTaskListener;
-import com.google.ase.InterpreterInstaller;
-import com.google.ase.exception.AseException;
-import com.google.ase.interpreter.InterpreterDescriptor;
+import com.googlecode.android_scripting.AsyncTaskListener;
+import com.googlecode.android_scripting.InterpreterInstaller;
+import com.googlecode.android_scripting.exception.Sl4aException;
+import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 
 public class FooInstaller extends InterpreterInstaller {
 
   public FooInstaller(InterpreterDescriptor descriptor, Context context,
-      AsyncTaskListener<Boolean> listener) throws AseException {
+      AsyncTaskListener<Boolean> listener) throws Sl4aException {
     super(descriptor, context, listener);
   }
 

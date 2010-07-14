@@ -1,7 +1,7 @@
 package com.dummy.fooforandroid;
 
-import com.google.ase.interpreter.InterpreterDescriptor;
-import com.google.ase.interpreter.InterpreterProvider;
+import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
+import com.googlecode.android_scripting.interpreter.InterpreterProvider;
 
 import java.util.Map;
 
