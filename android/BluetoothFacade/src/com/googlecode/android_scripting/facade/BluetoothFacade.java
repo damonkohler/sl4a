@@ -21,13 +21,9 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Looper;
 
-
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.MainThread;
 import com.googlecode.android_scripting.Sl4aLog;
-import com.googlecode.android_scripting.facade.AndroidFacade;
-import com.googlecode.android_scripting.facade.EventFacade;
-import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
@@ -40,7 +36,7 @@ import java.util.concurrent.Callable;
 
 public class BluetoothFacade extends RpcReceiver {
 
-  // UUID for ASE.
+  // UUID for SL4A.
   private static final String DEFAULT_UUID = "457807c0-4897-11df-9879-0800200c9a66";
 
   AndroidFacade mAndroidFacade;

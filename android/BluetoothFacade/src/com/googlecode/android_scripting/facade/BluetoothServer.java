@@ -16,6 +16,12 @@
 
 package com.googlecode.android_scripting.facade;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,21 +30,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
-
-import com.googlecode.android_scripting.Sl4aLog;
-import com.googlecode.android_scripting.facade.EventFacade;
-
 /**
  * This class does all the work for setting up and managing Bluetooth connections with other
  * devices. It has a thread that listens for incoming connections, a thread for connecting with a
  * device, and a thread for performing data transmissions when connected.
  */
 public class BluetoothServer {
-  private static final String SDP_NAME = "ASE";
+  private static final String SDP_NAME = "SL4A";
 
   private final BluetoothAdapter mAdapter;
   private final EventFacade mEventFacade;
