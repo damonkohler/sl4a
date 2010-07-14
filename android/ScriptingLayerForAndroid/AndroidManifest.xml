@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.googlecode.android_scripting"
+  android:versionName="25"
+  android:versionCode="25">
+  <application
+    android:debuggable="true"
+    android:icon="@drawable/sl4a_logo_48"
+    android:label="@string/application_title"
+    android:name=".Sl4aCoreApplication">
+    <activity
+      android:name=".activity.ScriptManager"
+      android:launchMode="singleTask"
+      android:configChanges="keyboardHidden|orientation">
+      <intent-filter>
+        <action
+          android:name="android.intent.action.MAIN" />
+        <category
+          android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name=".activity.ScriptPicker"
+      android:configChanges="keyboardHidden|orientation">
+      <intent-filter>
+        <action
+          android:name="android.intent.action.CREATE_SHORTCUT" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+      <intent-filter>
+        <action
+          android:name="android.intent.action.PICK" />
+        <data
+          android:scheme="content"
+          android:path="sl4a/scripts" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+    <activity-alias
+      android:name="LocalePlugin"
+      android:targetActivity=".activity.ScriptPicker"
+      android:label="@string/application_title"
+      android:icon="@drawable/sl4a_logo_32">
+      <intent-filter>
+        <action
+          android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+      </intent-filter>
+    </activity-alias>
+    <receiver
+      android:name=".locale.LocaleReceiver">
+      <intent-filter>
+        <action
+          android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
+      </intent-filter>
+    </receiver>
+    <activity
+      android:name=".activity.Sl4aPreferences"
+      android:theme="@android:style/Theme.NoTitleBar" />
+    <activity
+      android:name=".terminal.Terminal"
+      android:theme="@android:style/Theme.NoTitleBar"
+      android:configChanges="keyboardHidden|orientation"
+      android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+      android:finishOnTaskLaunch="true">
+    </activity>
+    <activity
+      android:name=".activity.ScriptEditor"
+      android:theme="@android:style/Theme.NoTitleBar"
+      android:configChanges="keyboardHidden|orientation"
+      android:windowSoftInputMode="stateAlwaysVisible|adjustResize">
+      <intent-filter>
+        <action
+          android:name="com.googlecode.android_scripting.action.EDIT_SCRIPT" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name=".activity.ApiBrowser"
+      android:theme="@android:style/Theme.NoTitleBar"
+      android:configChanges="keyboardHidden|orientation" />
+    <activity
+      android:name=".activity.ApiPrompt"
+      android:theme="@android:style/Theme.NoTitleBar"
+      android:configChanges="keyboardHidden|orientation" />
+    <activity
+      android:name=".activity.TriggerManager"
+      android:launchMode="singleTask"
+      android:configChanges="keyboardHidden|orientation" />
+    <activity
+      android:name=".activity.BluetoothDeviceList"
+      android:configChanges="keyboardHidden|orientation" />
+    <activity
+      android:name=".activity.Sl4aServiceLauncher"
+      android:taskAffinity=""
+      android:theme="@android:style/Theme.Translucent.NoTitleBar">
+      <intent-filter>
+        <action
+          android:name="android.intent.action.VIEW" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name=".activity.Sl4aServiceHelper"
+      android:theme="@android:style/Theme.Translucent.NoTitleBar"
+      android:configChanges="keyboardHidden|orientation"
+      android:launchMode="singleTask" />
+    <service
+      android:name=".activity.Sl4aService" />
+    <service
+      android:name=".activity.TriggerService" />
+    <activity
+      android:name=".activity.InterpreterManager"
+      android:launchMode="singleTask"
+      android:configChanges="keyboardHidden|orientation" />
+    <activity
+      android:name=".activity.LogcatViewer"
+      android:launchMode="singleTask"
+      android:configChanges="keyboardHidden|orientation" />
+    <activity
+      android:name=".activity.ScriptsLiveFolder"
+      android:label="Scripts"
+      android:configChanges="keyboardHidden|orientation">
+      <intent-filter>
+        <action
+          android:name="android.intent.action.CREATE_LIVE_FOLDER" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+    <provider
+      android:name=".provider.ScriptProvider"
+      android:authorities="com.googlecode.android_scripting.provider.scriptprovider" />
+    <uses-library
+      android:name="android.test.runner" />
+    <activity
+      android:name=".activity.Sl4aMonitor"
+      android:launchMode="singleTask" />
+  </application>
+  <uses-permission
+    android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+  <uses-permission
+    android:name="android.permission.INTERNET" />
+  <uses-permission
+    android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission
+    android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission
+    android:name="android.permission.CALL_PHONE" />
+  <uses-permission
+    android:name="android.permission.SEND_SMS" />
+  <uses-permission
+    android:name="android.permission.READ_SMS" />
+  <uses-permission
+    android:name="android.permission.WRITE_SMS" />
+  <uses-permission
+    android:name="android.permission.VIBRATE" />
+  <uses-permission
+    android:name="android.permission.ACCESS_WIFI_STATE" />
+  <uses-permission
+    android:name="android.permission.CHANGE_WIFI_STATE" />
+  <uses-permission
+    android:name="android.permission.READ_PHONE_STATE" />
+  <uses-permission
+    android:name="android.permission.PERSISTENT_ACTIVITY" />
+  <uses-permission
+    android:name="android.permission.RESTART_PACKAGES" />
+  <uses-permission
+    android:name="android.permission.GET_TASKS" />
+  <uses-permission
+    android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission
+    android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission
+    android:name="android.permission.RECORD_AUDIO" />
+  <uses-permission
+    android:name="android.permission.READ_LOGS" />
+  <uses-permission
+    android:name="android.permission.WRITE_SETTINGS" />
+  <uses-permission
+    android:name="android.permission.BLUETOOTH" />
+  <uses-permission
+    android:name="android.permission.BLUETOOTH_ADMIN" />
+  <uses-permission
+    android:name="android.permission.CAMERA" />
+  <uses-permission
+    android:name="android.permission.WAKE_LOCK" />
+  <uses-permission
+    android:name="android.permission.READ_CONTACTS" />
+  <uses-feature
+    android:name="android.hardware.camera" />
+  <uses-feature
+    android:name="android.hardware.camera.autofocus" />
+  <uses-sdk
+    android:minSdkVersion="3"></uses-sdk>
+</manifest>

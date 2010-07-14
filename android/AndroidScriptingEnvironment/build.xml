@@ -1,6 +1,0 @@
-<?xml version="1.0" ?>
-<project default="main">
-	<target name="main">
-		<copy file="./libs/armeabi/libcom_google_ase_Exec.so" tofile="../ScriptForAndroidTemplate/libs/armeabi/libcom_google_ase_Exec.so" overwrite="true" />
-	</target>
-</project>

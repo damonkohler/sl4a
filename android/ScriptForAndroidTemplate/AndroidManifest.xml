@@ -27,7 +27,7 @@
       android:theme="@android:style/Theme.Translucent.NoTitleBar"
       android:launchMode="singleTask"
       android:configChanges="keyboardHidden|orientation"
-      android:name="com.googlecode.android_scripting.activity.AseServiceHelper"></activity>
+      android:name="com.googlecode.android_scripting.activity.Sl4aServiceHelper"></activity>
   </application>
   <uses-sdk
     android:minSdkVersion="3" />
