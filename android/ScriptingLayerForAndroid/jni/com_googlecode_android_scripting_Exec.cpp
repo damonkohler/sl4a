@@ -117,7 +117,7 @@ int JNU_GetFdFromFileDescriptor(JNIEnv* env, jobject fileDescriptor) {
   return env->GetIntField(fileDescriptor, descriptor);
 }
 
-JNIEXPORT jobject JNICALL Java_com_googlecode_android_scripting_Exec_createSubprocess(
+JNIEXPORT jobject JNICALL Java_com_googlecode_android_1scripting_Exec_createSubprocess(
     JNIEnv* env, jclass clazz, jstring cmd, jobjectArray argArray, jobjectArray varArray,
     jintArray processIdArray) {
   char* cmd_native = JNU_GetStringNativeChars(env, cmd);
@@ -174,7 +174,7 @@ JNIEXPORT jobject JNICALL Java_com_googlecode_android_scripting_Exec_createSubpr
   return result;
 }
 
-JNIEXPORT void Java_com_googlecode_android_scripting_Exec_setPtyWindowSize(
+JNIEXPORT void JNICALL Java_com_googlecode_android_1scripting_Exec_setPtyWindowSize(
     JNIEnv* env, jclass clazz, jobject fileDescriptor, jint row, jint col, jint xpixel,
     jint ypixel) {
   struct winsize sz;
@@ -189,7 +189,7 @@ JNIEXPORT void Java_com_googlecode_android_scripting_Exec_setPtyWindowSize(
   ioctl(fd, TIOCSWINSZ, &sz);
 }
 
-JNIEXPORT jint Java_com_googlecode_android_scripting_Exec_waitFor(JNIEnv* env, jclass clazz, jint procId) {
+JNIEXPORT jint JNICALL Java_com_googlecode_android_1scripting_Exec_waitFor(JNIEnv* env, jclass clazz, jint procId) {
   int status;
   waitpid(procId, &status, 0);
   int result = 0;

@@ -202,8 +202,8 @@ public class Sl4aService extends Service {
   private void killScriptProcess(Intent intent) {
     int processId = intent.getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
     ScriptProcess scriptProcess = removeScriptProcess(processId);
-    scriptProcess.notifyTriggerOfShutDown(this);
     if (scriptProcess != null) {
+      scriptProcess.notifyTriggerOfShutDown(this);
       scriptProcess.kill();
     }
   }

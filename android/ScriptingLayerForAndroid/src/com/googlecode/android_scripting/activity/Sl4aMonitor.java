@@ -36,7 +36,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
@@ -173,8 +172,10 @@ public class Sl4aMonitor extends ListActivity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     menu.clear();
-    menu.add(Menu.NONE, 0, Menu.NONE, "Stop All Scripts").setIcon(
-        android.R.drawable.ic_menu_close_clear_cancel);
+    if (!mProcessList.isEmpty()) {
+      menu.add(Menu.NONE, 0, Menu.NONE, "Stop All Scripts").setIcon(
+          android.R.drawable.ic_menu_close_clear_cancel);
+    }
     return super.onPrepareOptionsMenu(menu);
   }
 

@@ -73,7 +73,7 @@
       android:windowSoftInputMode="stateAlwaysVisible|adjustResize">
       <intent-filter>
         <action
-          android:name="com.google.ase.action.EDIT_SCRIPT" />
+          android:name="com.googlecode.android_scripting.action.EDIT_SCRIPT" />
         <category
           android:name="android.intent.category.DEFAULT" />
       </intent-filter>
@@ -134,7 +134,7 @@
     </activity>
     <provider
       android:name=".provider.ScriptProvider"
-      android:authorities="com.google.ase.provider.scriptprovider" />
+      android:authorities="com.googlecode.android_scripting.provider.scriptprovider" />
     <uses-library
       android:name="android.test.runner" />
     <activity

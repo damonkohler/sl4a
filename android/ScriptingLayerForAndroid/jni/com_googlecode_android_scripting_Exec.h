@@ -10,9 +10,9 @@ extern "C" {
 /*
  * Class:     com_googlecode_android_scripting_Exec
  * Method:    createSubprocess
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[I[Ljava/lang/String;)Ljava/io/FileDescriptor;
+ * Signature: (Ljava/lang/String;[Ljava/lang/String;[Ljava/lang/String;[I)Ljava/io/FileDescriptor;
  */
-JNIEXPORT jobject JNICALL Java_com_googlecode_android_scripting_Exec_createSubprocess
+JNIEXPORT jobject JNICALL Java_com_googlecode_android_1scripting_Exec_createSubprocess
   (JNIEnv *, jclass, jstring, jobjectArray, jobjectArray, jintArray);
 
 /*
@@ -20,7 +20,7 @@ JNIEXPORT jobject JNICALL Java_com_googlecode_android_scripting_Exec_createSubpr
  * Method:    setPtyWindowSize
  * Signature: (Ljava/io/FileDescriptor;IIII)V
  */
-JNIEXPORT void JNICALL Java_com_googlecode_android_scripting_Exec_setPtyWindowSize
+JNIEXPORT void JNICALL Java_com_googlecode_android_1scripting_Exec_setPtyWindowSize
   (JNIEnv *, jclass, jobject, jint, jint, jint, jint);
 
 /*
@@ -28,7 +28,7 @@ JNIEXPORT void JNICALL Java_com_googlecode_android_scripting_Exec_setPtyWindowSi
  * Method:    waitFor
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_com_googlecode_android_scripting_Exec_waitFor
+JNIEXPORT jint JNICALL Java_com_googlecode_android_1scripting_Exec_waitFor
   (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus

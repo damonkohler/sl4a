@@ -16,6 +16,14 @@
 
 package com.googlecode.android_scripting;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.os.AsyncTask;
+
+import com.googlecode.android_scripting.exception.Sl4aException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,17 +31,6 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.os.AsyncTask;
-
-
-import com.googlecode.android_scripting.IoUtils;
-import com.googlecode.android_scripting.Sl4aLog;
-import com.googlecode.android_scripting.exception.Sl4aException;
 
 /**
  * AsyncTask for extracting ZIP files.
