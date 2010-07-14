@@ -18,10 +18,13 @@ package com.google.ase.interpreter;
 
 import android.content.Context;
 
-import com.google.ase.exception.AseException;
 import com.google.ase.language.Language;
 import com.google.ase.language.SupportedLanguages;
 import com.google.ase.rpc.MethodDescriptor;
+
+import com.googlecode.android_scripting.exception.Sl4aException;
+import com.googlecode.android_scripting.interpreter.InterpreterStrings;
+import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -53,10 +56,10 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
   private final Language mLanguage;
 
   public Interpreter(Map<String, String> data, Map<String, String> variables,
-      Map<String, String> args) throws AseException {
+      Map<String, String> args) throws Sl4aException {
     for (String key : mRequiredKeys) {
       if (data.get(key) == null) {
-        throw new AseException("Cannot create interpreter. Required parameter not specified: "
+        throw new Sl4aException("Cannot create interpreter. Required parameter not specified: "
             + key);
       }
     }

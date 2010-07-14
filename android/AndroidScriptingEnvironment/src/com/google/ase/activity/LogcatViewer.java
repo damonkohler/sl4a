@@ -30,10 +30,11 @@ import android.widget.TextView;
 
 import com.google.ase.ActivityFlinger;
 import com.google.ase.Analytics;
-import com.google.ase.AseLog;
 import com.google.ase.AseProcess;
 import com.google.ase.R;
 import com.google.ase.dialog.Help;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -82,7 +83,7 @@ public class LogcatViewer extends ListActivity {
           });
         }
       } catch (IOException e) {
-        AseLog.e("Failed to read from logcat process.", e);
+        Sl4aLog.e("Failed to read from logcat process.", e);
       } finally {
         mLogcatProcess.kill();
       }

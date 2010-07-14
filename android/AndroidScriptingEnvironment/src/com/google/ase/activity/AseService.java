@@ -28,15 +28,16 @@ import android.widget.RemoteViews;
 
 import com.google.ase.AndroidProxy;
 import com.google.ase.AseApplication;
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
 import com.google.ase.ScriptProcess;
-import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.terminal.Terminal;
 import com.google.ase.trigger.Trigger;
+
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aException;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -123,8 +124,8 @@ public class AseService extends Service {
       serverProxy = launchServer(intent, true);
       try {
         launcher = launchScript(intent, serverProxy);
-      } catch (AseException e) {
-        AseLog.e(this, e.getMessage(), e);
+      } catch (Sl4aException e) {
+        Sl4aLog.e(this, e.getMessage(), e);
         serverProxy.shutdown();
         serverProxy = null;
         return;
@@ -151,7 +152,7 @@ public class AseService extends Service {
     return androidProxy;
   }
 
-  private ScriptLauncher launchScript(Intent intent, AndroidProxy proxy) throws AseException {
+  private ScriptLauncher launchScript(Intent intent, AndroidProxy proxy) throws Sl4aException {
     InterpreterConfiguration config =
         ((AseApplication) getApplication()).getInterpreterConfiguration();
     ScriptLauncher launcher = new ScriptLauncher(proxy, intent, config);

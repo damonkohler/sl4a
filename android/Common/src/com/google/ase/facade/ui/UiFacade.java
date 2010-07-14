@@ -29,7 +29,6 @@ import android.util.AndroidRuntimeException;
 
 import com.google.ase.AseApplication;
 import com.google.ase.activity.AseServiceHelper;
-import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.facade.FacadeManager;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
@@ -38,6 +37,8 @@ import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 
 /**
  * UiFacade
@@ -120,7 +121,7 @@ public class UiFacade extends RpcReceiver {
     if (mDialogTask != null && mDialogTask instanceof RunnableProgressDialog) {
       ((ProgressDialog) mDialogTask.getDialog()).setProgress(current);
     } else {
-      throw new AseRuntimeException("No valid dialog to assign value to.");
+      throw new Sl4aRuntimeException("No valid dialog to assign value to.");
     }
   }
 
@@ -129,7 +130,7 @@ public class UiFacade extends RpcReceiver {
     if (mDialogTask != null && mDialogTask instanceof RunnableProgressDialog) {
       ((ProgressDialog) mDialogTask.getDialog()).setMax(max);
     } else {
-      throw new AseRuntimeException("No valid dialog to set maximum value of.");
+      throw new Sl4aRuntimeException("No valid dialog to set maximum value of.");
     }
   }
 

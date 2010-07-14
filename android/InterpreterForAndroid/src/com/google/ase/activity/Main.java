@@ -34,13 +34,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.ase.AseLog;
 import com.google.ase.AsyncTaskListener;
 import com.google.ase.InterpreterInstaller;
 import com.google.ase.InterpreterUninstaller;
-import com.google.ase.exception.AseException;
-import com.google.ase.interpreter.InterpreterConstants;
-import com.google.ase.interpreter.InterpreterDescriptor;
+
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aException;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
+import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 
 /**
  * Base activity for distributing interpreters as APK's.
@@ -62,11 +63,11 @@ public abstract class Main extends Activity {
   protected abstract InterpreterDescriptor getDescriptor();
 
   protected abstract InterpreterInstaller getInterpreterInstaller(InterpreterDescriptor descriptor,
-      Context context, AsyncTaskListener<Boolean> listener) throws AseException;
+      Context context, AsyncTaskListener<Boolean> listener) throws Sl4aException;
 
   protected abstract InterpreterUninstaller getInterpreterUninstaller(
       InterpreterDescriptor descriptor, Context context, AsyncTaskListener<Boolean> listener)
-      throws AseException;
+      throws Sl4aException;
 
   protected enum RunningTask {
     INSTALL, UNINSTALL
@@ -92,7 +93,7 @@ public abstract class Main extends Activity {
           break;
         }
       }
-      AseLog.v(Main.this, message);
+      Sl4aLog.v(Main.this, message);
       mCurrentTask = null;
     }
   };
@@ -202,8 +203,8 @@ public abstract class Main extends Activity {
     InterpreterInstaller installTask;
     try {
       installTask = getInterpreterInstaller(mDescriptor, Main.this, mTaskListener);
-    } catch (AseException e) {
-      AseLog.e(this, e.getMessage(), e);
+    } catch (Sl4aException e) {
+      Sl4aLog.e(this, e.getMessage(), e);
       return;
     }
     installTask.execute();
@@ -220,8 +221,8 @@ public abstract class Main extends Activity {
     InterpreterUninstaller uninstallTask;
     try {
       uninstallTask = getInterpreterUninstaller(mDescriptor, Main.this, mTaskListener);
-    } catch (AseException e) {
-      AseLog.e(this, e.getMessage(), e);
+    } catch (Sl4aException e) {
+      Sl4aLog.e(this, e.getMessage(), e);
       return;
     }
     uninstallTask.execute();

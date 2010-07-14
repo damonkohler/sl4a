@@ -1,6 +1,6 @@
 package com.google.ase.jsonrpc;
 
-import com.google.ase.AseLog;
+import com.googlecode.android_scripting.Sl4aLog;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -35,7 +35,7 @@ public abstract class RpcReceiverManager {
       object = constructor.newInstance(this);
       mReceivers.put(clazz, object);
     } catch (Exception e) {
-      AseLog.e(e);
+      Sl4aLog.e(e);
     }
 
     return object;

@@ -45,7 +45,6 @@ import android.widget.TextView;
 import com.google.ase.ActivityFlinger;
 import com.google.ase.Analytics;
 import com.google.ase.AseApplication;
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
@@ -55,6 +54,8 @@ import com.google.ase.dialog.UsageTrackingConfirmation;
 import com.google.ase.interpreter.InterpreterAgent;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterConfiguration.ConfigurationObserver;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 /**
  * Manages creation, deletion, and execution of stored scripts.
@@ -235,13 +236,13 @@ public class ScriptManager extends ListActivity {
     try {
       info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     } catch (ClassCastException e) {
-      AseLog.e("Bad menuInfo", e);
+      Sl4aLog.e("Bad menuInfo", e);
       return false;
     }
 
     File script = (File) mAdapter.getItem(info.position);
     if (script == null) {
-      AseLog.v("No script selected.");
+      Sl4aLog.v("No script selected.");
       return false;
     }
 
@@ -302,12 +303,12 @@ public class ScriptManager extends ListActivity {
   private void writeScriptFromBarcode(Intent data) {
     String result = data.getStringExtra("SCAN_RESULT");
     if (result == null) {
-      AseLog.e(this, "Invalid QR code content.");
+      Sl4aLog.e(this, "Invalid QR code content.");
       return;
     }
     String contents[] = result.split("\n", 2);
     if (contents.length != 2) {
-      AseLog.e(this, "Invalid QR code content.");
+      Sl4aLog.e(this, "Invalid QR code content.");
       return;
     }
     String title = contents[0];

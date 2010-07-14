@@ -37,11 +37,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.ase.Analytics;
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptProcess;
 import com.google.ase.terminal.Terminal;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 import java.util.List;
 import java.util.Timer;
@@ -107,7 +108,7 @@ public class AseMonitor extends ListActivity {
         mUpdater = new ScriptListAdapter();
         mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
       } catch (IllegalStateException e) {
-        AseLog.e(e.getMessage(), e);
+        Sl4aLog.e(e.getMessage(), e);
       }
     }
   }
@@ -135,7 +136,7 @@ public class AseMonitor extends ListActivity {
       ScriptProcess script = (ScriptProcess) mAdapter.getItem(info.position);
       scriptName = script.getScriptName();
     } catch (ClassCastException e) {
-      AseLog.e(e);
+      Sl4aLog.e(e);
     }
 
     if (scriptName == null) {
@@ -151,13 +152,13 @@ public class AseMonitor extends ListActivity {
     try {
       info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     } catch (ClassCastException e) {
-      AseLog.e("Bad menuInfo", e);
+      Sl4aLog.e("Bad menuInfo", e);
       return false;
     }
 
     final ScriptProcess script = (ScriptProcess) mAdapter.getItem(info.position);
     if (script == null) {
-      AseLog.v("No script selected.");
+      Sl4aLog.v("No script selected.");
       return false;
     }
 

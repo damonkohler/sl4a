@@ -14,20 +14,20 @@
  * the License.
  */
 
-package com.google.ase.exception;
+package com.googlecode.android_scripting.exception;
 
 @SuppressWarnings("serial")
-public class AseException extends Exception {
+public class Sl4aException extends Exception {
 
-  public AseException(Exception e) {
+  public Sl4aException(Exception e) {
     super(e);
   }
 
-  public AseException(String message) {
+  public Sl4aException(String message) {
     super(message);
   }
 
-  public AseException(String message, Exception e) {
+  public Sl4aException(String message, Exception e) {
     super(message, e);
   }
 

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase.interpreter;
+package com.googlecode.android_scripting.interpreter;
 
 /**
  * A collection of string for querying InterpreterProvider.

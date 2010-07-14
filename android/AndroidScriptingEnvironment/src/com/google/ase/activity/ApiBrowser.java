@@ -36,7 +36,6 @@ import android.widget.TextView;
 
 import com.google.ase.Analytics;
 import com.google.ase.AseApplication;
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.facade.FacadeConfiguration;
@@ -45,6 +44,8 @@ import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.language.SupportedLanguages;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.ParameterDescriptor;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 import java.util.HashSet;
 import java.util.List;
@@ -142,13 +143,13 @@ public class ApiBrowser extends ListActivity {
     try {
       info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     } catch (ClassCastException e) {
-      AseLog.e("Bad menuInfo", e);
+      Sl4aLog.e("Bad menuInfo", e);
       return false;
     }
 
     MethodDescriptor rpc = (MethodDescriptor) getListAdapter().getItem(info.position);
     if (rpc == null) {
-      AseLog.v("No RPC selected.");
+      Sl4aLog.v("No RPC selected.");
       return false;
     }
 

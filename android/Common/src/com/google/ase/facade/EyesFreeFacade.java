@@ -23,10 +23,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
-import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcParameter;
+
+import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 
 public class EyesFreeFacade extends RpcReceiver {
 
@@ -48,7 +49,7 @@ public class EyesFreeFacade extends RpcReceiver {
     if (infos.size() > 0) {
       mService.startActivity(intent);
     } else {
-      throw new AseRuntimeException("Eyes-Free is not installed.");
+      throw new Sl4aRuntimeException("Eyes-Free is not installed.");
     }
   }
 

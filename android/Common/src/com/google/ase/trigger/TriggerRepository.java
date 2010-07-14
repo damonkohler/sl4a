@@ -34,8 +34,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.google.ase.AseLog;
 import com.google.ase.IntentBuilders;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 /**
  * A repository maintaining all currently scheduled triggers. This includes, for example, alarms or
@@ -153,9 +154,9 @@ public class TriggerRepository {
       List<Trigger> result = (List<Trigger>) objectInputStream.readObject();
       return result;
     } catch (IOException e) {
-      AseLog.e(e);
+      Sl4aLog.e(e);
     } catch (ClassNotFoundException e) {
-      AseLog.e(e);
+      Sl4aLog.e(e);
     }
     return new ArrayList<Trigger>();
   }
@@ -168,7 +169,7 @@ public class TriggerRepository {
       objectOutputStream.writeObject(triggers);
       return new String(Base64.encodeBase64(outputStream.toByteArray()));
     } catch (IOException e) {
-      AseLog.e(e);
+      Sl4aLog.e(e);
       return null;
     }
   }

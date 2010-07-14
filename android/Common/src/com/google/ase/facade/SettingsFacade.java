@@ -28,7 +28,6 @@ import android.provider.Settings.SettingNotFoundException;
 import android.view.WindowManager;
 
 import com.google.ase.AseApplication;
-import com.google.ase.AseLog;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
@@ -36,6 +35,8 @@ import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 /**
  * Exposes phone settings functionality.
@@ -204,7 +205,7 @@ public class SettingsFacade extends RpcReceiver {
       Method isScreenOn = powerManagerClass.getMethod("isScreenOn");
       result = (Boolean) isScreenOn.invoke(mPower);
     } catch (Exception e) {
-      AseLog.e(e);
+      Sl4aLog.e(e);
       throw new UnsupportedOperationException("This feature is only available after Eclair.");
     }
     return result;

@@ -30,7 +30,10 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 
-import com.google.ase.exception.AseException;
+
+import com.googlecode.android_scripting.IoUtils;
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aException;
 
 /**
  * AsyncTask for extracting ZIP files.
@@ -59,13 +62,13 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
     }
   }
 
-  public ZipExtractorTask(String in, String out, Context context) throws AseException {
+  public ZipExtractorTask(String in, String out, Context context) throws Sl4aException {
     super();
     mInput = new File(in);
     mOutput = new File(out);
     if (!mOutput.exists()) {
       if (!mOutput.mkdirs()) {
-        throw new AseException("Failed to make directories: " + mOutput.getAbsolutePath());
+        throw new Sl4aException("Failed to make directories: " + mOutput.getAbsolutePath());
       }
     }
     if (context != null) {
@@ -77,7 +80,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
 
   @Override
   protected void onPreExecute() {
-    AseLog.v("Extracting " + mInput.getAbsolutePath() + " to " + mOutput.getAbsolutePath());
+    Sl4aLog.v("Extracting " + mInput.getAbsolutePath() + " to " + mOutput.getAbsolutePath());
     if (mDialog != null) {
       mDialog.setTitle("Extracting");
       mDialog.setMessage(mInput.getName());
@@ -128,7 +131,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
       return;
     }
     if (mException != null) {
-      AseLog.e("Zip extraction failed.", mException);
+      Sl4aLog.e("Zip extraction failed.", mException);
     }
   }
 
@@ -176,7 +179,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
         // swallow this exception, we are only interested in the original one
       }
     }
-    AseLog.v("Extraction is complete.");
+    Sl4aLog.v("Extraction is complete.");
     return extractedSize;
   }
 

@@ -16,6 +16,8 @@
 
 package com.google.ase;
 
+import com.googlecode.android_scripting.Sl4aLog;
+
 import android.os.Process;
 
 import java.io.BufferedReader;
@@ -81,14 +83,14 @@ public class AseProcess {
 
     new Thread(new Runnable() {
       public void run() {
-        AseLog.v("Waiting for " + mPid);
+        Sl4aLog.v("Waiting for " + mPid);
         int result = Exec.waitFor(mPid);
-        AseLog.v("Subprocess exited with result code " + result);
+        Sl4aLog.v("Subprocess exited with result code " + result);
         mOut.close();
         try {
           mIn.close();
         } catch (IOException e) {
-          AseLog.e(e);
+          Sl4aLog.e(e);
         }
         if (shutdownHook != null) {
           shutdownHook.run();
@@ -100,7 +102,7 @@ public class AseProcess {
   public void kill() {
     if (mPid != null) {
       Process.killProcess(mPid);
-      AseLog.v("Killed process " + mPid);
+      Sl4aLog.v("Killed process " + mPid);
     }
   }
 }

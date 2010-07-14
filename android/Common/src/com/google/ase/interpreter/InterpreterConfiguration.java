@@ -29,9 +29,11 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.google.ase.AseLog;
-import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.shell.ShellInterpreter;
+
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aException;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,8 +159,8 @@ public class InterpreterConfiguration {
       InterpreterAgent interpreter = null;
       try {
         interpreter = new Interpreter(interpreterMap, environmentMap, argumentsMap);
-      } catch (AseException e) {
-        AseLog.e(e.getMessage(), e);
+      } catch (Sl4aException e) {
+        Sl4aLog.e(e.getMessage(), e);
       } catch (Exception e) {
         e.printStackTrace();
       }

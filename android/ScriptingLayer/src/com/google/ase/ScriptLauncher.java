@@ -18,10 +18,11 @@ package com.google.ase;
 
 import android.content.Intent;
 
-import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterAgent;
 import com.google.ase.interpreter.InterpreterConfiguration;
 import com.google.ase.interpreter.InterpreterProcess;
+
+import com.googlecode.android_scripting.exception.Sl4aException;
 
 import java.io.File;
 
@@ -55,7 +56,7 @@ public class ScriptLauncher {
     }
   }
 
-  public void launch() throws AseException {
+  public void launch() throws Sl4aException {
     launch((new Runnable() {
       @Override
       public void run() {
@@ -64,15 +65,15 @@ public class ScriptLauncher {
     }));
   }
 
-  public void launch(final Runnable shutdownHook) throws AseException {
+  public void launch(final Runnable shutdownHook) throws Sl4aException {
     if (mScriptName == null && mInterpreter == null) {
-      throw new AseException("Must specify either script or interpreter.");
+      throw new Sl4aException("Must specify either script or interpreter.");
     }
     String scriptPath = null;
     if (mScriptName != null) {
       File script = ScriptStorageAdapter.getExistingScript(mScriptName);
       if (script == null) {
-        throw new AseException("No such script to launch.");
+        throw new Sl4aException("No such script to launch.");
       }
       scriptPath = script.getAbsolutePath();
     }

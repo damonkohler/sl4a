@@ -1,7 +1,8 @@
 package com.google.ase.language;
 
-import com.google.ase.AseLog;
-import com.google.ase.exception.AseException;
+
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,10 +46,10 @@ public class SupportedLanguages {
     }
   }
 
-  public static Language getLanguageByExtension(String extension) throws AseException {
+  public static Language getLanguageByExtension(String extension) throws Sl4aException {
     extension = extension.toLowerCase();
     if (!extension.startsWith(".")) {
-      throw new AseException("Extension does not start with a dot: " + extension);
+      throw new Sl4aException("Extension does not start with a dot: " + extension);
     }
     Language lang = null;
 
@@ -57,9 +58,9 @@ public class SupportedLanguages {
       try {
         lang = clazz.newInstance();
       } catch (IllegalAccessException e) {
-        AseLog.e(e);
+        Sl4aLog.e(e);
       } catch (InstantiationException e) {
-        AseLog.e(e);
+        Sl4aLog.e(e);
       }
     }
     return lang;

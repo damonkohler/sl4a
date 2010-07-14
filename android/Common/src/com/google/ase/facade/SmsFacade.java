@@ -31,12 +31,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.telephony.gsm.SmsManager;
 
-import com.google.ase.AseLog;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 /**
  * Provides access to SMS related functionality.
@@ -67,7 +68,7 @@ public class SmsFacade extends RpcReceiver {
     Uri.Builder builder = Uri.parse("content://sms").buildUpon();
     builder.appendPath(folder);
     Uri uri = builder.build();
-    AseLog.v("Built SMS URI: " + uri);
+    Sl4aLog.v("Built SMS URI: " + uri);
     return uri;
   }
 

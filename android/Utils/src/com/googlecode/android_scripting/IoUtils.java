@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.google.ase;
+package com.googlecode.android_scripting;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -45,12 +45,12 @@ public class IoUtils {
       try {
         out.close();
       } catch (IOException e) {
-        AseLog.e(e.getMessage(), e);
+        Sl4aLog.e(e.getMessage(), e);
       }
       try {
         in.close();
       } catch (IOException e) {
-        AseLog.e(e.getMessage(), e);
+        Sl4aLog.e(e.getMessage(), e);
       }
     }
     return count;

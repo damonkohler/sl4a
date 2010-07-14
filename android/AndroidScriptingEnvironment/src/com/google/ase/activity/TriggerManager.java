@@ -36,7 +36,6 @@ import android.widget.ListView;
 import com.google.ase.ActivityFlinger;
 import com.google.ase.Analytics;
 import com.google.ase.AseApplication;
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.condition.RingerModeEvent;
@@ -47,6 +46,8 @@ import com.google.ase.trigger.AlarmTriggerManager;
 import com.google.ase.trigger.EventTrigger;
 import com.google.ase.trigger.Trigger;
 import com.google.ase.trigger.TriggerRepository;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 public class TriggerManager extends ListActivity {
   private TriggerRepository mTriggerRepository;
@@ -121,13 +122,13 @@ public class TriggerManager extends ListActivity {
     try {
       info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     } catch (ClassCastException e) {
-      AseLog.e("Bad menuInfo", e);
+      Sl4aLog.e("Bad menuInfo", e);
       return false;
     }
 
     Trigger trigger = mAdapter.getItem(info.position);
     if (trigger == null) {
-      AseLog.v("No trigger selected.");
+      Sl4aLog.v("No trigger selected.");
       return false;
     }
 

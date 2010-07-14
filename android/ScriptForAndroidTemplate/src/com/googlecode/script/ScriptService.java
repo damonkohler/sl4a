@@ -7,12 +7,13 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.google.ase.AndroidProxy;
-import com.google.ase.AseLog;
 import com.google.ase.ScriptLauncher;
 import com.google.ase.ScriptStorageAdapter;
-import com.google.ase.exception.AseException;
 import com.google.ase.interpreter.InterpreterAgent;
 import com.google.ase.interpreter.InterpreterConfiguration;
+
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aException;
 
 import java.io.File;
 
@@ -43,7 +44,7 @@ public class ScriptService extends Service {
     InterpreterAgent interpreter = config.getInterpreterForScript(fileName);
 
     if (interpreter == null || !interpreter.isInstalled(this)) {
-      AseLog.e("Cannot find an interpreter for script " + fileName);
+      Sl4aLog.e("Cannot find an interpreter for script " + fileName);
       stopSelf(startId);
     }
 
@@ -55,8 +56,8 @@ public class ScriptService extends Service {
     ScriptLauncher launcher = new ScriptLauncher(proxy, script, config);
     try {
       launcher.launch();
-    } catch (AseException e) {
-      AseLog.e(e);
+    } catch (Sl4aException e) {
+      Sl4aLog.e(e);
       proxy.shutdown();
       stopSelf(startId);
     }

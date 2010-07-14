@@ -30,10 +30,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 
-import com.google.ase.exception.AseException;
-import com.google.ase.interpreter.InterpreterConstants;
-import com.google.ase.interpreter.InterpreterDescriptor;
-import com.google.ase.interpreter.InterpreterUtils;
+
+import com.googlecode.android_scripting.FileUtils;
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aException;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
+import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
+import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 
 /**
  * AsyncTask for installing interpreters.
@@ -87,7 +90,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
         }
         mTaskHolder = newTask.execute();
       } catch (Exception e) {
-        AseLog.v(e.getMessage(), e);
+        Sl4aLog.v(e.getMessage(), e);
       }
 
       if (mBackgroundHandler != null) {
@@ -119,27 +122,27 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
           }
         }
       } catch (Exception e) {
-        AseLog.e(e);
+        Sl4aLog.e(e);
       }
       // Something went wrong...
       switch (request) {
       case DOWNLOAD_INTERPRETER:
-        AseLog.e("Downloading interpreter failed.");
+        Sl4aLog.e("Downloading interpreter failed.");
         break;
       case DOWNLOAD_INTERPRETER_EXTRAS:
-        AseLog.e("Downloading interpreter extras failed.");
+        Sl4aLog.e("Downloading interpreter extras failed.");
         break;
       case DOWNLOAD_SCRIPTS:
-        AseLog.e("Downloading scripts failed.");
+        Sl4aLog.e("Downloading scripts failed.");
         break;
       case EXTRACT_INTERPRETER:
-        AseLog.e("Extracting interpreter failed.");
+        Sl4aLog.e("Extracting interpreter failed.");
         break;
       case EXTRACT_INTERPRETER_EXTRAS:
-        AseLog.e("Extracting interpreter extras failed.");
+        Sl4aLog.e("Extracting interpreter extras failed.");
         break;
       case EXTRACT_SCRIPTS:
-        AseLog.e("Extracting scripts failed.");
+        Sl4aLog.e("Extracting scripts failed.");
         break;
       }
       Looper.myLooper().quit();
@@ -148,7 +151,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
 
   // TODO(Alexey): Add Javadoc.
   public InterpreterInstaller(InterpreterDescriptor descriptor, Context context,
-      AsyncTaskListener<Boolean> taskListener) throws AseException {
+      AsyncTaskListener<Boolean> taskListener) throws Sl4aException {
     super();
     mDescriptor = descriptor;
     mContext = context;
@@ -157,13 +160,13 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     mTaskQueue = new LinkedList<RequestCode>();
 
     if (mDescriptor == null) {
-      throw new AseException("Interpreter description not provided.");
+      throw new Sl4aException("Interpreter description not provided.");
     }
     if (mDescriptor.getName() == null) {
-      throw new AseException("Interpreter not specified.");
+      throw new Sl4aException("Interpreter not specified.");
     }
     if (isInstalled()) {
-      throw new AseException("Interpreter is installed.");
+      throw new Sl4aException("Interpreter is installed.");
     }
 
     if (mDescriptor.hasInterpreterArchive()) {
@@ -238,11 +241,11 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     return download(mDescriptor.getScriptsArchiveUrl());
   }
 
-  protected AsyncTask<Void, Integer, Long> extract(String in, String out) throws AseException {
+  protected AsyncTask<Void, Integer, Long> extract(String in, String out) throws Sl4aException {
     return new ZipExtractorTask(in, out, mContext);
   }
 
-  protected AsyncTask<Void, Integer, Long> extractInterpreter() throws AseException {
+  protected AsyncTask<Void, Integer, Long> extractInterpreter() throws Sl4aException {
     String in =
         new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor.getInterpreterArchiveName())
             .getAbsolutePath();
@@ -250,7 +253,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     return extract(in, out);
   }
 
-  protected AsyncTask<Void, Integer, Long> extractInterpreterExtras() throws AseException {
+  protected AsyncTask<Void, Integer, Long> extractInterpreterExtras() throws Sl4aException {
     String in =
         new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor.getExtrasArchiveName())
             .getAbsolutePath();
@@ -258,7 +261,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     return extract(in, out);
   }
 
-  protected AsyncTask<Void, Integer, Long> extractScripts() throws AseException {
+  protected AsyncTask<Void, Integer, Long> extractScripts() throws Sl4aException {
     String in =
         new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor.getScriptsArchiveName())
             .getAbsolutePath();
@@ -275,7 +278,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
           FileUtils.recursiveChmod(InterpreterUtils.getInterpreterRoot(mContext, mDescriptor
               .getName()), 0755);
     } catch (Exception e) {
-      AseLog.e(e);
+      Sl4aLog.e(e);
       return false;
     }
     return dataChmodErrno == 0 && interpreterChmodSuccess;

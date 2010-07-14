@@ -22,8 +22,9 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 
-import com.google.ase.AseLog;
 import com.google.ase.trigger.EventListener;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 /**
  * This condition invokes a trigger whenever the ringer mode changes. The "ringer_mode" element in
@@ -55,7 +56,7 @@ public class RingerModeEvent implements Event {
           invokeListener();
         }
       default:
-        AseLog.e("Invalid ringer mode: " + newRingerMode);
+        Sl4aLog.e("Invalid ringer mode: " + newRingerMode);
       }
     }
   };

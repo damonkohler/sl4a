@@ -21,8 +21,9 @@ import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 
 import com.google.ase.activity.AseServiceHelper;
-import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureResult;
+
+import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,7 +86,7 @@ class RunnableAlertDialog extends RunnableDialog {
         try {
           mItems[i] = items.getString(i);
         } catch (JSONException e) {
-          throw new AseRuntimeException(e);
+          throw new Sl4aRuntimeException(e);
         }
       }
       mListType = ListType.MENU;

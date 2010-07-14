@@ -16,10 +16,11 @@
 
 package com.google.ase.jsonrpc;
 
-import com.google.ase.AseLog;
-import com.google.ase.exception.AseException;
 import com.google.ase.rpc.MethodDescriptor;
 import com.google.ase.rpc.RpcError;
+
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,26 +77,26 @@ public class JsonRpcServer {
 
     @Override
     public void run() {
-      AseLog.v("Server thread " + getId() + " started.");
+      Sl4aLog.v("Server thread " + getId() + " started.");
       try {
         mmReader = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()), 8192);
         mmWriter = new PrintWriter(mmSocket.getOutputStream(), true);
         process();
       } catch (Exception e) {
         if (!mStopServer) {
-          AseLog.e("Server error.", e);
+          Sl4aLog.e("Server error.", e);
         }
       } finally {
         close();
         mNetworkThreads.remove(this);
-        AseLog.v("Server thread " + getId() + " died.");
+        Sl4aLog.v("Server thread " + getId() + " died.");
       }
     }
 
-    private void process() throws JSONException, IOException, AseException {
+    private void process() throws JSONException, IOException, Sl4aException {
       String data;
       while ((data = mmReader.readLine()) != null) {
-        AseLog.v("Received: " + data);
+        Sl4aLog.v("Received: " + data);
         JSONObject request = new JSONObject(data);
         int id = request.getInt("id");
         String method = request.getString("method");
@@ -115,28 +116,28 @@ public class JsonRpcServer {
         try {
           send(JsonRpcResult.result(id, rpc.invoke(mRpcReceiverManager, params)));
         } catch (Throwable t) {
-          AseLog.e("Invocation error.", t);
+          Sl4aLog.e("Invocation error.", t);
           send(JsonRpcResult.error(id, t));
         }
       }
     }
 
     private void checkHandshake(int id, String method, JSONArray params) throws JSONException,
-        AseException {
+        Sl4aException {
       try {
         if (!method.equals("_authenticate")) {
-          throw new AseException(
+          throw new Sl4aException(
               "RPC method name does not match expected \"authenticate\", method = " + method);
         }
         if (mHandshake != null) {
           String handshake = params.getString(0);
           if (!mHandshake.equals(handshake)) {
-            throw new AseException("Handshake does not match.");
+            throw new Sl4aException("Handshake does not match.");
           }
         }
       } catch (Exception e) {
         send(JsonRpcResult.error(id, new RpcError("Authentication failed: " + e.getMessage())));
-        throw new AseException("Authentication failed", new Exception(e));
+        throw new Sl4aException("Authentication failed", new Exception(e));
       }
       send(JsonRpcResult.result(id, true));
     }
@@ -144,7 +145,7 @@ public class JsonRpcServer {
     private void send(JSONObject result) {
       mmWriter.write(result + "\n");
       mmWriter.flush();
-      AseLog.v("Sent: " + result);
+      Sl4aLog.v("Sent: " + result);
     }
 
     private void close() {
@@ -152,14 +153,14 @@ public class JsonRpcServer {
         try {
           mmSocket.close();
         } catch (IOException e) {
-          AseLog.e(e.getMessage(), e);
+          Sl4aLog.e(e.getMessage(), e);
         }
       }
       if (mmReader != null) {
         try {
           mmReader.close();
         } catch (IOException e) {
-          AseLog.e(e.getMessage(), e);
+          Sl4aLog.e(e.getMessage(), e);
         }
       }
       if (mmWriter != null) {
@@ -225,7 +226,7 @@ public class JsonRpcServer {
       address = InetAddress.getLocalHost();
       mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
     } catch (Exception e) {
-      AseLog.e("Failed to start server.", e);
+      Sl4aLog.e("Failed to start server.", e);
       return null;
     }
     int port = start(address);
@@ -243,7 +244,7 @@ public class JsonRpcServer {
       address = getPublicInetAddress();
       mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
     } catch (Exception e) {
-      AseLog.e("Failed to start server.", e);
+      Sl4aLog.e("Failed to start server.", e);
       return null;
     }
     int port = start(address);
@@ -260,14 +261,14 @@ public class JsonRpcServer {
             startConnectionThread(sock);
           } catch (IOException e) {
             if (!mStopServer) {
-              AseLog.e("Failed to accept connection.", e);
+              Sl4aLog.e("Failed to accept connection.", e);
             }
           }
         }
       }
     };
     mServerThread.start();
-    AseLog.v("Bound to " + address.getHostAddress() + ":" + mServer.getLocalPort());
+    Sl4aLog.v("Bound to " + address.getHostAddress() + ":" + mServer.getLocalPort());
     return mServer.getLocalPort();
   }
 
@@ -284,7 +285,7 @@ public class JsonRpcServer {
     try {
       mServer.close();
     } catch (IOException e) {
-      AseLog.e("Failed to close server socket.", e);
+      Sl4aLog.e("Failed to close server socket.", e);
     }
     // Since the server is not running, the mNetworkThreads set can only
     // shrink from this point onward. We can just stop all of the running helper

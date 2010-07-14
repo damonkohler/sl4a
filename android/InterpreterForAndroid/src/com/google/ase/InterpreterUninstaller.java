@@ -28,10 +28,11 @@ import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-import com.google.ase.exception.AseException;
-import com.google.ase.interpreter.InterpreterConstants;
-import com.google.ase.interpreter.InterpreterDescriptor;
-import com.google.ase.interpreter.InterpreterUtils;
+
+import com.googlecode.android_scripting.exception.Sl4aException;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
+import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
+import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 
 /**
  * AsyncTask for uninstalling interpreters.
@@ -47,7 +48,7 @@ public abstract class InterpreterUninstaller extends AsyncTask<Void, Void, Boole
   protected final AsyncTaskListener<Boolean> mListener;
 
   public InterpreterUninstaller(InterpreterDescriptor descriptor, Context context,
-      AsyncTaskListener<Boolean> listener) throws AseException {
+      AsyncTaskListener<Boolean> listener) throws Sl4aException {
 
     super();
 
@@ -56,13 +57,13 @@ public abstract class InterpreterUninstaller extends AsyncTask<Void, Void, Boole
     mListener = listener;
 
     if (mDescriptor == null) {
-      throw new AseException("Interpreter description not provided.");
+      throw new Sl4aException("Interpreter description not provided.");
     }
     if (mDescriptor.getName() == null) {
-      throw new AseException("Interpreter not specified.");
+      throw new Sl4aException("Interpreter not specified.");
     }
     if (!isInstalled()) {
-      throw new AseException("Interpreter not installed.");
+      throw new Sl4aException("Interpreter not installed.");
     }
 
     if (context != null) {

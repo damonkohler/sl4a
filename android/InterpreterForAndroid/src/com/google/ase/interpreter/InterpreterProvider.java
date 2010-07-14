@@ -16,6 +16,10 @@
 
 package com.google.ase.interpreter;
 
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
+import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
+import com.googlecode.android_scripting.interpreter.InterpreterStrings;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;

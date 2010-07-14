@@ -36,13 +36,14 @@ import android.widget.Toast;
 
 import com.google.ase.Analytics;
 import com.google.ase.AseApplication;
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.IntentBuilders;
 import com.google.ase.R;
 import com.google.ase.ScriptStorageAdapter;
 import com.google.ase.dialog.Help;
 import com.google.ase.interpreter.InterpreterConfiguration;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -111,7 +112,7 @@ public class ScriptEditor extends Activity {
         try {
           mLastSavedContent = ScriptStorageAdapter.readScript(name);
         } catch (IOException e) {
-          AseLog.e("Failed to read script.", e);
+          Sl4aLog.e("Failed to read script.", e);
           mLastSavedContent = "";
         } finally {
         }

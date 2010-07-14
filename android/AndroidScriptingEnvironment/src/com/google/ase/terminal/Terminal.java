@@ -33,7 +33,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.ase.Analytics;
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.R;
 import com.google.ase.ScriptLauncher;
@@ -41,6 +40,8 @@ import com.google.ase.ScriptProcess;
 import com.google.ase.activity.AsePreferences;
 import com.google.ase.activity.AseService;
 import com.google.ase.interpreter.InterpreterProcess;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 /**
  * A terminal emulator activity.
@@ -140,14 +141,14 @@ public class Terminal extends Activity {
 
     // TODO(damonkohler): Until we are able to save and return state, it's better to just die.
     if (savedInstanceState != null) {
-      AseLog.e("Attempted to restore previous state. Aborting.");
+      Sl4aLog.e("Attempted to restore previous state. Aborting.");
       finish();
       return;
     }
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     mProcessPort = getIntent().getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
     if (mProcessPort == 0) {
-      AseLog.e(this, "No proxy port specified.");
+      Sl4aLog.e(this, "No proxy port specified.");
       finish();
       return;
     }
@@ -158,7 +159,7 @@ public class Terminal extends Activity {
     mScriptProcess = mService.getScriptProcess(mProcessPort);
 
     if (mScriptProcess == null) {
-      AseLog.e(this, "Process does not exist.");
+      Sl4aLog.e(this, "Process does not exist.");
       finish();
       return;
     }
@@ -166,7 +167,7 @@ public class Terminal extends Activity {
     mLauncher = mScriptProcess.getLauncher();
 
     if (mLauncher == null) {
-      AseLog.e(this, "Process is running in server mode only.");
+      Sl4aLog.e(this, "Process is running in server mode only.");
       finish();
       return;
     }

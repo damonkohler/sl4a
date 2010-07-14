@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AndroidScriptingEnvironment"/>
 	<classpathentry kind="lib" path="libs/commons-lang-2.5.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ScriptingLayer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AndroidScriptingEnvironment"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

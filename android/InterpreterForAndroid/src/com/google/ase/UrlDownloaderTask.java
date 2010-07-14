@@ -21,7 +21,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 
-import com.google.ase.exception.AseException;
+
+import com.googlecode.android_scripting.IoUtils;
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -76,7 +79,7 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
 
   @Override
   protected void onPreExecute() {
-    AseLog.v("Downloading " + mUrl);
+    Sl4aLog.v("Downloading " + mUrl);
     if (mDialog != null) {
       mDialog.setTitle("Downloading");
       mDialog.setMessage(mFile.getName());
@@ -132,7 +135,7 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
       return;
     }
     if (mException != null) {
-      AseLog.e("Download failed.", mException);
+      Sl4aLog.e("Download failed.", mException);
     }
   }
 
@@ -148,20 +151,20 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
     try {
       connection = mUrl.openConnection();
     } catch (IOException e) {
-      throw new AseException("Cannot open URL: " + mUrl, e);
+      throw new Sl4aException("Cannot open URL: " + mUrl, e);
     }
 
     int contentLength = connection.getContentLength();
 
     if (mFile.exists() && contentLength == mFile.length()) {
-      AseLog.v("Output file already exists. Skipping download.");
+      Sl4aLog.v("Output file already exists. Skipping download.");
       return 0l;
     }
 
     try {
       mProgressReportingOutputStream = new ProgressReportingOutputStream(mFile);
     } catch (FileNotFoundException e) {
-      throw new AseException(e);
+      throw new Sl4aException(e);
     }
 
     publishProgress(0, contentLength);
@@ -171,7 +174,7 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
       throw new IOException("Download incomplete: " + bytesCopied + " != " + contentLength);
     }
     mProgressReportingOutputStream.close();
-    AseLog.v("Download completed successfully.");
+    Sl4aLog.v("Download completed successfully.");
     return bytesCopied;
   }
 }

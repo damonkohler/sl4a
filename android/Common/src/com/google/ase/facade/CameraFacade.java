@@ -24,11 +24,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
-import com.google.ase.AseLog;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcParameter;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -85,11 +86,11 @@ public class CameraFacade extends RpcReceiver {
           output.close();
           takePictureResult.mmResult = true;
         } catch (FileNotFoundException e) {
-          AseLog.e("Failed to save picture.", e);
+          Sl4aLog.e("Failed to save picture.", e);
           takePictureResult.mmResult = false;
           return;
         } catch (IOException e) {
-          AseLog.e("Failed to save picture.", e);
+          Sl4aLog.e("Failed to save picture.", e);
           takePictureResult.mmResult = false;
           return;
         } finally {

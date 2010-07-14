@@ -14,20 +14,20 @@
  * the License.
  */
 
-package com.google.ase.exception;
+package com.googlecode.android_scripting.exception;
 
 @SuppressWarnings("serial")
-public class AseRuntimeException extends RuntimeException {
+public class Sl4aRuntimeException extends RuntimeException {
 
-  public AseRuntimeException(String message) {
+  public Sl4aRuntimeException(String message) {
     super(message);
   }
 
-  public AseRuntimeException(String message, Throwable wrapped_throwable) {
+  public Sl4aRuntimeException(String message, Throwable wrapped_throwable) {
     super(message + "\n" + wrapped_throwable.toString());
   }
 
-  public AseRuntimeException(Throwable wrapped_throwable) {
+  public Sl4aRuntimeException(Throwable wrapped_throwable) {
     super(wrapped_throwable.toString());
   }
 }

@@ -16,6 +16,8 @@
 
 package com.google.ase;
 
+import com.googlecode.android_scripting.Sl4aLog;
+
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -31,7 +33,7 @@ public class AseVersion {
       PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
       return info.versionName;
     } catch (PackageManager.NameNotFoundException e) {
-      AseLog.e("Package name not found", e);
+      Sl4aLog.e("Package name not found", e);
     }
     return "?";
   }

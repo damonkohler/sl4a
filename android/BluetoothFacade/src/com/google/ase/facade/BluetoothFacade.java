@@ -21,7 +21,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Looper;
 
-import com.google.ase.AseLog;
 import com.google.ase.Constants;
 import com.google.ase.MainThread;
 import com.google.ase.jsonrpc.RpcReceiver;
@@ -29,6 +28,8 @@ import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -112,7 +113,7 @@ public class BluetoothFacade extends RpcReceiver {
       char[] buffer = new char[bufferSize];
       int bytesRead = mBluetoothServer.getReader().read(buffer);
       if (bytesRead == -1) {
-        AseLog.e("Read failed.");
+        Sl4aLog.e("Read failed.");
         throw new IOException("Read failed.");
       }
       return new String(buffer, 0, bytesRead);
@@ -150,7 +151,7 @@ public class BluetoothFacade extends RpcReceiver {
     }
     if (enabled) {
       if (prompt) {
-        AseLog.v("Prompting");
+        Sl4aLog.v("Prompting");
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         // TODO(damonkohler): Use the result to determine if this was successful. At any rate, keep
         // using startActivityForResult in order to synchronize this call.

@@ -43,10 +43,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.ase.AseApplication;
-import com.google.ase.AseLog;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.activity.NotificationIdFactory;
-import com.google.ase.exception.AseRuntimeException;
 import com.google.ase.future.FutureActivityTask;
 import com.google.ase.future.FutureResult;
 import com.google.ase.jsonrpc.RpcReceiver;
@@ -54,6 +52,9 @@ import com.google.ase.rpc.Rpc;
 import com.google.ase.rpc.RpcDefault;
 import com.google.ase.rpc.RpcOptional;
 import com.google.ase.rpc.RpcParameter;
+
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 
 public class AndroidFacade extends RpcReceiver {
   /**
@@ -126,13 +127,13 @@ public class AndroidFacade extends RpcReceiver {
     try {
       launchHelper();
     } catch (Exception e) {
-      AseLog.e("Failed to launch intent.", e);
+      Sl4aLog.e("Failed to launch intent.", e);
     }
     FutureResult<Intent> result = task.getFutureResult();
     try {
       return result.get();
     } catch (Exception e) {
-      throw new AseRuntimeException(e);
+      throw new Sl4aRuntimeException(e);
     }
   }
 
@@ -197,7 +198,7 @@ public class AndroidFacade extends RpcReceiver {
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       mService.startActivity(intent);
     } catch (Exception e) {
-      AseLog.e("Failed to launch intent.", e);
+      Sl4aLog.e("Failed to launch intent.", e);
     }
   }
 
@@ -267,7 +268,7 @@ public class AndroidFacade extends RpcReceiver {
     try {
       launchHelper();
     } catch (Exception e) {
-      AseLog.e("Failed to launch intent.", e);
+      Sl4aLog.e("Failed to launch intent.", e);
     }
 
     FutureResult<String> result = task.getFutureResult();
@@ -278,8 +279,8 @@ public class AndroidFacade extends RpcReceiver {
         return result.get();
       }
     } catch (Exception e) {
-      AseLog.e("Failed to display dialog.", e);
-      throw new AseRuntimeException(e);
+      Sl4aLog.e("Failed to display dialog.", e);
+      throw new Sl4aRuntimeException(e);
     }
   }
 

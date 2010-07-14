@@ -7,6 +7,8 @@ import android.os.Handler;
 
 import com.google.ase.future.FutureResult;
 
+import com.googlecode.android_scripting.Sl4aLog;
+
 import java.util.concurrent.Callable;
 
 public class MainThread {
@@ -28,7 +30,7 @@ public class MainThread {
         try {
           result.set(task.call());
         } catch (Exception e) {
-          AseLog.e(e);
+          Sl4aLog.e(e);
           result.set(null);
         }
       }
@@ -36,7 +38,7 @@ public class MainThread {
     try {
       return result.get();
     } catch (InterruptedException e) {
-      AseLog.e(e);
+      Sl4aLog.e(e);
     }
     return null;
   }

@@ -37,7 +37,10 @@ import android.util.Log;
 
 import com.google.ase.interpreter.InterpreterAgent;
 import com.google.ase.interpreter.InterpreterConfiguration;
-import com.google.ase.interpreter.InterpreterConstants;
+
+import com.googlecode.android_scripting.IoUtils;
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
 /**
  * Manages storage and retrieval of scripts on the file system.
@@ -55,15 +58,15 @@ public class ScriptStorageAdapter {
    */
   public static void writeScript(String name, String data) {
     if (name == null || name.length() == 0) {
-      AseLog.e("No script name specified.");
+      Sl4aLog.e("No script name specified.");
       return;
     }
 
     File scriptsDirectory = new File(InterpreterConstants.SCRIPTS_ROOT);
     if (!scriptsDirectory.exists()) {
-      AseLog.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
+      Sl4aLog.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
       if (!scriptsDirectory.mkdirs()) {
-        AseLog.e("Failed to create scripts directory.");
+        Sl4aLog.e("Failed to create scripts directory.");
       }
     }
 
@@ -81,15 +84,15 @@ public class ScriptStorageAdapter {
   // /XXX Temporary stuff!
   public static File copyFromStream(String name, InputStream input) {
     if (name == null || name.length() == 0) {
-      AseLog.e("No script name specified.");
+      Sl4aLog.e("No script name specified.");
       return null;
     }
 
     File scriptsDirectory = new File(InterpreterConstants.SCRIPTS_ROOT);
     if (!scriptsDirectory.exists()) {
-      AseLog.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
+      Sl4aLog.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
       if (!scriptsDirectory.mkdirs()) {
-        AseLog.e("Failed to create scripts directory.");
+        Sl4aLog.e("Failed to create scripts directory.");
       }
     }
     File scriptFile = getScript(name);
@@ -117,10 +120,10 @@ public class ScriptStorageAdapter {
     }
     if (scriptFile.exists()) {
       if (!scriptFile.delete()) {
-        AseLog.e("Failed to delete script.");
+        Sl4aLog.e("Failed to delete script.");
       }
     } else {
-      AseLog.e("Script does not exist.");
+      Sl4aLog.e("Script does not exist.");
     }
   }
 

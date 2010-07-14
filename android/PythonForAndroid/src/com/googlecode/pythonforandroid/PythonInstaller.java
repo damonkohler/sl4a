@@ -4,17 +4,18 @@ import java.io.File;
 
 import android.content.Context;
 
-import com.google.ase.AseLog;
 import com.google.ase.AsyncTaskListener;
 import com.google.ase.InterpreterInstaller;
-import com.google.ase.exception.AseException;
-import com.google.ase.interpreter.InterpreterConstants;
-import com.google.ase.interpreter.InterpreterDescriptor;
+
+import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.exception.Sl4aException;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
+import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 
 public class PythonInstaller extends InterpreterInstaller {
 
   public PythonInstaller(InterpreterDescriptor descriptor, Context context,
-      AsyncTaskListener<Boolean> listener) throws AseException {
+      AsyncTaskListener<Boolean> listener) throws Sl4aException {
     super(descriptor, context, listener);
   }
 
@@ -26,7 +27,7 @@ public class PythonInstaller extends InterpreterInstaller {
       try {
         tmp.mkdir();
       } catch (SecurityException e) {
-        AseLog.e(mContext, "Setup failed.", e);
+        Sl4aLog.e(mContext, "Setup failed.", e);
         return false;
       }
     }

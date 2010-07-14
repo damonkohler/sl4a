@@ -21,7 +21,7 @@ import java.io.PrintStream;
 
 import android.util.Log;
 
-import com.google.ase.AseLog;
+import com.googlecode.android_scripting.Sl4aLog;
 
 /**
  * Renders text into a screen. Contains all the terminal-specific knowlege and state. Emulates a
@@ -952,7 +952,7 @@ class TerminalEmulator {
     try {
       mScreen.scroll(mTopMargin, mBottomMargin, getForeColor(), getBackColor());
     } catch (IllegalArgumentException e) {
-      AseLog.e("Scrolling failed", e);
+      Sl4aLog.e("Scrolling failed", e);
     }
   }
 

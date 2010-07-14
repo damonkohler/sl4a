@@ -14,14 +14,14 @@
  * the License.
  */
 
-package com.google.ase;
+package com.googlecode.android_scripting;
 
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-public class AseLog {
-  private AseLog() {
+public class Sl4aLog {
+  private Sl4aLog() {
     // Utility class.
   }
 

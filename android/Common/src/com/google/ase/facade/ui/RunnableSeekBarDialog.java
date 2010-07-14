@@ -25,9 +25,10 @@ import android.content.DialogInterface;
 import android.util.AndroidRuntimeException;
 import android.widget.SeekBar;
 
-import com.google.ase.AseLog;
 import com.google.ase.activity.AseServiceHelper;
 import com.google.ase.future.FutureResult;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 /**
  * Wrapper class for dialog box with seek bar.
@@ -91,7 +92,7 @@ public class RunnableSeekBarDialog extends RunnableDialog {
           result.put("canceled", true);
           result.put("progress", mSeekBar.getProgress());
         } catch (JSONException e) {
-          AseLog.e(e);
+          Sl4aLog.e(e);
         }
         mResult.set(result);
         // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.

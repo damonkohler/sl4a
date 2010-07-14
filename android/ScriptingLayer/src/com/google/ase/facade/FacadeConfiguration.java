@@ -24,10 +24,11 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.google.ase.AseLog;
 import com.google.ase.facade.ui.UiFacade;
 import com.google.ase.jsonrpc.RpcReceiver;
 import com.google.ase.rpc.MethodDescriptor;
+
+import com.googlecode.android_scripting.Sl4aLog;
 
 /**
  * Encapsulates the list of supported facades and their construction.
@@ -46,7 +47,7 @@ public class FacadeConfiguration {
     try {
       sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
     } catch (NumberFormatException e) {
-      AseLog.e(e);
+      Sl4aLog.e(e);
     }
 
     sFacadeClassList = new HashSet<Class<? extends RpcReceiver>>();

@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AndroidScriptingEnvironment"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ScriptingLayer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AndroidScriptingEnvironment"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
