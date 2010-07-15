@@ -50,7 +50,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class Sl4aService extends Service {
+public class ScriptingLayerService extends Service {
 
   private final Map<Integer, ScriptProcess> mProcessMap;
   private NotificationManager mNotificationManager;
@@ -61,12 +61,12 @@ public class Sl4aService extends Service {
   private static final int mNotificationId = NotificationIdFactory.create();
 
   public class LocalBinder extends Binder {
-    public Sl4aService getService() {
-      return Sl4aService.this;
+    public ScriptingLayerService getService() {
+      return ScriptingLayerService.this;
     }
   }
 
-  public Sl4aService() {
+  public ScriptingLayerService() {
     mProcessMap = new ConcurrentHashMap<Integer, ScriptProcess>();
     mBinder = new LocalBinder();
   }
@@ -159,7 +159,7 @@ public class Sl4aService extends Service {
     launcher.launch(new Runnable() {
       @Override
       public void run() {
-        Intent intent = new Intent(Sl4aService.this, Sl4aService.class);
+        Intent intent = new Intent(ScriptingLayerService.this, ScriptingLayerService.class);
         intent.setAction(Constants.ACTION_KILL_PROCESS);
         intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
         startService(intent);
@@ -177,7 +177,7 @@ public class Sl4aService extends Service {
   }
 
   private void showRunningScripts() {
-    Intent i = new Intent(this, Sl4aMonitor.class);
+    Intent i = new Intent(this, ScriptProcessMonitor.class);
     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(i);
   }
@@ -234,7 +234,7 @@ public class Sl4aService extends Service {
 
   private void updateNotification() {
     StringBuffer message = new StringBuffer();
-    Intent notificationIntent = new Intent(this, Sl4aService.class);
+    Intent notificationIntent = new Intent(this, ScriptingLayerService.class);
     mNotification.flags = 0;
 
     if (mProcessMap.size() == 0) {

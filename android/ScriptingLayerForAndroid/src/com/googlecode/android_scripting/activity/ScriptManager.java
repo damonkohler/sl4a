@@ -252,7 +252,7 @@ public class ScriptManager extends ListActivity {
     } else if (itemId == MenuId.EDIT.getId()) {
       editScript(script.getName());
     } else if (itemId == MenuId.START_SERVICE.getId()) {
-      Intent intent = new Intent(this, Sl4aService.class);
+      Intent intent = new Intent(this, ScriptingLayerService.class);
       intent.setAction(Constants.ACTION_LAUNCH_SCRIPT);
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
       startService(intent);

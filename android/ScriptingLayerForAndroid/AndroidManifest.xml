@@ -2,8 +2,7 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.googlecode.android_scripting"
-  android:versionName="25"
-  android:versionCode="25">
+  android:versionName="0" android:versionCode="0">
   <application
     android:debuggable="true"
     android:icon="@drawable/sl4a_logo_48"
@@ -94,7 +93,7 @@
       android:name=".activity.BluetoothDeviceList"
       android:configChanges="keyboardHidden|orientation" />
     <activity
-      android:name=".activity.Sl4aServiceLauncher"
+      android:name=".activity.ScriptingLayerServiceLauncher"
       android:taskAffinity=""
       android:theme="@android:style/Theme.Translucent.NoTitleBar">
       <intent-filter>
@@ -110,7 +109,7 @@
       android:configChanges="keyboardHidden|orientation"
       android:launchMode="singleTask" />
     <service
-      android:name=".activity.Sl4aService" />
+      android:name=".activity.ScriptingLayerService" />
     <service
       android:name=".activity.TriggerService" />
     <activity
@@ -138,7 +137,7 @@
     <uses-library
       android:name="android.test.runner" />
     <activity
-      android:name=".activity.Sl4aMonitor"
+      android:name=".activity.ScriptProcessMonitor"
       android:launchMode="singleTask" />
   </application>
   <uses-permission

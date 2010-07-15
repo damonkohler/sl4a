@@ -16,10 +16,13 @@
 
 package com.googlecode.android_scripting.facade;
 
+import java.io.IOException;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.os.Looper;
 
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.MainThread;
@@ -29,10 +32,6 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import java.io.IOException;
-import java.util.UUID;
-import java.util.concurrent.Callable;
 
 public class BluetoothFacade extends RpcReceiver {
 
@@ -46,7 +45,6 @@ public class BluetoothFacade extends RpcReceiver {
   public BluetoothFacade(FacadeManager manager) {
     super(manager);
     mAndroidFacade = manager.getReceiver(AndroidFacade.class);
-    Looper.prepare();
     mBluetoothServer = new BluetoothServer(manager.getReceiver(EventFacade.class));
     mBluetoothAdapter = MainThread.run(manager.getService(), new Callable<BluetoothAdapter>() {
       @Override

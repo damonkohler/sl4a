@@ -126,14 +126,14 @@ public class InterpreterManager extends ListActivity {
   }
 
   private void launchService(boolean usePublicIp) {
-    Intent intent = new Intent(this, Sl4aService.class);
+    Intent intent = new Intent(this, ScriptingLayerService.class);
     intent.setAction(Constants.ACTION_LAUNCH_SERVER);
     intent.putExtra(Constants.EXTRA_USE_EXTERNAL_IP, usePublicIp);
     startService(intent);
   }
 
   private void launchTerminal(InterpreterAgent interpreter) {
-    Intent intent = new Intent(this, Sl4aService.class);
+    Intent intent = new Intent(this, ScriptingLayerService.class);
     intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
     intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
     startService(intent);

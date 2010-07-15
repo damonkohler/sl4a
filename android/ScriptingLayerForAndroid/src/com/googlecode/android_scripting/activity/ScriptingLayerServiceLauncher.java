@@ -22,7 +22,7 @@ import android.os.Bundle;
 
 import com.googlecode.android_scripting.Constants;
 
-public class Sl4aServiceLauncher extends Activity {
+public class ScriptingLayerServiceLauncher extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

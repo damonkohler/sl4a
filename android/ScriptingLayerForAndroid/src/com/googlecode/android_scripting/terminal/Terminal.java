@@ -40,7 +40,7 @@ import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.Sl4aLog;
 import com.googlecode.android_scripting.activity.Sl4aPreferences;
-import com.googlecode.android_scripting.activity.Sl4aService;
+import com.googlecode.android_scripting.activity.ScriptingLayerService;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 
 /**
@@ -118,13 +118,13 @@ public class Terminal extends Activity {
   private ScriptProcess mScriptProcess;
   private ScriptLauncher mLauncher;
 
-  private Sl4aService mService;
+  private ScriptingLayerService mService;
   private int mProcessPort;
 
   private final ServiceConnection mConnection = new ServiceConnection() {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-      mService = ((Sl4aService.LocalBinder) service).getService();
+      mService = ((ScriptingLayerService.LocalBinder) service).getService();
       startTerminal();
     }
 
@@ -137,7 +137,7 @@ public class Terminal extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    bindService(new Intent(this, Sl4aService.class), mConnection, 0);
+    bindService(new Intent(this, ScriptingLayerService.class), mConnection, 0);
 
     // TODO(damonkohler): Until we are able to save and return state, it's better to just die.
     if (savedInstanceState != null) {

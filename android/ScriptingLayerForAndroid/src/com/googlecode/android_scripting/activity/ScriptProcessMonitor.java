@@ -16,6 +16,10 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -43,22 +47,18 @@ import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.Sl4aLog;
 import com.googlecode.android_scripting.terminal.Terminal;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
  * An activity that allows to monitor running scripts.
  * 
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
-public class Sl4aMonitor extends ListActivity {
+public class ScriptProcessMonitor extends ListActivity {
 
   private final static int UPDATE_INTERVAL_SECS = 1;
 
   private List<ScriptProcess> mProcessList;
   private ScriptMonitorAdapter mAdapter;
-  private volatile Sl4aService mService;
+  private volatile ScriptingLayerService mService;
   private boolean isConnected = false;
 
   private final Handler mHandler = new Handler();
@@ -68,7 +68,7 @@ public class Sl4aMonitor extends ListActivity {
   private ServiceConnection mConnection = new ServiceConnection() {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-      mService = ((Sl4aService.LocalBinder) service).getService();
+      mService = ((ScriptingLayerService.LocalBinder) service).getService();
       mUpdater = new ScriptListAdapter();
       mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
       isConnected = true;
@@ -84,7 +84,7 @@ public class Sl4aMonitor extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    bindService(new Intent(this, Sl4aService.class), mConnection, 0);
+    bindService(new Intent(this, ScriptingLayerService.class), mConnection, 0);
     CustomizeWindow.requestCustomTitle(this, "Script Monitor", R.layout.script_monitor);
     mAdapter = new ScriptMonitorAdapter();
     setListAdapter(mAdapter);
@@ -122,27 +122,21 @@ public class Sl4aMonitor extends ListActivity {
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
     final ScriptProcess script = (ScriptProcess) list.getItemAtPosition(position);
-    Intent intent = new Intent(Sl4aMonitor.this, Terminal.class);
+    Intent intent = new Intent(ScriptProcessMonitor.this, Terminal.class);
     intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
     startActivity(intent);
   }
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-    String scriptName = null;
     try {
       AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
       ScriptProcess script = (ScriptProcess) mAdapter.getItem(info.position);
-      scriptName = script.getScriptName();
+      script.getScriptName();
     } catch (ClassCastException e) {
       Sl4aLog.e(e);
     }
-
-    if (scriptName == null) {
-      menu.add(Menu.NONE, 0, Menu.NONE, "Stop Script");
-    } else {
-      menu.add(Menu.NONE, 0, Menu.NONE, "Stop " + scriptName);
-    }
+    menu.add(Menu.NONE, 0, Menu.NONE, "Stop");
   }
 
   @Override
@@ -161,7 +155,7 @@ public class Sl4aMonitor extends ListActivity {
       return false;
     }
 
-    Intent intent = new Intent(Sl4aMonitor.this, Sl4aService.class);
+    Intent intent = new Intent(ScriptProcessMonitor.this, ScriptingLayerService.class);
     intent.setAction(Constants.ACTION_KILL_PROCESS);
     intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
     startService(intent);
@@ -181,7 +175,7 @@ public class Sl4aMonitor extends ListActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    Intent intent = new Intent(this, Sl4aService.class);
+    Intent intent = new Intent(this, ScriptingLayerService.class);
     intent.setAction(Constants.ACTION_KILL_ALL);
     startService(intent);
     return true;
