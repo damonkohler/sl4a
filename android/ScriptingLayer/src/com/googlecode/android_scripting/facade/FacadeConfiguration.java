@@ -25,7 +25,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.facade.AlarmManagerFacade;
 import com.googlecode.android_scripting.facade.AndroidFacade;
 import com.googlecode.android_scripting.facade.ApplicationManagerFacade;
@@ -70,7 +70,7 @@ public class FacadeConfiguration {
     try {
       sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
     } catch (NumberFormatException e) {
-      Sl4aLog.e(e);
+      Log.e(e);
     }
 
     sFacadeClassList = new HashSet<Class<? extends RpcReceiver>>();

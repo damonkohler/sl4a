@@ -77,7 +77,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
 
   @Override
   protected void onPreExecute() {
-    Sl4aLog.v("Extracting " + mInput.getAbsolutePath() + " to " + mOutput.getAbsolutePath());
+    Log.v("Extracting " + mInput.getAbsolutePath() + " to " + mOutput.getAbsolutePath());
     if (mDialog != null) {
       mDialog.setTitle("Extracting");
       mDialog.setMessage(mInput.getName());
@@ -128,7 +128,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
       return;
     }
     if (mException != null) {
-      Sl4aLog.e("Zip extraction failed.", mException);
+      Log.e("Zip extraction failed.", mException);
     }
   }
 
@@ -176,7 +176,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
         // swallow this exception, we are only interested in the original one
       }
     }
-    Sl4aLog.v("Extraction is complete.");
+    Log.v("Extraction is complete.");
     return extractedSize;
   }
 

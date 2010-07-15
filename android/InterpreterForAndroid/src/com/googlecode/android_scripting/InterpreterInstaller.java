@@ -32,7 +32,7 @@ import android.preference.PreferenceManager;
 
 
 import com.googlecode.android_scripting.FileUtils;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
@@ -90,7 +90,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
         }
         mTaskHolder = newTask.execute();
       } catch (Exception e) {
-        Sl4aLog.v(e.getMessage(), e);
+        Log.v(e.getMessage(), e);
       }
 
       if (mBackgroundHandler != null) {
@@ -122,27 +122,27 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
           }
         }
       } catch (Exception e) {
-        Sl4aLog.e(e);
+        Log.e(e);
       }
       // Something went wrong...
       switch (request) {
       case DOWNLOAD_INTERPRETER:
-        Sl4aLog.e("Downloading interpreter failed.");
+        Log.e("Downloading interpreter failed.");
         break;
       case DOWNLOAD_INTERPRETER_EXTRAS:
-        Sl4aLog.e("Downloading interpreter extras failed.");
+        Log.e("Downloading interpreter extras failed.");
         break;
       case DOWNLOAD_SCRIPTS:
-        Sl4aLog.e("Downloading scripts failed.");
+        Log.e("Downloading scripts failed.");
         break;
       case EXTRACT_INTERPRETER:
-        Sl4aLog.e("Extracting interpreter failed.");
+        Log.e("Extracting interpreter failed.");
         break;
       case EXTRACT_INTERPRETER_EXTRAS:
-        Sl4aLog.e("Extracting interpreter extras failed.");
+        Log.e("Extracting interpreter extras failed.");
         break;
       case EXTRACT_SCRIPTS:
-        Sl4aLog.e("Extracting scripts failed.");
+        Log.e("Extracting scripts failed.");
         break;
       }
       Looper.myLooper().quit();
@@ -278,7 +278,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
           FileUtils.recursiveChmod(InterpreterUtils.getInterpreterRoot(mContext, mDescriptor
               .getName()), 0755);
     } catch (Exception e) {
-      Sl4aLog.e(e);
+      Log.e(e);
       return false;
     }
     return dataChmodErrno == 0 && interpreterChmodSuccess;

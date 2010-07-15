@@ -38,7 +38,7 @@ import android.widget.TextView;
 import com.googlecode.android_scripting.AsyncTaskListener;
 import com.googlecode.android_scripting.InterpreterInstaller;
 import com.googlecode.android_scripting.InterpreterUninstaller;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
@@ -93,7 +93,7 @@ public abstract class Main extends Activity {
           break;
         }
       }
-      Sl4aLog.v(Main.this, message);
+      Log.v(Main.this, message);
       mCurrentTask = null;
     }
   };
@@ -204,7 +204,7 @@ public abstract class Main extends Activity {
     try {
       installTask = getInterpreterInstaller(mDescriptor, Main.this, mTaskListener);
     } catch (Sl4aException e) {
-      Sl4aLog.e(this, e.getMessage(), e);
+      Log.e(this, e.getMessage(), e);
       return;
     }
     installTask.execute();
@@ -222,7 +222,7 @@ public abstract class Main extends Activity {
     try {
       uninstallTask = getInterpreterUninstaller(mDescriptor, Main.this, mTaskListener);
     } catch (Sl4aException e) {
-      Sl4aLog.e(this, e.getMessage(), e);
+      Log.e(this, e.getMessage(), e);
       return;
     }
     uninstallTask.execute();

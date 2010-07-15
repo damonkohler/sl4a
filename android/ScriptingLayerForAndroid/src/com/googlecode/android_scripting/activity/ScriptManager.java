@@ -44,7 +44,7 @@ import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.dialog.UsageTrackingConfirmation;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
@@ -236,13 +236,13 @@ public class ScriptManager extends ListActivity {
     try {
       info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     } catch (ClassCastException e) {
-      Sl4aLog.e("Bad menuInfo", e);
+      Log.e("Bad menuInfo", e);
       return false;
     }
 
     File script = (File) mAdapter.getItem(info.position);
     if (script == null) {
-      Sl4aLog.v("No script selected.");
+      Log.v("No script selected.");
       return false;
     }
 
@@ -303,12 +303,12 @@ public class ScriptManager extends ListActivity {
   private void writeScriptFromBarcode(Intent data) {
     String result = data.getStringExtra("SCAN_RESULT");
     if (result == null) {
-      Sl4aLog.e(this, "Invalid QR code content.");
+      Log.e(this, "Invalid QR code content.");
       return;
     }
     String contents[] = result.split("\n", 2);
     if (contents.length != 2) {
-      Sl4aLog.e(this, "Invalid QR code content.");
+      Log.e(this, "Invalid QR code content.");
       return;
     }
     String title = contents[0];

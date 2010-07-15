@@ -32,7 +32,7 @@ import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Sl4aProcess;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.dialog.Help;
 
 import java.io.BufferedReader;
@@ -82,7 +82,7 @@ public class LogcatViewer extends ListActivity {
           });
         }
       } catch (IOException e) {
-        Sl4aLog.e("Failed to read from logcat process.", e);
+        Log.e("Failed to read from logcat process.", e);
       } finally {
         mLogcatProcess.kill();
       }

@@ -36,7 +36,7 @@ import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.condition.RingerModeEvent;
 import com.googlecode.android_scripting.dialog.DurationPickerDialog;
 import com.googlecode.android_scripting.dialog.Help;
@@ -121,13 +121,13 @@ public class TriggerManager extends ListActivity {
     try {
       info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     } catch (ClassCastException e) {
-      Sl4aLog.e("Bad menuInfo", e);
+      Log.e("Bad menuInfo", e);
       return false;
     }
 
     Trigger trigger = mAdapter.getItem(info.position);
     if (trigger == null) {
-      Sl4aLog.v("No trigger selected.");
+      Log.v("No trigger selected.");
       return false;
     }
 

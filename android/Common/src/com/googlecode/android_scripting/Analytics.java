@@ -42,7 +42,7 @@ public class Analytics {
     if (context == null || analyticsAccountId == null) {
       return;
     }
-    mSl4aVersion = Sl4aVersion.getVersion(context);
+    mSl4aVersion = Version.getVersion(context);
     mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     mTracker = GoogleAnalyticsTracker.getInstance();
     mTracker.start(analyticsAccountId, 10, context);

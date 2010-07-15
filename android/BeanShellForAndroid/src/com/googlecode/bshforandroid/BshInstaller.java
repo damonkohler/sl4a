@@ -7,7 +7,7 @@ import android.content.Context;
 
 import com.googlecode.android_scripting.AsyncTaskListener;
 import com.googlecode.android_scripting.InterpreterInstaller;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
@@ -26,7 +26,7 @@ public class BshInstaller extends InterpreterInstaller {
       try {
         dalvikCache.mkdir();
       } catch (SecurityException e) {
-        Sl4aLog.e(mContext, "Setup failed.", e);
+        Log.e(mContext, "Setup failed.", e);
         return false;
       }
     }

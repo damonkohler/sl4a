@@ -1,7 +1,7 @@
 package com.googlecode.android_scripting.language;
 
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 
 import java.util.HashMap;
@@ -58,9 +58,9 @@ public class SupportedLanguages {
       try {
         lang = clazz.newInstance();
       } catch (IllegalAccessException e) {
-        Sl4aLog.e(e);
+        Log.e(e);
       } catch (InstantiationException e) {
-        Sl4aLog.e(e);
+        Log.e(e);
       }
     }
     return lang;

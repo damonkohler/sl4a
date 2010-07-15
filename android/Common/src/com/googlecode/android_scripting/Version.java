@@ -16,15 +16,15 @@
 
 package com.googlecode.android_scripting;
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-public class Sl4aVersion {
+public class Version {
 
-  private Sl4aVersion() {
+  private Version() {
     // Utility class.
   }
 
@@ -33,7 +33,7 @@ public class Sl4aVersion {
       PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
       return info.versionName;
     } catch (PackageManager.NameNotFoundException e) {
-      Sl4aLog.e("Package name not found", e);
+      Log.e("Package name not found", e);
     }
     return "?";
   }

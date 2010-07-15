@@ -41,7 +41,7 @@ import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 
@@ -112,7 +112,7 @@ public class ScriptEditor extends Activity {
         try {
           mLastSavedContent = ScriptStorageAdapter.readScript(name);
         } catch (IOException e) {
-          Sl4aLog.e("Failed to read script.", e);
+          Log.e("Failed to read script.", e);
           mLastSavedContent = "";
         } finally {
         }

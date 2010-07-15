@@ -26,7 +26,7 @@ import android.content.Intent;
 
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.MainThread;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
@@ -110,7 +110,7 @@ public class BluetoothFacade extends RpcReceiver {
       char[] buffer = new char[bufferSize];
       int bytesRead = mBluetoothServer.getReader().read(buffer);
       if (bytesRead == -1) {
-        Sl4aLog.e("Read failed.");
+        Log.e("Read failed.");
         throw new IOException("Read failed.");
       }
       return new String(buffer, 0, bytesRead);
@@ -148,7 +148,7 @@ public class BluetoothFacade extends RpcReceiver {
     }
     if (enabled) {
       if (prompt) {
-        Sl4aLog.v("Prompting");
+        Log.v("Prompting");
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         // TODO(damonkohler): Use the result to determine if this was successful. At any rate, keep
         // using startActivityForResult in order to synchronize this call.

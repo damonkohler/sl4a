@@ -17,11 +17,10 @@
 package com.googlecode.android_scripting;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
-public class Sl4aLog {
-  private Sl4aLog() {
+public class Log {
+  private Log() {
     // Utility class.
   }
 
@@ -38,64 +37,64 @@ public class Sl4aLog {
   }
 
   public static void v(String message) {
-    Log.v(getTag(), message);
+    android.util.Log.v(getTag(), message);
   }
 
   public static void v(String message, Throwable e) {
-    Log.v(getTag(), message, e);
+    android.util.Log.v(getTag(), message, e);
   }
 
   public static void v(Context context, String message) {
     toast(context, message);
-    Log.v(getTag(), message);
+    android.util.Log.v(getTag(), message);
   }
 
   public static void v(Context context, String message, Throwable e) {
     toast(context, message);
-    Log.v(getTag(), message, e);
+    android.util.Log.v(getTag(), message, e);
   }
 
   public static void e(Throwable e) {
-    Log.e(getTag(), "Error", e);
+    android.util.Log.e(getTag(), "Error", e);
   }
 
   public static void e(String message) {
-    Log.e(getTag(), message);
+    android.util.Log.e(getTag(), message);
   }
 
   public static void e(String message, Throwable e) {
-    Log.e(getTag(), message, e);
+    android.util.Log.e(getTag(), message, e);
   }
 
   public static void e(Context context, String message) {
     toast(context, message);
-    Log.e(getTag(), message);
+    android.util.Log.e(getTag(), message);
   }
 
   public static void e(Context context, String message, Throwable e) {
     toast(context, message);
-    Log.e(getTag(), message, e);
+    android.util.Log.e(getTag(), message, e);
   }
 
   public static void w(Throwable e) {
-    Log.w(getTag(), "Warning", e);
+    android.util.Log.w(getTag(), "Warning", e);
   }
 
   public static void w(String message) {
-    Log.w(getTag(), message);
+    android.util.Log.w(getTag(), message);
   }
 
   public static void w(String message, Throwable e) {
-    Log.w(getTag(), message, e);
+    android.util.Log.w(getTag(), message, e);
   }
 
   public static void w(Context context, String message) {
     toast(context, message);
-    Log.w(getTag(), message);
+    android.util.Log.w(getTag(), message);
   }
 
   public static void w(Context context, String message, Throwable e) {
     toast(context, message);
-    Log.w(getTag(), message, e);
+    android.util.Log.w(getTag(), message, e);
   }
 }

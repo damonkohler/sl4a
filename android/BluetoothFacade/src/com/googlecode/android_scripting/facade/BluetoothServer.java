@@ -21,7 +21,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -86,7 +86,7 @@ public class BluetoothServer {
    *          An integer defining the current connection state
    */
   private synchronized void setState(State state) {
-    Sl4aLog.v("Bluetooth state changed from " + mState + " to " + state);
+    Log.v("Bluetooth state changed from " + mState + " to " + state);
     switch (state) {
     case CONNECTED:
       mEventFacade.postEvent("bluetooth", "connected");
@@ -227,7 +227,7 @@ public class BluetoothServer {
       try {
         tmp = mAdapter.listenUsingRfcommWithServiceRecord(SDP_NAME, uuid);
       } catch (IOException e) {
-        Sl4aLog.e("Bluetooth listen failed.", e);
+        Log.e("Bluetooth listen failed.", e);
       }
       mmServerSocket = tmp;
     }
@@ -243,7 +243,7 @@ public class BluetoothServer {
           // connection or an exception.
           socket = mmServerSocket.accept();
         } catch (IOException e) {
-          Sl4aLog.e("Bluetooth accept failed.", e);
+          Log.e("Bluetooth accept failed.", e);
           break;
         }
 
@@ -262,7 +262,7 @@ public class BluetoothServer {
               try {
                 socket.close();
               } catch (IOException e) {
-                Sl4aLog.e("Blueooth could not close unwanted socket.", e);
+                Log.e("Blueooth could not close unwanted socket.", e);
               }
               break;
             }
@@ -275,7 +275,7 @@ public class BluetoothServer {
       try {
         mmServerSocket.close();
       } catch (IOException e) {
-        Sl4aLog.e("Bluetooth server failed to close.", e);
+        Log.e("Bluetooth server failed to close.", e);
       }
     }
   }
@@ -296,7 +296,7 @@ public class BluetoothServer {
       try {
         tmp = device.createRfcommSocketToServiceRecord(uuid);
       } catch (IOException e) {
-        Sl4aLog.e("Bluetooth create failed.", e);
+        Log.e("Bluetooth create failed.", e);
       }
       mmSocket = tmp;
     }
@@ -316,7 +316,7 @@ public class BluetoothServer {
         try {
           mmSocket.close();
         } catch (IOException e2) {
-          Sl4aLog.e("Bluetooth unable to close socket during connection failure.", e2);
+          Log.e("Bluetooth unable to close socket during connection failure.", e2);
         }
         BluetoothServer.this.stop();
         return;
@@ -335,7 +335,7 @@ public class BluetoothServer {
       try {
         mmSocket.close();
       } catch (IOException e) {
-        Sl4aLog.e("Bluetooth connect thread failed to close.", e);
+        Log.e("Bluetooth connect thread failed to close.", e);
       }
     }
   }
@@ -357,7 +357,7 @@ public class BluetoothServer {
         tmpIn = socket.getInputStream();
         tmpOut = socket.getOutputStream();
       } catch (IOException e) {
-        Sl4aLog.e("Bluetooth temp sockets not created.", e);
+        Log.e("Bluetooth temp sockets not created.", e);
       }
 
       mOutputStream = tmpOut;
@@ -365,7 +365,7 @@ public class BluetoothServer {
       try {
         mReader = new BufferedReader(new InputStreamReader(tmpIn, "ASCII"));
       } catch (IOException e) {
-        Sl4aLog.e("Bluetooth sockets not created.", e);
+        Log.e("Bluetooth sockets not created.", e);
       }
     }
 
@@ -377,10 +377,10 @@ public class BluetoothServer {
           mInputStream.available();
           Thread.sleep(100);
         } catch (IOException e) {
-          Sl4aLog.e("Bluetooth disconnected.", e);
+          Log.e("Bluetooth disconnected.", e);
           setState(BluetoothServer.State.IDLE);
         } catch (InterruptedException e) {
-          Sl4aLog.e("Bluetooth connection interrupted.", e);
+          Log.e("Bluetooth connection interrupted.", e);
           setState(BluetoothServer.State.IDLE);
         }
       }
@@ -390,7 +390,7 @@ public class BluetoothServer {
       try {
         mmSocket.close();
       } catch (IOException e) {
-        Sl4aLog.e("Bluetooth close failed.", e);
+        Log.e("Bluetooth close failed.", e);
       }
     }
   }

@@ -38,7 +38,7 @@ import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.activity.Preferences;
 import com.googlecode.android_scripting.activity.ScriptingLayerService;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
@@ -141,14 +141,14 @@ public class Terminal extends Activity {
 
     // TODO(damonkohler): Until we are able to save and return state, it's better to just die.
     if (savedInstanceState != null) {
-      Sl4aLog.e("Attempted to restore previous state. Aborting.");
+      Log.e("Attempted to restore previous state. Aborting.");
       finish();
       return;
     }
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     mProcessPort = getIntent().getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
     if (mProcessPort == 0) {
-      Sl4aLog.e(this, "No proxy port specified.");
+      Log.e(this, "No proxy port specified.");
       finish();
       return;
     }
@@ -159,7 +159,7 @@ public class Terminal extends Activity {
     mScriptProcess = mService.getScriptProcess(mProcessPort);
 
     if (mScriptProcess == null) {
-      Sl4aLog.e(this, "Process does not exist.");
+      Log.e(this, "Process does not exist.");
       finish();
       return;
     }
@@ -167,7 +167,7 @@ public class Terminal extends Activity {
     mLauncher = mScriptProcess.getLauncher();
 
     if (mLauncher == null) {
-      Sl4aLog.e(this, "Process is running in server mode only.");
+      Log.e(this, "Process is running in server mode only.");
       finish();
       return;
     }

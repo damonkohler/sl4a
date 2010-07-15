@@ -24,7 +24,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 
 /**
  * A utility class supplying helper methods for {@link Service} objects.
@@ -58,13 +58,13 @@ public class ServiceUtils {
         startForeground.invoke(service, new Object[] { notificationId, notification });
       } catch (IllegalArgumentException e) {
         // Should not happen!
-        Sl4aLog.e("Could not set TriggerService to foreground mode.", e);
+        Log.e("Could not set TriggerService to foreground mode.", e);
       } catch (IllegalAccessException e) {
         // Should not happen!
-        Sl4aLog.e("Could not set TriggerService to foreground mode.", e);
+        Log.e("Could not set TriggerService to foreground mode.", e);
       } catch (InvocationTargetException e) {
         // Should not happen!
-        Sl4aLog.e("Could not set TriggerService to foreground mode.", e);
+        Log.e("Could not set TriggerService to foreground mode.", e);
       }
 
     } catch (NoSuchMethodException e) {

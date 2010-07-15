@@ -37,7 +37,7 @@ import android.util.Log;
 
 
 import com.googlecode.android_scripting.IoUtils;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
@@ -58,15 +58,15 @@ public class ScriptStorageAdapter {
    */
   public static void writeScript(String name, String data) {
     if (name == null || name.length() == 0) {
-      Sl4aLog.e("No script name specified.");
+      Log.e("No script name specified.");
       return;
     }
 
     File scriptsDirectory = new File(InterpreterConstants.SCRIPTS_ROOT);
     if (!scriptsDirectory.exists()) {
-      Sl4aLog.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
+      Log.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
       if (!scriptsDirectory.mkdirs()) {
-        Sl4aLog.e("Failed to create scripts directory.");
+        Log.e("Failed to create scripts directory.");
       }
     }
 
@@ -84,15 +84,15 @@ public class ScriptStorageAdapter {
   // /XXX Temporary stuff!
   public static File copyFromStream(String name, InputStream input) {
     if (name == null || name.length() == 0) {
-      Sl4aLog.e("No script name specified.");
+      Log.e("No script name specified.");
       return null;
     }
 
     File scriptsDirectory = new File(InterpreterConstants.SCRIPTS_ROOT);
     if (!scriptsDirectory.exists()) {
-      Sl4aLog.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
+      Log.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
       if (!scriptsDirectory.mkdirs()) {
-        Sl4aLog.e("Failed to create scripts directory.");
+        Log.e("Failed to create scripts directory.");
       }
     }
     File scriptFile = getScript(name);
@@ -120,10 +120,10 @@ public class ScriptStorageAdapter {
     }
     if (scriptFile.exists()) {
       if (!scriptFile.delete()) {
-        Sl4aLog.e("Failed to delete script.");
+        Log.e("Failed to delete script.");
       }
     } else {
-      Sl4aLog.e("Script does not exist.");
+      Log.e("Script does not exist.");
     }
   }
 

@@ -39,7 +39,7 @@ import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
@@ -143,13 +143,13 @@ public class ApiBrowser extends ListActivity {
     try {
       info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     } catch (ClassCastException e) {
-      Sl4aLog.e("Bad menuInfo", e);
+      Log.e("Bad menuInfo", e);
       return false;
     }
 
     MethodDescriptor rpc = (MethodDescriptor) getListAdapter().getItem(info.position);
     if (rpc == null) {
-      Sl4aLog.v("No RPC selected.");
+      Log.v("No RPC selected.");
       return false;
     }
 

@@ -17,7 +17,7 @@
 package com.googlecode.android_scripting.jsonrpc;
 
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.RpcError;
@@ -77,26 +77,26 @@ public class JsonRpcServer {
 
     @Override
     public void run() {
-      Sl4aLog.v("Server thread " + getId() + " started.");
+      Log.v("Server thread " + getId() + " started.");
       try {
         mmReader = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()), 8192);
         mmWriter = new PrintWriter(mmSocket.getOutputStream(), true);
         process();
       } catch (Exception e) {
         if (!mStopServer) {
-          Sl4aLog.e("Server error.", e);
+          Log.e("Server error.", e);
         }
       } finally {
         close();
         mNetworkThreads.remove(this);
-        Sl4aLog.v("Server thread " + getId() + " died.");
+        Log.v("Server thread " + getId() + " died.");
       }
     }
 
     private void process() throws JSONException, IOException, Sl4aException {
       String data;
       while ((data = mmReader.readLine()) != null) {
-        Sl4aLog.v("Received: " + data);
+        Log.v("Received: " + data);
         JSONObject request = new JSONObject(data);
         int id = request.getInt("id");
         String method = request.getString("method");
@@ -116,7 +116,7 @@ public class JsonRpcServer {
         try {
           send(JsonRpcResult.result(id, rpc.invoke(mRpcReceiverManager, params)));
         } catch (Throwable t) {
-          Sl4aLog.e("Invocation error.", t);
+          Log.e("Invocation error.", t);
           send(JsonRpcResult.error(id, t));
         }
       }
@@ -145,7 +145,7 @@ public class JsonRpcServer {
     private void send(JSONObject result) {
       mmWriter.write(result + "\n");
       mmWriter.flush();
-      Sl4aLog.v("Sent: " + result);
+      Log.v("Sent: " + result);
     }
 
     private void close() {
@@ -153,14 +153,14 @@ public class JsonRpcServer {
         try {
           mmSocket.close();
         } catch (IOException e) {
-          Sl4aLog.e(e.getMessage(), e);
+          Log.e(e.getMessage(), e);
         }
       }
       if (mmReader != null) {
         try {
           mmReader.close();
         } catch (IOException e) {
-          Sl4aLog.e(e.getMessage(), e);
+          Log.e(e.getMessage(), e);
         }
       }
       if (mmWriter != null) {
@@ -226,7 +226,7 @@ public class JsonRpcServer {
       address = InetAddress.getLocalHost();
       mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
     } catch (Exception e) {
-      Sl4aLog.e("Failed to start server.", e);
+      Log.e("Failed to start server.", e);
       return null;
     }
     int port = start(address);
@@ -244,7 +244,7 @@ public class JsonRpcServer {
       address = getPublicInetAddress();
       mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
     } catch (Exception e) {
-      Sl4aLog.e("Failed to start server.", e);
+      Log.e("Failed to start server.", e);
       return null;
     }
     int port = start(address);
@@ -261,14 +261,14 @@ public class JsonRpcServer {
             startConnectionThread(sock);
           } catch (IOException e) {
             if (!mStopServer) {
-              Sl4aLog.e("Failed to accept connection.", e);
+              Log.e("Failed to accept connection.", e);
             }
           }
         }
       }
     };
     mServerThread.start();
-    Sl4aLog.v("Bound to " + address.getHostAddress() + ":" + mServer.getLocalPort());
+    Log.v("Bound to " + address.getHostAddress() + ":" + mServer.getLocalPort());
     return mServer.getLocalPort();
   }
 
@@ -285,7 +285,7 @@ public class JsonRpcServer {
     try {
       mServer.close();
     } catch (IOException e) {
-      Sl4aLog.e("Failed to close server socket.", e);
+      Log.e("Failed to close server socket.", e);
     }
     // Since the server is not running, the mNetworkThreads set can only
     // shrink from this point onward. We can just stop all of the running helper

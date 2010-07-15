@@ -6,7 +6,7 @@ import android.content.Context;
 import android.os.Handler;
 
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.future.FutureResult;
 
 import java.util.concurrent.Callable;
@@ -30,7 +30,7 @@ public class MainThread {
         try {
           result.set(task.call());
         } catch (Exception e) {
-          Sl4aLog.e(e);
+          Log.e(e);
           result.set(null);
         }
       }
@@ -38,7 +38,7 @@ public class MainThread {
     try {
       return result.get();
     } catch (InterruptedException e) {
-      Sl4aLog.e(e);
+      Log.e(e);
     }
     return null;
   }

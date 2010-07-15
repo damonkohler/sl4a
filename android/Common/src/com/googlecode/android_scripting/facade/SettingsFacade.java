@@ -29,7 +29,7 @@ import android.view.WindowManager;
 
 
 import com.googlecode.android_scripting.Sl4aApplication;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
@@ -205,7 +205,7 @@ public class SettingsFacade extends RpcReceiver {
       Method isScreenOn = powerManagerClass.getMethod("isScreenOn");
       result = (Boolean) isScreenOn.invoke(mPower);
     } catch (Exception e) {
-      Sl4aLog.e(e);
+      Log.e(e);
       throw new UnsupportedOperationException("This feature is only available after Eclair.");
     }
     return result;

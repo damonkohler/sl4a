@@ -37,7 +37,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.googlecode.android_scripting.Sl4aApplication;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.activity.NotificationIdFactory;
 import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
@@ -126,7 +126,7 @@ public class AndroidFacade extends RpcReceiver {
     try {
       launchHelper();
     } catch (Exception e) {
-      Sl4aLog.e("Failed to launch intent.", e);
+      Log.e("Failed to launch intent.", e);
     }
     FutureResult<Intent> result = task.getFutureResult();
     try {
@@ -197,7 +197,7 @@ public class AndroidFacade extends RpcReceiver {
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       mService.startActivity(intent);
     } catch (Exception e) {
-      Sl4aLog.e("Failed to launch intent.", e);
+      Log.e("Failed to launch intent.", e);
     }
   }
 
@@ -267,7 +267,7 @@ public class AndroidFacade extends RpcReceiver {
     try {
       launchHelper();
     } catch (Exception e) {
-      Sl4aLog.e("Failed to launch intent.", e);
+      Log.e("Failed to launch intent.", e);
     }
 
     FutureResult<String> result = task.getFutureResult();
@@ -278,7 +278,7 @@ public class AndroidFacade extends RpcReceiver {
         return result.get();
       }
     } catch (Exception e) {
-      Sl4aLog.e("Failed to display dialog.", e);
+      Log.e("Failed to display dialog.", e);
       throw new Sl4aRuntimeException(e);
     }
   }

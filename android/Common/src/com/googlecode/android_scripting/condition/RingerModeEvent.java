@@ -23,7 +23,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.trigger.EventListener;
 
 /**
@@ -56,7 +56,7 @@ public class RingerModeEvent implements Event {
           invokeListener();
         }
       default:
-        Sl4aLog.e("Invalid ringer mode: " + newRingerMode);
+        Log.e("Invalid ringer mode: " + newRingerMode);
       }
     }
   };

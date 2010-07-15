@@ -16,7 +16,7 @@
 
 package com.googlecode.android_scripting;
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 
 import android.os.Process;
 
@@ -83,14 +83,14 @@ public class Sl4aProcess {
 
     new Thread(new Runnable() {
       public void run() {
-        Sl4aLog.v("Waiting for " + mPid);
+        Log.v("Waiting for " + mPid);
         int result = Exec.waitFor(mPid);
-        Sl4aLog.v("Subprocess exited with result code " + result);
+        Log.v("Subprocess exited with result code " + result);
         mOut.close();
         try {
           mIn.close();
         } catch (IOException e) {
-          Sl4aLog.e(e);
+          Log.e(e);
         }
         if (shutdownHook != null) {
           shutdownHook.run();
@@ -102,7 +102,7 @@ public class Sl4aProcess {
   public void kill() {
     if (mPid != null) {
       Process.killProcess(mPid);
-      Sl4aLog.v("Killed process " + mPid);
+      Log.v("Killed process " + mPid);
     }
   }
 }

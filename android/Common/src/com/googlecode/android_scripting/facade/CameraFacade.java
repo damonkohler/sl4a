@@ -25,7 +25,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
@@ -86,11 +86,11 @@ public class CameraFacade extends RpcReceiver {
           output.close();
           takePictureResult.mmResult = true;
         } catch (FileNotFoundException e) {
-          Sl4aLog.e("Failed to save picture.", e);
+          Log.e("Failed to save picture.", e);
           takePictureResult.mmResult = false;
           return;
         } catch (IOException e) {
-          Sl4aLog.e("Failed to save picture.", e);
+          Log.e("Failed to save picture.", e);
           takePictureResult.mmResult = false;
           return;
         } finally {

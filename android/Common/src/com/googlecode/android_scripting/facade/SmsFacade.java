@@ -32,7 +32,7 @@ import android.net.Uri;
 import android.telephony.gsm.SmsManager;
 
 
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
@@ -68,7 +68,7 @@ public class SmsFacade extends RpcReceiver {
     Uri.Builder builder = Uri.parse("content://sms").buildUpon();
     builder.appendPath(folder);
     Uri uri = builder.build();
-    Sl4aLog.v("Built SMS URI: " + uri);
+    Log.v("Built SMS URI: " + uri);
     return uri;
   }
 

@@ -44,7 +44,7 @@ import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptProcess;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.terminal.Terminal;
 
 /**
@@ -107,7 +107,7 @@ public class ScriptProcessMonitor extends ListActivity {
         mUpdater = new ScriptListAdapter();
         mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
       } catch (IllegalStateException e) {
-        Sl4aLog.e(e.getMessage(), e);
+        Log.e(e.getMessage(), e);
       }
     }
   }
@@ -134,7 +134,7 @@ public class ScriptProcessMonitor extends ListActivity {
       ScriptProcess script = (ScriptProcess) mAdapter.getItem(info.position);
       script.getScriptName();
     } catch (ClassCastException e) {
-      Sl4aLog.e(e);
+      Log.e(e);
     }
     menu.add(Menu.NONE, 0, Menu.NONE, "Stop");
   }
@@ -145,13 +145,13 @@ public class ScriptProcessMonitor extends ListActivity {
     try {
       info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     } catch (ClassCastException e) {
-      Sl4aLog.e("Bad menuInfo", e);
+      Log.e("Bad menuInfo", e);
       return false;
     }
 
     final ScriptProcess script = (ScriptProcess) mAdapter.getItem(info.position);
     if (script == null) {
-      Sl4aLog.v("No script selected.");
+      Log.v("No script selected.");
       return false;
     }
 

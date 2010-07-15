@@ -32,7 +32,7 @@ import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.Sl4aApplication;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.terminal.Terminal;
@@ -124,7 +124,7 @@ public class ScriptingLayerService extends Service {
       try {
         launcher = launchScript(intent, serverProxy);
       } catch (Sl4aException e) {
-        Sl4aLog.e(this, e.getMessage(), e);
+        Log.e(this, e.getMessage(), e);
         serverProxy.shutdown();
         serverProxy = null;
         return;

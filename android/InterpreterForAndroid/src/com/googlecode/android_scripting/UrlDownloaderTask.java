@@ -23,7 +23,7 @@ import android.os.AsyncTask;
 
 
 import com.googlecode.android_scripting.IoUtils;
-import com.googlecode.android_scripting.Sl4aLog;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 
 import java.io.File;
@@ -79,7 +79,7 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
 
   @Override
   protected void onPreExecute() {
-    Sl4aLog.v("Downloading " + mUrl);
+    Log.v("Downloading " + mUrl);
     if (mDialog != null) {
       mDialog.setTitle("Downloading");
       mDialog.setMessage(mFile.getName());
@@ -135,7 +135,7 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
       return;
     }
     if (mException != null) {
-      Sl4aLog.e("Download failed.", mException);
+      Log.e("Download failed.", mException);
     }
   }
 
@@ -157,7 +157,7 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
     int contentLength = connection.getContentLength();
 
     if (mFile.exists() && contentLength == mFile.length()) {
-      Sl4aLog.v("Output file already exists. Skipping download.");
+      Log.v("Output file already exists. Skipping download.");
       return 0l;
     }
 
@@ -174,7 +174,7 @@ public class UrlDownloaderTask extends AsyncTask<Void, Integer, Long> {
       throw new IOException("Download incomplete: " + bytesCopied + " != " + contentLength);
     }
     mProgressReportingOutputStream.close();
-    Sl4aLog.v("Download completed successfully.");
+    Log.v("Download completed successfully.");
     return bytesCopied;
   }
 }

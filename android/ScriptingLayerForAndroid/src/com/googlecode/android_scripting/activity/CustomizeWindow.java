@@ -21,7 +21,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.Sl4aVersion;
+import com.googlecode.android_scripting.Version;
 
 public class CustomizeWindow {
   private CustomizeWindow() {
@@ -34,6 +34,6 @@ public class CustomizeWindow {
     activity.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
     ((TextView) activity.findViewById(R.id.left_text)).setText(title);
     ((TextView) activity.findViewById(R.id.right_text)).setText("SL4A r"
-        + Sl4aVersion.getVersion(activity));
+        + Version.getVersion(activity));
   }
 }
