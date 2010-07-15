@@ -11,7 +11,7 @@ for host, name in bluetooth.discover_devices(lookup_names=True):
 services = bluetooth.find_service(address=host)
 
 for service in services:
-  if service['name'] == 'ASE':
+  if service['name'] == 'SL4A':
     port = service['port']
     break
 

@@ -51,18 +51,10 @@ public class ScriptingLayerServiceHelper extends Activity {
     mResultMap = new HashMap<Integer, FutureResult<?>>();
     mFinished = false;
     setPersistent(true);
+    process();
   }
 
-  public void taskDone(int taskId) {
-    mResultMap.remove(taskId);
-    if (mFinished && mResultMap.isEmpty()) {
-      finish();
-    }
-  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
+  private void process() {
     while (true) {
       FutureActivityTask<?> task = mTaskQueue.poll();
       if (task == null) {
@@ -73,6 +65,13 @@ public class ScriptingLayerServiceHelper extends Activity {
       mResultMap.put(task.getTaskId(), result);
     }
     mFinished = true;
+  }
+
+  public void taskDone(int taskId) {
+    mResultMap.remove(taskId);
+    if (mFinished && mResultMap.isEmpty()) {
+      finish();
+    }
   }
 
   @Override
