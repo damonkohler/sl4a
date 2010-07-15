@@ -74,7 +74,7 @@ sub AUTOLOAD {
 
 # tie returns the object, so the value returned to require will be true.
 tie %Config, 'Config', {
-    archlibexp => '/data/data/com.googlecode.perlforandroid/perl/5.10.0/arm-eabi-linux',
+    archlibexp => '/data/data/com.googlecode.perlforandroid/files/perl/5.10.0/arm-eabi-linux',
     archname => 'arm-eabi-linux',
     cc => 'agcc',
     d_readlink => 'define',
@@ -89,9 +89,9 @@ tie %Config, 'Config', {
     osname => 'linux',
     osvers => '2.6',
     path_sep => ':',
-    privlibexp => '/data/data/com.googlecode.perlforandroid/perl/5.10.0',
+    privlibexp => '/data/data/com.googlecode.perlforandroid/files/perl/5.10.0',
     scriptdir => '/usr/bin',
-    sitearchexp => '/data/data/com.googlecode.perlforandroid/perl/site_perl/5.10.0/arm-eabi-linux',
+    sitearchexp => '/data/data/com.googlecode.perlforandroid/files/perl/site_perl/5.10.0/arm-eabi-linux',
     sitelibexp => '/sdcard/sl4a/extras/perl/site_perl/5.10.0',
     useithreads => undef,
     usevendorprefix => undef,
