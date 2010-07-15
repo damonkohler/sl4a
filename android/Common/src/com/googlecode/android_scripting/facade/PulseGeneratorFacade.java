@@ -4,6 +4,7 @@ import com.cellbots.PulseGenerator;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 import com.googlecode.android_scripting.rpc.Rpc;
+import com.googlecode.android_scripting.rpc.RpcParameter;
 
 public class PulseGeneratorFacade extends RpcReceiver {
 
@@ -44,7 +45,7 @@ public class PulseGeneratorFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Wraps PulseGenerator setLeftPulsePercent().")
-  public void pulseGeneratorSetLeftPulsePercent(Integer percent) {
+  public void pulseGeneratorSetLeftPulsePercent(@RpcParameter(name = "percent") Integer percent) {
     mPulseGenerator.setLeftPulsePercent(percent);
   }
 
@@ -64,7 +65,7 @@ public class PulseGeneratorFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Wraps PulseGenerator setRightPulsePercent().")
-  public void pulseGeneratorSetRightPulsePercent(Integer percent) {
+  public void pulseGeneratorSetRightPulsePercent(@RpcParameter(name = "percent") Integer percent) {
     mPulseGenerator.setRightPulsePercent(percent);
   }
 
@@ -94,13 +95,12 @@ public class PulseGeneratorFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Wraps PulseGenerator setHz().")
-  public void pulseGenteratorSetHz(Float hz) {
+  public void pulseGenteratorSetHz(@RpcParameter(name = "hz") Float hz) {
     mPulseGenerator.setHz(hz);
   }
 
   @Rpc(description = "Wraps PulseGenerator setHzPercent().")
-  public void pulseGeneratorSetHzPercent(Integer percent) {
+  public void pulseGeneratorSetHzPercent(@RpcParameter(name = "percent") Integer percent) {
     mPulseGenerator.setHzPercent(percent);
   }
-
 }
