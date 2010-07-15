@@ -16,12 +16,18 @@
 
 package com.googlecode.android_scripting.facade;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 
 import com.googlecode.android_scripting.Constants;
@@ -37,10 +43,16 @@ public class BluetoothFacade extends RpcReceiver {
 
   // UUID for SL4A.
   private static final String DEFAULT_UUID = "457807c0-4897-11df-9879-0800200c9a66";
+  private static final String SDP_NAME = "SL4A";
 
-  AndroidFacade mAndroidFacade;
-  BluetoothAdapter mBluetoothAdapter;
-  BluetoothServer mBluetoothServer;
+  private AndroidFacade mAndroidFacade;
+  private BluetoothAdapter mBluetoothAdapter;
+  private BluetoothSocket mSocket;
+  private BluetoothServerSocket mServerSocket;
+  private BluetoothDevice mDevice;
+  private OutputStream mOutputStream;
+  private InputStream mInputStream;
+  private BufferedReader mReader;
 
   public BluetoothFacade(FacadeManager manager) {
     super(manager);
@@ -51,29 +63,37 @@ public class BluetoothFacade extends RpcReceiver {
         return BluetoothAdapter.getDefaultAdapter();
       }
     });
-    mBluetoothServer =
-        new BluetoothServer(manager.getReceiver(EventFacade.class), mBluetoothAdapter);
   }
 
   @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")
   public boolean bluetoothConnect(
-      @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
+      @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid)
+      throws IOException {
     Intent deviceChooserIntent = new Intent();
     deviceChooserIntent.setComponent(Constants.BLUETOOTH_DEVICE_LIST_COMPONENT_NAME);
     Intent result = mAndroidFacade.startActivityForResult(deviceChooserIntent);
     if (result != null && result.hasExtra(Constants.EXTRA_DEVICE_ADDRESS)) {
       String address = result.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
-      BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-      mBluetoothServer.connect(device, UUID.fromString(uuid));
-      return true;
+      mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
+      mDevice = mBluetoothAdapter.getRemoteDevice(address);
+      // Always cancel discovery because it will slow down a connection.
+      mBluetoothAdapter.cancelDiscovery();
+      mSocket.connect();
+      connected();
     }
     return false;
   }
 
   @Rpc(description = "Listens for and accepts a Bluetooth connection.")
   public void bluetoothAccept(
-      @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid) {
-    mBluetoothServer.start(UUID.fromString(uuid));
+      @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid)
+      throws IOException {
+    mServerSocket =
+        mBluetoothAdapter.listenUsingRfcommWithServiceRecord(SDP_NAME, UUID.fromString(uuid));
+    // This is a blocking call and will only return on a successful connection or an exception.
+    mSocket = mServerSocket.accept();
+    mDevice = mSocket.getRemoteDevice();
+    connected();
   }
 
   @Rpc(description = "Requests that the device be discoverable for Bluetooth connections.")
@@ -89,8 +109,8 @@ public class BluetoothFacade extends RpcReceiver {
 
   @Rpc(description = "Sends bytes over the currently open Bluetooth connection.")
   public void bluetoothWrite(@RpcParameter(name = "bytes") String bytes) throws IOException {
-    if (mBluetoothServer != null) {
-      mBluetoothServer.getOutputStream().write(bytes.getBytes());
+    if (mOutputStream != null) {
+      mOutputStream.write(bytes.getBytes());
     } else {
       throw new IOException("Bluetooth not ready.");
     }
@@ -98,8 +118,8 @@ public class BluetoothFacade extends RpcReceiver {
 
   @Rpc(description = "Returns True if the next read is guaranteed not to block.")
   public Boolean bluetoothReadReady() throws IOException {
-    if (mBluetoothServer != null) {
-      return mBluetoothServer.getReader().ready();
+    if (mReader != null) {
+      return mReader.ready();
     }
     throw new IOException("Bluetooth not ready.");
   }
@@ -107,9 +127,9 @@ public class BluetoothFacade extends RpcReceiver {
   @Rpc(description = "Read up to bufferSize bytes.")
   public String bluetoothRead(
       @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize) throws IOException {
-    if (mBluetoothServer != null) {
+    if (mReader != null) {
       char[] buffer = new char[bufferSize];
-      int bytesRead = mBluetoothServer.getReader().read(buffer);
+      int bytesRead = mReader.read(buffer);
       if (bytesRead == -1) {
         Log.e("Read failed.");
         throw new IOException("Read failed.");
@@ -121,18 +141,15 @@ public class BluetoothFacade extends RpcReceiver {
 
   @Rpc(description = "Read the next line.")
   public String bluetoothReadLine() throws IOException {
-    if (mBluetoothServer != null) {
-      return mBluetoothServer.getReader().readLine();
+    if (mReader != null) {
+      return mReader.readLine();
     }
     throw new IOException("Bluetooth not ready.");
   }
 
   @Rpc(description = "Returns the name of the connected device.")
   public String bluetoothGetConnectedDeviceName() {
-    if (mBluetoothServer != null) {
-      return mBluetoothServer.getDeviceName();
-    }
-    return null;
+    return mDevice.getName();
   }
 
   @Rpc(description = "Checks Bluetooth state.", returns = "True if Bluetooth is enabled.")
@@ -165,8 +182,57 @@ public class BluetoothFacade extends RpcReceiver {
     return enabled;
   }
 
+  public void connected() throws IOException {
+    mOutputStream = mSocket.getOutputStream();
+    mInputStream = mSocket.getInputStream();
+    mReader = new BufferedReader(new InputStreamReader(mInputStream, "ASCII"));
+  }
+
+  public void stop() {
+    if (mSocket != null) {
+      try {
+        mSocket.close();
+      } catch (IOException e) {
+        Log.e(e);
+      }
+    }
+    mSocket = null;
+    if (mServerSocket != null) {
+      try {
+        mServerSocket.close();
+      } catch (IOException e) {
+        Log.e(e);
+      }
+    }
+    mServerSocket = null;
+    if (mInputStream != null) {
+      try {
+        mInputStream.close();
+      } catch (IOException e) {
+        Log.e(e);
+      }
+    }
+    mInputStream = null;
+    if (mOutputStream != null) {
+      try {
+        mOutputStream.close();
+      } catch (IOException e) {
+        Log.e(e);
+      }
+    }
+    mOutputStream = null;
+    if (mReader != null) {
+      try {
+        mReader.close();
+      } catch (IOException e) {
+        Log.e(e);
+      }
+    }
+    mReader = null;
+  }
+
   @Override
   public void shutdown() {
-    mBluetoothServer.stop();
+    stop();
   }
 }

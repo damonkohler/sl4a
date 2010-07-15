@@ -1,11 +1,18 @@
 import android
+import sys
 import threading
 import time
 
 droid = android.Android()
 droid.toggleBluetoothState(True)
 droid.bluetoothMakeDiscoverable()
-droid.bluetoothAccept()
+
+print 'Connecting...'
+result = droid.bluetoothAccept()
+if result.error is not None:
+  print 'Connection failed!'
+  time.sleep(1)
+  sys.exit(1)
 
 def receiver():
   while True:
@@ -17,18 +24,6 @@ def sender():
   while True:
     droid.bluetoothWrite('test\n')
     time.sleep(0.25)
-
-while True:
-  result = droid.receiveEvent().result
-  if result is not None and result['name'] == 'bluetooth':
-    if result['data'] == 'idle':
-      print 'Connection failed.'
-      sys.exit(1)
-    elif result['data'] == 'connected':
-      print 'Connected!'
-      break
-  print 'Waiting for connection...'
-  time.sleep(1)
 
 receiver_thread = threading.Thread(target=receiver)
 receiver_thread.daemon = True
