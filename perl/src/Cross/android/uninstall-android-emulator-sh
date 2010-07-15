@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo
+echo "[uninstalling perl]"
+echo
+
+# TODO: sanity check: "did you really mean to do this?"
+
+sh -x -c "adb shell rm -r /data/data/com.google.ase/perl /sdcard/ase/extras/perl"
+
+echo
+echo "[perl uninstalled]"
+echo

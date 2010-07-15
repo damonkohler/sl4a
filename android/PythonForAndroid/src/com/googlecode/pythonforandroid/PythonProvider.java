@@ -1,13 +1,12 @@
 package com.googlecode.pythonforandroid;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 import com.googlecode.android_scripting.interpreter.InterpreterProvider;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PythonProvider extends InterpreterProvider {
 
@@ -21,7 +20,7 @@ public class PythonProvider extends InterpreterProvider {
   }
 
   private String getHome() {
-    File parent = mContext.getFilesDir().getParentFile();
+    File parent = mContext.getFilesDir();
     File file = new File(parent, mDescriptor.getName());
     return file.getAbsolutePath();
   }
