@@ -27,8 +27,7 @@ public class InterpreterUtils {
   }
 
   public static File getInterpreterRoot(Context context) {
-    // TODO(Alexey): Get rid of hardcoded stuff.
-    return context.getFilesDir().getParentFile();
+    return context.getFilesDir();
   }
 
   public static File getInterpreterRoot(Context context, String interpreterName) {

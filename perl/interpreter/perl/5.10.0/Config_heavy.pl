@@ -14,7 +14,7 @@ use strict;
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Thu Jul  8 10:27:58 CEST 2010
+## Configuration time: Wed Jul 14 18:08:43 CEST 2010
 ## Configured by     : raaar
 ## Target system     : linux su4ka.muc.corp.google.com 2.6.24-gg804011-generic #1 smp tue mar 30 18:11:30 utc 2010 x86_64 gnulinux 
 #
@@ -140,7 +140,7 @@ ccsymbols=''
 ccversion=''
 cf_by='raaar'
 cf_email='raaar@su4ka.muc.corp.google.com'
-cf_time='Thu Jul  8 10:27:58 CEST 2010'
+cf_time='Wed Jul 14 18:08:43 CEST 2010'
 chgrp=''
 chmod='chmod'
 chown=''

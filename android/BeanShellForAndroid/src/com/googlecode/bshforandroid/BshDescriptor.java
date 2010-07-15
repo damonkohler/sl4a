@@ -52,11 +52,6 @@ public class BshDescriptor extends Sl4aHostedInterpreter {
     return 2;
   }
 
-  @Override
-  public int getScriptsVersion() {
-    return 1;
-  }
-
   public String getBinary() {
     return BSH_BIN;
   }

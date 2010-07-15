@@ -133,7 +133,7 @@ def test_get_running_packages():
 
 def test_alert_dialog():
   title = 'User Interface'
-  message = 'Welcome to the ASE integration test.'
+  message = 'Welcome to the SL4A integration test.'
   droid.dialogCreateAlert(title, message)
   droid.dialogSetPositiveButtonText('Continue')
   droid.dialogShow()

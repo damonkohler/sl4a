@@ -53,6 +53,11 @@ public class PerlDescriptor extends Sl4aHostedInterpreter {
   }
 
   public int getVersion() {
+    return 8;
+  }
+
+  @Override
+  public int getExtrasVersion() {
     return 7;
   }
 
