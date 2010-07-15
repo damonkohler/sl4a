@@ -18,7 +18,7 @@ package com.googlecode.android_scripting.facade.ui;
 
 import android.app.Dialog;
 
-import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
+import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
 
@@ -26,7 +26,7 @@ import java.util.concurrent.CountDownLatch;
 
 abstract class RunnableDialog extends FutureActivityTask<Object> {
 
-  protected Sl4aServiceHelper mActivity;
+  protected ScriptingLayerServiceHelper mActivity;
   protected Dialog mDialog;
   protected FutureResult<Object> mResult;
   protected final CountDownLatch mShowLatch = new CountDownLatch(1);

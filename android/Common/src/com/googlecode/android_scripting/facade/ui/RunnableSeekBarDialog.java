@@ -27,7 +27,7 @@ import android.widget.SeekBar;
 
 
 import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
+import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureResult;
 
 /**
@@ -61,7 +61,7 @@ public class RunnableSeekBarDialog extends RunnableDialog {
   }
 
   @Override
-  public void run(Sl4aServiceHelper activity, FutureResult<Object> result) {
+  public void run(ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
     mActivity = activity;
     mResult = result;
     mSeekBar = new SeekBar(activity);
@@ -83,7 +83,7 @@ public class RunnableSeekBarDialog extends RunnableDialog {
   }
 
   private Builder addOnCancelListener(final AlertDialog.Builder builder,
-      final Sl4aServiceHelper activity) {
+      final ScriptingLayerServiceHelper activity) {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
@@ -102,7 +102,7 @@ public class RunnableSeekBarDialog extends RunnableDialog {
     });
   }
 
-  private void configureButtons(final AlertDialog.Builder builder, final Sl4aServiceHelper activity) {
+  private void configureButtons(final AlertDialog.Builder builder, final ScriptingLayerServiceHelper activity) {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {

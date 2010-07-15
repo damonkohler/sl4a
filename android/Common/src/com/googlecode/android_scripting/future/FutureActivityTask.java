@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.Activity;
 
-import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
+import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 
 /**
  * Encapsulates an {@link Activity} and a {@link FutureObject}.
@@ -32,9 +32,9 @@ public abstract class FutureActivityTask<T> {
   private final FutureResult<T> mResult = new FutureResult<T>();
   private final int myTaskId = mNextFutureTaskId.incrementAndGet();
 
-  public abstract void run(final Sl4aServiceHelper activity, final FutureResult<T> result);
+  public abstract void run(final ScriptingLayerServiceHelper activity, final FutureResult<T> result);
 
-  public Runnable getRunnable(final Sl4aServiceHelper activity) {
+  public Runnable getRunnable(final ScriptingLayerServiceHelper activity) {
     return new Runnable() {
       @Override
       public void run() {

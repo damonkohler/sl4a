@@ -104,7 +104,7 @@
       </intent-filter>
     </activity>
     <activity
-      android:name=".activity.Sl4aServiceHelper"
+      android:name=".activity.ScriptingLayerServiceHelper"
       android:theme="@android:style/Theme.Translucent.NoTitleBar"
       android:configChanges="keyboardHidden|orientation"
       android:launchMode="singleTask" />

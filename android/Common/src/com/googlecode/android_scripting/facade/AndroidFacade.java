@@ -39,7 +39,7 @@ import android.widget.Toast;
 import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.activity.NotificationIdFactory;
-import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
+import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
@@ -115,7 +115,7 @@ public class AndroidFacade extends RpcReceiver {
   Intent startActivityForResult(final Intent intent) {
     FutureActivityTask<Intent> task = new FutureActivityTask<Intent>() {
       @Override
-      public void run(Sl4aServiceHelper activity, FutureResult<Intent> result) {
+      public void run(ScriptingLayerServiceHelper activity, FutureResult<Intent> result) {
         // TODO(damonkohler): Throwing an exception here (e.g. specifying a non-existent activity)
         // causes a force close. There needs to be a way to pass back an error condition from the
         // helper.
@@ -137,7 +137,7 @@ public class AndroidFacade extends RpcReceiver {
   }
 
   private void launchHelper() {
-    Intent helper = new Intent(mService, Sl4aServiceHelper.class);
+    Intent helper = new Intent(mService, ScriptingLayerServiceHelper.class);
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     mService.startActivity(helper);
   }
@@ -235,7 +235,7 @@ public class AndroidFacade extends RpcReceiver {
       final boolean password) {
     final FutureActivityTask<String> task = new FutureActivityTask<String>() {
       @Override
-      public void run(final Sl4aServiceHelper activity, final FutureResult<String> result) {
+      public void run(final ScriptingLayerServiceHelper activity, final FutureResult<String> result) {
         final EditText input = new EditText(activity);
         if (password) {
           input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);

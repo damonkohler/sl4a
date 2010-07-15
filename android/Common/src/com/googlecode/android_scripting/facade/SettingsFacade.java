@@ -30,7 +30,7 @@ import android.view.WindowManager;
 
 import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
+import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
@@ -177,7 +177,7 @@ public class SettingsFacade extends RpcReceiver {
 
     FutureActivityTask<Object> task = new FutureActivityTask<Object>() {
       @Override
-      public void run(final Sl4aServiceHelper activity, FutureResult<Object> result) {
+      public void run(final ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         lp.screenBrightness = brightness * 1.0f / 255;
         activity.getWindow().setAttributes(lp);
@@ -190,7 +190,7 @@ public class SettingsFacade extends RpcReceiver {
         ((Sl4aApplication) mService.getApplication()).getTaskQueue();
     taskQueue.offer(task);
 
-    Intent helper = new Intent(mService, Sl4aServiceHelper.class);
+    Intent helper = new Intent(mService, ScriptingLayerServiceHelper.class);
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     mService.startActivity(helper);
 

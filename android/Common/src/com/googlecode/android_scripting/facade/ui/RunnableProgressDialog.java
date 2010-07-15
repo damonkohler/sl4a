@@ -18,7 +18,7 @@ package com.googlecode.android_scripting.facade.ui;
 
 import android.app.ProgressDialog;
 
-import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
+import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureResult;
 
 /**
@@ -43,7 +43,7 @@ class RunnableProgressDialog extends RunnableDialog {
   }
 
   @Override
-  public void run(Sl4aServiceHelper activity, FutureResult<Object> result) {
+  public void run(ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
     mActivity = activity;
     mDialog = new ProgressDialog(activity);
     ((ProgressDialog) mDialog).setProgressStyle(mStyle);

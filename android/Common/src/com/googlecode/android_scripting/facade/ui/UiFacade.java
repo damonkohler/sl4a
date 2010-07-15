@@ -29,7 +29,7 @@ import android.util.AndroidRuntimeException;
 
 
 import com.googlecode.android_scripting.Sl4aApplication;
-import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
+import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.future.FutureActivityTask;
@@ -57,7 +57,7 @@ public class UiFacade extends RpcReceiver {
   }
 
   private void launchHelper() {
-    Intent helper = new Intent(mService, Sl4aServiceHelper.class);
+    Intent helper = new Intent(mService, ScriptingLayerServiceHelper.class);
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     mService.startActivity(helper);
   }

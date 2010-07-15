@@ -149,7 +149,6 @@ public class BluetoothFacade extends RpcReceiver {
     }
     if (enabled) {
       if (prompt) {
-        Log.v("Prompting");
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         // TODO(damonkohler): Use the result to determine if this was successful. At any rate, keep
         // using startActivityForResult in order to synchronize this call.

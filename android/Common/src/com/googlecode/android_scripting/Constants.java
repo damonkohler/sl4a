@@ -75,10 +75,10 @@ public interface Constants {
 
   public static final ComponentName SL4A_SERVICE_COMPONENT_NAME =
       new ComponentName("com.googlecode.android_scripting",
-          "com.googlecode.android_scripting.activity.Sl4aService");
+          "com.googlecode.android_scripting.activity.ScriptingLayerService");
   public static final ComponentName SL4A_SERVICE_LAUNCHER_COMPONENT_NAME =
       new ComponentName("com.googlecode.android_scripting",
-          "com.googlecode.android_scripting.activity.Sl4aServiceLauncher");
+          "com.googlecode.android_scripting.activity.ScriptingLayerServiceLauncher");
   public static final ComponentName BLUETOOTH_DEVICE_LIST_COMPONENT_NAME =
       new ComponentName("com.googlecode.android_scripting",
           "com.googlecode.android_scripting.activity.BluetoothDeviceList");

@@ -16,6 +16,9 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.util.HashMap;
+import java.util.Queue;
+
 import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
@@ -26,9 +29,6 @@ import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
 
-import java.util.HashMap;
-import java.util.Queue;
-
 /**
  * This {@link Activity} is launched by the {@link Sl4aService} in order to perform operations that
  * a {@link Service} is unable to do. For example: start another activity for result, show dialogs,
@@ -36,7 +36,7 @@ import java.util.Queue;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class Sl4aServiceHelper extends Activity {
+public class ScriptingLayerServiceHelper extends Activity {
   Queue<FutureActivityTask<?>> mTaskQueue;
   private Handler mHandler;
   private HashMap<Integer, FutureResult<?>> mResultMap;

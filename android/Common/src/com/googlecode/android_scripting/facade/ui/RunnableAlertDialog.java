@@ -21,7 +21,7 @@ import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 
 
-import com.googlecode.android_scripting.activity.Sl4aServiceHelper;
+import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.future.FutureResult;
 
@@ -140,7 +140,7 @@ class RunnableAlertDialog extends RunnableDialog {
   }
 
   @Override
-  public void run(final Sl4aServiceHelper activity, FutureResult<Object> result) {
+  public void run(final ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
     mActivity = activity;
     mResult = result;
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -205,7 +205,7 @@ class RunnableAlertDialog extends RunnableDialog {
   }
 
   private Builder addOnCancelListener(final AlertDialog.Builder builder,
-      final Sl4aServiceHelper activity) {
+      final ScriptingLayerServiceHelper activity) {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
@@ -219,7 +219,7 @@ class RunnableAlertDialog extends RunnableDialog {
     });
   }
 
-  private void configureButtons(final AlertDialog.Builder builder, final Sl4aServiceHelper activity) {
+  private void configureButtons(final AlertDialog.Builder builder, final ScriptingLayerServiceHelper activity) {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
