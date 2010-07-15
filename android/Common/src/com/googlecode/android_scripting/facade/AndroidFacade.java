@@ -16,6 +16,10 @@
 
 package com.googlecode.android_scripting.facade;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -36,8 +40,9 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.activity.NotificationIdFactory;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
@@ -48,12 +53,6 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Queue;
 
 public class AndroidFacade extends RpcReceiver {
   /**
@@ -67,7 +66,7 @@ public class AndroidFacade extends RpcReceiver {
   private final Service mService;
   private final Handler mHandler;
   private final Intent mIntent;
-  private final Queue<FutureActivityTask<?>> mTaskQueue;
+  private final TaskQueue mTaskQueue;
 
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
@@ -123,23 +122,13 @@ public class AndroidFacade extends RpcReceiver {
       }
     };
     mTaskQueue.offer(task);
-    try {
-      launchHelper();
-    } catch (Exception e) {
-      Log.e("Failed to launch intent.", e);
-    }
+
     FutureResult<Intent> result = task.getFutureResult();
     try {
       return result.get();
     } catch (Exception e) {
       throw new Sl4aRuntimeException(e);
     }
-  }
-
-  private void launchHelper() {
-    Intent helper = new Intent(mService, ScriptingLayerServiceHelper.class);
-    helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    mService.startActivity(helper);
   }
 
   // TODO(damonkohler): It's unnecessary to add the complication of choosing between startActivity
@@ -263,12 +252,6 @@ public class AndroidFacade extends RpcReceiver {
       }
     };
     mTaskQueue.offer(task);
-
-    try {
-      launchHelper();
-    } catch (Exception e) {
-      Log.e("Failed to launch intent.", e);
-    }
 
     FutureResult<String> result = task.getFutureResult();
     try {

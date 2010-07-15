@@ -17,7 +17,6 @@
 package com.googlecode.android_scripting.activity;
 
 import java.util.HashMap;
-import java.util.Queue;
 
 import android.app.Activity;
 import android.app.Service;
@@ -26,6 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
 
@@ -37,7 +37,7 @@ import com.googlecode.android_scripting.future.FutureResult;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ScriptingLayerServiceHelper extends Activity {
-  Queue<FutureActivityTask<?>> mTaskQueue;
+  TaskQueue mTaskQueue;
   private Handler mHandler;
   private HashMap<Integer, FutureResult<?>> mResultMap;
 

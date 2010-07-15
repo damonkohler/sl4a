@@ -17,7 +17,6 @@
 package com.googlecode.android_scripting.facade;
 
 import java.lang.reflect.Method;
-import java.util.Queue;
 
 import android.app.Service;
 import android.content.Context;
@@ -27,9 +26,9 @@ import android.os.PowerManager;
 import android.provider.Settings.SettingNotFoundException;
 import android.view.WindowManager;
 
-
-import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
@@ -186,13 +185,8 @@ public class SettingsFacade extends RpcReceiver {
       }
     };
 
-    Queue<FutureActivityTask<?>> taskQueue =
-        ((Sl4aApplication) mService.getApplication()).getTaskQueue();
+    TaskQueue taskQueue = ((Sl4aApplication) mService.getApplication()).getTaskQueue();
     taskQueue.offer(task);
-
-    Intent helper = new Intent(mService, ScriptingLayerServiceHelper.class);
-    helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    mService.startActivity(helper);
 
     return oldValue;
   }

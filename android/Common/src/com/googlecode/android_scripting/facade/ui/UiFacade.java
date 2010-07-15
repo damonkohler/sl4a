@@ -16,7 +16,6 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import java.util.Queue;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -24,15 +23,12 @@ import org.json.JSONException;
 
 import android.app.ProgressDialog;
 import android.app.Service;
-import android.content.Intent;
 import android.util.AndroidRuntimeException;
 
-
 import com.googlecode.android_scripting.Sl4aApplication;
-import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
+import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.facade.FacadeManager;
-import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
@@ -47,19 +43,13 @@ import com.googlecode.android_scripting.rpc.RpcParameter;
  */
 public class UiFacade extends RpcReceiver {
   private final Service mService;
-  private final Queue<FutureActivityTask<?>> mTaskQueue;
+  private final TaskQueue mTaskQueue;
   private RunnableDialog mDialogTask;
 
   public UiFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
     mTaskQueue = ((Sl4aApplication) mService.getApplication()).getTaskQueue();
-  }
-
-  private void launchHelper() {
-    Intent helper = new Intent(mService, ScriptingLayerServiceHelper.class);
-    helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    mService.startActivity(helper);
   }
 
   @Rpc(description = "Create a spinner progress dialog.")
@@ -108,8 +98,7 @@ public class UiFacade extends RpcReceiver {
   @Rpc(description = "Show dialog.")
   public void dialogShow() throws InterruptedException {
     if (mDialogTask != null && mDialogTask.getDialog() == null) {
-      mTaskQueue.offer((FutureActivityTask<?>) mDialogTask);
-      launchHelper();
+      mTaskQueue.offer(mDialogTask);
       mDialogTask.getShowLatch().await();
     } else {
       throw new AndroidRuntimeException("No dialog to show.");

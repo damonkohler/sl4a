@@ -16,25 +16,20 @@
 
 package com.googlecode.android_scripting;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import android.app.Application;
 
-import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 
 public class Sl4aApplication extends Application {
 
-  private final Queue<FutureActivityTask<?>> mTaskQueue =
-      new ConcurrentLinkedQueue<FutureActivityTask<?>>();
+  private final TaskQueue mTaskQueue = new TaskQueue(this);
 
   protected TriggerRepository mTriggerRepository;
 
   protected InterpreterConfiguration mConfiguration;
 
-  public Queue<FutureActivityTask<?>> getTaskQueue() {
+  public TaskQueue getTaskQueue() {
     return mTaskQueue;
   }
 
