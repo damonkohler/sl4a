@@ -37,9 +37,11 @@ import com.googlecode.android_scripting.future.FutureResult;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ScriptingLayerServiceHelper extends Activity {
-  TaskQueue mTaskQueue;
+
+  private TaskQueue mTaskQueue;
   private Handler mHandler;
   private HashMap<Integer, FutureResult<?>> mResultMap;
+  private boolean mFinished;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +49,13 @@ public class ScriptingLayerServiceHelper extends Activity {
     mHandler = new Handler();
     mTaskQueue = ((Sl4aApplication) getApplication()).getTaskQueue();
     mResultMap = new HashMap<Integer, FutureResult<?>>();
+    mFinished = false;
     setPersistent(true);
   }
 
   public void taskDone(int taskId) {
     mResultMap.remove(taskId);
-    if (mResultMap.isEmpty()) {
+    if (mFinished && mResultMap.isEmpty()) {
       finish();
     }
   }
@@ -60,10 +63,16 @@ public class ScriptingLayerServiceHelper extends Activity {
   @Override
   protected void onStart() {
     super.onStart();
-    FutureActivityTask<?> task = mTaskQueue.poll();
-    mHandler.post(task.getRunnable(this));
-    FutureResult<?> result = task.getFutureResult();
-    mResultMap.put(task.getTaskId(), result);
+    while (true) {
+      FutureActivityTask<?> task = mTaskQueue.poll();
+      if (task == null) {
+        break;
+      }
+      mHandler.post(task.getRunnable(this));
+      FutureResult<?> result = task.getFutureResult();
+      mResultMap.put(task.getTaskId(), result);
+    }
+    mFinished = true;
   }
 
   @Override
