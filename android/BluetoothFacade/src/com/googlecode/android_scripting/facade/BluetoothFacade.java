@@ -25,8 +25,8 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 
 import com.googlecode.android_scripting.Constants;
-import com.googlecode.android_scripting.MainThread;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.MainThread;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
@@ -45,13 +45,14 @@ public class BluetoothFacade extends RpcReceiver {
   public BluetoothFacade(FacadeManager manager) {
     super(manager);
     mAndroidFacade = manager.getReceiver(AndroidFacade.class);
-    mBluetoothServer = new BluetoothServer(manager.getReceiver(EventFacade.class));
     mBluetoothAdapter = MainThread.run(manager.getService(), new Callable<BluetoothAdapter>() {
       @Override
       public BluetoothAdapter call() throws Exception {
         return BluetoothAdapter.getDefaultAdapter();
       }
     });
+    mBluetoothServer =
+        new BluetoothServer(manager.getReceiver(EventFacade.class), mBluetoothAdapter);
   }
 
   @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")

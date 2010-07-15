@@ -16,19 +16,19 @@
 
 package com.googlecode.android_scripting.facade;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
-
-import com.googlecode.android_scripting.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.UUID;
+
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
+
+import com.googlecode.android_scripting.Log;
 
 /**
  * This class does all the work for setting up and managing Bluetooth connections with other
@@ -55,9 +55,9 @@ public class BluetoothServer {
     IDLE, LISTENING, CONNECTING, CONNECTED
   }
 
-  public BluetoothServer(EventFacade eventFacade) {
+  public BluetoothServer(EventFacade eventFacade, BluetoothAdapter adapter) {
     mEventFacade = eventFacade;
-    mAdapter = BluetoothAdapter.getDefaultAdapter();
+    mAdapter = adapter;
     mState = State.IDLE;
   }
 

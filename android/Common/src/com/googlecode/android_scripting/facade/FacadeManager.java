@@ -39,7 +39,7 @@ public class FacadeManager extends RpcReceiverManager {
   public AndroidFacade.Resources getAndroidFacadeResources() {
     return new AndroidFacade.Resources() {
       @Override
-      public int getSl4aLogo48() {
+      public int getLogo48() {
         // TODO(Alexey): As an alternative, ask application for resource ids.
         String packageName = mService.getApplication().getPackageName();
         return mService.getResources().getIdentifier("script_logo_48", "drawable", packageName);

@@ -19,8 +19,6 @@ package com.googlecode.android_scripting.terminal;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import android.util.Log;
-
 import com.googlecode.android_scripting.Log;
 
 /**
@@ -328,13 +326,13 @@ class TerminalEmulator {
           if (c < 32 || c > 126) {
             c = ' ';
           }
-          Log.w(Terminal.TAG, "'" + c + "' (" + Integer.toString(c) + ")");
+          Log.w("'" + c + "' (" + Integer.toString(c) + ")");
         }
         process(c);
         mProcessedCharCount++;
       } catch (Exception e) {
-        Log.e(Terminal.TAG, "Exception while processing character "
-            + Integer.toString(mProcessedCharCount) + " code " + Integer.toString(c), e);
+        Log.e("Exception while processing character " + Integer.toString(mProcessedCharCount)
+            + " code " + Integer.toString(c), e);
       }
     }
   }
@@ -858,7 +856,7 @@ class TerminalEmulator {
         mBackColor = (mBackColor & 0x8) | (code - 40);
       } else {
         if (Terminal.LOG_UNKNOWN_ESCAPE_SEQUENCES) {
-          Log.w(Terminal.TAG, String.format("SGR unknown code %d", code));
+          Log.w(String.format("SGR unknown code %d", code));
         }
       }
     }
@@ -1054,7 +1052,7 @@ class TerminalEmulator {
 
   private void logError(String error) {
     if (Terminal.LOG_UNKNOWN_ESCAPE_SEQUENCES) {
-      Log.e(Terminal.TAG, error);
+      Log.e(error);
     }
     finishSequence();
   }

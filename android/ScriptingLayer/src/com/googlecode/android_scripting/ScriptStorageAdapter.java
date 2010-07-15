@@ -33,11 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 
-
-import com.googlecode.android_scripting.IoUtils;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
@@ -77,7 +73,7 @@ public class ScriptStorageAdapter {
       out.write(data);
       out.close();
     } catch (IOException e) {
-      Log.e("Script Storage", "Failed to write script file.", e);
+      Log.e("Failed to write script file.", e);
     }
   }
 

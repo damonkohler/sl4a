@@ -61,7 +61,7 @@ public class AndroidFacade extends RpcReceiver {
    * be obtained.
    */
   public interface Resources {
-    int getSl4aLogo48();
+    int getLogo48();
   }
 
   private final Service mService;
@@ -301,7 +301,7 @@ public class AndroidFacade extends RpcReceiver {
   public void notify(@RpcParameter(name = "title", description = "title") String title,
       @RpcParameter(name = "message") String message) {
     Notification notification =
-        new Notification(mResources.getSl4aLogo48(), message, System.currentTimeMillis());
+        new Notification(mResources.getLogo48(), message, System.currentTimeMillis());
     // This contentIntent is a noop.
     PendingIntent contentIntent = PendingIntent.getService(mService, 0, new Intent(), 0);
     notification.setLatestEventInfo(mService, title, message, contentIntent);
