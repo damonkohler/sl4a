@@ -56,7 +56,7 @@
       </intent-filter>
     </receiver>
     <activity
-      android:name=".activity.Sl4aPreferences"
+      android:name=".activity.Preferences"
       android:theme="@android:style/Theme.NoTitleBar" />
     <activity
       android:name=".terminal.Terminal"

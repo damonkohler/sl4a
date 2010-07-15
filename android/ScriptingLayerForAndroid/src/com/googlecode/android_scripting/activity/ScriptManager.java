@@ -194,7 +194,7 @@ public class ScriptManager extends ListActivity {
       Intent intent = new Intent("com.google.zxing.client.android.SCAN");
       startActivityForResult(intent, RequestCode.QRCODE_ADD.ordinal());
     } else if (itemId == MenuId.PREFERENCES.getId()) {
-      startActivity(new Intent(this, Sl4aPreferences.class));
+      startActivity(new Intent(this, Preferences.class));
     } else if (itemId == MenuId.TRIGGER_MANAGER.getId()) {
       startActivity(new Intent(this, TriggerManager.class));
     } else if (itemId == MenuId.LOGCAT_VIEWER.getId()) {

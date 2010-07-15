@@ -122,7 +122,7 @@ public class LogcatViewer extends ListActivity {
     } else if (itemId == MenuId.JUMP_TO_BOTTOM.getId()) {
       getListView().setSelection(mLogcatMessages.size() - 1);
     } else if (itemId == MenuId.PREFERENCES.getId()) {
-      startActivity(new Intent(this, Sl4aPreferences.class));
+      startActivity(new Intent(this, Preferences.class));
     }
     return super.onOptionsItemSelected(item);
   }

@@ -166,7 +166,7 @@ public class ScriptEditor extends Activity {
       startActivity(IntentBuilders.buildStartInTerminalIntent(mNameText.getText().toString()));
       finish();
     } else if (item.getItemId() == MenuId.PREFERENCES.getId()) {
-      startActivity(new Intent(this, Sl4aPreferences.class));
+      startActivity(new Intent(this, Preferences.class));
     } else if (item.getItemId() == MenuId.API_BROWSER.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, mNameText.getText().toString());

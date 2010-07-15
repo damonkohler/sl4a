@@ -39,7 +39,7 @@ import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.Sl4aLog;
-import com.googlecode.android_scripting.activity.Sl4aPreferences;
+import com.googlecode.android_scripting.activity.Preferences;
 import com.googlecode.android_scripting.activity.ScriptingLayerService;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 
@@ -350,7 +350,7 @@ public class Terminal extends Activity {
   }
 
   private void doPreferences() {
-    startActivity(new Intent(this, Sl4aPreferences.class));
+    startActivity(new Intent(this, Preferences.class));
   }
 
   private void doEmailTranscript() {

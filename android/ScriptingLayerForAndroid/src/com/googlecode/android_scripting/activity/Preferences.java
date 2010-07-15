@@ -22,7 +22,7 @@ import android.preference.PreferenceActivity;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.R;
 
-public class Sl4aPreferences extends PreferenceActivity {
+public class Preferences extends PreferenceActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

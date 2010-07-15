@@ -120,7 +120,7 @@ public class InterpreterManager extends ListActivity {
       });
       dialog.show();
     } else if (itemId == MenuId.PREFERENCES.getId()) {
-      startActivity(new Intent(this, Sl4aPreferences.class));
+      startActivity(new Intent(this, Preferences.class));
     }
     return true;
   }
