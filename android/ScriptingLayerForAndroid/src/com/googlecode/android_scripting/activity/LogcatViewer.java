@@ -16,10 +16,14 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,19 +34,13 @@ import android.widget.TextView;
 
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.Process;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.dialog.Help;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 public class LogcatViewer extends ListActivity {
 
-  private Handler mHandler;
   private List<String> mLogcatMessages;
   private int mOldLastPosition;
   private LogcatViewerAdapter mAdapter;
@@ -63,12 +61,15 @@ public class LogcatViewer extends ListActivity {
       mLogcatProcess.start("/system/bin/logcat", null, null, null);
       try {
         BufferedReader br = mLogcatProcess.getIn();
-        String line;
-        while ((line = br.readLine()) != null) {
-          mLogcatMessages.add(line);
-          mHandler.post(new Runnable() {
+        while (true) {
+          final String line = br.readLine();
+          if (line == null) {
+            break;
+          }
+          runOnUiThread(new Runnable() {
             @Override
             public void run() {
+              mLogcatMessages.add(line);
               mAdapter.notifyDataSetInvalidated();
               // This logic performs what transcriptMode="normal" should do. Since that doesn't seem
               // to work, we do it this way.
@@ -96,7 +97,6 @@ public class LogcatViewer extends ListActivity {
     mLogcatMessages = new LinkedList<String>();
     mOldLastPosition = 0;
     mAdapter = new LogcatViewerAdapter();
-    mHandler = new Handler();
     setListAdapter(mAdapter);
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
