@@ -32,13 +32,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.activity.Preferences;
 import com.googlecode.android_scripting.activity.ScriptingLayerService;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
@@ -159,7 +158,7 @@ public class Terminal extends Activity {
     mScriptProcess = mService.getScriptProcess(mProcessPort);
 
     if (mScriptProcess == null) {
-      Log.e(this, "Process does not exist.");
+      Log.e(String.format("Process (%d) does not exist.", mProcessPort));
       finish();
       return;
     }
