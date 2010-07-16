@@ -16,6 +16,13 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,23 +34,16 @@ import android.os.IBinder;
 import android.widget.RemoteViews;
 
 import com.googlecode.android_scripting.AndroidProxy;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
-import com.googlecode.android_scripting.BaseApplication;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.terminal.Terminal;
 import com.googlecode.android_scripting.trigger.Trigger;
-
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
@@ -79,15 +79,25 @@ public class ScriptingLayerService extends Service {
   }
 
   private void createNotification() {
-    String notificationMessage = "Service is created.";
     mNotification =
-        new Notification(R.drawable.sl4a_logo_48, "SL4A is running...", System.currentTimeMillis());
+        new Notification(R.drawable.sl4a_logo_48, "SL4A Service is running...", System
+            .currentTimeMillis());
     mNotification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
     mNotification.contentView.setTextViewText(R.id.notification_title, "SL4A Service");
-    mNotification.contentView.setTextViewText(R.id.notification_message, notificationMessage);
-    mNotification.contentView.setTextViewText(R.id.notification_action, null);
+    mNotification.contentView.setTextViewText(R.id.notification_action,
+        "Tap to view running scripts.");
     mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-    mNotification.contentIntent = PendingIntent.getService(this, 0, null, 0);
+    Intent notificationIntent = new Intent(this, ScriptingLayerService.class);
+    notificationIntent.setAction(Constants.ACTION_SHOW_RUNNING_SCRIPTS);
+    mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+  }
+
+  private void updateNotification() {
+    StringBuilder message = new StringBuilder();
+    message.append(getText(R.string.script_number_message));
+    message.append(mProcessMap.size());
+    mNotification.contentView.setTextViewText(R.id.notification_message, message);
+    mNotificationManager.notify(mNotificationId, mNotification);
   }
 
   @Override
@@ -159,6 +169,8 @@ public class ScriptingLayerService extends Service {
     launcher.launch(new Runnable() {
       @Override
       public void run() {
+        // TODO(damonkohler): This action actually kills the script rather than notifying the
+        // service that script exited on its own. We should distinguish between these two cases.
         Intent intent = new Intent(ScriptingLayerService.this, ScriptingLayerService.class);
         intent.setAction(Constants.ACTION_KILL_PROCESS);
         intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
@@ -230,30 +242,6 @@ public class ScriptingLayerService extends Service {
 
   public ScriptProcess getScriptProcess(int processPort) {
     return mProcessMap.get(processPort);
-  }
-
-  private void updateNotification() {
-    StringBuffer message = new StringBuffer();
-    Intent notificationIntent = new Intent(this, ScriptingLayerService.class);
-    mNotification.flags = 0;
-
-    if (mProcessMap.size() == 0) {
-      message.append(getText(R.string.no_running_scripts_message));
-      notificationIntent = null;
-      mNotification.flags |= Notification.FLAG_AUTO_CANCEL;
-      mNotification.contentView.setTextViewText(R.id.notification_action, null);
-    } else {
-      int numProcesses = mProcessMap.size();
-      message.append(getText(R.string.script_number_message));
-      message.append(numProcesses);
-      mNotification.contentView.setTextViewText(R.id.notification_action,
-          getText(R.string.notification_action_message));
-      notificationIntent.setAction(Constants.ACTION_SHOW_RUNNING_SCRIPTS);
-    }
-    mNotification.contentView.setTextViewText(R.id.notification_message, message);
-    mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
-    mNotification.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-    mNotificationManager.notify(mNotificationId, mNotification);
   }
 
   @Override

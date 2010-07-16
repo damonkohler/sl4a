@@ -26,10 +26,10 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 import com.googlecode.android_scripting.trigger.TriggerRepository.AddTriggerListener;
@@ -91,6 +91,7 @@ public class TriggerService extends Service {
             .currentTimeMillis());
     notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
     notification.contentView.setTextViewText(R.id.notification_title, "SL4A Trigger Service");
+    notification.contentView.setTextViewText(R.id.notification_action, "Tap to view triggers.");
     Intent notificationIntent = new Intent(this, TriggerManager.class);
     notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
     notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
