@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting;
 
-import com.googlecode.android_scripting.Log;
-
 import android.os.Process;
 
 import java.io.BufferedReader;

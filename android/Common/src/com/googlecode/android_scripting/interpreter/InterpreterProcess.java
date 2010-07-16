@@ -35,6 +35,7 @@ public abstract class InterpreterProcess extends Sl4aProcess {
   protected String mLaunchScript;
   protected Map<String, String> mEnvironment = new HashMap<String, String>();
   protected int mId;
+  private static final int BUFFER_SIZE = 8192;
 
   /**
    * Creates a new {@link InterpreterProcess}.
@@ -88,7 +89,7 @@ public abstract class InterpreterProcess extends Sl4aProcess {
 
   @Override
   public BufferedReader getIn() {
-    return new LoggingBufferedReader(mIn, 8192);
+    return new LoggingBufferedReader(mIn, BUFFER_SIZE);
   }
 
   private final StringBuffer mLog;
@@ -241,6 +242,10 @@ public abstract class InterpreterProcess extends Sl4aProcess {
           mmSkipLF = false;
           str = super.readLine();
         }
+        mLog.append(str);
+        mLog.append('\n');
+        mLogLength += str.length() + 1;
+        mmPos += str.length() + 1;
         return buffer.append(str).toString();
       }
     }

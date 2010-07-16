@@ -22,10 +22,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.database.DataSetObserver;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -34,14 +36,16 @@ import android.widget.TextView;
 
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
-import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.Sl4aApplication;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,10 +54,11 @@ public class InterpreterManager extends ListActivity {
   private InterpreterManagerAdapter mAdapter;
   private InterpreterListObserver mObserver;
   private List<InterpreterAgent> mInterpreterList;
+  private List<String> mFeaturedInterpreters;
   private InterpreterConfiguration mConfiguration;
 
   private static enum MenuId {
-    HELP, NETWORK, PREFERENCES;
+    HELP, ADD, NETWORK, PREFERENCES;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -72,6 +77,7 @@ public class InterpreterManager extends ListActivity {
     registerForContextMenu(getListView());
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
+    mFeaturedInterpreters = FeaturedInterpreters.getList();
     Analytics.trackActivity(this);
   }
 
@@ -96,6 +102,7 @@ public class InterpreterManager extends ListActivity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     menu.clear();
+    buildInstallLanguagesMenu(menu);
     menu.add(Menu.NONE, MenuId.NETWORK.getId(), Menu.NONE, "Start Server").setIcon(
         android.R.drawable.ic_menu_share);
     menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
@@ -103,6 +110,16 @@ public class InterpreterManager extends ListActivity {
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
     return super.onPrepareOptionsMenu(menu);
+  }
+
+  private void buildInstallLanguagesMenu(Menu menu) {
+    SubMenu installMenu =
+        menu.addSubMenu(Menu.NONE, MenuId.ADD.getId(), Menu.NONE, "Add").setIcon(
+            android.R.drawable.ic_menu_add);
+    int i = MenuId.values().length + Menu.FIRST;
+    for (String interpreterName : mFeaturedInterpreters) {
+      installMenu.add(Menu.NONE, i++, Menu.NONE, interpreterName);
+    }
   }
 
   @Override
@@ -121,6 +138,13 @@ public class InterpreterManager extends ListActivity {
       dialog.show();
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, Preferences.class));
+    } else if (itemId > MenuId.values().length + Menu.FIRST) {
+      int i = itemId - MenuId.values().length - Menu.FIRST;
+      if (i < mFeaturedInterpreters.size()) {
+        URL url = FeaturedInterpreters.getUrlForName(mFeaturedInterpreters.get(i));
+        Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(url.toString()));
+        startActivity(viewIntent);
+      }
     }
     return true;
   }

@@ -29,10 +29,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.net.Uri;
 
-
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
-import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 
 import java.util.ArrayList;
@@ -245,19 +243,6 @@ public class InterpreterConfiguration {
     List<InterpreterAgent> interpreters = new ArrayList<InterpreterAgent>();
     for (InterpreterAgent i : mInterpreterSet) {
       if (i.isInstalled(mContext)) {
-        interpreters.add(i);
-      }
-    }
-    return interpreters;
-  }
-
-  /**
-   * Returns the list of all not installed interpreters.
-   */
-  public List<InterpreterAgent> getNotInstalledInterpreters() {
-    List<InterpreterAgent> interpreters = new ArrayList<InterpreterAgent>();
-    for (InterpreterAgent i : mInterpreterSet) {
-      if (!i.isInstalled(mContext)) {
         interpreters.add(i);
       }
     }
