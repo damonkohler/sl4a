@@ -16,6 +16,7 @@
 
 package com.googlecode.android_scripting;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +24,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 
 import com.googlecode.android_scripting.exception.Sl4aException;
+import com.googlecode.android_scripting.future.FutureResult;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,11 +42,17 @@ import java.util.zip.ZipFile;
  */
 public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
 
+  private static enum Replace {
+    YES, NO, YESTOALL, CANCEL
+  }
+
   private final File mInput;
   private final File mOutput;
   private final ProgressDialog mDialog;
   private Throwable mException;
   private int mProgress = 0;
+  private final Context mContext;
+  private boolean mReplaceAll;
 
   private final class ProgressReportingOutputStream extends FileOutputStream {
     private ProgressReportingOutputStream(File f) throws FileNotFoundException {
@@ -59,7 +67,8 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
     }
   }
 
-  public ZipExtractorTask(String in, String out, Context context) throws Sl4aException {
+  public ZipExtractorTask(String in, String out, Context context, boolean replaceAll)
+      throws Sl4aException {
     super();
     mInput = new File(in);
     mOutput = new File(out);
@@ -73,6 +82,10 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
     } else {
       mDialog = null;
     }
+
+    mContext = context;
+    mReplaceAll = replaceAll;
+
   }
 
   @Override
@@ -162,13 +175,24 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
         if (!destination.getParentFile().exists()) {
           destination.getParentFile().mkdirs();
         }
+        if (destination.exists() && mContext != null && !mReplaceAll) {
+          Replace answer = showDialog(entry.getName());
+          switch (answer) {
+          case YES:
+            break;
+          case NO:
+            continue;
+          case YESTOALL:
+            mReplaceAll = true;
+            break;
+          default:
+            throw new Sl4aException("Installation was cancelled");
+          }
+        }
         ProgressReportingOutputStream outStream = new ProgressReportingOutputStream(destination);
         extractedSize += IoUtils.copy(zip.getInputStream(entry), outStream);
         outStream.close();
       }
-    } catch (Exception e) {
-      cleanUp(zip);
-      throw e;
     } finally {
       try {
         zip.close();
@@ -192,14 +216,55 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
     return originalSize;
   }
 
-  private void cleanUp(ZipFile file) {
-    Enumeration<? extends ZipEntry> entries = file.entries();
-    while (entries.hasMoreElements()) {
-      ZipEntry entry = entries.nextElement();
-      File destination = new File(mOutput, entry.getName());
-      if (destination.exists()) {
-        destination.delete();
+  private Replace showDialog(final String name) {
+    final FutureResult<Replace> mResult = new FutureResult<Replace>();
+
+    MainThread.run(mContext, new Runnable() {
+      @Override
+      public void run() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(String.format("Script \"%s\" already exist.", name));
+        builder.setMessage(String.format("Do you want to replace script \"%s\" ?", name));
+
+        DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            Replace result = Replace.CANCEL;
+            switch (which) {
+            case DialogInterface.BUTTON_POSITIVE:
+              result = Replace.YES;
+              break;
+            case DialogInterface.BUTTON_NEGATIVE:
+              result = Replace.NO;
+              break;
+            case DialogInterface.BUTTON_NEUTRAL:
+              result = Replace.YESTOALL;
+              break;
+            }
+            mResult.set(result);
+            dialog.dismiss();
+          }
+        };
+        builder.setNegativeButton("Skip", buttonListener);
+        builder.setPositiveButton("Replace", buttonListener);
+        builder.setNeutralButton("Replace All", buttonListener);
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+          @Override
+          public void onCancel(DialogInterface dialog) {
+            mResult.set(Replace.CANCEL);
+            dialog.dismiss();
+          }
+        });
+        builder.show();
       }
+    });
+
+    try {
+      return mResult.get();
+    } catch (InterruptedException e) {
+      Log.e(e);
     }
+    return null;
   }
 }

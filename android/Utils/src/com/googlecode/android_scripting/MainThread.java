@@ -5,8 +5,6 @@ package com.googlecode.android_scripting;
 import android.content.Context;
 import android.os.Handler;
 
-
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.future.FutureResult;
 
 import java.util.concurrent.Callable;
@@ -41,5 +39,15 @@ public class MainThread {
       Log.e(e);
     }
     return null;
+  }
+
+  public static void run(Context context, final Runnable task) {
+    Handler handler = new Handler(context.getMainLooper());
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+        task.run();
+      }
+    });
   }
 }
