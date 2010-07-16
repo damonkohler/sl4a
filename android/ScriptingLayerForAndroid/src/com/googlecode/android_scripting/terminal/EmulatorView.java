@@ -16,6 +16,13 @@
 
 package com.googlecode.android_scripting.terminal;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -37,13 +44,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.googlecode.android_scripting.Exec;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
-
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.Reader;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * A view on a transcript and a terminal emulator. Displays the text of the transcript and the
@@ -134,6 +134,7 @@ class EmulatorView extends View implements OnGestureListener {
   private Reader mTermIn;
   private PrintStream mTermOut;
   private FileDescriptor mTermFd;
+  private Runnable mOnPollingThreadExit;
 
   private final static int MAX_BYTES_PER_UPDATE = 512;
   private final Queue<Character> mReceiveBuffer =
@@ -416,6 +417,9 @@ class EmulatorView extends View implements OnGestureListener {
             break;
           }
         }
+        if (mOnPollingThreadExit != null) {
+          mOnPollingThreadExit.run();
+        }
       }
     });
 
@@ -475,5 +479,9 @@ class EmulatorView extends View implements OnGestureListener {
   public boolean onSingleTapUp(MotionEvent e) {
     mInputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT);
     return true;
+  }
+
+  public void setOnPollingThreadExit(Runnable runnable) {
+    mOnPollingThreadExit = runnable;
   }
 }

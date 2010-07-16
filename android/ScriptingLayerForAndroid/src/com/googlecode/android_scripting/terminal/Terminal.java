@@ -179,6 +179,12 @@ public class Terminal extends Activity {
     }
     mEmulatorView = (EmulatorView) findViewById(EMULATOR_VIEW);
     mEmulatorView.attachInterpreterProcess(mInterpreterProcess);
+    mEmulatorView.setOnPollingThreadExit(new Runnable() {
+      @Override
+      public void run() {
+        Terminal.this.finish();
+      }
+    });
     mKeyListener = new TermKeyListener();
     updatePreferences();
   }

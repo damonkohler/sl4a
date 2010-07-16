@@ -7,7 +7,7 @@
     android:debuggable="true"
     android:icon="@drawable/sl4a_logo_48"
     android:label="@string/application_title"
-    android:name=".Sl4aCoreApplication">
+    android:name=".Sl4aApplication">
     <activity
       android:name=".activity.ScriptManager"
       android:launchMode="singleTask"
