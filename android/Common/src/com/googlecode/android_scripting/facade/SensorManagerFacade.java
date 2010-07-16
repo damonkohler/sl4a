@@ -62,10 +62,10 @@ public class SensorManagerFacade extends RpcReceiver {
 
   @Rpc(description = "Starts recording sensor data to be available for polling.")
   public Bundle readSensors() {
+    if (mSensorReadings == null) {
+      return null;
+    }
     synchronized (mSensorReadings) {
-      if (mSensorReadings == null) {
-        return null;
-      }
       return new Bundle(mSensorReadings);
     }
   }
@@ -77,8 +77,10 @@ public class SensorManagerFacade extends RpcReceiver {
     }
     mSensorManager.unregisterListener(mSensorListener);
     mSensorListener = null;
-    synchronized (mSensorReadings) {
-      mSensorReadings = null;
+    if (mSensorReadings != null) {
+      synchronized (mSensorReadings) {
+        mSensorReadings = null;
+      }
     }
   }
 
