@@ -85,12 +85,10 @@ public class BluetoothFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Listens for and accepts a Bluetooth connection.")
-  public void bluetoothAccept(
-      @RpcParameter(name = "uuid", description = "It is sometimes necessary to specify a particular UUID to use for the Bluetooth connection.") @RpcDefault(DEFAULT_UUID) String uuid)
+  public void bluetoothAccept(@RpcParameter(name = "uuid") @RpcDefault(DEFAULT_UUID) String uuid)
       throws IOException {
     mServerSocket =
         mBluetoothAdapter.listenUsingRfcommWithServiceRecord(SDP_NAME, UUID.fromString(uuid));
-    // This is a blocking call and will only return on a successful connection or an exception.
     mSocket = mServerSocket.accept();
     mDevice = mSocket.getRemoteDevice();
     connected();
@@ -188,7 +186,8 @@ public class BluetoothFacade extends RpcReceiver {
     mReader = new BufferedReader(new InputStreamReader(mInputStream, "ASCII"));
   }
 
-  public void stop() {
+  @Rpc(description = "Stops Bluetooth connection.")
+  public void bluetoothStop() {
     if (mSocket != null) {
       try {
         mSocket.close();
@@ -233,6 +232,6 @@ public class BluetoothFacade extends RpcReceiver {
 
   @Override
   public void shutdown() {
-    stop();
+    bluetoothStop();
   }
 }
