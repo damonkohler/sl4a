@@ -34,7 +34,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.Log;
 
@@ -50,12 +49,15 @@ public class TriggerRepository {
   /**
    * An interface for objects that are notified when a trigger is added to the repository.
    */
-  public interface AddTriggerListener {
+  public interface TriggerRepositoryObserver {
     void onAddTrigger(Trigger trigger);
+
+    void onRemoveTrigger(Trigger trigger);
   }
 
-  private CopyOnWriteArrayList<AddTriggerListener> mAddTriggerListeners =
-      new CopyOnWriteArrayList<AddTriggerListener>();
+  private final CopyOnWriteArrayList<Trigger> mTriggers = new CopyOnWriteArrayList<Trigger>();
+  private final CopyOnWriteArrayList<TriggerRepositoryObserver> mTriggerObservers =
+      new CopyOnWriteArrayList<TriggerRepositoryObserver>();
 
   /**
    * The list of triggers is serialized to the shared preferences entry with this name.
@@ -70,8 +72,6 @@ public class TriggerRepository {
 
   private final SharedPreferences mPreferences;
 
-  private List<Trigger> mTriggers;
-
   private Context mContext;
 
   /** Interface for filters over triggers */
@@ -82,13 +82,8 @@ public class TriggerRepository {
   public TriggerRepository(Context context) {
     mContext = context;
     mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    mTriggers = deserializeTriggers();
-  }
-
-  private synchronized List<Trigger> deserializeTriggers() {
-    final String triggers = mPreferences.getString(TRIGGERS_PREF_KEY, null);
-    List<Trigger> triggerInfos = deserializeTriggersFromString(triggers);
-    return triggerInfos;
+    String triggers = mPreferences.getString(TRIGGERS_PREF_KEY, null);
+    mTriggers.addAll(deserializeTriggersFromString(triggers));
   }
 
   /** Returns a list of all triggers. The list is unmodifiable. */
@@ -102,7 +97,7 @@ public class TriggerRepository {
    */
   public synchronized void addTrigger(Trigger trigger) {
     mTriggers.add(trigger);
-    storeTriggers(mTriggers);
+    storeTriggers();
     notifyOnTriggerAdd(trigger);
     ensureTriggerServiceRunning();
   }
@@ -113,17 +108,24 @@ public class TriggerRepository {
     mContext.startService(startTriggerServiceIntent);
   }
 
-  /** Notify all {@link AddTriggerListener}s that a {@link Trigger} was added. */
+  /** Notify all {@link TriggerRepositoryObserver}s that a {@link Trigger} was added. */
   private void notifyOnTriggerAdd(Trigger trigger) {
-    for (AddTriggerListener listener : mAddTriggerListeners) {
-      listener.onAddTrigger(trigger);
+    for (TriggerRepositoryObserver observer : mTriggerObservers) {
+      observer.onAddTrigger(trigger);
+    }
+  }
+
+  /** Notify all {@link TriggerRepositoryObserver}s that a {@link Trigger} was added. */
+  private void notifyOnTriggerRemove(Trigger trigger) {
+    for (TriggerRepositoryObserver observer : mTriggerObservers) {
+      observer.onRemoveTrigger(trigger);
     }
   }
 
   /** Writes the list of triggers to the shared preferences. */
-  private void storeTriggers(List<Trigger> triggers) {
+  private void storeTriggers() {
     SharedPreferences.Editor editor = mPreferences.edit();
-    final String triggerValue = serializeTriggersToString(triggers);
+    final String triggerValue = serializeTriggersToString(mTriggers);
     if (triggerValue != null) {
       editor.putString(TRIGGERS_PREF_KEY, triggerValue);
     }
@@ -176,16 +178,15 @@ public class TriggerRepository {
 
   /** Removes all triggers that match the filters */
   public synchronized void removeTriggers(TriggerFilter triggerFilter) {
-    List<Trigger> allTriggers = new ArrayList<Trigger>();
-    for (Trigger trigger : getAllTriggers()) {
-      if (!triggerFilter.matches(trigger)) {
-        allTriggers.add(trigger);
-      } else {
+    new ArrayList<Trigger>();
+    for (Trigger trigger : mTriggers) {
+      if (triggerFilter.matches(trigger)) {
         trigger.remove();
+        mTriggers.remove(trigger);
+        notifyOnTriggerRemove(trigger);
       }
     }
-    mTriggers = allTriggers;
-    storeTriggers(allTriggers);
+    storeTriggers();
   }
 
   /** Returns the currently stored index. */
@@ -209,12 +210,11 @@ public class TriggerRepository {
 
   /** Returns the {@link TriggerInfo} object with the given id. */
   public Trigger getById(UUID id) {
-    for (Trigger trigger : getAllTriggers()) {
+    for (Trigger trigger : mTriggers) {
       if (trigger.getId().equals(id)) {
         return trigger;
       }
     }
-
     return null;
   }
 
@@ -224,15 +224,15 @@ public class TriggerRepository {
   }
 
   /** Registers a listener that is invoked when a new trigger gets added. */
-  public void registerAddTriggerListener(AddTriggerListener listener) {
-    mAddTriggerListeners.add(listener);
+  public void registerAddTriggerListener(TriggerRepositoryObserver listener) {
+    mTriggerObservers.add(listener);
   }
 
   /**
    * Unregisters a previously registered listener. This is a no-op if the listener hasn't been
    * registered.
    */
-  public void unregisterAddListener(AddTriggerListener addTriggerListener) {
-    mAddTriggerListeners.remove(addTriggerListener);
+  public void unregisterAddListener(TriggerRepositoryObserver addTriggerListener) {
+    mTriggerObservers.remove(addTriggerListener);
   }
 }

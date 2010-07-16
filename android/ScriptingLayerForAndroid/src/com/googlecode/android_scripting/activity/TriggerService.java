@@ -32,7 +32,7 @@ import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
-import com.googlecode.android_scripting.trigger.TriggerRepository.AddTriggerListener;
+import com.googlecode.android_scripting.trigger.TriggerRepository.TriggerRepositoryObserver;
 
 /**
  * The trigger service takes care of installing triggers serialized to the preference storage.
@@ -50,10 +50,17 @@ public class TriggerService extends Service {
   private static int mTriggerServiceNotificationId;
   private static final long TRIGGER_SERVICE_PING_MILLIS = 10 * 1000 * 60;
 
-  private final AddTriggerListener mAddTriggerListener = new AddTriggerListener() {
+  private final TriggerRepositoryObserver mAddTriggerListener = new TriggerRepositoryObserver() {
     @Override
     public void onAddTrigger(Trigger trigger) {
       trigger.install(TriggerService.this);
+    }
+
+    @Override
+    public void onRemoveTrigger(Trigger trigger) {
+      if (mTriggerRepository.isEmpty()) {
+        stopSelf();
+      }
     }
   };
 
@@ -69,12 +76,10 @@ public class TriggerService extends Service {
   @Override
   public void onCreate() {
     super.onCreate();
-
     mTriggerServiceNotificationId = NotificationIdFactory.create();
     BaseApplication application = (BaseApplication) getApplication();
     mTriggerRepository = application.getTriggerRepository();
     mTriggerRepository.registerAddTriggerListener(mAddTriggerListener);
-
     if (mTriggerRepository.isEmpty()) {
       stopSelf();
     } else {
@@ -127,7 +132,6 @@ public class TriggerService extends Service {
     NotificationManager manager =
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     manager.cancel(mTriggerServiceNotificationId);
-
     mTriggerRepository.unregisterAddListener(mAddTriggerListener);
   }
 
