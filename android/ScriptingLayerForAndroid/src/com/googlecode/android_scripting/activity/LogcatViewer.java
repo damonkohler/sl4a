@@ -54,7 +54,6 @@ public class LogcatViewer extends ListActivity {
   }
 
   private class LogcatWatcher implements Runnable {
-
     @Override
     public void run() {
       mLogcatProcess = new Process();
