@@ -36,15 +36,14 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.dialog.UsageTrackingConfirmation;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
@@ -106,7 +105,7 @@ public class ScriptManager extends ListActivity {
     if (mPreferences.getBoolean("show_all_files", false)) {
       mScriptList = ScriptStorageAdapter.listAllScripts();
     } else {
-      mScriptList = ScriptStorageAdapter.listExecutableScripts(this, mConfiguration);
+      mScriptList = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
     }
   }
 

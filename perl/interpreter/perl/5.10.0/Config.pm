@@ -92,7 +92,7 @@ tie %Config, 'Config', {
     privlibexp => '/data/data/com.googlecode.perlforandroid/files/perl/5.10.0',
     scriptdir => '/usr/bin',
     sitearchexp => '/data/data/com.googlecode.perlforandroid/files/perl/site_perl/5.10.0/arm-eabi-linux',
-    sitelibexp => '/sdcard/sl4a/extras/perl/site_perl/5.10.0',
+    sitelibexp => '/sdcard/com.googlecode.perlforandroid/extras/perl/site_perl/5.10.0',
     useithreads => undef,
     usevendorprefix => undef,
     version => '5.10.0',

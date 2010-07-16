@@ -47,4 +47,17 @@ public class FileUtils {
     }
     return success;
   }
+
+  public static void delete(File path) {
+    if (path.isDirectory()) {
+      for (File child : path.listFiles()) {
+        delete(child);
+      }
+      path.delete(); // Delete empty directory.
+    }
+    if (path.isFile()) {
+      path.delete();
+    }
+  }
+
 }

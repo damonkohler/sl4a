@@ -16,7 +16,6 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import android.content.Context;
 
 /**
  * Represents an executable interpreter.
@@ -39,7 +38,7 @@ public interface InterpreterExecutionDescriptor {
 
   public String getNiceName();
 
-  public boolean isInstalled(Context context);
+  public boolean isInstalled();
 
   public boolean isUninstallable();
 

@@ -16,13 +16,6 @@
 
 package com.googlecode.android_scripting;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -30,13 +23,17 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 
-
-import com.googlecode.android_scripting.FileUtils;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 import com.googlecode.android_scripting.interpreter.InterpreterUtils;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * AsyncTask for installing interpreters.
@@ -55,6 +52,8 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   protected Handler mBackgroundHandler;
 
   protected volatile AsyncTask<Void, Integer, Long> mTaskHolder;
+
+  protected final String mInterpreterRoot;
 
   protected static enum RequestCode {
     DOWNLOAD_INTERPRETER, DOWNLOAD_INTERPRETER_EXTRAS, DOWNLOAD_SCRIPTS, EXTRACT_INTERPRETER,
@@ -159,6 +158,14 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     mainThreadHandler = new Handler();
     mTaskQueue = new LinkedList<RequestCode>();
 
+    String packageName = mDescriptor.getClass().getPackage().getName();
+
+    if (packageName.length() == 0) {
+      throw new Sl4aException("Interpreter package name is empty.");
+    }
+
+    mInterpreterRoot = InterpreterConstants.SDCARD_ROOT + packageName;
+
     if (mDescriptor == null) {
       throw new Sl4aException("Interpreter description not provided.");
     }
@@ -202,6 +209,16 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   }
 
   private boolean executeInBackground() {
+
+    File root = new File(mInterpreterRoot);
+    if (root.exists()) {
+      FileUtils.delete(root);
+    }
+    if (!root.mkdirs()) {
+      Log.e("Failed to make directories: " + root.getAbsolutePath());
+      return false;
+    }
+
     if (Looper.myLooper() == null) {
       Looper.prepare();
     }
@@ -225,7 +242,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   }
 
   protected AsyncTask<Void, Integer, Long> download(String in) throws MalformedURLException {
-    String out = InterpreterConstants.DOWNLOAD_ROOT;
+    String out = mInterpreterRoot;
     return new UrlDownloaderTask(in, out, mContext);
   }
 
@@ -247,24 +264,19 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
 
   protected AsyncTask<Void, Integer, Long> extractInterpreter() throws Sl4aException {
     String in =
-        new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor.getInterpreterArchiveName())
-            .getAbsolutePath();
+        new File(mInterpreterRoot, mDescriptor.getInterpreterArchiveName()).getAbsolutePath();
     String out = InterpreterUtils.getInterpreterRoot(mContext).getAbsolutePath();
     return extract(in, out);
   }
 
   protected AsyncTask<Void, Integer, Long> extractInterpreterExtras() throws Sl4aException {
-    String in =
-        new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor.getExtrasArchiveName())
-            .getAbsolutePath();
-    String out = InterpreterConstants.INTERPRETER_EXTRAS_ROOT;
+    String in = new File(mInterpreterRoot, mDescriptor.getExtrasArchiveName()).getAbsolutePath();
+    String out = mInterpreterRoot + InterpreterConstants.INTERPRETER_EXTRAS_ROOT;
     return extract(in, out);
   }
 
   protected AsyncTask<Void, Integer, Long> extractScripts() throws Sl4aException {
-    String in =
-        new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor.getScriptsArchiveName())
-            .getAbsolutePath();
+    String in = new File(mInterpreterRoot, mDescriptor.getScriptsArchiveName()).getAbsolutePath();
     String out = InterpreterConstants.SCRIPTS_ROOT;
     return extract(in, out);
   }
@@ -292,46 +304,16 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   private void cleanup() {
     List<File> directories = new ArrayList<File>();
 
+    directories.add(new File(mInterpreterRoot));
+
     if (mDescriptor.hasInterpreterArchive()) {
-      if (!mTaskQueue.contains(RequestCode.DOWNLOAD_INTERPRETER)) {
-        directories.add(new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor
-            .getInterpreterArchiveName()));
-      }
       if (!mTaskQueue.contains(RequestCode.EXTRACT_INTERPRETER)) {
         directories.add(InterpreterUtils.getInterpreterRoot(mContext, mDescriptor.getName()));
       }
     }
 
-    if (mDescriptor.hasExtrasArchive()) {
-      if (!mTaskQueue.contains(RequestCode.DOWNLOAD_INTERPRETER_EXTRAS)) {
-        directories.add(new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor
-            .getExtrasArchiveName()));
-      }
-      if (!mTaskQueue.contains(RequestCode.EXTRACT_INTERPRETER_EXTRAS)) {
-        directories.add(new File(InterpreterConstants.INTERPRETER_EXTRAS_ROOT, mDescriptor
-            .getName()));
-      }
-    }
-
-    if (mDescriptor.hasScriptsArchive() && !mTaskQueue.contains(RequestCode.DOWNLOAD_SCRIPTS)) {
-      directories.add(new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor
-          .getScriptsArchiveName()));
-    }
-
     for (File directory : directories) {
-      delete(directory);
-    }
-  }
-
-  protected void delete(File path) {
-    if (path.isDirectory()) {
-      for (File child : path.listFiles()) {
-        delete(child);
-      }
-      path.delete(); // Delete empty directory.
-    }
-    if (path.isFile()) {
-      path.delete();
+      FileUtils.delete(directory);
     }
   }
 

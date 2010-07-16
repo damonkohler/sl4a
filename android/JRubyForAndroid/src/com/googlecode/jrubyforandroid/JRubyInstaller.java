@@ -1,9 +1,6 @@
 package com.googlecode.jrubyforandroid;
 
-import java.io.File;
-
 import android.content.Context;
-
 
 import com.googlecode.android_scripting.AsyncTaskListener;
 import com.googlecode.android_scripting.InterpreterInstaller;
@@ -11,6 +8,8 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
+
+import java.io.File;
 
 public class JRubyInstaller extends InterpreterInstaller {
 
@@ -21,7 +20,7 @@ public class JRubyInstaller extends InterpreterInstaller {
 
   @Override
   protected boolean setup() {
-    File dalvikCache = new File(InterpreterConstants.SL4A_DALVIK_CACHE_ROOT);
+    File dalvikCache = new File(mInterpreterRoot + InterpreterConstants.SL4A_DALVIK_CACHE_ROOT);
     if (!dalvikCache.isDirectory()) {
       try {
         dalvikCache.mkdir();

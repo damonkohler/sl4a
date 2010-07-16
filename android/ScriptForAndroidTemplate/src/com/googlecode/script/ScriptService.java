@@ -7,9 +7,9 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.googlecode.android_scripting.AndroidProxy;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
@@ -42,7 +42,7 @@ public class ScriptService extends Service {
 
     InterpreterAgent interpreter = config.getInterpreterForScript(fileName);
 
-    if (interpreter == null || !interpreter.isInstalled(this)) {
+    if (interpreter == null || !interpreter.isInstalled()) {
       Log.e("Cannot find an interpreter for script " + fileName);
       stopSelf(startId);
     }
