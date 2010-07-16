@@ -31,6 +31,7 @@ import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
@@ -182,7 +183,14 @@ public class Terminal extends Activity {
     mEmulatorView.setOnPollingThreadExit(new Runnable() {
       @Override
       public void run() {
-        Terminal.this.finish();
+        Terminal.this.runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            Toast.makeText(Terminal.this, mScriptProcess.getScriptName() + " exited.",
+                Toast.LENGTH_SHORT).show();
+            Terminal.this.finish();
+          }
+        });
       }
     });
     mKeyListener = new TermKeyListener();
