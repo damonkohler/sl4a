@@ -16,12 +16,7 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import android.content.Context;
-
-
 import com.googlecode.android_scripting.exception.Sl4aException;
-import com.googlecode.android_scripting.interpreter.InterpreterStrings;
-import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 import com.googlecode.android_scripting.language.Language;
 import com.googlecode.android_scripting.language.SupportedLanguages;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
@@ -127,9 +122,8 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
     return mLanguage.getRpcText(content, rpc, values);
   }
 
-  public boolean isInstalled(Context context) {
-    boolean pathCheck = mPath != null && new File(mPath, mBinary).exists();
-    return pathCheck || InterpreterUtils.isInstalled(context, getName());
+  public boolean isInstalled() {
+    return mPath != null && new File(mPath, mBinary).exists();
   }
 
   public boolean isUninstallable() {

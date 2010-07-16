@@ -16,6 +16,10 @@
 
 package com.googlecode.android_scripting;
 
+import com.googlecode.android_scripting.interpreter.InterpreterAgent;
+import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,12 +35,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import android.content.Context;
-
-import com.googlecode.android_scripting.interpreter.InterpreterAgent;
-import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
-import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
 /**
  * Manages storage and retrieval of scripts on the file system.
@@ -139,7 +137,7 @@ public class ScriptStorageAdapter {
   /**
    * Returns a list of all script {@link File}s for which there is an interpreter installed.
    */
-  public static List<File> listExecutableScripts(Context context, InterpreterConfiguration config) {
+  public static List<File> listExecutableScripts(InterpreterConfiguration config) {
     File dir = new File(InterpreterConstants.SCRIPTS_ROOT);
     if (dir.exists()) {
       // TODO(Alexey): Needs refactoring!
@@ -151,7 +149,7 @@ public class ScriptStorageAdapter {
       // Filter out any files that don't have interpreters installed.
       for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
         InterpreterAgent interpreter = config.getInterpreterForScript(it.next().getName());
-        if (interpreter == null || !interpreter.isInstalled(context)) {
+        if (interpreter == null || !interpreter.isInstalled()) {
           it.remove();
         }
       }

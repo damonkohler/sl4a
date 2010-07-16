@@ -69,7 +69,8 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
 
   public String getPath(Context context) {
     if (!hasInterpreterArchive() && hasExtrasArchive()) {
-      return new File(InterpreterConstants.INTERPRETER_EXTRAS_ROOT, getName()).getAbsolutePath();
+      return new File(InterpreterConstants.SDCARD_ROOT + this.getClass().getPackage().getName()
+          + InterpreterConstants.INTERPRETER_EXTRAS_ROOT, getName()).getAbsolutePath();
     }
     if (context == null) {
       return null;

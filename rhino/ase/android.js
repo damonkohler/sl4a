@@ -18,7 +18,7 @@ var AP_PORT = java.lang.System.getenv("AP_PORT");
 var AP_HOST = java.lang.System.getenv("AP_HOST");
 var AP_HANDSHAKE = java.lang.System.getenv("AP_HANDSHAKE");
 
-load('/sdcard/sl4a/extras/rhino/json2.js');
+load('/sdcard/com.googlecode.rhinoforandroid/extras/rhino/json2.js');
 
 function Android() {
 

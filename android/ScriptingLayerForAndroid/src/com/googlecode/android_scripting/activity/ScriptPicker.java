@@ -31,11 +31,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.googlecode.android_scripting.Analytics;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
-import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 
 import java.io.File;
@@ -57,7 +57,7 @@ public class ScriptPicker extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    mScriptList = ScriptStorageAdapter.listExecutableScripts(this, mConfiguration);
+    mScriptList = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
     mAdapter = new ScriptPickerAdapter();
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
@@ -146,7 +146,7 @@ public class ScriptPicker extends ListActivity {
   private class ScriptListObserver extends DataSetObserver {
     @Override
     public void onInvalidated() {
-      mScriptList = ScriptStorageAdapter.listExecutableScripts(ScriptPicker.this, mConfiguration);
+      mScriptList = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
     }
   }
 

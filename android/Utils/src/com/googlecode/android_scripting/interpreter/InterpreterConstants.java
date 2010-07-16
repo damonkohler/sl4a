@@ -29,15 +29,13 @@ public interface InterpreterConstants {
   public static final String SDCARD_ROOT =
       Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
 
-  public static final String DOWNLOAD_ROOT = SDCARD_ROOT;
-
   public static final String SDCARD_SL4A_ROOT = SDCARD_ROOT + "sl4a/";
 
-  public static final String SL4A_DALVIK_CACHE_ROOT = SDCARD_SL4A_ROOT + "dalvik-cache/";
-
-  public static final String INTERPRETER_EXTRAS_ROOT = SDCARD_SL4A_ROOT + "extras/";
-
   public static final String SCRIPTS_ROOT = SDCARD_SL4A_ROOT + "scripts/";
+
+  public static final String SL4A_DALVIK_CACHE_ROOT = "/dalvik-cache/";
+
+  public static final String INTERPRETER_EXTRAS_ROOT = "/extras/";
 
   // Interpreters discovery mechanism
   public static final String ACTION_DISCOVER_INTERPRETERS =

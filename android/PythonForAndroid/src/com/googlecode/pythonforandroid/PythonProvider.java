@@ -3,6 +3,7 @@ package com.googlecode.pythonforandroid;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 import com.googlecode.android_scripting.interpreter.InterpreterProvider;
+import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -19,20 +20,23 @@ public class PythonProvider extends InterpreterProvider {
     return new PythonDescriptor();
   }
 
+  private String getExtrasRoot() {
+    return InterpreterConstants.SDCARD_ROOT + getClass().getPackage().getName()
+        + InterpreterConstants.INTERPRETER_EXTRAS_ROOT;
+  }
+
   private String getHome() {
-    File parent = mContext.getFilesDir();
-    File file = new File(parent, mDescriptor.getName());
+    File file = InterpreterUtils.getInterpreterRoot(mContext, mDescriptor.getName());
     return file.getAbsolutePath();
   }
 
   private String getExtras() {
-    File file = new File(InterpreterConstants.INTERPRETER_EXTRAS_ROOT, mDescriptor.getName());
+    File file = new File(getExtrasRoot(), mDescriptor.getName());
     return file.getAbsolutePath();
   }
 
   private String getTemp() {
-    File tmp =
-        new File(InterpreterConstants.INTERPRETER_EXTRAS_ROOT, mDescriptor.getName() + "/tmp");
+    File tmp = new File(getExtrasRoot(), mDescriptor.getName() + "/tmp");
     if (!tmp.isDirectory()) {
       tmp.mkdir();
     }

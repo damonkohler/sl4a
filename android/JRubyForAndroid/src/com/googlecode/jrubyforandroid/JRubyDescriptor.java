@@ -84,7 +84,7 @@ public class JRubyDescriptor extends Sl4aHostedInterpreter {
   @Override
   public String[] getExecuteArgs(Context context) {
     String[] args =
-        { "-Xbootclasspath:/system/framework/core.jar", "-classpath",
+        { "-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
           super.getExecuteCommand(context), "org.jruby.Main", "-X-C" };
     return args;
   }

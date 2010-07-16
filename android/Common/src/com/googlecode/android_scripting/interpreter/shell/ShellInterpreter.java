@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting.interpreter.shell;
 
-import android.content.Context;
-
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.language.Language;
@@ -93,7 +91,7 @@ public class ShellInterpreter implements InterpreterAgent {
     return mShellLanguage.getRpcText(content, rpc, values);
   }
 
-  public boolean isInstalled(Context context) {
+  public boolean isInstalled() {
     return true;
   }
 

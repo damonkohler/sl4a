@@ -16,10 +16,6 @@
 
 package com.googlecode.android_scripting;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,11 +24,14 @@ import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 import com.googlecode.android_scripting.interpreter.InterpreterUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AsyncTask for uninstalling interpreters.
@@ -47,6 +46,8 @@ public abstract class InterpreterUninstaller extends AsyncTask<Void, Void, Boole
   protected final ProgressDialog mDialog;
   protected final AsyncTaskListener<Boolean> mListener;
 
+  protected final String mInterpreterRoot;
+
   public InterpreterUninstaller(InterpreterDescriptor descriptor, Context context,
       AsyncTaskListener<Boolean> listener) throws Sl4aException {
 
@@ -55,6 +56,14 @@ public abstract class InterpreterUninstaller extends AsyncTask<Void, Void, Boole
     mDescriptor = descriptor;
     mContext = context;
     mListener = listener;
+
+    String packageName = mDescriptor.getClass().getPackage().getName();
+
+    if (packageName.length() == 0) {
+      throw new Sl4aException("Interpreter package name is empty.");
+    }
+
+    mInterpreterRoot = InterpreterConstants.SDCARD_ROOT + packageName;
 
     if (mDescriptor == null) {
       throw new Sl4aException("Interpreter description not provided.");
@@ -108,41 +117,17 @@ public abstract class InterpreterUninstaller extends AsyncTask<Void, Void, Boole
   protected Boolean doInBackground(Void... params) {
     List<File> directories = new ArrayList<File>();
 
+    directories.add(new File(mInterpreterRoot));
+
     if (mDescriptor.hasInterpreterArchive()) {
-      directories.add(new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor
-          .getInterpreterArchiveName()));
-
       directories.add(InterpreterUtils.getInterpreterRoot(mContext, mDescriptor.getName()));
-    }
-    if (mDescriptor.hasExtrasArchive()) {
-      directories.add(new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor
-          .getExtrasArchiveName()));
-
-      directories
-          .add(new File(InterpreterConstants.INTERPRETER_EXTRAS_ROOT, mDescriptor.getName()));
-    }
-    if (mDescriptor.hasScriptsArchive()) {
-      directories.add(new File(InterpreterConstants.DOWNLOAD_ROOT, mDescriptor
-          .getScriptsArchiveName()));
     }
 
     for (File directory : directories) {
-      delete(directory);
+      FileUtils.delete(directory);
     }
 
     return cleanup();
-  }
-
-  protected void delete(File path) {
-    if (path.isDirectory()) {
-      for (File child : path.listFiles()) {
-        delete(child);
-      }
-      path.delete(); // Delete empty directory.
-    }
-    if (path.isFile()) {
-      path.delete();
-    }
   }
 
   protected boolean isInstalled() {

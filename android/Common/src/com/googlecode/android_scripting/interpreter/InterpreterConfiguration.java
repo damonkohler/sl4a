@@ -242,7 +242,7 @@ public class InterpreterConfiguration {
   public List<InterpreterAgent> getInstalledInterpreters() {
     List<InterpreterAgent> interpreters = new ArrayList<InterpreterAgent>();
     for (InterpreterAgent i : mInterpreterSet) {
-      if (i.isInstalled(mContext)) {
+      if (i.isInstalled()) {
         interpreters.add(i);
       }
     }

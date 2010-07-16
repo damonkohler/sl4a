@@ -53,12 +53,12 @@ public class RhinoDescriptor extends Sl4aHostedInterpreter {
   }
 
   public int getVersion() {
-    return 2;
+    return 3;
   }
 
   @Override
   public int getScriptsVersion() {
-    return 1;
+    return 2;
   }
 
   @Override

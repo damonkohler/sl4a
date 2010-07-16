@@ -17,10 +17,10 @@
 
 package com.googlecode.tclforandroid;
 
-
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 import com.googlecode.android_scripting.interpreter.InterpreterProvider;
+import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -39,20 +39,23 @@ public class TclProvider extends InterpreterProvider {
     return new TclDescriptor();
   }
 
+  private String getExtrasRoot() {
+    return InterpreterConstants.SDCARD_ROOT + getClass().getPackage().getName()
+        + InterpreterConstants.INTERPRETER_EXTRAS_ROOT;
+  }
+
   private String getHome() {
-    File parent = mContext.getFilesDir().getParentFile();
-    File file = new File(parent, mDescriptor.getName());
+    File file = InterpreterUtils.getInterpreterRoot(mContext, mDescriptor.getName());
     return file.getAbsolutePath();
   }
 
   private String getExtras() {
-    File file = new File(InterpreterConstants.INTERPRETER_EXTRAS_ROOT, mDescriptor.getName());
+    File file = new File(getExtrasRoot(), mDescriptor.getName());
     return file.getAbsolutePath();
   }
 
   private String getTemp() {
-    File tmp =
-        new File(InterpreterConstants.INTERPRETER_EXTRAS_ROOT, mDescriptor.getName() + "/tmp");
+    File tmp = new File(getExtrasRoot(), mDescriptor.getName() + "/tmp");
     if (!tmp.isDirectory()) {
       tmp.mkdir();
     }
@@ -66,7 +69,7 @@ public class TclProvider extends InterpreterProvider {
     settings.put(ENV_LIB, getExtras());
     settings.put(ENV_TEMP, getTemp());
     settings.put(ENV_SCRIPTS, InterpreterConstants.SCRIPTS_ROOT);
-    settings.put(ENV_HOME_GLOBAL, InterpreterConstants.SDCARD_SL4A_ROOT);
+    settings.put(ENV_HOME_GLOBAL, getClass().getPackage().getName());
     return settings;
   }
 
