@@ -3,7 +3,7 @@ package com.googlecode.android_scripting.facade;
 import android.app.Service;
 import android.content.Intent;
 
-import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
@@ -21,7 +21,7 @@ public class FacadeManager extends RpcReceiverManager {
     super(classList);
     mService = service;
     mIntent = intent;
-    mTriggerRepository = ((Sl4aApplication) service.getApplication()).getTriggerRepository();
+    mTriggerRepository = ((BaseApplication) service.getApplication()).getTriggerRepository();
   }
 
   public Service getService() {

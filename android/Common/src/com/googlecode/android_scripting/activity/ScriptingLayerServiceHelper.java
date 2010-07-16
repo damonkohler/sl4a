@@ -24,7 +24,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
@@ -47,7 +47,7 @@ public class ScriptingLayerServiceHelper extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mHandler = new Handler();
-    mTaskQueue = ((Sl4aApplication) getApplication()).getTaskQueue();
+    mTaskQueue = ((BaseApplication) getApplication()).getTaskQueue();
     mResultMap = new HashMap<Integer, FutureResult<?>>();
     mFinished = false;
     setPersistent(true);

@@ -39,7 +39,7 @@ import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
@@ -68,7 +68,7 @@ public class InterpreterManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.interpreter_manager);
-    mConfiguration = ((Sl4aApplication) getApplication()).getInterpreterConfiguration();
+    mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
     mInterpreterList = new ArrayList<InterpreterAgent>();
     mAdapter = new InterpreterManagerAdapter();
     mObserver = new InterpreterListObserver();

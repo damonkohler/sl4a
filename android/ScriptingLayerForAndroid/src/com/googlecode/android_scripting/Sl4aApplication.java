@@ -16,10 +16,7 @@
 
 package com.googlecode.android_scripting;
 
-import com.googlecode.android_scripting.Analytics;
-import com.googlecode.android_scripting.Sl4aApplication;
-
-public class Sl4aCoreApplication extends Sl4aApplication {
+public class Sl4aApplication extends BaseApplication {
 
   @Override
   public void onCreate() {
@@ -31,5 +28,4 @@ public class Sl4aCoreApplication extends Sl4aApplication {
   public void onTerminate() {
     Analytics.stop();
   }
-
 }

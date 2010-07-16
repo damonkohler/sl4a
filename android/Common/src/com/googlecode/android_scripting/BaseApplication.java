@@ -21,7 +21,7 @@ import android.app.Application;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 
-public class Sl4aApplication extends Application {
+public class BaseApplication extends Application {
 
   private final TaskQueue mTaskQueue = new TaskQueue(this);
 

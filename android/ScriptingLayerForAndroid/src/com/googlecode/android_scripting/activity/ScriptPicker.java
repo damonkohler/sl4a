@@ -35,7 +35,7 @@ import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
-import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 
 import java.io.File;
@@ -56,7 +56,7 @@ public class ScriptPicker extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
-    mConfiguration = ((Sl4aApplication) getApplication()).getInterpreterConfiguration();
+    mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
     mScriptList = ScriptStorageAdapter.listExecutableScripts(this, mConfiguration);
     mAdapter = new ScriptPickerAdapter();
     mAdapter.registerDataSetObserver(new ScriptListObserver());

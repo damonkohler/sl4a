@@ -31,7 +31,7 @@ import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
-import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
@@ -153,7 +153,7 @@ public class ScriptingLayerService extends Service {
 
   private ScriptLauncher launchScript(Intent intent, AndroidProxy proxy) throws Sl4aException {
     InterpreterConfiguration config =
-        ((Sl4aApplication) getApplication()).getInterpreterConfiguration();
+        ((BaseApplication) getApplication()).getInterpreterConfiguration();
     ScriptLauncher launcher = new ScriptLauncher(proxy, intent, config);
     final int port = proxy.getAddress().getPort();
     launcher.launch(new Runnable() {
@@ -264,7 +264,7 @@ public class ScriptingLayerService extends Service {
 
   /** Returns the {@link TriggerInfo} for the given intent, or null if none exists. */
   private Trigger getTrigger(Intent intent) {
-    final Sl4aApplication application = (Sl4aApplication) getApplication();
+    final BaseApplication application = (BaseApplication) getApplication();
     final String triggerIdExtra = intent.getStringExtra(Constants.EXTRA_TRIGGER_ID);
     if (triggerIdExtra == null) {
       return null;

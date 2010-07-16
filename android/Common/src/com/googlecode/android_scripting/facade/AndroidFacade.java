@@ -41,7 +41,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.activity.NotificationIdFactory;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
@@ -81,7 +81,7 @@ public class AndroidFacade extends RpcReceiver {
     super(manager);
     mService = manager.getService();
     mIntent = manager.getIntent();
-    Sl4aApplication application = ((Sl4aApplication) mService.getApplication());
+    BaseApplication application = ((BaseApplication) mService.getApplication());
     mTaskQueue = application.getTaskQueue();
     mHandler = new Handler(mService.getMainLooper());
     mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);

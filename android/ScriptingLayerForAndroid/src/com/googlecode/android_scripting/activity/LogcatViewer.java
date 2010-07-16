@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
-import com.googlecode.android_scripting.Sl4aProcess;
+import com.googlecode.android_scripting.Process;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.dialog.Help;
@@ -46,7 +46,7 @@ public class LogcatViewer extends ListActivity {
   private List<String> mLogcatMessages;
   private int mOldLastPosition;
   private LogcatViewerAdapter mAdapter;
-  private Sl4aProcess mLogcatProcess;
+  private Process mLogcatProcess;
 
   private static enum MenuId {
     HELP, PREFERENCES, JUMP_TO_BOTTOM;
@@ -59,7 +59,7 @@ public class LogcatViewer extends ListActivity {
 
     @Override
     public void run() {
-      mLogcatProcess = new Sl4aProcess();
+      mLogcatProcess = new Process();
       mLogcatProcess.start("/system/bin/logcat", null, null, null);
       try {
         BufferedReader br = mLogcatProcess.getIn();

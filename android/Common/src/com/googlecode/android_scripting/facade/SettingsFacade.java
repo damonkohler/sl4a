@@ -27,7 +27,7 @@ import android.provider.Settings.SettingNotFoundException;
 import android.view.WindowManager;
 
 import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
@@ -185,7 +185,7 @@ public class SettingsFacade extends RpcReceiver {
       }
     };
 
-    TaskQueue taskQueue = ((Sl4aApplication) mService.getApplication()).getTaskQueue();
+    TaskQueue taskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
     taskQueue.offer(task);
 
     return oldValue;

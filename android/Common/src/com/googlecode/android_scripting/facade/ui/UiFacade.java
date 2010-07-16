@@ -25,7 +25,7 @@ import android.app.ProgressDialog;
 import android.app.Service;
 import android.util.AndroidRuntimeException;
 
-import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.facade.FacadeManager;
@@ -49,7 +49,7 @@ public class UiFacade extends RpcReceiver {
   public UiFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
-    mTaskQueue = ((Sl4aApplication) mService.getApplication()).getTaskQueue();
+    mTaskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
   }
 
   @Rpc(description = "Create a spinner progress dialog.")

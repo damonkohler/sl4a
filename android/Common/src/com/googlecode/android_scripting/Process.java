@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting;
 
-import android.os.Process;
-
 import java.io.BufferedReader;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -27,7 +25,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 
-public class Sl4aProcess {
+public class Process {
 
   private static final int DEFAULT_BUFFER_SIZE = 8192;
 
@@ -37,7 +35,7 @@ public class Sl4aProcess {
   protected PrintStream mOut;
   protected Reader mIn;
 
-  public Sl4aProcess() {
+  public Process() {
   }
 
   public Integer getPid() {
@@ -99,7 +97,7 @@ public class Sl4aProcess {
 
   public void kill() {
     if (mPid != null) {
-      Process.killProcess(mPid);
+      android.os.Process.killProcess(mPid);
       Log.v("Killed process " + mPid);
     }
   }

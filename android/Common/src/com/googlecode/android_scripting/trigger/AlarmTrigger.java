@@ -21,7 +21,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 
-import com.googlecode.android_scripting.Sl4aApplication;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.IntentBuilders;
 
 /**
@@ -55,7 +55,7 @@ public class AlarmTrigger extends Trigger {
     super.beforeTrigger(service);
 
     // This trigger will only fire once: remove it from the repository.
-    Sl4aApplication application = (Sl4aApplication) service.getApplication();
+    BaseApplication application = (BaseApplication) service.getApplication();
     application.getTriggerRepository().removeTrigger(getId());
   }
 
