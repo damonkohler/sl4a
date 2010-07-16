@@ -76,8 +76,10 @@ public class SensorManagerFacade extends RpcReceiver {
       return;
     }
     mSensorManager.unregisterListener(mSensorListener);
-    mSensorReadings = null;
     mSensorListener = null;
+    synchronized (mSensorReadings) {
+      mSensorReadings = null;
+    }
   }
 
   @Override
