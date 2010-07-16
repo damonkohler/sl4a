@@ -40,8 +40,8 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.BaseApplication;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.activity.NotificationIdFactory;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
@@ -293,11 +293,6 @@ public class AndroidFacade extends RpcReceiver {
     // Get a unique notification id from the application.
     final int notificationId = NotificationIdFactory.create();
     mNotificationManager.notify(notificationId, notification);
-  }
-
-  @Rpc(description = "Exits the activity or service running the script.")
-  public void exit() {
-    mService.stopSelf();// XXX
   }
 
   @Rpc(description = "Returns the intent that launched the script.")
