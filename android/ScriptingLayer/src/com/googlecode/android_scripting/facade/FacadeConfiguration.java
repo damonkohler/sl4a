@@ -39,7 +39,7 @@ import com.googlecode.android_scripting.facade.EyesFreeFacade;
 import com.googlecode.android_scripting.facade.LocationFacade;
 import com.googlecode.android_scripting.facade.PhoneFacade;
 import com.googlecode.android_scripting.facade.PulseGeneratorFacade;
-import com.googlecode.android_scripting.facade.RecorderFacade;
+import com.googlecode.android_scripting.facade.MediaRecorderFacade;
 import com.googlecode.android_scripting.facade.SensorManagerFacade;
 import com.googlecode.android_scripting.facade.SettingsFacade;
 import com.googlecode.android_scripting.facade.SignalStrengthFacade;
@@ -85,7 +85,7 @@ public class FacadeConfiguration {
     sFacadeClassList.add(LocationFacade.class);
     sFacadeClassList.add(PhoneFacade.class);
     sFacadeClassList.add(PulseGeneratorFacade.class);
-    sFacadeClassList.add(RecorderFacade.class);
+    sFacadeClassList.add(MediaRecorderFacade.class);
     sFacadeClassList.add(SensorManagerFacade.class);
     sFacadeClassList.add(SettingsFacade.class);
     sFacadeClassList.add(SmsFacade.class);

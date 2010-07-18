@@ -42,9 +42,9 @@ import android.widget.TextView;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptProcess;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.terminal.Terminal;
 
 /**
@@ -166,7 +166,8 @@ public class ScriptProcessMonitor extends ListActivity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     menu.clear();
-    if (!mProcessList.isEmpty()) {
+    // TODO(damonkohler): How could mProcessList ever be null?
+    if (mProcessList != null && !mProcessList.isEmpty()) {
       menu.add(Menu.NONE, 0, Menu.NONE, "Stop All Scripts").setIcon(
           android.R.drawable.ic_menu_close_clear_cancel);
     }

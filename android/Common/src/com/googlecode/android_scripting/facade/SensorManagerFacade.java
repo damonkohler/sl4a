@@ -109,6 +109,9 @@ public class SensorManagerFacade extends RpcReceiver {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+      if (mSensorReadings == null) {
+        return;
+      }
       synchronized (mSensorReadings) {
         mSensorReadings.putInt("accuracy", accuracy);
         mEventFacade.postEvent("sensors", mSensorReadings);
@@ -117,6 +120,9 @@ public class SensorManagerFacade extends RpcReceiver {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+      if (mSensorReadings == null) {
+        return;
+      }
       synchronized (mSensorReadings) {
         switch (event.sensor.getType()) {
         case Sensor.TYPE_ACCELEROMETER:

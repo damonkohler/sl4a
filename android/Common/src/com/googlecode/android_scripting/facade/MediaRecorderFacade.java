@@ -26,23 +26,23 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
 /**
- * A facade for recording audio.
+ * A facade for recording media.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class RecorderFacade extends RpcReceiver {
+public class MediaRecorderFacade extends RpcReceiver {
 
-  public RecorderFacade(FacadeManager manager) {
+  private final MediaRecorder mMediaRecorder = new MediaRecorder();
+
+  public MediaRecorderFacade(FacadeManager manager) {
     super(manager);
   }
-
-  private final MediaRecorder mAudioRecorder = new MediaRecorder();
 
   @Rpc(description = "Records audio from the microphone and saves it to the given location.")
   public void recorderStartMicrophone(@RpcParameter(name = "targetPath") String targetPath)
       throws IOException {
-    startRecording(targetPath, MediaRecorder.AudioSource.MIC);
+    startAudioRecording(targetPath, MediaRecorder.AudioSource.MIC);
   }
 
   @Rpc(description = "Records audio from the phone and saves it to the given location.")
@@ -50,26 +50,26 @@ public class RecorderFacade extends RpcReceiver {
       throws Exception {
     // This is only possible starting with API level 4.
     Field source = Class.forName("android.media.MediaRecorder$AudioSource").getField("VOICE_CALL");
-    startRecording(targetPath, source.getInt(null));
+    startAudioRecording(targetPath, source.getInt(null));
   }
 
-  private void startRecording(String targetPath, int source) throws IOException {
-    mAudioRecorder.setAudioSource(source);
-    mAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-    mAudioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-    mAudioRecorder.setOutputFile(targetPath);
-    mAudioRecorder.prepare();
-    mAudioRecorder.start();
+  private void startAudioRecording(String targetPath, int source) throws IOException {
+    mMediaRecorder.setAudioSource(source);
+    mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+    mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+    mMediaRecorder.setOutputFile(targetPath);
+    mMediaRecorder.prepare();
+    mMediaRecorder.start();
   }
 
   @Rpc(description = "Stops a previously started recording.")
   public void recorderStop() {
-    mAudioRecorder.stop();
-    mAudioRecorder.reset();
+    mMediaRecorder.stop();
+    mMediaRecorder.reset();
   }
 
   @Override
   public void shutdown() {
-    mAudioRecorder.release();
+    mMediaRecorder.release();
   }
 }
