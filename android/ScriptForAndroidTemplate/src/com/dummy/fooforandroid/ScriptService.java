@@ -7,6 +7,8 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.googlecode.android_scripting.AndroidProxy;
+import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.ScriptLauncher;
@@ -43,7 +45,14 @@ public class ScriptService extends Service {
     InterpreterAgent interpreter = config.getInterpreterForScript(fileName);
 
     if (interpreter == null || !interpreter.isInstalled()) {
-      Log.e(this, "Cannot find an interpreter for script " + fileName);
+      if (FeaturedInterpreters.isSupported(fileName)) {
+        Intent i = new Intent(this, DialogActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.putExtra(Constants.EXTRA_SCRIPT_NAME, fileName);
+        startActivity(i);
+      } else {
+        Log.e(this, "Cannot find an interpreter for script " + fileName);
+      }
       stopSelf(startId);
       return;
     }
