@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting.activity;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
@@ -28,6 +26,8 @@ import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
+
+import java.util.HashMap;
 
 /**
  * This {@link Activity} is launched by the {@link Sl4aService} in order to perform operations that
@@ -41,7 +41,7 @@ public class ScriptingLayerServiceHelper extends Activity {
   private TaskQueue mTaskQueue;
   private Handler mHandler;
   private HashMap<Integer, FutureResult<?>> mResultMap;
-  private boolean mFinished;
+  private volatile boolean mFinished = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,12 @@ public class ScriptingLayerServiceHelper extends Activity {
     mResultMap = new HashMap<Integer, FutureResult<?>>();
     mFinished = false;
     setPersistent(true);
+  }
+
+  @Override
+  protected void onResume() {
+    mFinished = false;
+    super.onResume();
     process();
   }
 
@@ -68,8 +74,8 @@ public class ScriptingLayerServiceHelper extends Activity {
   }
 
   public void taskDone(int taskId) {
-    mResultMap.remove(taskId);
-    if (mFinished && mResultMap.isEmpty()) {
+    FutureResult<?> futureResult = mResultMap.remove(taskId);
+    if (mFinished && futureResult != null && mResultMap.isEmpty()) {
       finish();
     }
   }

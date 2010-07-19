@@ -28,7 +28,7 @@ abstract class RunnableDialog extends FutureActivityTask<Object> {
 
   protected ScriptingLayerServiceHelper mActivity;
   protected Dialog mDialog;
-  protected FutureResult<Object> mResult;
+  protected FutureResult<Object> mFutureResult;
   protected final CountDownLatch mShowLatch = new CountDownLatch(1);
 
   /**
@@ -42,8 +42,11 @@ abstract class RunnableDialog extends FutureActivityTask<Object> {
    * Dismiss the {@link Dialog} and close {@link Sl4aActivity}.
    */
   public void dismissDialog() {
-    mDialog.dismiss();
-    mActivity.taskDone(getTaskId());
+    if (mDialog != null) {
+      mDialog.dismiss();
+      mActivity.taskDone(getTaskId());
+    }
+    mDialog = null;
   }
 
   /**
@@ -51,10 +54,5 @@ abstract class RunnableDialog extends FutureActivityTask<Object> {
    */
   public CountDownLatch getShowLatch() {
     return mShowLatch;
-  }
-
-  @Override
-  public FutureResult<Object> getFutureResult() {
-    return mResult;
   }
 }

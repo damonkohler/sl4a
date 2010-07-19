@@ -16,10 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -53,6 +49,10 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AndroidFacade extends RpcReceiver {
   /**
@@ -237,15 +237,17 @@ public class AndroidFacade extends RpcReceiver {
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int whichButton) {
-            result.set(input.getText().toString());
+            dialog.dismiss();
             activity.taskDone(getTaskId());
+            result.set(input.getText().toString());
           }
         });
         alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
           @Override
-          public void onCancel(DialogInterface arg0) {
-            result.set(null);
+          public void onCancel(DialogInterface dialog) {
+            dialog.dismiss();
             activity.taskDone(getTaskId());
+            result.set(null);
           }
         });
         alert.show();

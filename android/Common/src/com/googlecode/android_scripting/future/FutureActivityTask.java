@@ -16,11 +16,11 @@
 
 package com.googlecode.android_scripting.future;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import android.app.Activity;
 
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Encapsulates an {@link Activity} and a {@link FutureObject}.

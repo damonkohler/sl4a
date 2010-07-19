@@ -20,7 +20,6 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 
-
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.future.FutureResult;
@@ -142,7 +141,7 @@ class RunnableAlertDialog extends RunnableDialog {
   @Override
   public void run(final ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
     mActivity = activity;
-    mResult = result;
+    mFutureResult = result;
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
     if (mTitle != null) {
       builder.setTitle(mTitle);
@@ -188,11 +187,8 @@ class RunnableAlertDialog extends RunnableDialog {
           public void onClick(DialogInterface dialog, int item) {
             Map<String, Integer> result = new HashMap<String, Integer>();
             result.put("item", item);
-            mResult.set(result);
-            // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory
-            // leak.
-            dialog.dismiss();
-            activity.taskDone(getTaskId());
+            dismissDialog();
+            mFutureResult.set(result);
           }
         });
         break;
@@ -211,15 +207,14 @@ class RunnableAlertDialog extends RunnableDialog {
       public void onCancel(DialogInterface dialog) {
         Map<String, Boolean> result = new HashMap<String, Boolean>();
         result.put("canceled", true);
-        mResult.set(result);
-        // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
-        dialog.dismiss();
-        activity.taskDone(getTaskId());
+        dismissDialog();
+        mFutureResult.set(result);
       }
     });
   }
 
-  private void configureButtons(final AlertDialog.Builder builder, final ScriptingLayerServiceHelper activity) {
+  private void configureButtons(final AlertDialog.Builder builder,
+      final ScriptingLayerServiceHelper activity) {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -235,10 +230,8 @@ class RunnableAlertDialog extends RunnableDialog {
           result.put("which", "neutral");
           break;
         }
-        mResult.set(result);
-        // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
-        dialog.dismiss();
-        activity.taskDone(getTaskId());
+        dismissDialog();
+        mFutureResult.set(result);
       }
     };
     if (mNegativeButtonText != null) {
