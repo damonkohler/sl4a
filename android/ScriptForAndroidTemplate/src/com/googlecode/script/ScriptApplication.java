@@ -2,15 +2,17 @@
 
 package com.googlecode.script;
 
-import android.content.Intent;
-
 import com.googlecode.android_scripting.BaseApplication;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
+
+import java.util.concurrent.CountDownLatch;
 
 public class ScriptApplication extends BaseApplication implements ConfigurationObserver {
 
   private volatile boolean receivedConfigUpdate = false;
+  private final CountDownLatch mLatch = new CountDownLatch(1);
 
   @Override
   public void onCreate() {
@@ -21,10 +23,17 @@ public class ScriptApplication extends BaseApplication implements ConfigurationO
 
   @Override
   public void onConfigurationChanged() {
-    if (!receivedConfigUpdate) {
       receivedConfigUpdate = true;
-      startService(new Intent(this, ScriptService.class));
-    }
-
+      mLatch.countDown();
   }
+
+  public boolean readyToStart() {
+    try {
+      mLatch.await();
+    } catch (InterruptedException e) {
+      Log.e(e);
+    }
+    return receivedConfigUpdate;
+  }
+
 }

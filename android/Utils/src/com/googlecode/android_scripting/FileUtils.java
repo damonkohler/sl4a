@@ -17,6 +17,9 @@
 package com.googlecode.android_scripting;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 
 /**
@@ -59,4 +62,32 @@ public class FileUtils {
       path.delete();
     }
   }
+
+  public static File copyFromStream(String name, InputStream input) {
+    if (name == null || name.length() == 0) {
+      Log.e("No script name specified.");
+      return null;
+    }
+
+    File file = new File(name);
+
+    File parent = file.getParentFile();
+    if (!parent.exists()) {
+      Log.v("Creating directory: " + parent.getAbsolutePath());
+      if (!parent.mkdirs()) {
+        Log.e("Failed to create a directory.");
+        return null;
+      }
+    }
+
+    try {
+      OutputStream output = new FileOutputStream(file);
+      IoUtils.copy(input, output);
+    } catch (Exception e) {
+      Log.e(e);
+      return null;
+    }
+    return file;
+  }
+
 }

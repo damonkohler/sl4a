@@ -43,7 +43,7 @@ import java.util.zip.ZipFile;
 public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
 
   private static enum Replace {
-    YES, NO, YESTOALL, CANCEL
+    YES, NO, YESTOALL, SKIPALL
   }
 
   private final File mInput;
@@ -186,7 +186,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
             mReplaceAll = true;
             break;
           default:
-            throw new Sl4aException("Installation was cancelled");
+            return extractedSize;
           }
         }
         ProgressReportingOutputStream outStream = new ProgressReportingOutputStream(destination);
@@ -229,7 +229,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
         DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            Replace result = Replace.CANCEL;
+            Replace result = Replace.SKIPALL;
             switch (which) {
             case DialogInterface.BUTTON_POSITIVE:
               result = Replace.YES;
@@ -252,7 +252,7 @@ public class ZipExtractorTask extends AsyncTask<Void, Integer, Long> {
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
           @Override
           public void onCancel(DialogInterface dialog) {
-            mResult.set(Replace.CANCEL);
+            mResult.set(Replace.SKIPALL);
             dialog.dismiss();
           }
         });
