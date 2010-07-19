@@ -74,8 +74,8 @@ public class BluetoothFacade extends RpcReceiver {
     Intent result = mAndroidFacade.startActivityForResult(deviceChooserIntent);
     if (result != null && result.hasExtra(Constants.EXTRA_DEVICE_ADDRESS)) {
       String address = result.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
-      mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
       mDevice = mBluetoothAdapter.getRemoteDevice(address);
+      mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
       // Always cancel discovery because it will slow down a connection.
       mBluetoothAdapter.cancelDiscovery();
       mSocket.connect();

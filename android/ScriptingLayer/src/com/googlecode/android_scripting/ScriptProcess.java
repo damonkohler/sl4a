@@ -16,11 +16,11 @@
 
 package com.googlecode.android_scripting;
 
+import java.net.InetSocketAddress;
+
 import android.app.Service;
 
 import com.googlecode.android_scripting.trigger.Trigger;
-
-import java.net.InetSocketAddress;
 
 public class ScriptProcess {
 
@@ -156,5 +156,4 @@ public class ScriptProcess {
     buffer.append(String.format("%02d:%02d", minutes, seconds));
     return buffer.toString();
   }
-
 }

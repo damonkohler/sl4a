@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -61,7 +60,6 @@ public class ScriptProcessMonitor extends ListActivity {
   private volatile ScriptingLayerService mService;
   private boolean isConnected = false;
 
-  private final Handler mHandler = new Handler();
   private final Timer mTimer = new Timer();
   private ScriptListAdapter mUpdater;
 
@@ -198,7 +196,7 @@ public class ScriptProcessMonitor extends ListActivity {
           mmList = mService.getScriptProcessesList();
         }
       }
-      mHandler.post(new Runnable() {
+      runOnUiThread(new Runnable() {
         public void run() {
           mProcessList = mUpdater.getFreshProcessList();
           mAdapter.notifyDataSetChanged();

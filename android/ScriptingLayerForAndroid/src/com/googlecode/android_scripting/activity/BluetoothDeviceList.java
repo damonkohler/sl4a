@@ -16,6 +16,9 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,9 +33,6 @@ import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.bluetooth.BluetoothHelper;
 import com.googlecode.android_scripting.bluetooth.BluetoothHelper.DeviceListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BluetoothDeviceList extends ListActivity {
 
