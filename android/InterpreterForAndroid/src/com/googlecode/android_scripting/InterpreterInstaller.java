@@ -102,9 +102,10 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
   private final Runnable mTaskWorker = new Runnable() {
     @Override
     public void run() {
-      RequestCode request = mTaskQueue.remove();
+      RequestCode request = mTaskQueue.peek();
       try {
         if (mTaskHolder != null && mTaskHolder.get() != null) {
+          mTaskQueue.remove();
           mTaskHolder = null;
           // Post processing.
           if (request == RequestCode.EXTRACT_INTERPRETER && !chmodIntepreter()) {
@@ -258,27 +259,28 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
     return download(mDescriptor.getScriptsArchiveUrl());
   }
 
-  protected AsyncTask<Void, Integer, Long> extract(String in, String out) throws Sl4aException {
-    return new ZipExtractorTask(in, out, mContext);
+  protected AsyncTask<Void, Integer, Long> extract(String in, String out, boolean replaceAll)
+      throws Sl4aException {
+    return new ZipExtractorTask(in, out, mContext, replaceAll);
   }
 
   protected AsyncTask<Void, Integer, Long> extractInterpreter() throws Sl4aException {
     String in =
         new File(mInterpreterRoot, mDescriptor.getInterpreterArchiveName()).getAbsolutePath();
     String out = InterpreterUtils.getInterpreterRoot(mContext).getAbsolutePath();
-    return extract(in, out);
+    return extract(in, out, true);
   }
 
   protected AsyncTask<Void, Integer, Long> extractInterpreterExtras() throws Sl4aException {
     String in = new File(mInterpreterRoot, mDescriptor.getExtrasArchiveName()).getAbsolutePath();
     String out = mInterpreterRoot + InterpreterConstants.INTERPRETER_EXTRAS_ROOT;
-    return extract(in, out);
+    return extract(in, out, true);
   }
 
   protected AsyncTask<Void, Integer, Long> extractScripts() throws Sl4aException {
     String in = new File(mInterpreterRoot, mDescriptor.getScriptsArchiveName()).getAbsolutePath();
     String out = InterpreterConstants.SCRIPTS_ROOT;
-    return extract(in, out);
+    return extract(in, out, false);
   }
 
   protected boolean chmodIntepreter() {
