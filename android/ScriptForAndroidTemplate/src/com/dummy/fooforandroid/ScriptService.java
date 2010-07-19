@@ -2,7 +2,6 @@ package com.dummy.fooforandroid;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -37,11 +36,7 @@ public class ScriptService extends Service {
     super.onStart(intent, startId);
     ScriptApplication app = (ScriptApplication) getApplication();
     InterpreterConfiguration config = app.getInterpreterConfiguration();
-    Resources resources = getResources();
-    int id = R.raw.script;
-    String name = resources.getText(id).toString();
-    String fileName = name.substring(name.lastIndexOf('/') + 1, name.length());
-
+    String fileName = Script.getFileName(this);
     InterpreterAgent interpreter = config.getInterpreterForScript(fileName);
 
     if (interpreter == null || !interpreter.isInstalled()) {
@@ -60,7 +55,11 @@ public class ScriptService extends Service {
     // Copies script to memory.
     fileName = InterpreterUtils.getInterpreterRoot(this).getAbsolutePath() + "/" + fileName;
 
-    File script = FileUtils.copyFromStream(fileName, resources.openRawResource(id));
+    File script = new File(fileName);
+
+    if (!script.exists()) {
+      script = FileUtils.copyFromStream(fileName, getResources().openRawResource(Script.ID));
+    }
 
     final AndroidProxy proxy = new AndroidProxy(this, null, true);
     proxy.startLocal();

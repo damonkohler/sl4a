@@ -22,6 +22,8 @@
           android:name="com.googlecode.android_scripting.DISCOVER_INTERPRETERS" />
         <category
           android:name="android.intent.category.LAUNCHER" />
+        <data
+          android:mimeType="script/.lua" />
       </intent-filter>
     </activity>
     <provider
