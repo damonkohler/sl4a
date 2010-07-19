@@ -41,7 +41,7 @@ import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
-import com.googlecode.android_scripting.interpreter.InterpreterAgent;
+import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.language.SupportedLanguages;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
@@ -204,7 +204,7 @@ public class ApiBrowser extends ListActivity {
     InterpreterConfiguration config =
         ((BaseApplication) getApplication()).getInterpreterConfiguration();
 
-    InterpreterAgent interpreter =
+    Interpreter interpreter =
         config.getInterpreterByName(getIntent().getStringExtra(Constants.EXTRA_INTERPRETER_NAME));
     String rpcHelpText = interpreter.getRpcText(scriptText, rpc, values);
 

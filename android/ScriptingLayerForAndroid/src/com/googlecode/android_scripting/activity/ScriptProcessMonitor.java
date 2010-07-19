@@ -245,7 +245,7 @@ public class ScriptProcessMonitor extends ListActivity {
       ((TextView) itemView.findViewById(R.id.process_details)).setText(process.getServerName()
           + ":" + process.getPort());
       ((TextView) itemView.findViewById(R.id.process_status)).setText(process.getState() + "("
-          + process.getPID() + ")");
+          + process.getPid() + ")");
       return itemView;
     }
   }

@@ -16,14 +16,13 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import java.io.File;
+import java.util.Map;
+
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.language.Language;
 import com.googlecode.android_scripting.language.SupportedLanguages;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Combines all the execution-related specs of a particular interpreter installed in the system.
@@ -32,26 +31,27 @@ import java.util.Map;
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
-public class Interpreter implements InterpreterAgent, InterpreterStrings {
+public class Interpreter implements InterpreterStrings {
 
   private static String[] mRequiredKeys =
-      { NAME, NICE_NAME, EXTENSION, BIN, PATH, EXECUTE, EXECUTE_PARAMS };
+      { NAME, NICE_NAME, EXTENSION, BINARY, PATH, EXECUTE, EXECUTE_PARAMS };
 
-  private final String mExtension;
-  private final String mName;
-  private final String mNiceName;
-  private final String mPath;
-  private final String mBinary;
-  private final String mEmptyParams;
-  private final String mExecuteParams;
-  private final String mExecute;
-  private final String[] mArguments;
-  private final Map<String, String> mEnvironmentVariables;
+  private String mExtension;
+  private String mName;
+  private String mNiceName;
+  private String mPath;
+  private String mBinary;
+  private String mEmptyParameters;
+  private String mExecuteParameters;
+  private String mExecute;
+  private String[] mArguments;
+  private Map<String, String> mEnvironmentVariables;
 
-  private final Language mLanguage;
+  private Language mLanguage;
 
-  public Interpreter(Map<String, String> data, Map<String, String> variables,
+  public static Interpreter buildFromMaps(Map<String, String> data, Map<String, String> variables,
       Map<String, String> args) throws Sl4aException {
+    Interpreter interpreter = new Interpreter();
     for (String key : mRequiredKeys) {
       if (data.get(key) == null) {
         throw new Sl4aException("Cannot create interpreter. Required parameter not specified: "
@@ -59,51 +59,85 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
       }
     }
 
-    mName = data.get(NAME);
-    mNiceName = data.get(NICE_NAME);
-    mExtension = data.get(EXTENSION);
-    mBinary = data.get(BIN);
-    mPath = new File(data.get(PATH)).getAbsolutePath() + "/";
-    mEmptyParams = data.get(EMPTY_PARAMS);
-    mExecuteParams = data.get(EXECUTE_PARAMS);
-    mExecute = data.get(EXECUTE);
-    if (args == null) {
-      mArguments = null;
-    } else {
-      mArguments = new String[args.size()];
+    String extension = data.get(EXTENSION);
+
+    interpreter.setName(data.get(NAME));
+    interpreter.setNiceName(data.get(NICE_NAME));
+    interpreter.setExtension(extension);
+    interpreter.setBinary(data.get(BINARY));
+    interpreter.setPath(new File(data.get(PATH)).getAbsolutePath() + "/");
+    interpreter.setEmptyParameters(data.get(EMPTY_PARAMS));
+    interpreter.setExecuteParameters(data.get(EXECUTE_PARAMS));
+    interpreter.setExecute(data.get(EXECUTE));
+    interpreter.setLanguage(SupportedLanguages.getLanguageByExtension(extension));
+    interpreter.setEnvironmentVariables(variables);
+
+    if (args != null) {
+      String[] arguments = new String[args.size()];
       int i = 0;
       for (String key : args.keySet()) {
-        mArguments[i++] = args.get(key);
+        arguments[i++] = args.get(key);
       }
+      interpreter.setArguments(arguments);
     }
 
-    mLanguage = SupportedLanguages.getLanguageByExtension(mExtension);
-
-    mEnvironmentVariables = new HashMap<String, String>();
-    if (variables != null) {
-      mEnvironmentVariables.putAll(variables);
-    }
+    return interpreter;
   }
 
-  public InterpreterProcess buildProcess(String launchScript, String host, int port,
-      String handshake) {
-    return new ProcessWrapper(launchScript, host, port, handshake);
+  private void setArguments(String[] arguments) {
+    mArguments = arguments;
+  }
+
+  private void setEnvironmentVariables(Map<String, String> environmentVariables) {
+    mEnvironmentVariables = environmentVariables;
+  }
+
+  protected void setExecute(String execute) {
+    mExecute = execute;
+  }
+
+  private void setExecuteParameters(String exeucteParameters) {
+    mExecuteParameters = exeucteParameters;
+  }
+
+  public void setEmptyParameters(String emptyParameters) {
+    mEmptyParameters = emptyParameters;
+  }
+
+  public void setBinary(String binary) {
+    mBinary = binary;
   }
 
   public String getBinary() {
     return mBinary;
   }
 
+  public void setPath(String path) {
+    mPath = path;
+  }
+
   public String getPath() {
     return mPath;
+  }
+
+  public void setExtension(String extension) {
+    mExtension = extension;
   }
 
   public String getExtension() {
     return mExtension;
   }
 
+  public void setName(String name) {
+    mName = name;
+  }
+
   public String getName() {
     return mName;
+  }
+
+  public void setNiceName(String niceName) {
+    mNiceName = niceName;
   }
 
   public String getNiceName() {
@@ -112,6 +146,10 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
 
   public String getContentTemplate() {
     return mLanguage.getContentTemplate();
+  }
+
+  public void setLanguage(Language language) {
+    mLanguage = language;
   }
 
   public Language getLanguage() {
@@ -130,10 +168,18 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
     return true;
   }
 
+  public InterpreterProcess buildProcess(String launchScript, String host, int port,
+      String handshake) {
+    return new ProcessWrapper(launchScript, host, port, handshake);
+  }
+
   private class ProcessWrapper extends InterpreterProcess {
 
+    private String mLaunchScript;
+
     public ProcessWrapper(String launchScript, String host, int port, String handshake) {
-      super(launchScript, host, port, handshake);
+      super(host, port, handshake);
+      mLaunchScript = launchScript;
     }
 
     @Override
@@ -151,9 +197,9 @@ public class Interpreter implements InterpreterAgent, InterpreterStrings {
       String action = null;
 
       if (mLaunchScript == null) {
-        action = mEmptyParams;
+        action = mEmptyParameters;
       } else {
-        action = String.format(mExecuteParams, mLaunchScript);
+        action = String.format(mExecuteParameters, mLaunchScript);
       }
 
       if (mArguments == null) {

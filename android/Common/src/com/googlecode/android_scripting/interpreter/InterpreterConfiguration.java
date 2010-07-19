@@ -16,6 +16,16 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -33,16 +43,6 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * Manages and provides access to the set of available interpreters.
  * 
@@ -51,7 +51,7 @@ import java.util.concurrent.Executors;
 public class InterpreterConfiguration {
 
   private final InterpreterListener mListener;
-  private final Set<InterpreterAgent> mInterpreterSet;
+  private final Set<Interpreter> mInterpreterSet;
   private final Set<ConfigurationObserver> mObserverSet;
   private final Context mContext;
 
@@ -63,13 +63,13 @@ public class InterpreterConfiguration {
     private final PackageManager mmPackageManager;
     private final ContentResolver mmResolver;
     private final ExecutorService mmExecutor;
-    private final Map<String, InterpreterAgent> mmDiscoveredInterpreters;
+    private final Map<String, Interpreter> mmDiscoveredInterpreters;
 
     private InterpreterListener(Context context) {
       mmPackageManager = context.getPackageManager();
       mmResolver = context.getContentResolver();
       mmExecutor = Executors.newSingleThreadExecutor();
-      mmDiscoveredInterpreters = new HashMap<String, InterpreterAgent>();
+      mmDiscoveredInterpreters = new HashMap<String, Interpreter>();
     }
 
     private void discoverAll() {
@@ -78,10 +78,10 @@ public class InterpreterConfiguration {
         public void run() {
           Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
           intent.addCategory(Intent.CATEGORY_LAUNCHER);
-          List<InterpreterAgent> discoveredInterpreters = new ArrayList<InterpreterAgent>();
+          List<Interpreter> discoveredInterpreters = new ArrayList<Interpreter>();
           List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
           for (ResolveInfo info : resolveInfos) {
-            InterpreterAgent interpreter = buildInterpreter(info.activityInfo.packageName);
+            Interpreter interpreter = buildInterpreter(info.activityInfo.packageName);
             if (interpreter == null) {
               continue;
             }
@@ -103,7 +103,7 @@ public class InterpreterConfiguration {
       mmExecutor.submit(new Runnable() {
         @Override
         public void run() {
-          InterpreterAgent discoveredInterpreter = buildInterpreter(packageName);
+          Interpreter discoveredInterpreter = buildInterpreter(packageName);
           if (discoveredInterpreter == null) {
             return;
           }
@@ -123,7 +123,7 @@ public class InterpreterConfiguration {
       mmExecutor.submit(new Runnable() {
         @Override
         public void run() {
-          InterpreterAgent interpreter = mmDiscoveredInterpreters.get(packageName);
+          Interpreter interpreter = mmDiscoveredInterpreters.get(packageName);
           if (interpreter == null) {
             return;
           }
@@ -137,7 +137,7 @@ public class InterpreterConfiguration {
     }
 
     // We require that there's only one interpreter provider per APK
-    private InterpreterAgent buildInterpreter(String packageName) {
+    private Interpreter buildInterpreter(String packageName) {
       PackageInfo packInfo = null;
       try {
         packInfo = mmPackageManager.getPackageInfo(packageName, PackageManager.GET_PROVIDERS);
@@ -154,9 +154,9 @@ public class InterpreterConfiguration {
 
       Map<String, String> argumentsMap = getMap(provider, InterpreterConstants.PROVIDER_ARGS);
 
-      InterpreterAgent interpreter = null;
+      Interpreter interpreter = null;
       try {
-        interpreter = new Interpreter(interpreterMap, environmentMap, argumentsMap);
+        interpreter = Interpreter.buildFromMaps(interpreterMap, environmentMap, argumentsMap);
       } catch (Sl4aException e) {
         Log.e(e.getMessage(), e);
       } catch (Exception e) {
@@ -199,7 +199,7 @@ public class InterpreterConfiguration {
 
   public InterpreterConfiguration(Context context) {
     mContext = context;
-    mInterpreterSet = new CopyOnWriteArraySet<InterpreterAgent>();
+    mInterpreterSet = new CopyOnWriteArraySet<Interpreter>();
     mInterpreterSet.add(new ShellInterpreter());
     mObserverSet = new CopyOnWriteArraySet<ConfigurationObserver>();
     IntentFilter filter = new IntentFilter();
@@ -232,16 +232,16 @@ public class InterpreterConfiguration {
   /**
    * Returns the list of all known interpreters.
    */
-  public List<? extends InterpreterAgent> getSupportedInterpreters() {
-    return new ArrayList<InterpreterAgent>(mInterpreterSet);
+  public List<? extends Interpreter> getSupportedInterpreters() {
+    return new ArrayList<Interpreter>(mInterpreterSet);
   }
 
   /**
    * Returns the list of all installed interpreters.
    */
-  public List<InterpreterAgent> getInstalledInterpreters() {
-    List<InterpreterAgent> interpreters = new ArrayList<InterpreterAgent>();
-    for (InterpreterAgent i : mInterpreterSet) {
+  public List<Interpreter> getInstalledInterpreters() {
+    List<Interpreter> interpreters = new ArrayList<Interpreter>();
+    for (Interpreter i : mInterpreterSet) {
       if (i.isInstalled()) {
         interpreters.add(i);
       }
@@ -252,8 +252,8 @@ public class InterpreterConfiguration {
   /**
    * Returns the interpreter matching the provided name or null if no interpreter was found.
    */
-  public InterpreterAgent getInterpreterByName(String interpreterName) {
-    for (InterpreterAgent i : mInterpreterSet) {
+  public Interpreter getInterpreterByName(String interpreterName) {
+    for (Interpreter i : mInterpreterSet) {
       if (i.getName().equals(interpreterName)) {
         return i;
       }
@@ -265,13 +265,13 @@ public class InterpreterConfiguration {
    * Returns the correct interpreter for the provided script name based on the script's extension or
    * null if no interpreter was found.
    */
-  public InterpreterAgent getInterpreterForScript(String scriptName) {
+  public Interpreter getInterpreterForScript(String scriptName) {
     int dotIndex = scriptName.lastIndexOf('.');
     if (dotIndex == -1) {
       return null;
     }
     String ext = scriptName.substring(dotIndex);
-    for (InterpreterAgent i : mInterpreterSet) {
+    for (Interpreter i : mInterpreterSet) {
       if (i.getExtension().equals(ext)) {
         return i;
       }

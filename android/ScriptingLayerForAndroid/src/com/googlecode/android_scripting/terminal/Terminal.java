@@ -37,11 +37,9 @@ import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.activity.Preferences;
 import com.googlecode.android_scripting.activity.ScriptingLayerService;
-import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 
 /**
  * A terminal emulator activity.
@@ -114,10 +112,7 @@ public class Terminal extends Activity {
   private SharedPreferences mPreferences;
 
   private StringBuffer mBuffer = new StringBuffer();
-  private InterpreterProcess mInterpreterProcess; // Convenience member.
   private ScriptProcess mScriptProcess;
-  private ScriptLauncher mLauncher;
-
   private ScriptingLayerService mService;
   private int mProcessPort;
 
@@ -164,22 +159,13 @@ public class Terminal extends Activity {
       return;
     }
 
-    mLauncher = mScriptProcess.getLauncher();
-
-    if (mLauncher == null) {
-      Log.e(this, "Process is running in server mode only.");
-      finish();
-      return;
-    }
-
     setContentView(R.layout.term);
-    mInterpreterProcess = mLauncher.getProcess();
     if (mBuffer.length() != 0) {
-      mInterpreterProcess.print(mBuffer.toString());
+      mScriptProcess.print(mBuffer.toString());
       mBuffer.setLength(0);
     }
     mEmulatorView = (EmulatorView) findViewById(EMULATOR_VIEW);
-    mEmulatorView.attachInterpreterProcess(mInterpreterProcess);
+    mEmulatorView.attachProcess(mScriptProcess);
     mEmulatorView.setOnPollingThreadExit(new Runnable() {
       @Override
       public void run() {
@@ -324,8 +310,8 @@ public class Terminal extends Activity {
   }
 
   private void print(char c) {
-    if (mInterpreterProcess != null) {
-      mInterpreterProcess.print(c);
+    if (mScriptProcess != null) {
+      mScriptProcess.print(c);
     } else {
       mBuffer.append(c);
     }
@@ -334,7 +320,7 @@ public class Terminal extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.terminal, menu);
-    if (mLauncher.getScriptName() == null) {
+    if (mScriptProcess.getScriptName() == null) {
       menu.removeItem(R.id.terminal_menu_exit_and_edit);
     }
     return true;
@@ -354,7 +340,7 @@ public class Terminal extends Activity {
       break;
     case R.id.terminal_menu_exit_and_edit:
       Intent i = new Intent(Constants.ACTION_EDIT_SCRIPT);
-      i.putExtra(Constants.EXTRA_SCRIPT_NAME, mLauncher.getScriptName());
+      i.putExtra(Constants.EXTRA_SCRIPT_NAME, mScriptProcess.getScriptName());
       startActivity(i);
       finish();
       break;

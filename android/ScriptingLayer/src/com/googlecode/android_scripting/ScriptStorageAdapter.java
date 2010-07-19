@@ -16,7 +16,7 @@
 
 package com.googlecode.android_scripting;
 
-import com.googlecode.android_scripting.interpreter.InterpreterAgent;
+import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
@@ -148,7 +148,7 @@ public class ScriptStorageAdapter {
               .listFiles()));
       // Filter out any files that don't have interpreters installed.
       for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
-        InterpreterAgent interpreter = config.getInterpreterForScript(it.next().getName());
+        Interpreter interpreter = config.getInterpreterForScript(it.next().getName());
         if (interpreter == null || !interpreter.isInstalled()) {
           it.remove();
         }

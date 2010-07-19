@@ -41,7 +41,7 @@ import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.dialog.Help;
-import com.googlecode.android_scripting.interpreter.InterpreterAgent;
+import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
@@ -53,7 +53,7 @@ public class InterpreterManager extends ListActivity {
 
   private InterpreterManagerAdapter mAdapter;
   private InterpreterListObserver mObserver;
-  private List<InterpreterAgent> mInterpreterList;
+  private List<Interpreter> mInterpreterList;
   private List<String> mFeaturedInterpreters;
   private InterpreterConfiguration mConfiguration;
 
@@ -69,7 +69,7 @@ public class InterpreterManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.interpreter_manager);
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    mInterpreterList = new ArrayList<InterpreterAgent>();
+    mInterpreterList = new ArrayList<Interpreter>();
     mAdapter = new InterpreterManagerAdapter();
     mObserver = new InterpreterListObserver();
     mAdapter.registerDataSetObserver(mObserver);
@@ -156,7 +156,7 @@ public class InterpreterManager extends ListActivity {
     startService(intent);
   }
 
-  private void launchTerminal(InterpreterAgent interpreter) {
+  private void launchTerminal(Interpreter interpreter) {
     Intent intent = new Intent(this, ScriptingLayerService.class);
     intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
     intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
@@ -165,7 +165,7 @@ public class InterpreterManager extends ListActivity {
 
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    InterpreterAgent interpreter = (InterpreterAgent) list.getItemAtPosition(position);
+    Interpreter interpreter = (Interpreter) list.getItemAtPosition(position);
     launchTerminal(interpreter);
   }
 

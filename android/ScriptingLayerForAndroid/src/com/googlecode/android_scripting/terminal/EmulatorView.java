@@ -42,8 +42,8 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
 import com.googlecode.android_scripting.Exec;
+import com.googlecode.android_scripting.Process;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 
 /**
  * A view on a transcript and a terminal emulator. Displays the text of the transcript and the
@@ -249,12 +249,12 @@ class EmulatorView extends View implements OnGestureListener {
   }
 
   /**
-   * Configures the view to use the supplied interpreter process.
+   * Configures the view to use the supplied process.
    */
-  public void attachInterpreterProcess(InterpreterProcess interpreter) {
-    mTermOut = interpreter.getOut();
-    mTermIn = interpreter.getIn();
-    mTermFd = interpreter.getFd();
+  public void attachProcess(Process process) {
+    mTermOut = process.getOut();
+    mTermIn = process.getIn();
+    mTermFd = process.getFd();
   }
 
   @Override

@@ -16,16 +16,15 @@
 
 package com.googlecode.android_scripting;
 
+import java.net.InetSocketAddress;
+import java.util.UUID;
+
 import android.app.Service;
 import android.content.Intent;
-
 
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.JsonRpcServer;
-
-import java.net.InetSocketAddress;
-import java.util.UUID;
 
 public class AndroidProxy {
 
@@ -39,12 +38,9 @@ public class AndroidProxy {
     } else {
       mSecret = null;
     }
-
     FacadeManager facadeManager =
         new FacadeManager(service, intent, FacadeConfiguration.getFacadeClasses());
-
     mJsonRpcServer = new JsonRpcServer(facadeManager, getSecret());
-
   }
 
   public InetSocketAddress getAddress() {

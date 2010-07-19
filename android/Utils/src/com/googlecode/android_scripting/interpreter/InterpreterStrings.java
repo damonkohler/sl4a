@@ -41,7 +41,7 @@ public interface InterpreterStrings {
   /**
    * Name (and path within working directory) of the interpreter executable.
    */
-  public static final String BIN = "binary";
+  public static final String BINARY = "binary";
 
   /**
    * Path to the working directory of the interpreter.
