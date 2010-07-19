@@ -33,50 +33,14 @@ public class ScriptLauncher {
 
   public static InterpreterProcess launchInterpreter(final AndroidProxy proxy, Intent intent,
       InterpreterConfiguration config, Runnable shutdownHook) {
-    return launch(proxy, intent, config, null, shutdownHook);
-  }
-
-  public static ScriptProcess launchScript(final AndroidProxy proxy, Intent intent,
-      InterpreterConfiguration config, Trigger trigger, Runnable shutdownHook) {
-    return (ScriptProcess) launch(proxy, intent, config, trigger, shutdownHook);
-  }
-
-  public static ScriptProcess launchScript(final AndroidProxy proxy, File script,
-      InterpreterConfiguration config, Trigger trigger, Runnable shutdownHook) {
-    Intent intent = new Intent();
-    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
-    return (ScriptProcess) launch(proxy, intent, config, trigger, shutdownHook);
-  }
-
-  private static InterpreterProcess launch(final AndroidProxy proxy, Intent intent,
-      InterpreterConfiguration config, Trigger trigger, Runnable shutdownHook) {
-    String scriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     Interpreter interpreter;
     String interpreterName;
-    if (scriptName != null) {
-      interpreter = config.getInterpreterForScript(scriptName);
-      interpreterName = interpreter.getName();
-    } else {
-      interpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
-      interpreter = config.getInterpreterByName(interpreterName);
-    }
-    if (scriptName == null && interpreter == null) {
-      throw new RuntimeException("Must specify either script or interpreter.");
-    }
+    interpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
+    interpreter = config.getInterpreterByName(interpreterName);
     InterpreterProcess process;
-    String scriptPath = null;
-    if (scriptName != null) {
-      File script = ScriptStorageAdapter.getExistingScript(scriptName);
-      if (script == null) {
-        throw new RuntimeException("No such script to launch.");
-      }
-      scriptPath = script.getAbsolutePath();
-      process = new ScriptProcess(scriptName, proxy, trigger);
-    } else {
-      process =
-          interpreter.buildProcess(scriptPath, proxy.getAddress().getHostName(), proxy.getAddress()
-              .getPort(), proxy.getSecret());
-    }
+    process =
+        interpreter.buildProcess(null, proxy.getAddress().getHostName(), proxy.getAddress()
+            .getPort(), proxy.getSecret());
     if (shutdownHook == null) {
       process.start(new Runnable() {
         @Override
@@ -88,5 +52,33 @@ public class ScriptLauncher {
       process.start(shutdownHook);
     }
     return process;
+  }
+
+  public static ScriptProcess launchScript(final AndroidProxy proxy, Intent intent,
+      Trigger trigger, Runnable shutdownHook) {
+    String scriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    File script = ScriptStorageAdapter.getExistingScript(scriptName);
+    if (script == null) {
+      throw new RuntimeException("No such script to launch.");
+    }
+    ScriptProcess process = new ScriptProcess(scriptName, proxy, trigger);
+    if (shutdownHook == null) {
+      process.start(new Runnable() {
+        @Override
+        public void run() {
+          proxy.shutdown();
+        }
+      });
+    } else {
+      process.start(shutdownHook);
+    }
+    return process;
+  }
+
+  public static ScriptProcess launchScript(final AndroidProxy proxy, File script, Trigger trigger,
+      Runnable shutdownHook) {
+    Intent intent = new Intent();
+    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
+    return launchScript(proxy, intent, trigger, shutdownHook);
   }
 }

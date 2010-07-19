@@ -64,6 +64,11 @@ public class ShellInterpreter extends Interpreter {
     return false;
   }
 
+  @Override
+  public boolean isInstalled() {
+    return true;
+  }
+
   private class ShellInterpreterProcess extends InterpreterProcess {
 
     public ShellInterpreterProcess(String host, int port, String handshake) {

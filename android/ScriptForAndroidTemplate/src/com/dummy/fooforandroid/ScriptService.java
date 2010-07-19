@@ -46,14 +46,13 @@ public class ScriptService extends Service {
       return;
     }
 
-    // Copies script to memory.
+    // Copies script to internal memory.
     fileName = InterpreterUtils.getInterpreterRoot(this).getAbsolutePath() + "/" + fileName;
-
     File script = FileUtils.copyFromStream(fileName, resources.openRawResource(id));
 
     final AndroidProxy proxy = new AndroidProxy(this, null, true);
     proxy.startLocal();
-    ScriptLauncher.launchScript(proxy, script, config, null, new Runnable() {
+    ScriptLauncher.launchScript(proxy, script, null, new Runnable() {
       @Override
       public void run() {
         proxy.shutdown();

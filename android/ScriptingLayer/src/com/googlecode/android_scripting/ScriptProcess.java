@@ -100,7 +100,7 @@ public class ScriptProcess extends InterpreterProcess {
 
   @Override
   public void kill() {
-    kill();
+    super.kill();
     if (mProxy != null) {
       mProxy.shutdown();
     }
@@ -136,8 +136,6 @@ public class ScriptProcess extends InterpreterProcess {
 
   @Override
   protected void buildEnvironment() {
-    // TODO Auto-generated method stub
-
   }
 
   @Override

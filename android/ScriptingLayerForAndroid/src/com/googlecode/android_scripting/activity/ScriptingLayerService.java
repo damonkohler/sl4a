@@ -40,6 +40,7 @@ import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.terminal.Terminal;
 import com.googlecode.android_scripting.trigger.Trigger;
 
@@ -134,7 +135,7 @@ public class ScriptingLayerService extends Service {
         launchTerminal(intent, serverProxy.getAddress());
       }
     }
-    addScriptProcess(scriptProcess);
+    addProcess(scriptProcess);
     scriptProcess.notifyTriggerOfStart(this);
   }
 
@@ -150,10 +151,25 @@ public class ScriptingLayerService extends Service {
   }
 
   private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {
+    final int port = proxy.getAddress().getPort();
+    return ScriptLauncher.launchScript(proxy, intent, trigger, new Runnable() {
+      @Override
+      public void run() {
+        // TODO(damonkohler): This action actually kills the script rather than notifying the
+        // service that script exited on its own. We should distinguish between these two cases.
+        Intent intent = new Intent(ScriptingLayerService.this, ScriptingLayerService.class);
+        intent.setAction(Constants.ACTION_KILL_PROCESS);
+        intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
+        startService(intent);
+      }
+    });
+  }
+
+  private InterpreterProcess launchInterpreter(Intent intent, AndroidProxy proxy) {
     InterpreterConfiguration config =
         ((BaseApplication) getApplication()).getInterpreterConfiguration();
     final int port = proxy.getAddress().getPort();
-    return ScriptLauncher.launchScript(proxy, intent, config, trigger, new Runnable() {
+    return ScriptLauncher.launchInterpreter(proxy, intent, config, new Runnable() {
       @Override
       public void run() {
         // TODO(damonkohler): This action actually kills the script rather than notifying the
@@ -180,7 +196,7 @@ public class ScriptingLayerService extends Service {
     startActivity(i);
   }
 
-  private void addScriptProcess(ScriptProcess process) {
+  private void addProcess(InterpreterProcess process) {
     mProcessMap.put(process.getPort(), process);
     modCount++;
     updateNotification();
