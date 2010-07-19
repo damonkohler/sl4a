@@ -1,4 +1,4 @@
-package com.googlecode.script;
+package com.dummy.fooforandroid;
 
 import android.app.Service;
 import android.content.Intent;

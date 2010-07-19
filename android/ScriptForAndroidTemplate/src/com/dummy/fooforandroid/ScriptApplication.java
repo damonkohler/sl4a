@@ -1,4 +1,4 @@
-package com.googlecode.script;
+package com.dummy.fooforandroid;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Log;
