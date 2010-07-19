@@ -44,6 +44,7 @@ import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptProcess;
+import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.terminal.Terminal;
 
 /**
@@ -55,7 +56,7 @@ public class ScriptProcessMonitor extends ListActivity {
 
   private final static int UPDATE_INTERVAL_SECS = 1;
 
-  private List<ScriptProcess> mProcessList;
+  private List<InterpreterProcess> mProcessList;
   private ScriptMonitorAdapter mAdapter;
   private volatile ScriptingLayerService mService;
   private boolean isConnected = false;
@@ -127,13 +128,6 @@ public class ScriptProcessMonitor extends ListActivity {
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-    try {
-      AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-      ScriptProcess script = (ScriptProcess) mAdapter.getItem(info.position);
-      script.getScriptName();
-    } catch (ClassCastException e) {
-      Log.e(e);
-    }
     menu.add(Menu.NONE, 0, Menu.NONE, "Stop");
   }
 
@@ -147,7 +141,7 @@ public class ScriptProcessMonitor extends ListActivity {
       return false;
     }
 
-    final ScriptProcess script = (ScriptProcess) mAdapter.getItem(info.position);
+    InterpreterProcess script = mAdapter.getItem(info.position);
     if (script == null) {
       Log.v("No script selected.");
       return false;
@@ -182,7 +176,7 @@ public class ScriptProcessMonitor extends ListActivity {
 
   private class ScriptListAdapter extends TimerTask {
     private int mmExpectedModCount = 0;
-    private volatile List<ScriptProcess> mmList;
+    private volatile List<InterpreterProcess> mmList;
 
     @Override
     public void run() {
@@ -204,7 +198,7 @@ public class ScriptProcessMonitor extends ListActivity {
       });
     }
 
-    private List<ScriptProcess> getFreshProcessList() {
+    private List<InterpreterProcess> getFreshProcessList() {
       return mmList;
     }
   }
@@ -220,7 +214,7 @@ public class ScriptProcessMonitor extends ListActivity {
     }
 
     @Override
-    public Object getItem(int position) {
+    public InterpreterProcess getItem(int position) {
       return mProcessList.get(position);
     }
 
@@ -239,13 +233,12 @@ public class ScriptProcessMonitor extends ListActivity {
       } else {
         itemView = convertView;
       }
-      ScriptProcess process = mProcessList.get(position);
-      ((TextView) itemView.findViewById(R.id.process_title)).setText(process.getScriptName());
+      InterpreterProcess process = mProcessList.get(position);
+      ((TextView) itemView.findViewById(R.id.process_title)).setText(process.getName());
       ((TextView) itemView.findViewById(R.id.process_age)).setText(process.getUptime());
-      ((TextView) itemView.findViewById(R.id.process_details)).setText(process.getServerName()
-          + ":" + process.getPort());
-      ((TextView) itemView.findViewById(R.id.process_status)).setText(process.getState() + "("
-          + process.getPid() + ")");
+      ((TextView) itemView.findViewById(R.id.process_details)).setText(process.getHost() + ":"
+          + process.getPort());
+      ((TextView) itemView.findViewById(R.id.process_status)).setText(process.getPid());
       return itemView;
     }
   }

@@ -51,7 +51,7 @@ import com.googlecode.android_scripting.trigger.Trigger;
  */
 public class ScriptingLayerService extends Service {
 
-  private final Map<Integer, ScriptProcess> mProcessMap;
+  private final Map<Integer, InterpreterProcess> mProcessMap;
   private NotificationManager mNotificationManager;
   private Notification mNotification;
   private final IBinder mBinder;
@@ -66,7 +66,7 @@ public class ScriptingLayerService extends Service {
   }
 
   public ScriptingLayerService() {
-    mProcessMap = new ConcurrentHashMap<Integer, ScriptProcess>();
+    mProcessMap = new ConcurrentHashMap<Integer, InterpreterProcess>();
     mBinder = new LocalBinder();
   }
 
@@ -202,9 +202,8 @@ public class ScriptingLayerService extends Service {
     updateNotification();
   }
 
-  private ScriptProcess removeScriptProcess(int id) {
-    ScriptProcess process;
-    process = mProcessMap.remove(id);
+  private InterpreterProcess removeProcess(int port) {
+    InterpreterProcess process = mProcessMap.remove(port);
     if (process == null) {
       return null;
     }
@@ -215,7 +214,7 @@ public class ScriptingLayerService extends Service {
 
   private void killScriptProcess(Intent intent) {
     int processId = intent.getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
-    ScriptProcess scriptProcess = removeScriptProcess(processId);
+    ScriptProcess scriptProcess = (ScriptProcess) removeProcess(processId);
     if (scriptProcess != null) {
       scriptProcess.notifyTriggerOfShutDown(this);
       scriptProcess.kill();
@@ -227,23 +226,25 @@ public class ScriptingLayerService extends Service {
   }
 
   private void killAll() {
-    for (ScriptProcess scriptProcess : getScriptProcessesList()) {
-      scriptProcess = removeScriptProcess(scriptProcess.getPort());
-      scriptProcess.notifyTriggerOfShutDown(this);
-      if (scriptProcess != null) {
-        scriptProcess.kill();
+    for (InterpreterProcess process : getScriptProcessesList()) {
+      process = removeProcess(process.getPort());
+      if (process instanceof ScriptProcess) {
+        ((ScriptProcess) process).notifyTriggerOfShutDown(this);
+      }
+      if (process != null) {
+        process.kill();
       }
     }
   }
 
-  public List<ScriptProcess> getScriptProcessesList() {
-    ArrayList<ScriptProcess> result = new ArrayList<ScriptProcess>();
+  public List<InterpreterProcess> getScriptProcessesList() {
+    ArrayList<InterpreterProcess> result = new ArrayList<InterpreterProcess>();
     result.addAll(mProcessMap.values());
     return result;
   }
 
-  public ScriptProcess getScriptProcess(int processPort) {
-    return mProcessMap.get(processPort);
+  public InterpreterProcess getProcess(int port) {
+    return mProcessMap.get(port);
   }
 
   @Override

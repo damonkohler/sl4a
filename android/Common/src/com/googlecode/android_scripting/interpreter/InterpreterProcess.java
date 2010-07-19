@@ -32,9 +32,15 @@ import com.googlecode.android_scripting.Process;
  */
 public abstract class InterpreterProcess extends Process {
 
-  protected Map<String, String> mEnvironment = new HashMap<String, String>();
-  protected int mId;
   private static final int BUFFER_SIZE = 8192;
+
+  protected Map<String, String> mEnvironment = new HashMap<String, String>();
+  private final String mHost;
+  private final int mPort;
+  private final String mHandshake;
+
+  private final StringBuffer mLog;
+  private volatile int mLogLength = 0;
 
   /**
    * Creates a new {@link InterpreterProcess}.
@@ -45,14 +51,33 @@ public abstract class InterpreterProcess extends Process {
    *          the port that the AndroidProxy is listening on
    */
   public InterpreterProcess(String host, int port, String handshake) {
-    mId = port;
-    mEnvironment.putAll(System.getenv());
-    mEnvironment.put("AP_PORT", Integer.toString(port));
-    mEnvironment.put("AP_HOST", host);
-    if (handshake != null) {
-      mEnvironment.put("AP_HANDSHAKE", handshake);
-    }
+    mHost = host;
+    mPort = port;
+    mHandshake = handshake;
     mLog = new StringBuffer();
+    initializeEnvironment();
+  }
+
+  public String getHost() {
+    return mHost;
+  }
+
+  public int getPort() {
+    return mPort;
+  }
+
+  public String getHandshake() {
+    return mHandshake;
+  }
+
+  private void initializeEnvironment() {
+    mEnvironment.putAll(System.getenv());
+    mEnvironment.put("AP_PORT", Integer.toString(mPort));
+    mEnvironment.put("AP_HOST", mHost);
+    // TODO(damonkohler): We should probably never have a null handshake.
+    if (mHandshake != null) {
+      mEnvironment.put("AP_HANDSHAKE", mHandshake);
+    }
   }
 
   public void start(final Runnable shutdownHook) {
@@ -89,10 +114,6 @@ public abstract class InterpreterProcess extends Process {
   public BufferedReader getIn() {
     return new LoggingBufferedReader(mIn, BUFFER_SIZE);
   }
-
-  private final StringBuffer mLog;
-
-  private volatile int mLogLength = 0;
 
   // TODO(Alexey): Add Javadoc.
   private class LoggingBufferedReader extends BufferedReader {

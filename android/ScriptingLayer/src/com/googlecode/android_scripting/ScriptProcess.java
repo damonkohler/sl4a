@@ -25,37 +25,14 @@ import com.googlecode.android_scripting.trigger.Trigger;
 
 public class ScriptProcess extends InterpreterProcess {
 
-  private static enum State {
-    ALIVE("Alive"), DEAD("Dead");
-
-    private final String mName;
-
-    State(String name) {
-      mName = name;
-    }
-
-    @Override
-    public String toString() {
-      return mName;
-    }
-  }
-
-  private final int mServerPort;
   private final Trigger mTrigger;
   private final AndroidProxy mProxy;
-  private final long mStartTime;
-  private final String mScriptName;
-
-  private volatile State mState;
 
   public ScriptProcess(String scriptName, AndroidProxy proxy, Trigger trigger) {
     super(proxy.getAddress().getHostName(), proxy.getAddress().getPort(), proxy.getSecret());
     mProxy = proxy;
     mTrigger = trigger;
-    mState = State.ALIVE;
-    mStartTime = System.currentTimeMillis();
-    mServerPort = proxy.getAddress().getPort();
-    mScriptName = scriptName;
+    mName = scriptName;
   }
 
   public void notifyTriggerOfShutDown(Service service) {
@@ -70,41 +47,12 @@ public class ScriptProcess extends InterpreterProcess {
     }
   }
 
-  public int getPort() {
-    return mServerPort;
-  }
-
-  public long getStartTime() {
-    return mStartTime;
-  }
-
-  public String getScriptName() {
-    return mScriptName;
-  }
-
-  public String getServerName() {
-    if (mProxy == null) {
-      return null;
-    }
-    InetSocketAddress address = mProxy.getAddress();
-    return address.getHostName();
-  }
-
-  public boolean isAlive() {
-    return mState.equals(State.ALIVE);
-  }
-
-  public String getState() {
-    return mState.toString();
-  }
-
   @Override
   public void kill() {
     super.kill();
     if (mProxy != null) {
       mProxy.shutdown();
     }
-    mState = State.DEAD;
   }
 
   @Override
@@ -114,24 +62,8 @@ public class ScriptProcess extends InterpreterProcess {
     info.append(String.format("Running network service on: %s:%d\n", address.getHostName(), address
         .getPort()));
     info.append("Running script service: ");
-    info.append(mScriptName);
+    info.append(mName);
     return info.toString();
-  }
-
-  public String getUptime() {
-    long ms = System.currentTimeMillis() - mStartTime;
-    StringBuffer buffer = new StringBuffer();
-    int days = (int) (ms / (1000 * 60 * 60 * 24));
-    int hours = (int) (ms % (1000 * 60 * 60 * 24)) / 3600000;
-    int minutes = (int) (ms % 3600000) / 60000;
-    int seconds = (int) (ms % 60000) / 1000;
-    if (days != 0) {
-      buffer.append(String.format("%02d:%02d:", days, hours));
-    } else if (hours != 0) {
-      buffer.append(String.format("%02d:", hours));
-    }
-    buffer.append(String.format("%02d:%02d", minutes, seconds));
-    return buffer.toString();
   }
 
   @Override

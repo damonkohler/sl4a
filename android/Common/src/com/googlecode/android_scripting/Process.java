@@ -29,14 +29,12 @@ public class Process {
 
   private static final int DEFAULT_BUFFER_SIZE = 8192;
 
+  protected String mName;
   protected Integer mPid;
   protected FileDescriptor mFd;
-
   protected PrintStream mOut;
   protected Reader mIn;
-
-  public Process() {
-  }
+  private long mStartTime;
 
   public Integer getPid() {
     return mPid;
@@ -71,17 +69,21 @@ public class Process {
   }
 
   public void start(String binary, String[] args, String[] envvars, final Runnable shutdownHook) {
+    if (mPid != null) {
+      throw new RuntimeException("Attempted to start process that is already running.");
+    }
     int[] pid = new int[1];
     mFd = Exec.createSubprocess(binary, args, envvars, pid);
     mPid = pid[0];
     mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
     mIn = new InputStreamReader(new FileInputStream(mFd));
+    mStartTime = System.currentTimeMillis();
 
     new Thread(new Runnable() {
       public void run() {
-        Log.v("Waiting for " + mPid);
         int result = Exec.waitFor(mPid);
-        Log.v("Subprocess exited with result code " + result);
+        Log.v("Process " + mPid + " exited with result code " + result + ".");
+        mPid = null;
         mOut.close();
         try {
           mIn.close();
@@ -96,9 +98,36 @@ public class Process {
   }
 
   public void kill() {
-    if (mPid != null) {
+    if (isAlive()) {
       android.os.Process.killProcess(mPid);
       Log.v("Killed process " + mPid);
     }
+  }
+
+  public boolean isAlive() {
+    return mPid != null;
+  }
+
+  public String getUptime() {
+    if (!isAlive()) {
+      return "";
+    }
+    long ms = System.currentTimeMillis() - mStartTime;
+    StringBuffer buffer = new StringBuffer();
+    int days = (int) (ms / (1000 * 60 * 60 * 24));
+    int hours = (int) (ms % (1000 * 60 * 60 * 24)) / 3600000;
+    int minutes = (int) (ms % 3600000) / 60000;
+    int seconds = (int) (ms % 60000) / 1000;
+    if (days != 0) {
+      buffer.append(String.format("%02d:%02d:", days, hours));
+    } else if (hours != 0) {
+      buffer.append(String.format("%02d:", hours));
+    }
+    buffer.append(String.format("%02d:%02d", minutes, seconds));
+    return buffer.toString();
+  }
+
+  public String getName() {
+    return mName;
   }
 }

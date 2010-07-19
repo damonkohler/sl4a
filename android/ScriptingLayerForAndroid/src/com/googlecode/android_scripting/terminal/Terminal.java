@@ -40,6 +40,7 @@ import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.activity.Preferences;
 import com.googlecode.android_scripting.activity.ScriptingLayerService;
+import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 
 /**
  * A terminal emulator activity.
@@ -112,7 +113,7 @@ public class Terminal extends Activity {
   private SharedPreferences mPreferences;
 
   private StringBuffer mBuffer = new StringBuffer();
-  private ScriptProcess mScriptProcess;
+  private InterpreterProcess mInterpreterProcess;
   private ScriptingLayerService mService;
   private int mProcessPort;
 
@@ -151,9 +152,9 @@ public class Terminal extends Activity {
   }
 
   private void startTerminal() {
-    mScriptProcess = mService.getScriptProcess(mProcessPort);
+    mInterpreterProcess = mService.getProcess(mProcessPort);
 
-    if (mScriptProcess == null) {
+    if (mInterpreterProcess == null) {
       Log.e(String.format("Process (%d) does not exist.", mProcessPort));
       finish();
       return;
@@ -161,19 +162,18 @@ public class Terminal extends Activity {
 
     setContentView(R.layout.term);
     if (mBuffer.length() != 0) {
-      mScriptProcess.print(mBuffer.toString());
+      mInterpreterProcess.print(mBuffer.toString());
       mBuffer.setLength(0);
     }
     mEmulatorView = (EmulatorView) findViewById(EMULATOR_VIEW);
-    mEmulatorView.attachProcess(mScriptProcess);
+    mEmulatorView.attachProcess(mInterpreterProcess);
     mEmulatorView.setOnPollingThreadExit(new Runnable() {
       @Override
       public void run() {
         Terminal.this.runOnUiThread(new Runnable() {
           @Override
           public void run() {
-            Toast.makeText(Terminal.this, mScriptProcess.getScriptName() + " exited.",
-                Toast.LENGTH_SHORT).show();
+            Toast.makeText(Terminal.this, "Process exited.", Toast.LENGTH_SHORT).show();
             Terminal.this.finish();
           }
         });
@@ -206,7 +206,7 @@ public class Terminal extends Activity {
   @Override
   public void onResume() {
     super.onResume();
-    if (mScriptProcess != null && !mScriptProcess.isAlive()) {
+    if (mInterpreterProcess != null && !mInterpreterProcess.isAlive()) {
       finish();
       return;
     }
@@ -310,8 +310,8 @@ public class Terminal extends Activity {
   }
 
   private void print(char c) {
-    if (mScriptProcess != null) {
-      mScriptProcess.print(c);
+    if (mInterpreterProcess != null) {
+      mInterpreterProcess.print(c);
     } else {
       mBuffer.append(c);
     }
@@ -320,7 +320,7 @@ public class Terminal extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.terminal, menu);
-    if (mScriptProcess.getScriptName() == null) {
+    if (!(mInterpreterProcess instanceof ScriptProcess)) {
       menu.removeItem(R.id.terminal_menu_exit_and_edit);
     }
     return true;
@@ -339,9 +339,9 @@ public class Terminal extends Activity {
       doDocumentKeys();
       break;
     case R.id.terminal_menu_exit_and_edit:
-      Intent i = new Intent(Constants.ACTION_EDIT_SCRIPT);
-      i.putExtra(Constants.EXTRA_SCRIPT_NAME, mScriptProcess.getScriptName());
-      startActivity(i);
+      Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
+      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, mInterpreterProcess.getName());
+      startActivity(intent);
       finish();
       break;
     }
