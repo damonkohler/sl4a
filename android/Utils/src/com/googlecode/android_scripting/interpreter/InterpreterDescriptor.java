@@ -25,8 +25,6 @@ import android.content.Context;
  */
 public interface InterpreterDescriptor {
 
-  // The following methods should be implemented to provide general interpreter information:
-
   /**
    * Returns unique name of the interpreter.
    */
@@ -129,5 +127,4 @@ public interface InterpreterDescriptor {
    * Returns URL location of the extras archive.
    */
   public String getExtrasArchiveUrl();
-
 }

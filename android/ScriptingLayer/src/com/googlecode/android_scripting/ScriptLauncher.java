@@ -16,93 +16,77 @@
 
 package com.googlecode.android_scripting;
 
+import java.io.File;
+
 import android.content.Intent;
 
-import com.googlecode.android_scripting.exception.Sl4aException;
-import com.googlecode.android_scripting.interpreter.InterpreterAgent;
+import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
-
-import java.io.File;
+import com.googlecode.android_scripting.trigger.Trigger;
 
 public class ScriptLauncher {
 
-  private final String mScriptName;
-  private File mScriptFile;
-  private final String mInterpreterName;
-  private final InterpreterAgent mInterpreter;
-  private InterpreterProcess mProcess;
-  private final AndroidProxy mProxy;
-
-  public ScriptLauncher(AndroidProxy proxy, File script, InterpreterConfiguration config) {
-    mProxy = proxy;
-    mScriptName = script.getName();
-    if (mScriptName == null) {
-      // throw exception
-    }
-    mInterpreter = config.getInterpreterForScript(mScriptName);
-    mInterpreterName = mInterpreter.getName();
-    mScriptFile = script;
+  private ScriptLauncher() {
+    // Utility class.
   }
 
-  public ScriptLauncher(AndroidProxy proxy, Intent intent, InterpreterConfiguration config) {
-    mProxy = proxy;
-    mScriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    if (mScriptName != null) {
-      mInterpreter = config.getInterpreterForScript(mScriptName);
-      mInterpreterName = mInterpreter.getName();
+  public static InterpreterProcess launchInterpreter(final AndroidProxy proxy, Intent intent,
+      InterpreterConfiguration config, Runnable shutdownHook) {
+    return launch(proxy, intent, config, null, shutdownHook);
+  }
+
+  public static ScriptProcess launchScript(final AndroidProxy proxy, Intent intent,
+      InterpreterConfiguration config, Trigger trigger, Runnable shutdownHook) {
+    return (ScriptProcess) launch(proxy, intent, config, trigger, shutdownHook);
+  }
+
+  public static ScriptProcess launchScript(final AndroidProxy proxy, File script,
+      InterpreterConfiguration config, Trigger trigger, Runnable shutdownHook) {
+    Intent intent = new Intent();
+    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
+    return (ScriptProcess) launch(proxy, intent, config, trigger, shutdownHook);
+  }
+
+  private static InterpreterProcess launch(final AndroidProxy proxy, Intent intent,
+      InterpreterConfiguration config, Trigger trigger, Runnable shutdownHook) {
+    String scriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    Interpreter interpreter;
+    String interpreterName;
+    if (scriptName != null) {
+      interpreter = config.getInterpreterForScript(scriptName);
+      interpreterName = interpreter.getName();
     } else {
-      mInterpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
-      mInterpreter = config.getInterpreterByName(mInterpreterName);
+      interpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
+      interpreter = config.getInterpreterByName(interpreterName);
     }
-  }
-
-  public void launch() throws Sl4aException {
-    launch((new Runnable() {
-      @Override
-      public void run() {
-        mProxy.shutdown();
+    if (scriptName == null && interpreter == null) {
+      throw new RuntimeException("Must specify either script or interpreter.");
+    }
+    InterpreterProcess process;
+    String scriptPath = null;
+    if (scriptName != null) {
+      File script = ScriptStorageAdapter.getExistingScript(scriptName);
+      if (script == null) {
+        throw new RuntimeException("No such script to launch.");
       }
-    }));
-  }
-
-  public void launch(final Runnable shutdownHook) throws Sl4aException {
-    if (mScriptName == null && mInterpreter == null) {
-      throw new Sl4aException("Must specify either script or interpreter.");
+      scriptPath = script.getAbsolutePath();
+      process = new ScriptProcess(scriptName, proxy, trigger);
+    } else {
+      process =
+          interpreter.buildProcess(scriptPath, proxy.getAddress().getHostName(), proxy.getAddress()
+              .getPort(), proxy.getSecret());
     }
-    if (mScriptFile == null) {
-      mScriptFile = ScriptStorageAdapter.getExistingScript(mScriptName);
-      if (mScriptFile == null) {
-        throw new Sl4aException("No such script to launch.");
-      }
+    if (shutdownHook == null) {
+      process.start(new Runnable() {
+        @Override
+        public void run() {
+          proxy.shutdown();
+        }
+      });
+    } else {
+      process.start(shutdownHook);
     }
-    mProcess =
-        mInterpreter.buildProcess(mScriptFile.getAbsolutePath(), mProxy.getAddress().getHostName(),
-            mProxy.getAddress().getPort(), mProxy.getSecret());
-    mProcess.start(shutdownHook);
-    Analytics.track(mInterpreterName);
+    return process;
   }
-
-  public void kill() {
-    if (mProcess != null) {
-      mProcess.kill();
-    }
-  }
-
-  public String getScriptName() {
-    return mScriptName;
-  }
-
-  public String getInterpreterName() {
-    return mInterpreterName;
-  }
-
-  public InterpreterProcess getProcess() {
-    return mProcess;
-  }
-
-  public int getPid() {
-    return mProcess.getPid();
-  }
-
 }

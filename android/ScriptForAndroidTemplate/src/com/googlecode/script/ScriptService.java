@@ -1,4 +1,4 @@
-package com.dummy.fooforandroid;
+package com.googlecode.script;
 
 import java.io.File;
 
@@ -9,12 +9,11 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.googlecode.android_scripting.AndroidProxy;
-import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.ScriptLauncher;
+import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
-import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 
 public class ScriptService extends Service {
   private final IBinder mBinder;
@@ -30,7 +29,7 @@ public class ScriptService extends Service {
   }
 
   @Override
-  public void onStart(Intent intent, final int startId) {
+  public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
     ScriptApplication app = (ScriptApplication) getApplication();
     InterpreterConfiguration config = app.getInterpreterConfiguration();
@@ -38,32 +37,24 @@ public class ScriptService extends Service {
     int id = R.raw.script;
     String name = resources.getText(id).toString();
     String fileName = name.substring(name.lastIndexOf('/') + 1, name.length());
+
     Interpreter interpreter = config.getInterpreterForScript(fileName);
 
     if (interpreter == null || !interpreter.isInstalled()) {
-      Log.e(this, "Cannot find an interpreter for script " + fileName);
+      Log.e("Cannot find an interpreter for script " + fileName);
       stopSelf(startId);
-      return;
     }
 
-    // Copies script to memory.
-    fileName = InterpreterUtils.getInterpreterRoot(this).getAbsolutePath() + "/" + fileName;
-
-    File script = FileUtils.copyFromStream(fileName, resources.openRawResource(id));
-
-    final AndroidProxy proxy = new AndroidProxy(this, null, true);
+    AndroidProxy proxy = new AndroidProxy(this, null, true);
     proxy.startLocal();
-    ScriptLauncher.launchScript(proxy, script, config, null, new Runnable() {
-      @Override
-      public void run() {
-        proxy.shutdown();
-        stopSelf(startId);
-      }
-    });
+
+    File script = ScriptStorageAdapter.copyFromStream(fileName, resources.openRawResource(id));
+    ScriptLauncher.launchScript(proxy, script, config, null, null);
   }
 
   @Override
   public IBinder onBind(Intent intent) {
     return mBinder;
   }
+
 }

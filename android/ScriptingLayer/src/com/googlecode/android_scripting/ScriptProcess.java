@@ -20,9 +20,10 @@ import java.net.InetSocketAddress;
 
 import android.app.Service;
 
+import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.trigger.Trigger;
 
-public class ScriptProcess {
+public class ScriptProcess extends InterpreterProcess {
 
   private static enum State {
     ALIVE("Alive"), DEAD("Dead");
@@ -40,29 +41,21 @@ public class ScriptProcess {
   }
 
   private final int mServerPort;
-  private final ScriptLauncher mLauncher;
   private final Trigger mTrigger;
   private final AndroidProxy mProxy;
   private final long mStartTime;
-  private volatile State myState;
-  private final String mName;
+  private final String mScriptName;
 
-  public ScriptProcess(AndroidProxy proxy, ScriptLauncher launcher, Trigger trigger) {
+  private volatile State mState;
+
+  public ScriptProcess(String scriptName, AndroidProxy proxy, Trigger trigger) {
+    super(proxy.getAddress().getHostName(), proxy.getAddress().getPort(), proxy.getSecret());
     mProxy = proxy;
-    mLauncher = launcher;
     mTrigger = trigger;
-
-    myState = State.ALIVE;
+    mState = State.ALIVE;
     mStartTime = System.currentTimeMillis();
     mServerPort = proxy.getAddress().getPort();
-
-    if (launcher == null) {
-      mName = "Server mode";
-    } else if (launcher.getScriptName() != null) {
-      mName = launcher.getScriptName();
-    } else {
-      mName = launcher.getInterpreterName();
-    }
+    mScriptName = scriptName;
   }
 
   public void notifyTriggerOfShutDown(Service service) {
@@ -81,23 +74,12 @@ public class ScriptProcess {
     return mServerPort;
   }
 
-  public int getPID() {
-    if (mLauncher == null) {
-      return 0;
-    }
-    return mLauncher.getPid();
-  }
-
   public long getStartTime() {
     return mStartTime;
   }
 
-  public ScriptLauncher getLauncher() {
-    return mLauncher;
-  }
-
   public String getScriptName() {
-    return mName;
+    return mScriptName;
   }
 
   public String getServerName() {
@@ -109,35 +91,30 @@ public class ScriptProcess {
   }
 
   public boolean isAlive() {
-    return myState.equals(State.ALIVE);
+    return mState.equals(State.ALIVE);
   }
 
   public String getState() {
-    return myState.toString();
+    return mState.toString();
   }
 
+  @Override
   public void kill() {
-    myState = State.DEAD;
-    if (mLauncher != null) {
-      mLauncher.kill();
-    }
+    kill();
     if (mProxy != null) {
       mProxy.shutdown();
     }
+    mState = State.DEAD;
   }
 
   @Override
   public String toString() {
-    StringBuffer info = new StringBuffer();
+    StringBuilder info = new StringBuilder();
     InetSocketAddress address = mProxy.getAddress();
-
-    info.append(String.format("Running network service on: %s:%d", address.getHostName(), address
+    info.append(String.format("Running network service on: %s:%d\n", address.getHostName(), address
         .getPort()));
-    if (mLauncher != null) {
-      String scriptName = mLauncher.getScriptName();
-      info.append("\nRunning script service: ");
-      info.append(scriptName);
-    }
+    info.append("Running script service: ");
+    info.append(mScriptName);
     return info.toString();
   }
 
@@ -155,5 +132,23 @@ public class ScriptProcess {
     }
     buffer.append(String.format("%02d:%02d", minutes, seconds));
     return buffer.toString();
+  }
+
+  @Override
+  protected void buildEnvironment() {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  protected String[] getInterpreterArguments() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected String getInterpreterCommand() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

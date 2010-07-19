@@ -46,7 +46,7 @@ import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.dialog.UsageTrackingConfirmation;
-import com.googlecode.android_scripting.interpreter.InterpreterAgent;
+import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
@@ -66,7 +66,7 @@ public class ScriptManager extends ListActivity {
   private List<File> mScriptList;
   private ScriptManagerAdapter mAdapter;
   private SharedPreferences mPreferences;
-  private HashMap<Integer, InterpreterAgent> mAddMenuIds;
+  private HashMap<Integer, Interpreter> mAddMenuIds;
   private ScriptListObserver mObserver;
   private InterpreterConfiguration mConfiguration;
 
@@ -153,10 +153,10 @@ public class ScriptManager extends ListActivity {
   }
 
   private void buildMenuIdMaps() {
-    mAddMenuIds = new HashMap<Integer, InterpreterAgent>();
+    mAddMenuIds = new HashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
-    List<InterpreterAgent> installed = mConfiguration.getInstalledInterpreters();
-    for (InterpreterAgent interpreter : installed) {
+    List<Interpreter> installed = mConfiguration.getInstalledInterpreters();
+    for (Interpreter interpreter : installed) {
       mAddMenuIds.put(i, interpreter);
       ++i;
     }
@@ -166,7 +166,7 @@ public class ScriptManager extends ListActivity {
     Menu addMenu =
         menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
             android.R.drawable.ic_menu_add);
-    for (Entry<Integer, InterpreterAgent> entry : mAddMenuIds.entrySet()) {
+    for (Entry<Integer, Interpreter> entry : mAddMenuIds.entrySet()) {
       addMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
     }
     addMenu.add(Menu.NONE, MenuId.QRCODE_ADD.getId(), Menu.NONE, "Scan Barcode");
@@ -184,7 +184,7 @@ public class ScriptManager extends ListActivity {
     } else if (mAddMenuIds.containsKey(itemId)) {
       // Add a new script.
       Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
-      InterpreterAgent interpreter = mAddMenuIds.get(itemId);
+      Interpreter interpreter = mAddMenuIds.get(itemId);
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, interpreter.getExtension());
       intent.putExtra(Constants.EXTRA_SCRIPT_CONTENT, interpreter.getContentTemplate());
       intent.putExtra(Constants.EXTRA_IS_NEW_SCRIPT, true);

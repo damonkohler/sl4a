@@ -16,14 +16,14 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import com.googlecode.android_scripting.Process;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.googlecode.android_scripting.Process;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -32,7 +32,6 @@ import java.util.Map.Entry;
  */
 public abstract class InterpreterProcess extends Process {
 
-  protected String mLaunchScript;
   protected Map<String, String> mEnvironment = new HashMap<String, String>();
   protected int mId;
   private static final int BUFFER_SIZE = 8192;
@@ -45,9 +44,8 @@ public abstract class InterpreterProcess extends Process {
    * @param port
    *          the port that the AndroidProxy is listening on
    */
-  public InterpreterProcess(String launchScript, String host, int port, String handshake) {
+  public InterpreterProcess(String host, int port, String handshake) {
     mId = port;
-    mLaunchScript = launchScript;
     mEnvironment.putAll(System.getenv());
     mEnvironment.put("AP_PORT", Integer.toString(port));
     mEnvironment.put("AP_HOST", host);

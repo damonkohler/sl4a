@@ -36,11 +36,9 @@ import android.widget.RemoteViews;
 import com.googlecode.android_scripting.AndroidProxy;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
-import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.terminal.Terminal;
 import com.googlecode.android_scripting.trigger.Trigger;
@@ -124,28 +122,18 @@ public class ScriptingLayerService extends Service {
     }
 
     AndroidProxy serverProxy = null;
-    ScriptLauncher launcher = null;
+    ScriptProcess scriptProcess = null;
 
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
       serverProxy = launchServer(intent, false);
     } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)
         || intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
       serverProxy = launchServer(intent, true);
-      try {
-        launcher = launchScript(intent, serverProxy);
-      } catch (Sl4aException e) {
-        Log.e(this, e.getMessage(), e);
-        serverProxy.shutdown();
-        serverProxy = null;
-        return;
-      }
-
+      scriptProcess = launchScript(intent, serverProxy, getTrigger(intent));
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
         launchTerminal(intent, serverProxy.getAddress());
       }
     }
-
-    ScriptProcess scriptProcess = new ScriptProcess(serverProxy, launcher, getTrigger(intent));
     addScriptProcess(scriptProcess);
     scriptProcess.notifyTriggerOfStart(this);
   }
@@ -161,12 +149,11 @@ public class ScriptingLayerService extends Service {
     return androidProxy;
   }
 
-  private ScriptLauncher launchScript(Intent intent, AndroidProxy proxy) throws Sl4aException {
+  private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {
     InterpreterConfiguration config =
         ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    ScriptLauncher launcher = new ScriptLauncher(proxy, intent, config);
     final int port = proxy.getAddress().getPort();
-    launcher.launch(new Runnable() {
+    return ScriptLauncher.launchScript(proxy, intent, config, trigger, new Runnable() {
       @Override
       public void run() {
         // TODO(damonkohler): This action actually kills the script rather than notifying the
@@ -177,7 +164,6 @@ public class ScriptingLayerService extends Service {
         startService(intent);
       }
     });
-    return launcher;
   }
 
   private void launchTerminal(Intent intent, InetSocketAddress address) {

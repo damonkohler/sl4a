@@ -16,39 +16,31 @@
 
 package com.googlecode.android_scripting.interpreter.shell;
 
-import com.googlecode.android_scripting.interpreter.InterpreterAgent;
+import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
-import com.googlecode.android_scripting.language.Language;
 import com.googlecode.android_scripting.language.ShellLanguage;
-import com.googlecode.android_scripting.rpc.MethodDescriptor;
 
 /**
  * Represents the shell.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class ShellInterpreter implements InterpreterAgent {
+public class ShellInterpreter extends Interpreter {
   private final static String SHELL_BIN = "/system/bin/sh";
-  private final Language mShellLanguage;
 
   public ShellInterpreter() {
-    mShellLanguage = new ShellLanguage();
+    setExtension(".sh");
+    setName("sh");
+    setNiceName("Shell");
+    setBinary(SHELL_BIN);
+    // TODO(damonkohler): This should take the script to execute as an argument.
+    setExecute(SHELL_BIN);
+    setLanguage(new ShellLanguage());
   }
 
-  public String getExtension() {
-    return ".sh";
-  }
-
-  public String getName() {
-    return "sh";
-  }
-
+  @Override
   public InterpreterProcess buildProcess(String scriptName, String host, int port, String handshake) {
-    return new ShellInterpreterProcess(scriptName, host, port, handshake);
-  }
-
-  public String getNiceName() {
-    return "Shell";
+    return new ShellInterpreterProcess(host, port, handshake);
   }
 
   public boolean hasInterpreterArchive() {
@@ -63,48 +55,24 @@ public class ShellInterpreter implements InterpreterAgent {
     return false;
   }
 
-  public String getBinary() {
-    return "";
-  }
-
   public int getVersion() {
     return 0;
   }
 
+  @Override
   public boolean isUninstallable() {
     return false;
   }
 
-  public String getContentTemplate() {
-    return mShellLanguage.getContentTemplate();
-  }
-
-  public Language getLanguage() {
-    return mShellLanguage;
-  }
-
-  public String getPath() {
-    return null;
-  }
-
-  public String getRpcText(String content, MethodDescriptor rpc, String[] values) {
-    return mShellLanguage.getRpcText(content, rpc, values);
-  }
-
-  public boolean isInstalled() {
-    return true;
-  }
-
   private class ShellInterpreterProcess extends InterpreterProcess {
 
-    public ShellInterpreterProcess(String launchScript, String host, int port, String handshake) {
-      super(launchScript, host, port, handshake);
+    public ShellInterpreterProcess(String host, int port, String handshake) {
+      super(host, port, handshake);
     }
 
     @Override
     protected void buildEnvironment() {
-      // TODO(damonkohler): Add bin directories for all interpreters to the
-      // path.
+      // TODO(damonkohler): Add bin directories for all interpreters to the path.
     }
 
     @Override

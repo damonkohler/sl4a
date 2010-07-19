@@ -153,7 +153,7 @@ public abstract class InterpreterProvider extends ContentProvider {
     values.put(InterpreterStrings.NICE_NAME, mDescriptor.getNiceName());
     values.put(InterpreterStrings.EXTENSION, mDescriptor.getExtension());
     values.put(InterpreterStrings.PATH, mDescriptor.getPath(mContext));
-    values.put(InterpreterStrings.BIN, mDescriptor.getBinary());
+    values.put(InterpreterStrings.BINARY, mDescriptor.getBinary());
     values.put(InterpreterStrings.EXECUTE, mDescriptor.getExecuteCommand(mContext));
     values.put(InterpreterStrings.EMPTY_PARAMS, mDescriptor.getEmptyParams(mContext));
     values.put(InterpreterStrings.EXECUTE_PARAMS, mDescriptor.getExecuteParams(mContext));
