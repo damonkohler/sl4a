@@ -22,13 +22,9 @@ import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -73,35 +69,6 @@ public class ScriptStorageAdapter {
     } catch (IOException e) {
       Log.e("Failed to write script file.", e);
     }
-  }
-
-  // /XXX Temporary stuff!
-  public static File copyFromStream(String name, InputStream input) {
-    if (name == null || name.length() == 0) {
-      Log.e("No script name specified.");
-      return null;
-    }
-
-    File scriptsDirectory = new File(InterpreterConstants.SCRIPTS_ROOT);
-    if (!scriptsDirectory.exists()) {
-      Log.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
-      if (!scriptsDirectory.mkdirs()) {
-        Log.e("Failed to create scripts directory.");
-      }
-    }
-    File scriptFile = getScript(name);
-    OutputStream output;
-    try {
-      output = new FileOutputStream(scriptFile);
-      IoUtils.copy(input, output);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return scriptFile;
   }
 
   /**

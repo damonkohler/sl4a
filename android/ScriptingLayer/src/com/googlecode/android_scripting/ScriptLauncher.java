@@ -18,9 +18,6 @@ package com.googlecode.android_scripting;
 
 import android.content.Intent;
 
-
-import com.googlecode.android_scripting.Analytics;
-import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.InterpreterAgent;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
@@ -31,6 +28,7 @@ import java.io.File;
 public class ScriptLauncher {
 
   private final String mScriptName;
+  private File mScriptFile;
   private final String mInterpreterName;
   private final InterpreterAgent mInterpreter;
   private InterpreterProcess mProcess;
@@ -44,6 +42,7 @@ public class ScriptLauncher {
     }
     mInterpreter = config.getInterpreterForScript(mScriptName);
     mInterpreterName = mInterpreter.getName();
+    mScriptFile = script;
   }
 
   public ScriptLauncher(AndroidProxy proxy, Intent intent, InterpreterConfiguration config) {
@@ -71,17 +70,15 @@ public class ScriptLauncher {
     if (mScriptName == null && mInterpreter == null) {
       throw new Sl4aException("Must specify either script or interpreter.");
     }
-    String scriptPath = null;
-    if (mScriptName != null) {
-      File script = ScriptStorageAdapter.getExistingScript(mScriptName);
-      if (script == null) {
+    if (mScriptFile == null) {
+      mScriptFile = ScriptStorageAdapter.getExistingScript(mScriptName);
+      if (mScriptFile == null) {
         throw new Sl4aException("No such script to launch.");
       }
-      scriptPath = script.getAbsolutePath();
     }
     mProcess =
-        mInterpreter.buildProcess(scriptPath, mProxy.getAddress().getHostName(), mProxy
-            .getAddress().getPort(), mProxy.getSecret());
+        mInterpreter.buildProcess(mScriptFile.getAbsolutePath(), mProxy.getAddress().getHostName(),
+            mProxy.getAddress().getPort(), mProxy.getSecret());
     mProcess.start(shutdownHook);
     Analytics.track(mInterpreterName);
   }
