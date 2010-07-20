@@ -17,6 +17,7 @@
 package com.googlecode.android_scripting;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,17 +25,41 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class Process {
 
   private static final int DEFAULT_BUFFER_SIZE = 8192;
 
+  protected Map<String, String> mEnvironment = new HashMap<String, String>();
+
   protected String mName;
+  protected File mBinary;
+  protected List<String> mArguments;
   protected Integer mPid;
   protected FileDescriptor mFd;
   protected PrintStream mOut;
   protected Reader mIn;
   private long mStartTime;
+
+  public void setArguments(List<String> arguments) {
+    mArguments = arguments;
+  }
+
+  public void setEnvironment(Map<String, String> environment) {
+    mEnvironment = environment;
+  }
+
+  public void setBinary(File binary) {
+    if (!binary.exists()) {
+      throw new RuntimeException("Binary " + binary + " does not exist!");
+    }
+    mBinary = binary;
+  }
 
   public Integer getPid() {
     return mPid;
@@ -68,12 +93,15 @@ public class Process {
     getOut().println(obj);
   }
 
-  public void start(String binary, String[] args, String[] envvars, final Runnable shutdownHook) {
-    if (mPid != null) {
+  public void start(final Runnable shutdownHook) {
+    if (isAlive()) {
       throw new RuntimeException("Attempted to start process that is already running.");
     }
+
     int[] pid = new int[1];
-    mFd = Exec.createSubprocess(binary, args, envvars, pid);
+    mFd =
+        Exec.createSubprocess(mBinary.getAbsolutePath(), mArguments.toArray(new String[mArguments
+            .size()]), getEnvironmentArray(), pid);
     mPid = pid[0];
     mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
     mIn = new InputStreamReader(new FileInputStream(mFd));
@@ -95,6 +123,15 @@ public class Process {
         }
       }
     }).start();
+  }
+
+  private String[] getEnvironmentArray() {
+    List<String> environmentVariables = new ArrayList<String>();
+    for (Entry<String, String> entry : mEnvironment.entrySet()) {
+      environmentVariables.add(entry.getKey() + "=" + entry.getValue());
+    }
+    String[] environment = environmentVariables.toArray(new String[environmentVariables.size()]);
+    return environment;
   }
 
   public void kill() {

@@ -238,7 +238,7 @@ public class ScriptProcessMonitor extends ListActivity {
       ((TextView) itemView.findViewById(R.id.process_age)).setText(process.getUptime());
       ((TextView) itemView.findViewById(R.id.process_details)).setText(process.getHost() + ":"
           + process.getPort());
-      ((TextView) itemView.findViewById(R.id.process_status)).setText(process.getPid());
+      ((TextView) itemView.findViewById(R.id.process_status)).setText("PID " + process.getPid());
       return itemView;
     }
   }

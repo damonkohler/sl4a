@@ -17,7 +17,6 @@
 package com.googlecode.android_scripting.interpreter.shell;
 
 import com.googlecode.android_scripting.interpreter.Interpreter;
-import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.language.ShellLanguage;
 
 /**
@@ -36,11 +35,6 @@ public class ShellInterpreter extends Interpreter {
     // TODO(damonkohler): This should take the script to execute as an argument.
     setExecute(SHELL_BIN);
     setLanguage(new ShellLanguage());
-  }
-
-  @Override
-  public InterpreterProcess buildProcess(String scriptName, String host, int port, String handshake) {
-    return new ShellInterpreterProcess(host, port, handshake);
   }
 
   public boolean hasInterpreterArchive() {
@@ -68,27 +62,4 @@ public class ShellInterpreter extends Interpreter {
   public boolean isInstalled() {
     return true;
   }
-
-  private class ShellInterpreterProcess extends InterpreterProcess {
-
-    public ShellInterpreterProcess(String host, int port, String handshake) {
-      super(host, port, handshake);
-    }
-
-    @Override
-    protected void buildEnvironment() {
-      // TODO(damonkohler): Add bin directories for all interpreters to the path.
-    }
-
-    @Override
-    protected String getInterpreterCommand() {
-      return SHELL_BIN;
-    }
-
-    @Override
-    protected String[] getInterpreterArguments() {
-      return null;
-    }
-  }
-
 }

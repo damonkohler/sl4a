@@ -110,7 +110,7 @@ public class ScriptingLayerService extends Service {
     }
 
     if (intent.getAction().equals(Constants.ACTION_KILL_PROCESS)) {
-      killScriptProcess(intent);
+      killProcess(intent);
       if (mProcessMap.isEmpty()) {
         stopSelf(startId);
       }
@@ -122,21 +122,26 @@ public class ScriptingLayerService extends Service {
       return;
     }
 
-    AndroidProxy serverProxy = null;
-    ScriptProcess scriptProcess = null;
+    AndroidProxy proxy = null;
+    InterpreterProcess interpreterProcess = null;
 
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
-      serverProxy = launchServer(intent, false);
-    } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_SCRIPT)
-        || intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
-      serverProxy = launchServer(intent, true);
-      scriptProcess = launchScript(intent, serverProxy, getTrigger(intent));
-      if (intent.getAction().equals(Constants.ACTION_LAUNCH_TERMINAL)) {
-        launchTerminal(intent, serverProxy.getAddress());
+      proxy = launchServer(intent, false);
+    } else {
+      proxy = launchServer(intent, true);
+      if (intent.getAction().equals(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT)) {
+        interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
+        ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
+        launchTerminal(intent, proxy.getAddress());
+      } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT)) {
+        interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
+        ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
+      } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_INTERPRETER)) {
+        interpreterProcess = launchInterpreter(intent, proxy);
+        launchTerminal(intent, proxy.getAddress());
       }
     }
-    addProcess(scriptProcess);
-    scriptProcess.notifyTriggerOfStart(this);
+    addProcess(interpreterProcess);
   }
 
   private AndroidProxy launchServer(Intent intent, boolean requiresHandshake) {
@@ -212,12 +217,14 @@ public class ScriptingLayerService extends Service {
     return process;
   }
 
-  private void killScriptProcess(Intent intent) {
+  private void killProcess(Intent intent) {
     int processId = intent.getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
-    ScriptProcess scriptProcess = (ScriptProcess) removeProcess(processId);
-    if (scriptProcess != null) {
-      scriptProcess.notifyTriggerOfShutDown(this);
-      scriptProcess.kill();
+    InterpreterProcess process = removeProcess(processId);
+    if (process != null) {
+      if (process instanceof ScriptProcess) {
+        ((ScriptProcess) process).notifyTriggerOfShutDown(this);
+      }
+      process.kill();
     }
   }
 

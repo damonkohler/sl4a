@@ -17,6 +17,7 @@
 package com.googlecode.android_scripting.activity;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,7 +58,8 @@ public class LogcatViewer extends ListActivity {
     @Override
     public void run() {
       mLogcatProcess = new Process();
-      mLogcatProcess.start("/system/bin/logcat", null, null, null);
+      mLogcatProcess.setBinary(new File("/system/bin/logcat"));
+      mLogcatProcess.start(null);
       try {
         BufferedReader br = mLogcatProcess.getIn();
         while (true) {

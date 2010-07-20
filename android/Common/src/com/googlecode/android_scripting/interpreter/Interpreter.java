@@ -17,6 +17,10 @@
 package com.googlecode.android_scripting.interpreter;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.googlecode.android_scripting.exception.Sl4aException;
@@ -44,13 +48,17 @@ public class Interpreter implements InterpreterStrings {
   private String mEmptyParameters;
   private String mExecuteParameters;
   private String mExecute;
-  private String[] mArguments;
-  private Map<String, String> mEnvironmentVariables;
-
+  private final List<String> mArguments;
+  private final Map<String, String> mEnvironment;
   private Language mLanguage;
 
+  public Interpreter() {
+    mArguments = new ArrayList<String>();
+    mEnvironment = new HashMap<String, String>();
+  }
+
   public static Interpreter buildFromMaps(Map<String, String> data, Map<String, String> variables,
-      Map<String, String> args) throws Sl4aException {
+      Map<String, String> arguments) throws Sl4aException {
     Interpreter interpreter = new Interpreter();
     for (String key : mRequiredKeys) {
       if (data.get(key) == null) {
@@ -60,36 +68,33 @@ public class Interpreter implements InterpreterStrings {
     }
 
     String extension = data.get(EXTENSION);
+    String name = data.get(NAME);
+    String niceName = data.get(NICE_NAME);
+    String binary = data.get(BINARY);
+    String emptyParameters = data.get(EMPTY_PARAMS);
+    String exeucteParameters = data.get(EXECUTE_PARAMS);
+    String execute = data.get(EXECUTE);
 
-    interpreter.setName(data.get(NAME));
-    interpreter.setNiceName(data.get(NICE_NAME));
+    interpreter.setName(name);
+    interpreter.setNiceName(niceName);
     interpreter.setExtension(extension);
-    interpreter.setBinary(data.get(BINARY));
+    interpreter.setBinary(binary);
     interpreter.setPath(new File(data.get(PATH)).getAbsolutePath() + "/");
-    interpreter.setEmptyParameters(data.get(EMPTY_PARAMS));
-    interpreter.setExecuteParameters(data.get(EXECUTE_PARAMS));
-    interpreter.setExecute(data.get(EXECUTE));
+    interpreter.setEmptyParameters(emptyParameters);
+    interpreter.setExecuteParameters(exeucteParameters);
+    interpreter.setExecute(execute);
     interpreter.setLanguage(SupportedLanguages.getLanguageByExtension(extension));
-    interpreter.setEnvironmentVariables(variables);
-
-    if (args != null) {
-      String[] arguments = new String[args.size()];
-      int i = 0;
-      for (String key : args.keySet()) {
-        arguments[i++] = args.get(key);
-      }
-      interpreter.setArguments(arguments);
-    }
-
+    interpreter.addEvironmentVariables(variables);
+    interpreter.addArguments(arguments.values());
     return interpreter;
   }
 
-  private void setArguments(String[] arguments) {
-    mArguments = arguments;
+  private void addArguments(Collection<String> arguments) {
+    mArguments.addAll(arguments);
   }
 
-  private void setEnvironmentVariables(Map<String, String> environmentVariables) {
-    mEnvironmentVariables = environmentVariables;
+  private void addEvironmentVariables(Map<String, String> environmentVariables) {
+    mEnvironment.putAll(environmentVariables);
   }
 
   protected void setExecute(String execute) {
@@ -168,54 +173,12 @@ public class Interpreter implements InterpreterStrings {
     return true;
   }
 
-  public InterpreterProcess buildProcess(String launchScript, String host, int port,
-      String handshake) {
-    return new ProcessWrapper(launchScript, host, port, handshake);
+  public InterpreterProcess buildProcess(String host, int port, String handshake) {
+    InterpreterProcess process = new InterpreterProcess(host, port, handshake);
+    process.setEnvironment(mEnvironment);
+    process.setBinary(new File(mBinary));
+    mArguments.add(mEmptyParameters);
+    process.setArguments(mArguments);
+    return process;
   }
-
-  private class ProcessWrapper extends InterpreterProcess {
-
-    private String mLaunchScript;
-
-    public ProcessWrapper(String launchScript, String host, int port, String handshake) {
-      super(host, port, handshake);
-      mLaunchScript = launchScript;
-    }
-
-    @Override
-    protected void buildEnvironment() {
-      mEnvironment.putAll(mEnvironmentVariables);
-    }
-
-    @Override
-    protected String getInterpreterCommand() {
-      return mExecute;
-    }
-
-    @Override
-    protected String[] getInterpreterArguments() {
-      String action = null;
-
-      if (mLaunchScript == null) {
-        action = mEmptyParameters;
-      } else {
-        action = String.format(mExecuteParameters, mLaunchScript);
-      }
-
-      if (mArguments == null) {
-        if (action == null) {
-          return null;
-        }
-        return new String[] { action };
-      }
-
-      String[] args = new String[mArguments.length + ((action != null) ? 1 : 0)];
-      System.arraycopy(mArguments, 0, args, 0, mArguments.length);
-      if (action != null) {
-        args[mArguments.length] = action;
-      }
-      return args;
-    }
-  }
-
 }

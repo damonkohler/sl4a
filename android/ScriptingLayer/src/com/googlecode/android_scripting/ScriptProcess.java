@@ -65,20 +65,4 @@ public class ScriptProcess extends InterpreterProcess {
     info.append(mName);
     return info.toString();
   }
-
-  @Override
-  protected void buildEnvironment() {
-  }
-
-  @Override
-  protected String[] getInterpreterArguments() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  protected String getInterpreterCommand() {
-    // TODO Auto-generated method stub
-    return null;
-  }
 }

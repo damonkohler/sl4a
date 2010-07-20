@@ -16,6 +16,10 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -36,18 +40,14 @@ import android.widget.TextView;
 
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class InterpreterManager extends ListActivity {
 
@@ -158,7 +158,7 @@ public class InterpreterManager extends ListActivity {
 
   private void launchTerminal(Interpreter interpreter) {
     Intent intent = new Intent(this, ScriptingLayerService.class);
-    intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
+    intent.setAction(Constants.ACTION_LAUNCH_INTERPRETER);
     intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
     startService(intent);
   }

@@ -19,8 +19,6 @@ package com.googlecode.android_scripting.interpreter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import com.googlecode.android_scripting.Process;
@@ -30,11 +28,10 @@ import com.googlecode.android_scripting.Process;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public abstract class InterpreterProcess extends Process {
+public class InterpreterProcess extends Process {
 
   private static final int BUFFER_SIZE = 8192;
 
-  protected Map<String, String> mEnvironment = new HashMap<String, String>();
   private final String mHost;
   private final int mPort;
   private final String mHandshake;
@@ -55,7 +52,13 @@ public abstract class InterpreterProcess extends Process {
     mPort = port;
     mHandshake = handshake;
     mLog = new StringBuffer();
-    initializeEnvironment();
+    mEnvironment.putAll(System.getenv());
+    mEnvironment.put("AP_PORT", Integer.toString(mPort));
+    mEnvironment.put("AP_HOST", mHost);
+    // TODO(damonkohler): We should probably never have a null handshake.
+    if (mHandshake != null) {
+      mEnvironment.put("AP_HANDSHAKE", mHandshake);
+    }
   }
 
   public String getHost() {
@@ -70,25 +73,11 @@ public abstract class InterpreterProcess extends Process {
     return mHandshake;
   }
 
-  private void initializeEnvironment() {
-    mEnvironment.putAll(System.getenv());
-    mEnvironment.put("AP_PORT", Integer.toString(mPort));
-    mEnvironment.put("AP_HOST", mHost);
-    // TODO(damonkohler): We should probably never have a null handshake.
-    if (mHandshake != null) {
-      mEnvironment.put("AP_HANDSHAKE", mHandshake);
-    }
-  }
-
   public void start(final Runnable shutdownHook) {
-    String command = getInterpreterCommand();
-    String[] arguments = getInterpreterArguments();
-    String[] environmentVariables = getEnvironmentVariables();
-    super.start(command, arguments, environmentVariables, shutdownHook);
+    super.start(shutdownHook);
   }
 
   protected String[] getEnvironmentVariables() {
-    buildEnvironment();
     String[] vars = new String[mEnvironment.size()];
     int i = 0;
     for (Entry<String, String> e : mEnvironment.entrySet()) {
@@ -96,19 +85,6 @@ public abstract class InterpreterProcess extends Process {
     }
     return vars;
   }
-
-  /**
-   * Writes the command to the shell that starts the interpreter.
-   */
-  protected abstract String getInterpreterCommand();
-
-  protected abstract String[] getInterpreterArguments();
-
-  /**
-   * Called before execution to allow interpreters to modify the environment map as necessary.
-   */
-  // Should normally be overridden. As is, the only environment variable will be the AP_PORT.
-  protected abstract void buildEnvironment();
 
   @Override
   public BufferedReader getIn() {
