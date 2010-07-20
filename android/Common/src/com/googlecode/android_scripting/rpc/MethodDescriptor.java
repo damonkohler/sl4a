@@ -150,6 +150,10 @@ public final class MethodDescriptor {
     return mMethod;
   }
 
+  public Class<? extends RpcReceiver> getDeclaringClass() {
+    return mClass;
+  }
+
   public String getName() {
     return mMethod.getName();
   }
@@ -191,6 +195,11 @@ public final class MethodDescriptor {
       helpBuilder.append("\n");
       helpBuilder.append("\nReturns:\n  ");
       helpBuilder.append(rpcAnnotation.returns());
+    }
+
+    if (mMethod.isAnnotationPresent(RpcDepreciated.class)) {
+      String replacedBy = mMethod.getAnnotation(RpcDepreciated.class).value();
+      helpBuilder.append(String.format("\n\nDepreciated! Please use %s instead.", replacedBy));
     }
 
     return helpBuilder.toString();
