@@ -188,16 +188,14 @@ public class Terminal extends Activity {
           public void run() {
             AlertDialog.Builder builder = new AlertDialog.Builder(Terminal.this);
             builder.setTitle(mScriptProcess.getScriptName() + " exited");
-            builder.setMessage("Do you want to keep terminal open?");
-
+            builder.setMessage("Close the terminal?");
             DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 if (which == DialogInterface.BUTTON_POSITIVE) {
-                  return;
+                  Terminal.this.finish();
                 }
-                Terminal.this.finish();
               }
             };
             builder.setNegativeButton("No", buttonListener);
