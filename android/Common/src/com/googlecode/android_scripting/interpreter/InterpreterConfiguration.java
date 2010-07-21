@@ -16,6 +16,16 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -32,16 +42,6 @@ import android.net.Uri;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Manages and provides access to the set of available interpreters.
@@ -113,6 +113,7 @@ public class InterpreterConfiguration {
             }
             mmDiscoveredInterpreters.put(info.activityInfo.packageName, interpreter);
             discoveredInterpreters.add(interpreter);
+            Log.v("Interpreter discovered: " + info.activityInfo.packageName);
           }
           mInterpreterSet.addAll(discoveredInterpreters);
           for (ConfigurationObserver observer : mObserverSet) {
@@ -138,6 +139,7 @@ public class InterpreterConfiguration {
           for (ConfigurationObserver observer : mObserverSet) {
             observer.onConfigurationChanged();
           }
+          Log.v("Interpreter discovered: " + packageName);
         }
       });
     }
