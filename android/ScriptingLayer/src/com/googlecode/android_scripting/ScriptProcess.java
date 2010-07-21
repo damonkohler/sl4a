@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting;
 
-import java.net.InetSocketAddress;
-
 import android.app.Service;
 
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
@@ -53,16 +51,5 @@ public class ScriptProcess extends InterpreterProcess {
     if (mProxy != null) {
       mProxy.shutdown();
     }
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder info = new StringBuilder();
-    InetSocketAddress address = mProxy.getAddress();
-    info.append(String.format("Running network service on: %s:%d\n", address.getHostName(), address
-        .getPort()));
-    info.append("Running script service: ");
-    info.append(mName);
-    return info.toString();
   }
 }

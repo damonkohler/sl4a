@@ -19,7 +19,6 @@ package com.googlecode.android_scripting.interpreter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Map.Entry;
 
 import com.googlecode.android_scripting.Process;
 
@@ -52,10 +51,10 @@ public class InterpreterProcess extends Process {
     mPort = port;
     mHandshake = handshake;
     mLog = new StringBuffer();
+
     mEnvironment.putAll(System.getenv());
     mEnvironment.put("AP_PORT", Integer.toString(mPort));
     mEnvironment.put("AP_HOST", mHost);
-    // TODO(damonkohler): We should probably never have a null handshake.
     if (mHandshake != null) {
       mEnvironment.put("AP_HANDSHAKE", mHandshake);
     }
@@ -73,17 +72,9 @@ public class InterpreterProcess extends Process {
     return mHandshake;
   }
 
+  @Override
   public void start(final Runnable shutdownHook) {
     super.start(shutdownHook);
-  }
-
-  protected String[] getEnvironmentVariables() {
-    String[] vars = new String[mEnvironment.size()];
-    int i = 0;
-    for (Entry<String, String> e : mEnvironment.entrySet()) {
-      vars[i++] = String.format("%s=%s", e.getKey(), e.getValue());
-    }
-    return vars;
   }
 
   @Override
