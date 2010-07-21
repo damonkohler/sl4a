@@ -161,6 +161,7 @@ public class SensorManagerFacade extends RpcReceiver {
             mSensorReadings.putDouble("roll", mmRoll.get());
           }
         }
+        mSensorReadings.putInt("timestamp", (int) (System.currentTimeMillis() / 1000));
         mEventFacade.postEvent("sensors", mSensorReadings);
       }
     }
