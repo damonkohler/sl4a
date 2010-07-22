@@ -19,7 +19,6 @@ package com.googlecode.android_scripting;
 import android.app.Service;
 import android.content.Intent;
 
-
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.JsonRpcServer;
@@ -41,7 +40,8 @@ public class AndroidProxy {
     }
 
     FacadeManager facadeManager =
-        new FacadeManager(service, intent, FacadeConfiguration.getFacadeClasses());
+        new FacadeManager(FacadeConfiguration.getSdkLevel(), service, intent, FacadeConfiguration
+            .getFacadeClasses());
 
     mJsonRpcServer = new JsonRpcServer(facadeManager, getSecret());
 

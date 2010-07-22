@@ -66,10 +66,10 @@ public class MediaRecorderFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Records video (and optionally audio) from the camera and saves it to the given location. "
-      + "Duration specifies the maximum duration of the recording session. "
-      + "If duration is not provided this method will return immediately and the recording will only be stopped "
-      + "when recorderStop is called or when a scripts exits. "
-      + "Otherwise it will block for the time period equal to the duration argument.")
+      + "\nDuration specifies the maximum duration of the recording session. "
+      + "\nIf duration is not provided this method will return immediately and the recording will only be stopped "
+      + "\nwhen recorderStop is called or when a scripts exits. "
+      + "\nOtherwise it will block for the time period equal to the duration argument.")
   public void recorderCaptureVideo(@RpcParameter(name = "targetPath") String targetPath,
       @RpcParameter(name = "duration") @RpcOptional Double duration,
       @RpcParameter(name = "recordAudio") @RpcDefault("true") Boolean recordAudio) throws Exception {

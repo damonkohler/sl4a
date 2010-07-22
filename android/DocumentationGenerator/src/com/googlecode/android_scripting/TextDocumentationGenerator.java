@@ -6,6 +6,7 @@ import com.googlecode.android_scripting.facade.SignalStrengthFacade;
 import com.googlecode.android_scripting.facade.TextToSpeechFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
+import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
 import org.apache.taglibs.string.util.StringW;
 
@@ -62,7 +63,14 @@ public class TextDocumentationGenerator {
       System.out.println("{{{");
       System.out.println(StringW.wordWrap(descriptor.getHelp()));
       Class<? extends RpcReceiver> clazz = descriptor.getDeclaringClass();
-      int minSDK = getMinSdk(clazz);
+
+      int minSDK = 3;
+
+      if (descriptor.getMethod().isAnnotationPresent(RpcMinSdk.class)) {
+        minSDK = descriptor.getMethod().getAnnotation(RpcMinSdk.class).value();
+      } else {
+        minSDK = getMinSdk(clazz);
+      }
 
       if (minSDK != 3) {
         System.out.println(String.format("\nRequires API Level %d.", minSDK));

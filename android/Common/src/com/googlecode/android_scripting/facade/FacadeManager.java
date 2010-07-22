@@ -5,9 +5,11 @@ import android.content.Intent;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 import com.googlecode.android_scripting.rpc.RpcDepreciated;
+import com.googlecode.android_scripting.rpc.RpcMinSdk;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,13 +21,19 @@ public class FacadeManager extends RpcReceiverManager {
   private final Service mService;
   private final Intent mIntent;
   private final TriggerRepository mTriggerRepository;
+  private int mSdkLevel;
 
-  public FacadeManager(Service service, Intent intent,
+  public FacadeManager(int sdkLevel, Service service, Intent intent,
       Collection<Class<? extends RpcReceiver>> classList) {
     super(classList);
+    mSdkLevel = sdkLevel;
     mService = service;
     mIntent = intent;
     mTriggerRepository = ((BaseApplication) service.getApplication()).getTriggerRepository();
+  }
+
+  public int getSdkLevel() {
+    return mSdkLevel;
   }
 
   public Service getService() {
@@ -48,6 +56,12 @@ public class FacadeManager extends RpcReceiverManager {
         String replacedBy = method.getAnnotation(RpcDepreciated.class).value();
         String title = method.getName() + " is depreciated";
         Log.notify(mService, title, title, String.format("Please use %s instead.", replacedBy));
+      } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
+        int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
+        if (mSdkLevel < requiredSdkLevel) {
+          throw new Sl4aException(String.format("%s requires API level %d, current level is %d",
+              method.getName(), requiredSdkLevel, mSdkLevel));
+        }
       }
       return super.invoke(clazz, method, args);
     } catch (InvocationTargetException e) {

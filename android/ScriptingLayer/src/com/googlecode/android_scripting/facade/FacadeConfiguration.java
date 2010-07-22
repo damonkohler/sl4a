@@ -36,13 +36,13 @@ import java.util.TreeMap;
  * @author Igor Karp (igor.v.karp@gmail.com)
  */
 public class FacadeConfiguration {
-
   private final static Set<Class<? extends RpcReceiver>> sFacadeClassList;
   private final static SortedMap<String, MethodDescriptor> sRpcs =
       new TreeMap<String, MethodDescriptor>();
 
+  private static int sdkVersion;
+
   static {
-    int sdkVersion = 0;
 
     if (android.os.Build.VERSION.SDK == null) {
       sdkVersion = Integer.MAX_VALUE;
@@ -75,6 +75,7 @@ public class FacadeConfiguration {
     sFacadeClassList.add(WakeLockFacade.class);
     sFacadeClassList.add(WifiFacade.class);
     sFacadeClassList.add(UiFacade.class);
+    sFacadeClassList.add(BatteryManagerFacade.class);
 
     if (sdkVersion >= 4) {
       sFacadeClassList.add(TextToSpeechFacade.class);
@@ -99,6 +100,10 @@ public class FacadeConfiguration {
 
   private FacadeConfiguration() {
     // Utility class.
+  }
+
+  public static int getSdkLevel() {
+    return sdkVersion;
   }
 
   /** Returns a list of {@link MethodDescriptor} objects for all facades. */
