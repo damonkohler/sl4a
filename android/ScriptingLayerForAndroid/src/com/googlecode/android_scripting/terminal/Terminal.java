@@ -208,8 +208,9 @@ public class Terminal extends Activity {
                 Terminal.this.finish();
               }
             });
-
-            builder.show();
+            if (!isFinishing()) {
+              builder.show();
+            }
           }
         });
       }

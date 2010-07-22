@@ -16,6 +16,7 @@
 
 package com.googlecode.android_scripting.facade;
 
+import android.app.Service;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
@@ -23,9 +24,17 @@ import android.hardware.Camera.PictureCallback;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.SurfaceHolder.Callback;
+import android.view.ViewGroup.LayoutParams;
 
-
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.TaskQueue;
+import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
+import com.googlecode.android_scripting.future.FutureActivityTask;
+import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
@@ -35,11 +44,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
 
 public class CameraFacade extends RpcReceiver {
 
-  private final AndroidFacade mAndroidFacade;
+  private final Service mService;
 
   private class BooleanResult {
     boolean mmResult = false;
@@ -47,7 +57,7 @@ public class CameraFacade extends RpcReceiver {
 
   public CameraFacade(FacadeManager manager) {
     super(manager);
-    mAndroidFacade = manager.getReceiver(AndroidFacade.class);
+    mService = manager.getService();
   }
 
   @Rpc(description = "Take a picture and save it to the specified path.", returns = "A map of Booleans autoFocus and takePicture where True indicates success.")
@@ -57,13 +67,32 @@ public class CameraFacade extends RpcReceiver {
     final BooleanResult autoFocusResult = new BooleanResult();
     final BooleanResult takePictureResult = new BooleanResult();
 
-    final Camera camera = Camera.open();
+    Camera camera = Camera.open();
+
     try {
+      Method method = camera.getClass().getMethod("setDisplayOrientation", int.class);
+      method.invoke(camera, 180);
+    } catch (Exception e) {
+    }
+
+    int sdkVersion = 3;
+    try {
+      sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
+    } catch (NumberFormatException e) {
+    }
+
+    try {
+      if (sdkVersion == 3) {
+        setPreviewDisplay(camera);
+      }
+
       camera.startPreview();
       if (useAutoFocus) {
         autoFocus(autoFocusResult, camera);
       }
       takePicture(path, takePictureResult, camera);
+    } catch (Exception e) {
+      Log.e(e);
     } finally {
       camera.release();
     }
@@ -72,6 +101,40 @@ public class CameraFacade extends RpcReceiver {
     result.putBoolean("autoFocus", autoFocusResult.mmResult);
     result.putBoolean("takePicture", takePictureResult.mmResult);
     return result;
+  }
+
+  private void setPreviewDisplay(Camera camera) throws IOException, InterruptedException {
+    FutureActivityTask<SurfaceHolder> task = new FutureActivityTask<SurfaceHolder>() {
+      @Override
+      public void run(final ScriptingLayerServiceHelper activity,
+          final FutureResult<SurfaceHolder> result) {
+        final SurfaceView view = new SurfaceView(activity);
+        activity.setContentView(view, new LayoutParams(LayoutParams.FILL_PARENT,
+            LayoutParams.FILL_PARENT));
+
+        view.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        view.getHolder().addCallback(new Callback() {
+          @Override
+          public void surfaceDestroyed(SurfaceHolder holder) {
+          }
+
+          @Override
+          public void surfaceCreated(SurfaceHolder holder) {
+          }
+
+          @Override
+          public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            result.set(view.getHolder());
+            activity.taskDone(getTaskId());
+          }
+        });
+      }
+    };
+    TaskQueue taskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
+    taskQueue.offer(task);
+
+    camera.setPreviewDisplay(task.getFutureResult().get());
   }
 
   private void takePicture(final String path, final BooleanResult takePictureResult,
@@ -126,14 +189,7 @@ public class CameraFacade extends RpcReceiver {
     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     File file = new File(path);
     intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-    mAndroidFacade.startActivityForResult(intent);
-  }
-
-  @Rpc(description = "Starts the video capture application to record a video and saves it to the specified path.")
-  public void cameraInteractiveCaptureVideo(@RpcParameter(name = "path") final String path) {
-    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-    File file = new File(path);
-    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-    mAndroidFacade.startActivityForResult(intent);
+    AndroidFacade facade = mManager.getReceiver(AndroidFacade.class);
+    facade.startActivityForResult(intent);
   }
 }

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.googlecode.android_scripting.activity;
+package com.googlecode.android_scripting;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

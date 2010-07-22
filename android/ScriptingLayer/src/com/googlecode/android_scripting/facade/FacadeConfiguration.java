@@ -43,10 +43,15 @@ public class FacadeConfiguration {
 
   static {
     int sdkVersion = 0;
-    try {
-      sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
-    } catch (NumberFormatException e) {
-      Log.e(e);
+
+    if (android.os.Build.VERSION.SDK == null) {
+      sdkVersion = Integer.MAX_VALUE;
+    } else {
+      try {
+        sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
+      } catch (NumberFormatException e) {
+        Log.e(e);
+      }
     }
 
     sFacadeClassList = new HashSet<Class<? extends RpcReceiver>>();
