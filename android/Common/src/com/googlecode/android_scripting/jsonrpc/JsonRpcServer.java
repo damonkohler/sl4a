@@ -16,7 +16,6 @@
 
 package com.googlecode.android_scripting.jsonrpc;
 
-
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;

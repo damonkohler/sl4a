@@ -72,12 +72,13 @@ public class InterpreterConfiguration {
       mmDiscoveredInterpreters = new HashMap<String, Interpreter>();
     }
 
-    private void discoverAll() {
+    private void discoverForType(final String mime) {
       mmExecutor.submit(new Runnable() {
         @Override
         public void run() {
           Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
           intent.addCategory(Intent.CATEGORY_LAUNCHER);
+          intent.setType(mime);
           List<Interpreter> discoveredInterpreters = new ArrayList<Interpreter>();
           List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
           for (ResolveInfo info : resolveInfos) {
@@ -87,6 +88,32 @@ public class InterpreterConfiguration {
             }
             mmDiscoveredInterpreters.put(info.activityInfo.packageName, interpreter);
             discoveredInterpreters.add(interpreter);
+          }
+          mInterpreterSet.addAll(discoveredInterpreters);
+          for (ConfigurationObserver observer : mObserverSet) {
+            observer.onConfigurationChanged();
+          }
+        }
+      });
+    }
+
+    private void discoverAll() {
+      mmExecutor.submit(new Runnable() {
+        @Override
+        public void run() {
+          Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
+          intent.addCategory(Intent.CATEGORY_LAUNCHER);
+          intent.setType(InterpreterConstants.MIME + "*");
+          List<Interpreter> discoveredInterpreters = new ArrayList<Interpreter>();
+          List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
+          for (ResolveInfo info : resolveInfos) {
+            Interpreter interpreter = buildInterpreter(info.activityInfo.packageName);
+            if (interpreter == null) {
+              continue;
+            }
+            mmDiscoveredInterpreters.put(info.activityInfo.packageName, interpreter);
+            discoveredInterpreters.add(interpreter);
+            Log.v("Interpreter discovered: " + info.activityInfo.packageName);
           }
           mInterpreterSet.addAll(discoveredInterpreters);
           for (ConfigurationObserver observer : mObserverSet) {
@@ -112,6 +139,7 @@ public class InterpreterConfiguration {
           for (ConfigurationObserver observer : mObserverSet) {
             observer.onConfigurationChanged();
           }
+          Log.v("Interpreter discovered: " + packageName);
         }
       });
     }
@@ -215,6 +243,10 @@ public class InterpreterConfiguration {
 
   public void startDiscovering() {
     mListener.discoverAll();
+  }
+
+  public void startDiscovering(String mime) {
+    mListener.discoverForType(mime);
   }
 
   public void registerObserver(ConfigurationObserver observer) {

@@ -16,19 +16,18 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.util.AndroidRuntimeException;
 import android.widget.SeekBar;
 
-
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Wrapper class for dialog box with seek bar.
@@ -61,9 +60,8 @@ public class RunnableSeekBarDialog extends RunnableDialog {
   }
 
   @Override
-  public void run(ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
+  public void run(ScriptingLayerServiceHelper activity, FutureResult<Object> futureResult) {
     mActivity = activity;
-    mResult = result;
     mSeekBar = new SeekBar(activity);
     mSeekBar.setMax(mMax);
     mSeekBar.setProgress(mProgress);
@@ -94,15 +92,14 @@ public class RunnableSeekBarDialog extends RunnableDialog {
         } catch (JSONException e) {
           Log.e(e);
         }
-        mResult.set(result);
-        // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
-        dialog.dismiss();
-        activity.taskDone(getTaskId());
+        dismissDialog();
+        mFutureResult.set(result);
       }
     });
   }
 
-  private void configureButtons(final AlertDialog.Builder builder, final ScriptingLayerServiceHelper activity) {
+  private void configureButtons(final AlertDialog.Builder builder,
+      final ScriptingLayerServiceHelper activity) {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -125,10 +122,8 @@ public class RunnableSeekBarDialog extends RunnableDialog {
           }
           break;
         }
-        mResult.set(result);
-        // TODO(damonkohler): This leaves the dialog in the UiFacade map of dialogs. Memory leak.
-        dialog.dismiss();
-        activity.taskDone(getTaskId());
+        dismissDialog();
+        mFutureResult.set(result);
       }
     };
     if (mNegativeButtonText != null) {

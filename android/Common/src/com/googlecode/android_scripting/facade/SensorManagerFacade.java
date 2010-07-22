@@ -107,6 +107,11 @@ public class SensorManagerFacade extends RpcReceiver {
       mmRoll = new RollingAverage(avgSampleSize);
     }
 
+    private void postEvent() {
+      mSensorReadings.putDouble("time", System.currentTimeMillis() / 1000.0);
+      mEventFacade.postEvent("sensors", mSensorReadings);
+    }
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
       if (mSensorReadings == null) {
@@ -114,7 +119,7 @@ public class SensorManagerFacade extends RpcReceiver {
       }
       synchronized (mSensorReadings) {
         mSensorReadings.putInt("accuracy", accuracy);
-        mEventFacade.postEvent("sensors", mSensorReadings);
+        postEvent();
       }
     }
 
@@ -161,7 +166,7 @@ public class SensorManagerFacade extends RpcReceiver {
             mSensorReadings.putDouble("roll", mmRoll.get());
           }
         }
-        mEventFacade.postEvent("sensors", mSensorReadings);
+        postEvent();
       }
     }
   }

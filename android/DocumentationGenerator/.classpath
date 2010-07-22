@@ -5,5 +5,9 @@
 	<classpathentry kind="lib" path="libs/commons-lang-2.5.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ScriptingLayer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ScriptingLayerForAndroid"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BluetoothFacade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SignalStrengthFacade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TextToSpeechFacade"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

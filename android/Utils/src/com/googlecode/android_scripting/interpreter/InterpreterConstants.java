@@ -52,4 +52,6 @@ public interface InterpreterConstants {
 
   public static final String INSTALL_PREF = "SL4A.interpreter.installed";
 
+  public static final String MIME = "script/";
+
 }

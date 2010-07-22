@@ -16,11 +16,6 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.util.AndroidRuntimeException;
@@ -35,6 +30,11 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.Set;
 
 /**
  * UiFacade

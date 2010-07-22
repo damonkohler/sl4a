@@ -34,19 +34,20 @@ import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
-import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.language.SupportedLanguages;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.ParameterDescriptor;
+import com.googlecode.android_scripting.rpc.RpcDepreciated;
 
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -83,6 +84,13 @@ public class ApiBrowser extends ListActivity {
     getListView().setFastScrollEnabled(true);
     mExpandedPositions = new HashSet<Integer>();
     mRpcDescriptors = FacadeConfiguration.collectRpcDescriptors();
+    for (int i = mRpcDescriptors.size() - 1; i >= 0; i--) {
+      MethodDescriptor descriptor = mRpcDescriptors.get(i);
+      Method method = descriptor.getMethod();
+      if (method.isAnnotationPresent(RpcDepreciated.class)) {
+        mRpcDescriptors.remove(i);
+      }
+    }
     String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     mIsLanguageSupported = SupportedLanguages.checkLanguageSupported(scriptName);
     mAdapter = new ApiBrowserAdapter();

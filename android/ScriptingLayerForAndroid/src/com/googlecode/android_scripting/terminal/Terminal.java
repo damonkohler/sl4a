@@ -173,8 +173,8 @@ public class Terminal extends Activity {
         Terminal.this.runOnUiThread(new Runnable() {
           @Override
           public void run() {
-            Toast.makeText(Terminal.this, "Process exited.", Toast.LENGTH_SHORT).show();
-            Terminal.this.finish();
+            Toast.makeText(Terminal.this, mInterpreterProcess.getName() + " exited.",
+                Toast.LENGTH_SHORT).show();
           }
         });
       }
@@ -320,7 +320,7 @@ public class Terminal extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.terminal, menu);
-    if (!(mInterpreterProcess instanceof ScriptProcess)) {
+    if (mInterpreterProcess instanceof ScriptProcess) {
       menu.removeItem(R.id.terminal_menu_exit_and_edit);
     }
     return true;
