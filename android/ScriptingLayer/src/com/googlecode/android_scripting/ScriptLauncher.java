@@ -37,9 +37,7 @@ public class ScriptLauncher {
     String interpreterName;
     interpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
     interpreter = config.getInterpreterByName(interpreterName);
-    InterpreterProcess process =
-        new InterpreterProcess(interpreter, proxy.getAddress().getHostName(), proxy.getAddress()
-            .getPort(), proxy.getSecret());
+    InterpreterProcess process = new InterpreterProcess(interpreter, proxy);
     if (shutdownHook == null) {
       process.start(new Runnable() {
         @Override

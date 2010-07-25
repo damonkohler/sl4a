@@ -61,7 +61,7 @@ public class AndroidProxy {
     mJsonRpcServer.shutdown();
   }
 
-  String getSecret() {
+  public String getSecret() {
     if (mSecret == null) {
       return null;
     }

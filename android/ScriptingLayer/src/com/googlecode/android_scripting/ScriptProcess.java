@@ -25,13 +25,10 @@ import com.googlecode.android_scripting.trigger.Trigger;
 public class ScriptProcess extends InterpreterProcess {
 
   private final Trigger mTrigger;
-  private final AndroidProxy mProxy;
 
   public ScriptProcess(InterpreterConfiguration configuration, String scriptName,
       AndroidProxy proxy, Trigger trigger) {
-    super(configuration.getInterpreterForScript(scriptName), proxy.getAddress().getHostName(),
-        proxy.getAddress().getPort(), proxy.getSecret());
-    mProxy = proxy;
+    super(configuration.getInterpreterForScript(scriptName), proxy);
     mTrigger = trigger;
     mName = scriptName;
   }
@@ -45,14 +42,6 @@ public class ScriptProcess extends InterpreterProcess {
   public void notifyTriggerOfStart(Service service) {
     if (mTrigger != null) {
       mTrigger.beforeTrigger(service);
-    }
-  }
-
-  @Override
-  public void kill() {
-    super.kill();
-    if (mProxy != null) {
-      mProxy.shutdown();
     }
   }
 }

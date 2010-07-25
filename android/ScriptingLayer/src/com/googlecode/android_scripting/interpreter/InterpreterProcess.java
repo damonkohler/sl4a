@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
+import com.googlecode.android_scripting.AndroidProxy;
 import com.googlecode.android_scripting.Process;
 
 /**
@@ -32,10 +33,7 @@ public class InterpreterProcess extends Process {
 
   private static final int BUFFER_SIZE = 8192;
 
-  private final String mHost;
-  private final int mPort;
-  private final String mHandshake;
-
+  private final AndroidProxy mProxy;
   private final StringBuffer mLog;
   private volatile int mLogLength = 0;
 
@@ -47,39 +45,45 @@ public class InterpreterProcess extends Process {
    * @param port
    *          the port that the AndroidProxy is listening on
    */
-  public InterpreterProcess(Interpreter interpreter, String host, int port, String handshake) {
-    mHost = host;
-    mPort = port;
-    mHandshake = handshake;
+  public InterpreterProcess(Interpreter interpreter, AndroidProxy proxy) {
+    mProxy = proxy;
     mLog = new StringBuffer();
-
-    mEnvironment.putAll(System.getenv());
-    mEnvironment.put("AP_PORT", Integer.toString(mPort));
-    mEnvironment.put("AP_HOST", mHost);
-    if (mHandshake != null) {
-      mEnvironment.put("AP_HANDSHAKE", mHandshake);
-    }
 
     mName = interpreter.getNiceName();
     mBinary = new File(interpreter.getBinary());
     mArguments.add(interpreter.getEmptyParameters());
+
+    mEnvironment.putAll(System.getenv());
+    mEnvironment.put("AP_HOST", getHost());
+    mEnvironment.put("AP_PORT", Integer.toString(getPort()));
+    if (proxy.getSecret() != null) {
+      mEnvironment.put("AP_HANDSHAKE", getSecret());
+    }
   }
 
   public String getHost() {
-    return mHost;
+    return mProxy.getAddress().getHostName();
   }
 
   public int getPort() {
-    return mPort;
+    return mProxy.getAddress().getPort();
   }
 
-  public String getHandshake() {
-    return mHandshake;
+  public String getSecret() {
+    return mProxy.getSecret();
   }
 
   @Override
   public void start(final Runnable shutdownHook) {
     super.start(shutdownHook);
+  }
+
+  @Override
+  public void kill() {
+    super.kill();
+    if (mProxy != null) {
+      mProxy.shutdown();
+    }
   }
 
   @Override
