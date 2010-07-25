@@ -56,6 +56,7 @@ public class ScriptingLayerService extends Service {
   private Notification mNotification;
   private final IBinder mBinder;
   private volatile int modCount = 0;
+  private final InterpreterConfiguration mInterpreterConfiguration;
 
   private static final int mNotificationId = NotificationIdFactory.create();
 
@@ -68,6 +69,7 @@ public class ScriptingLayerService extends Service {
   public ScriptingLayerService() {
     mProcessMap = new ConcurrentHashMap<Integer, InterpreterProcess>();
     mBinder = new LocalBinder();
+    mInterpreterConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
   }
 
   @Override
@@ -157,7 +159,7 @@ public class ScriptingLayerService extends Service {
 
   private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {
     final int port = proxy.getAddress().getPort();
-    return ScriptLauncher.launchScript(proxy, intent, trigger, new Runnable() {
+    return ScriptLauncher.launchScript(mInterpreterConfiguration, proxy, intent, trigger, new Runnable() {
       @Override
       public void run() {
         // TODO(damonkohler): This action actually kills the script rather than notifying the

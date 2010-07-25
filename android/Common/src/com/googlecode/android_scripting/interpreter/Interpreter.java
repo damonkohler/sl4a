@@ -173,13 +173,7 @@ public class Interpreter implements InterpreterStrings {
     return true;
   }
 
-  public InterpreterProcess buildProcess(String host, int port, String handshake) {
-    InterpreterProcess process = new InterpreterProcess(host, port, handshake);
-    process.setName(mNiceName);
-    process.setEnvironment(mEnvironment);
-    process.setBinary(new File(mBinary));
-    mArguments.add(mEmptyParameters);
-    process.setArguments(mArguments);
-    return process;
+  public String getEmptyParameters() {
+    return mEmptyParameters;
   }
 }

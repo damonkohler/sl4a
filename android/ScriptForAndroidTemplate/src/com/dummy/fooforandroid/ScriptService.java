@@ -1,11 +1,14 @@
 package com.dummy.fooforandroid;
 
+import java.io.File;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
 import com.googlecode.android_scripting.AndroidProxy;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.FileUtils;
@@ -15,10 +18,10 @@ import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 
-import java.io.File;
-
 public class ScriptService extends Service {
+
   private final IBinder mBinder;
+  private final InterpreterConfiguration mInterpreterConfiguration;
 
   public class LocalBinder extends Binder {
     public ScriptService getService() {
@@ -28,6 +31,7 @@ public class ScriptService extends Service {
 
   public ScriptService() {
     mBinder = new LocalBinder();
+    mInterpreterConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
   }
 
   @Override
@@ -60,7 +64,7 @@ public class ScriptService extends Service {
 
     final AndroidProxy proxy = new AndroidProxy(this, null, true);
     proxy.startLocal();
-    ScriptLauncher.launchScript(proxy, script, null, new Runnable() {
+    ScriptLauncher.launchScript(mInterpreterConfiguration, proxy, script, null, new Runnable() {
       @Override
       public void run() {
         proxy.shutdown();

@@ -17,6 +17,7 @@
 package com.googlecode.android_scripting.interpreter;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -46,7 +47,7 @@ public class InterpreterProcess extends Process {
    * @param port
    *          the port that the AndroidProxy is listening on
    */
-  public InterpreterProcess(String host, int port, String handshake) {
+  public InterpreterProcess(Interpreter interpreter, String host, int port, String handshake) {
     mHost = host;
     mPort = port;
     mHandshake = handshake;
@@ -58,6 +59,10 @@ public class InterpreterProcess extends Process {
     if (mHandshake != null) {
       mEnvironment.put("AP_HANDSHAKE", mHandshake);
     }
+
+    mName = interpreter.getNiceName();
+    mBinary = new File(interpreter.getBinary());
+    mArguments.add(interpreter.getEmptyParameters());
   }
 
   public String getHost() {

@@ -18,6 +18,7 @@ package com.googlecode.android_scripting;
 
 import android.app.Service;
 
+import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.trigger.Trigger;
 
@@ -26,8 +27,10 @@ public class ScriptProcess extends InterpreterProcess {
   private final Trigger mTrigger;
   private final AndroidProxy mProxy;
 
-  public ScriptProcess(String scriptName, AndroidProxy proxy, Trigger trigger) {
-    super(proxy.getAddress().getHostName(), proxy.getAddress().getPort(), proxy.getSecret());
+  public ScriptProcess(InterpreterConfiguration configuration, String scriptName,
+      AndroidProxy proxy, Trigger trigger) {
+    super(configuration.getInterpreterForScript(scriptName), proxy.getAddress().getHostName(),
+        proxy.getAddress().getPort(), proxy.getSecret());
     mProxy = proxy;
     mTrigger = trigger;
     mName = scriptName;

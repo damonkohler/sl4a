@@ -38,8 +38,8 @@ public class ScriptLauncher {
     interpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
     interpreter = config.getInterpreterByName(interpreterName);
     InterpreterProcess process =
-        interpreter.buildProcess(proxy.getAddress().getHostName(), proxy.getAddress().getPort(),
-            proxy.getSecret());
+        new InterpreterProcess(interpreter, proxy.getAddress().getHostName(), proxy.getAddress()
+            .getPort(), proxy.getSecret());
     if (shutdownHook == null) {
       process.start(new Runnable() {
         @Override
@@ -53,14 +53,14 @@ public class ScriptLauncher {
     return process;
   }
 
-  public static ScriptProcess launchScript(final AndroidProxy proxy, Intent intent,
-      Trigger trigger, Runnable shutdownHook) {
+  public static ScriptProcess launchScript(InterpreterConfiguration configuration,
+      final AndroidProxy proxy, Intent intent, Trigger trigger, Runnable shutdownHook) {
     String scriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     File script = ScriptStorageAdapter.getExistingScript(scriptName);
     if (script == null) {
       throw new RuntimeException("No such script to launch.");
     }
-    ScriptProcess process = new ScriptProcess(scriptName, proxy, trigger);
+    ScriptProcess process = new ScriptProcess(configuration, scriptName, proxy, trigger);
     if (shutdownHook == null) {
       process.start(new Runnable() {
         @Override
@@ -74,10 +74,10 @@ public class ScriptLauncher {
     return process;
   }
 
-  public static ScriptProcess launchScript(final AndroidProxy proxy, File script, Trigger trigger,
-      Runnable shutdownHook) {
+  public static ScriptProcess launchScript(InterpreterConfiguration configuration,
+      final AndroidProxy proxy, File script, Trigger trigger, Runnable shutdownHook) {
     Intent intent = new Intent();
     intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
-    return launchScript(proxy, intent, trigger, shutdownHook);
+    return launchScript(configuration, proxy, intent, trigger, shutdownHook);
   }
 }
