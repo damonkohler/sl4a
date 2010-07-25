@@ -16,9 +16,9 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import com.googlecode.android_scripting.interpreter.InterpreterConstants;
-import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
-import com.googlecode.android_scripting.interpreter.InterpreterStrings;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -30,18 +30,14 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * A provider that can be queried to obtain execution-related interpreter info.
  * 
  * <p>
- * To create an interpreter APK, please extend this content provider and
- * implement getDescriptor() and getEnvironmentSettings().<br>
- * Please declare the provider in the android manifest xml (the authority values
- * has to be set to your_package_name.provider_name).
+ * To create an interpreter APK, please extend this content provider and implement getDescriptor()
+ * and getEnvironmentSettings().<br>
+ * Please declare the provider in the android manifest xml (the authority values has to be set to
+ * your_package_name.provider_name).
  * 
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
@@ -67,14 +63,13 @@ public abstract class InterpreterProvider extends ContentProvider {
   }
 
   /**
-   * Should return an instance instance of a class that implements interpreter
-   * descriptor.
+   * Should return an instance instance of a class that implements interpreter descriptor.
    */
   protected abstract InterpreterDescriptor getDescriptor();
 
   /**
-   * Should return a map of environment variables names and their values (or
-   * null if interpreter does not require any environment variables).
+   * Should return a map of environment variables names and their values (or null if interpreter
+   * does not require any environment variables).
    */
   protected abstract Map<String, String> getEnvironmentSettings();
 
@@ -112,17 +107,17 @@ public abstract class InterpreterProvider extends ContentProvider {
     Map<String, ? extends Object> map;
 
     switch (matcher.match(uri)) {
-      case BASE:
-        map = getSettings();
-        break;
-      case ENVVARS:
-        map = getEnvironmentSettings();
-        break;
-      case ARGS:
-        map = getArguments();
-        break;
-      default:
-        map = null;
+    case BASE:
+      map = getSettings();
+      break;
+    case ENVVARS:
+      map = getEnvironmentSettings();
+      break;
+    case ARGS:
+      map = getArguments();
+      break;
+    default:
+      map = null;
     }
 
     return buildCursorFromMap(map);
@@ -163,12 +158,11 @@ public abstract class InterpreterProvider extends ContentProvider {
 
   protected Map<String, Object> getArguments() {
     String[] arguments = mDescriptor.getExecuteArgs(mContext);
-    if (arguments == null) {
-      return null;
-    }
     Map<String, Object> values = new LinkedHashMap<String, Object>();
-    for (String argument : arguments) {
-      values.put(argument, argument);
+    if (arguments != null) {
+      for (String argument : arguments) {
+        values.put(argument, argument);
+      }
     }
     return values;
   }

@@ -40,7 +40,6 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 
 /**
@@ -179,16 +178,13 @@ public class InterpreterConfiguration {
         return null; // Apparently, the interpreter is not installed yet.
       }
       Map<String, String> environmentMap = getMap(provider, InterpreterConstants.PROVIDER_ENV);
-
       Map<String, String> argumentsMap = getMap(provider, InterpreterConstants.PROVIDER_ARGS);
 
       Interpreter interpreter = null;
       try {
         interpreter = Interpreter.buildFromMaps(interpreterMap, environmentMap, argumentsMap);
-      } catch (Sl4aException e) {
-        Log.e(e.getMessage(), e);
       } catch (Exception e) {
-        e.printStackTrace();
+        Log.e(e);
       }
 
       return interpreter;

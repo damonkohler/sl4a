@@ -175,6 +175,7 @@ public class Interpreter implements InterpreterStrings {
 
   public InterpreterProcess buildProcess(String host, int port, String handshake) {
     InterpreterProcess process = new InterpreterProcess(host, port, handshake);
+    process.setName(mNiceName);
     process.setEnvironment(mEnvironment);
     process.setBinary(new File(mBinary));
     mArguments.add(mEmptyParameters);
