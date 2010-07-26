@@ -36,8 +36,6 @@ import com.googlecode.android_scripting.rpc.MethodDescriptor;
  */
 public class Interpreter implements InterpreterStrings {
 
-  private static String[] mRequiredKeys = { NAME, NICE_NAME, EXTENSION, BINARY, EXECUTE_PARAMS };
-
   private String mExtension;
   private String mName;
   private String mNiceName;
@@ -55,14 +53,6 @@ public class Interpreter implements InterpreterStrings {
 
   public static Interpreter buildFromMaps(Map<String, String> data, Map<String, String> variables,
       Map<String, String> arguments) {
-    Interpreter interpreter = new Interpreter();
-    for (String key : mRequiredKeys) {
-      if (data.get(key) == null) {
-        throw new RuntimeException("Cannot create interpreter. Required parameter not specified: "
-            + key);
-      }
-    }
-
     String extension = data.get(EXTENSION);
     String name = data.get(NAME);
     String niceName = data.get(NICE_NAME);
@@ -70,6 +60,7 @@ public class Interpreter implements InterpreterStrings {
     String emptyParameters = data.get(EMPTY_PARAMS);
     String exeucteParameters = data.get(EXECUTE_PARAMS);
 
+    Interpreter interpreter = new Interpreter();
     interpreter.setName(name);
     interpreter.setNiceName(niceName);
     interpreter.setExtension(extension);
