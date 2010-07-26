@@ -14,24 +14,19 @@
  * the License.
  */
 
-package com.googlecode.android_scripting.activity;
+package com.googlecode.android_scripting.rpc;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
- * Creates unique ids to identify the notifications created by the android scripting service and the
- * trigger service.
- * 
- * @author Felix Arends (felix.arends@gmail.com)
+ * Use this annotation to specify minimum SDK level (if higher than 3).
  * 
  */
-public final class NotificationIdFactory {
-  private static final AtomicInteger mNextId = new AtomicInteger(0);
-
-  public static int create() {
-    return mNextId.incrementAndGet();
-  }
-
-  private NotificationIdFactory() {
-  }
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface RpcMinSdk {
+  /** Minimum SDK Level. */
+  public int value();
 }

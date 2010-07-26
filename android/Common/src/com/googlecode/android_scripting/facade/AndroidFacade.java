@@ -38,8 +38,8 @@ import android.widget.Toast;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.TaskQueue;
-import com.googlecode.android_scripting.activity.NotificationIdFactory;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.future.FutureActivityTask;

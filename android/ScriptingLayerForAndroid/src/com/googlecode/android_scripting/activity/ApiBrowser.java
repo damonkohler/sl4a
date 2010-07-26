@@ -46,6 +46,7 @@ import com.googlecode.android_scripting.language.SupportedLanguages;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.ParameterDescriptor;
 import com.googlecode.android_scripting.rpc.RpcDepreciated;
+import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -89,6 +90,11 @@ public class ApiBrowser extends ListActivity {
       Method method = descriptor.getMethod();
       if (method.isAnnotationPresent(RpcDepreciated.class)) {
         mRpcDescriptors.remove(i);
+      } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
+        int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
+        if (FacadeConfiguration.getSdkLevel() < requiredSdkLevel) {
+          mRpcDescriptors.remove(i);
+        }
       }
     }
     String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);

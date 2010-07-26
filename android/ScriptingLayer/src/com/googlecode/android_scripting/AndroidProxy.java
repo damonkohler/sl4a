@@ -39,7 +39,9 @@ public class AndroidProxy {
       mSecret = null;
     }
     FacadeManager facadeManager =
-        new FacadeManager(service, intent, FacadeConfiguration.getFacadeClasses());
+        new FacadeManager(FacadeConfiguration.getSdkLevel(), service, intent, FacadeConfiguration
+            .getFacadeClasses());
+
     mJsonRpcServer = new JsonRpcServer(facadeManager, getSecret());
   }
 

@@ -36,6 +36,7 @@ import android.widget.RemoteViews;
 import com.googlecode.android_scripting.AndroidProxy;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
