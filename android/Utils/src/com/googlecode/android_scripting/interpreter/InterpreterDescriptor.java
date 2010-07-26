@@ -17,6 +17,7 @@
 package com.googlecode.android_scripting.interpreter;
 
 import java.io.File;
+import java.util.List;
 
 import android.content.Context;
 
@@ -71,7 +72,7 @@ public interface InterpreterDescriptor {
    * Returns an array of command line arguments required to execute the interpreter (it's essential
    * that the order in the array is consistent with order of arguments in the command line).
    */
-  public String[] getArguments(Context context);
+  public List<String> getArguments(Context context);
 
   // The following methods are required for installation:
 

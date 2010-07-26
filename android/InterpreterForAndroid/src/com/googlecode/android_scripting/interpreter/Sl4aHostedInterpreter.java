@@ -17,6 +17,8 @@
 package com.googlecode.android_scripting.interpreter;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 
@@ -85,7 +87,7 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
   }
 
   @Override
-  public String[] getArguments(Context context) {
-    return null;
+  public List<String> getArguments(Context context) {
+    return new ArrayList<String>();
   }
 }

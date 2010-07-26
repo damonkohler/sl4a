@@ -150,12 +150,11 @@ public abstract class InterpreterProvider extends ContentProvider {
   }
 
   protected Map<String, Object> getArguments() {
-    String[] arguments = mDescriptor.getArguments(mContext);
     Map<String, Object> values = new LinkedHashMap<String, Object>();
-    if (arguments != null) {
-      for (String argument : arguments) {
-        values.put(argument, argument);
-      }
+    int column = 0;
+    for (String argument : mDescriptor.getArguments(mContext)) {
+      values.put(Integer.toString(column), argument);
+      column++;
     }
     return values;
   }

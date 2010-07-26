@@ -17,6 +17,8 @@
 package com.googlecode.jrubyforandroid;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import android.content.Context;
 
@@ -80,11 +82,9 @@ public class JRubyDescriptor extends Sl4aHostedInterpreter {
   }
 
   @Override
-  public String[] getArguments(Context context) {
+  public List<String> getArguments(Context context) {
     String absolutePathToJar = new File(getExtrasPath(context), JRUBY_JAR).getAbsolutePath();
-    String[] args =
-        { "-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
-          absolutePathToJar, "org.jruby.Main", "-X-C" };
-    return args;
+    return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
+        absolutePathToJar, "org.jruby.Main", "-X-C");
   }
 }
