@@ -41,6 +41,7 @@ import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
+import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 import com.googlecode.android_scripting.terminal.Terminal;
 import com.googlecode.android_scripting.trigger.Trigger;
 
@@ -56,7 +57,7 @@ public class ScriptingLayerService extends Service {
   private Notification mNotification;
   private final IBinder mBinder;
   private volatile int modCount = 0;
-  private final InterpreterConfiguration mInterpreterConfiguration;
+  private InterpreterConfiguration mInterpreterConfiguration;
 
   private static final int mNotificationId = NotificationIdFactory.create();
 
@@ -69,11 +70,11 @@ public class ScriptingLayerService extends Service {
   public ScriptingLayerService() {
     mProcessMap = new ConcurrentHashMap<Integer, InterpreterProcess>();
     mBinder = new LocalBinder();
-    mInterpreterConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
   }
 
   @Override
   public void onCreate() {
+    mInterpreterConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
     mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     createNotification();
     ServiceUtils.setForeground(this, mNotificationId, mNotification);
@@ -129,6 +130,9 @@ public class ScriptingLayerService extends Service {
 
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
       proxy = launchServer(intent, false);
+      // TODO(damonkohler): This is just to make things easier. Really, we shouldn't need to start
+      // an interpreter when all we want is a server.
+      interpreterProcess = new InterpreterProcess(new ShellInterpreter(), proxy);
     } else {
       proxy = launchServer(intent, true);
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT)) {
@@ -159,17 +163,18 @@ public class ScriptingLayerService extends Service {
 
   private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {
     final int port = proxy.getAddress().getPort();
-    return ScriptLauncher.launchScript(mInterpreterConfiguration, proxy, intent, trigger, new Runnable() {
-      @Override
-      public void run() {
-        // TODO(damonkohler): This action actually kills the script rather than notifying the
-        // service that script exited on its own. We should distinguish between these two cases.
-        Intent intent = new Intent(ScriptingLayerService.this, ScriptingLayerService.class);
-        intent.setAction(Constants.ACTION_KILL_PROCESS);
-        intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
-        startService(intent);
-      }
-    });
+    return ScriptLauncher.launchScript(mInterpreterConfiguration, proxy, intent, trigger,
+        new Runnable() {
+          @Override
+          public void run() {
+            // TODO(damonkohler): This action actually kills the script rather than notifying the
+            // service that script exited on its own. We should distinguish between these two cases.
+            Intent intent = new Intent(ScriptingLayerService.this, ScriptingLayerService.class);
+            intent.setAction(Constants.ACTION_KILL_PROCESS);
+            intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
+            startService(intent);
+          }
+        });
   }
 
   private InterpreterProcess launchInterpreter(Intent intent, AndroidProxy proxy) {

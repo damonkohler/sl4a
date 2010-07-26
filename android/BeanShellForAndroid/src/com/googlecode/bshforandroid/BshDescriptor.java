@@ -16,13 +16,15 @@
 
 package com.googlecode.bshforandroid;
 
+import java.io.File;
+
 import android.content.Context;
 
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class BshDescriptor extends Sl4aHostedInterpreter {
 
-  private final static String BSH_BIN = "bsh-2.0b4-dx.jar";
+  private final static String BSH_JAR = "bsh-2.0b4-dx.jar";
 
   public String getExtension() {
     return ".bsh";
@@ -57,20 +59,15 @@ public class BshDescriptor extends Sl4aHostedInterpreter {
     return 3;
   }
 
-  public String getBinary() {
-    return BSH_BIN;
-  }
-
   @Override
-  public String getExecuteCommand(Context context) {
-    return DALVIKVM;
+  public File getBinary(Context context) {
+    return new File(DALVIKVM);
   }
 
   @Override
   public String[] getExecuteArgs(Context context) {
     String[] args =
-        { "-Xbootclasspath:/system/framework/core.jar", "-classpath",
-          super.getExecuteCommand(context), "bsh.Interpreter" };
+        { "-Xbootclasspath:/system/framework/core.jar", "-classpath", BSH_JAR, "bsh.Interpreter" };
     return args;
   }
 

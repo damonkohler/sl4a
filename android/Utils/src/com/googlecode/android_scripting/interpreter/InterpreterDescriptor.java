@@ -16,6 +16,8 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import java.io.File;
+
 import android.content.Context;
 
 /**
@@ -48,29 +50,10 @@ public interface InterpreterDescriptor {
   // The following methods provide execution-related information:
 
   /**
-   * Returns name (and path within working directory) of the interpreter binary.
+   * Returns the binary as a File object. Context is the InterpreterProvider's {@link Context} and
+   * is provided to find the interpreter installation directory.
    */
-  public String getBinary();
-
-  /**
-   * Returns path to the interpreter working directory, i.e. path to the installation directory. If
-   * interpreter binaries provided as a part of interpreter archive, by default they will be
-   * extracted in /data/data/package_name/files/ - as returned by
-   * InterpreterUtils.getInterpreterRoot(mContext).getAbsolutePath(). Therefore, this should return
-   * InterpreterUtils.getInterpreterRoot(context, interpreter_name).getAbsolutePath(), where
-   * interpreter_name is the name of the interpreter folder in the archive (which by default should
-   * be the same as returned by getName()). If interpreter binaries provided as a part of extras
-   * archive, by default they will be extracted in /sdcard/package_name/extras/. In this case, this
-   * should return /sdcard/package_name/extras/interpreter_name/.
-   * 
-   */
-  public String getPath(Context context);
-
-  /**
-   * Returns the command (path and name of the interpreter's executable - in the most common case it
-   * can return String.format("%1$s/%2$s", getPath(context), getBinary())).
-   */
-  public String getExecuteCommand(Context context);
+  public File getBinary(Context context);
 
   /**
    * Returns execution parameters in case when script name is not provided (when interpreter is

@@ -17,7 +17,6 @@
 package com.googlecode.android_scripting.interpreter;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -50,15 +49,17 @@ public class InterpreterProcess extends Process {
     mLog = new StringBuffer();
 
     mName = interpreter.getNiceName();
-    mBinary = new File(interpreter.getBinary());
-    mArguments.add(interpreter.getEmptyParameters());
 
-    mEnvironment.putAll(System.getenv());
-    mEnvironment.put("AP_HOST", getHost());
-    mEnvironment.put("AP_PORT", Integer.toString(getPort()));
+    setBinary(interpreter.getBinary());
+    addAllArguments(interpreter.getArguments());
+
+    putAllEnvironmentVariables(System.getenv());
+    putEnvironmentVariable("AP_HOST", getHost());
+    putEnvironmentVariable("AP_PORT", Integer.toString(getPort()));
     if (proxy.getSecret() != null) {
-      mEnvironment.put("AP_HANDSHAKE", getSecret());
+      putEnvironmentVariable("AP_HANDSHAKE", getSecret());
     }
+    putAllEnvironmentVariables(interpreter.getEnvironmentVariables());
   }
 
   public String getHost() {

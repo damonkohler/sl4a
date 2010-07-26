@@ -18,6 +18,7 @@ package com.googlecode.android_scripting;
 
 import android.app.Service;
 
+import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.trigger.Trigger;
@@ -31,6 +32,9 @@ public class ScriptProcess extends InterpreterProcess {
     super(configuration.getInterpreterForScript(scriptName), proxy);
     mTrigger = trigger;
     mName = scriptName;
+    Interpreter interpreter = configuration.getInterpreterForScript(scriptName);
+    addArgument(String.format(interpreter.getExecuteParameters(), ScriptStorageAdapter
+        .getExistingScript(scriptName).getAbsolutePath()));
   }
 
   public void notifyTriggerOfShutDown(Service service) {

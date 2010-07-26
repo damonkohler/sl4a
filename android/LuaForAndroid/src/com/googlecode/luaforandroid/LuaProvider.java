@@ -1,12 +1,12 @@
 package com.googlecode.luaforandroid;
 
+import java.util.HashMap;
+import java.util.Map;
 
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 import com.googlecode.android_scripting.interpreter.InterpreterProvider;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class LuaProvider extends InterpreterProvider {
 
@@ -21,7 +21,7 @@ public class LuaProvider extends InterpreterProvider {
   @Override
   protected Map<String, String> getEnvironmentSettings() {
     Map<String, String> settings = new HashMap<String, String>(1);
-    String root = mDescriptor.getPath(mContext);
+    String root = ((Sl4aHostedInterpreter) mDescriptor).getPath(mContext).getAbsolutePath();
     String ldir = root + "/share/lua/5.1/";
     String cdir = root + "/lib/lua/5.1/";
     String lua_path =

@@ -17,6 +17,10 @@
 
 package com.googlecode.tclforandroid;
 
+import java.io.File;
+
+import android.content.Context;
+
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class TclDescriptor extends Sl4aHostedInterpreter {
@@ -47,8 +51,9 @@ public class TclDescriptor extends Sl4aHostedInterpreter {
     return true;
   }
 
-  public String getBinary() {
-    return TCL;
+  @Override
+  public File getBinary(Context context) {
+    return new File(getPath(context), TCL);
   }
 
   public int getVersion() {

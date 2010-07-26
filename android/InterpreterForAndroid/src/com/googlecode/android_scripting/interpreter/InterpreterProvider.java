@@ -43,23 +43,24 @@ import android.preference.PreferenceManager;
  */
 public abstract class InterpreterProvider extends ContentProvider {
 
-  protected static final int BASE = 1;
-  protected static final int ENVVARS = 2;
-  protected static final int ARGS = 3;
+  private static final int BASE = 1;
+  private static final int ENVVARS = 2;
+  private static final int ARGS = 3;
+
+  private UriMatcher mUriMatcher;
+  private SharedPreferences mPreferences;
 
   protected InterpreterDescriptor mDescriptor;
   protected Context mContext;
-  protected UriMatcher matcher;
-  private SharedPreferences mPreferences;
 
   public static final String MIME = "vnd.android.cursor.item/vnd.googlecode.interpreter";
 
   protected InterpreterProvider() {
-    matcher = new UriMatcher(UriMatcher.NO_MATCH);
+    mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     String auth = this.getClass().getName().toLowerCase();
-    matcher.addURI(auth, InterpreterConstants.PROVIDER_BASE, BASE);
-    matcher.addURI(auth, InterpreterConstants.PROVIDER_ENV, ENVVARS);
-    matcher.addURI(auth, InterpreterConstants.PROVIDER_ARGS, ARGS);
+    mUriMatcher.addURI(auth, InterpreterConstants.PROVIDER_BASE, BASE);
+    mUriMatcher.addURI(auth, InterpreterConstants.PROVIDER_ENV, ENVVARS);
+    mUriMatcher.addURI(auth, InterpreterConstants.PROVIDER_ARGS, ARGS);
   }
 
   /**
@@ -99,14 +100,11 @@ public abstract class InterpreterProvider extends ContentProvider {
   @Override
   public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
       String sortOrder) {
-
     if (!isInterpreterInstalled()) {
       return null;
     }
-
     Map<String, ? extends Object> map;
-
-    switch (matcher.match(uri)) {
+    switch (mUriMatcher.match(uri)) {
     case BASE:
       map = getSettings();
       break;
@@ -119,7 +117,6 @@ public abstract class InterpreterProvider extends ContentProvider {
     default:
       map = null;
     }
-
     return buildCursorFromMap(map);
   }
 
@@ -143,16 +140,12 @@ public abstract class InterpreterProvider extends ContentProvider {
 
   protected Map<String, Object> getSettings() {
     Map<String, Object> values = new HashMap<String, Object>();
-
     values.put(InterpreterStrings.NAME, mDescriptor.getName());
     values.put(InterpreterStrings.NICE_NAME, mDescriptor.getNiceName());
     values.put(InterpreterStrings.EXTENSION, mDescriptor.getExtension());
-    values.put(InterpreterStrings.PATH, mDescriptor.getPath(mContext));
-    values.put(InterpreterStrings.BINARY, mDescriptor.getBinary());
-    values.put(InterpreterStrings.EXECUTE, mDescriptor.getExecuteCommand(mContext));
+    values.put(InterpreterStrings.BINARY, mDescriptor.getBinary(mContext).getAbsolutePath());
     values.put(InterpreterStrings.EMPTY_PARAMS, mDescriptor.getEmptyParams(mContext));
     values.put(InterpreterStrings.EXECUTE_PARAMS, mDescriptor.getExecuteParams(mContext));
-
     return values;
   }
 

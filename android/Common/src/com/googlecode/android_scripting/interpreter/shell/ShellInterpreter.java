@@ -16,6 +16,8 @@
 
 package com.googlecode.android_scripting.interpreter.shell;
 
+import java.io.File;
+
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.language.ShellLanguage;
 
@@ -31,9 +33,8 @@ public class ShellInterpreter extends Interpreter {
     setExtension(".sh");
     setName("sh");
     setNiceName("Shell");
-    setBinary(SHELL_BIN);
-    // TODO(damonkohler): This should take the script to execute as an argument.
-    setExecute(SHELL_BIN);
+    setBinary(new File(SHELL_BIN));
+    setEmptyParameters("");
     setLanguage(new ShellLanguage());
   }
 

@@ -16,6 +16,10 @@
 
 package com.googlecode.pythonforandroid;
 
+import java.io.File;
+
+import android.content.Context;
+
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class PythonDescriptor extends Sl4aHostedInterpreter {
@@ -60,7 +64,8 @@ public class PythonDescriptor extends Sl4aHostedInterpreter {
     return 8;
   }
 
-  public String getBinary() {
-    return PYTHON_BIN;
+  @Override
+  public File getBinary(Context context) {
+    return new File(getPath(context), PYTHON_BIN);
   }
 }

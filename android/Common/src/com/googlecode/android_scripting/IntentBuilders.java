@@ -66,7 +66,7 @@ public class IntentBuilders {
     final ComponentName componentName = Constants.SL4A_SERVICE_LAUNCHER_COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
-    intent.setAction(Constants.ACTION_LAUNCH_TERMINAL);
+    intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
     intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
     return intent;
   }

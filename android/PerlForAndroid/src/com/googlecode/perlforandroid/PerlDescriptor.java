@@ -16,6 +16,8 @@
 
 package com.googlecode.perlforandroid;
 
+import java.io.File;
+
 import android.content.Context;
 
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
@@ -48,8 +50,9 @@ public class PerlDescriptor extends Sl4aHostedInterpreter {
     return true;
   }
 
-  public String getBinary() {
-    return PERL;
+  @Override
+  public File getBinary(Context context) {
+    return new File(getPath(context), PERL);
   }
 
   public int getVersion() {

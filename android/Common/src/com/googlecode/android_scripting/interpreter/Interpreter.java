@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.language.Language;
 import com.googlecode.android_scripting.language.SupportedLanguages;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
@@ -37,17 +36,14 @@ import com.googlecode.android_scripting.rpc.MethodDescriptor;
  */
 public class Interpreter implements InterpreterStrings {
 
-  private static String[] mRequiredKeys =
-      { NAME, NICE_NAME, EXTENSION, BINARY, PATH, EXECUTE, EXECUTE_PARAMS };
+  private static String[] mRequiredKeys = { NAME, NICE_NAME, EXTENSION, BINARY, EXECUTE_PARAMS };
 
   private String mExtension;
   private String mName;
   private String mNiceName;
-  private String mPath;
-  private String mBinary;
   private String mEmptyParameters;
   private String mExecuteParameters;
-  private String mExecute;
+  private File mBinary;
   private final List<String> mArguments;
   private final Map<String, String> mEnvironment;
   private Language mLanguage;
@@ -58,11 +54,11 @@ public class Interpreter implements InterpreterStrings {
   }
 
   public static Interpreter buildFromMaps(Map<String, String> data, Map<String, String> variables,
-      Map<String, String> arguments) throws Sl4aException {
+      Map<String, String> arguments) {
     Interpreter interpreter = new Interpreter();
     for (String key : mRequiredKeys) {
       if (data.get(key) == null) {
-        throw new Sl4aException("Cannot create interpreter. Required parameter not specified: "
+        throw new RuntimeException("Cannot create interpreter. Required parameter not specified: "
             + key);
       }
     }
@@ -73,56 +69,61 @@ public class Interpreter implements InterpreterStrings {
     String binary = data.get(BINARY);
     String emptyParameters = data.get(EMPTY_PARAMS);
     String exeucteParameters = data.get(EXECUTE_PARAMS);
-    String execute = data.get(EXECUTE);
 
     interpreter.setName(name);
     interpreter.setNiceName(niceName);
     interpreter.setExtension(extension);
-    interpreter.setBinary(binary);
-    interpreter.setPath(new File(data.get(PATH)).getAbsolutePath() + "/");
+    interpreter.setBinary(new File(binary));
     interpreter.setEmptyParameters(emptyParameters);
     interpreter.setExecuteParameters(exeucteParameters);
-    interpreter.setExecute(execute);
     interpreter.setLanguage(SupportedLanguages.getLanguageByExtension(extension));
-    interpreter.addEvironmentVariables(variables);
-    interpreter.addArguments(arguments.values());
+    interpreter.putAllEnvironmentVariables(variables);
+    interpreter.addAllArguments(arguments.values());
     return interpreter;
   }
 
-  private void addArguments(Collection<String> arguments) {
+  // TODO(damonkohler): This should take a List<String> since order is important.
+  private void addAllArguments(Collection<String> arguments) {
     mArguments.addAll(arguments);
   }
 
-  private void addEvironmentVariables(Map<String, String> environmentVariables) {
+  List<String> getArguments() {
+    return mArguments;
+  }
+
+  private void putAllEnvironmentVariables(Map<String, String> environmentVariables) {
     mEnvironment.putAll(environmentVariables);
   }
 
-  protected void setExecute(String execute) {
-    mExecute = execute;
+  public Map<String, String> getEnvironmentVariables() {
+    return mEnvironment;
   }
 
   private void setExecuteParameters(String exeucteParameters) {
     mExecuteParameters = exeucteParameters;
   }
 
+  public String getExecuteParameters() {
+    return mExecuteParameters;
+  }
+
   public void setEmptyParameters(String emptyParameters) {
     mEmptyParameters = emptyParameters;
   }
 
-  public void setBinary(String binary) {
+  public String getEmptyParameters() {
+    return mEmptyParameters;
+  }
+
+  public void setBinary(File binary) {
+    if (!binary.exists()) {
+      throw new RuntimeException("Binary " + binary + " does not exist!");
+    }
     mBinary = binary;
   }
 
-  public String getBinary() {
+  public File getBinary() {
     return mBinary;
-  }
-
-  public void setPath(String path) {
-    mPath = path;
-  }
-
-  public String getPath() {
-    return mPath;
   }
 
   public void setExtension(String extension) {
@@ -166,14 +167,10 @@ public class Interpreter implements InterpreterStrings {
   }
 
   public boolean isInstalled() {
-    return mPath != null && new File(mPath, mBinary).exists();
+    return mBinary.exists();
   }
 
   public boolean isUninstallable() {
     return true;
-  }
-
-  public String getEmptyParameters() {
-    return mEmptyParameters;
   }
 }

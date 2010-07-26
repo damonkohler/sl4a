@@ -1,5 +1,7 @@
 package com.dummy.fooforandroid;
 
+import java.io.File;
+
 import android.content.Context;
 
 import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
@@ -18,7 +20,8 @@ public class FooDescriptor implements InterpreterDescriptor {
     return null;
   }
 
-  public String getBinary() {
+  @Override
+  public File getBinary(Context context) {
     return null;
   }
 

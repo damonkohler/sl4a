@@ -16,9 +16,9 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import android.content.Context;
-
 import java.io.File;
+
+import android.content.Context;
 
 /**
  * A description of the interpreters hosted by the SL4A project.
@@ -67,23 +67,17 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
     return BASE_INSTALL_URL + getScriptsArchiveName();
   }
 
-  public String getPath(Context context) {
+  // TODO(damonkohler): This shouldn't be public.
+  public File getPath(Context context) {
     if (!hasInterpreterArchive() && hasExtrasArchive()) {
       return new File(InterpreterConstants.SDCARD_ROOT + this.getClass().getPackage().getName()
-          + InterpreterConstants.INTERPRETER_EXTRAS_ROOT, getName()).getAbsolutePath();
+          + InterpreterConstants.INTERPRETER_EXTRAS_ROOT, getName());
     }
-    if (context == null) {
-      return null;
-    }
-    return InterpreterUtils.getInterpreterRoot(context, getName()).getAbsolutePath();
-  }
-
-  public String getExecuteCommand(Context context) {
-    return String.format("%1$s/%2$s", getPath(context), getBinary());
+    return InterpreterUtils.getInterpreterRoot(context, getName());
   }
 
   public String getEmptyParams(Context context) {
-    return null;
+    return "";
   }
 
   public String getExecuteParams(Context context) {
@@ -94,5 +88,4 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
   public String[] getExecuteArgs(Context context) {
     return null;
   }
-
 }

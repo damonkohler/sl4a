@@ -16,13 +16,15 @@
 
 package com.googlecode.rhinoforandroid;
 
+import java.io.File;
+
 import android.content.Context;
 
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class RhinoDescriptor extends Sl4aHostedInterpreter {
 
-  private final static String RHINO_BIN = "rhino1_7R2-dex.jar";
+  private final static String RHINO_JAR = "rhino1_7R2-dex.jar";
 
   public String getExtension() {
     return ".js";
@@ -48,8 +50,9 @@ public class RhinoDescriptor extends Sl4aHostedInterpreter {
     return true;
   }
 
-  public String getBinary() {
-    return RHINO_BIN;
+  @Override
+  public File getBinary(Context context) {
+    return new File(DALVIKVM);
   }
 
   public int getVersion() {
@@ -62,15 +65,10 @@ public class RhinoDescriptor extends Sl4aHostedInterpreter {
   }
 
   @Override
-  public String getExecuteCommand(Context context) {
-    return DALVIKVM;
-  }
-
-  @Override
   public String[] getExecuteArgs(Context context) {
     String[] args =
-        { "-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
-          super.getExecuteCommand(context), "org.mozilla.javascript.tools.shell.Main", "-O", "-1" };
+        { "-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath", RHINO_JAR,
+          "org.mozilla.javascript.tools.shell.Main", "-O", "-1" };
     return args;
   }
 }

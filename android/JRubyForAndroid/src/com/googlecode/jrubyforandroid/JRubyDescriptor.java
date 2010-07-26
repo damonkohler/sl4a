@@ -16,6 +16,8 @@
 
 package com.googlecode.jrubyforandroid;
 
+import java.io.File;
+
 import android.content.Context;
 
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
@@ -24,7 +26,7 @@ public class JRubyDescriptor extends Sl4aHostedInterpreter {
 
   private final static String JRUBY_PREFIX =
       "-e $LOAD_PATH.push('file:%1$s/%2$s!/META-INF/jruby.home/lib/ruby/1.8'); require 'android'; %3$s";
-  private final static String JRUBY_BIN = "jruby-complete-1.4.jar";
+  private final static String JRUBY_JAR = "jruby-complete-1.4.jar";
 
   public String getExtension() {
     // TODO(psycho): Add support for multiple interpreters for the same
@@ -61,31 +63,28 @@ public class JRubyDescriptor extends Sl4aHostedInterpreter {
     return 1;
   }
 
-  public String getBinary() {
-    return JRUBY_BIN;
+  @Override
+  public File getBinary(Context context) {
+    return new File(DALVIKVM);
   }
 
   @Override
   public String getEmptyParams(Context context) {
-    return String.format(JRUBY_PREFIX, getPath(context), getBinary(),
+    return String.format(JRUBY_PREFIX, getBinary(context).getAbsolutePath(),
         "require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start");
   }
 
   @Override
   public String getExecuteParams(Context context) {
-    return String.format(JRUBY_PREFIX, getPath(context), getBinary(), "load('%s')");
-  }
-
-  @Override
-  public String getExecuteCommand(Context context) {
-    return DALVIKVM;
+    return String.format(JRUBY_PREFIX, getPath(context), getBinary(context).getAbsolutePath(),
+        "load('%s')");
   }
 
   @Override
   public String[] getExecuteArgs(Context context) {
     String[] args =
-        { "-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
-          super.getExecuteCommand(context), "org.jruby.Main", "-X-C" };
+        { "-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath", JRUBY_JAR,
+          "org.jruby.Main", "-X-C" };
     return args;
   }
 

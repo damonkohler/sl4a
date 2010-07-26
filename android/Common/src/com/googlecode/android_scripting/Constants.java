@@ -26,8 +26,6 @@ public interface Constants {
       "com.googlecode.android_scripting.action.LAUNCH_BACKGROUND_SCRIPT";
   public static final String ACTION_LAUNCH_INTERPRETER =
       "com.googlecode.android_scripting.action.LAUNCH_INTERPRETER";
-  public static final String ACTION_LAUNCH_TERMINAL =
-      "com.googlecode.android_scripting.action.LAUNCH_TERMINAL";
   public static final String ACTION_EDIT_SCRIPT =
       "com.googlecode.android_scripting.action.EDIT_SCRIPT";
   public static final String ACTION_SAVE_SCRIPT =

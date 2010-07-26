@@ -35,23 +35,37 @@ public class Process {
 
   private static final int DEFAULT_BUFFER_SIZE = 8192;
 
-  protected Map<String, String> mEnvironment = new HashMap<String, String>();
+  private final List<String> mArguments;
+  private final Map<String, String> mEnvironment;
+
+  private File mBinary;
+  private long mStartTime;
 
   protected String mName;
-  protected File mBinary;
-  protected List<String> mArguments;
   protected Integer mPid;
   protected FileDescriptor mFd;
   protected PrintStream mOut;
   protected Reader mIn;
-  private long mStartTime;
 
-  public void setArguments(List<String> arguments) {
-    mArguments = arguments;
+  public Process() {
+    mArguments = new ArrayList<String>();
+    mEnvironment = new HashMap<String, String>();
   }
 
-  public void setEnvironment(Map<String, String> environment) {
-    mEnvironment = environment;
+  public void addArgument(String argument) {
+    mArguments.add(argument);
+  }
+
+  public void addAllArguments(List<String> arguments) {
+    mArguments.addAll(arguments);
+  }
+
+  public void putAllEnvironmentVariables(Map<String, String> environment) {
+    mEnvironment.putAll(environment);
+  }
+
+  public void putEnvironmentVariable(String key, String value) {
+    mEnvironment.put(key, value);
   }
 
   public void setBinary(File binary) {
@@ -99,6 +113,8 @@ public class Process {
     }
 
     int[] pid = new int[1];
+    Log.v("Executing " + mBinary.getAbsolutePath() + " with arguments " + mArguments
+        + " and with environment " + mEnvironment.toString());
     mFd =
         Exec.createSubprocess(mBinary.getAbsolutePath(), mArguments.toArray(new String[mArguments
             .size()]), getEnvironmentArray(), pid);

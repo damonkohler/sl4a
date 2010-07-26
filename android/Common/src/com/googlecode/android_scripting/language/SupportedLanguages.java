@@ -1,23 +1,17 @@
 package com.googlecode.android_scripting.language;
 
-
-import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.exception.Sl4aException;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.googlecode.android_scripting.Log;
 
 public class SupportedLanguages {
 
   private static enum KnownLanguage {
-//    SHELL(".sh", ShellLanguage.class), // We don't really support Shell language
-    BEANSHELL(".bsh", BeanShellLanguage.class), 
-    JAVASCRIPT(".js", JavaScriptLanguage.class), 
-    LUA(".lua", LuaLanguage.class), 
-    PERL(".pl", PerlLanguage.class), 
-    PYTHON(".py", PythonLanguage.class), 
-    RUBY(".rb", RubyLanguage.class),
-    TCL(".tcl", TclLanguage.class),
+    // SHELL(".sh", ShellLanguage.class), // We don't really support Shell language
+    BEANSHELL(".bsh", BeanShellLanguage.class), JAVASCRIPT(".js", JavaScriptLanguage.class), LUA(
+        ".lua", LuaLanguage.class), PERL(".pl", PerlLanguage.class), PYTHON(".py",
+        PythonLanguage.class), RUBY(".rb", RubyLanguage.class), TCL(".tcl", TclLanguage.class),
     PHP(".php", PhpLanguage.class);
 
     private final String mmExtension;
@@ -46,10 +40,10 @@ public class SupportedLanguages {
     }
   }
 
-  public static Language getLanguageByExtension(String extension) throws Sl4aException {
+  public static Language getLanguageByExtension(String extension) {
     extension = extension.toLowerCase();
     if (!extension.startsWith(".")) {
-      throw new Sl4aException("Extension does not start with a dot: " + extension);
+      throw new RuntimeException("Extension does not start with a dot: " + extension);
     }
     Language lang = null;
 
