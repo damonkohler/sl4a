@@ -31,9 +31,9 @@ public class ScriptProcess extends InterpreterProcess {
       AndroidProxy proxy, Trigger trigger) {
     super(configuration.getInterpreterForScript(scriptName), proxy);
     mTrigger = trigger;
-    mName = scriptName;
+    setName(scriptName);
     Interpreter interpreter = configuration.getInterpreterForScript(scriptName);
-    addArgument(String.format(interpreter.getExecuteParameters(), ScriptStorageAdapter
+    setCommand(String.format(interpreter.getScriptCommand(), ScriptStorageAdapter
         .getExistingScript(scriptName).getAbsolutePath()));
   }
 

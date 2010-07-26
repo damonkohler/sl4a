@@ -68,7 +68,7 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
   }
 
   // TODO(damonkohler): This shouldn't be public.
-  public File getPath(Context context) {
+  public File getExtrasPath(Context context) {
     if (!hasInterpreterArchive() && hasExtrasArchive()) {
       return new File(InterpreterConstants.SDCARD_ROOT + this.getClass().getPackage().getName()
           + InterpreterConstants.INTERPRETER_EXTRAS_ROOT, getName());
@@ -76,16 +76,16 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
     return InterpreterUtils.getInterpreterRoot(context, getName());
   }
 
-  public String getEmptyParams(Context context) {
+  public String getInteractiveCommand(Context context) {
     return "";
   }
 
-  public String getExecuteParams(Context context) {
+  public String getScriptCommand(Context context) {
     return "%s";
   }
 
   @Override
-  public String[] getExecuteArgs(Context context) {
+  public String[] getArguments(Context context) {
     return null;
   }
 }

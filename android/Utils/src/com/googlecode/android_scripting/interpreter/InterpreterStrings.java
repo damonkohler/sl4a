@@ -51,12 +51,12 @@ public interface InterpreterStrings {
   /**
    * Specifies command line arguments when script name is not provided.
    */
-  public static final String EMPTY_PARAMS = "emptyParams";
+  public static final String INTERACTIVE_COMMAND = "emptyParams";
 
   /**
    * Specifies command line arguments to execute a script.
    */
-  public static final String EXECUTE_PARAMS = "executeParams";
+  public static final String SCRIPT_COMMAND = "executeParams";
 
   /**
    * Execution command.

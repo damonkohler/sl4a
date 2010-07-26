@@ -52,7 +52,7 @@ public class PerlDescriptor extends Sl4aHostedInterpreter {
 
   @Override
   public File getBinary(Context context) {
-    return new File(getPath(context), PERL);
+    return new File(getExtrasPath(context), PERL);
   }
 
   public int getVersion() {
@@ -70,7 +70,7 @@ public class PerlDescriptor extends Sl4aHostedInterpreter {
   }
 
   @Override
-  public String getEmptyParams(Context context) {
+  public String getInteractiveCommand(Context context) {
     return "-de 1";
   }
 }

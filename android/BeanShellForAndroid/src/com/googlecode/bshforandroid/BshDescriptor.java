@@ -65,7 +65,7 @@ public class BshDescriptor extends Sl4aHostedInterpreter {
   }
 
   @Override
-  public String[] getExecuteArgs(Context context) {
+  public String[] getArguments(Context context) {
     String[] args =
         { "-Xbootclasspath:/system/framework/core.jar", "-classpath", BSH_JAR, "bsh.Interpreter" };
     return args;

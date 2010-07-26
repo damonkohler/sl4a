@@ -34,6 +34,8 @@ public class InterpreterProcess extends Process {
 
   private final AndroidProxy mProxy;
   private final StringBuffer mLog;
+  private final Interpreter mInterpreter;
+  private String mCommand;
   private volatile int mLogLength = 0;
 
   /**
@@ -47,10 +49,12 @@ public class InterpreterProcess extends Process {
   public InterpreterProcess(Interpreter interpreter, AndroidProxy proxy) {
     mProxy = proxy;
     mLog = new StringBuffer();
-
-    mName = interpreter.getNiceName();
+    mInterpreter = interpreter;
 
     setBinary(interpreter.getBinary());
+    setName(interpreter.getNiceName());
+    setCommand(interpreter.getInteractiveCommand());
+
     addAllArguments(interpreter.getArguments());
 
     putAllEnvironmentVariables(System.getenv());
@@ -60,6 +64,14 @@ public class InterpreterProcess extends Process {
       putEnvironmentVariable("AP_HANDSHAKE", getSecret());
     }
     putAllEnvironmentVariables(interpreter.getEnvironmentVariables());
+  }
+
+  protected void setCommand(String command) {
+    mCommand = command;
+  }
+
+  public Interpreter getInterpreter() {
+    return mInterpreter;
   }
 
   public String getHost() {
@@ -76,6 +88,7 @@ public class InterpreterProcess extends Process {
 
   @Override
   public void start(final Runnable shutdownHook) {
+    addArgument(mCommand);
     super.start(shutdownHook);
   }
 

@@ -21,7 +21,7 @@ public class LuaProvider extends InterpreterProvider {
   @Override
   protected Map<String, String> getEnvironmentSettings() {
     Map<String, String> settings = new HashMap<String, String>(1);
-    String root = ((Sl4aHostedInterpreter) mDescriptor).getPath(mContext).getAbsolutePath();
+    String root = ((Sl4aHostedInterpreter) mDescriptor).getExtrasPath(mContext).getAbsolutePath();
     String ldir = root + "/share/lua/5.1/";
     String cdir = root + "/lib/lua/5.1/";
     String lua_path =

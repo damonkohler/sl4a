@@ -39,9 +39,9 @@ public class Process {
   private final Map<String, String> mEnvironment;
 
   private File mBinary;
+  private String mName;
   private long mStartTime;
 
-  protected String mName;
   protected Integer mPid;
   protected FileDescriptor mFd;
   protected PrintStream mOut;
