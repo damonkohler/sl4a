@@ -23,17 +23,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to mark an RPC parameter that have a default value.
+ * Use this annotation to mark an RPC as one that generates an event.
  * 
- * @author igor.v.karp@gmail.com (Igor Karp)
+ * @author damonkohler@gmail.com (Damon Kohler)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target(ElementType.METHOD)
 @Documented
-public @interface RpcDefault {
-  /** The default value of the RPC parameter. */
+public @interface RpcEvent {
+  /** The name of the event that is generated. */
   public String value();
-
-  @SuppressWarnings("unchecked")
-  public Class<? extends Converter> converter() default Converter.class;
 }

@@ -26,6 +26,7 @@ import android.os.Bundle;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
+import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
 /**
@@ -49,6 +50,7 @@ public class SensorManagerFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Starts recording sensor data to be available for polling.")
+  @RpcEvent("sensors")
   public void startSensing(
       @RpcParameter(name = "sampleSize", description = "number of samples for calculating average readings") @RpcDefault("5") Integer sampleSize) {
     if (mSensorListener == null) {
