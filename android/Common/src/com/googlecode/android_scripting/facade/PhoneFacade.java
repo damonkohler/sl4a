@@ -33,6 +33,7 @@ import android.telephony.TelephonyManager;
 import com.googlecode.android_scripting.MainThread;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
+import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
 /**
@@ -85,6 +86,7 @@ public class PhoneFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Starts tracking phone state.")
+  @RpcEvent("phone")
   public void startTrackingPhoneState() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
   }
