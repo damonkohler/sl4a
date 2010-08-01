@@ -103,19 +103,9 @@ public class InterpreterConfiguration {
           Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
           intent.addCategory(Intent.CATEGORY_LAUNCHER);
           intent.setType(InterpreterConstants.MIME + "*");
-          List<Interpreter> discoveredInterpreters = new ArrayList<Interpreter>();
           List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
           for (ResolveInfo info : resolveInfos) {
-            Interpreter interpreter = buildInterpreter(info.activityInfo.packageName);
-            if (interpreter == null) {
-              continue;
-            }
-            mmDiscoveredInterpreters.put(info.activityInfo.packageName, interpreter);
-            discoveredInterpreters.add(interpreter);
-          }
-          mInterpreterSet.addAll(discoveredInterpreters);
-          for (ConfigurationObserver observer : mObserverSet) {
-            observer.onConfigurationChanged();
+            addInterpreter(info.activityInfo.packageName);
           }
         }
       });

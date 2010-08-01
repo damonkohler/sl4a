@@ -123,7 +123,6 @@ JNIEXPORT jobject JNICALL Java_com_googlecode_android_1scripting_Exec_createSubp
   char* cmd_native = JNU_GetStringNativeChars(env, cmd);
   pid_t pid;
   jsize len = 0;
-
   if (argArray) {
     len = env->GetArrayLength(argArray);
   }
@@ -132,9 +131,9 @@ JNIEXPORT jobject JNICALL Java_com_googlecode_android_1scripting_Exec_createSubp
   for (int i = 0; i < len; i++) {
     jstring arg = (jstring) env->GetObjectArrayElement(argArray, i);
     char* arg_native = JNU_GetStringNativeChars(env, arg);
-    args[i+1] = arg_native;
+    args[i + 1] = arg_native;
   }
-  args[len+1] = NULL;
+  args[len + 1] = NULL;
 
   len = 0;
   if (varArray) {

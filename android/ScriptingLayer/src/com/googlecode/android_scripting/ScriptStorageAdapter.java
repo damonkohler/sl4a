@@ -16,10 +16,6 @@
 
 package com.googlecode.android_scripting;
 
-import com.googlecode.android_scripting.interpreter.Interpreter;
-import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
-import com.googlecode.android_scripting.interpreter.InterpreterConstants;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -31,6 +27,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.googlecode.android_scripting.interpreter.Interpreter;
+import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
 /**
  * Manages storage and retrieval of scripts on the file system.
@@ -107,7 +107,6 @@ public class ScriptStorageAdapter {
   public static List<File> listExecutableScripts(InterpreterConfiguration config) {
     File dir = new File(InterpreterConstants.SCRIPTS_ROOT);
     if (dir.exists()) {
-      // TODO(Alexey): Needs refactoring!
       // NOTE(damonkohler): Creating a LinkedList here is necessary in order to be able to filter it
       // later.
       List<File> scripts =

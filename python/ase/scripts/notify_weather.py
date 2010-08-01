@@ -25,7 +25,6 @@ def notify_weather(droid):
     result = weather.fetch_weather(zip)
     msg = '%(temperature)s degrees and %(conditions)s, in %(city)s.' % result
   droid.notify('Weather Report', msg)
-  droid.exit()
 
 
 if __name__ == '__main__':
