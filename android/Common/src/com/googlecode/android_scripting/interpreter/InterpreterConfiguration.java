@@ -150,7 +150,7 @@ public class InterpreterConfiguration {
       });
     }
 
-    // We require that there's only one interpreter provider per APK
+    // We require that there's only one interpreter provider per APK.
     private Interpreter buildInterpreter(String packageName) {
       PackageInfo packInfo;
       try {

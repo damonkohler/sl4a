@@ -116,14 +116,8 @@ public class Process {
     Log.v("Executing " + binaryPath + " with arguments " + mArguments + " and with environment "
         + mEnvironment.toString());
 
-    // TODO(damonkohler): Why is passing null into createSubprocess different than passing in an
-    // empty array?
-    String[] argumentsArray = null;
-    if (mArguments.size() > 0) {
-      argumentsArray = mArguments.toArray(new String[mArguments.size()]);
-    }
-
     int[] pid = new int[1];
+    String[] argumentsArray = mArguments.toArray(new String[mArguments.size()]);
     mFd = Exec.createSubprocess(binaryPath, argumentsArray, getEnvironmentArray(), pid);
     mPid = pid[0];
     mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
