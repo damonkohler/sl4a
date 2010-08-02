@@ -206,10 +206,6 @@ public class Terminal extends Activity {
   @Override
   public void onResume() {
     super.onResume();
-    if (mInterpreterProcess != null && !mInterpreterProcess.isAlive()) {
-      finish();
-      return;
-    }
     // Typically, onResume is called after we update our preferences.
     if (mEmulatorView != null) {
       updatePreferences();

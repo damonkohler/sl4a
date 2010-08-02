@@ -16,13 +16,6 @@
 
 package com.googlecode.android_scripting.activity;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -45,6 +38,13 @@ import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 import com.googlecode.android_scripting.terminal.Terminal;
 import com.googlecode.android_scripting.trigger.Trigger;
+
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
@@ -137,15 +137,15 @@ public class ScriptingLayerService extends Service {
     } else {
       proxy = launchServer(intent, true);
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT)) {
+        launchTerminal(intent, proxy.getAddress());
         interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
         ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
-        launchTerminal(intent, proxy.getAddress());
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT)) {
         interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
         ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_INTERPRETER)) {
-        interpreterProcess = launchInterpreter(intent, proxy);
         launchTerminal(intent, proxy.getAddress());
+        interpreterProcess = launchInterpreter(intent, proxy);
       }
     }
     addProcess(interpreterProcess);
