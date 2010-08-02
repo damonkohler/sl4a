@@ -13,33 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.android_scripting.condition;
+
+package com.googlecode.android_scripting.event;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.os.Bundle;
-
 
 import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.trigger.EventListener;
 
 /**
- * This condition invokes a trigger whenever the ringer mode changes. The "ringer_mode" element in
- * the "state" map of the extras passed to the trigger script contains the new ringer mode.
+ * This {@link EventListener} tracks ringer mode changes.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
- * 
  */
-public class RingerModeEvent implements Event {
-  private static final String RINGER_MODE_STATE_EXTRA = "ringer_mode";
+public class RingerModeEventListener implements EventListener {
 
   private final AudioManager mAudioManager;
   private final Context mContext;
 
-  private EventListener mConditionListener;
+  private EventObserver mEventObserver;
   private int mRingerMode;
 
   /** Our broadcast receiver dealing with changes to the ringer mode. */
@@ -61,14 +56,14 @@ public class RingerModeEvent implements Event {
     }
   };
 
-  private RingerModeEvent(Context context) {
+  private RingerModeEventListener(Context context) {
     mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     mContext = context;
   }
 
   @Override
-  public void addListener(EventListener listener) {
-    mConditionListener = listener;
+  public void registerObserver(EventObserver listener) {
+    mEventObserver = listener;
   }
 
   @Override
@@ -80,10 +75,8 @@ public class RingerModeEvent implements Event {
   }
 
   private void invokeListener() {
-    if (mConditionListener != null) {
-      Bundle state = new Bundle();
-      state.putInt(RINGER_MODE_STATE_EXTRA, mRingerMode);
-      mConditionListener.run(state);
+    if (mEventObserver != null) {
+      mEventObserver.run(new Event("ringer_mode", mRingerMode));
     }
   }
 
@@ -103,8 +96,8 @@ public class RingerModeEvent implements Event {
     private static final long serialVersionUID = 7593570695879937214L;
 
     @Override
-    public Event create(Context context) {
-      return new RingerModeEvent(context);
+    public EventListener create(Context context) {
+      return new RingerModeEventListener(context);
     }
   }
 }

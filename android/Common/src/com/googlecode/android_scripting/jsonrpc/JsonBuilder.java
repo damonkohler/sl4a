@@ -34,7 +34,7 @@ import android.os.Bundle;
 import android.telephony.CellLocation;
 import android.telephony.gsm.GsmCellLocation;
 
-import com.googlecode.android_scripting.facade.Event;
+import com.googlecode.android_scripting.event.Event;
 
 public class JsonBuilder {
 

@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.content.Context;
 
+import com.googlecode.android_scripting.event.Event;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 
@@ -51,7 +52,7 @@ public class EventFacade extends RpcReceiver {
   }
 
   /**
-   * Posts an event on the event queue.
+   * Posts an event with {@link String} data to the event queue.
    */
   void postEvent(String name, Object data) {
     mEventQueue.add(new Event(name, data));
