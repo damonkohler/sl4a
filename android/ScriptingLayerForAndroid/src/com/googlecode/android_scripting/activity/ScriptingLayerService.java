@@ -16,6 +16,14 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.lang.ref.WeakReference;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -38,14 +46,6 @@ import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 import com.googlecode.android_scripting.terminal.Terminal;
 import com.googlecode.android_scripting.trigger.Trigger;
-
-import java.lang.ref.WeakReference;
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
@@ -86,9 +86,7 @@ public class ScriptingLayerService extends Service {
   }
 
   private void createNotification() {
-    mNotification =
-        new Notification(R.drawable.sl4a_logo_48, "SL4A Service is running...", System
-            .currentTimeMillis());
+    mNotification = new Notification(R.drawable.sl4a_logo_48, null, System.currentTimeMillis());
     mNotification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
     mNotification.contentView.setTextViewText(R.id.notification_title, "SL4A Service");
     mNotification.contentView.setTextViewText(R.id.notification_action,
@@ -99,10 +97,11 @@ public class ScriptingLayerService extends Service {
     mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
   }
 
-  private void updateNotification() {
+  private void updateNotification(String tickerText) {
     StringBuilder message = new StringBuilder();
     message.append(getText(R.string.script_number_message));
     message.append(mProcessMap.size());
+    mNotification.tickerText = tickerText;
     mNotification.contentView.setTextViewText(R.id.notification_message, message);
     mNotificationManager.notify(mNotificationId, mNotification);
   }
@@ -217,7 +216,7 @@ public class ScriptingLayerService extends Service {
   private void addProcess(InterpreterProcess process) {
     mProcessMap.put(process.getPort(), process);
     modCount++;
-    updateNotification();
+    updateNotification(process.getName() + " started.");
   }
 
   private InterpreterProcess removeProcess(int port) {
@@ -226,7 +225,7 @@ public class ScriptingLayerService extends Service {
       return null;
     }
     modCount++;
-    updateNotification();
+    updateNotification(process.getName() + " exited.");
     return process;
   }
 

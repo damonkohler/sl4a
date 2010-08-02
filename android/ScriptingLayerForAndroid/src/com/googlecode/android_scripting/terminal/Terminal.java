@@ -33,7 +33,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
@@ -176,8 +175,6 @@ public class Terminal extends Activity {
           @Override
           public void run() {
             hideKeyboard();
-            Toast.makeText(Terminal.this, mInterpreterProcess.getName() + " exited.",
-                Toast.LENGTH_SHORT).show();
           }
         });
       }
