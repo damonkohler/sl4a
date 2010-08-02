@@ -16,12 +16,13 @@
 
 package com.googlecode.android_scripting;
 
+import com.trilead.ssh2.StreamGobbler;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -92,6 +93,9 @@ public class Process {
   }
 
   public BufferedReader getIn() {
+    if (mIn == null) {
+      return null;
+    }
     return new BufferedReader(mIn, DEFAULT_BUFFER_SIZE);
   }
 
@@ -121,7 +125,7 @@ public class Process {
     mFd = Exec.createSubprocess(binaryPath, argumentsArray, getEnvironmentArray(), pid);
     mPid = pid[0];
     mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
-    mIn = new InputStreamReader(new FileInputStream(mFd));
+    mIn = new InputStreamReader(new StreamGobbler(new FileInputStream(mFd)));
     mStartTime = System.currentTimeMillis();
 
     new Thread(new Runnable() {
@@ -130,17 +134,6 @@ public class Process {
         Log.v("Process " + mPid + " exited with result code " + result + ".");
         mPid = null;
         mOut.close();
-        try {
-          BufferedReader r = new BufferedReader(mIn);
-          String line = r.readLine();
-          while (line != null) {
-            Log.v(line);
-            line = r.readLine();
-          }
-          mIn.close();
-        } catch (IOException e) {
-          Log.e(e);
-        }
         if (shutdownHook != null) {
           shutdownHook.run();
         }

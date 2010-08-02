@@ -20,6 +20,7 @@ package com.googlecode.android_scripting.terminal;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -31,6 +32,7 @@ import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.googlecode.android_scripting.Analytics;
@@ -173,6 +175,7 @@ public class Terminal extends Activity {
         Terminal.this.runOnUiThread(new Runnable() {
           @Override
           public void run() {
+            hideKeyboard();
             Toast.makeText(Terminal.this, mInterpreterProcess.getName() + " exited.",
                 Toast.LENGTH_SHORT).show();
           }
@@ -206,6 +209,9 @@ public class Terminal extends Activity {
   @Override
   public void onResume() {
     super.onResume();
+    if (mInterpreterProcess != null && !mInterpreterProcess.isAlive()) {
+      hideKeyboard();
+    }
     // Typically, onResume is called after we update our preferences.
     if (mEmulatorView != null) {
       updatePreferences();
@@ -258,6 +264,11 @@ public class Terminal extends Activity {
       return true;
     }
     return false;
+  }
+
+  private void hideKeyboard() {
+    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.hideSoftInputFromWindow(mEmulatorView.getWindowToken(), 0);
   }
 
   /**

@@ -16,12 +16,12 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import com.googlecode.android_scripting.AndroidProxy;
+import com.googlecode.android_scripting.Process;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-
-import com.googlecode.android_scripting.AndroidProxy;
-import com.googlecode.android_scripting.Process;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -101,6 +101,9 @@ public class InterpreterProcess extends Process {
 
   @Override
   public BufferedReader getIn() {
+    if (mIn == null) {
+      return null;
+    }
     return new LoggingBufferedReader(mIn, BUFFER_SIZE);
   }
 

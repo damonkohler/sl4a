@@ -24,7 +24,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +34,7 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
 import com.googlecode.android_scripting.Exec;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.Process;
 import com.googlecode.android_scripting.R;
 
@@ -253,9 +253,11 @@ class EmulatorView extends View implements OnGestureListener {
    * Configures the view to use the supplied process.
    */
   public void attachProcess(Process process) {
+
     mTermOut = process.getOut();
     mTermIn = process.getIn();
     mTermFd = process.getFd();
+
   }
 
   @Override
@@ -404,7 +406,7 @@ class EmulatorView extends View implements OnGestureListener {
       public void run() {
         while (true) {
           if (mTermIn == null) {
-            Log.e("EmulatorView", "No terminal input. Exiting thread.", null);
+            Log.e("No terminal input. Exiting thread.", null);
             break;
           }
           try {
@@ -414,7 +416,7 @@ class EmulatorView extends View implements OnGestureListener {
               mHandler.sendMessage(mHandler.obtainMessage(UPDATE));
             }
           } catch (IOException e) {
-            Log.e("EmulatorView", "Failed to read. Exiting thread.", e);
+            Log.e("Failed to read. Exiting thread.", e);
             break;
           }
         }

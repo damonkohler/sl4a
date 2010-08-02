@@ -16,6 +16,12 @@
 
 package com.googlecode.android_scripting.facade;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.concurrent.Callable;
+
+import org.json.JSONException;
+
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;

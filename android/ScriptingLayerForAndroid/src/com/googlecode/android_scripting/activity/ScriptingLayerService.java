@@ -39,6 +39,7 @@ import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 import com.googlecode.android_scripting.terminal.Terminal;
 import com.googlecode.android_scripting.trigger.Trigger;
 
+import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,8 @@ public class ScriptingLayerService extends Service {
   private volatile int modCount = 0;
   private InterpreterConfiguration mInterpreterConfiguration;
 
+  private volatile WeakReference<InterpreterProcess> mRecentlyKilledProcess;
+
   private static final int mNotificationId = NotificationIdFactory.create();
 
   public class LocalBinder extends Binder {
@@ -77,6 +80,7 @@ public class ScriptingLayerService extends Service {
   public void onCreate() {
     mInterpreterConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
     mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    mRecentlyKilledProcess = new WeakReference<InterpreterProcess>(null);
     createNotification();
     ServiceUtils.setForeground(this, mNotificationId, mNotification);
   }
@@ -134,6 +138,7 @@ public class ScriptingLayerService extends Service {
       // TODO(damonkohler): This is just to make things easier. Really, we shouldn't need to start
       // an interpreter when all we want is a server.
       interpreterProcess = new InterpreterProcess(new ShellInterpreter(), proxy);
+      interpreterProcess.setName("Server");
     } else {
       proxy = launchServer(intent, true);
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT)) {
@@ -233,6 +238,7 @@ public class ScriptingLayerService extends Service {
         ((ScriptProcess) process).notifyTriggerOfShutDown(this);
       }
       process.kill();
+      mRecentlyKilledProcess = new WeakReference<InterpreterProcess>(process);
     }
   }
 
@@ -259,7 +265,11 @@ public class ScriptingLayerService extends Service {
   }
 
   public InterpreterProcess getProcess(int port) {
-    return mProcessMap.get(port);
+    InterpreterProcess p = mProcessMap.get(port);
+    if (p == null) {
+      return mRecentlyKilledProcess.get();
+    }
+    return p;
   }
 
   @Override

@@ -16,10 +16,10 @@
 
 package com.googlecode.android_scripting.interpreter.shell;
 
-import java.io.File;
-
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.language.ShellLanguage;
+
+import java.io.File;
 
 /**
  * Represents the shell.
@@ -35,6 +35,7 @@ public class ShellInterpreter extends Interpreter {
     setNiceName("Shell");
     setBinary(new File(SHELL_BIN));
     setInteractiveCommand("");
+    setScriptCommand("%s");
     setLanguage(new ShellLanguage());
   }
 

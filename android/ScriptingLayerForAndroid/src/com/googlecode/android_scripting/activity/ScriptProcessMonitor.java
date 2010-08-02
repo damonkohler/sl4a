@@ -16,10 +16,6 @@
 
 package com.googlecode.android_scripting.activity;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -43,9 +39,12 @@ import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.terminal.Terminal;
+
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * An activity that allows to monitor running scripts.
@@ -120,7 +119,7 @@ public class ScriptProcessMonitor extends ListActivity {
 
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    final ScriptProcess script = (ScriptProcess) list.getItemAtPosition(position);
+    final InterpreterProcess script = (InterpreterProcess) list.getItemAtPosition(position);
     Intent intent = new Intent(ScriptProcessMonitor.this, Terminal.class);
     intent.putExtra(Constants.EXTRA_PROXY_PORT, script.getPort());
     startActivity(intent);

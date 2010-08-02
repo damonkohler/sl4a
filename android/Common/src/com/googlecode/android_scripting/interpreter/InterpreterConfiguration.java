@@ -16,16 +16,6 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -41,6 +31,16 @@ import android.net.Uri;
 
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Manages and provides access to the set of available interpreters.
@@ -115,19 +115,14 @@ public class InterpreterConfiguration {
       if (mmDiscoveredInterpreters.containsKey(packageName)) {
         return;
       }
-      mmExecutor.submit(new Runnable() {
-        @Override
-        public void run() {
-          Interpreter discoveredInterpreter = buildInterpreter(packageName);
-          mmDiscoveredInterpreters.put(packageName, discoveredInterpreter);
-          mInterpreterSet.add(discoveredInterpreter);
-          for (ConfigurationObserver observer : mObserverSet) {
-            observer.onConfigurationChanged();
-          }
-          Log.v("Interpreter discovered: " + packageName + "\nBinary: "
-              + discoveredInterpreter.getBinary());
-        }
-      });
+      Interpreter discoveredInterpreter = buildInterpreter(packageName);
+      mmDiscoveredInterpreters.put(packageName, discoveredInterpreter);
+      mInterpreterSet.add(discoveredInterpreter);
+      for (ConfigurationObserver observer : mObserverSet) {
+        observer.onConfigurationChanged();
+      }
+      Log.v("Interpreter discovered: " + packageName + "\nBinary: "
+          + discoveredInterpreter.getBinary());
     }
 
     private void remove(final String packageName) {
@@ -193,9 +188,14 @@ public class InterpreterConfiguration {
     @Override
     public void onReceive(Context context, Intent intent) {
       final String action = intent.getAction();
-      String packageName = intent.getData().getSchemeSpecificPart();
+      final String packageName = intent.getData().getSchemeSpecificPart();
       if (action.equals(InterpreterConstants.ACTION_INTERPRETER_ADDED)) {
-        addInterpreter(packageName);
+        mmExecutor.submit(new Runnable() {
+          @Override
+          public void run() {
+            addInterpreter(packageName);
+          }
+        });
       } else if (action.equals(InterpreterConstants.ACTION_INTERPRETER_REMOVED)
           || action.equals(Intent.ACTION_PACKAGE_REMOVED)
           || action.equals(Intent.ACTION_PACKAGE_REPLACED)

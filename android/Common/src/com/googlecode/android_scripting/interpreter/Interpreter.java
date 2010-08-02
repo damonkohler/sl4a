@@ -16,16 +16,16 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import com.googlecode.android_scripting.language.Language;
+import com.googlecode.android_scripting.language.SupportedLanguages;
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.googlecode.android_scripting.language.Language;
-import com.googlecode.android_scripting.language.SupportedLanguages;
-import com.googlecode.android_scripting.rpc.MethodDescriptor;
 
 /**
  * Combines all the execution-related specs of a particular interpreter installed in the system.
@@ -90,7 +90,7 @@ public class Interpreter implements InterpreterStrings {
     return mEnvironment;
   }
 
-  private void setScriptCommand(String exeucteParameters) {
+  protected void setScriptCommand(String exeucteParameters) {
     mScriptExecutionCommand = exeucteParameters;
   }
 
@@ -98,7 +98,7 @@ public class Interpreter implements InterpreterStrings {
     return mScriptExecutionCommand;
   }
 
-  public void setInteractiveCommand(String interactiveCommand) {
+  protected void setInteractiveCommand(String interactiveCommand) {
     mInteractiveCommand = interactiveCommand;
   }
 
@@ -106,7 +106,7 @@ public class Interpreter implements InterpreterStrings {
     return mInteractiveCommand;
   }
 
-  public void setBinary(File binary) {
+  protected void setBinary(File binary) {
     if (!binary.exists()) {
       throw new RuntimeException("Binary " + binary + " does not exist!");
     }
@@ -117,7 +117,7 @@ public class Interpreter implements InterpreterStrings {
     return mBinary;
   }
 
-  public void setExtension(String extension) {
+  protected void setExtension(String extension) {
     mExtension = extension;
   }
 
@@ -125,7 +125,7 @@ public class Interpreter implements InterpreterStrings {
     return mExtension;
   }
 
-  public void setName(String name) {
+  protected void setName(String name) {
     mName = name;
   }
 
@@ -133,7 +133,7 @@ public class Interpreter implements InterpreterStrings {
     return mName;
   }
 
-  public void setNiceName(String niceName) {
+  protected void setNiceName(String niceName) {
     mNiceName = niceName;
   }
 
@@ -145,7 +145,7 @@ public class Interpreter implements InterpreterStrings {
     return mLanguage.getContentTemplate();
   }
 
-  public void setLanguage(Language language) {
+  protected void setLanguage(Language language) {
     mLanguage = language;
   }
 

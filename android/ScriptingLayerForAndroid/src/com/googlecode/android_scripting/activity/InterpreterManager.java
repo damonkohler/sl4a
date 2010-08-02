@@ -16,10 +16,6 @@
 
 package com.googlecode.android_scripting.activity;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
@@ -48,6 +44,10 @@ import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InterpreterManager extends ListActivity {
 
@@ -138,11 +138,11 @@ public class InterpreterManager extends ListActivity {
       dialog.show();
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, Preferences.class));
-    } else if (itemId > MenuId.values().length + Menu.FIRST) {
+    } else if (itemId >= MenuId.values().length + Menu.FIRST) {
       int i = itemId - MenuId.values().length - Menu.FIRST;
       if (i < mFeaturedInterpreters.size()) {
         URL url = FeaturedInterpreters.getUrlForName(mFeaturedInterpreters.get(i));
-        Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(url.toString()));
+        Intent viewIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString()));
         startActivity(viewIntent);
       }
     }
