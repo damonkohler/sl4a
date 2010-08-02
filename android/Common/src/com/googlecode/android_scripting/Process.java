@@ -39,9 +39,9 @@ public class Process {
   private final Map<String, String> mEnvironment;
 
   private File mBinary;
+  private String mName;
   private long mStartTime;
 
-  protected String mName;
   protected Integer mPid;
   protected FileDescriptor mFd;
   protected PrintStream mOut;
@@ -112,12 +112,13 @@ public class Process {
       throw new RuntimeException("Attempted to start process that is already running.");
     }
 
+    String binaryPath = mBinary.getAbsolutePath();
+    Log.v("Executing " + binaryPath + " with arguments " + mArguments + " and with environment "
+        + mEnvironment.toString());
+
     int[] pid = new int[1];
-    Log.v("Executing " + mBinary.getAbsolutePath() + " with arguments " + mArguments
-        + " and with environment " + mEnvironment.toString());
-    mFd =
-        Exec.createSubprocess(mBinary.getAbsolutePath(), mArguments.toArray(new String[mArguments
-            .size()]), getEnvironmentArray(), pid);
+    String[] argumentsArray = mArguments.toArray(new String[mArguments.size()]);
+    mFd = Exec.createSubprocess(binaryPath, argumentsArray, getEnvironmentArray(), pid);
     mPid = pid[0];
     mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
     mIn = new InputStreamReader(new FileInputStream(mFd));
@@ -130,6 +131,12 @@ public class Process {
         mPid = null;
         mOut.close();
         try {
+          BufferedReader r = new BufferedReader(mIn);
+          String line = r.readLine();
+          while (line != null) {
+            Log.v(line);
+            line = r.readLine();
+          }
           mIn.close();
         } catch (IOException e) {
           Log.e(e);

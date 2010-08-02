@@ -56,6 +56,6 @@ public class LuaDescriptor extends Sl4aHostedInterpreter {
 
   @Override
   public File getBinary(Context context) {
-    return new File(getPath(context), LUA_BIN);
+    return new File(getExtrasPath(context), LUA_BIN);
   }
 }

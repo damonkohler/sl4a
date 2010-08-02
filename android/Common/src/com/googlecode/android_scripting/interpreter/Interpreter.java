@@ -36,13 +36,11 @@ import com.googlecode.android_scripting.rpc.MethodDescriptor;
  */
 public class Interpreter implements InterpreterStrings {
 
-  private static String[] mRequiredKeys = { NAME, NICE_NAME, EXTENSION, BINARY, EXECUTE_PARAMS };
-
   private String mExtension;
   private String mName;
   private String mNiceName;
-  private String mEmptyParameters;
-  private String mExecuteParameters;
+  private String mInteractiveCommand;
+  private String mScriptExecutionCommand;
   private File mBinary;
   private final List<String> mArguments;
   private final Map<String, String> mEnvironment;
@@ -55,27 +53,20 @@ public class Interpreter implements InterpreterStrings {
 
   public static Interpreter buildFromMaps(Map<String, String> data, Map<String, String> variables,
       Map<String, String> arguments) {
-    Interpreter interpreter = new Interpreter();
-    for (String key : mRequiredKeys) {
-      if (data.get(key) == null) {
-        throw new RuntimeException("Cannot create interpreter. Required parameter not specified: "
-            + key);
-      }
-    }
-
     String extension = data.get(EXTENSION);
     String name = data.get(NAME);
     String niceName = data.get(NICE_NAME);
     String binary = data.get(BINARY);
-    String emptyParameters = data.get(EMPTY_PARAMS);
-    String exeucteParameters = data.get(EXECUTE_PARAMS);
+    String interactiveCommand = data.get(INTERACTIVE_COMMAND);
+    String scriptCommand = data.get(SCRIPT_COMMAND);
 
+    Interpreter interpreter = new Interpreter();
     interpreter.setName(name);
     interpreter.setNiceName(niceName);
     interpreter.setExtension(extension);
     interpreter.setBinary(new File(binary));
-    interpreter.setEmptyParameters(emptyParameters);
-    interpreter.setExecuteParameters(exeucteParameters);
+    interpreter.setInteractiveCommand(interactiveCommand);
+    interpreter.setScriptCommand(scriptCommand);
     interpreter.setLanguage(SupportedLanguages.getLanguageByExtension(extension));
     interpreter.putAllEnvironmentVariables(variables);
     interpreter.addAllArguments(arguments.values());
@@ -99,20 +90,20 @@ public class Interpreter implements InterpreterStrings {
     return mEnvironment;
   }
 
-  private void setExecuteParameters(String exeucteParameters) {
-    mExecuteParameters = exeucteParameters;
+  private void setScriptCommand(String exeucteParameters) {
+    mScriptExecutionCommand = exeucteParameters;
   }
 
-  public String getExecuteParameters() {
-    return mExecuteParameters;
+  public String getScriptCommand() {
+    return mScriptExecutionCommand;
   }
 
-  public void setEmptyParameters(String emptyParameters) {
-    mEmptyParameters = emptyParameters;
+  public void setInteractiveCommand(String interactiveCommand) {
+    mInteractiveCommand = interactiveCommand;
   }
 
-  public String getEmptyParameters() {
-    return mEmptyParameters;
+  public String getInteractiveCommand() {
+    return mInteractiveCommand;
   }
 
   public void setBinary(File binary) {

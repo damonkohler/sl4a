@@ -39,33 +39,23 @@ public interface InterpreterStrings {
   public static final String EXTENSION = "extension";
 
   /**
-   * Name (and path within working directory) of the interpreter executable.
+   * Absolute path of the interpreter executable.
    */
   public static final String BINARY = "binary";
 
   /**
-   * Path to the working directory of the interpreter.
+   * Final argument to interpreter binary when running the interpreter interactively.
    */
-  public static final String PATH = "path";
+  public static final String INTERACTIVE_COMMAND = "interactiveCommand";
 
   /**
-   * Specifies command line arguments when script name is not provided.
+   * Final argument to interpreter binary when running a script.
    */
-  public static final String EMPTY_PARAMS = "emptyParams";
-
-  /**
-   * Specifies command line arguments to execute a script.
-   */
-  public static final String EXECUTE_PARAMS = "executeParams";
-
-  /**
-   * Execution command.
-   */
-  public static final String EXECUTE = "execute";
+  public static final String SCRIPT_COMMAND = "scriptCommand";
 
   /**
    * Execution arguments.
    */
-  public static final String ARGS = "arguments";
+  public static final String ARGUMENTS = "arguments";
 
 }

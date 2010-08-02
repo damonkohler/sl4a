@@ -34,7 +34,7 @@ public class ShellInterpreter extends Interpreter {
     setName("sh");
     setNiceName("Shell");
     setBinary(new File(SHELL_BIN));
-    setEmptyParameters("");
+    setInteractiveCommand("");
     setLanguage(new ShellLanguage());
   }
 

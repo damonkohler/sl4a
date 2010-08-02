@@ -17,6 +17,8 @@
 package com.googlecode.rhinoforandroid;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import android.content.Context;
 
@@ -65,10 +67,9 @@ public class RhinoDescriptor extends Sl4aHostedInterpreter {
   }
 
   @Override
-  public String[] getExecuteArgs(Context context) {
-    String[] args =
-        { "-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath", RHINO_JAR,
-          "org.mozilla.javascript.tools.shell.Main", "-O", "-1" };
-    return args;
+  public List<String> getArguments(Context context) {
+    String absolutePathToJar = new File(getExtrasPath(context), RHINO_JAR).getAbsolutePath();
+    return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
+        absolutePathToJar, "org.mozilla.javascript.tools.shell.Main", "-O", "-1");
   }
 }

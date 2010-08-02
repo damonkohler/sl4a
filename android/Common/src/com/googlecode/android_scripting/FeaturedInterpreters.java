@@ -31,7 +31,9 @@ public class FeaturedInterpreters {
             new FeaturedInterpreter("Python 2.6.2", ".py",
                 "http://android-scripting.googlecode.com/files/pythonforandroid.apk"),
             new FeaturedInterpreter("Rhino 1.7R2", ".js",
-                "http://android-scripting.googlecode.com/files/rhinoforandroid.apk") };
+                "http://android-scripting.googlecode.com/files/rhinoforandroid.apk"),
+            new FeaturedInterpreter("PHP 5.3.3", ".php",
+                "http://php-for-android.googlecode.com/files/phpforandroid.apk") };
 
       for (FeaturedInterpreter interpreter : interpreters) {
         mNameMap.put(interpreter.mmName, interpreter);

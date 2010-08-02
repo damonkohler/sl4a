@@ -17,6 +17,8 @@
 package com.googlecode.android_scripting.interpreter;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 
@@ -68,7 +70,7 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
   }
 
   // TODO(damonkohler): This shouldn't be public.
-  public File getPath(Context context) {
+  public File getExtrasPath(Context context) {
     if (!hasInterpreterArchive() && hasExtrasArchive()) {
       return new File(InterpreterConstants.SDCARD_ROOT + this.getClass().getPackage().getName()
           + InterpreterConstants.INTERPRETER_EXTRAS_ROOT, getName());
@@ -76,16 +78,16 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
     return InterpreterUtils.getInterpreterRoot(context, getName());
   }
 
-  public String getEmptyParams(Context context) {
+  public String getInteractiveCommand(Context context) {
     return "";
   }
 
-  public String getExecuteParams(Context context) {
+  public String getScriptCommand(Context context) {
     return "%s";
   }
 
   @Override
-  public String[] getExecuteArgs(Context context) {
-    return null;
+  public List<String> getArguments(Context context) {
+    return new ArrayList<String>();
   }
 }

@@ -37,15 +37,17 @@ public interface InterpreterConstants {
 
   public static final String INTERPRETER_EXTRAS_ROOT = "/extras/";
 
-  // Interpreters discovery mechanism
+  // Interpreters discovery mechanism.
   public static final String ACTION_DISCOVER_INTERPRETERS =
       "com.googlecode.android_scripting.DISCOVER_INTERPRETERS";
-  // Interpreters broadcasts
+
+  // Interpreters broadcasts.
   public static final String ACTION_INTERPRETER_ADDED =
       "com.googlecode.android_scripting.INTERPRETER_ADDED";
   public static final String ACTION_INTERPRETER_REMOVED =
       "com.googlecode.android_scripting.INTERPRETER_REMOVED";
-  // Interpreter content provider
+
+  // Interpreter content provider.
   public static final String PROVIDER_BASE = "com.googlecode.android_scripting.base";
   public static final String PROVIDER_ENV = "com.googlecode.android_scripting.env";
   public static final String PROVIDER_ARGS = "com.googlecode.android_scripting.args";
@@ -53,5 +55,4 @@ public interface InterpreterConstants {
   public static final String INSTALL_PREF = "SL4A.interpreter.installed";
 
   public static final String MIME = "script/";
-
 }

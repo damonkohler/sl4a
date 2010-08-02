@@ -34,6 +34,8 @@ public class InterpreterProcess extends Process {
 
   private final AndroidProxy mProxy;
   private final StringBuffer mLog;
+  private final Interpreter mInterpreter;
+  private String mCommand;
   private volatile int mLogLength = 0;
 
   /**
@@ -47,12 +49,12 @@ public class InterpreterProcess extends Process {
   public InterpreterProcess(Interpreter interpreter, AndroidProxy proxy) {
     mProxy = proxy;
     mLog = new StringBuffer();
-
-    mName = interpreter.getNiceName();
+    mInterpreter = interpreter;
 
     setBinary(interpreter.getBinary());
+    setName(interpreter.getNiceName());
+    setCommand(interpreter.getInteractiveCommand());
     addAllArguments(interpreter.getArguments());
-
     putAllEnvironmentVariables(System.getenv());
     putEnvironmentVariable("AP_HOST", getHost());
     putEnvironmentVariable("AP_PORT", Integer.toString(getPort()));
@@ -60,6 +62,14 @@ public class InterpreterProcess extends Process {
       putEnvironmentVariable("AP_HANDSHAKE", getSecret());
     }
     putAllEnvironmentVariables(interpreter.getEnvironmentVariables());
+  }
+
+  protected void setCommand(String command) {
+    mCommand = command;
+  }
+
+  public Interpreter getInterpreter() {
+    return mInterpreter;
   }
 
   public String getHost() {
@@ -76,15 +86,17 @@ public class InterpreterProcess extends Process {
 
   @Override
   public void start(final Runnable shutdownHook) {
+    // NOTE(damonkohler): String.isEmpty() doesn't work on Cupcake.
+    if (!mCommand.equals("")) {
+      addArgument(mCommand);
+    }
     super.start(shutdownHook);
   }
 
   @Override
   public void kill() {
     super.kill();
-    if (mProxy != null) {
-      mProxy.shutdown();
-    }
+    mProxy.shutdown();
   }
 
   @Override

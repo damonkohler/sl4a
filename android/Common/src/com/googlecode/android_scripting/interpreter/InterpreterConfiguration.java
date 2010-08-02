@@ -103,21 +103,9 @@ public class InterpreterConfiguration {
           Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
           intent.addCategory(Intent.CATEGORY_LAUNCHER);
           intent.setType(InterpreterConstants.MIME + "*");
-          List<Interpreter> discoveredInterpreters = new ArrayList<Interpreter>();
           List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
           for (ResolveInfo info : resolveInfos) {
-            Interpreter interpreter = buildInterpreter(info.activityInfo.packageName);
-            if (interpreter == null) {
-              continue;
-            }
-            mmDiscoveredInterpreters.put(info.activityInfo.packageName, interpreter);
-            discoveredInterpreters.add(interpreter);
-            Log.v("Interpreter discovered: " + info.activityInfo.packageName + "\nBinary: "
-                + interpreter.getBinary());
-          }
-          mInterpreterSet.addAll(discoveredInterpreters);
-          for (ConfigurationObserver observer : mObserverSet) {
-            observer.onConfigurationChanged();
+            addInterpreter(info.activityInfo.packageName);
           }
         }
       });
@@ -131,15 +119,13 @@ public class InterpreterConfiguration {
         @Override
         public void run() {
           Interpreter discoveredInterpreter = buildInterpreter(packageName);
-          if (discoveredInterpreter == null) {
-            return;
-          }
           mmDiscoveredInterpreters.put(packageName, discoveredInterpreter);
           mInterpreterSet.add(discoveredInterpreter);
           for (ConfigurationObserver observer : mObserverSet) {
             observer.onConfigurationChanged();
           }
-          Log.v("Interpreter discovered: " + packageName);
+          Log.v("Interpreter discovered: " + packageName + "\nBinary: "
+              + discoveredInterpreter.getBinary());
         }
       });
     }
@@ -164,31 +150,29 @@ public class InterpreterConfiguration {
       });
     }
 
-    // We require that there's only one interpreter provider per APK
+    // We require that there's only one interpreter provider per APK.
     private Interpreter buildInterpreter(String packageName) {
-      PackageInfo packInfo = null;
+      PackageInfo packInfo;
       try {
         packInfo = mmPackageManager.getPackageInfo(packageName, PackageManager.GET_PROVIDERS);
       } catch (NameNotFoundException e) {
-        return null;
+        throw new RuntimeException("Package '" + packageName + "' not found.");
       }
       ProviderInfo provider = packInfo.providers[0];
 
       Map<String, String> interpreterMap = getMap(provider, InterpreterConstants.PROVIDER_BASE);
       if (interpreterMap == null) {
-        return null; // Apparently, the interpreter is not installed yet.
+        throw new RuntimeException("Null interpreter map for: " + packageName);
       }
       Map<String, String> environmentMap = getMap(provider, InterpreterConstants.PROVIDER_ENV);
-      Map<String, String> argumentsMap = getMap(provider, InterpreterConstants.PROVIDER_ARGS);
-
-      Interpreter interpreter = null;
-      try {
-        interpreter = Interpreter.buildFromMaps(interpreterMap, environmentMap, argumentsMap);
-      } catch (Exception e) {
-        Log.e(e);
+      if (environmentMap == null) {
+        throw new RuntimeException("Null environment map for: " + packageName);
       }
-
-      return interpreter;
+      Map<String, String> argumentsMap = getMap(provider, InterpreterConstants.PROVIDER_ARGS);
+      if (argumentsMap == null) {
+        throw new RuntimeException("Null arguments map for: " + packageName);
+      }
+      return Interpreter.buildFromMaps(interpreterMap, environmentMap, argumentsMap);
     }
 
     private Map<String, String> getMap(ProviderInfo provider, String name) {

@@ -31,6 +31,7 @@ import android.telephony.TelephonyManager;
 import com.googlecode.android_scripting.MainThread;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
+import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
 import org.json.JSONException;
@@ -78,7 +79,7 @@ public class PhoneFacade extends RpcReceiver {
               mPhoneState.putString("state", "ringing");
               break;
             }
-            mEventFacade.postEvent("phone_state", mPhoneState);
+            mEventFacade.postEvent("phone", mPhoneState);
           }
         };
       }
@@ -91,6 +92,7 @@ public class PhoneFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Starts tracking phone state.")
+  @RpcEvent("phone")
   public void startTrackingPhoneState() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
   }
