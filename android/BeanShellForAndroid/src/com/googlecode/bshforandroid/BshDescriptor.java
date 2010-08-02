@@ -68,7 +68,8 @@ public class BshDescriptor extends Sl4aHostedInterpreter {
 
   @Override
   public List<String> getArguments(Context context) {
-    return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-classpath", BSH_JAR,
-        "bsh.Interpreter");
+    String absolutePathToJar = new File(getExtrasPath(context), BSH_JAR).getAbsolutePath();
+    return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-classpath",
+        absolutePathToJar, "bsh.Interpreter");
   }
 }
