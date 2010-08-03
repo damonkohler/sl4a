@@ -388,8 +388,8 @@ public class Terminal extends Activity {
 
   private final void displayTerminatePrompt() {
     AlertDialog.Builder builder = new AlertDialog.Builder(Terminal.this);
-    builder.setTitle(mInterpreterProcess.getName() + " is still running");
-    builder.setMessage("Terminate the process?");
+    builder.setTitle("Confirm exit");
+    builder.setMessage("Kill the process?");
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
