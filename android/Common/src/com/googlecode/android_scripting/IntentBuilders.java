@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcelable;
 
+import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.trigger.Trigger;
 
 public class IntentBuilders {
@@ -84,6 +85,25 @@ public class IntentBuilders {
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_INTERPRETER);
     intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreterName);
+    return intent;
+  }
+
+  /**
+   * Builds an intent that creates a shortcut to launch the provided interpreter.
+   * 
+   * @param interpreter
+   *          the interpreter to link to
+   * @param iconResource
+   *          the icon resource to associate with the shortcut
+   * @return the intent that will create the shortcut
+   */
+  public static Intent buildInterpreterShortcutIntent(Interpreter interpreter,
+      Parcelable iconResource) {
+    Intent intent = new Intent();
+    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
+        buildStartInterpreterIntent(interpreter.getName()));
+    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, interpreter.getNiceName());
+    intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
     return intent;
   }
 

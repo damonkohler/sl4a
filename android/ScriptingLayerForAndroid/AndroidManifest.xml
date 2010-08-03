@@ -21,7 +21,7 @@
     </activity>
     <activity
       android:name=".activity.ScriptPicker"
-      android:configChanges="keyboardHidden|orientation">
+      android:configChanges="keyboardHidden|orientation" android:label="SL4A: Scripts">
       <intent-filter>
         <action
           android:name="android.intent.action.CREATE_SHORTCUT" />
@@ -34,6 +34,16 @@
         <data
           android:scheme="content"
           android:path="sl4a/scripts" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+     <activity
+      android:name=".activity.InterpreterPicker"
+      android:configChanges="keyboardHidden|orientation" android:label="SL4A: Interpreters">
+      <intent-filter>
+        <action
+          android:name="android.intent.action.CREATE_SHORTCUT" />
         <category
           android:name="android.intent.category.DEFAULT" />
       </intent-filter>
