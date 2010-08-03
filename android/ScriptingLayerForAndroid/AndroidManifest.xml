@@ -72,8 +72,7 @@
       android:name=".terminal.Terminal"
       android:theme="@android:style/Theme.NoTitleBar"
       android:configChanges="keyboardHidden|orientation"
-      android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
-      android:finishOnTaskLaunch="true">
+      android:windowSoftInputMode="stateAlwaysVisible|adjustResize">
     </activity>
     <activity
       android:name=".activity.ScriptEditor"

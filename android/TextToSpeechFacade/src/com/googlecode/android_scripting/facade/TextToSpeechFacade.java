@@ -16,16 +16,15 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.util.concurrent.CountDownLatch;
-
 import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 
-import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.util.concurrent.CountDownLatch;
 
 public class TextToSpeechFacade extends RpcReceiver {
 
@@ -54,7 +53,9 @@ public class TextToSpeechFacade extends RpcReceiver {
   @Rpc(description = "Speaks the provided message via TTS.")
   public void ttsSpeak(@RpcParameter(name = "message") String message) throws InterruptedException {
     mOnInitLock.await();
-    mTts.speak(message, TextToSpeech.QUEUE_ADD, null);
+    if (message != null) {
+      mTts.speak(message, TextToSpeech.QUEUE_ADD, null);
+    }
   }
 
   @Rpc(description = "Returns True if speech is currently in progress.")
