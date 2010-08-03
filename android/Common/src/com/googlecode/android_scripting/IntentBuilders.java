@@ -72,6 +72,22 @@ public class IntentBuilders {
   }
 
   /**
+   * Builds an intent that launches an interpreter.
+   * 
+   * @param interpreterName
+   *          the interpreter to launch
+   * @return the intent that will launch the interpreter
+   */
+  public static Intent buildStartInterpreterIntent(String interpreterName) {
+    final ComponentName componentName = Constants.SL4A_SERVICE_LAUNCHER_COMPONENT_NAME;
+    Intent intent = new Intent();
+    intent.setComponent(componentName);
+    intent.setAction(Constants.ACTION_LAUNCH_INTERPRETER);
+    intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreterName);
+    return intent;
+  }
+
+  /**
    * Builds an intent that creates a shortcut to launch the provided script in the background.
    * 
    * @param scriptName
