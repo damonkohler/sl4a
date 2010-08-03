@@ -136,6 +136,7 @@ class EmulatorView extends View implements OnGestureListener {
   private FileDescriptor mTermFd;
   private Runnable mOnPollingThreadExit;
   private boolean mProcessExited = false;
+  private boolean mStopped = false;
 
   private final static int MAX_BYTES_PER_UPDATE = 512;
   private final Queue<Character> mReceiveBuffer =
@@ -253,21 +254,15 @@ class EmulatorView extends View implements OnGestureListener {
    * Configures the view to use the supplied process.
    */
   public void attachProcess(Process process) {
-
     mTermOut = process.getOut();
     mTermIn = process.getIn();
     mTermFd = process.getFd();
-
   }
 
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-    if (changed) {
-      update();
-      // A new thread is only created on startup (or if the polling thread dies for some reason).
-      // During a layout/orientation change, this is a no-op.
-      startInputPollingThread();
-    }
+    update();
+    startInputPollingThread();
   }
 
   /**
@@ -402,11 +397,12 @@ class EmulatorView extends View implements OnGestureListener {
     if (mProcessExited || (mPollingThread != null && mPollingThread.isAlive())) {
       return;
     }
+    mStopped = false;
     mPollingThread = new Thread(new Runnable() {
       public void run() {
-        while (true) {
+        while (!mStopped) {
           if (mTermIn == null) {
-            Log.e("No terminal input. Exiting thread.", null);
+            Log.e("No terminal input. Exiting thread.");
             break;
           }
           try {
@@ -420,10 +416,12 @@ class EmulatorView extends View implements OnGestureListener {
             break;
           }
         }
-        mProcessExited = true;
-        if (mOnPollingThreadExit != null) {
+
+        if (!mStopped && mOnPollingThreadExit != null) {
+          mProcessExited = true;
           mOnPollingThreadExit.run();
         }
+        mPollingThread = null;
       }
     });
 
@@ -487,5 +485,12 @@ class EmulatorView extends View implements OnGestureListener {
 
   public void setOnPollingThreadExit(Runnable runnable) {
     mOnPollingThreadExit = runnable;
+  }
+
+  public void stopPollingThread() {
+    mStopped = true;
+    if (mPollingThread != null) {
+      mPollingThread.interrupt();
+    }
   }
 }

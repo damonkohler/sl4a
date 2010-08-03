@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -227,6 +228,10 @@ public class Terminal extends Activity {
     if (handleControlKey(keyCode, true)) {
       return true;
     } else if (event.isSystem()) {
+      if (keyCode == KeyEvent.KEYCODE_BACK) {
+        displayTerminatePrompt();
+        return true;
+      }
       // Don't intercept the system keys.
       return super.onKeyDown(keyCode, event);
     } else if (handleDPad(keyCode, true)) {
@@ -372,6 +377,44 @@ public class Terminal extends Activity {
             + controlKey + " 1 ==> Control-[ (ESC)\n" + controlKey + " 5 ==> Control-_\n"
             + controlKey + " . ==> Control-\\\n" + controlKey + " 0 ==> Control-]\n" + controlKey
             + " 6 ==> Control-^").show();
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    mEmulatorView.stopPollingThread();
+  }
+
+  private final void displayTerminatePrompt() {
+    if (mInterpreterProcess != null && mInterpreterProcess.isAlive()) {
+      AlertDialog.Builder builder = new AlertDialog.Builder(Terminal.this);
+      builder.setTitle(mInterpreterProcess.getName() + " is still running");
+      builder.setMessage("Terminate the process?");
+      DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          dialog.dismiss();
+          if (which == DialogInterface.BUTTON_POSITIVE) {
+            Intent intent = new Intent(Terminal.this, ScriptingLayerService.class);
+            intent.setAction(Constants.ACTION_KILL_PROCESS);
+            intent.putExtra(Constants.EXTRA_PROXY_PORT, mInterpreterProcess.getPort());
+            startService(intent);
+          }
+          Terminal.this.finish();
+        }
+      };
+      builder.setNegativeButton("No", buttonListener);
+      builder.setPositiveButton("Yes", buttonListener);
+
+      builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialog) {
+          dialog.dismiss();
+          Terminal.this.finish();
+        }
+      });
+      builder.show();
+    }
   }
 
   @Override

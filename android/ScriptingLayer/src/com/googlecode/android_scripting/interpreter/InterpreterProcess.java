@@ -17,11 +17,13 @@
 package com.googlecode.android_scripting.interpreter;
 
 import com.googlecode.android_scripting.AndroidProxy;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.Process;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -37,6 +39,7 @@ public class InterpreterProcess extends Process {
   private final Interpreter mInterpreter;
   private String mCommand;
   private volatile int mLogLength = 0;
+  private final ReentrantLock mLock;
 
   /**
    * Creates a new {@link InterpreterProcess}.
@@ -50,6 +53,7 @@ public class InterpreterProcess extends Process {
     mProxy = proxy;
     mLog = new StringBuffer();
     mInterpreter = interpreter;
+    mLock = new ReentrantLock();
 
     setBinary(interpreter.getBinary());
     setName(interpreter.getNiceName());
@@ -135,8 +139,9 @@ public class InterpreterProcess extends Process {
     }
 
     private int read1() throws IOException {
-      int c;
-      synchronized (lock) {
+      int c = 0;
+      try {
+        mLock.lockInterruptibly();
         // check again
         if (mmPos < mLogLength) {
           c = mLog.charAt(mmPos);
@@ -145,8 +150,12 @@ public class InterpreterProcess extends Process {
           mLog.append(Character.valueOf((char) c));
           mLogLength++;
         }
+      } catch (InterruptedException e) {
+        Log.e(e);
+      } finally {
+        mLock.unlock();
+        mmPos++;
       }
-      mmPos++;
       return c;
     }
 
@@ -175,7 +184,8 @@ public class InterpreterProcess extends Process {
 
     private int read1(char cbuf[], int off, int len) throws IOException {
       int count = 0;
-      synchronized (lock) {
+      try {
+        mLock.lockInterruptibly();
         if (mmPos < mLogLength) {
           int end = Math.min(mLogLength, mmPos + len);
           mLog.getChars(mmPos, end, cbuf, off);
@@ -194,6 +204,10 @@ public class InterpreterProcess extends Process {
           mmPos += read;
           count += read;
         }
+      } catch (InterruptedException e) {
+        Log.e(e);
+      } finally {
+        mLock.unlock();
       }
       return count;
     }
@@ -228,8 +242,9 @@ public class InterpreterProcess extends Process {
     }
 
     private String readLine1() throws IOException {
-      StringBuffer buffer = new StringBuffer();
-      synchronized (lock) {
+      StringBuilder buffer = new StringBuilder();
+      try {
+        mLock.lockInterruptibly();
         while (mmPos < mLogLength) {
           char nextChar = mLog.charAt(mmPos);
           mmPos++;
@@ -258,7 +273,12 @@ public class InterpreterProcess extends Process {
         mLogLength += str.length() + 1;
         mmPos += str.length() + 1;
         return buffer.append(str).toString();
+      } catch (InterruptedException e) {
+        Log.e(e);
+      } finally {
+        mLock.unlock();
       }
+      return null;
     }
   }
 }
