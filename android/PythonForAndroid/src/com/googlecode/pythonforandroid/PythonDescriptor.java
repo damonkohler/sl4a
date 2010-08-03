@@ -66,6 +66,6 @@ public class PythonDescriptor extends Sl4aHostedInterpreter {
 
   @Override
   public File getBinary(Context context) {
-    return new File(getPath(context), PYTHON_BIN);
+    return new File(getExtrasPath(context), PYTHON_BIN);
   }
 }

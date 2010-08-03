@@ -17,6 +17,7 @@
 package com.googlecode.android_scripting.interpreter;
 
 import java.io.File;
+import java.util.List;
 
 import android.content.Context;
 
@@ -59,19 +60,19 @@ public interface InterpreterDescriptor {
    * Returns execution parameters in case when script name is not provided (when interpreter is
    * started in a shell mode);
    */
-  public String getEmptyParams(Context context);
+  public String getInteractiveCommand(Context context);
 
   /**
    * Returns command line arguments to execute a with a given script (format string with one
    * argument).
    */
-  public String getExecuteParams(Context context);
+  public String getScriptCommand(Context context);
 
   /**
    * Returns an array of command line arguments required to execute the interpreter (it's essential
    * that the order in the array is consistent with order of arguments in the command line).
    */
-  public String[] getExecuteArgs(Context context);
+  public List<String> getArguments(Context context);
 
   // The following methods are required for installation:
 

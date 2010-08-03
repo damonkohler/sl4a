@@ -16,12 +16,14 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import com.googlecode.android_scripting.AndroidProxy;
+import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.Process;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-
-import com.googlecode.android_scripting.AndroidProxy;
-import com.googlecode.android_scripting.Process;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -34,7 +36,10 @@ public class InterpreterProcess extends Process {
 
   private final AndroidProxy mProxy;
   private final StringBuffer mLog;
+  private final Interpreter mInterpreter;
+  private String mCommand;
   private volatile int mLogLength = 0;
+  private final ReentrantLock mLock;
 
   /**
    * Creates a new {@link InterpreterProcess}.
@@ -47,12 +52,13 @@ public class InterpreterProcess extends Process {
   public InterpreterProcess(Interpreter interpreter, AndroidProxy proxy) {
     mProxy = proxy;
     mLog = new StringBuffer();
-
-    mName = interpreter.getNiceName();
+    mInterpreter = interpreter;
+    mLock = new ReentrantLock();
 
     setBinary(interpreter.getBinary());
+    setName(interpreter.getNiceName());
+    setCommand(interpreter.getInteractiveCommand());
     addAllArguments(interpreter.getArguments());
-
     putAllEnvironmentVariables(System.getenv());
     putEnvironmentVariable("AP_HOST", getHost());
     putEnvironmentVariable("AP_PORT", Integer.toString(getPort()));
@@ -60,6 +66,14 @@ public class InterpreterProcess extends Process {
       putEnvironmentVariable("AP_HANDSHAKE", getSecret());
     }
     putAllEnvironmentVariables(interpreter.getEnvironmentVariables());
+  }
+
+  protected void setCommand(String command) {
+    mCommand = command;
+  }
+
+  public Interpreter getInterpreter() {
+    return mInterpreter;
   }
 
   public String getHost() {
@@ -76,19 +90,24 @@ public class InterpreterProcess extends Process {
 
   @Override
   public void start(final Runnable shutdownHook) {
+    // NOTE(damonkohler): String.isEmpty() doesn't work on Cupcake.
+    if (!mCommand.equals("")) {
+      addArgument(mCommand);
+    }
     super.start(shutdownHook);
   }
 
   @Override
   public void kill() {
     super.kill();
-    if (mProxy != null) {
-      mProxy.shutdown();
-    }
+    mProxy.shutdown();
   }
 
   @Override
   public BufferedReader getIn() {
+    if (mIn == null) {
+      return null;
+    }
     return new LoggingBufferedReader(mIn, BUFFER_SIZE);
   }
 
@@ -120,8 +139,9 @@ public class InterpreterProcess extends Process {
     }
 
     private int read1() throws IOException {
-      int c;
-      synchronized (lock) {
+      int c = 0;
+      try {
+        mLock.lockInterruptibly();
         // check again
         if (mmPos < mLogLength) {
           c = mLog.charAt(mmPos);
@@ -130,8 +150,12 @@ public class InterpreterProcess extends Process {
           mLog.append(Character.valueOf((char) c));
           mLogLength++;
         }
+      } catch (InterruptedException e) {
+        Log.e(e);
+      } finally {
+        mLock.unlock();
+        mmPos++;
       }
-      mmPos++;
       return c;
     }
 
@@ -160,7 +184,8 @@ public class InterpreterProcess extends Process {
 
     private int read1(char cbuf[], int off, int len) throws IOException {
       int count = 0;
-      synchronized (lock) {
+      try {
+        mLock.lockInterruptibly();
         if (mmPos < mLogLength) {
           int end = Math.min(mLogLength, mmPos + len);
           mLog.getChars(mmPos, end, cbuf, off);
@@ -179,6 +204,10 @@ public class InterpreterProcess extends Process {
           mmPos += read;
           count += read;
         }
+      } catch (InterruptedException e) {
+        Log.e(e);
+      } finally {
+        mLock.unlock();
       }
       return count;
     }
@@ -213,8 +242,9 @@ public class InterpreterProcess extends Process {
     }
 
     private String readLine1() throws IOException {
-      StringBuffer buffer = new StringBuffer();
-      synchronized (lock) {
+      StringBuilder buffer = new StringBuilder();
+      try {
+        mLock.lockInterruptibly();
         while (mmPos < mLogLength) {
           char nextChar = mLog.charAt(mmPos);
           mmPos++;
@@ -243,7 +273,12 @@ public class InterpreterProcess extends Process {
         mLogLength += str.length() + 1;
         mmPos += str.length() + 1;
         return buffer.append(str).toString();
+      } catch (InterruptedException e) {
+        Log.e(e);
+      } finally {
+        mLock.unlock();
       }
+      return null;
     }
   }
 }

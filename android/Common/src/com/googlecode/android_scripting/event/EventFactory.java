@@ -14,21 +14,12 @@
  * the License.
  */
 
-package com.googlecode.android_scripting.rpc;
+package com.googlecode.android_scripting.event;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.io.Serializable;
 
-/**
- * Use this annotation to mark RPC method as depreciated.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@Documented
-public @interface RpcDepreciated {
-  /** The method that replaced this one. */
-  public String value();
+import android.content.Context;
+
+public interface EventFactory extends Serializable {
+  public EventListener create(Context context);
 }

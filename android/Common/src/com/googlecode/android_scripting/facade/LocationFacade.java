@@ -16,6 +16,11 @@
 
 package com.googlecode.android_scripting.facade;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Service;
 import android.content.Context;
 import android.location.Address;
@@ -28,12 +33,8 @@ import android.os.Bundle;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
+import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This facade exposes the LocationManager related functionality.
@@ -83,6 +84,7 @@ public class LocationFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Starts collecting location data.")
+  @RpcEvent("location")
   public void startLocating(
       @RpcParameter(name = "minDistance", description = "minimum time between updates in milliseconds") @RpcDefault("60000") Integer minUpdateTime,
       @RpcParameter(name = "minUpdateDistance", description = "minimum distance between updates in meters") @RpcDefault("30") Integer minUpdateDistance) {

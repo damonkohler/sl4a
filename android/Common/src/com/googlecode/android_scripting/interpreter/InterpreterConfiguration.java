@@ -16,16 +16,6 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -41,6 +31,16 @@ import android.net.Uri;
 
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Manages and provides access to the set of available interpreters.
@@ -103,21 +103,9 @@ public class InterpreterConfiguration {
           Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
           intent.addCategory(Intent.CATEGORY_LAUNCHER);
           intent.setType(InterpreterConstants.MIME + "*");
-          List<Interpreter> discoveredInterpreters = new ArrayList<Interpreter>();
           List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
           for (ResolveInfo info : resolveInfos) {
-            Interpreter interpreter = buildInterpreter(info.activityInfo.packageName);
-            if (interpreter == null) {
-              continue;
-            }
-            mmDiscoveredInterpreters.put(info.activityInfo.packageName, interpreter);
-            discoveredInterpreters.add(interpreter);
-            Log.v("Interpreter discovered: " + info.activityInfo.packageName + "\nBinary: "
-                + interpreter.getBinary());
-          }
-          mInterpreterSet.addAll(discoveredInterpreters);
-          for (ConfigurationObserver observer : mObserverSet) {
-            observer.onConfigurationChanged();
+            addInterpreter(info.activityInfo.packageName);
           }
         }
       });
@@ -127,21 +115,14 @@ public class InterpreterConfiguration {
       if (mmDiscoveredInterpreters.containsKey(packageName)) {
         return;
       }
-      mmExecutor.submit(new Runnable() {
-        @Override
-        public void run() {
-          Interpreter discoveredInterpreter = buildInterpreter(packageName);
-          if (discoveredInterpreter == null) {
-            return;
-          }
-          mmDiscoveredInterpreters.put(packageName, discoveredInterpreter);
-          mInterpreterSet.add(discoveredInterpreter);
-          for (ConfigurationObserver observer : mObserverSet) {
-            observer.onConfigurationChanged();
-          }
-          Log.v("Interpreter discovered: " + packageName);
-        }
-      });
+      Interpreter discoveredInterpreter = buildInterpreter(packageName);
+      mmDiscoveredInterpreters.put(packageName, discoveredInterpreter);
+      mInterpreterSet.add(discoveredInterpreter);
+      for (ConfigurationObserver observer : mObserverSet) {
+        observer.onConfigurationChanged();
+      }
+      Log.v("Interpreter discovered: " + packageName + "\nBinary: "
+          + discoveredInterpreter.getBinary());
     }
 
     private void remove(final String packageName) {
@@ -164,31 +145,29 @@ public class InterpreterConfiguration {
       });
     }
 
-    // We require that there's only one interpreter provider per APK
+    // We require that there's only one interpreter provider per APK.
     private Interpreter buildInterpreter(String packageName) {
-      PackageInfo packInfo = null;
+      PackageInfo packInfo;
       try {
         packInfo = mmPackageManager.getPackageInfo(packageName, PackageManager.GET_PROVIDERS);
       } catch (NameNotFoundException e) {
-        return null;
+        throw new RuntimeException("Package '" + packageName + "' not found.");
       }
       ProviderInfo provider = packInfo.providers[0];
 
       Map<String, String> interpreterMap = getMap(provider, InterpreterConstants.PROVIDER_BASE);
       if (interpreterMap == null) {
-        return null; // Apparently, the interpreter is not installed yet.
+        throw new RuntimeException("Null interpreter map for: " + packageName);
       }
       Map<String, String> environmentMap = getMap(provider, InterpreterConstants.PROVIDER_ENV);
-      Map<String, String> argumentsMap = getMap(provider, InterpreterConstants.PROVIDER_ARGS);
-
-      Interpreter interpreter = null;
-      try {
-        interpreter = Interpreter.buildFromMaps(interpreterMap, environmentMap, argumentsMap);
-      } catch (Exception e) {
-        Log.e(e);
+      if (environmentMap == null) {
+        throw new RuntimeException("Null environment map for: " + packageName);
       }
-
-      return interpreter;
+      Map<String, String> argumentsMap = getMap(provider, InterpreterConstants.PROVIDER_ARGS);
+      if (argumentsMap == null) {
+        throw new RuntimeException("Null arguments map for: " + packageName);
+      }
+      return Interpreter.buildFromMaps(interpreterMap, environmentMap, argumentsMap);
     }
 
     private Map<String, String> getMap(ProviderInfo provider, String name) {
@@ -209,9 +188,14 @@ public class InterpreterConfiguration {
     @Override
     public void onReceive(Context context, Intent intent) {
       final String action = intent.getAction();
-      String packageName = intent.getData().getSchemeSpecificPart();
+      final String packageName = intent.getData().getSchemeSpecificPart();
       if (action.equals(InterpreterConstants.ACTION_INTERPRETER_ADDED)) {
-        addInterpreter(packageName);
+        mmExecutor.submit(new Runnable() {
+          @Override
+          public void run() {
+            addInterpreter(packageName);
+          }
+        });
       } else if (action.equals(InterpreterConstants.ACTION_INTERPRETER_REMOVED)
           || action.equals(Intent.ACTION_PACKAGE_REMOVED)
           || action.equals(Intent.ACTION_PACKAGE_REPLACED)

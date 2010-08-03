@@ -24,7 +24,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +34,7 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
 import com.googlecode.android_scripting.Exec;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.Process;
 import com.googlecode.android_scripting.R;
 
@@ -136,6 +136,7 @@ class EmulatorView extends View implements OnGestureListener {
   private FileDescriptor mTermFd;
   private Runnable mOnPollingThreadExit;
   private boolean mProcessExited = false;
+  private boolean mStopped = false;
 
   private final static int MAX_BYTES_PER_UPDATE = 512;
   private final Queue<Character> mReceiveBuffer =
@@ -260,12 +261,8 @@ class EmulatorView extends View implements OnGestureListener {
 
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-    if (changed) {
-      update();
-      // A new thread is only created on startup (or if the polling thread dies for some reason).
-      // During a layout/orientation change, this is a no-op.
-      startInputPollingThread();
-    }
+    update();
+    startInputPollingThread();
   }
 
   /**
@@ -400,11 +397,12 @@ class EmulatorView extends View implements OnGestureListener {
     if (mProcessExited || (mPollingThread != null && mPollingThread.isAlive())) {
       return;
     }
+    mStopped = false;
     mPollingThread = new Thread(new Runnable() {
       public void run() {
-        while (true) {
+        while (!mStopped) {
           if (mTermIn == null) {
-            Log.e("EmulatorView", "No terminal input. Exiting thread.", null);
+            Log.e("No terminal input. Exiting thread.");
             break;
           }
           try {
@@ -414,14 +412,16 @@ class EmulatorView extends View implements OnGestureListener {
               mHandler.sendMessage(mHandler.obtainMessage(UPDATE));
             }
           } catch (IOException e) {
-            Log.e("EmulatorView", "Failed to read. Exiting thread.", e);
+            Log.e("Failed to read. Exiting thread.", e);
             break;
           }
         }
-        mProcessExited = true;
-        if (mOnPollingThreadExit != null) {
+
+        if (!mStopped && mOnPollingThreadExit != null) {
+          mProcessExited = true;
           mOnPollingThreadExit.run();
         }
+        mPollingThread = null;
       }
     });
 
@@ -485,5 +485,12 @@ class EmulatorView extends View implements OnGestureListener {
 
   public void setOnPollingThreadExit(Runnable runnable) {
     mOnPollingThreadExit = runnable;
+  }
+
+  public void stopPollingThread() {
+    mStopped = true;
+    if (mPollingThread != null) {
+      mPollingThread.interrupt();
+    }
   }
 }

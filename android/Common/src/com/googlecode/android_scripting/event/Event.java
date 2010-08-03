@@ -14,21 +14,31 @@
  * the License.
  */
 
-package com.googlecode.android_scripting.rpc;
+package com.googlecode.android_scripting.event;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class Event {
 
-/**
- * Use this annotation to mark RPC method as depreciated.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@Documented
-public @interface RpcDepreciated {
-  /** The method that replaced this one. */
-  public String value();
+  private String mName;
+  private Object mData;
+
+  public Event(String name, Object data) {
+    setName(name);
+    setData(data);
+  }
+
+  public void setName(String name) {
+    mName = name;
+  }
+
+  public String getName() {
+    return mName;
+  }
+
+  public void setData(Object data) {
+    mData = data;
+  }
+
+  public Object getData() {
+    return mData;
+  }
 }

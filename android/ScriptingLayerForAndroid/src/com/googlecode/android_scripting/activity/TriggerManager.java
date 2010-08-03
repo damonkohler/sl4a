@@ -37,12 +37,12 @@ import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.condition.RingerModeEvent;
 import com.googlecode.android_scripting.dialog.DurationPickerDialog;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.dialog.DurationPickerDialog.DurationPickedListener;
+import com.googlecode.android_scripting.event.EventTrigger;
+import com.googlecode.android_scripting.event.RingerModeEventListener;
 import com.googlecode.android_scripting.trigger.AlarmTriggerManager;
-import com.googlecode.android_scripting.trigger.EventTrigger;
 import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 
@@ -205,7 +205,7 @@ public class TriggerManager extends ListActivity {
               }
             });
       } else if (requestCode == MenuId.RINGER_MODE_CONDITION.getId()) {
-        mTriggerRepository.addTrigger(new EventTrigger(scriptName, new RingerModeEvent.Factory()));
+        mTriggerRepository.addTrigger(new EventTrigger(scriptName, new RingerModeEventListener.Factory()));
         mAdapter.notifyDataSetInvalidated();
       }
     }

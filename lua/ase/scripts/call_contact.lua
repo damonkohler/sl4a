@@ -1,5 +1,5 @@
 require "android"
 
-contact = android.pickContact()
+contact = android.pickPhone()
 android.printDict(contact.result)
 android.phoneCall(contact.result.data)

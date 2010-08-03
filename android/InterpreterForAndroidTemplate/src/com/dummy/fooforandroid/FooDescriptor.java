@@ -1,6 +1,7 @@
 package com.dummy.fooforandroid;
 
 import java.io.File;
+import java.util.List;
 
 import android.content.Context;
 
@@ -25,7 +26,22 @@ public class FooDescriptor implements InterpreterDescriptor {
     return null;
   }
 
-  public String getPath(Context arg0) {
+  @Override
+  public List<String> getArguments(Context context) {
+    return null;
+  }
+
+  @Override
+  public String getInteractiveCommand(Context context) {
+    return null;
+  }
+
+  @Override
+  public String getScriptCommand(Context context) {
+    return null;
+  }
+
+  public String getPath(Context context) {
     return null;
   }
 
@@ -84,5 +100,4 @@ public class FooDescriptor implements InterpreterDescriptor {
   public String[] getExecuteArgs(Context context) {
     return null;
   }
-
 }

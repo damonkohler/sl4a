@@ -50,7 +50,7 @@ public class IntentBuilders {
     final ComponentName componentName = Constants.SL4A_SERVICE_LAUNCHER_COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
-    intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
+    intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
     intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
     return intent;
   }
@@ -68,6 +68,22 @@ public class IntentBuilders {
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
     intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+    return intent;
+  }
+
+  /**
+   * Builds an intent that launches an interpreter.
+   * 
+   * @param interpreterName
+   *          the interpreter to launch
+   * @return the intent that will launch the interpreter
+   */
+  public static Intent buildStartInterpreterIntent(String interpreterName) {
+    final ComponentName componentName = Constants.SL4A_SERVICE_LAUNCHER_COMPONENT_NAME;
+    Intent intent = new Intent();
+    intent.setComponent(componentName);
+    intent.setAction(Constants.ACTION_LAUNCH_INTERPRETER);
+    intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreterName);
     return intent;
   }
 

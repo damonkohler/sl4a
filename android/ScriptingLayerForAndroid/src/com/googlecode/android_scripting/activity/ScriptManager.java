@@ -207,7 +207,10 @@ public class ScriptManager extends ListActivity {
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
     File script = (File) list.getItemAtPosition(position);
-    startActivity(IntentBuilders.buildStartInTerminalIntent(script.getName()));
+    Intent intent = new Intent(this, ScriptingLayerService.class);
+    intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
+    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
+    startService(intent);
   }
 
   /**
@@ -252,7 +255,7 @@ public class ScriptManager extends ListActivity {
       editScript(script.getName());
     } else if (itemId == MenuId.START_SERVICE.getId()) {
       Intent intent = new Intent(this, ScriptingLayerService.class);
-      intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
+      intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
       intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
       startService(intent);
     }

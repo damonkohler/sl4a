@@ -6,10 +6,9 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
-import com.googlecode.android_scripting.facade.EventFacade;
-import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
+import com.googlecode.android_scripting.rpc.RpcEvent;
 
 /**
  * Exposes SignalStrength functionality.
@@ -38,6 +37,7 @@ public class SignalStrengthFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Starts tracking signal strengths.")
+  @RpcEvent("signal_strengths")
   public void startTrackingSignalStrengths() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
   }

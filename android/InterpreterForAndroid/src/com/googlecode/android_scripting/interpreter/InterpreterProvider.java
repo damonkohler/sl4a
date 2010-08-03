@@ -144,18 +144,17 @@ public abstract class InterpreterProvider extends ContentProvider {
     values.put(InterpreterStrings.NICE_NAME, mDescriptor.getNiceName());
     values.put(InterpreterStrings.EXTENSION, mDescriptor.getExtension());
     values.put(InterpreterStrings.BINARY, mDescriptor.getBinary(mContext).getAbsolutePath());
-    values.put(InterpreterStrings.EMPTY_PARAMS, mDescriptor.getEmptyParams(mContext));
-    values.put(InterpreterStrings.EXECUTE_PARAMS, mDescriptor.getExecuteParams(mContext));
+    values.put(InterpreterStrings.INTERACTIVE_COMMAND, mDescriptor.getInteractiveCommand(mContext));
+    values.put(InterpreterStrings.SCRIPT_COMMAND, mDescriptor.getScriptCommand(mContext));
     return values;
   }
 
   protected Map<String, Object> getArguments() {
-    String[] arguments = mDescriptor.getExecuteArgs(mContext);
     Map<String, Object> values = new LinkedHashMap<String, Object>();
-    if (arguments != null) {
-      for (String argument : arguments) {
-        values.put(argument, argument);
-      }
+    int column = 0;
+    for (String argument : mDescriptor.getArguments(mContext)) {
+      values.put(Integer.toString(column), argument);
+      column++;
     }
     return values;
   }

@@ -17,6 +17,8 @@
 package com.googlecode.bshforandroid;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import android.content.Context;
 
@@ -65,10 +67,9 @@ public class BshDescriptor extends Sl4aHostedInterpreter {
   }
 
   @Override
-  public String[] getExecuteArgs(Context context) {
-    String[] args =
-        { "-Xbootclasspath:/system/framework/core.jar", "-classpath", BSH_JAR, "bsh.Interpreter" };
-    return args;
+  public List<String> getArguments(Context context) {
+    String absolutePathToJar = new File(getExtrasPath(context), BSH_JAR).getAbsolutePath();
+    return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-classpath",
+        absolutePathToJar, "bsh.Interpreter");
   }
-
 }

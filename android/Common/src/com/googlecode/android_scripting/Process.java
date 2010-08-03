@@ -16,12 +16,13 @@
 
 package com.googlecode.android_scripting;
 
+import com.trilead.ssh2.StreamGobbler;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -39,9 +40,9 @@ public class Process {
   private final Map<String, String> mEnvironment;
 
   private File mBinary;
+  private String mName;
   private long mStartTime;
 
-  protected String mName;
   protected Integer mPid;
   protected FileDescriptor mFd;
   protected PrintStream mOut;
@@ -92,6 +93,9 @@ public class Process {
   }
 
   public BufferedReader getIn() {
+    if (mIn == null) {
+      return null;
+    }
     return new BufferedReader(mIn, DEFAULT_BUFFER_SIZE);
   }
 
@@ -100,7 +104,9 @@ public class Process {
   }
 
   public void print(Object obj) {
-    getOut().print(obj);
+    if (getOut() != null) {
+      getOut().print(obj);
+    }
   }
 
   public void println(Object obj) {
@@ -112,15 +118,16 @@ public class Process {
       throw new RuntimeException("Attempted to start process that is already running.");
     }
 
+    String binaryPath = mBinary.getAbsolutePath();
+    Log.v("Executing " + binaryPath + " with arguments " + mArguments + " and with environment "
+        + mEnvironment.toString());
+
     int[] pid = new int[1];
-    Log.v("Executing " + mBinary.getAbsolutePath() + " with arguments " + mArguments
-        + " and with environment " + mEnvironment.toString());
-    mFd =
-        Exec.createSubprocess(mBinary.getAbsolutePath(), mArguments.toArray(new String[mArguments
-            .size()]), getEnvironmentArray(), pid);
+    String[] argumentsArray = mArguments.toArray(new String[mArguments.size()]);
+    mFd = Exec.createSubprocess(binaryPath, argumentsArray, getEnvironmentArray(), pid);
     mPid = pid[0];
     mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
-    mIn = new InputStreamReader(new FileInputStream(mFd));
+    mIn = new InputStreamReader(new StreamGobbler(new FileInputStream(mFd)));
     mStartTime = System.currentTimeMillis();
 
     new Thread(new Runnable() {
@@ -129,11 +136,6 @@ public class Process {
         Log.v("Process " + mPid + " exited with result code " + result + ".");
         mPid = null;
         mOut.close();
-        try {
-          mIn.close();
-        } catch (IOException e) {
-          Log.e(e);
-        }
         if (shutdownHook != null) {
           shutdownHook.run();
         }

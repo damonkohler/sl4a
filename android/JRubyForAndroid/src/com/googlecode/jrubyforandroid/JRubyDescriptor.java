@@ -17,6 +17,8 @@
 package com.googlecode.jrubyforandroid;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import android.content.Context;
 
@@ -25,12 +27,10 @@ import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 public class JRubyDescriptor extends Sl4aHostedInterpreter {
 
   private final static String JRUBY_PREFIX =
-      "-e $LOAD_PATH.push('file:%1$s/%2$s!/META-INF/jruby.home/lib/ruby/1.8'); require 'android'; %3$s";
+      "-e $LOAD_PATH.push('file:%1$s!/META-INF/jruby.home/lib/ruby/1.8'); require 'android'; %2$s";
   private final static String JRUBY_JAR = "jruby-complete-1.4.jar";
 
   public String getExtension() {
-    // TODO(psycho): Add support for multiple interpreters for the same
-    // extension later.
     return ".rb";
   }
 
@@ -69,23 +69,22 @@ public class JRubyDescriptor extends Sl4aHostedInterpreter {
   }
 
   @Override
-  public String getEmptyParams(Context context) {
-    return String.format(JRUBY_PREFIX, getBinary(context).getAbsolutePath(),
+  public String getInteractiveCommand(Context context) {
+    String absolutePathToJar = new File(getExtrasPath(context), JRUBY_JAR).getAbsolutePath();
+    return String.format(JRUBY_PREFIX, absolutePathToJar,
         "require 'irb'; IRB.conf[:USE_READLINE] = false; IRB.start");
   }
 
   @Override
-  public String getExecuteParams(Context context) {
-    return String.format(JRUBY_PREFIX, getPath(context), getBinary(context).getAbsolutePath(),
-        "load('%s')");
+  public String getScriptCommand(Context context) {
+    String absolutePathToJar = new File(getExtrasPath(context), JRUBY_JAR).getAbsolutePath();
+    return String.format(JRUBY_PREFIX, absolutePathToJar, "load('%s')");
   }
 
   @Override
-  public String[] getExecuteArgs(Context context) {
-    String[] args =
-        { "-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath", JRUBY_JAR,
-          "org.jruby.Main", "-X-C" };
-    return args;
+  public List<String> getArguments(Context context) {
+    String absolutePathToJar = new File(getExtrasPath(context), JRUBY_JAR).getAbsolutePath();
+    return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
+        absolutePathToJar, "org.jruby.Main", "-X-C");
   }
-
 }

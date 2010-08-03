@@ -20,6 +20,8 @@ package com.googlecode.android_scripting.terminal;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -31,7 +33,7 @@ import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.inputmethod.InputMethodManager;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
@@ -173,8 +175,7 @@ public class Terminal extends Activity {
         Terminal.this.runOnUiThread(new Runnable() {
           @Override
           public void run() {
-            Toast.makeText(Terminal.this, mInterpreterProcess.getName() + " exited.",
-                Toast.LENGTH_SHORT).show();
+            hideKeyboard();
           }
         });
       }
@@ -207,8 +208,7 @@ public class Terminal extends Activity {
   public void onResume() {
     super.onResume();
     if (mInterpreterProcess != null && !mInterpreterProcess.isAlive()) {
-      finish();
-      return;
+      hideKeyboard();
     }
     // Typically, onResume is called after we update our preferences.
     if (mEmulatorView != null) {
@@ -228,6 +228,11 @@ public class Terminal extends Activity {
     if (handleControlKey(keyCode, true)) {
       return true;
     } else if (event.isSystem()) {
+      if (keyCode == KeyEvent.KEYCODE_BACK && mInterpreterProcess != null
+          && mInterpreterProcess.isAlive()) {
+        displayTerminatePrompt();
+        return true;
+      }
       // Don't intercept the system keys.
       return super.onKeyDown(keyCode, event);
     } else if (handleDPad(keyCode, true)) {
@@ -262,6 +267,11 @@ public class Terminal extends Activity {
       return true;
     }
     return false;
+  }
+
+  private void hideKeyboard() {
+    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.hideSoftInputFromWindow(mEmulatorView.getWindowToken(), 0);
   }
 
   /**
@@ -320,7 +330,7 @@ public class Terminal extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.terminal, menu);
-    if (mInterpreterProcess instanceof ScriptProcess) {
+    if (!(mInterpreterProcess instanceof ScriptProcess)) {
       menu.removeItem(R.id.terminal_menu_exit_and_edit);
     }
     return true;
@@ -368,6 +378,42 @@ public class Terminal extends Activity {
             + controlKey + " 1 ==> Control-[ (ESC)\n" + controlKey + " 5 ==> Control-_\n"
             + controlKey + " . ==> Control-\\\n" + controlKey + " 0 ==> Control-]\n" + controlKey
             + " 6 ==> Control-^").show();
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    mEmulatorView.stopPollingThread();
+  }
+
+  private final void displayTerminatePrompt() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(Terminal.this);
+    builder.setTitle(mInterpreterProcess.getName() + " is still running");
+    builder.setMessage("Terminate the process?");
+    DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+          Intent intent = new Intent(Terminal.this, ScriptingLayerService.class);
+          intent.setAction(Constants.ACTION_KILL_PROCESS);
+          intent.putExtra(Constants.EXTRA_PROXY_PORT, mInterpreterProcess.getPort());
+          startService(intent);
+        }
+        Terminal.this.finish();
+      }
+    };
+    builder.setNegativeButton("No", buttonListener);
+    builder.setPositiveButton("Yes", buttonListener);
+
+    builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+      @Override
+      public void onCancel(DialogInterface dialog) {
+        dialog.dismiss();
+        Terminal.this.finish();
+      }
+    });
+    builder.show();
   }
 
   @Override

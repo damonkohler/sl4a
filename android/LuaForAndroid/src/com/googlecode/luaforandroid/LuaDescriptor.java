@@ -16,11 +16,11 @@
 
 package com.googlecode.luaforandroid;
 
-import java.io.File;
-
 import android.content.Context;
 
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
+
+import java.io.File;
 
 public class LuaDescriptor extends Sl4aHostedInterpreter {
 
@@ -51,11 +51,16 @@ public class LuaDescriptor extends Sl4aHostedInterpreter {
   }
 
   public int getVersion() {
+    return 2;
+  }
+
+  @Override
+  public int getScriptsVersion() {
     return 1;
   }
 
   @Override
   public File getBinary(Context context) {
-    return new File(getPath(context), LUA_BIN);
+    return new File(getExtrasPath(context), LUA_BIN);
   }
 }

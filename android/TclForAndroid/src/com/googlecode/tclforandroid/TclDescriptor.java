@@ -53,7 +53,7 @@ public class TclDescriptor extends Sl4aHostedInterpreter {
 
   @Override
   public File getBinary(Context context) {
-    return new File(getPath(context), TCL);
+    return new File(getExtrasPath(context), TCL);
   }
 
   public int getVersion() {

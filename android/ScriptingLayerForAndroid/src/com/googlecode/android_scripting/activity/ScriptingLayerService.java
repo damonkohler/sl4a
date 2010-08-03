@@ -16,6 +16,7 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,8 @@ public class ScriptingLayerService extends Service {
   private volatile int modCount = 0;
   private InterpreterConfiguration mInterpreterConfiguration;
 
+  private volatile WeakReference<InterpreterProcess> mRecentlyKilledProcess;
+
   private static final int mNotificationId = NotificationIdFactory.create();
 
   public class LocalBinder extends Binder {
@@ -77,14 +80,13 @@ public class ScriptingLayerService extends Service {
   public void onCreate() {
     mInterpreterConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
     mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    mRecentlyKilledProcess = new WeakReference<InterpreterProcess>(null);
     createNotification();
     ServiceUtils.setForeground(this, mNotificationId, mNotification);
   }
 
   private void createNotification() {
-    mNotification =
-        new Notification(R.drawable.sl4a_logo_48, "SL4A Service is running...", System
-            .currentTimeMillis());
+    mNotification = new Notification(R.drawable.sl4a_logo_48, null, System.currentTimeMillis());
     mNotification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
     mNotification.contentView.setTextViewText(R.id.notification_title, "SL4A Service");
     mNotification.contentView.setTextViewText(R.id.notification_action,
@@ -95,10 +97,11 @@ public class ScriptingLayerService extends Service {
     mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
   }
 
-  private void updateNotification() {
+  private void updateNotification(String tickerText) {
     StringBuilder message = new StringBuilder();
     message.append(getText(R.string.script_number_message));
     message.append(mProcessMap.size());
+    mNotification.tickerText = tickerText;
     mNotification.contentView.setTextViewText(R.id.notification_message, message);
     mNotificationManager.notify(mNotificationId, mNotification);
   }
@@ -134,18 +137,19 @@ public class ScriptingLayerService extends Service {
       // TODO(damonkohler): This is just to make things easier. Really, we shouldn't need to start
       // an interpreter when all we want is a server.
       interpreterProcess = new InterpreterProcess(new ShellInterpreter(), proxy);
+      interpreterProcess.setName("Server");
     } else {
       proxy = launchServer(intent, true);
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT)) {
+        launchTerminal(intent, proxy.getAddress());
         interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
         ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
-        launchTerminal(intent, proxy.getAddress());
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT)) {
         interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
         ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_INTERPRETER)) {
-        interpreterProcess = launchInterpreter(intent, proxy);
         launchTerminal(intent, proxy.getAddress());
+        interpreterProcess = launchInterpreter(intent, proxy);
       }
     }
     addProcess(interpreterProcess);
@@ -212,7 +216,7 @@ public class ScriptingLayerService extends Service {
   private void addProcess(InterpreterProcess process) {
     mProcessMap.put(process.getPort(), process);
     modCount++;
-    updateNotification();
+    updateNotification(process.getName() + " started.");
   }
 
   private InterpreterProcess removeProcess(int port) {
@@ -221,7 +225,7 @@ public class ScriptingLayerService extends Service {
       return null;
     }
     modCount++;
-    updateNotification();
+    updateNotification(process.getName() + " exited.");
     return process;
   }
 
@@ -233,6 +237,7 @@ public class ScriptingLayerService extends Service {
         ((ScriptProcess) process).notifyTriggerOfShutDown(this);
       }
       process.kill();
+      mRecentlyKilledProcess = new WeakReference<InterpreterProcess>(process);
     }
   }
 
@@ -259,7 +264,11 @@ public class ScriptingLayerService extends Service {
   }
 
   public InterpreterProcess getProcess(int port) {
-    return mProcessMap.get(port);
+    InterpreterProcess p = mProcessMap.get(port);
+    if (p == null) {
+      return mRecentlyKilledProcess.get();
+    }
+    return p;
   }
 
   @Override
