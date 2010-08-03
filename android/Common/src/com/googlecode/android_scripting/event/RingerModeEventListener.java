@@ -50,6 +50,7 @@ public class RingerModeEventListener implements EventListener {
           mRingerMode = newRingerMode;
           invokeListener();
         }
+        break;
       default:
         Log.e("Invalid ringer mode: " + newRingerMode);
       }

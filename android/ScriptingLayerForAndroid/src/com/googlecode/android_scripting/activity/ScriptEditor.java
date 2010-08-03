@@ -34,14 +34,12 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
-import com.googlecode.android_scripting.IntentBuilders;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 
@@ -163,7 +161,10 @@ public class ScriptEditor extends Activity {
       finish();
     } else if (item.getItemId() == MenuId.SAVE_AND_RUN.getId()) {
       save();
-      startActivity(IntentBuilders.buildStartInTerminalIntent(mNameText.getText().toString()));
+      Intent intent = new Intent(this, ScriptingLayerService.class);
+      intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
+      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, mNameText.getText().toString());
+      startService(intent);
       finish();
     } else if (item.getItemId() == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, Preferences.class));

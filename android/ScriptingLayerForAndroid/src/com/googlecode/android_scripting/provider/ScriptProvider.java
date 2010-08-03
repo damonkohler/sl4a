@@ -18,6 +18,7 @@ package com.googlecode.android_scripting.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -27,6 +28,7 @@ import android.provider.LiveFolders;
 
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
+import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 
 import java.io.File;
 
@@ -36,6 +38,9 @@ public class ScriptProvider extends ContentProvider {
       Uri.parse("content://com.googlecode.android_scripting.scriptprovider");
   public static final String SINGLE_MIME = "vnd.android.cursor.item/vnd.sl4a.script";
   public static final String MULTIPLE_MIME = "vnd.android.cursor.dir/vnd.sl4a.script";
+
+  private Context mContext;
+  private InterpreterConfiguration mConfiguration;
 
   @Override
   public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -57,7 +62,10 @@ public class ScriptProvider extends ContentProvider {
 
   @Override
   public boolean onCreate() {
-    return false;
+    mContext = getContext();
+    mConfiguration = new InterpreterConfiguration(mContext);
+    mConfiguration.startDiscovering();
+    return true;
   }
 
   @Override
@@ -66,7 +74,7 @@ public class ScriptProvider extends ContentProvider {
     String[] columns = { BaseColumns._ID, LiveFolders.NAME, LiveFolders.INTENT };
     MatrixCursor cursor = new MatrixCursor(columns);
     int index = 0;
-    for (File script : ScriptStorageAdapter.listAllScripts()) {
+    for (File script : ScriptStorageAdapter.listExecutableScripts(mConfiguration)) {
       String scriptName = script.getName();
       Intent intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

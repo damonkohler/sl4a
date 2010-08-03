@@ -104,7 +104,9 @@ public class Process {
   }
 
   public void print(Object obj) {
-    getOut().print(obj);
+    if (getOut() != null) {
+      getOut().print(obj);
+    }
   }
 
   public void println(Object obj) {

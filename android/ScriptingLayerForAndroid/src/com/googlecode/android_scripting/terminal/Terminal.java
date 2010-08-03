@@ -228,7 +228,8 @@ public class Terminal extends Activity {
     if (handleControlKey(keyCode, true)) {
       return true;
     } else if (event.isSystem()) {
-      if (keyCode == KeyEvent.KEYCODE_BACK) {
+      if (keyCode == KeyEvent.KEYCODE_BACK && mInterpreterProcess != null
+          && mInterpreterProcess.isAlive()) {
         displayTerminatePrompt();
         return true;
       }
@@ -329,7 +330,7 @@ public class Terminal extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.terminal, menu);
-    if (mInterpreterProcess instanceof ScriptProcess) {
+    if (!(mInterpreterProcess instanceof ScriptProcess)) {
       menu.removeItem(R.id.terminal_menu_exit_and_edit);
     }
     return true;
@@ -386,35 +387,33 @@ public class Terminal extends Activity {
   }
 
   private final void displayTerminatePrompt() {
-    if (mInterpreterProcess != null && mInterpreterProcess.isAlive()) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(Terminal.this);
-      builder.setTitle(mInterpreterProcess.getName() + " is still running");
-      builder.setMessage("Terminate the process?");
-      DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-          dialog.dismiss();
-          if (which == DialogInterface.BUTTON_POSITIVE) {
-            Intent intent = new Intent(Terminal.this, ScriptingLayerService.class);
-            intent.setAction(Constants.ACTION_KILL_PROCESS);
-            intent.putExtra(Constants.EXTRA_PROXY_PORT, mInterpreterProcess.getPort());
-            startService(intent);
-          }
-          Terminal.this.finish();
+    AlertDialog.Builder builder = new AlertDialog.Builder(Terminal.this);
+    builder.setTitle(mInterpreterProcess.getName() + " is still running");
+    builder.setMessage("Terminate the process?");
+    DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+          Intent intent = new Intent(Terminal.this, ScriptingLayerService.class);
+          intent.setAction(Constants.ACTION_KILL_PROCESS);
+          intent.putExtra(Constants.EXTRA_PROXY_PORT, mInterpreterProcess.getPort());
+          startService(intent);
         }
-      };
-      builder.setNegativeButton("No", buttonListener);
-      builder.setPositiveButton("Yes", buttonListener);
+        Terminal.this.finish();
+      }
+    };
+    builder.setNegativeButton("No", buttonListener);
+    builder.setPositiveButton("Yes", buttonListener);
 
-      builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-        @Override
-        public void onCancel(DialogInterface dialog) {
-          dialog.dismiss();
-          Terminal.this.finish();
-        }
-      });
-      builder.show();
-    }
+    builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+      @Override
+      public void onCancel(DialogInterface dialog) {
+        dialog.dismiss();
+        Terminal.this.finish();
+      }
+    });
+    builder.show();
   }
 
   @Override
