@@ -130,7 +130,7 @@ function decode(s, startPos)
     return decode_scanArray(s,startPos)
   end
   -- Number
-  if string.find("+-0123456789.e", curChar, 1, true) then
+  if string.find("+-0123456789.eE", curChar, 1, true) then
     return decode_scanNumber(s,startPos)
   end
   -- String
@@ -224,13 +224,13 @@ end
 function decode_scanNumber(s,startPos)
   local endPos = startPos+1
   local stringLen = string.len(s)
-  local acceptableChars = "+-0123456789.e"
+  local acceptableChars = "+-0123456789.eE"
   while (string.find(acceptableChars, string.sub(s,endPos,endPos), 1, true)
 	and endPos<=stringLen
 	) do
     endPos = endPos + 1
   end
-  local stringValue = 'return ' .. string.sub(s,startPos, endPos-1)
+  local stringValue = 'return ' .. string.sub(s,startPos, endPos-1)	
   local stringEval = base.loadstring(stringValue)
   base.assert(stringEval, 'Failed to scan number [ ' .. stringValue .. '] in JSON string at position ' .. startPos .. ' : ' .. endPos)
   return stringEval(), endPos
