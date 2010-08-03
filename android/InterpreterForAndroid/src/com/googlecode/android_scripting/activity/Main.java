@@ -20,20 +20,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
 
 import com.googlecode.android_scripting.AsyncTaskListener;
 import com.googlecode.android_scripting.InterpreterInstaller;
@@ -51,14 +48,12 @@ import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
  */
 public abstract class Main extends Activity {
   protected final static float MARGIN_DIP = 3.0f;
-  protected final static float SPINNER_DIP = 10.0f;
 
   protected final String mId = getClass().getPackage().getName();
 
   protected SharedPreferences mPreferences;
   protected InterpreterDescriptor mDescriptor;
   protected Button mButton;
-  private LinearLayout mProgressLayout;
 
   protected abstract InterpreterDescriptor getDescriptor();
 
@@ -78,9 +73,8 @@ public abstract class Main extends Activity {
   protected final AsyncTaskListener<Boolean> mTaskListener = new AsyncTaskListener<Boolean>() {
     @Override
     public void onTaskFinished(Boolean result, String message) {
-
-      mProgressLayout.setVisibility(View.INVISIBLE);
-
+      getWindow().setFeatureInt(Window.FEATURE_INDETERMINATE_PROGRESS,
+          Window.PROGRESS_VISIBILITY_OFF);
       if (result) {
         switch (mCurrentTask) {
         case INSTALL:
@@ -103,6 +97,8 @@ public abstract class Main extends Activity {
     super.onCreate(savedInstanceState);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     mDescriptor = getDescriptor();
+
+    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     initializeViews();
     if (checkInstalled()) {
       prepareUninstallButton();
@@ -132,32 +128,6 @@ public abstract class Main extends Activity {
     marginParams.setMargins(marginPixels, marginPixels, marginPixels, marginPixels);
     mButton.setLayoutParams(marginParams);
     layout.addView(mButton);
-
-    mProgressLayout = new LinearLayout(this);
-    mProgressLayout.setOrientation(LinearLayout.HORIZONTAL);
-    mProgressLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-        LayoutParams.FILL_PARENT));
-    mProgressLayout.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-
-    LinearLayout bottom = new LinearLayout(this);
-    bottom.setOrientation(LinearLayout.HORIZONTAL);
-    bottom.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-    bottom.setGravity(Gravity.CENTER_VERTICAL);
-    mProgressLayout.addView(bottom);
-
-    TextView message = new TextView(this);
-    message.setText("   In Progress...");
-    message.setTextSize(20);
-    message.setTypeface(Typeface.DEFAULT_BOLD);
-    message.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-    ProgressBar bar = new ProgressBar(this);
-    bar.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-
-    bottom.addView(bar);
-    bottom.addView(message);
-    mProgressLayout.setVisibility(View.INVISIBLE);
-
-    layout.addView(mProgressLayout);
     setContentView(layout);
   }
 
@@ -196,9 +166,7 @@ public abstract class Main extends Activity {
     if (mCurrentTask != null) {
       return;
     }
-
-    mProgressLayout.setVisibility(View.VISIBLE);
-
+    getWindow().setFeatureInt(Window.FEATURE_INDETERMINATE_PROGRESS, Window.PROGRESS_VISIBILITY_ON);
     mCurrentTask = RunningTask.INSTALL;
     InterpreterInstaller installTask;
     try {
@@ -214,9 +182,7 @@ public abstract class Main extends Activity {
     if (mCurrentTask != null) {
       return;
     }
-
-    mProgressLayout.setVisibility(View.VISIBLE);
-
+    getWindow().setFeatureInt(Window.FEATURE_INDETERMINATE_PROGRESS, Window.PROGRESS_VISIBILITY_ON);
     mCurrentTask = RunningTask.UNINSTALL;
     InterpreterUninstaller uninstallTask;
     try {
