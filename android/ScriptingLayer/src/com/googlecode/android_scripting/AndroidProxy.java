@@ -16,9 +16,6 @@
 
 package com.googlecode.android_scripting;
 
-import java.net.InetSocketAddress;
-import java.util.UUID;
-
 import android.app.Service;
 import android.content.Intent;
 
@@ -26,12 +23,24 @@ import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.JsonRpcServer;
 
+import java.net.InetSocketAddress;
+import java.util.UUID;
+
 public class AndroidProxy {
 
   private InetSocketAddress mAddress;
   private final JsonRpcServer mJsonRpcServer;
   private final UUID mSecret;
 
+  /**
+   * 
+   * @param service
+   *          Android service (required to build facades).
+   * @param intent
+   *          the intent that launched the proxy/script.
+   * @param requiresHandshake
+   *          indicates whether RPC security protocol should be enabled.
+   */
   public AndroidProxy(Service service, Intent intent, boolean requiresHandshake) {
     if (requiresHandshake) {
       mSecret = UUID.randomUUID();

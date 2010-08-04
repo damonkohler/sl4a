@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
@@ -12,4 +12,40 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/no_scripts_message" />
-</LinearLayout>
+  
+  <RelativeLayout
+    android:id="@+id/search_box_group"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:padding="5dip"
+    android:background="#80000000"
+    android:fadingEdge="horizontal"
+    android:fadingEdgeLength="25dip"
+    android:visibility="gone"
+    >
+
+    <ImageView
+      android:id="@+id/search_image"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"  
+      android:paddingRight="15dip"
+      android:paddingBottom="15dip"        
+      android:src="@+drawable/ic_menu_search"
+      />
+
+    <EditText
+      android:id="@+id/search_text"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:singleLine="true"
+      android:inputType="text"
+      android:imeOptions="flagNoEnterAction"
+      android:layout_toRightOf="@+id/search_image"
+      />
+
+  </RelativeLayout>
+    
+    
+  
+</RelativeLayout>

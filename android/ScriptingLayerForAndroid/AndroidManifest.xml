@@ -11,7 +11,7 @@
     <activity
       android:name=".activity.ScriptManager"
       android:launchMode="singleTask"
-      android:configChanges="keyboardHidden|orientation">
+      android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />

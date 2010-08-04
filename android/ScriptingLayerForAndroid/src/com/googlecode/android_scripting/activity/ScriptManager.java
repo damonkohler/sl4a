@@ -24,8 +24,11 @@ import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +36,10 @@ import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.googlecode.android_scripting.ActivityFlinger;
@@ -61,14 +67,18 @@ import java.util.Map.Entry;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class ScriptManager extends ListActivity {
+public class ScriptManager extends ListActivity implements TextWatcher {
 
-  private List<File> mScriptList;
+  private SelectableListProxy mScriptList;
   private ScriptManagerAdapter mAdapter;
   private SharedPreferences mPreferences;
   private HashMap<Integer, Interpreter> mAddMenuIds;
   private ScriptListObserver mObserver;
   private InterpreterConfiguration mConfiguration;
+
+  private RelativeLayout searchPromptGroup;
+  private ImageView searchIcon;
+  private EditText searchText;
 
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
@@ -76,7 +86,7 @@ public class ScriptManager extends ListActivity {
 
   private static enum MenuId {
     DELETE, EDIT, START_SERVICE, HELP, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES, LOGCAT_VIEWER,
-    TRIGGER_MANAGER, REFRESH;
+    TRIGGER_MANAGER, REFRESH, SEARCH;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -91,7 +101,7 @@ public class ScriptManager extends ListActivity {
     mObserver = new ScriptListObserver();
     mAdapter.registerDataSetObserver(mObserver);
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    mScriptList = new ArrayList<File>();
+    mScriptList = new SelectableListProxy(null);
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     UsageTrackingConfirmation.show(this);
@@ -103,9 +113,9 @@ public class ScriptManager extends ListActivity {
 
   private void updateScriptsList() {
     if (mPreferences.getBoolean("show_all_files", false)) {
-      mScriptList = ScriptStorageAdapter.listAllScripts();
+      mScriptList.replace(ScriptStorageAdapter.listAllScripts());
     } else {
-      mScriptList = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
+      mScriptList.replace(ScriptStorageAdapter.listExecutableScripts(mConfiguration));
     }
   }
 
@@ -140,6 +150,8 @@ public class ScriptManager extends ListActivity {
         android.R.drawable.ic_menu_help);
     menu.add(Menu.NONE, MenuId.REFRESH.getId(), Menu.NONE, "Refresh").setIcon(
         R.drawable.ic_menu_refresh);
+    menu.add(Menu.NONE, MenuId.SEARCH.getId(), Menu.NONE, "Search").setIcon(
+        R.drawable.ic_menu_search);
     return true;
   }
 
@@ -200,8 +212,21 @@ public class ScriptManager extends ListActivity {
       startActivity(new Intent(this, LogcatViewer.class));
     } else if (itemId == MenuId.REFRESH.getId()) {
       mAdapter.notifyDataSetInvalidated();
+    } else if (itemId == MenuId.SEARCH.getId()) {
+      doSearch();
     }
     return true;
+  }
+
+  private void doSearch() {
+    if (searchPromptGroup == null) {
+      searchPromptGroup = (RelativeLayout) findViewById(R.id.search_box_group);
+      searchIcon = (ImageView) findViewById(R.id.search_image);
+      searchText = (EditText) findViewById(R.id.search_text);
+      searchText.setRawInputType(0x00080001);
+      searchText.addTextChangedListener(this);
+    }
+    searchPromptGroup.setVisibility(View.VISIBLE);
   }
 
   @Override
@@ -281,6 +306,20 @@ public class ScriptManager extends ListActivity {
   }
 
   @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+    if (keyCode == KeyEvent.KEYCODE_BACK && searchPromptGroup != null
+        && searchPromptGroup.isShown()) {
+      searchPromptGroup.setVisibility(View.GONE);
+      return true;
+    } else if (keyCode == KeyEvent.KEYCODE_SEARCH
+        && (searchPromptGroup == null || !searchPromptGroup.isShown())) {
+      doSearch();
+    }
+    return super.onKeyDown(keyCode, event);
+  }
+
+  @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     RequestCode request = RequestCode.values()[requestCode];
     if (resultCode == RESULT_OK) {
@@ -332,7 +371,7 @@ public class ScriptManager extends ListActivity {
 
     @Override
     public void onChanged() {
-      updateScriptsList();
+      // updateScriptsList();
     }
 
     @Override
@@ -340,7 +379,7 @@ public class ScriptManager extends ListActivity {
       runOnUiThread(new Runnable() {
         @Override
         public void run() {
-          mAdapter.notifyDataSetChanged();
+          mAdapter.notifyDataSetInvalidated();
         }
       });
     }
@@ -370,6 +409,70 @@ public class ScriptManager extends ListActivity {
       view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
       view.setText(mScriptList.get(position).getName());
       return view;
+    }
+  }
+
+  @Override
+  public void afterTextChanged(Editable s) {
+  }
+
+  @Override
+  public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+  }
+
+  @Override
+  public void onTextChanged(CharSequence s, int start, int before, int count) {
+    mScriptList.setPrefix(s.toString());
+    mAdapter.notifyDataSetChanged();
+  }
+
+  private class SelectableListProxy {
+    private List<File> mmBaseList;
+    private List<File> mmSelectedList = new ArrayList<File>();
+    private String mmPrefix = null;
+
+    public SelectableListProxy(List<File> list) {
+      mmBaseList = list;
+    }
+
+    public void replace(List<File> list) {
+      mmBaseList = list;
+    }
+
+    public void setPrefix(String prefix) {
+      if (prefix != null && prefix.length() == 0) {
+        mmPrefix = null;
+      } else {
+        mmPrefix = prefix;
+      }
+      mmSelectedList.clear();
+
+      if (mmPrefix != null) {
+        for (File f : mmBaseList) {
+          if (f.getName().startsWith(mmPrefix)) {
+            mmSelectedList.add(f);
+          }
+        }
+      }
+    }
+
+    public int size() {
+      if (mmPrefix == null) {
+        if (mmBaseList == null) {
+          return 0;
+        }
+        return mmBaseList.size();
+      } else {
+        return mmSelectedList.size();
+      }
+    }
+
+    public File get(int index) {
+      if (mmPrefix == null) {
+        return mmBaseList.get(index);
+      } else {
+        return mmSelectedList.get(index);
+      }
     }
   }
 }

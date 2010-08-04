@@ -230,7 +230,12 @@ public class Terminal extends Activity {
     } else if (event.isSystem()) {
       if (keyCode == KeyEvent.KEYCODE_BACK && mInterpreterProcess != null
           && mInterpreterProcess.isAlive()) {
-        displayTerminatePrompt();
+        displayTerminatePrompt(new Runnable() {
+          @Override
+          public void run() {
+            Terminal.this.finish();
+          }
+        });
         return true;
       }
       // Don't intercept the system keys.
@@ -349,10 +354,20 @@ public class Terminal extends Activity {
       doDocumentKeys();
       break;
     case R.id.terminal_menu_exit_and_edit:
-      Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, mInterpreterProcess.getName());
-      startActivity(intent);
-      finish();
+      Runnable editTask = new Runnable() {
+        @Override
+        public void run() {
+          Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
+          intent.putExtra(Constants.EXTRA_SCRIPT_NAME, mInterpreterProcess.getName());
+          startActivity(intent);
+          finish();
+        }
+      };
+      if (mInterpreterProcess != null && mInterpreterProcess.isAlive()) {
+        displayTerminatePrompt(editTask);
+      } else {
+        editTask.run();
+      }
       break;
     }
     return super.onOptionsItemSelected(item);
@@ -383,10 +398,12 @@ public class Terminal extends Activity {
   @Override
   protected void onStop() {
     super.onStop();
-    mEmulatorView.stopPollingThread();
+    if (mEmulatorView != null) {
+      mEmulatorView.stopPollingThread();
+    }
   }
 
-  private final void displayTerminatePrompt() {
+  private final void displayTerminatePrompt(final Runnable task) {
     AlertDialog.Builder builder = new AlertDialog.Builder(Terminal.this);
     builder.setTitle("Confirm exit");
     builder.setMessage("Kill the process?");
@@ -399,18 +416,22 @@ public class Terminal extends Activity {
           intent.setAction(Constants.ACTION_KILL_PROCESS);
           intent.putExtra(Constants.EXTRA_PROXY_PORT, mInterpreterProcess.getPort());
           startService(intent);
+        } else if (which == DialogInterface.BUTTON_NEUTRAL) {
+          dialog.dismiss();
+          return;
         }
-        Terminal.this.finish();
+        task.run();
       }
     };
     builder.setNegativeButton("No", buttonListener);
     builder.setPositiveButton("Yes", buttonListener);
+    builder.setNeutralButton("Cancel", buttonListener);
 
     builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
         dialog.dismiss();
-        Terminal.this.finish();
+        task.run();
       }
     });
     builder.show();
