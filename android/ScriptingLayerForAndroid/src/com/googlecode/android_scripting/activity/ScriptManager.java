@@ -18,14 +18,14 @@ package com.googlecode.android_scripting.activity;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -36,10 +36,7 @@ import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.googlecode.android_scripting.ActivityFlinger;
@@ -67,7 +64,7 @@ import java.util.Map.Entry;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class ScriptManager extends ListActivity implements TextWatcher {
+public class ScriptManager extends ListActivity {
 
   private SelectableListProxy mScriptList;
   private ScriptManagerAdapter mAdapter;
@@ -75,10 +72,8 @@ public class ScriptManager extends ListActivity implements TextWatcher {
   private HashMap<Integer, Interpreter> mAddMenuIds;
   private ScriptListObserver mObserver;
   private InterpreterConfiguration mConfiguration;
-
-  private RelativeLayout searchPromptGroup;
-  private ImageView searchIcon;
-  private EditText searchText;
+  private SearchManager mManager;
+  private boolean searchResultMode = false;
 
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
@@ -108,7 +103,36 @@ public class ScriptManager extends ListActivity implements TextWatcher {
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     startService(IntentBuilders.buildTriggerServiceIntent());
+    mManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+    handleIntent(getIntent());
     Analytics.trackActivity(this);
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    handleIntent(intent);
+  }
+
+  private void handleIntent(Intent intent) {
+    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+      searchResultMode = true;
+      ((TextView) findViewById(R.id.left_text)).setText("Search results");
+      String query = intent.getStringExtra(SearchManager.QUERY);
+      mScriptList.setQuery(query.toString());
+      mAdapter.notifyDataSetChanged();
+    }
+  }
+
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_BACK && searchResultMode) {
+      searchResultMode = false;
+      ((TextView) findViewById(R.id.left_text)).setText("Scripts");
+      mScriptList.reset();
+      mAdapter.notifyDataSetChanged();
+      return true;
+    }
+    return super.onKeyDown(keyCode, event);
   }
 
   private void updateScriptsList() {
@@ -213,20 +237,9 @@ public class ScriptManager extends ListActivity implements TextWatcher {
     } else if (itemId == MenuId.REFRESH.getId()) {
       mAdapter.notifyDataSetInvalidated();
     } else if (itemId == MenuId.SEARCH.getId()) {
-      doSearch();
+      onSearchRequested();
     }
     return true;
-  }
-
-  private void doSearch() {
-    if (searchPromptGroup == null) {
-      searchPromptGroup = (RelativeLayout) findViewById(R.id.search_box_group);
-      searchIcon = (ImageView) findViewById(R.id.search_image);
-      searchText = (EditText) findViewById(R.id.search_text);
-      searchText.setRawInputType(0x00080001);
-      searchText.addTextChangedListener(this);
-    }
-    searchPromptGroup.setVisibility(View.VISIBLE);
   }
 
   @Override
@@ -306,20 +319,6 @@ public class ScriptManager extends ListActivity implements TextWatcher {
   }
 
   @Override
-  public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-    if (keyCode == KeyEvent.KEYCODE_BACK && searchPromptGroup != null
-        && searchPromptGroup.isShown()) {
-      searchPromptGroup.setVisibility(View.GONE);
-      return true;
-    } else if (keyCode == KeyEvent.KEYCODE_SEARCH
-        && (searchPromptGroup == null || !searchPromptGroup.isShown())) {
-      doSearch();
-    }
-    return super.onKeyDown(keyCode, event);
-  }
-
-  @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     RequestCode request = RequestCode.values()[requestCode];
     if (resultCode == RESULT_OK) {
@@ -361,17 +360,13 @@ public class ScriptManager extends ListActivity implements TextWatcher {
   public void onDestroy() {
     super.onDestroy();
     mConfiguration.unregisterObserver(mObserver);
+    mManager.setOnCancelListener(null);
   }
 
   private class ScriptListObserver extends DataSetObserver implements ConfigurationObserver {
     @Override
     public void onInvalidated() {
       updateScriptsList();
-    }
-
-    @Override
-    public void onChanged() {
-      // updateScriptsList();
     }
 
     @Override
@@ -412,24 +407,10 @@ public class ScriptManager extends ListActivity implements TextWatcher {
     }
   }
 
-  @Override
-  public void afterTextChanged(Editable s) {
-  }
-
-  @Override
-  public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-  }
-
-  @Override
-  public void onTextChanged(CharSequence s, int start, int before, int count) {
-    mScriptList.setPrefix(s.toString());
-    mAdapter.notifyDataSetChanged();
-  }
-
   private class SelectableListProxy {
     private List<File> mmBaseList;
     private List<File> mmSelectedList = new ArrayList<File>();
-    private String mmPrefix = null;
+    private String mmQuery = null;
 
     public SelectableListProxy(List<File> list) {
       mmBaseList = list;
@@ -437,27 +418,35 @@ public class ScriptManager extends ListActivity implements TextWatcher {
 
     public void replace(List<File> list) {
       mmBaseList = list;
+      select();
     }
 
-    public void setPrefix(String prefix) {
+    public void setQuery(String prefix) {
       if (prefix != null && prefix.length() == 0) {
-        mmPrefix = null;
+        mmQuery = null;
       } else {
-        mmPrefix = prefix;
+        mmQuery = prefix;
       }
-      mmSelectedList.clear();
+      select();
+    }
 
-      if (mmPrefix != null) {
+    private void select() {
+      mmSelectedList.clear();
+      if (mmQuery != null && mmBaseList != null) {
         for (File f : mmBaseList) {
-          if (f.getName().startsWith(mmPrefix)) {
+          if (f.getName().contains(mmQuery)) {
             mmSelectedList.add(f);
           }
         }
       }
     }
 
+    public void reset() {
+      mmQuery = null;
+    }
+
     public int size() {
-      if (mmPrefix == null) {
+      if (mmQuery == null) {
         if (mmBaseList == null) {
           return 0;
         }
@@ -468,7 +457,7 @@ public class ScriptManager extends ListActivity implements TextWatcher {
     }
 
     public File get(int index) {
-      if (mmPrefix == null) {
+      if (mmQuery == null) {
         return mmBaseList.get(index);
       } else {
         return mmSelectedList.get(index);

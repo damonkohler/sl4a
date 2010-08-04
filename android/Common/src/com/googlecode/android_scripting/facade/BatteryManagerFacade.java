@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 
 public class BatteryManagerFacade extends RpcReceiver {
   private final Service mService;
+  private final BatteryStateListener mReceiver;
 
   private int mBatteryStatus = 1;
   private int mBatteryHealth = 1;
@@ -35,7 +36,8 @@ public class BatteryManagerFacade extends RpcReceiver {
     sdkVersion = manager.getSdkLevel();
     IntentFilter filter = new IntentFilter();
     filter.addAction(Intent.ACTION_BATTERY_CHANGED);
-    mService.registerReceiver(new BatteryStateListener(), filter);
+    mReceiver = new BatteryStateListener();
+    mService.registerReceiver(mReceiver, filter);
   }
 
   private class BatteryStateListener extends BroadcastReceiver {
@@ -69,6 +71,7 @@ public class BatteryManagerFacade extends RpcReceiver {
 
   @Override
   public void shutdown() {
+    mService.unregisterReceiver(mReceiver);
   }
 
   @Rpc(description = "Returns battery status:" + "\n\t 1 - unknown; " + "\n\t 2 - charging; "

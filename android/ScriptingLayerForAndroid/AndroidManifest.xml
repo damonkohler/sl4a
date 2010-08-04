@@ -18,6 +18,11 @@
         <category
           android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
+     <intent-filter>
+    <action android:name="android.intent.action.SEARCH" />
+    </intent-filter>      
+    <meta-data android:name="android.app.searchable" 
+    android:resource="@xml/searchable"/>
     </activity>
     <activity
       android:name=".activity.ScriptPicker"
@@ -148,7 +153,7 @@
     <activity
       android:name=".activity.ScriptProcessMonitor"
       android:launchMode="singleTask" />
-  </application>
+</application>
   <uses-permission
     android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
   <uses-permission
@@ -200,5 +205,5 @@
   <uses-permission
     android:name="android.permission.READ_CONTACTS" />
   <uses-sdk
-    android:minSdkVersion="3"></uses-sdk>
+    android:minSdkVersion="3" android:targetSdkVersion="4"/>
 </manifest>

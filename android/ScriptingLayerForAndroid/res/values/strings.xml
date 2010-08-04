@@ -46,4 +46,5 @@
   <string name="script_number_message">Number of running scripts:\t</string>
 <string name="no_triggers_message">No triggers.</string>
 <string name="no_bluetooth_devices_message">No bluetooth devices found.</string>
+<string name="search_description">Search scripts</string>
 </resources>

@@ -150,11 +150,11 @@ public class InterpreterProcess extends Process {
           mLog.append(Character.valueOf((char) c));
           mLogLength++;
         }
+        mmPos++;
       } catch (InterruptedException e) {
         Log.e(e);
       } finally {
         mLock.unlock();
-        mmPos++;
       }
       return c;
     }

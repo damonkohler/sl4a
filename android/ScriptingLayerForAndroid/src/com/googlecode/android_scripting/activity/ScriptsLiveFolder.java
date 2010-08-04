@@ -9,11 +9,12 @@ import android.provider.LiveFolders;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.provider.ScriptProvider;
 
 public class ScriptsLiveFolder extends Activity {
 
   public static final Uri CONTENT_URI =
-      Uri.parse("content://com.googlecode.android_scripting.provider.scriptprovider");
+      Uri.parse("content://" + ScriptProvider.AUTHORITY + "/" + ScriptProvider.LIVEFOLDER);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
