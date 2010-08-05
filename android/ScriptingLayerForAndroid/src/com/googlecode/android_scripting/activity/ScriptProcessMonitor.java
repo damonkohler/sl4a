@@ -159,7 +159,7 @@ public class ScriptProcessMonitor extends ListActivity {
     menu.clear();
     // TODO(damonkohler): How could mProcessList ever be null?
     if (mProcessList != null && !mProcessList.isEmpty()) {
-      menu.add(Menu.NONE, 0, Menu.NONE, "Stop All Scripts").setIcon(
+      menu.add(Menu.NONE, 0, Menu.NONE, R.string.stop_all).setIcon(
           android.R.drawable.ic_menu_close_clear_cancel);
     }
     return super.onPrepareOptionsMenu(menu);

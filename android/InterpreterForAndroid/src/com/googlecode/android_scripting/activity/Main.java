@@ -47,6 +47,7 @@ import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
 public abstract class Main extends Activity {
+
   protected final static float MARGIN_DIP = 3.0f;
 
   protected final String mId = getClass().getPackage().getName();

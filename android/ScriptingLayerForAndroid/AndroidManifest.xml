@@ -2,7 +2,8 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.googlecode.android_scripting"
-  android:versionName="0" android:versionCode="0">
+  android:versionName="0"
+  android:versionCode="0">
   <application
     android:debuggable="true"
     android:icon="@drawable/sl4a_logo_48"
@@ -11,22 +12,26 @@
     <activity
       android:name=".activity.ScriptManager"
       android:launchMode="singleTask"
-      android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustResize">
+      android:configChanges="keyboardHidden|orientation"
+      android:windowSoftInputMode="adjustResize">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />
         <category
           android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-     <intent-filter>
-    <action android:name="android.intent.action.SEARCH" />
-    </intent-filter>      
-    <meta-data android:name="android.app.searchable" 
-    android:resource="@xml/searchable"/>
+      <intent-filter>
+        <action
+          android:name="android.intent.action.SEARCH" />
+      </intent-filter>
+      <meta-data
+        android:name="android.app.searchable"
+        android:resource="@xml/searchable" />
     </activity>
     <activity
       android:name=".activity.ScriptPicker"
-      android:configChanges="keyboardHidden|orientation" android:label="SL4A: Scripts">
+      android:configChanges="keyboardHidden|orientation"
+      android:label="Scripts">
       <intent-filter>
         <action
           android:name="android.intent.action.CREATE_SHORTCUT" />
@@ -43,9 +48,10 @@
           android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </activity>
-     <activity
+    <activity
       android:name=".activity.InterpreterPicker"
-      android:configChanges="keyboardHidden|orientation" android:label="SL4A: Interpreters">
+      android:configChanges="keyboardHidden|orientation"
+      android:label="Interpreters">
       <intent-filter>
         <action
           android:name="android.intent.action.CREATE_SHORTCUT" />
@@ -153,7 +159,7 @@
     <activity
       android:name=".activity.ScriptProcessMonitor"
       android:launchMode="singleTask" />
-</application>
+  </application>
   <uses-permission
     android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
   <uses-permission
@@ -205,5 +211,6 @@
   <uses-permission
     android:name="android.permission.READ_CONTACTS" />
   <uses-sdk
-    android:minSdkVersion="3" android:targetSdkVersion="4"/>
+    android:minSdkVersion="3"
+    android:targetSdkVersion="4" />
 </manifest>
