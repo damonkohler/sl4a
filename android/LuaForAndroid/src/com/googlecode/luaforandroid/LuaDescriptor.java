@@ -16,15 +16,20 @@
 
 package com.googlecode.luaforandroid;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.Context;
 
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
-
-import java.io.File;
 
 public class LuaDescriptor extends Sl4aHostedInterpreter {
 
-  private final static String LUA_BIN = "bin/lua";
+  private static final String LUA_BIN = "bin/lua";
+  private static final String LUA_PATH = "LUA_PATH";
+  private static final String LUA_CPATH = "LUA_CPATH";
 
   public String getExtension() {
     return ".lua";
@@ -62,5 +67,21 @@ public class LuaDescriptor extends Sl4aHostedInterpreter {
   @Override
   public File getBinary(Context context) {
     return new File(getExtrasPath(context), LUA_BIN);
+  }
+
+  @Override
+  public Map<String, String> getEnvironmentVariables(Context context) {
+    Map<String, String> settings = new HashMap<String, String>(1);
+    String root = getExtrasPath(context).getAbsolutePath();
+    String ldir = root + "/share/lua/5.1/";
+    String cdir = root + "/lib/lua/5.1/";
+    String lua_path =
+        "./?.lua;" + ldir + "?/?.lua;" + ldir + "?.lua;" + ldir + "?/init.lua;" + cdir + "?.lua;"
+            + cdir + "?/init.lua;" + InterpreterConstants.SCRIPTS_ROOT + "/?.lua;";
+    String lua_cpath =
+        "./?.so;" + cdir + "?.so;" + cdir + "loadall.so;" + cdir + "?/init.sl;" + cdir + "?/?.so;";
+    settings.put(LUA_PATH, lua_path);
+    settings.put(LUA_CPATH, lua_cpath);
+    return settings;
   }
 }

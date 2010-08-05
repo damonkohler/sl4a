@@ -16,16 +16,16 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import com.googlecode.android_scripting.language.Language;
-import com.googlecode.android_scripting.language.SupportedLanguages;
-import com.googlecode.android_scripting.rpc.MethodDescriptor;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.googlecode.android_scripting.language.Language;
+import com.googlecode.android_scripting.language.SupportedLanguages;
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
 
 /**
  * Combines all the execution-related specs of a particular interpreter installed in the system.
@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
-public class Interpreter implements InterpreterStrings {
+public class Interpreter implements InterpreterPropertyNames {
 
   private String mExtension;
   private String mName;
@@ -51,8 +51,8 @@ public class Interpreter implements InterpreterStrings {
     mEnvironment = new HashMap<String, String>();
   }
 
-  public static Interpreter buildFromMaps(Map<String, String> data, Map<String, String> variables,
-      Map<String, String> arguments) {
+  public static Interpreter buildFromMaps(Map<String, String> data,
+      Map<String, String> environment_variables, Map<String, String> arguments) {
     String extension = data.get(EXTENSION);
     String name = data.get(NAME);
     String niceName = data.get(NICE_NAME);
@@ -68,7 +68,7 @@ public class Interpreter implements InterpreterStrings {
     interpreter.setInteractiveCommand(interactiveCommand);
     interpreter.setScriptCommand(scriptCommand);
     interpreter.setLanguage(SupportedLanguages.getLanguageByExtension(extension));
-    interpreter.putAllEnvironmentVariables(variables);
+    interpreter.putAllEnvironmentVariables(environment_variables);
     interpreter.addAllArguments(arguments.values());
     return interpreter;
   }

@@ -18,15 +18,19 @@ package com.googlecode.bshforandroid;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class BshDescriptor extends Sl4aHostedInterpreter {
 
   private final static String BSH_JAR = "bsh-2.0b4-dx.jar";
+  private static final String ENV_DATA = "ANDROID_DATA";
 
   public String getExtension() {
     return ".bsh";
@@ -71,5 +75,12 @@ public class BshDescriptor extends Sl4aHostedInterpreter {
     String absolutePathToJar = new File(getExtrasPath(context), BSH_JAR).getAbsolutePath();
     return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-classpath",
         absolutePathToJar, "bsh.Interpreter");
+  }
+
+  @Override
+  public Map<String, String> getEnvironmentVariables(Context unused) {
+    Map<String, String> values = new HashMap<String, String>();
+    values.put(ENV_DATA, InterpreterConstants.SDCARD_ROOT + getClass().getPackage().getName());
+    return values;
   }
 }

@@ -64,15 +64,9 @@ public abstract class InterpreterProvider extends ContentProvider {
   }
 
   /**
-   * Should return an instance instance of a class that implements interpreter descriptor.
+   * Returns an instance of the class that implements the desired {@link InterpreterDescriptor}.
    */
   protected abstract InterpreterDescriptor getDescriptor();
-
-  /**
-   * Should return a map of environment variables names and their values (or null if interpreter
-   * does not require any environment variables).
-   */
-  protected abstract Map<String, String> getEnvironmentSettings();
 
   @Override
   public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -103,13 +97,13 @@ public abstract class InterpreterProvider extends ContentProvider {
     if (!isInterpreterInstalled()) {
       return null;
     }
-    Map<String, ? extends Object> map;
+    Map<String, String> map;
     switch (mUriMatcher.match(uri)) {
     case BASE:
-      map = getSettings();
+      map = getProperties();
       break;
     case ENVVARS:
-      map = getEnvironmentSettings();
+      map = getEnvironmentVariables();
       break;
     case ARGS:
       map = getArguments();
@@ -129,7 +123,7 @@ public abstract class InterpreterProvider extends ContentProvider {
     return mPreferences.getBoolean(InterpreterConstants.INSTALL_PREF, false);
   }
 
-  protected Cursor buildCursorFromMap(Map<String, ? extends Object> map) {
+  protected Cursor buildCursorFromMap(Map<String, String> map) {
     if (map == null) {
       return null;
     }
@@ -138,19 +132,26 @@ public abstract class InterpreterProvider extends ContentProvider {
     return cursor;
   }
 
-  protected Map<String, Object> getSettings() {
-    Map<String, Object> values = new HashMap<String, Object>();
-    values.put(InterpreterStrings.NAME, mDescriptor.getName());
-    values.put(InterpreterStrings.NICE_NAME, mDescriptor.getNiceName());
-    values.put(InterpreterStrings.EXTENSION, mDescriptor.getExtension());
-    values.put(InterpreterStrings.BINARY, mDescriptor.getBinary(mContext).getAbsolutePath());
-    values.put(InterpreterStrings.INTERACTIVE_COMMAND, mDescriptor.getInteractiveCommand(mContext));
-    values.put(InterpreterStrings.SCRIPT_COMMAND, mDescriptor.getScriptCommand(mContext));
+  protected Map<String, String> getProperties() {
+    Map<String, String> values = new HashMap<String, String>();
+    values.put(InterpreterPropertyNames.NAME, mDescriptor.getName());
+    values.put(InterpreterPropertyNames.NICE_NAME, mDescriptor.getNiceName());
+    values.put(InterpreterPropertyNames.EXTENSION, mDescriptor.getExtension());
+    values.put(InterpreterPropertyNames.BINARY, mDescriptor.getBinary(mContext).getAbsolutePath());
+    values.put(InterpreterPropertyNames.INTERACTIVE_COMMAND, mDescriptor
+        .getInteractiveCommand(mContext));
+    values.put(InterpreterPropertyNames.SCRIPT_COMMAND, mDescriptor.getScriptCommand(mContext));
     return values;
   }
 
-  protected Map<String, Object> getArguments() {
-    Map<String, Object> values = new LinkedHashMap<String, Object>();
+  protected Map<String, String> getEnvironmentVariables() {
+    Map<String, String> values = new HashMap<String, String>();
+    values.putAll(mDescriptor.getEnvironmentVariables(mContext));
+    return values;
+  }
+
+  protected Map<String, String> getArguments() {
+    Map<String, String> values = new LinkedHashMap<String, String>();
     int column = 0;
     for (String argument : mDescriptor.getArguments(mContext)) {
       values.put(Integer.toString(column), argument);

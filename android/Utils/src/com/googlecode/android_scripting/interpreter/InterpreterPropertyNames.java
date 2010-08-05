@@ -17,11 +17,11 @@
 package com.googlecode.android_scripting.interpreter;
 
 /**
- * A collection of string for querying InterpreterProvider.
+ * A collection of {@link String} keys for querying an InterpreterProvider.
  * 
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
-public interface InterpreterStrings {
+public interface InterpreterPropertyNames {
 
   /**
    * Unique name of the interpreter.
@@ -52,10 +52,5 @@ public interface InterpreterStrings {
    * Final argument to interpreter binary when running a script.
    */
   public static final String SCRIPT_COMMAND = "scriptCommand";
-
-  /**
-   * Execution arguments.
-   */
-  public static final String ARGUMENTS = "arguments";
 
 }

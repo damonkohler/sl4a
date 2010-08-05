@@ -18,15 +18,19 @@ package com.googlecode.rhinoforandroid;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class RhinoDescriptor extends Sl4aHostedInterpreter {
 
-  private final static String RHINO_JAR = "rhino1_7R2-dex.jar";
+  private static final String RHINO_JAR = "rhino1_7R2-dex.jar";
+  private static final String ENV_DATA = "ANDROID_DATA";
 
   public String getExtension() {
     return ".js";
@@ -71,5 +75,12 @@ public class RhinoDescriptor extends Sl4aHostedInterpreter {
     String absolutePathToJar = new File(getExtrasPath(context), RHINO_JAR).getAbsolutePath();
     return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
         absolutePathToJar, "org.mozilla.javascript.tools.shell.Main", "-O", "-1");
+  }
+
+  @Override
+  public Map<String, String> getEnvironmentVariables(Context context) {
+    Map<String, String> settings = new HashMap<String, String>(1);
+    settings.put(ENV_DATA, InterpreterConstants.SDCARD_ROOT + getClass().getPackage().getName());
+    return settings;
   }
 }

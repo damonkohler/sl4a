@@ -18,14 +18,23 @@
 package com.googlecode.tclforandroid;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Context;
 
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
+import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class TclDescriptor extends Sl4aHostedInterpreter {
 
-  private final static String TCL = "tclsh";
+  private static final String TCL = "tclsh";
+  private static final String ENV_HOME = "TCL_LIBRARY";
+  private static final String ENV_LIB = "TCLLIBPATH";
+  private static final String ENV_SCRIPTS = "TCL_SCRIPTS";
+  private static final String ENV_TEMP = "TEMP";
+  private static final String ENV_HOME_GLOBAL = "HOME";
 
   public String getExtension() {
     return ".tcl";
@@ -60,4 +69,37 @@ public class TclDescriptor extends Sl4aHostedInterpreter {
     return 1;
   }
 
+  private String getExtrasRoot() {
+    return InterpreterConstants.SDCARD_ROOT + getClass().getPackage().getName()
+        + InterpreterConstants.INTERPRETER_EXTRAS_ROOT;
+  }
+
+  private String getHome(Context context) {
+    File file = InterpreterUtils.getInterpreterRoot(context, getName());
+    return file.getAbsolutePath();
+  }
+
+  private String getExtras() {
+    File file = new File(getExtrasRoot(), getName());
+    return file.getAbsolutePath();
+  }
+
+  private String getTemp() {
+    File tmp = new File(getExtrasRoot(), getName() + "/tmp");
+    if (!tmp.isDirectory()) {
+      tmp.mkdir();
+    }
+    return tmp.getAbsolutePath();
+  }
+
+  @Override
+  public Map<String, String> getEnvironmentVariables(Context context) {
+    Map<String, String> settings = new HashMap<String, String>();
+    settings.put(ENV_HOME, getHome(context));
+    settings.put(ENV_LIB, getExtras());
+    settings.put(ENV_TEMP, getTemp());
+    settings.put(ENV_SCRIPTS, InterpreterConstants.SCRIPTS_ROOT);
+    settings.put(ENV_HOME_GLOBAL, getClass().getPackage().getName());
+    return settings;
+  }
 }

@@ -18,17 +18,21 @@ package com.googlecode.jrubyforandroid;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class JRubyDescriptor extends Sl4aHostedInterpreter {
 
-  private final static String JRUBY_PREFIX =
+  private static final String JRUBY_PREFIX =
       "-e $LOAD_PATH.push('file:%1$s!/META-INF/jruby.home/lib/ruby/1.8'); require 'android'; %2$s";
-  private final static String JRUBY_JAR = "jruby-complete-1.4.jar";
+  private static final String JRUBY_JAR = "jruby-complete-1.4.jar";
+  private static final String ENV_DATA = "ANDROID_DATA";
 
   public String getExtension() {
     return ".rb";
@@ -86,5 +90,12 @@ public class JRubyDescriptor extends Sl4aHostedInterpreter {
     String absolutePathToJar = new File(getExtrasPath(context), JRUBY_JAR).getAbsolutePath();
     return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
         absolutePathToJar, "org.jruby.Main", "-X-C");
+  }
+
+  @Override
+  public Map<String, String> getEnvironmentVariables(Context unused) {
+    Map<String, String> values = new HashMap<String, String>(1);
+    values.put(ENV_DATA, InterpreterConstants.SDCARD_ROOT + getClass().getPackage().getName());
+    return values;
   }
 }

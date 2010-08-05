@@ -18,7 +18,9 @@ package com.googlecode.android_scripting.interpreter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 
@@ -89,5 +91,10 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
   @Override
   public List<String> getArguments(Context context) {
     return new ArrayList<String>();
+  }
+
+  @Override
+  public Map<String, String> getEnvironmentVariables(Context context) {
+    return new HashMap<String, String>();
   }
 }

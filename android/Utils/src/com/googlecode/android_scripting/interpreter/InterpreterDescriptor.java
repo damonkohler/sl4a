@@ -18,6 +18,7 @@ package com.googlecode.android_scripting.interpreter;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 
@@ -48,8 +49,6 @@ public interface InterpreterDescriptor {
    */
   public int getVersion();
 
-  // The following methods provide execution-related information:
-
   /**
    * Returns the binary as a File object. Context is the InterpreterProvider's {@link Context} and
    * is provided to find the interpreter installation directory.
@@ -74,7 +73,11 @@ public interface InterpreterDescriptor {
    */
   public List<String> getArguments(Context context);
 
-  // The following methods are required for installation:
+  /**
+   * Should return a map of environment variables names and their values (or null if interpreter
+   * does not require any environment variables).
+   */
+  public Map<String, String> getEnvironmentVariables(Context context);
 
   /**
    * Returns true if interpreter has an archive.
