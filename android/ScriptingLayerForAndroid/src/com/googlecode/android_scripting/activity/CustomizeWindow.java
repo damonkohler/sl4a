@@ -17,7 +17,9 @@
 package com.googlecode.android_scripting.activity;
 
 import android.app.Activity;
+import android.view.View;
 import android.view.Window;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.googlecode.android_scripting.R;
@@ -35,5 +37,10 @@ public class CustomizeWindow {
     ((TextView) activity.findViewById(R.id.left_text)).setText(title);
     ((TextView) activity.findViewById(R.id.right_text)).setText("SL4A r"
         + Version.getVersion(activity));
+  }
+
+  public static void toggleProgressBarVisibility(Activity activity, boolean on) {
+    ((ProgressBar) activity.findViewById(R.id.progress_bar)).setVisibility(on ? View.VISIBLE
+        : View.GONE);
   }
 }

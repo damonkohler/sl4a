@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <searchable xmlns:android="http://schemas.android.com/apk/res/android"
+        android:label="@string/application_title"
+        android:hint="@string/search_description_apis"
+        android:searchSettingsDescription="@string/search_description_apis"
+        android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+        android:searchSuggestAuthority="com.googlecode.android_scripting.provider.apiprovider"
+        android:searchSuggestPath="searchSuggestions">
+</searchable>
+
