@@ -25,6 +25,11 @@ public class SignalStrengthFacade extends RpcReceiver {
     public void onSignalStrengthsChanged(SignalStrength signalStrength) {
       mSignalStrengths = new Bundle();
       mSignalStrengths.putInt("gsm_signal_strength", signalStrength.getGsmSignalStrength());
+      mSignalStrengths.putInt("gsm_bit_error_rate", signalStrength.getGsmBitErrorRate());
+      mSignalStrengths.putInt("cdma_dbm", signalStrength.getCdmaDbm());
+      mSignalStrengths.putInt("cdma_ecio", signalStrength.getCdmaEcio());
+      mSignalStrengths.putInt("evdo_dbm", signalStrength.getEvdoDbm());
+      mSignalStrengths.putInt("evdo_ecio", signalStrength.getEvdoEcio());
       mEventFacade.postEvent("signal_strengths", mSignalStrengths);
     }
   };
