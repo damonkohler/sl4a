@@ -62,7 +62,7 @@ public class SensorManagerFacade extends RpcReceiver {
     }
   }
 
-  @Rpc(description = "Starts recording sensor data to be available for polling.")
+  @Rpc(description = "Returns the most recently recorded sensor data.")
   public Bundle readSensors() {
     if (mSensorReadings == null) {
       return null;
