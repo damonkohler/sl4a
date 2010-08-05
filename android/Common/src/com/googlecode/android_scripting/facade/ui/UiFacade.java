@@ -16,6 +16,11 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
+import java.util.Set;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.util.AndroidRuntimeException;
@@ -30,11 +35,6 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.Set;
 
 /**
  * UiFacade
@@ -85,6 +85,22 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "Title") String title, @RpcParameter(name = "Message") String message) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask = new RunnableSeekBarDialog(progress, max, title, message);
+  }
+
+  @Rpc(description = "Create time picker dialog.")
+  public void dialogCreateTimePicker(@RpcParameter(name = "Hour") @RpcDefault("0") Integer hour,
+      @RpcParameter(name = "Minute") @RpcDefault("0") Integer minute,
+      @RpcParameter(name = "Use 24 hour clock") @RpcDefault("false") Boolean is24hour) {
+    dialogDismiss(); // Dismiss any existing dialog.
+    mDialogTask = new RunnableTimePickerDialog(hour, minute, is24hour);
+  }
+
+  @Rpc(description = "Create date picker dialog.")
+  public void dialogCreateDatePicker(@RpcParameter(name = "Year") @RpcDefault("1970") Integer year,
+      @RpcParameter(name = "Month") @RpcDefault("1") Integer month,
+      @RpcParameter(name = "Day") @RpcDefault("1") Integer day) {
+    dialogDismiss(); // Dismiss any existing dialog.
+    mDialogTask = new RunnableDatePickerDialog(year, month, day);
   }
 
   @Rpc(description = "Dismiss dialog.")
