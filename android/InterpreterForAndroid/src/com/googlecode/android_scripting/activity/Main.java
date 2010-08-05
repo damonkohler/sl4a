@@ -197,13 +197,13 @@ public abstract class Main extends Activity {
 
   protected void setInstalled(boolean isInstalled) {
     SharedPreferences.Editor editor = mPreferences.edit();
-    editor.putBoolean(InterpreterConstants.INSTALL_PREF, isInstalled);
+    editor.putBoolean(InterpreterConstants.INSTALLED_PREFERENCE_KEY, isInstalled);
     editor.commit();
     broadcastInstallationStateChange(isInstalled);
   }
 
   protected boolean checkInstalled() {
-    boolean isInstalled = mPreferences.getBoolean(InterpreterConstants.INSTALL_PREF, false);
+    boolean isInstalled = mPreferences.getBoolean(InterpreterConstants.INSTALLED_PREFERENCE_KEY, false);
     broadcastInstallationStateChange(isInstalled);
     return isInstalled;
   }

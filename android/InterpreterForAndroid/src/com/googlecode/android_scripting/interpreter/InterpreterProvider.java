@@ -43,9 +43,9 @@ import android.preference.PreferenceManager;
  */
 public abstract class InterpreterProvider extends ContentProvider {
 
-  private static final int BASE = 1;
-  private static final int ENVVARS = 2;
-  private static final int ARGS = 3;
+  private static final int PROPERTIES = 1;
+  private static final int ENVIRONMENT_VARIABLES = 2;
+  private static final int ARGUMENTS = 3;
 
   private UriMatcher mUriMatcher;
   private SharedPreferences mPreferences;
@@ -58,9 +58,10 @@ public abstract class InterpreterProvider extends ContentProvider {
   public InterpreterProvider() {
     mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     String auth = this.getClass().getName().toLowerCase();
-    mUriMatcher.addURI(auth, InterpreterConstants.PROVIDER_BASE, BASE);
-    mUriMatcher.addURI(auth, InterpreterConstants.PROVIDER_ENV, ENVVARS);
-    mUriMatcher.addURI(auth, InterpreterConstants.PROVIDER_ARGS, ARGS);
+    mUriMatcher.addURI(auth, InterpreterConstants.PROVIDER_PROPERTIES, PROPERTIES);
+    mUriMatcher.addURI(auth, InterpreterConstants.PROVIDER_ENVIRONMENT_VARIABLES,
+        ENVIRONMENT_VARIABLES);
+    mUriMatcher.addURI(auth, InterpreterConstants.PROVIDER_ARGUMENTS, ARGUMENTS);
   }
 
   /**
@@ -99,13 +100,13 @@ public abstract class InterpreterProvider extends ContentProvider {
     }
     Map<String, String> map;
     switch (mUriMatcher.match(uri)) {
-    case BASE:
+    case PROPERTIES:
       map = getProperties();
       break;
-    case ENVVARS:
+    case ENVIRONMENT_VARIABLES:
       map = getEnvironmentVariables();
       break;
-    case ARGS:
+    case ARGUMENTS:
       map = getArguments();
       break;
     default:
@@ -120,7 +121,7 @@ public abstract class InterpreterProvider extends ContentProvider {
   }
 
   private boolean isInterpreterInstalled() {
-    return mPreferences.getBoolean(InterpreterConstants.INSTALL_PREF, false);
+    return mPreferences.getBoolean(InterpreterConstants.INSTALLED_PREFERENCE_KEY, false);
   }
 
   private Cursor buildCursorFromMap(Map<String, String> map) {

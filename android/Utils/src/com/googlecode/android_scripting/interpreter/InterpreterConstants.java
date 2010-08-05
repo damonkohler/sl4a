@@ -48,11 +48,11 @@ public interface InterpreterConstants {
       "com.googlecode.android_scripting.INTERPRETER_REMOVED";
 
   // Interpreter content provider.
-  public static final String PROVIDER_BASE = "com.googlecode.android_scripting.base";
-  public static final String PROVIDER_ENV = "com.googlecode.android_scripting.env";
-  public static final String PROVIDER_ARGS = "com.googlecode.android_scripting.args";
+  public static final String PROVIDER_PROPERTIES = "com.googlecode.android_scripting.base";
+  public static final String PROVIDER_ENVIRONMENT_VARIABLES = "com.googlecode.android_scripting.env";
+  public static final String PROVIDER_ARGUMENTS = "com.googlecode.android_scripting.args";
 
-  public static final String INSTALL_PREF = "SL4A.interpreter.installed";
+  public static final String INSTALLED_PREFERENCE_KEY = "SL4A.interpreter.installed";
 
   public static final String MIME = "script/";
 }

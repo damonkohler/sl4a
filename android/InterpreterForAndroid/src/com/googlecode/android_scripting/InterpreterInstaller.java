@@ -300,7 +300,7 @@ public abstract class InterpreterInstaller extends AsyncTask<Void, Void, Boolean
 
   protected boolean isInstalled() {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-    return preferences.getBoolean(InterpreterConstants.INSTALL_PREF, false);
+    return preferences.getBoolean(InterpreterConstants.INSTALLED_PREFERENCE_KEY, false);
   }
 
   private void cleanup() {

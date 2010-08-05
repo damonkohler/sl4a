@@ -155,15 +155,15 @@ public class InterpreterConfiguration {
       }
       ProviderInfo provider = packInfo.providers[0];
 
-      Map<String, String> interpreterMap = getMap(provider, InterpreterConstants.PROVIDER_BASE);
+      Map<String, String> interpreterMap = getMap(provider, InterpreterConstants.PROVIDER_PROPERTIES);
       if (interpreterMap == null) {
         throw new RuntimeException("Null interpreter map for: " + packageName);
       }
-      Map<String, String> environmentMap = getMap(provider, InterpreterConstants.PROVIDER_ENV);
+      Map<String, String> environmentMap = getMap(provider, InterpreterConstants.PROVIDER_ENVIRONMENT_VARIABLES);
       if (environmentMap == null) {
         throw new RuntimeException("Null environment map for: " + packageName);
       }
-      Map<String, String> argumentsMap = getMap(provider, InterpreterConstants.PROVIDER_ARGS);
+      Map<String, String> argumentsMap = getMap(provider, InterpreterConstants.PROVIDER_ARGUMENTS);
       if (argumentsMap == null) {
         throw new RuntimeException("Null arguments map for: " + packageName);
       }

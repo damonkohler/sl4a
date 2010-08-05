@@ -132,7 +132,7 @@ public abstract class InterpreterUninstaller extends AsyncTask<Void, Void, Boole
 
   protected boolean isInstalled() {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-    return preferences.getBoolean(InterpreterConstants.INSTALL_PREF, false);
+    return preferences.getBoolean(InterpreterConstants.INSTALLED_PREFERENCE_KEY, false);
   }
 
   protected abstract boolean cleanup();
