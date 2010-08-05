@@ -47,6 +47,10 @@ public abstract class FutureActivityTask<T> {
     return mResult;
   }
 
+  public boolean isBlocking() {
+    return false;
+  }
+
   public int getTaskId() {
     return myTaskId;
   }

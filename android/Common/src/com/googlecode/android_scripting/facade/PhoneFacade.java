@@ -16,13 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.net.URLEncoder;
-import java.util.concurrent.Callable;
-
-import org.json.JSONException;
-
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -40,6 +33,13 @@ import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.util.concurrent.Callable;
 
 /**
  * Exposes TelephonyManager functionality.
@@ -136,7 +136,8 @@ public class PhoneFacade extends RpcReceiver {
       c.close();
       phoneCallNumber(number);
     } else {
-      mAndroidFacade.startActivity(Intent.ACTION_CALL, uriString, null, null);
+      // XXX @Damon: should it block?
+      mAndroidFacade.startActivity(Intent.ACTION_CALL, uriString, null, null, null);
     }
   }
 
@@ -148,7 +149,8 @@ public class PhoneFacade extends RpcReceiver {
 
   @Rpc(description = "Dials a contact/phone number by URI.")
   public void phoneDial(@RpcParameter(name = "uri") final String uri) throws JSONException {
-    mAndroidFacade.startActivity(Intent.ACTION_DIAL, uri, null, null);
+    // XXX @Damon: should it block?
+    mAndroidFacade.startActivity(Intent.ACTION_DIAL, uri, null, null, null);
   }
 
   @Rpc(description = "Dials a phone number.")
