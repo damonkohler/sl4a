@@ -50,12 +50,12 @@ public abstract class InterpreterProvider extends ContentProvider {
   private UriMatcher mUriMatcher;
   private SharedPreferences mPreferences;
 
-  protected InterpreterDescriptor mDescriptor;
-  protected Context mContext;
+  private InterpreterDescriptor mDescriptor;
+  private Context mContext;
 
   public static final String MIME = "vnd.android.cursor.item/vnd.googlecode.interpreter";
 
-  protected InterpreterProvider() {
+  public InterpreterProvider() {
     mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     String auth = this.getClass().getName().toLowerCase();
     mUriMatcher.addURI(auth, InterpreterConstants.PROVIDER_BASE, BASE);
@@ -119,11 +119,11 @@ public abstract class InterpreterProvider extends ContentProvider {
     return 0;
   }
 
-  protected boolean isInterpreterInstalled() {
+  private boolean isInterpreterInstalled() {
     return mPreferences.getBoolean(InterpreterConstants.INSTALL_PREF, false);
   }
 
-  protected Cursor buildCursorFromMap(Map<String, String> map) {
+  private Cursor buildCursorFromMap(Map<String, String> map) {
     if (map == null) {
       return null;
     }
@@ -132,7 +132,7 @@ public abstract class InterpreterProvider extends ContentProvider {
     return cursor;
   }
 
-  protected Map<String, String> getProperties() {
+  private Map<String, String> getProperties() {
     Map<String, String> values = new HashMap<String, String>();
     values.put(InterpreterPropertyNames.NAME, mDescriptor.getName());
     values.put(InterpreterPropertyNames.NICE_NAME, mDescriptor.getNiceName());
@@ -144,13 +144,13 @@ public abstract class InterpreterProvider extends ContentProvider {
     return values;
   }
 
-  protected Map<String, String> getEnvironmentVariables() {
+  private Map<String, String> getEnvironmentVariables() {
     Map<String, String> values = new HashMap<String, String>();
     values.putAll(mDescriptor.getEnvironmentVariables(mContext));
     return values;
   }
 
-  protected Map<String, String> getArguments() {
+  private Map<String, String> getArguments() {
     Map<String, String> values = new LinkedHashMap<String, String>();
     int column = 0;
     for (String argument : mDescriptor.getArguments(mContext)) {

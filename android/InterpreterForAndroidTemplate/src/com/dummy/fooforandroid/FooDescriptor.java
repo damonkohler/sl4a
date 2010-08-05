@@ -2,6 +2,7 @@ package com.dummy.fooforandroid;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 
@@ -9,14 +10,17 @@ import com.googlecode.android_scripting.interpreter.InterpreterDescriptor;
 
 public class FooDescriptor implements InterpreterDescriptor {
 
+  @Override
   public String getName() {
     return null;
   }
 
+  @Override
   public String getNiceName() {
     return null;
   }
 
+  @Override
   public String getExtension() {
     return null;
   }
@@ -41,63 +45,58 @@ public class FooDescriptor implements InterpreterDescriptor {
     return null;
   }
 
-  public String getPath(Context context) {
-    return null;
-  }
-
+  @Override
   public int getVersion() {
     return 0;
   }
 
-  public String getEmptyParams(Context context) {
-    return null;
-  }
-
-  public String getExecuteCommand(Context context) {
-    return null;
-  }
-
-  public String getExecuteParams(Context context) {
-    return null;
-  }
-
+  @Override
   public boolean hasInterpreterArchive() {
     return false;
   }
 
+  @Override
   public String getInterpreterArchiveName() {
     return null;
   }
 
+  @Override
   public String getInterpreterArchiveUrl() {
     return null;
   }
 
+  @Override
   public boolean hasExtrasArchive() {
     return false;
   }
 
+  @Override
   public String getExtrasArchiveName() {
     return null;
   }
 
+  @Override
   public String getExtrasArchiveUrl() {
     return null;
   }
 
+  @Override
   public boolean hasScriptsArchive() {
     return false;
   }
 
+  @Override
   public String getScriptsArchiveName() {
     return null;
   }
 
+  @Override
   public String getScriptsArchiveUrl() {
     return null;
   }
 
-  public String[] getExecuteArgs(Context context) {
+  @Override
+  public Map<String, String> getEnvironmentVariables(Context arg0) {
     return null;
   }
 }
