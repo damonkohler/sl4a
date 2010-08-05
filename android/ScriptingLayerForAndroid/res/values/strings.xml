@@ -73,6 +73,8 @@
     name="no_scripts_message">Start adding scripts and interpreters by pressing the menu
     button.</string>
   <string
+    name="no_apis_message">No matching APIs found.</string>  
+  <string
     name="notification_action_message">Tap to open Script Monitor.</string>
   <string
     name="no_running_scripts_message">There are no currently running scripts.</string>
@@ -83,5 +85,7 @@
   <string
     name="no_bluetooth_devices_message">No Bluetooth devices found.</string>
   <string
-    name="search_description">Search scripts</string>
+    name="search_description_scripts">Search scripts</string>
+  <string
+    name="search_description_apis">Search APIs</string>
 </resources>

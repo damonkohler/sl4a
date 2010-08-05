@@ -17,11 +17,13 @@
 package com.googlecode.android_scripting.activity;
 
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +45,7 @@ import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.language.SupportedLanguages;
+import com.googlecode.android_scripting.provider.SelectableListProxy;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.ParameterDescriptor;
 import com.googlecode.android_scripting.rpc.RpcDepreciated;
@@ -55,12 +58,14 @@ import java.util.Set;
 
 public class ApiBrowser extends ListActivity {
 
+  private boolean searchResultMode = false;
+
   private static enum RequestCode {
     RPC_PROMPT
   }
 
   private static enum MenuId {
-    EXPAND_ALL, COLLAPSE_ALL;
+    EXPAND_ALL, COLLAPSE_ALL, SEARCH;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -73,7 +78,7 @@ public class ApiBrowser extends ListActivity {
     }
   }
 
-  private List<MethodDescriptor> mRpcDescriptors;
+  private SelectableMethodDescriptorListProxy mRpcDescriptors;
   private Set<Integer> mExpandedPositions;
   private ApiBrowserAdapter mAdapter;
   private boolean mIsLanguageSupported;
@@ -84,18 +89,19 @@ public class ApiBrowser extends ListActivity {
     setContentView(R.layout.api_browser);
     getListView().setFastScrollEnabled(true);
     mExpandedPositions = new HashSet<Integer>();
-    mRpcDescriptors = FacadeConfiguration.collectRpcDescriptors();
-    for (int i = mRpcDescriptors.size() - 1; i >= 0; i--) {
-      MethodDescriptor descriptor = mRpcDescriptors.get(i);
+    List<MethodDescriptor> listRpcDescriptors = FacadeConfiguration.collectRpcDescriptors();
+    for (int i = listRpcDescriptors.size() - 1; i >= 0; i--) {
+      MethodDescriptor descriptor = listRpcDescriptors.get(i);
       Method method = descriptor.getMethod();
       if (method.isAnnotationPresent(RpcDepreciated.class)) {
-        mRpcDescriptors.remove(i);
+        listRpcDescriptors.remove(i);
       } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
         int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
         if (FacadeConfiguration.getSdkLevel() < requiredSdkLevel) {
-          mRpcDescriptors.remove(i);
+          listRpcDescriptors.remove(i);
         }
       }
+      mRpcDescriptors = new SelectableMethodDescriptorListProxy(listRpcDescriptors);
     }
     String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     mIsLanguageSupported = SupportedLanguages.checkLanguageSupported(scriptName);
@@ -107,6 +113,31 @@ public class ApiBrowser extends ListActivity {
   }
 
   @Override
+  protected void onNewIntent(Intent intent) {
+    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+      searchResultMode = true;
+      String query = intent.getStringExtra(SearchManager.QUERY);
+      mRpcDescriptors.setQuery(query);
+      if (mRpcDescriptors.size() == 1) {
+        mExpandedPositions.add(0);
+      }
+      mAdapter.notifyDataSetChanged();
+    }
+  }
+
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_BACK && searchResultMode) {
+      searchResultMode = false;
+      mExpandedPositions.clear();
+      mRpcDescriptors.reset();
+      mAdapter.notifyDataSetChanged();
+      return true;
+    }
+    return super.onKeyDown(keyCode, event);
+  }
+
+  @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
     menu.clear();
@@ -114,6 +145,8 @@ public class ApiBrowser extends ListActivity {
         android.R.drawable.ic_menu_add);
     menu.add(Menu.NONE, MenuId.COLLAPSE_ALL.getId(), Menu.NONE, "Collapse All").setIcon(
         android.R.drawable.ic_menu_close_clear_cancel);
+    menu.add(Menu.NONE, MenuId.SEARCH.getId(), Menu.NONE, "Search").setIcon(
+        R.drawable.ic_menu_search);
     return true;
   }
 
@@ -127,7 +160,10 @@ public class ApiBrowser extends ListActivity {
       }
     } else if (itemId == MenuId.COLLAPSE_ALL.getId()) {
       mExpandedPositions.clear();
+    } else if (itemId == MenuId.SEARCH.getId()) {
+      onSearchRequested();
     }
+
     mAdapter.notifyDataSetInvalidated();
     return true;
   }
@@ -281,6 +317,18 @@ public class ApiBrowser extends ListActivity {
     @Override
     public Object[] getSections() {
       return mIndexer.getSections();
+    }
+  }
+
+  private class SelectableMethodDescriptorListProxy extends SelectableListProxy<MethodDescriptor> {
+
+    public SelectableMethodDescriptorListProxy(List<MethodDescriptor> list) {
+      super(list);
+    }
+
+    @Override
+    public String getString(MethodDescriptor item) {
+      return item.getMethod().getName().toLowerCase();
     }
   }
 }

@@ -20,41 +20,51 @@ import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.provider.LiveFolders;
 
-import com.googlecode.android_scripting.IntentBuilders;
-import com.googlecode.android_scripting.ScriptStorageAdapter;
-import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.facade.FacadeConfiguration;
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
+import com.googlecode.android_scripting.rpc.Rpc;
+import com.googlecode.android_scripting.rpc.RpcDepreciated;
+import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
-import java.io.File;
+import java.lang.reflect.Method;
+import java.util.List;
 
-public class ScriptProvider extends ContentProvider {
+public class ApiProvider extends ContentProvider {
 
-  public static final String SINGLE_MIME = "vnd.android.cursor.item/vnd.sl4a.script";
-  public static final String MULTIPLE_MIME = "vnd.android.cursor.dir/vnd.sl4a.script";
+  public static final String SINGLE_MIME = "vnd.android.cursor.item/vnd.sl4a.api";
 
-  private static final int LIVEFOLDER_ID = 1;
-  private static final int SUGGESTIONS_ID = 2;
+  private static final int SUGGESTIONS_ID = 1;
 
-  public static final String AUTHORITY = ScriptProvider.class.getName().toLowerCase();
-  public static final String LIVEFOLDER = "liveFolder";
+  public static final String AUTHORITY = ApiProvider.class.getName().toLowerCase();
   public static final String SUGGESTIONS = "searchSuggestions/*/*";
 
   private final UriMatcher mUriMatcher;
+  private final List<MethodDescriptor> mRpcDescriptors;
 
   private Context mContext;
-  private InterpreterConfiguration mConfiguration;
 
-  public ScriptProvider() {
+  public ApiProvider() {
     mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    mUriMatcher.addURI(AUTHORITY, LIVEFOLDER, LIVEFOLDER_ID);
     mUriMatcher.addURI(AUTHORITY, SUGGESTIONS, SUGGESTIONS_ID);
+    mRpcDescriptors = FacadeConfiguration.collectRpcDescriptors();
+    for (int i = mRpcDescriptors.size() - 1; i >= 0; i--) {
+      MethodDescriptor descriptor = mRpcDescriptors.get(i);
+      Method method = descriptor.getMethod();
+      if (method.isAnnotationPresent(RpcDepreciated.class)) {
+        mRpcDescriptors.remove(i);
+      } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
+        int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
+        if (FacadeConfiguration.getSdkLevel() < requiredSdkLevel) {
+          mRpcDescriptors.remove(i);
+        }
+      }
+    }
   }
 
   @Override
@@ -64,9 +74,6 @@ public class ScriptProvider extends ContentProvider {
 
   @Override
   public String getType(Uri uri) {
-    if (uri.getLastPathSegment().equals("scripts")) {
-      return MULTIPLE_MIME;
-    }
     return SINGLE_MIME;
   }
 
@@ -78,8 +85,6 @@ public class ScriptProvider extends ContentProvider {
   @Override
   public boolean onCreate() {
     mContext = getContext();
-    mConfiguration = new InterpreterConfiguration(mContext);
-    mConfiguration.startDiscovering();
     return true;
   }
 
@@ -87,43 +92,27 @@ public class ScriptProvider extends ContentProvider {
   public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
       String sortOrder) {
     switch (mUriMatcher.match(uri)) {
-    case LIVEFOLDER_ID:
-      return queryLiveFolder();
     case SUGGESTIONS_ID:
       String query = uri.getLastPathSegment().toLowerCase();
       return querySearchSuggestions(query);
-    default:
-      return null;
     }
+    return null;
   }
 
   private Cursor querySearchSuggestions(String query) {
     String[] columns =
-        { BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.SUGGEST_COLUMN_QUERY,
-          SearchManager.SUGGEST_COLUMN_SHORTCUT_ID };
+        { BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1,
+          SearchManager.SUGGEST_COLUMN_TEXT_2, SearchManager.SUGGEST_COLUMN_QUERY };
     MatrixCursor cursor = new MatrixCursor(columns);
     int index = 0;
-    for (File script : ScriptStorageAdapter.listExecutableScripts(mConfiguration)) {
-      String scriptName = script.getName().toLowerCase();
-      if (!scriptName.contains(query)) {
+    for (MethodDescriptor descriptor : mRpcDescriptors) {
+      String name = descriptor.getMethod().getName();
+      if (!name.toLowerCase().contains(query)) {
         continue;
       }
-      Object[] row = { index, scriptName, scriptName, SearchManager.SUGGEST_NEVER_MAKE_SHORTCUT };
-      cursor.addRow(row);
-      ++index;
-    }
-    return cursor;
-  }
-
-  private Cursor queryLiveFolder() {
-    String[] columns = { BaseColumns._ID, LiveFolders.NAME, LiveFolders.INTENT };
-    MatrixCursor cursor = new MatrixCursor(columns);
-    int index = 0;
-    for (File script : ScriptStorageAdapter.listExecutableScripts(mConfiguration)) {
-      String scriptName = script.getName();
-      Intent intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
-      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      Object[] row = { index, scriptName, intent.toURI() };
+      String description = descriptor.getMethod().getAnnotation(Rpc.class).description();
+      description = description.replaceAll("\\s+", " ");
+      Object[] row = { index, name, description, name };
       cursor.addRow(row);
       ++index;
     }

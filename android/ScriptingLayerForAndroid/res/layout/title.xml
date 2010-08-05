@@ -22,6 +22,7 @@
         android:ellipsize="end" 
         android:maxLines="1"
         android:scrollHorizontally="true"
+        android:layout_centerVertical="true"
         android:fadingEdge="horizontal"
         android:layout_alignParentLeft="true" 
         android:textStyle="bold" 
@@ -32,5 +33,16 @@
     <TextView android:id="@+id/right_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true" />
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/progress_bar"
+        android:layout_alignWithParentIfMissing="true"/>
+     <ProgressBar android:id="@+id/progress_bar"
+      android:layout_height="18sp"
+      android:layout_width="18sp"
+      android:layout_marginLeft="5sp"
+      android:visibility="gone"
+      style="android:attr/ProgressBar_indeterminate"
+      android:layout_centerVertical="true"
+      android:layout_alignParentRight="true"
+     />
 </RelativeLayout>

@@ -53,6 +53,7 @@ public class InterpreterConfiguration {
   private final Set<Interpreter> mInterpreterSet;
   private final Set<ConfigurationObserver> mObserverSet;
   private final Context mContext;
+  private boolean isDiscoveryComplete = false;
 
   public interface ConfigurationObserver {
     public void onConfigurationChanged();
@@ -89,6 +90,7 @@ public class InterpreterConfiguration {
             discoveredInterpreters.add(interpreter);
           }
           mInterpreterSet.addAll(discoveredInterpreters);
+          isDiscoveryComplete = true;
           for (ConfigurationObserver observer : mObserverSet) {
             observer.onConfigurationChanged();
           }
@@ -107,6 +109,10 @@ public class InterpreterConfiguration {
           for (ResolveInfo info : resolveInfos) {
             addInterpreter(info.activityInfo.packageName);
           }
+          isDiscoveryComplete = true;
+          for (ConfigurationObserver observer : mObserverSet) {
+            observer.onConfigurationChanged();
+          }
         }
       });
     }
@@ -118,9 +124,6 @@ public class InterpreterConfiguration {
       Interpreter discoveredInterpreter = buildInterpreter(packageName);
       mmDiscoveredInterpreters.put(packageName, discoveredInterpreter);
       mInterpreterSet.add(discoveredInterpreter);
-      for (ConfigurationObserver observer : mObserverSet) {
-        observer.onConfigurationChanged();
-      }
       Log.v("Interpreter discovered: " + packageName + "\nBinary: "
           + discoveredInterpreter.getBinary());
     }
@@ -194,6 +197,9 @@ public class InterpreterConfiguration {
           @Override
           public void run() {
             addInterpreter(packageName);
+            for (ConfigurationObserver observer : mObserverSet) {
+              observer.onConfigurationChanged();
+            }
           }
         });
       } else if (action.equals(InterpreterConstants.ACTION_INTERPRETER_REMOVED)
@@ -228,6 +234,10 @@ public class InterpreterConfiguration {
 
   public void startDiscovering(String mime) {
     mListener.discoverForType(mime);
+  }
+
+  public boolean isDiscoveryComplete() {
+    return isDiscoveryComplete;
   }
 
   public void registerObserver(ConfigurationObserver observer) {

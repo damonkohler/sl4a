@@ -52,9 +52,9 @@ import com.googlecode.android_scripting.dialog.UsageTrackingConfirmation;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
+import com.googlecode.android_scripting.provider.SelectableListProxy;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -66,7 +66,7 @@ import java.util.Map.Entry;
  */
 public class ScriptManager extends ListActivity {
 
-  private SelectableListProxy mScriptList;
+  private SelectableFileListProxy mScriptList;
   private ScriptManagerAdapter mAdapter;
   private SharedPreferences mPreferences;
   private HashMap<Integer, Interpreter> mAddMenuIds;
@@ -91,12 +91,13 @@ public class ScriptManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
+    CustomizeWindow.toggleProgressBarVisibility(this, true);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     mAdapter = new ScriptManagerAdapter();
     mObserver = new ScriptListObserver();
     mAdapter.registerDataSetObserver(mObserver);
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    mScriptList = new SelectableListProxy(null);
+    mScriptList = new SelectableFileListProxy(null);
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     UsageTrackingConfirmation.show(this);
@@ -118,7 +119,7 @@ public class ScriptManager extends ListActivity {
       searchResultMode = true;
       String query = intent.getStringExtra(SearchManager.QUERY);
       ((TextView) findViewById(R.id.left_text)).setText(query);
-      mScriptList.setQuery(query.toString());
+      mScriptList.setQuery(query);
       if (mScriptList.size() == 0) {
         ((TextView) findViewById(android.R.id.empty)).setText("No matches found.");
       }
@@ -139,6 +140,8 @@ public class ScriptManager extends ListActivity {
   }
 
   private void updateScriptsList() {
+    boolean keepOn = !mConfiguration.isDiscoveryComplete();
+    CustomizeWindow.toggleProgressBarVisibility((ScriptManager.this), keepOn);
     if (mPreferences.getBoolean("show_all_files", false)) {
       mScriptList.replace(ScriptStorageAdapter.listAllScripts());
     } else {
@@ -155,6 +158,7 @@ public class ScriptManager extends ListActivity {
   @Override
   public void onStart() {
     super.onStart();
+    updateScriptsList();
     mConfiguration.registerObserver(mObserver);
   }
 
@@ -413,61 +417,15 @@ public class ScriptManager extends ListActivity {
     }
   }
 
-  private class SelectableListProxy {
-    private List<File> mmBaseList;
-    private List<File> mmSelectedList = new ArrayList<File>();
-    private String mmQuery = null;
+  private class SelectableFileListProxy extends SelectableListProxy<File> {
 
-    public SelectableListProxy(List<File> list) {
-      mmBaseList = list;
+    public SelectableFileListProxy(List<File> list) {
+      super(list);
     }
 
-    public void replace(List<File> list) {
-      mmBaseList = list;
-      select();
-    }
-
-    public void setQuery(String prefix) {
-      if (prefix != null && prefix.length() == 0) {
-        mmQuery = null;
-      } else {
-        mmQuery = prefix;
-      }
-      select();
-    }
-
-    private void select() {
-      mmSelectedList.clear();
-      if (mmQuery != null && mmBaseList != null) {
-        for (File f : mmBaseList) {
-          if (f.getName().contains(mmQuery)) {
-            mmSelectedList.add(f);
-          }
-        }
-      }
-    }
-
-    public void reset() {
-      mmQuery = null;
-    }
-
-    public int size() {
-      if (mmQuery == null) {
-        if (mmBaseList == null) {
-          return 0;
-        }
-        return mmBaseList.size();
-      } else {
-        return mmSelectedList.size();
-      }
-    }
-
-    public File get(int index) {
-      if (mmQuery == null) {
-        return mmBaseList.get(index);
-      } else {
-        return mmSelectedList.get(index);
-      }
+    @Override
+    public String getString(File item) {
+      return item.getName().toLowerCase();
     }
   }
 }

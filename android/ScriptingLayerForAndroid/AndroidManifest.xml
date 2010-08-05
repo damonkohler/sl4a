@@ -26,7 +26,7 @@
       </intent-filter>
       <meta-data
         android:name="android.app.searchable"
-        android:resource="@xml/searchable" />
+        android:resource="@xml/searchable_scripts" />
     </activity>
     <activity
       android:name=".activity.ScriptPicker"
@@ -100,7 +100,15 @@
     <activity
       android:name=".activity.ApiBrowser"
       android:theme="@android:style/Theme.NoTitleBar"
-      android:configChanges="keyboardHidden|orientation" />
+      android:configChanges="keyboardHidden|orientation" android:launchMode="singleTop" android:windowSoftInputMode="adjustResize">
+      <intent-filter>
+        <action
+          android:name="android.intent.action.SEARCH" />
+      </intent-filter>
+      <meta-data
+        android:name="android.app.searchable"
+        android:resource="@xml/searchable_apis" />
+    </activity>
     <activity
       android:name=".activity.ApiPrompt"
       android:theme="@android:style/Theme.NoTitleBar"
@@ -154,6 +162,9 @@
     <provider
       android:name=".provider.ScriptProvider"
       android:authorities="com.googlecode.android_scripting.provider.scriptprovider" />
+    <provider
+      android:name=".provider.ApiProvider"
+      android:authorities="com.googlecode.android_scripting.provider.apiprovider" />
     <uses-library
       android:name="android.test.runner" />
     <activity
