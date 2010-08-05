@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.Service;
 import android.content.Context;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
 
@@ -70,6 +71,16 @@ public class WifiFacade extends RpcReceiver {
     }
     mWifi.setWifiEnabled(enabled);
     return enabled;
+  }
+
+  @Rpc(description = "Disconnects from the currently active access point.", returns = "True if the operation succeeded.")
+  public Boolean wifiDisconnect() {
+    return mWifi.disconnect();
+  }
+
+  @Rpc(description = "Returns information about the currently active access point.")
+  public WifiInfo wifiGetConnectionInfo() {
+    return mWifi.getConnectionInfo();
   }
 
   @Override

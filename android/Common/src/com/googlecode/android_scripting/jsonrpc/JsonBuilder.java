@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.os.Bundle;
 import android.telephony.CellLocation;
 import android.telephony.gsm.GsmCellLocation;
@@ -102,6 +103,9 @@ public class JsonBuilder {
     }
     if (data instanceof CellLocation) {
       return buildJsonCellLocation((CellLocation) data);
+    }
+    if (data instanceof WifiInfo) {
+      return buildJsonWifiInfo((WifiInfo) data);
     }
     throw new JSONException("Failed to build JSON result.");
   }
@@ -189,6 +193,58 @@ public class JsonBuilder {
       result.put("cid", location.getCid());
     }
     // TODO(damonkohler): Add support for CdmaCellLocation. Not supported until API level 5.
+    return result;
+  }
+
+  private static JSONObject buildJsonWifiInfo(WifiInfo data) throws JSONException {
+    JSONObject result = new JSONObject();
+    result.put("hidden_ssid", data.getHiddenSSID());
+    result.put("ip_address", data.getIpAddress());
+    result.put("link_speed", data.getLinkSpeed());
+    result.put("network_id", data.getNetworkId());
+    result.put("rssi", data.getRssi());
+    result.put("bssid", data.getBSSID());
+    result.put("mac_address", data.getMacAddress());
+    result.put("ssid", data.getSSID());
+    String supplicantState = "";
+    switch (data.getSupplicantState()) {
+    case ASSOCIATED:
+      supplicantState = "associated";
+      break;
+    case ASSOCIATING:
+      supplicantState = "associating";
+      break;
+    case COMPLETED:
+      supplicantState = "completed";
+      break;
+    case DISCONNECTED:
+      supplicantState = "disconnected";
+      break;
+    case DORMANT:
+      supplicantState = "dormant";
+      break;
+    case FOUR_WAY_HANDSHAKE:
+      supplicantState = "four_way_handshake";
+      break;
+    case GROUP_HANDSHAKE:
+      supplicantState = "group_handshake";
+      break;
+    case INACTIVE:
+      supplicantState = "inactive";
+      break;
+    case INVALID:
+      supplicantState = "invalid";
+      break;
+    case SCANNING:
+      supplicantState = "scanning";
+      break;
+    case UNINITIALIZED:
+      supplicantState = "uninitialized";
+      break;
+    default:
+      supplicantState = "invalid";
+    }
+    result.put("supplicant_state", supplicantState);
     return result;
   }
 }
