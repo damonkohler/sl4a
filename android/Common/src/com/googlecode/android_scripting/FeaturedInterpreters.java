@@ -21,17 +21,17 @@ public class FeaturedInterpreters {
       FeaturedInterpreter interpreters[] =
           {
             new FeaturedInterpreter("BeanShell 2.0b4", ".bsh",
-                "http://android-scripting.googlecode.com/files/beanshellforandroid.apk"),
+                "http://android-scripting.googlecode.com/files/beanshell_for_android_r0.apk"),
             new FeaturedInterpreter("JRuby-1.4", ".rb",
-                "http://android-scripting.googlecode.com/files/jrubyforandroid.apk"),
+                "http://android-scripting.googlecode.com/files/jruby_for_android_r0.apk"),
             new FeaturedInterpreter("Lua 5.1.4", ".lua",
-                "http://android-scripting.googlecode.com/files/luaforandroid.apk"),
+                "http://android-scripting.googlecode.com/files/lua_for_android_r0.apk"),
             new FeaturedInterpreter("Perl 5.10.1", ".pl",
-                "http://android-scripting.googlecode.com/files/perlforandroid.apk"),
+                "http://android-scripting.googlecode.com/files/perl_for_android_r0.apk"),
             new FeaturedInterpreter("Python 2.6.2", ".py",
-                "http://android-scripting.googlecode.com/files/pythonforandroid.apk"),
+                "http://android-scripting.googlecode.com/files/python_for_android_r0.apk"),
             new FeaturedInterpreter("Rhino 1.7R2", ".js",
-                "http://android-scripting.googlecode.com/files/rhinoforandroid.apk"),
+                "http://android-scripting.googlecode.com/files/rhino_for_android_r0.apk"),
             new FeaturedInterpreter("PHP 5.3.3", ".php",
                 "http://php-for-android.googlecode.com/files/phpforandroid.apk") };
 
