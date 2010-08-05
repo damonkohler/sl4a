@@ -116,9 +116,12 @@ public class ScriptManager extends ListActivity {
   private void handleIntent(Intent intent) {
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
       searchResultMode = true;
-      ((TextView) findViewById(R.id.left_text)).setText("Search results");
       String query = intent.getStringExtra(SearchManager.QUERY);
+      ((TextView) findViewById(R.id.left_text)).setText(query);
       mScriptList.setQuery(query.toString());
+      if (mScriptList.size() == 0) {
+        ((TextView) findViewById(android.R.id.empty)).setText("No matches found.");
+      }
       mAdapter.notifyDataSetChanged();
     }
   }
@@ -158,6 +161,9 @@ public class ScriptManager extends ListActivity {
   @Override
   protected void onResume() {
     super.onResume();
+    if (!searchResultMode) {
+      ((TextView) findViewById(android.R.id.empty)).setText(R.string.no_scripts_message);
+    }
     mAdapter.notifyDataSetInvalidated();
   }
 
