@@ -83,6 +83,16 @@ public class WifiFacade extends RpcReceiver {
     return mWifi.getConnectionInfo();
   }
 
+  @Rpc(description = "Reassociates with the currently active access point.", returns = "True if the operation succeeded.")
+  public Boolean wifiReassociate() {
+    return mWifi.reassociate();
+  }
+
+  @Rpc(description = "Reconnects to the currently active access point.", returns = "True if the operation succeeded.")
+  public Boolean wifiReconnect() {
+    return mWifi.reconnect();
+  }
+
   @Override
   public void shutdown() {
     wifiLockRelease();
