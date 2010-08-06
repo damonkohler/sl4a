@@ -28,8 +28,8 @@ import android.widget.TextView;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.bluetooth.BluetoothHelper;
-import com.googlecode.android_scripting.bluetooth.BluetoothHelper.DeviceListener;
+import com.googlecode.android_scripting.bluetooth.BluetoothDiscoveryHelper;
+import com.googlecode.android_scripting.bluetooth.BluetoothDiscoveryHelper.BluetoothDiscoveryListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class BluetoothDeviceList extends ListActivity {
   }
 
   private final DeviceListAdapter mAdapter = new DeviceListAdapter();
-  private final BluetoothHelper mBluetoothHelper = new BluetoothHelper(this, mAdapter);
+  private final BluetoothDiscoveryHelper mBluetoothHelper = new BluetoothDiscoveryHelper(this, mAdapter);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class BluetoothDeviceList extends ListActivity {
     finish();
   };
 
-  private class DeviceListAdapter extends BaseAdapter implements DeviceListener {
+  private class DeviceListAdapter extends BaseAdapter implements BluetoothDiscoveryListener {
     List<DeviceInfo> mmDeviceList;
 
     public DeviceListAdapter() {

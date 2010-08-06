@@ -25,9 +25,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-public class BluetoothHelper {
+public class BluetoothDiscoveryHelper {
 
-  public static interface DeviceListener {
+  public static interface BluetoothDiscoveryListener {
     public void addBondedDevice(String name, String address);
 
     public void addDevice(String name, String address);
@@ -36,10 +36,10 @@ public class BluetoothHelper {
   }
 
   private final Context mContext;
-  private final DeviceListener mListener;
+  private final BluetoothDiscoveryListener mListener;
   private final BroadcastReceiver mReceiver;
 
-  public BluetoothHelper(Context context, DeviceListener listener) {
+  public BluetoothDiscoveryHelper(Context context, BluetoothDiscoveryListener listener) {
     mContext = context;
     mListener = listener;
     mReceiver = new BluetoothReceiver();
@@ -51,10 +51,9 @@ public class BluetoothHelper {
       final String action = intent.getAction();
 
       if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-        // Get the BluetoothDevice object from the Intent
+        // Get the BluetoothDevice object from the Intent.
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-        // If it's already paired, skip it, because it's been listed already
+        // If it's already paired, skip it, because it's been listed already.
         if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
           mListener.addDevice(device.getName(), device.getAddress());
         }
