@@ -28,8 +28,10 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.LiveFolders;
 
+import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
+import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 
 import java.io.File;
@@ -99,8 +101,9 @@ public class ScriptProvider extends ContentProvider {
 
   private Cursor querySearchSuggestions(String query) {
     String[] columns =
-        { BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1, SearchManager.SUGGEST_COLUMN_QUERY,
-          SearchManager.SUGGEST_COLUMN_SHORTCUT_ID };
+        { BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1,
+          SearchManager.SUGGEST_COLUMN_TEXT_2, SearchManager.SUGGEST_COLUMN_ICON_2,
+          SearchManager.SUGGEST_COLUMN_QUERY, SearchManager.SUGGEST_COLUMN_SHORTCUT_ID };
     MatrixCursor cursor = new MatrixCursor(columns);
     int index = 0;
     for (File script : ScriptStorageAdapter.listExecutableScripts(mConfiguration)) {
@@ -108,7 +111,12 @@ public class ScriptProvider extends ContentProvider {
       if (!scriptName.contains(query)) {
         continue;
       }
-      Object[] row = { index, scriptName, scriptName, SearchManager.SUGGEST_NEVER_MAKE_SHORTCUT };
+      Interpreter interpreter = mConfiguration.getInterpreterForScript(scriptName);
+      String secondLine = "Interpreter: " + interpreter.getNiceName();
+      int icon = FeaturedInterpreters.getInterpreterIcon(mContext, interpreter.getExtension());
+      Object[] row =
+          { index, scriptName, secondLine, icon, scriptName,
+            SearchManager.SUGGEST_NEVER_MAKE_SHORTCUT };
       cursor.addRow(row);
       ++index;
     }
