@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
@@ -96,9 +97,13 @@ public class ScriptPicker extends ListActivity {
           new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+              int icon =
+                  FeaturedInterpreters.getInterpreterIcon(ScriptPicker.this, script.getName());
+              if (icon == 0) {
+                icon = R.drawable.sl4a_logo_48;
+              }
               Parcelable iconResource =
-                  Intent.ShortcutIconResource.fromContext(ScriptPicker.this,
-                      R.drawable.sl4a_logo_48);
+                  Intent.ShortcutIconResource.fromContext(ScriptPicker.this, icon);
               Intent intent = null;
               if (which == 0) {
                 intent = IntentBuilders.buildTerminalShortcutIntent(script.getName(), iconResource);

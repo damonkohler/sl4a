@@ -77,8 +77,8 @@ public class FeaturedInterpreters {
   public static int getInterpreterIcon(Context context, String key) {
     String packageName = context.getPackageName();
     String name = "_icon";
-    if (key.startsWith(".")) {
-      name = key.substring(1) + name;
+    if (key.contains(".")) {
+      name = key.substring(key.lastIndexOf('.') + 1) + name;
     } else {
       name = key + name;
     }

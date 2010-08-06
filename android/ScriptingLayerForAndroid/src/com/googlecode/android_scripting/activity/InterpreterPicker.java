@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
+import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.interpreter.Interpreter;
@@ -68,8 +69,14 @@ public class InterpreterPicker extends ListActivity {
   protected void onListItemClick(ListView list, View view, int position, long id) {
     final Interpreter interpreter = (Interpreter) list.getItemAtPosition(position);
     if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
+      int icon =
+          FeaturedInterpreters.getInterpreterIcon(InterpreterPicker.this, interpreter
+              .getExtension());
+      if (icon == 0) {
+        icon = R.drawable.sl4a_logo_48;
+      }
       Parcelable iconResource =
-          Intent.ShortcutIconResource.fromContext(InterpreterPicker.this, R.drawable.sl4a_logo_48);
+          Intent.ShortcutIconResource.fromContext(InterpreterPicker.this, icon);
       Intent intent = IntentBuilders.buildInterpreterShortcutIntent(interpreter, iconResource);
       setResult(RESULT_OK, intent);
     }
