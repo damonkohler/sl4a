@@ -120,6 +120,8 @@ public class ApiBrowser extends ListActivity {
       mRpcDescriptors.setQuery(query);
       if (mRpcDescriptors.size() == 1) {
         mExpandedPositions.add(0);
+      } else {
+        mExpandedPositions.clear();
       }
       mAdapter.notifyDataSetChanged();
     }

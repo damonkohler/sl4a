@@ -2,6 +2,8 @@
 
 package com.googlecode.android_scripting;
 
+import android.content.Context;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -70,6 +72,17 @@ public class FeaturedInterpreters {
   public static boolean isSupported(String fileName) {
     String extension = getExtension(fileName);
     return (extension != null) && (mExtensionMap.containsKey(extension));
+  }
+
+  public static int getInterpreterIcon(Context context, String key) {
+    String packageName = context.getPackageName();
+    String name = "_icon";
+    if (key.startsWith(".")) {
+      name = key.substring(1) + name;
+    } else {
+      name = key + name;
+    }
+    return context.getResources().getIdentifier(name, "drawable", packageName);
   }
 
   private static String getExtension(String fileName) {
