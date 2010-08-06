@@ -33,7 +33,6 @@ import android.view.SurfaceHolder.Callback;
 import android.view.ViewGroup.LayoutParams;
 
 import com.googlecode.android_scripting.BaseApplication;
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
@@ -109,14 +108,6 @@ public class MediaRecorderFacade extends RpcReceiver {
     }
   }
 
-  @Rpc(description = "Records audio from the phone and saves it to the given location.")
-  public void recorderStartPhone(@RpcParameter(name = "targetPath") String targetPath)
-      throws Exception {
-    // This is only possible starting with API level 4.
-    Field source = Class.forName("android.media.MediaRecorder$AudioSource").getField("VOICE_CALL");
-    startAudioRecording(targetPath, source.getInt(null));
-  }
-
   private void startAudioRecording(String targetPath, int source) throws IOException {
     mMediaRecorder.setAudioSource(source);
     mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
@@ -143,12 +134,6 @@ public class MediaRecorderFacade extends RpcReceiver {
 
   @Override
   public void shutdown() {
-    try {
-      mMediaRecorder.stop();
-    } catch (IllegalStateException e) {
-      Log.e(e);
-    }
-    mMediaRecorder.reset();
     mMediaRecorder.release();
   }
 
