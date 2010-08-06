@@ -33,4 +33,19 @@ public class BeanShellLanguage extends Language {
   protected String getRpcReceiverDeclaration(String rpcReceiver) {
     return rpcReceiver + " = Android();\n";
   }
+
+  @Override
+  protected String getApplyOperatorText() {
+    return ".call(\"";
+  }
+
+  @Override
+  protected String getLeftParametersText() {
+    return "\", ";
+  }
+
+  @Override
+  protected String getRightParametersText() {
+    return ")";
+  }
 }

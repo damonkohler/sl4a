@@ -32,5 +32,4 @@ public class RubyLanguage extends Language {
   protected String getRpcReceiverDeclaration(String rpcReceiver) {
     return rpcReceiver + " = Droid.new\n";
   }
-
 }
