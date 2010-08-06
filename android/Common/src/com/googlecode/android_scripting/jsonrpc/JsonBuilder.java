@@ -33,6 +33,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.os.Bundle;
 import android.telephony.CellLocation;
+import android.telephony.NeighboringCellInfo;
 import android.telephony.gsm.GsmCellLocation;
 
 import com.googlecode.android_scripting.event.Event;
@@ -106,6 +107,9 @@ public class JsonBuilder {
     }
     if (data instanceof WifiInfo) {
       return buildJsonWifiInfo((WifiInfo) data);
+    }
+    if (data instanceof NeighboringCellInfo) {
+      return buildNeighboringCellInfo((NeighboringCellInfo) data);
     }
     throw new JSONException("Failed to build JSON result.");
   }
@@ -245,6 +249,14 @@ public class JsonBuilder {
       supplicantState = null;
     }
     result.put("supplicant_state", build(supplicantState));
+    return result;
+  }
+
+  private static JSONObject buildNeighboringCellInfo(NeighboringCellInfo data) throws JSONException {
+    // TODO(damonkohler): Additional information available at API level 5.
+    JSONObject result = new JSONObject();
+    result.put("cid", data.getCid());
+    result.put("rssi", data.getRssi());
     return result;
   }
 }

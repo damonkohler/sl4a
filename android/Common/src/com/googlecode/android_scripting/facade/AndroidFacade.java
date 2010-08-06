@@ -195,14 +195,37 @@ public class AndroidFacade extends RpcReceiver {
       @RpcParameter(name = "action") String action,
       @RpcParameter(name = "uri") @RpcOptional String uri,
       @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
-      @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras)
+      @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras,
+      @RpcParameter(name = "wait", description = "if wait is set to true this call will block until user navigates back to the calling application") @RpcOptional Boolean wait)
       throws JSONException {
-    Intent intent = new Intent(action);
+    final Intent intent = new Intent(action);
     intent.setDataAndType(uri != null ? Uri.parse(uri) : null, type);
     if (extras != null) {
       putExtrasFromJsonObject(extras, intent);
     }
-    startActivity(intent);
+    if (wait == null || wait == false) {
+      startActivity(intent);
+    } else {
+      FutureActivityTask<Intent> task = new FutureActivityTask<Intent>() {
+        @Override
+        public void run(ScriptingLayerServiceHelper activity, FutureResult<Intent> result) {
+          activity.startActivity(intent);
+        }
+
+        @Override
+        public boolean isBlocking() {
+          return true;
+        }
+      };
+      mTaskQueue.offer(task);
+
+      FutureResult<Intent> result = task.getFutureResult();
+      try {
+        result.get();
+      } catch (Exception e) {
+        throw new Sl4aRuntimeException(e);
+      }
+    }
   }
 
   @Rpc(description = "Vibrates the phone or a specified duration in milliseconds.")

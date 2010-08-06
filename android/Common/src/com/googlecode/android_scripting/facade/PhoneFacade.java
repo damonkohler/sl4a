@@ -19,6 +19,7 @@ package com.googlecode.android_scripting.facade;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.json.JSONException;
@@ -32,6 +33,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Contacts.People;
 import android.telephony.CellLocation;
+import android.telephony.NeighboringCellInfo;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
@@ -136,7 +138,8 @@ public class PhoneFacade extends RpcReceiver {
       c.close();
       phoneCallNumber(number);
     } else {
-      mAndroidFacade.startActivity(Intent.ACTION_CALL, uriString, null, null);
+      // XXX @Damon: should it block?
+      mAndroidFacade.startActivity(Intent.ACTION_CALL, uriString, null, null, null);
     }
   }
 
@@ -148,7 +151,8 @@ public class PhoneFacade extends RpcReceiver {
 
   @Rpc(description = "Dials a contact/phone number by URI.")
   public void phoneDial(@RpcParameter(name = "uri") final String uri) throws JSONException {
-    mAndroidFacade.startActivity(Intent.ACTION_DIAL, uri, null, null);
+    // XXX @Damon: should it block?
+    mAndroidFacade.startActivity(Intent.ACTION_DIAL, uri, null, null, null);
   }
 
   @Rpc(description = "Dials a phone number.")
@@ -200,5 +204,85 @@ public class PhoneFacade extends RpcReceiver {
     default:
       return null;
     }
+  }
+
+  @Rpc(description = "Returns the ISO country code equivalent for the SIM provider's country code.")
+  public String getSimCountryIso() {
+    return mTelephonyManager.getSimCountryIso();
+  }
+
+  @Rpc(description = "Returns the MCC+MNC (mobile country code + mobile network code) of the provider of the SIM. 5 or 6 decimal digits.")
+  public String getSimOperator() {
+    return mTelephonyManager.getSimOperator();
+  }
+
+  @Rpc(description = "Returns the Service Provider Name (SPN).")
+  public String getSimOperatorName() {
+    return mTelephonyManager.getSimOperatorName();
+  }
+
+  @Rpc(description = "Returns the serial number of the SIM, if applicable. Return null if it is unavailable.")
+  public String getSimSerialNumber() {
+    return mTelephonyManager.getSimSerialNumber();
+  }
+
+  @Rpc(description = "Returns the state of the device SIM card.")
+  public String getSimState() {
+    switch (mTelephonyManager.getSimState()) {
+    case TelephonyManager.SIM_STATE_UNKNOWN:
+      return "uknown";
+    case TelephonyManager.SIM_STATE_ABSENT:
+      return "absent";
+    case TelephonyManager.SIM_STATE_PIN_REQUIRED:
+      return "pin_required";
+    case TelephonyManager.SIM_STATE_PUK_REQUIRED:
+      return "puk_required";
+    case TelephonyManager.SIM_STATE_NETWORK_LOCKED:
+      return "network_locked";
+    case TelephonyManager.SIM_STATE_READY:
+      return "ready";
+    default:
+      return null;
+    }
+  }
+
+  @Rpc(description = "Returns the unique subscriber ID, for example, the IMSI for a GSM phone. Return null if it is unavailable.")
+  public String getSubscriberId() {
+    return mTelephonyManager.getSubscriberId();
+  }
+
+  @Rpc(description = "Retrieves the alphabetic identifier associated with the voice mail number.")
+  public String getVoiceMailAlphaTag() {
+    return mTelephonyManager.getVoiceMailAlphaTag();
+  }
+
+  @Rpc(description = "Returns the voice mail number. Return null if it is unavailable.")
+  public String getVoiceMailNumber() {
+    return mTelephonyManager.getVoiceMailNumber();
+  }
+
+  @Rpc(description = "Returns true if the device is considered roaming on the current network, for GSM purposes.")
+  public Boolean checkNetworkRoaming() {
+    return mTelephonyManager.isNetworkRoaming();
+  }
+
+  @Rpc(description = "Returns the unique device ID, for example, the IMEI for GSM and the MEID for CDMA phones. Return null if device ID is not available.")
+  public String getDeviceId() {
+    return mTelephonyManager.getDeviceId();
+  }
+
+  @Rpc(description = "Returns the software version number for the device, for example, the IMEI/SV for GSM phones. Return null if the software version is not available.")
+  public String getDeviceSoftwareVersion() {
+    return mTelephonyManager.getDeviceSoftwareVersion();
+  }
+
+  @Rpc(description = "Returns the phone number string for line 1, for example, the MSISDN for a GSM phone. Return null if it is unavailable.")
+  public String getLine1Number() {
+    return mTelephonyManager.getLine1Number();
+  }
+
+  @Rpc(description = "Returns the neighboring cell information of the device.")
+  public List<NeighboringCellInfo> getNeighboringCellInfo() {
+    return mTelephonyManager.getNeighboringCellInfo();
   }
 }

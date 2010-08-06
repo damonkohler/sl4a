@@ -42,6 +42,7 @@ public class ScriptingLayerServiceHelper extends Activity {
   private Handler mHandler;
   private HashMap<Integer, FutureResult<?>> mResultMap;
   private volatile boolean mFinished = false;
+  private Integer mBlockOnId = null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,29 @@ public class ScriptingLayerServiceHelper extends Activity {
   protected void onResume() {
     mFinished = false;
     super.onResume();
-    process();
+    if (mBlockOnId != null) {
+      @SuppressWarnings("unchecked")
+      FutureResult<Intent> result = (FutureResult<Intent>) mResultMap.get(mBlockOnId);
+      result.set(null);
+      mFinished = true;
+      taskDone(mBlockOnId);
+      mBlockOnId = null;
+    } else {
+      process();
+    }
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    // Theoretically should never happen, JIC
+    if (mBlockOnId != null) {
+      @SuppressWarnings("unchecked")
+      FutureResult<Intent> result = (FutureResult<Intent>) mResultMap.get(mBlockOnId);
+      result.set(null);
+      mResultMap.remove(mBlockOnId);
+      mBlockOnId = null;
+    }
   }
 
   private void process() {
@@ -65,6 +88,9 @@ public class ScriptingLayerServiceHelper extends Activity {
       FutureActivityTask<?> task = mTaskQueue.poll();
       if (task == null) {
         break;
+      }
+      if (task.isBlocking()) {
+        mBlockOnId = task.getTaskId();
       }
       mHandler.post(task.getRunnable(this));
       FutureResult<?> result = task.getFutureResult();

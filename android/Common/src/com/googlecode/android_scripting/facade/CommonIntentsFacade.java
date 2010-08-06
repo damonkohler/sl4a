@@ -51,7 +51,7 @@ public class CommonIntentsFacade extends RpcReceiver {
       @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
       @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras)
       throws JSONException {
-    mAndroidFacade.startActivity(Intent.ACTION_VIEW, uri, type, extras);
+    mAndroidFacade.startActivity(Intent.ACTION_VIEW, uri, type, extras, true);
   }
 
   @Rpc(description = "Opens a map search for query (e.g. pizza, 123 My Street).")
