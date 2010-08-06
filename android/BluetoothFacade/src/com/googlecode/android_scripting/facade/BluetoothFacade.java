@@ -16,6 +16,14 @@
 
 package com.googlecode.android_scripting.facade;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -30,14 +38,6 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.UUID;
-import java.util.concurrent.Callable;
 
 public class BluetoothFacade extends RpcReceiver {
 
@@ -65,23 +65,28 @@ public class BluetoothFacade extends RpcReceiver {
     });
   }
 
-  @Rpc(description = "Displays a dialog with discoverable devices and connects to one chosen by the user.", returns = "True if the connection was established successfully.")
+  @Rpc(description = "Connect to a device over Bluetooth.", returns = "True if the connection was established successfully.")
   public boolean bluetoothConnect(
-      @RpcParameter(name = "uuid", description = "The UUID passed here must match the UUID used by the server device.") @RpcDefault(DEFAULT_UUID) String uuid)
+      @RpcParameter(name = "uuid", description = "The UUID passed here must match the UUID used by the server device.") @RpcDefault(DEFAULT_UUID) String uuid,
+      @RpcParameter(name = "address", description = "The user will be presented with a list of discovered devices to choose from if an address is not provided.") @RpcOptional String address)
       throws IOException {
-    Intent deviceChooserIntent = new Intent();
-    deviceChooserIntent.setComponent(Constants.BLUETOOTH_DEVICE_LIST_COMPONENT_NAME);
-    Intent result = mAndroidFacade.startActivityForResult(deviceChooserIntent);
-    if (result != null && result.hasExtra(Constants.EXTRA_DEVICE_ADDRESS)) {
-      String address = result.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
-      mDevice = mBluetoothAdapter.getRemoteDevice(address);
-      mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
-      // Always cancel discovery because it will slow down a connection.
-      mBluetoothAdapter.cancelDiscovery();
-      mSocket.connect();
-      connected();
+    if (address == null) {
+      Intent deviceChooserIntent = new Intent();
+      deviceChooserIntent.setComponent(Constants.BLUETOOTH_DEVICE_LIST_COMPONENT_NAME);
+      Intent result = mAndroidFacade.startActivityForResult(deviceChooserIntent);
+      if (result != null && result.hasExtra(Constants.EXTRA_DEVICE_ADDRESS)) {
+        address = result.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
+      } else {
+        return false;
+      }
     }
-    return false;
+    mDevice = mBluetoothAdapter.getRemoteDevice(address);
+    mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
+    // Always cancel discovery because it will slow down a connection.
+    mBluetoothAdapter.cancelDiscovery();
+    mSocket.connect();
+    connected();
+    return true;
   }
 
   @Rpc(description = "Listens for and accepts a Bluetooth connection.")
