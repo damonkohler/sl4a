@@ -16,6 +16,11 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -44,11 +49,6 @@ import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A text editor for scripts.
@@ -216,7 +216,7 @@ public class ScriptEditor extends Activity {
   private void save() {
     mLastSavedContent = mContentText.getText().toString();
     ScriptStorageAdapter.writeScript(mNameText.getText().toString(), mLastSavedContent);
-    Toast.makeText(this, "Saved " + mNameText.getText().toString(), Toast.LENGTH_SHORT);
+    Toast.makeText(this, "Saved " + mNameText.getText().toString(), Toast.LENGTH_SHORT).show();
   }
 
   private void insertContent(String text) {
