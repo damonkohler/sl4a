@@ -16,6 +16,10 @@
 
 package com.googlecode.android_scripting.facade;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -49,10 +53,6 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class AndroidFacade extends RpcReceiver {
   /**
@@ -325,35 +325,24 @@ public class AndroidFacade extends RpcReceiver {
     return mIntent;
   }
 
-  /**
-   * Launches an activity that sends an e-mail message to a given recipient.
-   * 
-   * @param recipientAddress
-   *          recipient's e-mail address
-   * @param subject
-   *          message subject
-   * @param body
-   *          message body
-   */
   @Rpc(description = "Launches an activity that sends an e-mail message to a given recipient.")
-  public void sendEmail(@RpcParameter(name = "recipientAddress") final String recipientAddress,
+  public void sendEmail(
+      @RpcParameter(name = "to", description = "A comma separated list of recipients.") final String to,
       @RpcParameter(name = "subject") final String subject,
-      @RpcParameter(name = "body") final String body) {
-    final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-    emailIntent.setType("plain/text");
-    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] { recipientAddress });
-    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
-    emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
-    startActivity(emailIntent);
+      @RpcParameter(name = "body") final String body,
+      @RpcParameter(name = "attachmentUri") @RpcOptional final String attachmentUri) {
+    final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+    intent.setType("plain/text");
+    intent.putExtra(android.content.Intent.EXTRA_EMAIL, to.split(","));
+    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+    intent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+    if (attachmentUri != null) {
+      intent.putExtra(android.content.Intent.EXTRA_STREAM, Uri.parse(attachmentUri));
+    }
+    startActivity(intent);
   }
 
-  /**
-   * Retrieve package version code
-   * 
-   * @param packageName
-   * @return
-   */
-  @Rpc(description = "Retrieve package version code")
+  @Rpc(description = "Returns package version code.")
   public int getPackageVersionCode(@RpcParameter(name = "packageName") final String packageName) {
     int result = -1;
     PackageInfo pInfo = null;
@@ -369,35 +358,22 @@ public class AndroidFacade extends RpcReceiver {
     return result;
   }
 
-  /**
-   * Retrieve package version string
-   * 
-   * @param packageName
-   * @return
-   */
-  @Rpc(description = "Retrieve package version string")
+  @Rpc(description = "Returns package version name.")
   public String getPackageVersion(@RpcParameter(name = "packageName") final String packageName) {
-    String result = "";
-    PackageInfo pInfo = null;
+    PackageInfo packageInfo = null;
     try {
-      pInfo =
+      packageInfo =
           mService.getPackageManager().getPackageInfo(packageName, PackageManager.GET_META_DATA);
     } catch (NameNotFoundException e) {
-      pInfo = null;
+      return null;
     }
-    if (pInfo != null) {
-      result = "" + pInfo.versionName;
+    if (packageInfo != null) {
+      return packageInfo.versionName;
     }
-    return result;
+    return null;
   }
 
-  /**
-   * Check if SL4A is higher or equal of specified version
-   * 
-   * @param version
-   * @return
-   */
-  @Rpc(description = "Check if SL4A is higher or equal of specified version")
+  @Rpc(description = "Checks if version of SL4A is greater than or equal to the specified version.")
   public boolean requiredVersion(@RpcParameter(name = "requiredVersion") final Integer version) {
     boolean result = false;
     int packageVersion = getPackageVersionCode("com.googlecode.android_scripting");
