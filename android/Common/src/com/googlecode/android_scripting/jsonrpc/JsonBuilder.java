@@ -242,9 +242,9 @@ public class JsonBuilder {
       supplicantState = "uninitialized";
       break;
     default:
-      supplicantState = "invalid";
+      supplicantState = null;
     }
-    result.put("supplicant_state", supplicantState);
+    result.put("supplicant_state", build(supplicantState));
     return result;
   }
 }

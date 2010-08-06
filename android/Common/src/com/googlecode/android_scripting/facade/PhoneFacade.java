@@ -161,4 +161,44 @@ public class PhoneFacade extends RpcReceiver {
   public CellLocation getCellLocation() {
     return mTelephonyManager.getCellLocation();
   }
+
+  @Rpc(description = "Returns the numeric name (MCC+MNC) of current registered operator.")
+  public String getNetworkOperator() {
+    return mTelephonyManager.getNetworkOperator();
+  }
+
+  @Rpc(description = "Returns the alphabetic name of current registered operator.")
+  public String getNetworkOperatorName() {
+    return mTelephonyManager.getNetworkOperatorName();
+  }
+
+  @Rpc(description = "Returns a the radio technology (network type) currently in use on the device.")
+  public String getNetworkType() {
+    // TODO(damonkohler): API level 5 has many more types.
+    switch (mTelephonyManager.getNetworkType()) {
+    case TelephonyManager.NETWORK_TYPE_EDGE:
+      return "edge";
+    case TelephonyManager.NETWORK_TYPE_GPRS:
+      return "gprs";
+    case TelephonyManager.NETWORK_TYPE_UMTS:
+      return "umts";
+    case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+      return "unknown";
+    default:
+      return null;
+    }
+  }
+
+  @Rpc(description = "Returns the device phone type.")
+  public String getPhoneType() {
+    // TODO(damonkohler): API level 4 includes CDMA.
+    switch (mTelephonyManager.getPhoneType()) {
+    case TelephonyManager.PHONE_TYPE_GSM:
+      return "gsm";
+    case TelephonyManager.PHONE_TYPE_NONE:
+      return "none";
+    default:
+      return null;
+    }
+  }
 }

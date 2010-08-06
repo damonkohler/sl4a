@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="ANDROID_SDK/platforms/android-7/android.jar" sourcepath="/ANDROID_SDK/platforms/android-7/sources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
