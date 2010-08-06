@@ -72,13 +72,12 @@ public class ScriptingLayerServiceHelper extends Activity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    // Theoretically should never happen, JIC
     if (mBlockOnId != null) {
-      @SuppressWarnings("unchecked")
-      FutureResult<Intent> result = (FutureResult<Intent>) mResultMap.get(mBlockOnId);
+      FutureResult<?> result = mResultMap.get(mBlockOnId);
       result.set(null);
       mResultMap.remove(mBlockOnId);
       mBlockOnId = null;
+      throw new RuntimeException();
     }
   }
 
@@ -107,8 +106,7 @@ public class ScriptingLayerServiceHelper extends Activity {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    @SuppressWarnings("unchecked")
-    FutureResult<Intent> result = (FutureResult<Intent>) mResultMap.get(requestCode);
+    FutureResult<?> result = mResultMap.get(requestCode);
     if (result != null) {
       result.set(data);
       taskDone(requestCode);

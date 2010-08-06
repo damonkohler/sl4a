@@ -30,8 +30,8 @@ public class FutureResult<T> implements Future<T> {
   private final CountDownLatch mLatch = new CountDownLatch(1);
   private T mResult;
 
-  public void set(T result) {
-    mResult = result;
+  public <S> void set(S result) {
+    mResult = (T) result;
     mLatch.countDown();
   }
 
