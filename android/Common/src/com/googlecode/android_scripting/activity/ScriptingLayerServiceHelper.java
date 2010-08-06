@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting.activity;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
@@ -28,6 +26,8 @@ import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
+
+import java.util.HashMap;
 
 /**
  * This {@link Activity} is launched by the {@link Sl4aService} in order to perform operations that
@@ -105,8 +105,9 @@ public class ScriptingLayerServiceHelper extends Activity {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    FutureResult<?> result = mResultMap.get(requestCode);
+    FutureResult<Intent> result = (FutureResult<Intent>) mResultMap.get(requestCode);
     if (result != null) {
       result.set(data);
       taskDone(requestCode);

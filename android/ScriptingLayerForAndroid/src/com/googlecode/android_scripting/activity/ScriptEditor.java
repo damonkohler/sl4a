@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -131,9 +132,9 @@ public class ScriptEditor extends Activity {
     filters.add(new ContentInputFilter());
     mContentText.setFilters(filters.toArray(oldFilters));
     mContentText.addTextChangedListener(mWatcher);
-
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-
+    // Disables volume key beep.
+    setVolumeControlStream(AudioManager.STREAM_MUSIC);
     Analytics.trackActivity(this);
   }
 
@@ -191,7 +192,7 @@ public class ScriptEditor extends Activity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    RequestCode request = RequestCode.values()[requestCode]; // TODO Auto-generated method stub
+    RequestCode request = RequestCode.values()[requestCode];
 
     if (resultCode == RESULT_OK) {
       switch (request) {
@@ -228,6 +229,7 @@ public class ScriptEditor extends Activity {
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     if (keyCode == KeyEvent.KEYCODE_BACK && hasContentChanged()) {
       AlertDialog.Builder alert = new AlertDialog.Builder(this);
+      setVolumeControlStream(AudioManager.STREAM_MUSIC);
       alert.setCancelable(false);
       alert.setTitle("Confirm exit");
       alert.setMessage("Would you like to save?");
@@ -248,8 +250,7 @@ public class ScriptEditor extends Activity {
       });
       alert.show();
       return true;
-    }
-    if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+    } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
       redo();
       return true;
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
@@ -338,14 +339,17 @@ public class ScriptEditor extends Activity {
       if (mmPosition == 0) {
         return null;
       }
-      return mmHistory.get(--mmPosition);
+      mmPosition--;
+      return mmHistory.get(mmPosition);
     }
 
     private EditItem getNext() {
       if (mmPosition == mmHistory.size()) {
         return null;
       }
-      return mmHistory.get(mmPosition++);
+      EditItem item = mmHistory.get(mmPosition);
+      mmPosition++;
+      return item;
     }
   }
 
@@ -366,6 +370,7 @@ public class ScriptEditor extends Activity {
     mIsUndoOrRedo = true;
     text.replace(start, end, edit.before);
     mIsUndoOrRedo = false;
+    // This will get rid of underscores inserted when editor tries to come up with a suggestion.
     for (Object o : text.getSpans(0, text.length(), UnderlineSpan.class)) {
       text.removeSpan(o);
     }
