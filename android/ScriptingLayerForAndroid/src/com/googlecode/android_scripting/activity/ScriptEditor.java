@@ -28,6 +28,7 @@ import android.text.InputFilter;
 import android.text.Selection;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.UnderlineSpan;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +62,10 @@ public class ScriptEditor extends Activity {
   private String mLastSavedContent;
   private SharedPreferences mPreferences;
   private InterpreterConfiguration mConfiguration;
+  private ContentTextWatcher mWatcher;
+  private EditHistory mHistory;
+
+  private boolean mIsUndoOrRedo = false;
 
   private static enum MenuId {
     SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP;
@@ -90,6 +95,8 @@ public class ScriptEditor extends Activity {
     setContentView(R.layout.script_editor);
     mNameText = (EditText) findViewById(R.id.script_editor_title);
     mContentText = (EditText) findViewById(R.id.script_editor_body);
+    mHistory = new EditHistory();
+    mWatcher = new ContentTextWatcher(mHistory);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     updatePreferences();
 
@@ -123,7 +130,7 @@ public class ScriptEditor extends Activity {
     filters.addAll(Arrays.asList(oldFilters));
     filters.add(new ContentInputFilter());
     mContentText.setFilters(filters.toArray(oldFilters));
-    mContentText.addTextChangedListener(new ContentTextWatcher());
+    mContentText.addTextChangedListener(mWatcher);
 
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
 
@@ -184,7 +191,8 @@ public class ScriptEditor extends Activity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    RequestCode request = RequestCode.values()[requestCode];
+    RequestCode request = RequestCode.values()[requestCode]; // TODO Auto-generated method stub
+
     if (resultCode == RESULT_OK) {
       switch (request) {
       case RPC_HELP:
@@ -240,6 +248,13 @@ public class ScriptEditor extends Activity {
       });
       alert.show();
       return true;
+    }
+    if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+      redo();
+      return true;
+    } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+      undo();
+      return true;
     } else {
       return super.onKeyDown(keyCode, event);
     }
@@ -267,12 +282,28 @@ public class ScriptEditor extends Activity {
   }
 
   private final class ContentTextWatcher implements TextWatcher {
+    private final EditHistory mmEditHistory;
+    private EditItem mmCurrentOperation;
+
+    private ContentTextWatcher(EditHistory history) {
+      mmEditHistory = history;
+    }
+
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+      if (!mIsUndoOrRedo) {
+        mmCurrentOperation.after = s.subSequence(start, start + count);
+        mmEditHistory.add(mmCurrentOperation);
+      }
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      if (!mIsUndoOrRedo) {
+        mmCurrentOperation = new EditItem();
+        mmCurrentOperation.index = start;
+        mmCurrentOperation.before = s.subSequence(start, start + count);
+      }
     }
 
     @Override
@@ -282,6 +313,73 @@ public class ScriptEditor extends Activity {
         Selection.moveLeft(mContentText.getText(), mContentText.getLayout());
       }
     }
+  }
+
+  private final class EditHistory {
+    int mmPosition = 0;
+    private List<EditItem> mmHistory = new ArrayList<EditItem>();
+
+    private void add(EditItem item) {
+      while (mmPosition < mmHistory.size()) {
+        mmHistory.remove(mmHistory.size() - 1);
+      }
+      mmHistory.add(item);
+      mmPosition++;
+    }
+
+    private EditItem getPrevious() {
+      if (mmPosition == 0) {
+        return null;
+      }
+      return mmHistory.get(--mmPosition);
+    }
+
+    private EditItem getNext() {
+      if (mmPosition == mmHistory.size()) {
+        return null;
+      }
+      return mmHistory.get(mmPosition++);
+    }
+  }
+
+  private final class EditItem {
+    private int index;
+    private CharSequence before;
+    private CharSequence after;
+  }
+
+  private void undo() {
+    EditItem edit = mHistory.getPrevious();
+    if (edit == null) {
+      return;
+    }
+    Editable text = mContentText.getText();
+    int start = edit.index;
+    int end = start + (edit.after != null ? edit.after.length() : 0);
+    mIsUndoOrRedo = true;
+    text.replace(start, end, edit.before);
+    mIsUndoOrRedo = false;
+    for (Object o : text.getSpans(0, text.length(), UnderlineSpan.class)) {
+      text.removeSpan(o);
+    }
+    Selection.setSelection(text, edit.before == null ? start : (start + edit.before.length()));
+  }
+
+  private void redo() {
+    EditItem edit = mHistory.getNext();
+    if (edit == null) {
+      return;
+    }
+    Editable text = mContentText.getText();
+    int start = edit.index;
+    int end = start + (edit.before != null ? edit.before.length() : 0);
+    mIsUndoOrRedo = true;
+    text.replace(start, end, edit.after);
+    mIsUndoOrRedo = false;
+    for (Object o : text.getSpans(0, text.length(), UnderlineSpan.class)) {
+      text.removeSpan(o);
+    }
+    Selection.setSelection(text, edit.after == null ? start : (start + edit.after.length()));
   }
 
 }
