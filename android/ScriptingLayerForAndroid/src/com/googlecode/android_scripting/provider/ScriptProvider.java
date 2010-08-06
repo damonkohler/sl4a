@@ -16,6 +16,8 @@
 
 package com.googlecode.android_scripting.provider;
 
+import java.io.File;
+
 import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -33,8 +35,6 @@ import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
-
-import java.io.File;
 
 public class ScriptProvider extends ContentProvider {
 
@@ -112,7 +112,7 @@ public class ScriptProvider extends ContentProvider {
         continue;
       }
       Interpreter interpreter = mConfiguration.getInterpreterForScript(scriptName);
-      String secondLine = "Interpreter: " + interpreter.getNiceName();
+      String secondLine = interpreter.getNiceName();
       int icon = FeaturedInterpreters.getInterpreterIcon(mContext, interpreter.getExtension());
       Object[] row =
           { index, scriptName, secondLine, icon, scriptName,
