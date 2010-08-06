@@ -16,6 +16,8 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
@@ -26,8 +28,6 @@ import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.future.FutureResult;
-
-import java.util.HashMap;
 
 /**
  * This {@link Activity} is launched by the {@link Sl4aService} in order to perform operations that
@@ -59,8 +59,7 @@ public class ScriptingLayerServiceHelper extends Activity {
     mFinished = false;
     super.onResume();
     if (mBlockOnId != null) {
-      @SuppressWarnings("unchecked")
-      FutureResult<Intent> result = (FutureResult<Intent>) mResultMap.get(mBlockOnId);
+      FutureResult<?> result = mResultMap.get(mBlockOnId);
       result.set(null);
       mFinished = true;
       taskDone(mBlockOnId);

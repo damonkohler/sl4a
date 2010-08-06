@@ -16,6 +16,10 @@
 
 package com.googlecode.android_scripting.activity;
 
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -42,10 +46,6 @@ import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.terminal.Terminal;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
  * An activity that allows to monitor running scripts.
  * 
@@ -55,13 +55,14 @@ public class ScriptProcessMonitor extends ListActivity {
 
   private final static int UPDATE_INTERVAL_SECS = 1;
 
+  private final Timer mTimer = new Timer();
+
+  private volatile ScriptingLayerService mService;
+
+  private ScriptListAdapter mUpdater;
   private List<InterpreterProcess> mProcessList;
   private ScriptMonitorAdapter mAdapter;
-  private volatile ScriptingLayerService mService;
   private boolean isConnected = false;
-
-  private final Timer mTimer = new Timer();
-  private ScriptListAdapter mUpdater;
 
   private ServiceConnection mConnection = new ServiceConnection() {
     @Override
@@ -93,7 +94,9 @@ public class ScriptProcessMonitor extends ListActivity {
   @Override
   public void onPause() {
     super.onPause();
-    mUpdater.cancel();
+    if (mUpdater != null) {
+      mUpdater.cancel();
+    }
     mTimer.purge();
   }
 

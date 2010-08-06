@@ -16,6 +16,12 @@
 
 package com.googlecode.android_scripting.facade;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaRecorder;
@@ -27,6 +33,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.ViewGroup.LayoutParams;
 
 import com.googlecode.android_scripting.BaseApplication;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
@@ -36,12 +43,6 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A facade for recording media.
@@ -142,6 +143,12 @@ public class MediaRecorderFacade extends RpcReceiver {
 
   @Override
   public void shutdown() {
+    try {
+      mMediaRecorder.stop();
+    } catch (IllegalStateException e) {
+      Log.e(e);
+    }
+    mMediaRecorder.reset();
     mMediaRecorder.release();
   }
 
