@@ -11,9 +11,8 @@
     android:name=".Sl4aApplication">
     <activity
       android:name=".activity.ScriptManager"
-      android:launchMode="singleTask"
       android:configChanges="keyboardHidden|orientation"
-      android:windowSoftInputMode="adjustResize">
+      android:windowSoftInputMode="adjustResize" android:launchMode="singleTop">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />

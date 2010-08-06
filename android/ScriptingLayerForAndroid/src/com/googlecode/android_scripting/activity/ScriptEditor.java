@@ -260,6 +260,13 @@ public class ScriptEditor extends Activity {
     }
   }
 
+  @Override
+  protected void onUserLeaveHint() {
+    if (hasContentChanged()) {
+      save();
+    }
+  }
+
   private boolean hasContentChanged() {
     return !mLastSavedContent.equals(mContentText.getText().toString());
   }
