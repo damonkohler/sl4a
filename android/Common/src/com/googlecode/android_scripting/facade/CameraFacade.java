@@ -16,10 +16,18 @@
 
 package com.googlecode.android_scripting.facade;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.concurrent.CountDownLatch;
+
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,16 +48,10 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.concurrent.CountDownLatch;
-
 public class CameraFacade extends RpcReceiver {
 
   private final Service mService;
+  private final Parameters mParameters;
 
   private class BooleanResult {
     boolean mmResult = false;
@@ -58,6 +60,12 @@ public class CameraFacade extends RpcReceiver {
   public CameraFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
+    Camera camera = Camera.open();
+    try {
+      mParameters = camera.getParameters();
+    } finally {
+      camera.release();
+    }
   }
 
   @Rpc(description = "Take a picture and save it to the specified path.", returns = "A map of Booleans autoFocus and takePicture where True indicates success.")
@@ -68,6 +76,7 @@ public class CameraFacade extends RpcReceiver {
     final BooleanResult takePictureResult = new BooleanResult();
 
     Camera camera = Camera.open();
+    camera.setParameters(mParameters);
 
     try {
       Method method = camera.getClass().getMethod("setDisplayOrientation", int.class);
