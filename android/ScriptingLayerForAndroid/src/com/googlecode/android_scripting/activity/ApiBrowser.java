@@ -48,10 +48,7 @@ import com.googlecode.android_scripting.language.SupportedLanguages;
 import com.googlecode.android_scripting.provider.SelectableListProxy;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.ParameterDescriptor;
-import com.googlecode.android_scripting.rpc.RpcDepreciated;
-import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -89,20 +86,9 @@ public class ApiBrowser extends ListActivity {
     setContentView(R.layout.api_browser);
     getListView().setFastScrollEnabled(true);
     mExpandedPositions = new HashSet<Integer>();
-    List<MethodDescriptor> listRpcDescriptors = FacadeConfiguration.collectRpcDescriptors();
-    for (int i = listRpcDescriptors.size() - 1; i >= 0; i--) {
-      MethodDescriptor descriptor = listRpcDescriptors.get(i);
-      Method method = descriptor.getMethod();
-      if (method.isAnnotationPresent(RpcDepreciated.class)) {
-        listRpcDescriptors.remove(i);
-      } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
-        int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
-        if (FacadeConfiguration.getSdkLevel() < requiredSdkLevel) {
-          listRpcDescriptors.remove(i);
-        }
-      }
-      mRpcDescriptors = new SelectableMethodDescriptorListProxy(listRpcDescriptors);
-    }
+    mRpcDescriptors =
+        new SelectableMethodDescriptorListProxy(FacadeConfiguration
+            .collectSupportedRpcDescriptors());
     String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     mIsLanguageSupported = SupportedLanguages.checkLanguageSupported(scriptName);
     mAdapter = new ApiBrowserAdapter();
@@ -117,7 +103,7 @@ public class ApiBrowser extends ListActivity {
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
       searchResultMode = true;
       String query = intent.getStringExtra(SearchManager.QUERY);
-      mRpcDescriptors.setQuery(query);
+      mRpcDescriptors.setSelection(query);
       if (mRpcDescriptors.size() == 1) {
         mExpandedPositions.add(0);
       } else {

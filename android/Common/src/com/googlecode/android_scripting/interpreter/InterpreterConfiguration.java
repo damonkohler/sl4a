@@ -91,9 +91,7 @@ public class InterpreterConfiguration {
           }
           mInterpreterSet.addAll(discoveredInterpreters);
           isDiscoveryComplete = true;
-          for (ConfigurationObserver observer : mObserverSet) {
-            observer.onConfigurationChanged();
-          }
+          notifyConfigurationObservers();
         }
       });
     }
@@ -110,11 +108,15 @@ public class InterpreterConfiguration {
             addInterpreter(info.activityInfo.packageName);
           }
           isDiscoveryComplete = true;
-          for (ConfigurationObserver observer : mObserverSet) {
-            observer.onConfigurationChanged();
-          }
+          notifyConfigurationObservers();
         }
       });
+    }
+
+    private void notifyConfigurationObservers() {
+      for (ConfigurationObserver observer : mObserverSet) {
+        observer.onConfigurationChanged();
+      }
     }
 
     private void addInterpreter(final String packageName) {
@@ -141,9 +143,7 @@ public class InterpreterConfiguration {
           }
           mInterpreterSet.remove(interpreter);
           mmDiscoveredInterpreters.remove(packageName);
-          for (ConfigurationObserver observer : mObserverSet) {
-            observer.onConfigurationChanged();
-          }
+          notifyConfigurationObservers();
         }
       });
     }
@@ -158,11 +158,13 @@ public class InterpreterConfiguration {
       }
       ProviderInfo provider = packInfo.providers[0];
 
-      Map<String, String> interpreterMap = getMap(provider, InterpreterConstants.PROVIDER_PROPERTIES);
+      Map<String, String> interpreterMap =
+          getMap(provider, InterpreterConstants.PROVIDER_PROPERTIES);
       if (interpreterMap == null) {
         throw new RuntimeException("Null interpreter map for: " + packageName);
       }
-      Map<String, String> environmentMap = getMap(provider, InterpreterConstants.PROVIDER_ENVIRONMENT_VARIABLES);
+      Map<String, String> environmentMap =
+          getMap(provider, InterpreterConstants.PROVIDER_ENVIRONMENT_VARIABLES);
       if (environmentMap == null) {
         throw new RuntimeException("Null environment map for: " + packageName);
       }
@@ -197,9 +199,7 @@ public class InterpreterConfiguration {
           @Override
           public void run() {
             addInterpreter(packageName);
-            for (ConfigurationObserver observer : mObserverSet) {
-              observer.onConfigurationChanged();
-            }
+            notifyConfigurationObservers();
           }
         });
       } else if (action.equals(InterpreterConstants.ACTION_INTERPRETER_REMOVED)

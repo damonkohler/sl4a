@@ -29,10 +29,7 @@ import android.provider.BaseColumns;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.Rpc;
-import com.googlecode.android_scripting.rpc.RpcDepreciated;
-import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 public class ApiProvider extends ContentProvider {
@@ -52,19 +49,7 @@ public class ApiProvider extends ContentProvider {
   public ApiProvider() {
     mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     mUriMatcher.addURI(AUTHORITY, SUGGESTIONS, SUGGESTIONS_ID);
-    mRpcDescriptors = FacadeConfiguration.collectRpcDescriptors();
-    for (int i = mRpcDescriptors.size() - 1; i >= 0; i--) {
-      MethodDescriptor descriptor = mRpcDescriptors.get(i);
-      Method method = descriptor.getMethod();
-      if (method.isAnnotationPresent(RpcDepreciated.class)) {
-        mRpcDescriptors.remove(i);
-      } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
-        int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
-        if (FacadeConfiguration.getSdkLevel() < requiredSdkLevel) {
-          mRpcDescriptors.remove(i);
-        }
-      }
-    }
+    mRpcDescriptors = FacadeConfiguration.collectSupportedRpcDescriptors();
   }
 
   @Override

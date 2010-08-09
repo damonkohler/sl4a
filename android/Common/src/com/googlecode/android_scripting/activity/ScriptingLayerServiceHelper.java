@@ -37,7 +37,7 @@ import java.util.HashMap;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ScriptingLayerServiceHelper extends Activity {
-
+  // TODO(raaar): Add FutureActivity...
   private TaskQueue mTaskQueue;
   private Handler mHandler;
   private HashMap<Integer, FutureResult<?>> mResultMap;
@@ -72,11 +72,8 @@ public class ScriptingLayerServiceHelper extends Activity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    // TODO(raaar): Javadoc.
     if (mBlockOnId != null) {
-      FutureResult<?> result = mResultMap.get(mBlockOnId);
-      result.set(null);
-      mResultMap.remove(mBlockOnId);
-      mBlockOnId = null;
       throw new RuntimeException();
     }
   }

@@ -20,7 +20,10 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
+import com.googlecode.android_scripting.rpc.RpcDepreciated;
+import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -109,6 +112,27 @@ public class FacadeConfiguration {
   /** Returns a list of {@link MethodDescriptor} objects for all facades. */
   public static List<MethodDescriptor> collectRpcDescriptors() {
     return new ArrayList<MethodDescriptor>(sRpcs.values());
+  }
+
+  /**
+   * Returns a list of not depreciated {@link MethodDescriptor} objects for facades supported by the
+   * current SDK version.
+   */
+  public static List<MethodDescriptor> collectSupportedRpcDescriptors() {
+    List<MethodDescriptor> list = new ArrayList<MethodDescriptor>();
+    for (MethodDescriptor descriptor : sRpcs.values()) {
+      Method method = descriptor.getMethod();
+      if (method.isAnnotationPresent(RpcDepreciated.class)) {
+        continue;
+      } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
+        int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
+        if (sdkVersion < requiredSdkLevel) {
+          continue;
+        }
+      }
+      list.add(descriptor);
+    }
+    return list;
   }
 
   /** Returns a method by name. */

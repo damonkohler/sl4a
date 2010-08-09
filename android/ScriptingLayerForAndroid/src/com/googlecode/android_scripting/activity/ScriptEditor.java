@@ -16,11 +16,6 @@
 
 package com.googlecode.android_scripting.activity;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -49,6 +44,12 @@ import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * A text editor for scripts.
@@ -291,7 +292,8 @@ public class ScriptEditor extends Activity {
 
   private final class ContentTextWatcher implements TextWatcher {
     private final EditHistory mmEditHistory;
-    private EditItem mmCurrentOperation;
+    private CharSequence mmBeforeChange;
+    private CharSequence mmAfterChange;
 
     private ContentTextWatcher(EditHistory history) {
       mmEditHistory = history;
@@ -300,17 +302,15 @@ public class ScriptEditor extends Activity {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
       if (!mIsUndoOrRedo) {
-        mmCurrentOperation.after = s.subSequence(start, start + count);
-        mmEditHistory.add(mmCurrentOperation);
+        mmAfterChange = s.subSequence(start, start + count);
+        mmEditHistory.add(new EditItem(start, mmBeforeChange, mmAfterChange));
       }
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
       if (!mIsUndoOrRedo) {
-        mmCurrentOperation = new EditItem();
-        mmCurrentOperation.index = start;
-        mmCurrentOperation.before = s.subSequence(start, start + count);
+        mmBeforeChange = s.subSequence(start, start + count);
       }
     }
 
@@ -323,18 +323,28 @@ public class ScriptEditor extends Activity {
     }
   }
 
+  /**
+   * Keeps track of all the edit history of a text.
+   */
   private final class EditHistory {
     int mmPosition = 0;
-    private List<EditItem> mmHistory = new ArrayList<EditItem>();
+    private final Vector<EditItem> mmHistory = new Vector<EditItem>();
 
+    /**
+     * Adds a new edit operation to the history at the current position. If executed after a call to
+     * getPrevious() removes all the future history (elements with positions >= current history
+     * position).
+     * 
+     */
     private void add(EditItem item) {
-      while (mmPosition < mmHistory.size()) {
-        mmHistory.remove(mmHistory.size() - 1);
-      }
+      mmHistory.setSize(mmPosition);
       mmHistory.add(item);
       mmPosition++;
     }
 
+    /**
+     * Traverses the history backward by one position, returns and item at that position.
+     */
     private EditItem getPrevious() {
       if (mmPosition == 0) {
         return null;
@@ -343,6 +353,9 @@ public class ScriptEditor extends Activity {
       return mmHistory.get(mmPosition);
     }
 
+    /**
+     * Traverses the history forward by one position, returns and item at that position.
+     */
     private EditItem getNext() {
       if (mmPosition == mmHistory.size()) {
         return null;
@@ -353,10 +366,23 @@ public class ScriptEditor extends Activity {
     }
   }
 
+  /**
+   * Represents a single edit operation.
+   */
   private final class EditItem {
-    private int index;
-    private CharSequence before;
-    private CharSequence after;
+    private final int mmIndex;
+    private final CharSequence mmBefore;
+    private final CharSequence mmAfter;
+
+    /**
+     * Constructs EditItem of a modification that was applied at position start and replaced
+     * CharSequence before with CharSequence after.
+     */
+    public EditItem(int start, CharSequence before, CharSequence after) {
+      mmIndex = start;
+      mmBefore = before;
+      mmAfter = after;
+    }
   }
 
   private void undo() {
@@ -365,16 +391,16 @@ public class ScriptEditor extends Activity {
       return;
     }
     Editable text = mContentText.getText();
-    int start = edit.index;
-    int end = start + (edit.after != null ? edit.after.length() : 0);
+    int start = edit.mmIndex;
+    int end = start + (edit.mmAfter != null ? edit.mmAfter.length() : 0);
     mIsUndoOrRedo = true;
-    text.replace(start, end, edit.before);
+    text.replace(start, end, edit.mmBefore);
     mIsUndoOrRedo = false;
     // This will get rid of underlines inserted when editor tries to come up with a suggestion.
     for (Object o : text.getSpans(0, text.length(), UnderlineSpan.class)) {
       text.removeSpan(o);
     }
-    Selection.setSelection(text, edit.before == null ? start : (start + edit.before.length()));
+    Selection.setSelection(text, edit.mmBefore == null ? start : (start + edit.mmBefore.length()));
   }
 
   private void redo() {
@@ -383,15 +409,15 @@ public class ScriptEditor extends Activity {
       return;
     }
     Editable text = mContentText.getText();
-    int start = edit.index;
-    int end = start + (edit.before != null ? edit.before.length() : 0);
+    int start = edit.mmIndex;
+    int end = start + (edit.mmBefore != null ? edit.mmBefore.length() : 0);
     mIsUndoOrRedo = true;
-    text.replace(start, end, edit.after);
+    text.replace(start, end, edit.mmAfter);
     mIsUndoOrRedo = false;
     for (Object o : text.getSpans(0, text.length(), UnderlineSpan.class)) {
       text.removeSpan(o);
     }
-    Selection.setSelection(text, edit.after == null ? start : (start + edit.after.length()));
+    Selection.setSelection(text, edit.mmAfter == null ? start : (start + edit.mmAfter.length()));
   }
 
 }

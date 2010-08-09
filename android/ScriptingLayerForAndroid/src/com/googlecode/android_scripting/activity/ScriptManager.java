@@ -119,7 +119,7 @@ public class ScriptManager extends ListActivity {
       searchResultMode = true;
       String query = intent.getStringExtra(SearchManager.QUERY);
       ((TextView) findViewById(R.id.left_text)).setText(query);
-      mScriptList.setQuery(query);
+      mScriptList.setSelection(query);
       if (mScriptList.size() == 0) {
         ((TextView) findViewById(android.R.id.empty)).setText("No matches found.");
       }
