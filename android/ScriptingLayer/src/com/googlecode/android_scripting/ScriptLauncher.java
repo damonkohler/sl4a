@@ -16,14 +16,14 @@
 
 package com.googlecode.android_scripting;
 
-import java.io.File;
-
 import android.content.Intent;
 
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.trigger.Trigger;
+
+import java.io.File;
 
 public class ScriptLauncher {
 
@@ -75,7 +75,7 @@ public class ScriptLauncher {
   public static ScriptProcess launchScript(InterpreterConfiguration configuration,
       final AndroidProxy proxy, File script, Trigger trigger, Runnable shutdownHook) {
     Intent intent = new Intent();
-    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
+    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getPath());
     return launchScript(configuration, proxy, intent, trigger, shutdownHook);
   }
 }

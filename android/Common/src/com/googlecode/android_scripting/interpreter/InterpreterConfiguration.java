@@ -40,7 +40,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Manages and provides access to the set of available interpreters.
@@ -53,7 +55,7 @@ public class InterpreterConfiguration {
   private final Set<Interpreter> mInterpreterSet;
   private final Set<ConfigurationObserver> mObserverSet;
   private final Context mContext;
-  private boolean isDiscoveryComplete = false;
+  private volatile boolean isDiscoveryComplete = false;
 
   public interface ConfigurationObserver {
     public void onConfigurationChanged();
@@ -68,28 +70,21 @@ public class InterpreterConfiguration {
     private InterpreterListener(Context context) {
       mmPackageManager = context.getPackageManager();
       mmResolver = context.getContentResolver();
-      mmExecutor = Executors.newSingleThreadExecutor();
+      mmExecutor = new SingleThreadExecutor();
       mmDiscoveredInterpreters = new HashMap<String, Interpreter>();
     }
 
     private void discoverForType(final String mime) {
-      mmExecutor.submit(new Runnable() {
+      mmExecutor.execute(new Runnable() {
         @Override
         public void run() {
           Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
           intent.addCategory(Intent.CATEGORY_LAUNCHER);
           intent.setType(mime);
-          List<Interpreter> discoveredInterpreters = new ArrayList<Interpreter>();
           List<ResolveInfo> resolveInfos = mmPackageManager.queryIntentActivities(intent, 0);
           for (ResolveInfo info : resolveInfos) {
-            Interpreter interpreter = buildInterpreter(info.activityInfo.packageName);
-            if (interpreter == null) {
-              continue;
-            }
-            mmDiscoveredInterpreters.put(info.activityInfo.packageName, interpreter);
-            discoveredInterpreters.add(interpreter);
+            addInterpreter(info.activityInfo.packageName);
           }
-          mInterpreterSet.addAll(discoveredInterpreters);
           isDiscoveryComplete = true;
           notifyConfigurationObservers();
         }
@@ -97,7 +92,7 @@ public class InterpreterConfiguration {
     }
 
     private void discoverAll() {
-      mmExecutor.submit(new Runnable() {
+      mmExecutor.execute(new Runnable() {
         @Override
         public void run() {
           Intent intent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
@@ -124,6 +119,9 @@ public class InterpreterConfiguration {
         return;
       }
       Interpreter discoveredInterpreter = buildInterpreter(packageName);
+      if (discoveredInterpreter == null) {
+        return;
+      }
       mmDiscoveredInterpreters.put(packageName, discoveredInterpreter);
       mInterpreterSet.add(discoveredInterpreter);
       Log.v("Interpreter discovered: " + packageName + "\nBinary: "
@@ -134,7 +132,7 @@ public class InterpreterConfiguration {
       if (!mmDiscoveredInterpreters.containsKey(packageName)) {
         return;
       }
-      mmExecutor.submit(new Runnable() {
+      mmExecutor.execute(new Runnable() {
         @Override
         public void run() {
           Interpreter interpreter = mmDiscoveredInterpreters.get(packageName);
@@ -161,7 +159,8 @@ public class InterpreterConfiguration {
       Map<String, String> interpreterMap =
           getMap(provider, InterpreterConstants.PROVIDER_PROPERTIES);
       if (interpreterMap == null) {
-        throw new RuntimeException("Null interpreter map for: " + packageName);
+        Log.e("Null interpreter map for: " + packageName);
+        return null;
       }
       Map<String, String> environmentMap =
           getMap(provider, InterpreterConstants.PROVIDER_ENVIRONMENT_VARIABLES);
@@ -181,7 +180,7 @@ public class InterpreterConfiguration {
       Uri uri = Uri.parse("content://" + provider.authority + "/" + name);
       Cursor cursor = mmResolver.query(uri, null, null, null, null);
       if (cursor == null) {
-        return map;
+        return null;
       }
       cursor.moveToFirst();
       for (int i = 0; i < cursor.getColumnCount(); i++) {
@@ -195,7 +194,7 @@ public class InterpreterConfiguration {
       final String action = intent.getAction();
       final String packageName = intent.getData().getSchemeSpecificPart();
       if (action.equals(InterpreterConstants.ACTION_INTERPRETER_ADDED)) {
-        mmExecutor.submit(new Runnable() {
+        mmExecutor.execute(new Runnable() {
           @Override
           public void run() {
             addInterpreter(packageName);
@@ -300,6 +299,20 @@ public class InterpreterConfiguration {
       }
     }
     return null;
+  }
+
+  private class SingleThreadExecutor extends ThreadPoolExecutor {
+
+    public SingleThreadExecutor() {
+      super(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+    }
+
+    @Override
+    protected void afterExecute(Runnable r, Throwable t) {
+      if (t != null) {
+        throw new RuntimeException(t);
+      }
+    }
   }
 
 }

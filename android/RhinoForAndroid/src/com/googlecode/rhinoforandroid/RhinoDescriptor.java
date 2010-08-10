@@ -16,16 +16,16 @@
 
 package com.googlecode.rhinoforandroid;
 
+import android.content.Context;
+
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
+import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.content.Context;
-
-import com.googlecode.android_scripting.interpreter.InterpreterConstants;
-import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class RhinoDescriptor extends Sl4aHostedInterpreter {
 

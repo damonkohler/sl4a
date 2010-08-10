@@ -39,9 +39,9 @@ public class BaseApplication extends Application {
 
   @Override
   public void onCreate() {
-    mTriggerRepository = new TriggerRepository(this);
     mConfiguration = new InterpreterConfiguration(this);
     mConfiguration.startDiscovering();
+    mTriggerRepository = new TriggerRepository(this);
   }
 
   public InterpreterConfiguration getInterpreterConfiguration() {

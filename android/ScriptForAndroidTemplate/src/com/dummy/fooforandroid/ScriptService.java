@@ -1,9 +1,13 @@
 package com.dummy.fooforandroid;
 
 import java.io.File;
+import java.util.List;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ResolveInfo;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -16,12 +20,13 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 
 public class ScriptService extends Service {
 
   private final IBinder mBinder;
-  private final InterpreterConfiguration mInterpreterConfiguration;
+  private InterpreterConfiguration mInterpreterConfiguration;
 
   public class LocalBinder extends Binder {
     public ScriptService getService() {
@@ -31,17 +36,18 @@ public class ScriptService extends Service {
 
   public ScriptService() {
     mBinder = new LocalBinder();
+  }
+
+  @Override
+  public void onCreate() {
     mInterpreterConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
   }
 
   @Override
   public void onStart(Intent intent, final int startId) {
     super.onStart(intent, startId);
-    ScriptApplication app = (ScriptApplication) getApplication();
-    InterpreterConfiguration config = app.getInterpreterConfiguration();
     String fileName = Script.getFileName(this);
-    Interpreter interpreter = config.getInterpreterForScript(fileName);
-
+    Interpreter interpreter = mInterpreterConfiguration.getInterpreterForScript(fileName);
     if (interpreter == null || !interpreter.isInstalled()) {
       if (FeaturedInterpreters.isSupported(fileName)) {
         Intent i = new Intent(this, DialogActivity.class);

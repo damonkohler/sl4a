@@ -7,8 +7,7 @@
   <application
     android:debuggable="true"
     android:icon="@drawable/script_logo_48"
-    android:label="@string/app_name"
-    android:name=".ScriptApplication">
+    android:label="@string/app_name" android:name=".ScriptApplication">
     <activity
       android:name=".ScriptActivity"
       android:launchMode="singleTask"

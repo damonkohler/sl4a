@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting.provider;
 
-import java.io.File;
-
 import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -35,6 +33,8 @@ import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+
+import java.io.File;
 
 public class ScriptProvider extends ContentProvider {
 
@@ -79,7 +79,6 @@ public class ScriptProvider extends ContentProvider {
 
   @Override
   public boolean onCreate() {
-    mContext = getContext();
     mConfiguration = new InterpreterConfiguration(mContext);
     mConfiguration.startDiscovering();
     return true;
