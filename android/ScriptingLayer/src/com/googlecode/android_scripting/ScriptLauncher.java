@@ -51,14 +51,12 @@ public class ScriptLauncher {
     return process;
   }
 
-  public static ScriptProcess launchScript(InterpreterConfiguration configuration,
-      final AndroidProxy proxy, Intent intent, Trigger trigger, Runnable shutdownHook) {
-    String scriptName = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    File script = ScriptStorageAdapter.getExistingScript(scriptName);
-    if (script == null) {
+  public static ScriptProcess launchScript(File script, InterpreterConfiguration configuration,
+      final AndroidProxy proxy, Trigger trigger, Runnable shutdownHook) {
+    if (!script.exists()) {
       throw new RuntimeException("No such script to launch.");
     }
-    ScriptProcess process = new ScriptProcess(configuration, scriptName, proxy, trigger);
+    ScriptProcess process = new ScriptProcess(script, configuration, proxy, trigger);
     if (shutdownHook == null) {
       process.start(new Runnable() {
         @Override
@@ -70,12 +68,5 @@ public class ScriptLauncher {
       process.start(shutdownHook);
     }
     return process;
-  }
-
-  public static ScriptProcess launchScript(InterpreterConfiguration configuration,
-      final AndroidProxy proxy, File script, Trigger trigger, Runnable shutdownHook) {
-    Intent intent = new Intent();
-    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getPath());
-    return launchScript(configuration, proxy, intent, trigger, shutdownHook);
   }
 }

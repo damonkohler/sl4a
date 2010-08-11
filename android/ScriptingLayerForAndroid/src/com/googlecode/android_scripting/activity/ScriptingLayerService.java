@@ -33,12 +33,14 @@ import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
+import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 import com.googlecode.android_scripting.terminal.Terminal;
 import com.googlecode.android_scripting.trigger.Trigger;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -176,7 +178,9 @@ public class ScriptingLayerService extends Service {
 
   private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {
     final int port = proxy.getAddress().getPort();
-    return ScriptLauncher.launchScript(mInterpreterConfiguration, proxy, intent, trigger,
+    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    File script = ScriptStorageAdapter.getExistingScript(name);
+    return ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, trigger,
         new Runnable() {
           @Override
           public void run() {

@@ -132,10 +132,7 @@ public class ScriptStorageAdapter {
    *          the name of the script to access
    */
   public static File getExistingScript(String name) {
-    File scriptFile = new File(name);
-    if (scriptFile.getParent() == null) {
-      scriptFile = new File(InterpreterConstants.SCRIPTS_ROOT, name);
-    }
+    File scriptFile = new File(InterpreterConstants.SCRIPTS_ROOT, name);
     if (scriptFile.exists()) {
       return scriptFile;
     }

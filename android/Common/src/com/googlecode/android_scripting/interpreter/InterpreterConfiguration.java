@@ -55,7 +55,7 @@ public class InterpreterConfiguration {
   private final Set<Interpreter> mInterpreterSet;
   private final Set<ConfigurationObserver> mObserverSet;
   private final Context mContext;
-  private volatile boolean isDiscoveryComplete = false;
+  private volatile boolean mIsDiscoveryComplete = false;
 
   public interface ConfigurationObserver {
     public void onConfigurationChanged();
@@ -85,7 +85,7 @@ public class InterpreterConfiguration {
           for (ResolveInfo info : resolveInfos) {
             addInterpreter(info.activityInfo.packageName);
           }
-          isDiscoveryComplete = true;
+          mIsDiscoveryComplete = true;
           notifyConfigurationObservers();
         }
       });
@@ -102,7 +102,7 @@ public class InterpreterConfiguration {
           for (ResolveInfo info : resolveInfos) {
             addInterpreter(info.activityInfo.packageName);
           }
-          isDiscoveryComplete = true;
+          mIsDiscoveryComplete = true;
           notifyConfigurationObservers();
         }
       });
@@ -137,6 +137,7 @@ public class InterpreterConfiguration {
         public void run() {
           Interpreter interpreter = mmDiscoveredInterpreters.get(packageName);
           if (interpreter == null) {
+            Log.v("Interpreter for " + packageName + " not installed.");
             return;
           }
           mInterpreterSet.remove(interpreter);
@@ -175,14 +176,14 @@ public class InterpreterConfiguration {
     }
 
     private Map<String, String> getMap(ProviderInfo provider, String name) {
-      // Use LinkedHashMap so that order is maintained (important for position CLI arguments).
-      Map<String, String> map = new LinkedHashMap<String, String>();
       Uri uri = Uri.parse("content://" + provider.authority + "/" + name);
       Cursor cursor = mmResolver.query(uri, null, null, null, null);
       if (cursor == null) {
         return null;
       }
       cursor.moveToFirst();
+      // Use LinkedHashMap so that order is maintained (important for position CLI arguments).
+      Map<String, String> map = new LinkedHashMap<String, String>();
       for (int i = 0; i < cursor.getColumnCount(); i++) {
         map.put(cursor.getColumnName(i), cursor.getString(i));
       }
@@ -236,7 +237,7 @@ public class InterpreterConfiguration {
   }
 
   public boolean isDiscoveryComplete() {
-    return isDiscoveryComplete;
+    return mIsDiscoveryComplete;
   }
 
   public void registerObserver(ConfigurationObserver observer) {

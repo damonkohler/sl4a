@@ -79,6 +79,7 @@ public class ScriptProvider extends ContentProvider {
 
   @Override
   public boolean onCreate() {
+    mContext = getContext();
     mConfiguration = new InterpreterConfiguration(mContext);
     mConfiguration.startDiscovering();
     return true;

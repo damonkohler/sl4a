@@ -70,7 +70,7 @@ public class ScriptService extends Service {
 
     final AndroidProxy proxy = new AndroidProxy(this, null, true);
     proxy.startLocal();
-    ScriptLauncher.launchScript(mInterpreterConfiguration, proxy, script, null, new Runnable() {
+    ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, null, new Runnable() {
       @Override
       public void run() {
         proxy.shutdown();

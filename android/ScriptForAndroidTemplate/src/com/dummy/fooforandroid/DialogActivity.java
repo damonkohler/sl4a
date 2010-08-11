@@ -22,27 +22,27 @@ public class DialogActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    
+
     String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     String interpreter = FeaturedInterpreters.getInterpreterNameForScript(scriptName);
-    
+
     if (interpreter == null) {
       Log.e("Cannot find interpreter for script " + scriptName);
       finish();
     }
-    
+
     final Intent activityIntent = new Intent();
-    
+
     Intent resolveIntent = new Intent(InterpreterConstants.ACTION_DISCOVER_INTERPRETERS);
     resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
     resolveIntent.setType(InterpreterConstants.MIME + Script.getFileExtension(this));
     List<ResolveInfo> resolveInfos = getPackageManager().queryIntentActivities(resolveIntent, 0);
-    
-    if(resolveInfos!=null && resolveInfos.size()==1){
+
+    if (resolveInfos != null && resolveInfos.size() == 1) {
       ActivityInfo info = resolveInfos.get(0).activityInfo;
       activityIntent.setComponent(new ComponentName(info.packageName, info.name));
       activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    }else{
+    } else {
       final URL url = FeaturedInterpreters.getUrlForName(interpreter);
       activityIntent.setAction(Intent.ACTION_VIEW);
       activityIntent.setData(Uri.parse(url.toString()));
@@ -50,12 +50,13 @@ public class DialogActivity extends Activity {
 
     AlertDialog.Builder dialog = new AlertDialog.Builder(this);
     dialog.setTitle(String.format("%s is not installed.", interpreter));
-    dialog.setMessage(String.format("Do you want to download and install APK for %s ?", interpreter));
+    dialog.setMessage(String
+        .format("Do you want to download and install APK for %s ?", interpreter));
 
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {   
+        if (which == DialogInterface.BUTTON_POSITIVE) {
           startActivity(activityIntent);
         }
         dialog.dismiss();

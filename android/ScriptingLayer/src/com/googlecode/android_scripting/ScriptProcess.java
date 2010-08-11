@@ -23,18 +23,20 @@ import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.trigger.Trigger;
 
+import java.io.File;
+
 public class ScriptProcess extends InterpreterProcess {
 
   private final Trigger mTrigger;
 
-  public ScriptProcess(InterpreterConfiguration configuration, String scriptName,
-      AndroidProxy proxy, Trigger trigger) {
-    super(configuration.getInterpreterForScript(scriptName), proxy);
+  public ScriptProcess(File script, InterpreterConfiguration configuration, AndroidProxy proxy,
+      Trigger trigger) {
+    super(configuration.getInterpreterForScript(script.getName()), proxy);
     mTrigger = trigger;
+    String scriptName = script.getName();
     setName(scriptName);
     Interpreter interpreter = configuration.getInterpreterForScript(scriptName);
-    setCommand(String.format(interpreter.getScriptCommand(), ScriptStorageAdapter
-        .getExistingScript(scriptName).getAbsolutePath()));
+    setCommand(String.format(interpreter.getScriptCommand(), script.getAbsolutePath()));
   }
 
   public void notifyTriggerOfShutDown(Service service) {
