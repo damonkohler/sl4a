@@ -16,6 +16,7 @@
 
 package com.googlecode.android_scripting;
 
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.trilead.ssh2.StreamGobbler;
 
 import java.io.File;
@@ -107,12 +108,12 @@ public class Process {
 
     int[] pid = new int[1];
     String[] argumentsArray = mArguments.toArray(new String[mArguments.size()]);
+    File logFile =
+        new File(String.format("%s/%s.log", InterpreterConstants.SDCARD_SL4A_ROOT, getName()));
     mFd = Exec.createSubprocess(binaryPath, argumentsArray, getEnvironmentArray(), pid);
     mPid = pid[0];
     mOut = new FileOutputStream(mFd);
-    mIn =
-        new StreamGobbler(new FileInputStream(mFd), new File("/sdcard/sl4a/dummy.log"),
-            DEFAULT_BUFFER_SIZE);
+    mIn = new StreamGobbler(new FileInputStream(mFd), logFile, DEFAULT_BUFFER_SIZE);
     mStartTime = System.currentTimeMillis();
 
     new Thread(new Runnable() {
