@@ -79,10 +79,10 @@
       android:name=".activity.Preferences"
       android:theme="@android:style/Theme.NoTitleBar" />
     <activity
-      android:name=".terminal.Terminal"
+      android:name="org.connectbot.ConsoleActivity"
       android:theme="@android:style/Theme.NoTitleBar"
       android:configChanges="keyboardHidden|orientation"
-      android:windowSoftInputMode="stateAlwaysVisible|adjustResize">
+      android:windowSoftInputMode="stateAlwaysVisible|adjustResize" android:finishOnTaskLaunch="true" android:launchMode="singleTask">
     </activity>
     <activity
       android:name=".activity.ScriptEditor"
@@ -168,7 +168,17 @@
       android:name="android.test.runner" />
     <activity
       android:name=".activity.ScriptProcessMonitor"
-      android:launchMode="singleTask" />
+      android:launchMode="singleTask" android:finishOnTaskLaunch="true"/>
+    <activity
+      android:configChanges="keyboardHidden|orientation"
+      android:name="org.connectbot.util.ColorsActivity" android:theme="@android:style/Theme.Dialog">
+      <intent-filter>
+        <action
+          android:name="com.googlecode.android_scripting.PICK_TERMINAL_COLORS" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
   </application>
   <uses-permission
     android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />

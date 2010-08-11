@@ -138,4 +138,40 @@ public class Log {
     toast(context, message);
     android.util.Log.w(getTag(), message, e);
   }
+
+  public static void d(String message) {
+    android.util.Log.d(getTag(), message);
+  }
+
+  public static void d(String message, Throwable e) {
+    android.util.Log.d(getTag(), message, e);
+  }
+
+  public static void d(Context context, String message) {
+    toast(context, message);
+    android.util.Log.d(getTag(), message);
+  }
+
+  public static void d(Context context, String message, Throwable e) {
+    toast(context, message);
+    android.util.Log.d(getTag(), message, e);
+  }
+
+  public static void i(String message) {
+    android.util.Log.i(getTag(), message);
+  }
+
+  public static void i(String message, Throwable e) {
+    android.util.Log.i(getTag(), message, e);
+  }
+
+  public static void i(Context context, String message) {
+    toast(context, message);
+    android.util.Log.i(getTag(), message);
+  }
+
+  public static void i(Context context, String message, Throwable e) {
+    toast(context, message);
+    android.util.Log.i(getTag(), message, e);
+  }
 }

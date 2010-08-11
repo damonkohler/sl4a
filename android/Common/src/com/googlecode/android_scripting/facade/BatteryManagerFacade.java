@@ -74,15 +74,14 @@ public class BatteryManagerFacade extends RpcReceiver {
     mService.unregisterReceiver(mReceiver);
   }
 
-  @Rpc(description = "Returns battery status:" + "\n\t 1 - unknown; " + "\n\t 2 - charging; "
-      + "\n\t 3 - discharging; " + "\n\t 4 - not charging; " + "\n\t 5 - full;")
+  @Rpc(description = "Returns battery status:" + "\n1 - unknown;" + "\n2 - charging;"
+      + "\n3 - discharging;" + "\n4 - not charging;" + "\n5 - full;")
   public Integer batteryGetStatus() {
     return mBatteryStatus;
   }
 
-  @Rpc(description = "Returns battery health:" + "\n\t 1 - unknown; " + "\n\t 2 - good; "
-      + "\n\t 3 - overheat; " + "\n\t 4 - dead; " + "\n\t 5 - over voltage;"
-      + "\n\t 6 - unspecified failure;")
+  @Rpc(description = "Returns battery health:" + "\n1 - unknown;" + "\n2 - good;"
+      + "\n3 - overheat;" + "\n4 - dead;" + "\n5 - over voltage;" + "\n6 - unspecified failure;")
   public Integer batteryGetHealth() {
     return mBatteryHealth;
   }
@@ -92,8 +91,8 @@ public class BatteryManagerFacade extends RpcReceiver {
   /** Power source is a USB port. */
   public static final int BATTERY_PLUGGED_USB = 2;
 
-  @Rpc(description = "Returns plug type:" + "\n\t -1 - unknown; " + "\n\t 0 - unplugged; "
-      + "\n\t 1 - power source is an AC charger; " + "\n\t 2 - power source is a USB port;")
+  @Rpc(description = "Returns plug type:" + "\n-1 - unknown;" + "\n0 - unplugged;"
+      + "\n1 - power source is an AC charger;" + "\n2 - power source is a USB port;")
   public Integer batteryGetPlugType() {
     return mPlugType;
   }

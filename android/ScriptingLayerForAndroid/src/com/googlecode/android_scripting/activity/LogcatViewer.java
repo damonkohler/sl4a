@@ -16,12 +16,6 @@
 
 package com.googlecode.android_scripting.activity;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +33,13 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.Process;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.dialog.Help;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.List;
 
 public class LogcatViewer extends ListActivity {
 
@@ -61,7 +62,7 @@ public class LogcatViewer extends ListActivity {
       mLogcatProcess.setBinary(new File("/system/bin/logcat"));
       mLogcatProcess.start(null);
       try {
-        BufferedReader br = mLogcatProcess.getIn();
+        BufferedReader br = new BufferedReader(new InputStreamReader(mLogcatProcess.getIn()));
         while (true) {
           final String line = br.readLine();
           if (line == null) {

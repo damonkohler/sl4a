@@ -37,8 +37,10 @@ import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
-import com.googlecode.android_scripting.terminal.Terminal;
 import com.googlecode.android_scripting.trigger.Trigger;
+
+import org.connectbot.ConsoleActivity;
+import org.connectbot.service.TerminalManager;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -65,6 +67,8 @@ public class ScriptingLayerService extends Service {
 
   private volatile WeakReference<InterpreterProcess> mRecentlyKilledProcess;
 
+  private TerminalManager mTerminalManager;
+
   private static final int mNotificationId = NotificationIdFactory.create();
 
   public class LocalBinder extends Binder {
@@ -83,6 +87,7 @@ public class ScriptingLayerService extends Service {
     mInterpreterConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
     mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     mRecentlyKilledProcess = new WeakReference<InterpreterProcess>(null);
+    mTerminalManager = new TerminalManager(this);
     createNotification();
     ServiceUtils.setForeground(this, mNotificationId, mNotification);
   }
@@ -212,7 +217,7 @@ public class ScriptingLayerService extends Service {
   }
 
   private void launchTerminal(Intent intent, InetSocketAddress address) {
-    Intent i = new Intent(this, Terminal.class);
+    Intent i = new Intent(this, ConsoleActivity.class);
     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     i.putExtras(intent);
     i.putExtra(Constants.EXTRA_PROXY_PORT, address.getPort());
@@ -308,5 +313,9 @@ public class ScriptingLayerService extends Service {
   @Override
   public IBinder onBind(Intent intent) {
     return mBinder;
+  }
+
+  public TerminalManager getTerminalManager() {
+    return mTerminalManager;
   }
 }

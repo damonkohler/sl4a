@@ -1,5 +1,9 @@
 package com.trilead.ssh2;
 
+import com.googlecode.android_scripting.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -33,11 +37,12 @@ public class StreamGobbler extends InputStream {
   class GobblerThread extends Thread {
     @Override
     public void run() {
-      byte[] buff = new byte[8192];
 
       while (true) {
         try {
-          int avail = is.read(buff);
+          byte[] saveBuffer = null;
+
+          int avail = is.read(buffer, write_pos, buffer.length - write_pos);
 
           synchronized (synchronizer) {
             if (avail <= 0) {
@@ -45,39 +50,28 @@ public class StreamGobbler extends InputStream {
               synchronizer.notifyAll();
               break;
             }
+            write_pos += avail;
 
             int space_available = buffer.length - write_pos;
 
-            if (space_available < avail) {
-              /* compact/resize buffer */
-
-              int unread_size = write_pos - read_pos;
-              int need_space = unread_size + avail;
-
-              byte[] new_buffer = buffer;
-
-              if (need_space > buffer.length) {
-                int inc = need_space / 3;
-                inc = (inc < 256) ? 256 : inc;
-                inc = (inc > 8192) ? 8192 : inc;
-                new_buffer = new byte[need_space + inc];
+            if (space_available == 0) {
+              if (read_pos > 0) {
+                saveBuffer = new byte[read_pos];
+                System.arraycopy(buffer, 0, saveBuffer, 0, read_pos);
+                System.arraycopy(buffer, read_pos, buffer, 0, buffer.length - read_pos);
+                write_pos -= read_pos;
+                read_pos = 0;
+              } else {
+                write_pos = 0;
+                saveBuffer = buffer;
               }
-
-              if (unread_size > 0) {
-                System.arraycopy(buffer, read_pos, new_buffer, 0, unread_size);
-              }
-
-              buffer = new_buffer;
-
-              read_pos = 0;
-              write_pos = unread_size;
             }
-
-            System.arraycopy(buff, 0, buffer, write_pos, avail);
-            write_pos += avail;
 
             synchronizer.notifyAll();
           }
+
+          writeToFile(saveBuffer);
+
         } catch (IOException e) {
           synchronized (synchronizer) {
             exception = e;
@@ -98,15 +92,36 @@ public class StreamGobbler extends InputStream {
   private boolean isClosed = false;
   private IOException exception = null;
 
-  private byte[] buffer = new byte[2048];
+  private byte[] buffer;
   private int read_pos = 0;
   private int write_pos = 0;
+  private final FileOutputStream mLogStream;
+  private final int mBufferSize;
 
-  public StreamGobbler(InputStream is) {
+  public StreamGobbler(InputStream is, File log, int buffer_size) {
     this.is = is;
+    mBufferSize = buffer_size;
+    FileOutputStream out = null;
+    try {
+      out = new FileOutputStream(log, false);
+    } catch (IOException e) {
+      Log.e(e);
+    }
+    mLogStream = out;
+    buffer = new byte[mBufferSize];
     t = new GobblerThread();
     t.setDaemon(true);
     t.start();
+  }
+
+  public void writeToFile(byte[] buffer) {
+    if (mLogStream != null && buffer != null) {
+      try {
+        mLogStream.write(buffer);
+      } catch (IOException e) {
+        Log.e(e);
+      }
+    }
   }
 
   @Override

@@ -18,14 +18,13 @@ package com.googlecode.android_scripting;
 
 import com.trilead.ssh2.StreamGobbler;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.Reader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,11 +41,12 @@ public class Process {
   private File mBinary;
   private String mName;
   private long mStartTime;
+  private long mEndTime;
 
-  protected Integer mPid;
+  protected volatile Integer mPid;
   protected FileDescriptor mFd;
-  protected PrintStream mOut;
-  protected Reader mIn;
+  protected OutputStream mOut;
+  protected InputStream mIn;
 
   public Process() {
     mArguments = new ArrayList<String>();
@@ -84,33 +84,16 @@ public class Process {
     return mFd;
   }
 
-  public PrintStream getOut() {
+  public OutputStream getOut() {
     return mOut;
   }
 
-  public PrintStream getErr() {
+  public OutputStream getErr() {
     return getOut();
   }
 
-  public BufferedReader getIn() {
-    if (mIn == null) {
-      return null;
-    }
-    return new BufferedReader(mIn, DEFAULT_BUFFER_SIZE);
-  }
-
-  public void error(Object obj) {
-    println(obj);
-  }
-
-  public void print(Object obj) {
-    if (getOut() != null) {
-      getOut().print(obj);
-    }
-  }
-
-  public void println(Object obj) {
-    getOut().println(obj);
+  public InputStream getIn() {
+    return mIn;
   }
 
   public void start(final Runnable shutdownHook) {
@@ -126,16 +109,28 @@ public class Process {
     String[] argumentsArray = mArguments.toArray(new String[mArguments.size()]);
     mFd = Exec.createSubprocess(binaryPath, argumentsArray, getEnvironmentArray(), pid);
     mPid = pid[0];
-    mOut = new PrintStream(new FileOutputStream(mFd), true /* autoflush */);
-    mIn = new InputStreamReader(new StreamGobbler(new FileInputStream(mFd)));
+    mOut = new FileOutputStream(mFd);
+    mIn =
+        new StreamGobbler(new FileInputStream(mFd), new File("/sdcard/sl4a/dummy.log"),
+            DEFAULT_BUFFER_SIZE);
     mStartTime = System.currentTimeMillis();
 
     new Thread(new Runnable() {
       public void run() {
         int result = Exec.waitFor(mPid);
-        Log.v("Process " + mPid + " exited with result code " + result + ".");
+        mEndTime = System.currentTimeMillis();
         mPid = null;
-        mOut.close();
+        Log.v("Process " + mPid + " exited with result code " + result + ".");
+        try {
+          mIn.close();
+        } catch (IOException e) {
+          Log.e(e);
+        }
+        try {
+          mOut.close();
+        } catch (IOException e) {
+          Log.e(e);
+        }
         if (shutdownHook != null) {
           shutdownHook.run();
         }
@@ -160,15 +155,17 @@ public class Process {
   }
 
   public boolean isAlive() {
-    return mPid != null;
+    return (mFd != null && mFd.valid()) && mPid != null;
   }
 
   public String getUptime() {
+    long ms;
     if (!isAlive()) {
-      return "";
+      ms = mEndTime - mStartTime;
+    } else {
+      ms = System.currentTimeMillis() - mStartTime;
     }
-    long ms = System.currentTimeMillis() - mStartTime;
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
     int days = (int) (ms / (1000 * 60 * 60 * 24));
     int hours = (int) (ms % (1000 * 60 * 60 * 24)) / 3600000;
     int minutes = (int) (ms % 3600000) / 60000;
