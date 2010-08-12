@@ -15,9 +15,9 @@
  */
 package com.googlecode.android_scripting.language;
 
-import com.googlecode.android_scripting.rpc.ParameterDescriptor;
-
 import junit.framework.TestCase;
+
+import com.googlecode.android_scripting.rpc.ParameterDescriptor;
 
 /**
  * Tests languages support.
@@ -55,7 +55,8 @@ public class LanguageTest extends TestCase {
           new ParameterDescriptor(null, String.class), new ParameterDescriptor(null, Object.class),
           new ParameterDescriptor("true", Boolean.class),
           new ParameterDescriptor("isComplete", Boolean.class), };
-    checkMethodCall("droid.method(1, \"abc\", null, null, true, isComplete)", beanShell, params);
+    checkMethodCall("droid.call(\"method\", 1, \"abc\", null, null, true, isComplete)", beanShell,
+        params);
     checkMethodCall("droid.method(1, \"abc\", null, null, true, isComplete)", javaScript, params);
     checkMethodCall("android.method(1, \"abc\", null, null, true, isComplete)", lua, params);
     checkMethodCall("$droid->method(1, \"abc\", null, null, true, isComplete)", perl, params);
