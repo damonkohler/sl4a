@@ -39,6 +39,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
@@ -52,7 +55,6 @@ import com.googlecode.android_scripting.dialog.UsageTrackingConfirmation;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
-import com.googlecode.android_scripting.provider.SelectableListProxy;
 
 import java.io.File;
 import java.util.HashMap;
@@ -66,14 +68,14 @@ import java.util.Map.Entry;
  */
 public class ScriptManager extends ListActivity {
 
-  private SelectableFileListProxy mScriptList;
+  private List<File> mScripts;
   private ScriptManagerAdapter mAdapter;
   private SharedPreferences mPreferences;
   private HashMap<Integer, Interpreter> mAddMenuIds;
   private ScriptListObserver mObserver;
   private InterpreterConfiguration mConfiguration;
   private SearchManager mManager;
-  private boolean searchResultMode = false;
+  private boolean mInSearchResultMode = false;
 
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
@@ -91,13 +93,12 @@ public class ScriptManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
-    CustomizeWindow.toggleProgressBarVisibility(this, true);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     mAdapter = new ScriptManagerAdapter();
     mObserver = new ScriptListObserver();
     mAdapter.registerDataSetObserver(mObserver);
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    mScriptList = new SelectableFileListProxy(null);
+    updateAndFilterScriptList("");
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     UsageTrackingConfirmation.show(this);
@@ -114,13 +115,28 @@ public class ScriptManager extends ListActivity {
     handleIntent(intent);
   }
 
+  private void updateAndFilterScriptList(final String query) {
+    List<File> scripts;
+    if (mPreferences.getBoolean("show_all_files", false)) {
+      scripts = ScriptStorageAdapter.listAllScripts();
+    } else {
+      scripts = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
+    }
+    mScripts = Lists.newArrayList(Collections2.filter(scripts, new Predicate<File>() {
+      @Override
+      public boolean apply(File file) {
+        return file.getName().toLowerCase().contains(query.toLowerCase());
+      }
+    }));
+  }
+
   private void handleIntent(Intent intent) {
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-      searchResultMode = true;
+      mInSearchResultMode = true;
       String query = intent.getStringExtra(SearchManager.QUERY);
       ((TextView) findViewById(R.id.left_text)).setText(query);
-      mScriptList.setSelection(query);
-      if (mScriptList.size() == 0) {
+      updateAndFilterScriptList(query);
+      if (mScripts.size() == 0) {
         ((TextView) findViewById(android.R.id.empty)).setText("No matches found.");
       }
       mAdapter.notifyDataSetChanged();
@@ -129,24 +145,14 @@ public class ScriptManager extends ListActivity {
 
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_BACK && searchResultMode) {
-      searchResultMode = false;
+    if (keyCode == KeyEvent.KEYCODE_BACK && mInSearchResultMode) {
+      mInSearchResultMode = false;
       ((TextView) findViewById(R.id.left_text)).setText("Scripts");
-      mScriptList.reset();
+      updateAndFilterScriptList("");
       mAdapter.notifyDataSetChanged();
       return true;
     }
     return super.onKeyDown(keyCode, event);
-  }
-
-  private void updateScriptsList() {
-    boolean keepOn = !mConfiguration.isDiscoveryComplete();
-    CustomizeWindow.toggleProgressBarVisibility((ScriptManager.this), keepOn);
-    if (mPreferences.getBoolean("show_all_files", false)) {
-      mScriptList.replace(ScriptStorageAdapter.listAllScripts());
-    } else {
-      mScriptList.replace(ScriptStorageAdapter.listExecutableScripts(mConfiguration));
-    }
   }
 
   @Override
@@ -158,17 +164,17 @@ public class ScriptManager extends ListActivity {
   @Override
   public void onStart() {
     super.onStart();
-    updateScriptsList();
+    updateAndFilterScriptList("");
     mConfiguration.registerObserver(mObserver);
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    if (!searchResultMode) {
+    if (!mInSearchResultMode) {
       ((TextView) findViewById(android.R.id.empty)).setText(R.string.no_scripts_message);
     }
-    mAdapter.notifyDataSetInvalidated();
+    mAdapter.notifyDataSetChanged();
   }
 
   @Override
@@ -245,7 +251,7 @@ public class ScriptManager extends ListActivity {
     } else if (itemId == MenuId.LOGCAT_VIEWER.getId()) {
       startActivity(new Intent(this, LogcatViewer.class));
     } else if (itemId == MenuId.REFRESH.getId()) {
-      mAdapter.notifyDataSetInvalidated();
+      mAdapter.notifyDataSetChanged();
     } else if (itemId == MenuId.SEARCH.getId()) {
       onSearchRequested();
     }
@@ -317,7 +323,7 @@ public class ScriptManager extends ListActivity {
     alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int whichButton) {
         ScriptStorageAdapter.deleteScript(scriptName);
-        mAdapter.notifyDataSetInvalidated();
+        mAdapter.notifyDataSetChanged();
       }
     });
     alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -347,7 +353,7 @@ public class ScriptManager extends ListActivity {
         break;
       }
     }
-    mAdapter.notifyDataSetInvalidated();
+    mAdapter.notifyDataSetChanged();
   }
 
   private void writeScriptFromBarcode(Intent data) {
@@ -374,9 +380,10 @@ public class ScriptManager extends ListActivity {
   }
 
   private class ScriptListObserver extends DataSetObserver implements ConfigurationObserver {
+
     @Override
     public void onInvalidated() {
-      updateScriptsList();
+      updateAndFilterScriptList("");
     }
 
     @Override
@@ -384,7 +391,7 @@ public class ScriptManager extends ListActivity {
       runOnUiThread(new Runnable() {
         @Override
         public void run() {
-          mAdapter.notifyDataSetInvalidated();
+          mAdapter.notifyDataSetChanged();
         }
       });
     }
@@ -394,12 +401,12 @@ public class ScriptManager extends ListActivity {
 
     @Override
     public int getCount() {
-      return mScriptList.size();
+      return mScripts.size();
     }
 
     @Override
     public Object getItem(int position) {
-      return mScriptList.get(position);
+      return mScripts.get(position);
     }
 
     @Override
@@ -412,20 +419,8 @@ public class ScriptManager extends ListActivity {
       TextView view = new TextView(ScriptManager.this);
       view.setPadding(2, 2, 2, 2);
       view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-      view.setText(mScriptList.get(position).getName());
+      view.setText(mScripts.get(position).getName());
       return view;
-    }
-  }
-
-  private class SelectableFileListProxy extends SelectableListProxy<File> {
-
-    public SelectableFileListProxy(List<File> list) {
-      super(list);
-    }
-
-    @Override
-    public String getString(File item) {
-      return item.getName().toLowerCase();
     }
   }
 }

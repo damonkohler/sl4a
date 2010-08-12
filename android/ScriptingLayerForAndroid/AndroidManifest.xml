@@ -98,7 +98,6 @@
     </activity>
     <activity
       android:name=".activity.ApiBrowser"
-      android:theme="@android:style/Theme.NoTitleBar"
       android:configChanges="keyboardHidden|orientation" android:launchMode="singleTop" android:windowSoftInputMode="adjustResize">
       <intent-filter>
         <action

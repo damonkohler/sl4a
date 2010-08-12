@@ -16,21 +16,25 @@
 
 package com.googlecode.android_scripting.provider;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
+
 import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.Rpc;
-
-import java.util.List;
+import com.googlecode.android_scripting.rpc.RpcDepreciated;
+import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
 public class ApiProvider extends ContentProvider {
 
@@ -42,14 +46,28 @@ public class ApiProvider extends ContentProvider {
   public static final String SUGGESTIONS = "searchSuggestions/*/*";
 
   private final UriMatcher mUriMatcher;
-  private final List<MethodDescriptor> mRpcDescriptors;
-
-  private Context mContext;
+  private final Collection<MethodDescriptor> mMethodDescriptors;
 
   public ApiProvider() {
     mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     mUriMatcher.addURI(AUTHORITY, SUGGESTIONS, SUGGESTIONS_ID);
-    mRpcDescriptors = FacadeConfiguration.collectSupportedRpcDescriptors();
+    mMethodDescriptors =
+        Collections2.filter(FacadeConfiguration.collectMethodDescriptors(),
+            new Predicate<MethodDescriptor>() {
+              @Override
+              public boolean apply(MethodDescriptor descriptor) {
+                Method method = descriptor.getMethod();
+                if (method.isAnnotationPresent(RpcDepreciated.class)) {
+                  return false;
+                } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
+                  int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
+                  if (FacadeConfiguration.getSdkLevel() < requiredSdkLevel) {
+                    return false;
+                  }
+                }
+                return true;
+              }
+            });
   }
 
   @Override
@@ -69,7 +87,6 @@ public class ApiProvider extends ContentProvider {
 
   @Override
   public boolean onCreate() {
-    mContext = getContext();
     return true;
   }
 
@@ -90,7 +107,7 @@ public class ApiProvider extends ContentProvider {
           SearchManager.SUGGEST_COLUMN_TEXT_2, SearchManager.SUGGEST_COLUMN_QUERY };
     MatrixCursor cursor = new MatrixCursor(columns);
     int index = 0;
-    for (MethodDescriptor descriptor : mRpcDescriptors) {
+    for (MethodDescriptor descriptor : mMethodDescriptors) {
       String name = descriptor.getMethod().getName();
       if (!name.toLowerCase().contains(query)) {
         continue;
@@ -108,5 +125,4 @@ public class ApiProvider extends ContentProvider {
   public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
     return 0;
   }
-
 }

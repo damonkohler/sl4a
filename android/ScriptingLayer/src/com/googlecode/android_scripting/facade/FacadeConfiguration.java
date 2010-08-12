@@ -110,7 +110,7 @@ public class FacadeConfiguration {
   }
 
   /** Returns a list of {@link MethodDescriptor} objects for all facades. */
-  public static List<MethodDescriptor> collectRpcDescriptors() {
+  public static List<MethodDescriptor> collectMethodDescriptors() {
     return new ArrayList<MethodDescriptor>(sRpcs.values());
   }
 

@@ -36,7 +36,7 @@ import com.googlecode.android_scripting.rpc.RpcParameter;
 public class RpcAnnotationsTest extends AndroidTestCase {
 
   public void testParameterAnnotationsCardinality() {
-    for (MethodDescriptor rpc : FacadeConfiguration.collectRpcDescriptors()) {
+    for (MethodDescriptor rpc : FacadeConfiguration.collectMethodDescriptors()) {
       int param = -1;
       for (Annotation[] annotations : rpc.getParameterAnnotations()) {
         param++;
@@ -66,7 +66,7 @@ public class RpcAnnotationsTest extends AndroidTestCase {
   }
 
   public void testDefaultValues() {
-    for (MethodDescriptor rpc : FacadeConfiguration.collectRpcDescriptors()) {
+    for (MethodDescriptor rpc : FacadeConfiguration.collectMethodDescriptors()) {
       int param = -1;
       Type[] parameterTypes = rpc.getGenericParameterTypes();
       for (Annotation[] annotations : rpc.getParameterAnnotations()) {
