@@ -128,8 +128,7 @@ public class TerminalManager implements OnSharedPreferenceChangeListener {
 
     InterpreterProcess process = mService.getProcess(id);
 
-    TerminalBridge bridge =
-        new TerminalBridge(this, id, process.getName(), new ProcessTransport(process));
+    TerminalBridge bridge = new TerminalBridge(this, process, new ProcessTransport(process));
     bridge.connect();
 
     WeakReference<TerminalBridge> wr = new WeakReference<TerminalBridge>(bridge);

@@ -91,12 +91,16 @@
     
   <string name="prompt_process_exited">Process has exited.\nClose terminal?</string>
   <string name="prompt_confirm_exit">Confirm exit.\nKill process?</string>
-  <string name="console_copy_done">Copied %1$d bytes to clipboard</string>
-  <string name="console_menu_close">Close</string>
-  <string name="console_copy_start">Touch and drag\nor use directional pad\nto select area to copy</string>
-  <string name="console_menu_copy">Copy</string>
-  <string name="console_menu_paste">Paste</string>
-  <string name="console_menu_resize">Force Size</string>
+  
+  <string name="terminal_copy_done">Copied %1$d bytes to clipboard</string>
+  <string name="terminal_copy_start">Touch and drag\nor use directional pad\nto select area to copy</string>
+  
+  
+  <string name="terminal_menu_close">Close</string>
+  <string name="terminal_menu_copy">Copy</string>
+  <string name="terminal_menu_paste">Paste</string>
+  <string name="terminal_menu_resize">Force Size</string>
+  
   <string name="button_resize">Resize</string>
   
   <!-- Name for the scrollback size preference -->

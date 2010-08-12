@@ -48,6 +48,7 @@ public class Process {
   protected FileDescriptor mFd;
   protected OutputStream mOut;
   protected InputStream mIn;
+  protected File mLog;
 
   public Process() {
     mArguments = new ArrayList<String>();
@@ -93,6 +94,10 @@ public class Process {
     return getOut();
   }
 
+  public File getLogFile() {
+    return mLog;
+  }
+
   public InputStream getIn() {
     return mIn;
   }
@@ -108,12 +113,11 @@ public class Process {
 
     int[] pid = new int[1];
     String[] argumentsArray = mArguments.toArray(new String[mArguments.size()]);
-    File logFile =
-        new File(String.format("%s/%s.log", InterpreterConstants.SDCARD_SL4A_ROOT, getName()));
+    mLog = new File(String.format("%s/%s.log", InterpreterConstants.SDCARD_SL4A_ROOT, getName()));
     mFd = Exec.createSubprocess(binaryPath, argumentsArray, getEnvironmentArray(), pid);
     mPid = pid[0];
     mOut = new FileOutputStream(mFd);
-    mIn = new StreamGobbler(new FileInputStream(mFd), logFile, DEFAULT_BUFFER_SIZE);
+    mIn = new StreamGobbler(new FileInputStream(mFd), mLog, DEFAULT_BUFFER_SIZE);
     mStartTime = System.currentTimeMillis();
 
     new Thread(new Runnable() {

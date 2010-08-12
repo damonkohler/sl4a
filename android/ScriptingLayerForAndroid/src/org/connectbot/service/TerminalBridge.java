@@ -31,6 +31,7 @@ import android.text.ClipboardManager;
 
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 
 import de.mud.terminal.VDUBuffer;
 import de.mud.terminal.VDUDisplay;
@@ -61,8 +62,7 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
 
   private final TerminalManager manager;
 
-  private final int mId;
-  private final String mName;
+  private final InterpreterProcess mProcess;
 
   private int mDefaultFgColor;
   private int mDefaultBgColor;
@@ -148,8 +148,8 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
 
     keyListener = new TerminalKeyListener(manager, this, buffer, null);
 
-    mId = 0;
-    mName = null;
+    mProcess = null;
+
     mDefaultFgColor = 0;
     mDefaultBgColor = 0;
     promptHelper = null;
@@ -161,12 +161,11 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
    * Create new terminal bridge with following parameters. We will immediately launch thread to
    * start SSH connection and handle any hostkey verification and password authentication.
    */
-  public TerminalBridge(final TerminalManager manager, int id, String name, AbsTransport t)
+  public TerminalBridge(final TerminalManager manager, InterpreterProcess process, AbsTransport t)
       throws IOException {
     this.manager = manager;
     transport = t;
-    mId = id;
-    mName = name;
+    mProcess = process;
 
     String string = manager.getStringParameter(PreferenceConstants.SCROLLBACK, null);
     if (string != null) {
@@ -776,11 +775,15 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
   }
 
   public int getId() {
-    return mId;
+    return mProcess.getPort();
   }
 
   public String getName() {
-    return mName;
+    return mProcess.getName();
+  }
+
+  public InterpreterProcess getProcess() {
+    return mProcess;
   }
 
   public int getForegroundColor() {

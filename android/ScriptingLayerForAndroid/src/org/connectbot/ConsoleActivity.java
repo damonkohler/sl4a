@@ -28,6 +28,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -35,6 +36,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
+import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,7 +45,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
-import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
@@ -60,6 +62,8 @@ import android.widget.ViewFlipper;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.ScriptProcess;
+import com.googlecode.android_scripting.activity.Preferences;
 import com.googlecode.android_scripting.activity.ScriptingLayerService;
 
 import de.mud.terminal.VDUBuffer;
@@ -107,9 +111,9 @@ public class ConsoleActivity extends Activity {
   private ImageView keyboardButton;
   private float lastX, lastY;
 
-  private InputMethodManager inputManager;
+  private int mTouchSlopSquare;
 
-  private MenuItem copy, paste, resize;
+  private InputMethodManager inputManager;
 
   protected TerminalBridge copySource = null;
   private int lastTouchRow, lastTouchCol;
@@ -117,6 +121,13 @@ public class ConsoleActivity extends Activity {
   private boolean forcedOrientation;
 
   private Handler handler = new Handler();
+
+  private static enum MenuId {
+    EDIT, PREFS, EMAIL, RESIZE, COPY, PASTE;
+    public int getId() {
+      return ordinal() + Menu.FIRST;
+    }
+  }
 
   private final ServiceConnection mConnection = new ServiceConnection() {
     @Override
@@ -323,6 +334,10 @@ public class ConsoleActivity extends Activity {
       }
     });
 
+    final ViewConfiguration configuration = ViewConfiguration.get(this);
+    int touchSlop = configuration.getScaledTouchSlop();
+    mTouchSlopSquare = touchSlop * touchSlop;
+
     // detect fling gestures to switch between terminals
     final GestureDetector detect =
         new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
@@ -417,7 +432,8 @@ public class ConsoleActivity extends Activity {
 
         });
 
-    flip.setLongClickable(true);
+    flip.setOnCreateContextMenuListener(this);
+
     flip.setOnTouchListener(new OnTouchListener() {
 
       public boolean onTouch(View v, MotionEvent event) {
@@ -448,7 +464,6 @@ public class ConsoleActivity extends Activity {
             if (row == lastTouchRow && col == lastTouchCol) {
               return true;
             }
-
             // if the user moves, start the selection for other corner
             area.finishSelectingOrigin();
 
@@ -473,7 +488,7 @@ public class ConsoleActivity extends Activity {
 
             clipboard.setText(copiedText);
             Toast.makeText(ConsoleActivity.this,
-                getString(R.string.console_copy_done, copiedText.length()), Toast.LENGTH_LONG)
+                getString(R.string.terminal_copy_done, copiedText.length()), Toast.LENGTH_LONG)
                 .show();
             // fall through to clear state
 
@@ -491,27 +506,37 @@ public class ConsoleActivity extends Activity {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
           lastX = event.getX();
           lastY = event.getY();
-        } else if (event.getAction() == MotionEvent.ACTION_UP
-            && config.hardKeyboardHidden != Configuration.KEYBOARDHIDDEN_NO
-            && keyboardButton.getVisibility() == View.GONE
-            && event.getEventTime() - event.getDownTime() < CLICK_TIME
-            && Math.abs(event.getX() - lastX) < MAX_CLICK_DISTANCE
-            && Math.abs(event.getY() - lastY) < MAX_CLICK_DISTANCE) {
-          keyboardButton.startAnimation(keyboard_fade_in);
-          keyboardButton.setVisibility(View.VISIBLE);
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+          final int deltaX = (int) (lastX - event.getX());
+          final int deltaY = (int) (lastY - event.getY());
+          int distance = (deltaX * deltaX) + (deltaY * deltaY);
+          if (distance > mTouchSlopSquare) {
+            flip.cancelLongPress();
+          }
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+          flip.cancelLongPress();
+          if (config.hardKeyboardHidden != Configuration.KEYBOARDHIDDEN_NO
+              && keyboardButton.getVisibility() == View.GONE
+              && event.getEventTime() - event.getDownTime() < CLICK_TIME
+              && Math.abs(event.getX() - lastX) < MAX_CLICK_DISTANCE
+              && Math.abs(event.getY() - lastY) < MAX_CLICK_DISTANCE) {
+            keyboardButton.startAnimation(keyboard_fade_in);
+            keyboardButton.setVisibility(View.VISIBLE);
 
-          handler.postDelayed(new Runnable() {
-            public void run() {
-              if (keyboardButton.getVisibility() == View.GONE) {
-                return;
+            handler.postDelayed(new Runnable() {
+              public void run() {
+                if (keyboardButton.getVisibility() == View.GONE) {
+                  return;
+                }
+
+                keyboardButton.startAnimation(keyboard_fade_out);
+                keyboardButton.setVisibility(View.GONE);
               }
+            }, KEYBOARD_DISPLAY_TIME);
 
-              keyboardButton.startAnimation(keyboard_fade_out);
-              keyboardButton.setVisibility(View.GONE);
-            }
-          }, KEYBOARD_DISPLAY_TIME);
+            return false;
+          }
         }
-
         // pass any touch events back to detector
         return detect.onTouchEvent(event);
       }
@@ -520,9 +545,6 @@ public class ConsoleActivity extends Activity {
 
   }
 
-  /**
-	 *
-	 */
   private void configureOrientation() {
     String rotateDefault;
     if (getResources().getConfiguration().keyboard == Configuration.KEYBOARD_NOKEYS) {
@@ -552,128 +574,150 @@ public class ConsoleActivity extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
-
-    View view = findCurrentView(R.id.console_flip);
-    final boolean activeTerminal = (view instanceof TerminalView);
-    boolean sessionOpen = false;
-    if (activeTerminal) {
-      TerminalBridge bridge = ((TerminalView) view).bridge;
-      sessionOpen = bridge.isSessionOpen();
-    }
-
+    getMenuInflater().inflate(R.menu.terminal, menu);
     menu.setQwertyMode(true);
-
-    copy = menu.add(R.string.console_menu_copy);
-    copy.setAlphabeticShortcut('c');
-    copy.setIcon(android.R.drawable.ic_menu_set_as);
-    copy.setEnabled(activeTerminal);
-    copy.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-      public boolean onMenuItemClick(MenuItem item) {
-        // mark as copying and reset any previous bounds
-        TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
-        copySource = terminalView.bridge;
-
-        SelectionArea area = copySource.getSelectionArea();
-        area.reset();
-        area.setBounds(copySource.getVDUBuffer().getColumns(), copySource.getVDUBuffer().getRows());
-
-        copySource.setSelectingForCopy(true);
-
-        // Make sure we show the initial selection
-        copySource.redraw();
-
-        Toast.makeText(ConsoleActivity.this, getString(R.string.console_copy_start),
-            Toast.LENGTH_LONG).show();
-        return true;
-      }
-    });
-
-    paste = menu.add(R.string.console_menu_paste);
-    paste.setAlphabeticShortcut('v');
-    paste.setIcon(android.R.drawable.ic_menu_edit);
-    paste.setEnabled(clipboard.hasText() && sessionOpen);
-    paste.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-      public boolean onMenuItemClick(MenuItem item) {
-        // force insert of clipboard text into current console
-        TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
-        TerminalBridge bridge = terminalView.bridge;
-
-        // pull string from clipboard and generate all events to force down
-        String clip = clipboard.getText().toString();
-        bridge.injectString(clip);
-
-        return true;
-      }
-    });
-
-    resize = menu.add(R.string.console_menu_resize);
-    resize.setAlphabeticShortcut('s');
-    resize.setIcon(android.R.drawable.ic_menu_crop);
-    resize.setEnabled(sessionOpen);
-    resize.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-      public boolean onMenuItemClick(MenuItem item) {
-        final TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
-
-        final View resizeView = inflater.inflate(R.layout.dia_resize, null, false);
-        new AlertDialog.Builder(ConsoleActivity.this).setView(resizeView).setPositiveButton(
-            R.string.button_resize, new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                int width, height;
-                try {
-                  width =
-                      Integer.parseInt(((EditText) resizeView.findViewById(R.id.width)).getText()
-                          .toString());
-                  height =
-                      Integer.parseInt(((EditText) resizeView.findViewById(R.id.height)).getText()
-                          .toString());
-                } catch (NumberFormatException nfe) {
-                  // TODO change this to a real dialog where we can
-                  // make the input boxes turn red to indicate an error.
-                  return;
-                }
-
-                terminalView.forceSize(width, height);
-              }
-            }).setNegativeButton(android.R.string.cancel, null).create().show();
-
-        return true;
-      }
-    });
-
     return true;
   }
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
-
     setVolumeControlStream(AudioManager.STREAM_NOTIFICATION);
-
-    final View view = findCurrentView(R.id.console_flip);
-    boolean activeTerminal = (view instanceof TerminalView);
-    boolean sessionOpen = false;
-    if (activeTerminal) {
-      TerminalBridge bridge = ((TerminalView) view).bridge;
-      sessionOpen = bridge.isSessionOpen();
+    TerminalBridge bridge = ((TerminalView) findCurrentView(R.id.console_flip)).bridge;
+    boolean sessionOpen = bridge.isSessionOpen();
+    menu.findItem(R.id.terminal_menu_resize).setEnabled(sessionOpen);
+    if (bridge.getProcess() instanceof ScriptProcess) {
+      menu.findItem(R.id.terminal_menu_exit_and_edit).setEnabled(true);
     }
-    copy.setEnabled(activeTerminal);
-    paste.setEnabled(clipboard.hasText() && sessionOpen);
-    resize.setEnabled(sessionOpen);
-
     return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+    case R.id.terminal_menu_resize:
+      doResize();
+      break;
+    case R.id.terminal_menu_preferences:
+      doPreferences();
+      break;
+    case R.id.terminal_menu_send_email:
+      doEmailTranscript();
+      break;
+    case R.id.terminal_menu_exit_and_edit:
+      TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
+      TerminalBridge bridge = terminalView.bridge;
+      if (manager != null) {
+        manager.closeConnection(bridge, true);
+      } else {
+        Intent intent = new Intent(this, ScriptingLayerService.class);
+        intent.setAction(Constants.ACTION_KILL_PROCESS);
+        intent.putExtra(Constants.EXTRA_PROXY_PORT, bridge.getId());
+        startService(intent);
+        Message.obtain(disconnectHandler, -1, bridge).sendToTarget();
+      }
+      Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
+      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, bridge.getName());
+      startActivity(intent);
+      finish();
+      break;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
   public void onOptionsMenuClosed(Menu menu) {
     super.onOptionsMenuClosed(menu);
-
     setVolumeControlStream(AudioManager.STREAM_MUSIC);
+  }
+
+  private void doResize() {
+    closeOptionsMenu();
+    final TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
+    final View resizeView = inflater.inflate(R.layout.dia_resize, null, false);
+    new AlertDialog.Builder(ConsoleActivity.this).setView(resizeView).setPositiveButton(
+        R.string.button_resize, new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            int width, height;
+            try {
+              width =
+                  Integer.parseInt(((EditText) resizeView.findViewById(R.id.width)).getText()
+                      .toString());
+              height =
+                  Integer.parseInt(((EditText) resizeView.findViewById(R.id.height)).getText()
+                      .toString());
+            } catch (NumberFormatException nfe) {
+              return;
+            }
+            terminalView.forceSize(width, height);
+          }
+        }).setNegativeButton(android.R.string.cancel, null).create().show();
+  }
+
+  private void doPreferences() {
+    startActivity(new Intent(this, Preferences.class));
+  }
+
+  private void doEmailTranscript() {
+    // Don't really want to supply an address, but currently it's required, otherwise we get an
+    // exception.
+    TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
+    TerminalBridge bridge = terminalView.bridge;
+    // TODO(raaar): Replace with process log.
+    VDUBuffer buffer = bridge.getVDUBuffer();
+    int height = buffer.getRows();
+    int width = buffer.getColumns();
+    StringBuilder string = new StringBuilder();
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        string.append(buffer.getChar(j, i));
+      }
+    }
+    String addr = "user@example.com";
+    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + addr));
+    intent.putExtra("body", string.toString().trim());
+    startActivity(intent);
+  }
+
+  @Override
+  public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+    TerminalBridge bridge = ((TerminalView) findCurrentView(R.id.console_flip)).bridge;
+    boolean sessionOpen = bridge.isSessionOpen();
+    menu.add(Menu.NONE, MenuId.COPY.getId(), Menu.NONE, R.string.terminal_menu_copy);
+    if (clipboard.hasText() && sessionOpen) {
+      menu.add(Menu.NONE, MenuId.PASTE.getId(), Menu.NONE, R.string.terminal_menu_paste);
+    }
+  }
+
+  @Override
+  public boolean onContextItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    if (itemId == MenuId.COPY.getId()) {
+      TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
+      copySource = terminalView.bridge;
+      SelectionArea area = copySource.getSelectionArea();
+      area.reset();
+      area.setBounds(copySource.getVDUBuffer().getColumns(), copySource.getVDUBuffer().getRows());
+      copySource.setSelectingForCopy(true);
+      // Make sure we show the initial selection
+      copySource.redraw();
+      Toast.makeText(ConsoleActivity.this, getString(R.string.terminal_copy_start),
+          Toast.LENGTH_LONG).show();
+      return true;
+    } else if (itemId == MenuId.PASTE.getId()) {
+      TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
+      TerminalBridge bridge = terminalView.bridge;
+      // pull string from clipboard and generate all events to force down
+      String clip = clipboard.getText().toString();
+      bridge.injectString(clip);
+      return true;
+    }
+    return false;
   }
 
   @Override
   public void onStart() {
     super.onStart();
-
     // connect with manager service to find all bridges
     // when connected it will insert all views
     bindService(new Intent(this, ScriptingLayerService.class), mConnection, 0);

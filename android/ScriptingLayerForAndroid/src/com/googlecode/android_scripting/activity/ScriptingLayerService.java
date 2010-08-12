@@ -219,7 +219,6 @@ public class ScriptingLayerService extends Service {
   private void launchTerminal(Intent intent, InetSocketAddress address) {
     Intent i = new Intent(this, ConsoleActivity.class);
     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    i.putExtras(intent);
     i.putExtra(Constants.EXTRA_PROXY_PORT, address.getPort());
     startActivity(i);
   }
