@@ -1,13 +1,9 @@
 package com.dummy.fooforandroid;
 
 import java.io.File;
-import java.util.List;
 
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ResolveInfo;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -20,7 +16,6 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
-import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 
 public class ScriptService extends Service {

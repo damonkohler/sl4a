@@ -19,8 +19,6 @@ package com.googlecode.android_scripting.interpreter;
 import com.googlecode.android_scripting.AndroidProxy;
 import com.googlecode.android_scripting.Process;
 
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
  * This is a skeletal implementation of an interpreter process.
  * 
@@ -28,14 +26,9 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class InterpreterProcess extends Process {
 
-  private static final int BUFFER_SIZE = 8192;
-
   private final AndroidProxy mProxy;
-  private final StringBuffer mLog;
   private final Interpreter mInterpreter;
   private String mCommand;
-  private volatile int mLogLength = 0;
-  private final ReentrantLock mLock;
 
   /**
    * Creates a new {@link InterpreterProcess}.
@@ -47,9 +40,7 @@ public class InterpreterProcess extends Process {
    */
   public InterpreterProcess(Interpreter interpreter, AndroidProxy proxy) {
     mProxy = proxy;
-    mLog = new StringBuffer();
     mInterpreter = interpreter;
-    mLock = new ReentrantLock();
 
     setBinary(interpreter.getBinary());
     setName(interpreter.getNiceName());
