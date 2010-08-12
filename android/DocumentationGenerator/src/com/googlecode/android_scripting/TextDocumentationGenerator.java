@@ -21,7 +21,7 @@ import java.util.Set;
 public class TextDocumentationGenerator {
 
   public static void main(String args[]) {
-    List<MethodDescriptor> descriptors = FacadeConfiguration.collectRpcDescriptors();
+    List<MethodDescriptor> descriptors = FacadeConfiguration.collectMethodDescriptors();
     List<Class<? extends RpcReceiver>> classes =
         new ArrayList<Class<? extends RpcReceiver>>(FacadeConfiguration.getFacadeClasses());
 

@@ -36,6 +36,9 @@ import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
@@ -45,7 +48,6 @@ import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.language.SupportedLanguages;
-import com.googlecode.android_scripting.provider.SelectableListProxy;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.ParameterDescriptor;
 import com.googlecode.android_scripting.rpc.RpcDepreciated;
@@ -78,7 +80,7 @@ public class ApiBrowser extends ListActivity {
     }
   }
 
-  private SelectableMethodDescriptorListProxy mRpcDescriptors;
+  private List<MethodDescriptor> mMethodDescriptors;
   private Set<Integer> mExpandedPositions;
   private ApiBrowserAdapter mAdapter;
   private boolean mIsLanguageSupported;
@@ -86,23 +88,10 @@ public class ApiBrowser extends ListActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.api_browser);
+    CustomizeWindow.requestCustomTitle(this, "API Browser", R.layout.api_browser);
     getListView().setFastScrollEnabled(true);
     mExpandedPositions = new HashSet<Integer>();
-    List<MethodDescriptor> listRpcDescriptors = FacadeConfiguration.collectRpcDescriptors();
-    for (int i = listRpcDescriptors.size() - 1; i >= 0; i--) {
-      MethodDescriptor descriptor = listRpcDescriptors.get(i);
-      Method method = descriptor.getMethod();
-      if (method.isAnnotationPresent(RpcDepreciated.class)) {
-        listRpcDescriptors.remove(i);
-      } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
-        int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
-        if (FacadeConfiguration.getSdkLevel() < requiredSdkLevel) {
-          listRpcDescriptors.remove(i);
-        }
-      }
-      mRpcDescriptors = new SelectableMethodDescriptorListProxy(listRpcDescriptors);
-    }
+    updateAndFilterMethodDescriptors(null);
     String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     mIsLanguageSupported = SupportedLanguages.checkLanguageSupported(scriptName);
     mAdapter = new ApiBrowserAdapter();
@@ -112,13 +101,37 @@ public class ApiBrowser extends ListActivity {
     setResult(RESULT_CANCELED);
   }
 
+  private void updateAndFilterMethodDescriptors(final String query) {
+    mMethodDescriptors =
+        Lists.newArrayList(Collections2.filter(FacadeConfiguration.collectMethodDescriptors(),
+            new Predicate<MethodDescriptor>() {
+              @Override
+              public boolean apply(MethodDescriptor descriptor) {
+                Method method = descriptor.getMethod();
+                if (method.isAnnotationPresent(RpcDepreciated.class)) {
+                  return false;
+                } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
+                  int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
+                  if (FacadeConfiguration.getSdkLevel() < requiredSdkLevel) {
+                    return false;
+                  }
+                }
+                if (query == null) {
+                  return true;
+                }
+                return descriptor.getName().toLowerCase().contains(query.toLowerCase());
+              }
+            }));
+  }
+
   @Override
   protected void onNewIntent(Intent intent) {
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
       searchResultMode = true;
-      String query = intent.getStringExtra(SearchManager.QUERY);
-      mRpcDescriptors.setQuery(query);
-      if (mRpcDescriptors.size() == 1) {
+      final String query = intent.getStringExtra(SearchManager.QUERY);
+      ((TextView) findViewById(R.id.left_text)).setText(query);
+      updateAndFilterMethodDescriptors(query);
+      if (mMethodDescriptors.size() == 1) {
         mExpandedPositions.add(0);
       } else {
         mExpandedPositions.clear();
@@ -132,7 +145,8 @@ public class ApiBrowser extends ListActivity {
     if (keyCode == KeyEvent.KEYCODE_BACK && searchResultMode) {
       searchResultMode = false;
       mExpandedPositions.clear();
-      mRpcDescriptors.reset();
+      ((TextView) findViewById(R.id.left_text)).setText("API Browser");
+      updateAndFilterMethodDescriptors("");
       mAdapter.notifyDataSetChanged();
       return true;
     }
@@ -157,7 +171,7 @@ public class ApiBrowser extends ListActivity {
     super.onOptionsItemSelected(item);
     int itemId = item.getItemId();
     if (itemId == MenuId.EXPAND_ALL.getId()) {
-      for (int i = 0; i < mRpcDescriptors.size(); i++) {
+      for (int i = 0; i < mMethodDescriptors.size(); i++) {
         mExpandedPositions.add(i);
       }
     } else if (itemId == MenuId.COLLAPSE_ALL.getId()) {
@@ -273,7 +287,7 @@ public class ApiBrowser extends ListActivity {
 
     public ApiBrowserAdapter() {
       mCursor = new MatrixCursor(new String[] { "NAME" });
-      for (MethodDescriptor info : mRpcDescriptors) {
+      for (MethodDescriptor info : mMethodDescriptors) {
         mCursor.addRow(new String[] { info.getName() });
       }
       mIndexer = new AlphabetIndexer(mCursor, 0, " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
@@ -281,12 +295,12 @@ public class ApiBrowser extends ListActivity {
 
     @Override
     public int getCount() {
-      return mRpcDescriptors.size();
+      return mMethodDescriptors.size();
     }
 
     @Override
     public Object getItem(int position) {
-      return mRpcDescriptors.get(position);
+      return mMethodDescriptors.get(position);
     }
 
     @Override
@@ -299,9 +313,9 @@ public class ApiBrowser extends ListActivity {
       TextView view = new TextView(ApiBrowser.this);
       view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
       if (mExpandedPositions.contains(position)) {
-        view.setText(mRpcDescriptors.get(position).getHelp());
+        view.setText(mMethodDescriptors.get(position).getHelp());
       } else {
-        view.setText(mRpcDescriptors.get(position).getName());
+        view.setText(mMethodDescriptors.get(position).getName());
       }
       return view;
     }
@@ -319,18 +333,6 @@ public class ApiBrowser extends ListActivity {
     @Override
     public Object[] getSections() {
       return mIndexer.getSections();
-    }
-  }
-
-  private class SelectableMethodDescriptorListProxy extends SelectableListProxy<MethodDescriptor> {
-
-    public SelectableMethodDescriptorListProxy(List<MethodDescriptor> list) {
-      super(list);
-    }
-
-    @Override
-    public String getString(MethodDescriptor item) {
-      return item.getMethod().getName().toLowerCase();
     }
   }
 }
