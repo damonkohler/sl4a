@@ -32,6 +32,7 @@ public class ProcessTransport extends AbsTransport {
   private final Process mProcess;
   private InputStream is;
   private OutputStream os;
+  private boolean mConnected = false;
 
   public ProcessTransport(Process process) {
     mProcess = process;
@@ -47,7 +48,7 @@ public class ProcessTransport extends AbsTransport {
 
   @Override
   public void connect() {
-    //
+    mConnected = true;
   }
 
   @Override
@@ -57,7 +58,7 @@ public class ProcessTransport extends AbsTransport {
 
   @Override
   public boolean isConnected() {
-    return mProcess.isAlive();
+    return mConnected && mProcess.isAlive();
   }
 
   @Override
@@ -68,12 +69,14 @@ public class ProcessTransport extends AbsTransport {
   @Override
   public int read(byte[] buffer, int start, int len) throws IOException {
     if (is == null) {
+      mConnected = false;
       bridge.dispatchDisconnect(false);
       throw new IOException("session closed");
     }
     try {
       return is.read(buffer, start, len);
     } catch (IOException e) {
+      mConnected = false;
       bridge.dispatchDisconnect(false);
       throw new IOException("session closed");
     }

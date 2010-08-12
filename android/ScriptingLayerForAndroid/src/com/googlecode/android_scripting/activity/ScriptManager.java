@@ -42,6 +42,7 @@ import android.widget.TextView;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
+
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
@@ -148,8 +149,7 @@ public class ScriptManager extends ListActivity {
     if (keyCode == KeyEvent.KEYCODE_BACK && mInSearchResultMode) {
       mInSearchResultMode = false;
       ((TextView) findViewById(R.id.left_text)).setText("Scripts");
-      updateAndFilterScriptList("");
-      mAdapter.notifyDataSetChanged();
+      mAdapter.notifyDataSetInvalidated();
       return true;
     }
     return super.onKeyDown(keyCode, event);
@@ -304,7 +304,7 @@ public class ScriptManager extends ListActivity {
 
     int itemId = item.getItemId();
     if (itemId == MenuId.DELETE.getId()) {
-      deleteScript(script.getName());
+      deleteScript(script);
     } else if (itemId == MenuId.EDIT.getId()) {
       editScript(script.getName());
     } else if (itemId == MenuId.START_SERVICE.getId()) {
@@ -316,13 +316,14 @@ public class ScriptManager extends ListActivity {
     return true;
   }
 
-  private void deleteScript(final String scriptName) {
+  private void deleteScript(final File script) {
     AlertDialog.Builder alert = new AlertDialog.Builder(this);
     alert.setTitle("Delete Script");
-    alert.setMessage("Would you like to delete " + scriptName + "?");
+    alert.setMessage("Would you like to delete " + script.getName() + "?");
     alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int whichButton) {
-        ScriptStorageAdapter.deleteScript(scriptName);
+        ScriptStorageAdapter.deleteScript(script.getName());
+        mScripts.remove(script);
         mAdapter.notifyDataSetChanged();
       }
     });
