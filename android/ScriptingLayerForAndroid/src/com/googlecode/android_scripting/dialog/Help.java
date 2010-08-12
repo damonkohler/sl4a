@@ -24,6 +24,8 @@ import android.net.Uri;
 
 import com.googlecode.android_scripting.R;
 
+import org.connectbot.HelpActivity;
+
 public class Help {
   private Help() {
     // Utility class.
@@ -31,20 +33,34 @@ public class Help {
 
   public static void show(final Activity activity) {
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-    builder.setItems(new CharSequence[] { "Wiki Documentation", "YouTube Screencasts" },
-        new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            if (which == 0) {
-              intent.setData(Uri.parse(activity.getString(R.string.wiki_url)));
-            } else {
-              intent.setData(Uri.parse(activity.getString(R.string.youtube_url)));
-            }
-            activity.startActivity(intent);
-          }
-        });
+    builder.setItems(new CharSequence[] { "Wiki Documentation", "YouTube Screencasts",
+      "Terminal help" }, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        switch (which) {
+        case 0: {
+          Intent intent = new Intent();
+          intent.setAction(Intent.ACTION_VIEW);
+          intent.setData(Uri.parse(activity.getString(R.string.wiki_url)));
+          activity.startActivity(intent);
+          break;
+        }
+        case 1: {
+          Intent intent = new Intent();
+          intent.setAction(Intent.ACTION_VIEW);
+          intent.setData(Uri.parse(activity.getString(R.string.youtube_url)));
+          activity.startActivity(intent);
+          break;
+        }
+        case 2: {
+          Intent intent = new Intent(activity, HelpActivity.class);
+          activity.startActivity(intent);
+          break;
+        }
+        }
+
+      }
+    });
     builder.show();
   }
 }

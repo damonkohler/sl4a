@@ -15,6 +15,11 @@
  * limitations under the License.
  */
 
+/**
+ * @author modified by raaar
+ *
+ */
+
 package org.connectbot;
 
 import android.app.Activity;
@@ -511,9 +516,14 @@ public class ConsoleActivity extends Activity {
           final int deltaY = (int) (lastY - event.getY());
           int distance = (deltaX * deltaX) + (deltaY * deltaY);
           if (distance > mTouchSlopSquare) {
+            // If currently scheduled long press event is not canceled here,
+            // GestureDetector.onScroll is executed, which takes a while, and by the time we are
+            // back in the view's dispatchTouchEvent
+            // mPendingCheckForLongPress is already executed
             flip.cancelLongPress();
           }
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
+          // Same as above, except now GestureDetector.onFling is called.
           flip.cancelLongPress();
           if (config.hardKeyboardHidden != Configuration.KEYBOARDHIDDEN_NO
               && keyboardButton.getVisibility() == View.GONE

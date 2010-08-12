@@ -39,7 +39,7 @@ import java.io.IOException;
 
 /**
  * @author kenny
- * 
+ * @author modified by raaar
  */
 public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceChangeListener {
 

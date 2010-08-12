@@ -176,4 +176,10 @@
   <!-- Name for the ASCII DEL character -->
   <string name="list_delkey_del">Delete</string>
   
+  <!-- Window title for Help index -->
+  <string name="title_help">Help</string>
+  
+  <string name="help_acks">SL4A uses <a href="http://code.google.com/p/connectbot/">ConnectBot</a> terminal.</string>
+  <string name="help_intro">Please select a topic below for more information on a particular subject.</string>
+  
 </resources>

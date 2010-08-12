@@ -54,6 +54,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * currently connected SSH bridges that are ready for connection up to a GUI if needed.
  * 
  * @author jsharkey
+ * @author modified by raaar
  */
 public class TerminalManager implements OnSharedPreferenceChangeListener {
 

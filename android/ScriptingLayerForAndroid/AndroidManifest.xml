@@ -135,6 +135,10 @@
       android:theme="@android:style/Theme.Translucent.NoTitleBar"
       android:configChanges="keyboardHidden|orientation"
       android:launchMode="singleTask" />
+    <activity android:name="org.connectbot.HelpActivity" 
+      android:configChanges="keyboardHidden|orientation" />
+    <activity android:name="org.connectbot.HelpTopicActivity" 
+      android:configChanges="keyboardHidden|orientation" />
     <service
       android:name=".activity.ScriptingLayerService" />
     <service

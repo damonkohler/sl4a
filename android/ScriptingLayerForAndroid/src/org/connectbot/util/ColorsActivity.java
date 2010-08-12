@@ -24,6 +24,9 @@ import com.googlecode.android_scripting.R;
 
 import org.connectbot.util.UberColorPickerDialog.OnColorChangedListener;
 
+/**
+ * @author modified by raaar
+ */
 public class ColorsActivity extends Activity implements OnItemClickListener, OnColorChangedListener {
 
   private SharedPreferences mPreferences;
