@@ -23,6 +23,7 @@ import android.util.AndroidRuntimeException;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
+import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
@@ -222,13 +223,8 @@ public class UiFacade extends RpcReceiver {
 
   @Rpc(description = "Display a WebView with the given url")
   public void webViewShow(@RpcParameter(name = "Url") String url) {
-    WebViewTask task = new WebViewTask(url);
+    WebViewTask task = new WebViewTask(url, mManager.getReceiver(EventFacade.class));
     mTaskQueue.offer(task);
-    try {
-      task.getResult();
-    } catch (InterruptedException e) {
-      new Sl4aRuntimeException(e);
-    }
   }
 
   @Override

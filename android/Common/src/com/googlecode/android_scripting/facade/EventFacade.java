@@ -16,14 +16,14 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import android.content.Context;
 
 import com.googlecode.android_scripting.event.Event;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * This facade exposes the functionality to read from the event queue as an RPC, and the
@@ -54,7 +54,7 @@ public class EventFacade extends RpcReceiver {
   /**
    * Posts an event with {@link String} data to the event queue.
    */
-  void postEvent(String name, Object data) {
+  public void postEvent(String name, Object data) {
     mEventQueue.add(new Event(name, data));
     if (mEventQueue.size() > MAX_QUEUE_SIZE) {
       mEventQueue.remove();
