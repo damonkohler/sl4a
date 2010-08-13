@@ -24,7 +24,6 @@ import android.widget.SeekBar;
 
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
-import com.googlecode.android_scripting.future.FutureResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,8 +59,8 @@ public class RunnableSeekBarDialog extends RunnableDialog {
   }
 
   @Override
-  public void run(ScriptingLayerServiceHelper activity, FutureResult<Object> futureResult) {
-    mActivity = activity;
+  public void onCreate(ScriptingLayerServiceHelper activity) {
+    super.onCreate(activity);
     mSeekBar = new SeekBar(activity);
     mSeekBar.setMax(mMax);
     mSeekBar.setProgress(mProgress);
@@ -93,7 +92,7 @@ public class RunnableSeekBarDialog extends RunnableDialog {
           Log.e(e);
         }
         dismissDialog();
-        mFutureResult.set(result);
+        setResult(result);
       }
     });
   }
@@ -123,7 +122,7 @@ public class RunnableSeekBarDialog extends RunnableDialog {
           break;
         }
         dismissDialog();
-        mFutureResult.set(result);
+        setResult(result);
       }
     };
     if (mNegativeButtonText != null) {

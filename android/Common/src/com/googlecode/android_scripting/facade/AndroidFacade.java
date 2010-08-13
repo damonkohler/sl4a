@@ -16,10 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -47,12 +43,15 @@ import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.future.FutureActivityTask;
-import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AndroidFacade extends RpcReceiver {
   /**
@@ -114,20 +113,22 @@ public class AndroidFacade extends RpcReceiver {
   Intent startActivityForResult(final Intent intent) {
     FutureActivityTask<Intent> task = new FutureActivityTask<Intent>() {
       @Override
-      public void run(ScriptingLayerServiceHelper activity, FutureResult<Intent> result) {
+      public void onCreate(ScriptingLayerServiceHelper activity) {
         // TODO(damonkohler): Throwing an exception here (e.g. specifying a non-existent activity)
         // causes a force close. There needs to be a way to pass back an error condition from the
         // helper.
-        activity.startActivityForResult(intent, getTaskId());
+        super.onCreate(activity);
+        activity.startActivityForResult(intent, 0);
       }
     };
     mTaskQueue.offer(task);
 
-    FutureResult<Intent> result = task.getFutureResult();
     try {
-      return result.get();
+      return task.getResult();
     } catch (Exception e) {
       throw new Sl4aRuntimeException(e);
+    } finally {
+      task.finish();
     }
   }
 
@@ -207,21 +208,32 @@ public class AndroidFacade extends RpcReceiver {
       startActivity(intent);
     } else {
       FutureActivityTask<Intent> task = new FutureActivityTask<Intent>() {
+        private boolean mSecondResume = false;
+
         @Override
-        public void run(ScriptingLayerServiceHelper activity, FutureResult<Intent> result) {
+        public void onCreate(ScriptingLayerServiceHelper activity) {
+          super.onCreate(activity);
           activity.startActivity(intent);
         }
 
         @Override
-        public boolean isBlocking() {
-          return true;
+        public void onResume() {
+          if (mSecondResume) {
+            finish();
+          }
+          mSecondResume = true;
         }
+
+        @Override
+        public void onDestroy() {
+          setResult(null);
+        }
+
       };
       mTaskQueue.offer(task);
 
-      FutureResult<Intent> result = task.getFutureResult();
       try {
-        result.get();
+        task.getResult();
       } catch (Exception e) {
         throw new Sl4aRuntimeException(e);
       }
@@ -247,7 +259,8 @@ public class AndroidFacade extends RpcReceiver {
       final boolean password) {
     final FutureActivityTask<String> task = new FutureActivityTask<String>() {
       @Override
-      public void run(final ScriptingLayerServiceHelper activity, final FutureResult<String> result) {
+      public void onCreate(ScriptingLayerServiceHelper activity) {
+        super.onCreate(activity);
         final EditText input = new EditText(activity);
         if (password) {
           input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -261,16 +274,16 @@ public class AndroidFacade extends RpcReceiver {
           @Override
           public void onClick(DialogInterface dialog, int whichButton) {
             dialog.dismiss();
-            activity.taskDone(getTaskId());
-            result.set(input.getText().toString());
+            setResult(input.getText().toString());
+            finish();
           }
         });
         alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
           @Override
           public void onCancel(DialogInterface dialog) {
             dialog.dismiss();
-            activity.taskDone(getTaskId());
-            result.set(null);
+            setResult(null);
+            finish();
           }
         });
         alert.show();
@@ -278,13 +291,8 @@ public class AndroidFacade extends RpcReceiver {
     };
     mTaskQueue.offer(task);
 
-    FutureResult<String> result = task.getFutureResult();
     try {
-      if (result.get() == null) {
-        return null;
-      } else {
-        return result.get();
-      }
+      return task.getResult();
     } catch (Exception e) {
       Log.e("Failed to display dialog.", e);
       throw new Sl4aRuntimeException(e);

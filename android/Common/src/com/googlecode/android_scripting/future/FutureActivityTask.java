@@ -17,10 +17,9 @@
 package com.googlecode.android_scripting.future;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Encapsulates an {@link Activity} and a {@link FutureObject}.
@@ -28,30 +27,50 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public abstract class FutureActivityTask<T> {
-  private final static AtomicInteger mNextFutureTaskId = new AtomicInteger(0);
   private final FutureResult<T> mResult = new FutureResult<T>();
-  private final int myTaskId = mNextFutureTaskId.incrementAndGet();
+  private ScriptingLayerServiceHelper mActivity;
 
-  public abstract void run(final ScriptingLayerServiceHelper activity, final FutureResult<T> result);
-
-  public Runnable getRunnable(final ScriptingLayerServiceHelper activity) {
-    return new Runnable() {
-      @Override
-      public void run() {
-        FutureActivityTask.this.run(activity, mResult);
-      }
-    };
+  public void onCreate(ScriptingLayerServiceHelper activity) {
+    mActivity = activity;
   }
 
-  public FutureResult<T> getFutureResult() {
-    return mResult;
+  public void onStart() {
   }
 
-  public boolean isBlocking() {
-    return false;
+  public void onResume() {
   }
 
-  public int getTaskId() {
-    return myTaskId;
+  public void onPause() {
+  }
+
+  public void onStop() {
+  }
+
+  public void onDestroy() {
+  }
+
+  // public abstract void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo);
+  //  
+  // public abstract boolean onPrepareOptionsMenu(Menu menu);
+
+  @SuppressWarnings("unchecked")
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    ((FutureResult<Intent>) mResult).set(data);
+  }
+
+  protected void setResult(T result) {
+    mResult.set(result);
+  }
+
+  public T getResult() throws InterruptedException {
+    return mResult.get();
+  }
+
+  public Activity getHelperActivity() {
+    return mActivity;
+  }
+
+  public void finish() {
+    mActivity.finish();
   }
 }

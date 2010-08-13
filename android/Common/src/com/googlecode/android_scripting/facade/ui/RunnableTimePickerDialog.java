@@ -16,16 +16,15 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.util.AndroidRuntimeException;
 import android.widget.TimePicker;
 
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
-import com.googlecode.android_scripting.future.FutureResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Wrapper class for time picker dialog running in separate thread.
@@ -44,9 +43,8 @@ public class RunnableTimePickerDialog extends RunnableDialog {
   }
 
   @Override
-  public void run(ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
-    mActivity = activity;
-    mFutureResult = result;
+  public void onCreate(ScriptingLayerServiceHelper activity) {
+    super.onCreate(activity);
     mDialog = new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
       @Override
       public void onTimeSet(TimePicker view, int hour, int minute) {
@@ -55,7 +53,7 @@ public class RunnableTimePickerDialog extends RunnableDialog {
           result.put("which", "positive");
           result.put("hour", hour);
           result.put("minute", minute);
-          mFutureResult.set(result);
+          setResult(result);
         } catch (JSONException e) {
           throw new AndroidRuntimeException(e);
         }
@@ -69,7 +67,7 @@ public class RunnableTimePickerDialog extends RunnableDialog {
           result.put("which", "neutral");
           result.put("hour", mHour);
           result.put("minute", mMinute);
-          mFutureResult.set(result);
+          setResult(result);
         } catch (JSONException e) {
           throw new AndroidRuntimeException(e);
         }
@@ -83,7 +81,7 @@ public class RunnableTimePickerDialog extends RunnableDialog {
           result.put("which", "negative");
           result.put("hour", mHour);
           result.put("minute", mMinute);
-          mFutureResult.set(result);
+          setResult(result);
         } catch (JSONException e) {
           throw new AndroidRuntimeException(e);
         }

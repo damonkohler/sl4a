@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.lang.reflect.Method;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -26,16 +24,17 @@ import android.os.PowerManager;
 import android.provider.Settings.SettingNotFoundException;
 import android.view.WindowManager;
 
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.BaseApplication;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
-import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.lang.reflect.Method;
 
 /**
  * Exposes phone settings functionality.
@@ -176,12 +175,13 @@ public class SettingsFacade extends RpcReceiver {
 
     FutureActivityTask<Object> task = new FutureActivityTask<Object>() {
       @Override
-      public void run(final ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
+      public void onCreate(final ScriptingLayerServiceHelper activity) {
+        super.onCreate(activity);
         WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         lp.screenBrightness = brightness * 1.0f / 255;
         activity.getWindow().setAttributes(lp);
-        result.set(null);
-        activity.taskDone(getTaskId());
+        setResult(null);
+        finish();
       }
     };
 

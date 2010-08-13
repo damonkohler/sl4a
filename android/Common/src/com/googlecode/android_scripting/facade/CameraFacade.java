@@ -16,13 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.concurrent.CountDownLatch;
-
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.Camera;
@@ -42,11 +35,17 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
-import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.concurrent.CountDownLatch;
 
 public class CameraFacade extends RpcReceiver {
 
@@ -115,8 +114,8 @@ public class CameraFacade extends RpcReceiver {
   private void setPreviewDisplay(Camera camera) throws IOException, InterruptedException {
     FutureActivityTask<SurfaceHolder> task = new FutureActivityTask<SurfaceHolder>() {
       @Override
-      public void run(final ScriptingLayerServiceHelper activity,
-          final FutureResult<SurfaceHolder> result) {
+      public void onCreate(final ScriptingLayerServiceHelper activity) {
+        super.onCreate(activity);
         final SurfaceView view = new SurfaceView(activity);
         activity.setContentView(view, new LayoutParams(LayoutParams.FILL_PARENT,
             LayoutParams.FILL_PARENT));
@@ -130,12 +129,12 @@ public class CameraFacade extends RpcReceiver {
 
           @Override
           public void surfaceCreated(SurfaceHolder holder) {
+            setResult(view.getHolder());
+            finish();
           }
 
           @Override
           public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            result.set(view.getHolder());
-            activity.taskDone(getTaskId());
           }
         });
       }
@@ -143,7 +142,7 @@ public class CameraFacade extends RpcReceiver {
     TaskQueue taskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
     taskQueue.offer(task);
 
-    camera.setPreviewDisplay(task.getFutureResult().get());
+    camera.setPreviewDisplay(task.getResult());
   }
 
   private void takePicture(final String path, final BooleanResult takePictureResult,

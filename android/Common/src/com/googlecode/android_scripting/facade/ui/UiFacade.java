@@ -16,11 +16,6 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.util.AndroidRuntimeException;
@@ -29,12 +24,16 @@ import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.facade.FacadeManager;
-import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.Set;
 
 /**
  * UiFacade
@@ -206,8 +205,7 @@ public class UiFacade extends RpcReceiver {
   @Rpc(description = "Returns dialog response.")
   public Object dialogGetResponse() {
     try {
-      FutureResult<Object> result = mDialogTask.getFutureResult();
-      return result.get();
+      return mDialogTask.getResult();
     } catch (Exception e) {
       throw new AndroidRuntimeException(e);
     }
@@ -219,6 +217,17 @@ public class UiFacade extends RpcReceiver {
       return ((RunnableAlertDialog) mDialogTask).getSelectedItems();
     } else {
       throw new AndroidRuntimeException("No dialog to add list to.");
+    }
+  }
+
+  @Rpc(description = "Display a WebView with the given url")
+  public void webViewShow(@RpcParameter(name = "Url") String url) {
+    WebViewTask task = new WebViewTask(url);
+    mTaskQueue.offer(task);
+    try {
+      task.getResult();
+    } catch (InterruptedException e) {
+      new Sl4aRuntimeException(e);
     }
   }
 

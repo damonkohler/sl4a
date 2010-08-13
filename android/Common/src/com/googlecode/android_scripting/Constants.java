@@ -70,6 +70,7 @@ public interface Constants {
       "com.googlecode.android_scripting.extra.EXTRA_TRIGGER_ID";
   public static final String EXTRA_LAUNCH_IN_BACKGROUND =
       "com.googlecode.android_scripting.extra.EXTRA_LAUNCH_IN_BACKGROUND";
+  public static final String EXTRA_TASK_ID = "com.googlecode.android_scripting.extra.EXTRA_TASK_ID";
 
   // BluetoothDeviceManager
   public static final String EXTRA_DEVICE_ADDRESS =

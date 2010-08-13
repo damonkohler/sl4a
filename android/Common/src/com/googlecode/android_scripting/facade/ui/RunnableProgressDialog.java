@@ -19,7 +19,6 @@ package com.googlecode.android_scripting.facade.ui;
 import android.app.ProgressDialog;
 
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
-import com.googlecode.android_scripting.future.FutureResult;
 
 /**
  * Wrapper class for progress dialog running in separate thread
@@ -43,8 +42,8 @@ class RunnableProgressDialog extends RunnableDialog {
   }
 
   @Override
-  public void run(ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
-    mActivity = activity;
+  public void onCreate(ScriptingLayerServiceHelper activity) {
+    super.onCreate(activity);
     mDialog = new ProgressDialog(activity);
     ((ProgressDialog) mDialog).setProgressStyle(mStyle);
     ((ProgressDialog) mDialog).setMax(mMax);

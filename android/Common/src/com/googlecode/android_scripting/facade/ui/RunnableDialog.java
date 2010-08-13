@@ -18,17 +18,13 @@ package com.googlecode.android_scripting.facade.ui;
 
 import android.app.Dialog;
 
-import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
-import com.googlecode.android_scripting.future.FutureResult;
 
 import java.util.concurrent.CountDownLatch;
 
 abstract class RunnableDialog extends FutureActivityTask<Object> {
 
-  protected ScriptingLayerServiceHelper mActivity;
   protected Dialog mDialog;
-  protected FutureResult<Object> mFutureResult;
   protected final CountDownLatch mShowLatch = new CountDownLatch(1);
 
   /**
@@ -44,7 +40,7 @@ abstract class RunnableDialog extends FutureActivityTask<Object> {
   public void dismissDialog() {
     if (mDialog != null) {
       mDialog.dismiss();
-      mActivity.taskDone(getTaskId());
+      finish();
     }
     mDialog = null;
   }

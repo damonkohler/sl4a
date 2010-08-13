@@ -69,6 +69,8 @@ import java.util.Map.Entry;
  */
 public class ScriptManager extends ListActivity {
 
+  private final static String EMPTY = "";
+
   private List<File> mScripts;
   private ScriptManagerAdapter mAdapter;
   private SharedPreferences mPreferences;
@@ -77,6 +79,7 @@ public class ScriptManager extends ListActivity {
   private InterpreterConfiguration mConfiguration;
   private SearchManager mManager;
   private boolean mInSearchResultMode = false;
+  private String mQuery = EMPTY;
 
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
@@ -99,7 +102,7 @@ public class ScriptManager extends ListActivity {
     mObserver = new ScriptListObserver();
     mAdapter.registerDataSetObserver(mObserver);
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    updateAndFilterScriptList("");
+    updateAndFilterScriptList(mQuery);
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     UsageTrackingConfirmation.show(this);
@@ -129,17 +132,28 @@ public class ScriptManager extends ListActivity {
         return file.getName().toLowerCase().contains(query.toLowerCase());
       }
     }));
+
+    synchronized (mQuery) {
+      if (!mQuery.equals(query)) {
+        if (query == null || query.equals(EMPTY)) {
+          ((TextView) findViewById(R.id.left_text)).setText("Scripts");
+        } else {
+          ((TextView) findViewById(R.id.left_text)).setText(query);
+        }
+        mQuery = query;
+      }
+    }
+
+    if (mScripts.size() == 0) {
+      ((TextView) findViewById(android.R.id.empty)).setText("No matches found.");
+    }
   }
 
   private void handleIntent(Intent intent) {
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
       mInSearchResultMode = true;
       String query = intent.getStringExtra(SearchManager.QUERY);
-      ((TextView) findViewById(R.id.left_text)).setText(query);
       updateAndFilterScriptList(query);
-      if (mScripts.size() == 0) {
-        ((TextView) findViewById(android.R.id.empty)).setText("No matches found.");
-      }
       mAdapter.notifyDataSetChanged();
     }
   }
@@ -148,7 +162,6 @@ public class ScriptManager extends ListActivity {
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     if (keyCode == KeyEvent.KEYCODE_BACK && mInSearchResultMode) {
       mInSearchResultMode = false;
-      ((TextView) findViewById(R.id.left_text)).setText("Scripts");
       mAdapter.notifyDataSetInvalidated();
       return true;
     }
@@ -164,7 +177,6 @@ public class ScriptManager extends ListActivity {
   @Override
   public void onStart() {
     super.onStart();
-    updateAndFilterScriptList("");
     mConfiguration.registerObserver(mObserver);
   }
 
@@ -174,6 +186,7 @@ public class ScriptManager extends ListActivity {
     if (!mInSearchResultMode) {
       ((TextView) findViewById(android.R.id.empty)).setText(R.string.no_scripts_message);
     }
+    updateAndFilterScriptList(mQuery);
     mAdapter.notifyDataSetChanged();
   }
 
@@ -241,6 +254,9 @@ public class ScriptManager extends ListActivity {
       intent.putExtra(Constants.EXTRA_SCRIPT_CONTENT, interpreter.getContentTemplate());
       intent.putExtra(Constants.EXTRA_IS_NEW_SCRIPT, true);
       startActivity(intent);
+      synchronized (mQuery) {
+        mQuery = EMPTY;
+      }
     } else if (itemId == MenuId.QRCODE_ADD.getId()) {
       Intent intent = new Intent("com.google.zxing.client.android.SCAN");
       startActivityForResult(intent, RequestCode.QRCODE_ADD.ordinal());
@@ -251,6 +267,7 @@ public class ScriptManager extends ListActivity {
     } else if (itemId == MenuId.LOGCAT_VIEWER.getId()) {
       startActivity(new Intent(this, LogcatViewer.class));
     } else if (itemId == MenuId.REFRESH.getId()) {
+      updateAndFilterScriptList(mQuery);
       mAdapter.notifyDataSetChanged();
     } else if (itemId == MenuId.SEARCH.getId()) {
       onSearchRequested();
@@ -354,7 +371,7 @@ public class ScriptManager extends ListActivity {
         break;
       }
     }
-    mAdapter.notifyDataSetChanged();
+    mAdapter.notifyDataSetInvalidated();
   }
 
   private void writeScriptFromBarcode(Intent data) {
@@ -384,7 +401,7 @@ public class ScriptManager extends ListActivity {
 
     @Override
     public void onInvalidated() {
-      updateAndFilterScriptList("");
+      updateAndFilterScriptList(EMPTY);
     }
 
     @Override
@@ -392,6 +409,7 @@ public class ScriptManager extends ListActivity {
       runOnUiThread(new Runnable() {
         @Override
         public void run() {
+          updateAndFilterScriptList(mQuery);
           mAdapter.notifyDataSetChanged();
         }
       });

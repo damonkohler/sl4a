@@ -20,14 +20,11 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 
 import com.googlecode.android_scripting.BaseApplication;
+import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.TaskQueue;
 import com.googlecode.android_scripting.future.FutureActivityTask;
-import com.googlecode.android_scripting.future.FutureResult;
-
-import java.util.HashMap;
 
 /**
  * This {@link Activity} is launched by the {@link Sl4aService} in order to perform operations that
@@ -37,77 +34,49 @@ import java.util.HashMap;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ScriptingLayerServiceHelper extends Activity {
-  // TODO(raaar): Add FutureActivity...
-  private TaskQueue mTaskQueue;
-  private Handler mHandler;
-  private HashMap<Integer, FutureResult<?>> mResultMap;
-  private volatile boolean mFinished = false;
-  private Integer mBlockOnId = null;
+  private FutureActivityTask<?> mTask;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mHandler = new Handler();
-    mTaskQueue = ((BaseApplication) getApplication()).getTaskQueue();
-    mResultMap = new HashMap<Integer, FutureResult<?>>();
-    mFinished = false;
-    setPersistent(true);
+    int id = getIntent().getIntExtra(Constants.EXTRA_TASK_ID, 0);
+    TaskQueue taskQueue = ((BaseApplication) getApplication()).getTaskQueue();
+    mTask = taskQueue.poll(id);
+    mTask.onCreate(this);
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    mTask.onStart();
   }
 
   @Override
   protected void onResume() {
-    mFinished = false;
     super.onResume();
-    if (mBlockOnId != null) {
-      FutureResult<?> result = mResultMap.get(mBlockOnId);
-      result.set(null);
-      mFinished = true;
-      taskDone(mBlockOnId);
-      mBlockOnId = null;
-    } else {
-      process();
-    }
+    mTask.onResume();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mTask.onPause();
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    mTask.onStop();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    // TODO(raaar): Javadoc.
-    if (mBlockOnId != null) {
-      throw new RuntimeException();
-    }
-  }
-
-  private void process() {
-    while (true) {
-      FutureActivityTask<?> task = mTaskQueue.poll();
-      if (task == null) {
-        break;
-      }
-      if (task.isBlocking()) {
-        mBlockOnId = task.getTaskId();
-      }
-      mHandler.post(task.getRunnable(this));
-      FutureResult<?> result = task.getFutureResult();
-      mResultMap.put(task.getTaskId(), result);
-    }
-    mFinished = true;
-  }
-
-  public void taskDone(int taskId) {
-    FutureResult<?> futureResult = mResultMap.remove(taskId);
-    if (mFinished && futureResult != null && mResultMap.isEmpty()) {
-      finish();
-    }
+    mTask.onDestroy();
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    FutureResult<Intent> result = (FutureResult<Intent>) mResultMap.get(requestCode);
-    if (result != null) {
-      result.set(data);
-      taskDone(requestCode);
-    }
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    mTask.onActivityResult(requestCode, resultCode, data);
   }
 }

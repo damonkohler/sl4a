@@ -16,16 +16,15 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.util.AndroidRuntimeException;
 import android.widget.DatePicker;
 
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
-import com.googlecode.android_scripting.future.FutureResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Wrapper class for date picker dialog running in separate thread.
@@ -44,9 +43,8 @@ public class RunnableDatePickerDialog extends RunnableDialog {
   }
 
   @Override
-  public void run(ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
-    mActivity = activity;
-    mFutureResult = result;
+  public void onCreate(ScriptingLayerServiceHelper activity) {
+    super.onCreate(activity);
     mDialog = new DatePickerDialog(activity, new DatePickerDialog.OnDateSetListener() {
       @Override
       public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -56,7 +54,7 @@ public class RunnableDatePickerDialog extends RunnableDialog {
           result.put("year", year);
           result.put("month", month + 1);
           result.put("day", day);
-          mFutureResult.set(result);
+          setResult(result);
         } catch (JSONException e) {
           throw new AndroidRuntimeException(e);
         }
@@ -71,7 +69,7 @@ public class RunnableDatePickerDialog extends RunnableDialog {
           result.put("year", mYear);
           result.put("month", mMonth + 1);
           result.put("day", mDay);
-          mFutureResult.set(result);
+          setResult(result);
         } catch (JSONException e) {
           throw new AndroidRuntimeException(e);
         }
@@ -86,7 +84,7 @@ public class RunnableDatePickerDialog extends RunnableDialog {
           result.put("year", mYear);
           result.put("month", mMonth + 1);
           result.put("day", mDay);
-          mFutureResult.set(result);
+          setResult(result);
         } catch (JSONException e) {
           throw new AndroidRuntimeException(e);
         }

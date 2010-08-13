@@ -22,7 +22,6 @@ import android.content.DialogInterface;
 
 import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
-import com.googlecode.android_scripting.future.FutureResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -139,9 +138,8 @@ class RunnableAlertDialog extends RunnableDialog {
   }
 
   @Override
-  public void run(final ScriptingLayerServiceHelper activity, FutureResult<Object> result) {
-    mActivity = activity;
-    mFutureResult = result;
+  public void onCreate(final ScriptingLayerServiceHelper activity) {
+    super.onCreate(activity);
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
     if (mTitle != null) {
       builder.setTitle(mTitle);
@@ -188,7 +186,7 @@ class RunnableAlertDialog extends RunnableDialog {
             Map<String, Integer> result = new HashMap<String, Integer>();
             result.put("item", item);
             dismissDialog();
-            mFutureResult.set(result);
+            setResult(result);
           }
         });
         break;
@@ -208,7 +206,7 @@ class RunnableAlertDialog extends RunnableDialog {
         Map<String, Boolean> result = new HashMap<String, Boolean>();
         result.put("canceled", true);
         dismissDialog();
-        mFutureResult.set(result);
+        setResult(result);
       }
     });
   }
@@ -231,7 +229,7 @@ class RunnableAlertDialog extends RunnableDialog {
           break;
         }
         dismissDialog();
-        mFutureResult.set(result);
+        setResult(result);
       }
     };
     if (mNegativeButtonText != null) {
