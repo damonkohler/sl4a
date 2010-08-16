@@ -44,7 +44,7 @@ import java.util.Set;
 public class UiFacade extends RpcReceiver {
   private final Service mService;
   private final TaskQueue mTaskQueue;
-  private RunnableDialog mDialogTask;
+  private DialogTask mDialogTask;
 
   public UiFacade(FacadeManager manager) {
     super(manager);
@@ -58,7 +58,7 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
-        new RunnableProgressDialog(ProgressDialog.STYLE_SPINNER, max, title, message, true);
+        new ProgressDialogTask(ProgressDialog.STYLE_SPINNER, max, title, message, true);
   }
 
   @Rpc(description = "Create a horizontal progress dialog.")
@@ -68,14 +68,14 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
-        new RunnableProgressDialog(ProgressDialog.STYLE_HORIZONTAL, max, title, message, true);
+        new ProgressDialogTask(ProgressDialog.STYLE_HORIZONTAL, max, title, message, true);
   }
 
   @Rpc(description = "Create alert dialog.")
   public void dialogCreateAlert(@RpcParameter(name = "Title") @RpcOptional String title,
       @RpcParameter(name = "Message") @RpcOptional String message) {
     dialogDismiss(); // Dismiss any existing dialog.
-    mDialogTask = new RunnableAlertDialog(title, message);
+    mDialogTask = new AlertDialogTask(title, message);
   }
 
   @Rpc(description = "Create seek bar dialog.")
@@ -84,7 +84,7 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "Maximum value") @RpcDefault("100") Integer max,
       @RpcParameter(name = "Title") String title, @RpcParameter(name = "Message") String message) {
     dialogDismiss(); // Dismiss any existing dialog.
-    mDialogTask = new RunnableSeekBarDialog(progress, max, title, message);
+    mDialogTask = new SeekBarDialogTask(progress, max, title, message);
   }
 
   @Rpc(description = "Create time picker dialog.")
@@ -92,7 +92,7 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "Minute") @RpcDefault("0") Integer minute,
       @RpcParameter(name = "Use 24 hour clock") @RpcDefault("false") Boolean is24hour) {
     dialogDismiss(); // Dismiss any existing dialog.
-    mDialogTask = new RunnableTimePickerDialog(hour, minute, is24hour);
+    mDialogTask = new TimePickerDialogTask(hour, minute, is24hour);
   }
 
   @Rpc(description = "Create date picker dialog.")
@@ -100,7 +100,7 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "Month") @RpcDefault("1") Integer month,
       @RpcParameter(name = "Day") @RpcDefault("1") Integer day) {
     dialogDismiss(); // Dismiss any existing dialog.
-    mDialogTask = new RunnableDatePickerDialog(year, month, day);
+    mDialogTask = new DatePickerDialogTask(year, month, day);
   }
 
   @Rpc(description = "Dismiss dialog.")
@@ -123,7 +123,7 @@ public class UiFacade extends RpcReceiver {
 
   @Rpc(description = "Set progress dialog current value.")
   public void dialogSetCurrentProgress(@RpcParameter(name = "current") Integer current) {
-    if (mDialogTask != null && mDialogTask instanceof RunnableProgressDialog) {
+    if (mDialogTask != null && mDialogTask instanceof ProgressDialogTask) {
       ((ProgressDialog) mDialogTask.getDialog()).setProgress(current);
     } else {
       throw new Sl4aRuntimeException("No valid dialog to assign value to.");
@@ -132,7 +132,7 @@ public class UiFacade extends RpcReceiver {
 
   @Rpc(description = "Set progress dialog maximum value.")
   public void dialogSetMaxProgress(@RpcParameter(name = "max") Integer max) {
-    if (mDialogTask != null && mDialogTask instanceof RunnableProgressDialog) {
+    if (mDialogTask != null && mDialogTask instanceof ProgressDialogTask) {
       ((ProgressDialog) mDialogTask.getDialog()).setMax(max);
     } else {
       throw new Sl4aRuntimeException("No valid dialog to set maximum value of.");
@@ -141,10 +141,10 @@ public class UiFacade extends RpcReceiver {
 
   @Rpc(description = "Set alert dialog positive button text.")
   public void dialogSetPositiveButtonText(@RpcParameter(name = "text") String text) {
-    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) mDialogTask).setPositiveButtonText(text);
-    } else if (mDialogTask != null && mDialogTask instanceof RunnableSeekBarDialog) {
-      ((RunnableSeekBarDialog) mDialogTask).setPositiveButtonText(text);
+    if (mDialogTask != null && mDialogTask instanceof AlertDialogTask) {
+      ((AlertDialogTask) mDialogTask).setPositiveButtonText(text);
+    } else if (mDialogTask != null && mDialogTask instanceof SeekBarDialogTask) {
+      ((SeekBarDialogTask) mDialogTask).setPositiveButtonText(text);
     } else {
       throw new AndroidRuntimeException("No dialog to add button to.");
     }
@@ -152,10 +152,10 @@ public class UiFacade extends RpcReceiver {
 
   @Rpc(description = "Set alert dialog button text.")
   public void dialogSetNegativeButtonText(@RpcParameter(name = "text") String text) {
-    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) mDialogTask).setNegativeButtonText(text);
-    } else if (mDialogTask != null && mDialogTask instanceof RunnableSeekBarDialog) {
-      ((RunnableSeekBarDialog) mDialogTask).setNegativeButtonText(text);
+    if (mDialogTask != null && mDialogTask instanceof AlertDialogTask) {
+      ((AlertDialogTask) mDialogTask).setNegativeButtonText(text);
+    } else if (mDialogTask != null && mDialogTask instanceof SeekBarDialogTask) {
+      ((SeekBarDialogTask) mDialogTask).setNegativeButtonText(text);
     } else {
       throw new AndroidRuntimeException("No dialog to add button to.");
     }
@@ -163,8 +163,8 @@ public class UiFacade extends RpcReceiver {
 
   @Rpc(description = "Set alert dialog button text.")
   public void dialogSetNeutralButtonText(@RpcParameter(name = "text") String text) {
-    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) mDialogTask).setNeutralButtonText(text);
+    if (mDialogTask != null && mDialogTask instanceof AlertDialogTask) {
+      ((AlertDialogTask) mDialogTask).setNeutralButtonText(text);
     } else {
       throw new AndroidRuntimeException("No dialog to add button to.");
     }
@@ -173,8 +173,8 @@ public class UiFacade extends RpcReceiver {
   // TODO(damonkohler): Make RPC layer translate between JSONArray and List<Object>.
   @Rpc(description = "Set alert dialog list items.")
   public void dialogSetItems(@RpcParameter(name = "items") JSONArray items) {
-    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) mDialogTask).setItems(items);
+    if (mDialogTask != null && mDialogTask instanceof AlertDialogTask) {
+      ((AlertDialogTask) mDialogTask).setItems(items);
     } else {
       throw new AndroidRuntimeException("No dialog to add list to.");
     }
@@ -184,8 +184,8 @@ public class UiFacade extends RpcReceiver {
   public void dialogSetSingleChoiceItems(
       @RpcParameter(name = "items") JSONArray items,
       @RpcParameter(name = "selected", description = "selected item index") @RpcDefault("0") Integer selected) {
-    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) mDialogTask).setSingleChoiceItems(items, selected);
+    if (mDialogTask != null && mDialogTask instanceof AlertDialogTask) {
+      ((AlertDialogTask) mDialogTask).setSingleChoiceItems(items, selected);
     } else {
       throw new AndroidRuntimeException("No dialog to add list to.");
     }
@@ -196,8 +196,8 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "items") JSONArray items,
       @RpcParameter(name = "selected", description = "list of selected items") @RpcOptional JSONArray selected)
       throws JSONException {
-    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
-      ((RunnableAlertDialog) mDialogTask).setMultiChoiceItems(items, selected);
+    if (mDialogTask != null && mDialogTask instanceof AlertDialogTask) {
+      ((AlertDialogTask) mDialogTask).setMultiChoiceItems(items, selected);
     } else {
       throw new AndroidRuntimeException("No dialog to add list to.");
     }
@@ -214,8 +214,8 @@ public class UiFacade extends RpcReceiver {
 
   @Rpc(description = "This method provides list of items user selected.", returns = "Selected items")
   public Set<Integer> dialogGetSelectedItems() {
-    if (mDialogTask != null && mDialogTask instanceof RunnableAlertDialog) {
-      return ((RunnableAlertDialog) mDialogTask).getSelectedItems();
+    if (mDialogTask != null && mDialogTask instanceof AlertDialogTask) {
+      return ((AlertDialogTask) mDialogTask).getSelectedItems();
     } else {
       throw new AndroidRuntimeException("No dialog to add list to.");
     }
