@@ -16,13 +16,17 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
+import java.util.Set;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.util.AndroidRuntimeException;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.FutureActivityTaskExecutor;
-import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
@@ -30,11 +34,6 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.Set;
 
 /**
  * UiFacade
@@ -57,8 +56,7 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "Message") @RpcOptional String message,
       @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max) {
     dialogDismiss(); // Dismiss any existing dialog.
-    mDialogTask =
-        new ProgressDialogTask(ProgressDialog.STYLE_SPINNER, max, title, message, true);
+    mDialogTask = new ProgressDialogTask(ProgressDialog.STYLE_SPINNER, max, title, message, true);
   }
 
   @Rpc(description = "Create a horizontal progress dialog.")
@@ -126,7 +124,7 @@ public class UiFacade extends RpcReceiver {
     if (mDialogTask != null && mDialogTask instanceof ProgressDialogTask) {
       ((ProgressDialog) mDialogTask.getDialog()).setProgress(current);
     } else {
-      throw new Sl4aRuntimeException("No valid dialog to assign value to.");
+      throw new RuntimeException("No valid dialog to assign value to.");
     }
   }
 
@@ -135,7 +133,7 @@ public class UiFacade extends RpcReceiver {
     if (mDialogTask != null && mDialogTask instanceof ProgressDialogTask) {
       ((ProgressDialog) mDialogTask.getDialog()).setMax(max);
     } else {
-      throw new Sl4aRuntimeException("No valid dialog to set maximum value of.");
+      throw new RuntimeException("No valid dialog to set maximum value of.");
     }
   }
 

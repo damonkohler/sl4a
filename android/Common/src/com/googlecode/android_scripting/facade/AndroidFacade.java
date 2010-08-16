@@ -41,10 +41,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.googlecode.android_scripting.BaseApplication;
+import com.googlecode.android_scripting.FutureActivityTaskExecutor;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.NotificationIdFactory;
-import com.googlecode.android_scripting.FutureActivityTaskExecutor;
-import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
@@ -126,7 +125,7 @@ public class AndroidFacade extends RpcReceiver {
     try {
       return task.getResult();
     } catch (Exception e) {
-      throw new Sl4aRuntimeException(e);
+      throw new RuntimeException(e);
     } finally {
       task.finish();
     }
@@ -234,7 +233,7 @@ public class AndroidFacade extends RpcReceiver {
       try {
         task.getResult();
       } catch (Exception e) {
-        throw new Sl4aRuntimeException(e);
+        throw new RuntimeException(e);
       }
     }
   }
@@ -293,7 +292,7 @@ public class AndroidFacade extends RpcReceiver {
       return task.getResult();
     } catch (Exception e) {
       Log.e("Failed to display dialog.", e);
-      throw new Sl4aRuntimeException(e);
+      throw new RuntimeException(e);
     }
   }
 

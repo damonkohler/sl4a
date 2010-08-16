@@ -23,8 +23,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
-
-import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcParameter;
@@ -49,7 +47,7 @@ public class EyesFreeFacade extends RpcReceiver {
     if (infos.size() > 0) {
       mService.startActivity(intent);
     } else {
-      throw new Sl4aRuntimeException("Eyes-Free is not installed.");
+      throw new RuntimeException("Eyes-Free is not installed.");
     }
   }
 

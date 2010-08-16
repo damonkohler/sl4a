@@ -29,8 +29,6 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 
-import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
-
 /**
  * Wrapper class for alert dialog running in separate thread.
  * 
@@ -84,7 +82,7 @@ class AlertDialogTask extends DialogTask {
         try {
           mItems[i] = items.getString(i);
         } catch (JSONException e) {
-          throw new Sl4aRuntimeException(e);
+          throw new RuntimeException(e);
         }
       }
       mListType = ListType.MENU;
