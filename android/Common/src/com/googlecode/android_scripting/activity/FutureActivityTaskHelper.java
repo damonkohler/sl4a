@@ -33,7 +33,7 @@ import com.googlecode.android_scripting.future.FutureActivityTask;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class ScriptingLayerServiceHelper extends Activity {
+public class FutureActivityTaskHelper extends Activity {
   private FutureActivityTask<?> mTask;
 
   @Override
