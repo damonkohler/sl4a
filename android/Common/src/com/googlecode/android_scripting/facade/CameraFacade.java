@@ -80,19 +80,20 @@ public class CameraFacade extends RpcReceiver {
       Method method = camera.getClass().getMethod("setDisplayOrientation", int.class);
       method.invoke(camera, 180);
     } catch (Exception e) {
+      Log.e(e);
     }
 
     int sdkVersion = 3;
     try {
       sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
     } catch (NumberFormatException e) {
+      Log.e(e);
     }
 
     try {
       if (sdkVersion == 3) {
         setPreviewDisplay(camera);
       }
-
       camera.startPreview();
       if (useAutoFocus) {
         autoFocus(autoFocusResult, camera);
