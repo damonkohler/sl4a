@@ -130,7 +130,7 @@
       </intent-filter>
     </activity>
     <activity
-      android:name=".activity.ScriptingLayerServiceHelper"
+      android:name=".activity.FutureActivity"
       android:theme="@android:style/Theme.Translucent.NoTitleBar"
       android:configChanges="keyboardHidden|orientation"
       android:launchMode="singleTask" />
