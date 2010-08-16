@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import android.content.Context;
 import android.content.Intent;
 
-import com.googlecode.android_scripting.activity.FutureActivityTaskHelper;
+import com.googlecode.android_scripting.activity.FutureActivity;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 
 public class FutureActivityTaskExecutor {
@@ -48,7 +48,7 @@ public class FutureActivityTaskExecutor {
   }
 
   private void launchHelper(int id) {
-    Intent helper = new Intent(mService, FutureActivityTaskHelper.class);
+    Intent helper = new Intent(mService, FutureActivity.class);
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     helper.putExtra(Constants.EXTRA_TASK_ID, id);
     mService.startActivity(helper);
