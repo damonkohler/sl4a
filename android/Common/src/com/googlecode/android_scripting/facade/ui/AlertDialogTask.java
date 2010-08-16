@@ -36,7 +36,7 @@ import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-class RunnableAlertDialog extends RunnableDialog {
+class AlertDialogTask extends DialogTask {
 
   private final String mTitle;
   private final String mMessage;
@@ -53,7 +53,7 @@ class RunnableAlertDialog extends RunnableDialog {
     MENU, SINGLE_CHOICE, MULTI_CHOICE;
   }
 
-  public RunnableAlertDialog(String title, String message) {
+  public AlertDialogTask(String title, String message) {
     mTitle = title;
     mMessage = message;
     mListType = ListType.MENU;

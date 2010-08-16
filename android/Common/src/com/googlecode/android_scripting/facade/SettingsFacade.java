@@ -28,7 +28,7 @@ import android.view.WindowManager;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.TaskQueue;
+import com.googlecode.android_scripting.FutureActivityTaskExecutor;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
@@ -183,8 +183,8 @@ public class SettingsFacade extends RpcReceiver {
       }
     };
 
-    TaskQueue taskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
-    taskQueue.offer(task);
+    FutureActivityTaskExecutor taskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
+    taskQueue.execute(task);
 
     return oldValue;
   }

@@ -23,13 +23,13 @@ import com.googlecode.android_scripting.trigger.TriggerRepository;
 
 public class BaseApplication extends Application {
 
-  private final TaskQueue mTaskQueue = new TaskQueue(this);
+  private final FutureActivityTaskExecutor mTaskQueue = new FutureActivityTaskExecutor(this);
 
   protected TriggerRepository mTriggerRepository;
 
   protected InterpreterConfiguration mConfiguration;
 
-  public TaskQueue getTaskQueue() {
+  public FutureActivityTaskExecutor getTaskQueue() {
     return mTaskQueue;
   }
 

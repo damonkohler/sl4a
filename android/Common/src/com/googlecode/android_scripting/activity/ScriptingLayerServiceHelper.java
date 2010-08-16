@@ -23,7 +23,7 @@ import android.os.Bundle;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
-import com.googlecode.android_scripting.TaskQueue;
+import com.googlecode.android_scripting.FutureActivityTaskExecutor;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 
 /**
@@ -40,8 +40,8 @@ public class ScriptingLayerServiceHelper extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     int id = getIntent().getIntExtra(Constants.EXTRA_TASK_ID, 0);
-    TaskQueue taskQueue = ((BaseApplication) getApplication()).getTaskQueue();
-    mTask = taskQueue.poll(id);
+    FutureActivityTaskExecutor taskQueue = ((BaseApplication) getApplication()).getTaskQueue();
+    mTask = taskQueue.getTask(id);
     mTask.setActivity(this);
   }
 

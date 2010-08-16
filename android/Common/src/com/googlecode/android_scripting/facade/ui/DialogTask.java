@@ -22,7 +22,7 @@ import com.googlecode.android_scripting.future.FutureActivityTask;
 
 import java.util.concurrent.CountDownLatch;
 
-abstract class RunnableDialog extends FutureActivityTask<Object> {
+abstract class DialogTask extends FutureActivityTask<Object> {
 
   protected Dialog mDialog;
   protected final CountDownLatch mShowLatch = new CountDownLatch(1);

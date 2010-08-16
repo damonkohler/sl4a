@@ -43,7 +43,7 @@ import android.widget.Toast;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.NotificationIdFactory;
-import com.googlecode.android_scripting.TaskQueue;
+import com.googlecode.android_scripting.FutureActivityTaskExecutor;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
@@ -64,7 +64,7 @@ public class AndroidFacade extends RpcReceiver {
   private final Service mService;
   private final Handler mHandler;
   private final Intent mIntent;
-  private final TaskQueue mTaskQueue;
+  private final FutureActivityTaskExecutor mTaskQueue;
 
   private final Vibrator mVibrator;
   private final NotificationManager mNotificationManager;
@@ -121,7 +121,7 @@ public class AndroidFacade extends RpcReceiver {
         setResult(data);
       }
     };
-    mTaskQueue.offer(task);
+    mTaskQueue.execute(task);
 
     try {
       return task.getResult();
@@ -229,7 +229,7 @@ public class AndroidFacade extends RpcReceiver {
         }
 
       };
-      mTaskQueue.offer(task);
+      mTaskQueue.execute(task);
 
       try {
         task.getResult();
@@ -287,7 +287,7 @@ public class AndroidFacade extends RpcReceiver {
         alert.show();
       }
     };
-    mTaskQueue.offer(task);
+    mTaskQueue.execute(task);
 
     try {
       return task.getResult();

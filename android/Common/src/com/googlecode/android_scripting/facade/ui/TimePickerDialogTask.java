@@ -29,12 +29,12 @@ import android.widget.TimePicker;
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-public class RunnableTimePickerDialog extends RunnableDialog {
+public class TimePickerDialogTask extends DialogTask {
   private final int mHour;
   private final int mMinute;
   private final boolean mIs24Hour;
 
-  public RunnableTimePickerDialog(int hour, int minute, boolean is24hour) {
+  public TimePickerDialogTask(int hour, int minute, boolean is24hour) {
     mHour = hour;
     mMinute = minute;
     mIs24Hour = is24hour;

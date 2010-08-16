@@ -33,7 +33,7 @@ import com.googlecode.android_scripting.Log;
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-public class RunnableSeekBarDialog extends RunnableDialog {
+public class SeekBarDialogTask extends DialogTask {
 
   private SeekBar mSeekBar;
   private final int mProgress;
@@ -43,7 +43,7 @@ public class RunnableSeekBarDialog extends RunnableDialog {
   private String mPositiveButtonText;
   private String mNegativeButtonText;
 
-  public RunnableSeekBarDialog(int progress, int max, String title, String message) {
+  public SeekBarDialogTask(int progress, int max, String title, String message) {
     mProgress = progress;
     mMax = max;
     mTitle = title;

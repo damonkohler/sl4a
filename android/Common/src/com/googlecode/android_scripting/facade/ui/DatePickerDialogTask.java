@@ -29,12 +29,12 @@ import android.widget.DatePicker;
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-public class RunnableDatePickerDialog extends RunnableDialog {
+public class DatePickerDialogTask extends DialogTask {
   public static int mYear;
   public static int mMonth;
   public static int mDay;
 
-  public RunnableDatePickerDialog(int year, int month, int day) {
+  public DatePickerDialogTask(int year, int month, int day) {
     mYear = year;
     mMonth = month - 1;
     mDay = day;

@@ -21,7 +21,7 @@ import android.app.Service;
 import android.util.AndroidRuntimeException;
 
 import com.googlecode.android_scripting.BaseApplication;
-import com.googlecode.android_scripting.TaskQueue;
+import com.googlecode.android_scripting.FutureActivityTaskExecutor;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.FacadeManager;
@@ -43,7 +43,7 @@ import java.util.Set;
  */
 public class UiFacade extends RpcReceiver {
   private final Service mService;
-  private final TaskQueue mTaskQueue;
+  private final FutureActivityTaskExecutor mTaskQueue;
   private DialogTask mDialogTask;
 
   public UiFacade(FacadeManager manager) {
@@ -114,7 +114,7 @@ public class UiFacade extends RpcReceiver {
   @Rpc(description = "Show dialog.")
   public void dialogShow() throws InterruptedException {
     if (mDialogTask != null && mDialogTask.getDialog() == null) {
-      mTaskQueue.offer(mDialogTask);
+      mTaskQueue.execute(mDialogTask);
       mDialogTask.getShowLatch().await();
     } else {
       throw new AndroidRuntimeException("No dialog to show.");
@@ -224,7 +224,7 @@ public class UiFacade extends RpcReceiver {
   @Rpc(description = "Display a WebView with the given url")
   public void webViewShow(@RpcParameter(name = "Url") String url) {
     WebViewTask task = new WebViewTask(url, mManager.getReceiver(EventFacade.class));
-    mTaskQueue.offer(task);
+    mTaskQueue.execute(task);
   }
 
   @Override

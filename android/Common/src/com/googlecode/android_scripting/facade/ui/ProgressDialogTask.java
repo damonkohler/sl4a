@@ -23,7 +23,7 @@ import android.app.ProgressDialog;
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
-class RunnableProgressDialog extends RunnableDialog {
+class ProgressDialogTask extends DialogTask {
 
   private final int mStyle;
   private final int mMax;
@@ -31,7 +31,7 @@ class RunnableProgressDialog extends RunnableDialog {
   private final String mMessage;
   private final Boolean mCancelable;
 
-  public RunnableProgressDialog(int style, int max, String title, String message, boolean cancelable) {
+  public ProgressDialogTask(int style, int max, String title, String message, boolean cancelable) {
     mStyle = style;
     mMax = max;
     mTitle = title;
