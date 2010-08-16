@@ -196,7 +196,7 @@ public class AndroidFacade extends RpcReceiver {
       @RpcParameter(name = "uri") @RpcOptional String uri,
       @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
       @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras,
-      @RpcParameter(name = "wait", description = "if wait is set to true this call will block until user navigates back to the calling application") @RpcOptional Boolean wait)
+      @RpcParameter(name = "wait", description = "block until the user exits the started activity") @RpcOptional Boolean wait)
       throws JSONException {
     final Intent intent = new Intent(action);
     intent.setDataAndType(uri != null ? Uri.parse(uri) : null, type);
