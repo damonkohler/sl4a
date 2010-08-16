@@ -16,6 +16,12 @@
 
 package com.googlecode.android_scripting.facade;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaRecorder;
@@ -28,19 +34,12 @@ import android.view.ViewGroup.LayoutParams;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.TaskQueue;
-import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A facade for recording media.
@@ -139,11 +138,10 @@ public class MediaRecorderFacade extends RpcReceiver {
   private void prepare() throws Exception {
     FutureActivityTask<Exception> task = new FutureActivityTask<Exception>() {
       @Override
-      public void onCreate(final ScriptingLayerServiceHelper activity) {
-        super.onCreate(activity);
-        final SurfaceView view = new SurfaceView(activity);
-        activity.setContentView(view, new LayoutParams(LayoutParams.FILL_PARENT,
-            LayoutParams.FILL_PARENT));
+      public void onCreate() {
+        final SurfaceView view = new SurfaceView(getActivity());
+        getActivity().setContentView(view,
+            new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
         view.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         view.getHolder().addCallback(new Callback() {
           @Override

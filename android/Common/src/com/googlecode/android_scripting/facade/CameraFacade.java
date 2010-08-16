@@ -16,6 +16,13 @@
 
 package com.googlecode.android_scripting.facade;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.concurrent.CountDownLatch;
+
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.Camera;
@@ -33,19 +40,11 @@ import android.view.ViewGroup.LayoutParams;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.TaskQueue;
-import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.concurrent.CountDownLatch;
 
 public class CameraFacade extends RpcReceiver {
 
@@ -114,11 +113,10 @@ public class CameraFacade extends RpcReceiver {
   private void setPreviewDisplay(Camera camera) throws IOException, InterruptedException {
     FutureActivityTask<SurfaceHolder> task = new FutureActivityTask<SurfaceHolder>() {
       @Override
-      public void onCreate(final ScriptingLayerServiceHelper activity) {
-        super.onCreate(activity);
-        final SurfaceView view = new SurfaceView(activity);
-        activity.setContentView(view, new LayoutParams(LayoutParams.FILL_PARENT,
-            LayoutParams.FILL_PARENT));
+      public void onCreate() {
+        final SurfaceView view = new SurfaceView(getActivity());
+        getActivity().setContentView(view,
+            new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
         view.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 

@@ -16,6 +16,10 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -23,10 +27,6 @@ import android.util.AndroidRuntimeException;
 import android.widget.SeekBar;
 
 import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Wrapper class for dialog box with seek bar.
@@ -59,13 +59,12 @@ public class RunnableSeekBarDialog extends RunnableDialog {
   }
 
   @Override
-  public void onCreate(ScriptingLayerServiceHelper activity) {
-    super.onCreate(activity);
-    mSeekBar = new SeekBar(activity);
+  public void onCreate() {
+    mSeekBar = new SeekBar(getActivity());
     mSeekBar.setMax(mMax);
     mSeekBar.setProgress(mProgress);
     mSeekBar.setPadding(10, 0, 10, 3);
-    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     if (mTitle != null) {
       builder.setTitle(mTitle);
     }
@@ -73,14 +72,13 @@ public class RunnableSeekBarDialog extends RunnableDialog {
       builder.setMessage(mMessage);
     }
     builder.setView(mSeekBar);
-    configureButtons(builder, activity);
-    addOnCancelListener(builder, activity);
+    configureButtons(builder, getActivity());
+    addOnCancelListener(builder, getActivity());
     mDialog = builder.show();
     mShowLatch.countDown();
   }
 
-  private Builder addOnCancelListener(final AlertDialog.Builder builder,
-      final ScriptingLayerServiceHelper activity) {
+  private Builder addOnCancelListener(final AlertDialog.Builder builder, final Activity activity) {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
@@ -97,8 +95,7 @@ public class RunnableSeekBarDialog extends RunnableDialog {
     });
   }
 
-  private void configureButtons(final AlertDialog.Builder builder,
-      final ScriptingLayerServiceHelper activity) {
+  private void configureButtons(final AlertDialog.Builder builder, final Activity activity) {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {

@@ -16,6 +16,10 @@
 
 package com.googlecode.android_scripting.facade;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -40,7 +44,6 @@ import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.TaskQueue;
-import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
@@ -48,10 +51,6 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class AndroidFacade extends RpcReceiver {
   /**
@@ -113,12 +112,13 @@ public class AndroidFacade extends RpcReceiver {
   Intent startActivityForResult(final Intent intent) {
     FutureActivityTask<Intent> task = new FutureActivityTask<Intent>() {
       @Override
-      public void onCreate(ScriptingLayerServiceHelper activity) {
-        // TODO(damonkohler): Throwing an exception here (e.g. specifying a non-existent activity)
-        // causes a force close. There needs to be a way to pass back an error condition from the
-        // helper.
-        super.onCreate(activity);
-        activity.startActivityForResult(intent, 0);
+      public void onCreate() {
+        startActivityForResult(intent, 0);
+      }
+
+      @Override
+      public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        setResult(data);
       }
     };
     mTaskQueue.offer(task);
@@ -211,9 +211,8 @@ public class AndroidFacade extends RpcReceiver {
         private boolean mSecondResume = false;
 
         @Override
-        public void onCreate(ScriptingLayerServiceHelper activity) {
-          super.onCreate(activity);
-          activity.startActivity(intent);
+        public void onCreate() {
+          startActivity(intent);
         }
 
         @Override
@@ -259,14 +258,13 @@ public class AndroidFacade extends RpcReceiver {
       final boolean password) {
     final FutureActivityTask<String> task = new FutureActivityTask<String>() {
       @Override
-      public void onCreate(ScriptingLayerServiceHelper activity) {
-        super.onCreate(activity);
-        final EditText input = new EditText(activity);
+      public void onCreate() {
+        final EditText input = new EditText(getActivity());
         if (password) {
           input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
           input.setTransformationMethod(new PasswordTransformationMethod());
         }
-        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(title);
         alert.setMessage(message);
         alert.setView(input);

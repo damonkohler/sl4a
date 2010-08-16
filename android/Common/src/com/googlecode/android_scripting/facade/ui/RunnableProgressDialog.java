@@ -18,8 +18,6 @@ package com.googlecode.android_scripting.facade.ui;
 
 import android.app.ProgressDialog;
 
-import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
-
 /**
  * Wrapper class for progress dialog running in separate thread
  * 
@@ -42,9 +40,8 @@ class RunnableProgressDialog extends RunnableDialog {
   }
 
   @Override
-  public void onCreate(ScriptingLayerServiceHelper activity) {
-    super.onCreate(activity);
-    mDialog = new ProgressDialog(activity);
+  public void onCreate() {
+    mDialog = new ProgressDialog(getActivity());
     ((ProgressDialog) mDialog).setProgressStyle(mStyle);
     ((ProgressDialog) mDialog).setMax(mMax);
     mDialog.setCancelable(mCancelable);

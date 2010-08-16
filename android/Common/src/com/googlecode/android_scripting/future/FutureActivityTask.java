@@ -19,19 +19,25 @@ package com.googlecode.android_scripting.future;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
-
 /**
  * Encapsulates an {@link Activity} and a {@link FutureObject}.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public abstract class FutureActivityTask<T> {
-  private final FutureResult<T> mResult = new FutureResult<T>();
-  private ScriptingLayerServiceHelper mActivity;
 
-  public void onCreate(ScriptingLayerServiceHelper activity) {
+  private final FutureResult<T> mResult = new FutureResult<T>();
+  private Activity mActivity;
+
+  public void setActivity(Activity activity) {
     mActivity = activity;
+  }
+
+  public Activity getActivity() {
+    return mActivity;
+  }
+
+  public void onCreate() {
   }
 
   public void onStart() {
@@ -53,9 +59,7 @@ public abstract class FutureActivityTask<T> {
   //  
   // public abstract boolean onPrepareOptionsMenu(Menu menu);
 
-  @SuppressWarnings("unchecked")
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    ((FutureResult<Intent>) mResult).set(data);
   }
 
   protected void setResult(T result) {
@@ -72,5 +76,13 @@ public abstract class FutureActivityTask<T> {
 
   public void finish() {
     mActivity.finish();
+  }
+
+  public void startActivity(Intent intent) {
+    mActivity.startActivity(intent);
+  }
+
+  public void startActivityForResult(Intent intent, int requestCode) {
+    mActivity.startActivityForResult(intent, requestCode);
   }
 }

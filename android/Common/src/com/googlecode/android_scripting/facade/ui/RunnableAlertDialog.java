@@ -16,20 +16,20 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
-
-import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
-import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+
+import com.googlecode.android_scripting.exception.Sl4aRuntimeException;
 
 /**
  * Wrapper class for alert dialog running in separate thread.
@@ -138,9 +138,8 @@ class RunnableAlertDialog extends RunnableDialog {
   }
 
   @Override
-  public void onCreate(final ScriptingLayerServiceHelper activity) {
-    super.onCreate(activity);
-    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+  public void onCreate() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     if (mTitle != null) {
       builder.setTitle(mTitle);
     }
@@ -192,14 +191,13 @@ class RunnableAlertDialog extends RunnableDialog {
         break;
       }
     }
-    configureButtons(builder, activity);
-    addOnCancelListener(builder, activity);
+    configureButtons(builder, getActivity());
+    addOnCancelListener(builder, getActivity());
     mDialog = builder.show();
     mShowLatch.countDown();
   }
 
-  private Builder addOnCancelListener(final AlertDialog.Builder builder,
-      final ScriptingLayerServiceHelper activity) {
+  private Builder addOnCancelListener(final AlertDialog.Builder builder, final Activity activity) {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
@@ -211,8 +209,7 @@ class RunnableAlertDialog extends RunnableDialog {
     });
   }
 
-  private void configureButtons(final AlertDialog.Builder builder,
-      final ScriptingLayerServiceHelper activity) {
+  private void configureButtons(final AlertDialog.Builder builder, final Activity activity) {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {

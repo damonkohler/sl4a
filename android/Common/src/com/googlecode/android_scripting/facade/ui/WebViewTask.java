@@ -18,7 +18,6 @@ package com.googlecode.android_scripting.facade.ui;
 
 import android.webkit.WebView;
 
-import com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper;
 import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 
@@ -35,12 +34,11 @@ public class WebViewTask extends FutureActivityTask<Void> {
   }
 
   @Override
-  public void onCreate(ScriptingLayerServiceHelper activity) {
-    super.onCreate(activity);
-    mView = new WebView(activity);
+  public void onCreate() {
+    mView = new WebView(getActivity());
     mView.getSettings().setJavaScriptEnabled(true);
     mView.addJavascriptInterface(mWrapper, "droid_events");
-    activity.setContentView(mView);
+    getActivity().setContentView(mView);
     mView.loadUrl(mSource);
   }
 

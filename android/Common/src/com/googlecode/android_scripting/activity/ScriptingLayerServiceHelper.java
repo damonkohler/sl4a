@@ -42,7 +42,7 @@ public class ScriptingLayerServiceHelper extends Activity {
     int id = getIntent().getIntExtra(Constants.EXTRA_TASK_ID, 0);
     TaskQueue taskQueue = ((BaseApplication) getApplication()).getTaskQueue();
     mTask = taskQueue.poll(id);
-    mTask.onCreate(this);
+    mTask.setActivity(this);
   }
 
   @Override
