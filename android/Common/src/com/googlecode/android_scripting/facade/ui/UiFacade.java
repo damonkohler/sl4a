@@ -78,6 +78,8 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message)
       throws InterruptedException {
     dialogCreateInput(title, message);
+    dialogSetNegativeButtonText("Cancel");
+    dialogSetPositiveButtonText("Ok");
     dialogShow();
     Map<String, Object> response = (Map<String, Object>) dialogGetResponse();
     return (String) response.get("value");
@@ -90,6 +92,8 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter password:") final String message)
       throws InterruptedException {
     dialogCreatePassword(title, message);
+    dialogSetNegativeButtonText("Cancel");
+    dialogSetPositiveButtonText("Ok");
     dialogShow();
     Map<String, Object> response = (Map<String, Object>) dialogGetResponse();
     return (String) response.get("value");
