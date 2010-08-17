@@ -16,12 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaRecorder;
@@ -29,17 +23,26 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 import android.view.SurfaceHolder.Callback;
 import android.view.ViewGroup.LayoutParams;
 
 import com.googlecode.android_scripting.BaseApplication;
+import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.FutureActivityTaskExecutor;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A facade for recording media.
@@ -85,7 +88,7 @@ public class MediaRecorderFacade extends RpcReceiver {
             Class.forName("android.media.MediaRecorder$AudioSource").getField("CAMCORDER");
         audioSource = source.getInt(null);
       } catch (Exception e) {
-        e.printStackTrace();
+        Log.e(e);
       }
       mMediaRecorder.setAudioSource(audioSource);
       mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
@@ -94,16 +97,19 @@ public class MediaRecorderFacade extends RpcReceiver {
       mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
     }
     mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
-
+    if (!FileUtils.mkDirs(targetPath)) {
+      throw new RuntimeException(String.format("Cannot create directories for %s.", targetPath));
+    }
     mMediaRecorder.setOutputFile(targetPath);
     if (milliseconds > 0) {
       mMediaRecorder.setMaxDuration(milliseconds);
     }
-    prepare();
+    FutureActivityTask<Exception> prepTask = prepare();
     mMediaRecorder.start();
     if (milliseconds > 0) {
       new CountDownLatch(1).await(milliseconds, TimeUnit.MILLISECONDS);
     }
+    prepTask.finish();
   }
 
   private void startAudioRecording(String targetPath, int source) throws IOException {
@@ -135,13 +141,14 @@ public class MediaRecorderFacade extends RpcReceiver {
     mMediaRecorder.release();
   }
 
-  private void prepare() throws Exception {
+  private FutureActivityTask<Exception> prepare() throws Exception {
     FutureActivityTask<Exception> task = new FutureActivityTask<Exception>() {
       @Override
       public void onCreate() {
         final SurfaceView view = new SurfaceView(getActivity());
-        getActivity().setContentView(view,
-            new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        getActivity().setContentView(view, new LayoutParams(1, 1));
+        getActivity().getWindow().setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
         view.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         view.getHolder().addCallback(new Callback() {
           @Override
@@ -157,7 +164,6 @@ public class MediaRecorderFacade extends RpcReceiver {
             } catch (IOException e) {
               setResult(e);
             }
-            finish();
           }
 
           @Override
@@ -166,13 +172,16 @@ public class MediaRecorderFacade extends RpcReceiver {
         });
       }
     };
-    FutureActivityTaskExecutor taskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
+    FutureActivityTaskExecutor taskQueue =
+        ((BaseApplication) mService.getApplication()).getTaskQueue();
     taskQueue.execute(task);
 
     Exception e = task.getResult();
     if (e != null) {
       throw e;
     }
+
+    return task;
   }
 
   private int convertSecondsToMilliseconds(Double seconds) {

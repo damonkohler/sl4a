@@ -68,18 +68,10 @@ public class FileUtils {
       Log.e("No script name specified.");
       return null;
     }
-
-    File file = new File(name);
-
-    File parent = file.getParentFile();
-    if (!parent.exists()) {
-      Log.v("Creating directory: " + parent.getAbsolutePath());
-      if (!parent.mkdirs()) {
-        Log.e("Failed to create a directory.");
-        return null;
-      }
+    if (!mkDirs(name)) {
+      return null;
     }
-
+    File file = new File(name);
     try {
       OutputStream output = new FileOutputStream(file);
       IoUtils.copy(input, output);
@@ -88,6 +80,19 @@ public class FileUtils {
       return null;
     }
     return file;
+  }
+
+  public static boolean mkDirs(String filename) {
+    File file = new File(filename);
+    File parent = file.getParentFile();
+    if (!parent.exists()) {
+      Log.v("Creating directory: " + parent.getAbsolutePath());
+      if (!parent.mkdirs()) {
+        Log.e("Failed to create a directory.");
+        return false;
+      }
+    }
+    return true;
   }
 
 }

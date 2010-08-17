@@ -16,22 +16,37 @@
 
 package com.googlecode.android_scripting.jsonrpc;
 
+import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.googlecode.android_scripting.Log;
-
 public abstract class RpcReceiverManager {
 
   private final Map<Class<? extends RpcReceiver>, RpcReceiver> mReceivers;
+
+  /**
+   * A map of strings to known RPCs.
+   */
+  private final Map<String, MethodDescriptor> mKnownRpcs = new HashMap<String, MethodDescriptor>();
 
   public RpcReceiverManager(Collection<Class<? extends RpcReceiver>> classList) {
     mReceivers = new HashMap<Class<? extends RpcReceiver>, RpcReceiver>();
     for (Class<? extends RpcReceiver> receiverClass : classList) {
       mReceivers.put(receiverClass, null);
+      Collection<MethodDescriptor> methodList = MethodDescriptor.collectFrom(receiverClass);
+      for (MethodDescriptor m : methodList) {
+        if (mKnownRpcs.containsKey(m.getName())) {
+          // We already know an RPC of the same name. We don't catch this anywhere because this is a
+          // programming error.
+          throw new RuntimeException("An RPC with the name " + m.getName() + " is already known.");
+        }
+        mKnownRpcs.put(m.getName(), m);
+      }
     }
   }
 
@@ -60,6 +75,10 @@ public abstract class RpcReceiverManager {
   public <T extends RpcReceiver> T getReceiver(Class<T> clazz) {
     RpcReceiver receiver = get(clazz);
     return clazz.cast(receiver);
+  }
+
+  public MethodDescriptor getMethodDescriptor(String methodName) {
+    return mKnownRpcs.get(methodName);
   }
 
   public Object invoke(Class<? extends RpcReceiver> clazz, Method method, Object[] args)

@@ -36,11 +36,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -49,11 +46,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class JsonRpcServer {
-
-  /**
-   * A map of strings to known RPCs.
-   */
-  private final Map<String, MethodDescriptor> mKnownRpcs = new HashMap<String, MethodDescriptor>();
 
   private final RpcReceiverManager mRpcReceiverManager;
 
@@ -107,7 +99,7 @@ public class JsonRpcServer {
           continue;
         }
 
-        MethodDescriptor rpc = mKnownRpcs.get(method);
+        MethodDescriptor rpc = mRpcReceiverManager.getMethodDescriptor(method);
         if (rpc == null) {
           send(JsonRpcResult.error(id, new RpcError("Unknown RPC.")));
           continue;
@@ -178,27 +170,6 @@ public class JsonRpcServer {
     mHandshake = handshake;
     mRpcReceiverManager = manager;
     mNetworkThreads = new CopyOnWriteArrayList<ConnectionThread>();
-    for (Class<? extends RpcReceiver> receiver : manager.getRpcReceiverClasses()) {
-      registerRpcReceiver(receiver);
-    }
-  }
-
-  /**
-   * Registers an RPC receiving object with this {@link JsonRpcServer} object.
-   * 
-   * @param receiver
-   *          the receiving object
-   */
-  private void registerRpcReceiver(final Class<? extends RpcReceiver> receiverClass) {
-    Collection<MethodDescriptor> methodList = MethodDescriptor.collectFrom(receiverClass);
-    for (MethodDescriptor m : methodList) {
-      if (mKnownRpcs.containsKey(m.getName())) {
-        // We already know an RPC of the same name. We don't catch this anywhere because this is a
-        // programming error.
-        throw new RuntimeException("An RPC with the name " + m.getName() + " is already known.");
-      }
-      mKnownRpcs.put(m.getName(), m);
-    }
   }
 
   private InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {

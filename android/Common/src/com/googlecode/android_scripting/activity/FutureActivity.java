@@ -41,6 +41,9 @@ public class FutureActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     int id = getIntent().getIntExtra(Constants.EXTRA_TASK_ID, 0);
+    if (id == 0) {
+      throw new RuntimeException("FutureActivityTask id is not specified.");
+    }
     FutureActivityTaskExecutor taskQueue = ((BaseApplication) getApplication()).getTaskQueue();
     mTask = taskQueue.getTask(id);
     mTask.setActivity(this);

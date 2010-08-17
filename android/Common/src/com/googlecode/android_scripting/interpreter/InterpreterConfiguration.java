@@ -221,7 +221,7 @@ public class InterpreterConfiguration {
     try {
       mInterpreterSet.add(new HtmlInterpreter(mContext));
     } catch (IOException e) {
-      Log.e("Filed to instantiate HtmlInterpreter.", e);
+      Log.e("Failed to instantiate HtmlInterpreter.", e);
     }
     mObserverSet = new CopyOnWriteArraySet<ConfigurationObserver>();
     IntentFilter filter = new IntentFilter();

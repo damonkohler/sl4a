@@ -16,13 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.concurrent.CountDownLatch;
-
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.Camera;
@@ -34,17 +27,26 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 import android.view.SurfaceHolder.Callback;
 import android.view.ViewGroup.LayoutParams;
 
 import com.googlecode.android_scripting.BaseApplication;
-import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.FutureActivityTaskExecutor;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.concurrent.CountDownLatch;
 
 public class CameraFacade extends RpcReceiver {
 
@@ -78,27 +80,19 @@ public class CameraFacade extends RpcReceiver {
 
     try {
       Method method = camera.getClass().getMethod("setDisplayOrientation", int.class);
-      method.invoke(camera, 180);
+      method.invoke(camera, 90);
     } catch (Exception e) {
       Log.e(e);
     }
 
-    int sdkVersion = 3;
     try {
-      sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
-    } catch (NumberFormatException e) {
-      Log.e(e);
-    }
-
-    try {
-      if (sdkVersion == 3) {
-        setPreviewDisplay(camera);
-      }
+      FutureActivityTask<SurfaceHolder> previewTask = setPreviewDisplay(camera);
       camera.startPreview();
       if (useAutoFocus) {
         autoFocus(autoFocusResult, camera);
       }
       takePicture(path, takePictureResult, camera);
+      previewTask.finish();
     } catch (Exception e) {
       Log.e(e);
     } finally {
@@ -111,13 +105,15 @@ public class CameraFacade extends RpcReceiver {
     return result;
   }
 
-  private void setPreviewDisplay(Camera camera) throws IOException, InterruptedException {
+  private FutureActivityTask<SurfaceHolder> setPreviewDisplay(Camera camera) throws IOException,
+      InterruptedException {
     FutureActivityTask<SurfaceHolder> task = new FutureActivityTask<SurfaceHolder>() {
       @Override
       public void onCreate() {
         final SurfaceView view = new SurfaceView(getActivity());
-        getActivity().setContentView(view,
-            new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        getActivity().setContentView(view, new LayoutParams(1, 1));
+        getActivity().getWindow().setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
 
         view.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
@@ -129,7 +125,6 @@ public class CameraFacade extends RpcReceiver {
           @Override
           public void surfaceCreated(SurfaceHolder holder) {
             setResult(view.getHolder());
-            finish();
           }
 
           @Override
@@ -138,10 +133,12 @@ public class CameraFacade extends RpcReceiver {
         });
       }
     };
-    FutureActivityTaskExecutor taskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
+    FutureActivityTaskExecutor taskQueue =
+        ((BaseApplication) mService.getApplication()).getTaskQueue();
     taskQueue.execute(task);
 
     camera.setPreviewDisplay(task.getResult());
+    return task;
   }
 
   private void takePicture(final String path, final BooleanResult takePictureResult,
@@ -150,6 +147,10 @@ public class CameraFacade extends RpcReceiver {
     camera.takePicture(null, null, new PictureCallback() {
       @Override
       public void onPictureTaken(byte[] data, Camera camera) {
+        if (!FileUtils.mkDirs(path)) {
+          takePictureResult.mmResult = false;
+          return;
+        }
         try {
           FileOutputStream output = new FileOutputStream(path);
           output.write(data);
