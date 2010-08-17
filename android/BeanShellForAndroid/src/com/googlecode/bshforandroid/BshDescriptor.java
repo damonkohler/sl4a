@@ -16,16 +16,16 @@
 
 package com.googlecode.bshforandroid;
 
+import android.content.Context;
+
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
+import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.content.Context;
-
-import com.googlecode.android_scripting.interpreter.InterpreterConstants;
-import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 public class BshDescriptor extends Sl4aHostedInterpreter {
 
@@ -57,11 +57,6 @@ public class BshDescriptor extends Sl4aHostedInterpreter {
   }
 
   public int getVersion() {
-    return 2;
-  }
-
-  @Override
-  public int getScriptsVersion() {
     return 3;
   }
 

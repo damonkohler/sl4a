@@ -41,6 +41,11 @@ Android() {
     return new JSONObject(data);
   }
 
+  call(String method) {
+    JSONArray args = new JSONArray();
+    call(method, args);
+  }
+
   call(String method, Object arg1) {
     JSONArray args = new JSONArray();
     args.put(arg1);

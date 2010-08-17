@@ -65,7 +65,7 @@ public class HtmlLanguage extends Language {
 
   @Override
   protected String getRightParametersText() {
-    return ");";
+    return ")";
   }
 
   @Override

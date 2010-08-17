@@ -28,7 +28,7 @@ public class BeanShellLanguage extends Language {
   @Override
   protected String getImportStatement() {
     // FIXME(igor.v.karp): this is interpreter specific
-    return "source(\"/sdcard/sl4a/extras/bsh/android.bsh\");\n";
+    return "source(\"/sdcard/com.googlecode.bshforandroid/extras/bsh/android.bsh\");\n";
   }
 
   @Override
@@ -69,6 +69,6 @@ public class BeanShellLanguage extends Language {
 
   @Override
   protected String getRightParametersText() {
-    return ");";
+    return ")";
   }
 }
