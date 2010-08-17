@@ -16,11 +16,11 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
+import java.util.concurrent.CountDownLatch;
+
 import android.app.Dialog;
 
 import com.googlecode.android_scripting.future.FutureActivityTask;
-
-import java.util.concurrent.CountDownLatch;
 
 abstract class DialogTask extends FutureActivityTask<Object> {
 

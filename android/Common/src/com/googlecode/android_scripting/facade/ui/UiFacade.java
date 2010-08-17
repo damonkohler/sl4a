@@ -16,6 +16,7 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -51,52 +52,96 @@ public class UiFacade extends RpcReceiver {
     mTaskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
   }
 
+  @Rpc(description = "Create a text input dialog.")
+  public void dialogCreateInput(
+      @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("Value") final String title,
+      @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message)
+      throws InterruptedException {
+    dialogDismiss();
+    mDialogTask = new AlertDialogTask(title, message);
+    ((AlertDialogTask) mDialogTask).setTextInput();
+  }
+
+  @Rpc(description = "Create a password input dialog.")
+  public void dialogCreatePassword(
+      @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("Password") final String title,
+      @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter password:") final String message) {
+    dialogDismiss();
+    mDialogTask = new AlertDialogTask(title, message);
+    ((AlertDialogTask) mDialogTask).setPasswordInput();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Rpc(description = "Queries the user for a text input.")
+  public String dialogGetInput(
+      @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("Value") final String title,
+      @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message)
+      throws InterruptedException {
+    dialogCreateInput(title, message);
+    dialogShow();
+    Map<String, Object> response = (Map<String, Object>) dialogGetResponse();
+    return (String) response.get("value");
+  }
+
+  @SuppressWarnings("unchecked")
+  @Rpc(description = "Queries the user for a password.")
+  public String dialogGetPassword(
+      @RpcParameter(name = "title", description = "title of the password box") @RpcDefault("Password") final String title,
+      @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter password:") final String message)
+      throws InterruptedException {
+    dialogCreatePassword(title, message);
+    dialogShow();
+    Map<String, Object> response = (Map<String, Object>) dialogGetResponse();
+    return (String) response.get("value");
+  }
+
   @Rpc(description = "Create a spinner progress dialog.")
-  public void dialogCreateSpinnerProgress(@RpcParameter(name = "Title") @RpcOptional String title,
-      @RpcParameter(name = "Message") @RpcOptional String message,
-      @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max) {
+  public void dialogCreateSpinnerProgress(@RpcParameter(name = "title") @RpcOptional String title,
+      @RpcParameter(name = "message") @RpcOptional String message,
+      @RpcParameter(name = "maximum progress") @RpcDefault("100") Integer max) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask = new ProgressDialogTask(ProgressDialog.STYLE_SPINNER, max, title, message, true);
   }
 
   @Rpc(description = "Create a horizontal progress dialog.")
   public void dialogCreateHorizontalProgress(
-      @RpcParameter(name = "Title") @RpcOptional String title,
-      @RpcParameter(name = "Message") @RpcOptional String message,
-      @RpcParameter(name = "Maximum progress") @RpcDefault("100") Integer max) {
+      @RpcParameter(name = "title") @RpcOptional String title,
+      @RpcParameter(name = "message") @RpcOptional String message,
+      @RpcParameter(name = "maximum progress") @RpcDefault("100") Integer max) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask =
         new ProgressDialogTask(ProgressDialog.STYLE_HORIZONTAL, max, title, message, true);
   }
 
   @Rpc(description = "Create alert dialog.")
-  public void dialogCreateAlert(@RpcParameter(name = "Title") @RpcOptional String title,
-      @RpcParameter(name = "Message") @RpcOptional String message) {
+  public void dialogCreateAlert(@RpcParameter(name = "title") @RpcOptional String title,
+      @RpcParameter(name = "message") @RpcOptional String message) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask = new AlertDialogTask(title, message);
   }
 
   @Rpc(description = "Create seek bar dialog.")
   public void dialogCreateSeekBar(
-      @RpcParameter(name = "Starting value") @RpcDefault("50") Integer progress,
-      @RpcParameter(name = "Maximum value") @RpcDefault("100") Integer max,
-      @RpcParameter(name = "Title") String title, @RpcParameter(name = "Message") String message) {
+      @RpcParameter(name = "starting value") @RpcDefault("50") Integer progress,
+      @RpcParameter(name = "maximum value") @RpcDefault("100") Integer max,
+      @RpcParameter(name = "title") String title, @RpcParameter(name = "message") String message) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask = new SeekBarDialogTask(progress, max, title, message);
   }
 
   @Rpc(description = "Create time picker dialog.")
-  public void dialogCreateTimePicker(@RpcParameter(name = "Hour") @RpcDefault("0") Integer hour,
-      @RpcParameter(name = "Minute") @RpcDefault("0") Integer minute,
-      @RpcParameter(name = "Use 24 hour clock") @RpcDefault("false") Boolean is24hour) {
+  public void dialogCreateTimePicker(
+      @RpcParameter(name = "hour") @RpcDefault("0") Integer hour,
+      @RpcParameter(name = "minute") @RpcDefault("0") Integer minute,
+      @RpcParameter(name = "is24hour", description = "Use 24 hour clock") @RpcDefault("false") Boolean is24hour) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask = new TimePickerDialogTask(hour, minute, is24hour);
   }
 
   @Rpc(description = "Create date picker dialog.")
-  public void dialogCreateDatePicker(@RpcParameter(name = "Year") @RpcDefault("1970") Integer year,
-      @RpcParameter(name = "Month") @RpcDefault("1") Integer month,
-      @RpcParameter(name = "Day") @RpcDefault("1") Integer day) {
+  public void dialogCreateDatePicker(@RpcParameter(name = "year") @RpcDefault("1970") Integer year,
+      @RpcParameter(name = "month") @RpcDefault("1") Integer month,
+      @RpcParameter(name = "day") @RpcDefault("1") Integer day) {
     dialogDismiss(); // Dismiss any existing dialog.
     mDialogTask = new DatePickerDialogTask(year, month, day);
   }
@@ -115,7 +160,7 @@ public class UiFacade extends RpcReceiver {
       mTaskQueue.execute(mDialogTask);
       mDialogTask.getShowLatch().await();
     } else {
-      throw new AndroidRuntimeException("No dialog to show.");
+      throw new RuntimeException("No dialog to show.");
     }
   }
 
@@ -219,8 +264,8 @@ public class UiFacade extends RpcReceiver {
     }
   }
 
-  @Rpc(description = "Display a WebView with the given url")
-  public void webViewShow(@RpcParameter(name = "Url") String url) {
+  @Rpc(description = "Display a WebView with the given URL.")
+  public void webViewShow(@RpcParameter(name = "url") String url) {
     WebViewTask task = new WebViewTask(url, mManager.getReceiver(EventFacade.class));
     mTaskQueue.execute(task);
   }

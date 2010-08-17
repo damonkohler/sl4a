@@ -33,7 +33,7 @@ import com.google.common.collect.Collections2;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.Rpc;
-import com.googlecode.android_scripting.rpc.RpcDepreciated;
+import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
 public class ApiProvider extends ContentProvider {
@@ -57,7 +57,7 @@ public class ApiProvider extends ContentProvider {
               @Override
               public boolean apply(MethodDescriptor descriptor) {
                 Method method = descriptor.getMethod();
-                if (method.isAnnotationPresent(RpcDepreciated.class)) {
+                if (method.isAnnotationPresent(RpcDeprecated.class)) {
                   return false;
                 } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
                   int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();

@@ -20,7 +20,7 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
-import com.googlecode.android_scripting.rpc.RpcDepreciated;
+import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
 import java.lang.reflect.Method;
@@ -122,7 +122,7 @@ public class FacadeConfiguration {
     List<MethodDescriptor> list = new ArrayList<MethodDescriptor>();
     for (MethodDescriptor descriptor : sRpcs.values()) {
       Method method = descriptor.getMethod();
-      if (method.isAnnotationPresent(RpcDepreciated.class)) {
+      if (method.isAnnotationPresent(RpcDeprecated.class)) {
         continue;
       } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
         int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();

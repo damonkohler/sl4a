@@ -16,7 +16,9 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -28,6 +30,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.text.method.PasswordTransformationMethod;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnKeyListener;
+import android.widget.EditText;
 
 /**
  * Wrapper class for alert dialog running in separate thread.
@@ -39,23 +46,26 @@ class AlertDialogTask extends DialogTask {
   private final String mTitle;
   private final String mMessage;
 
-  private CharSequence[] mItems;
+  private final List<String> mItems;
   private final Set<Integer> mSelectedItems;
-  private ListType mListType;
+  private final Map<String, Object> mResultMap;
+  private InputType mInputType;
 
   private String mPositiveButtonText;
   private String mNegativeButtonText;
   private String mNeutralButtonText;
 
-  private enum ListType {
-    MENU, SINGLE_CHOICE, MULTI_CHOICE;
+  private enum InputType {
+    MENU, SINGLE_CHOICE, MULTI_CHOICE, PLAIN_TEXT, PASSWORD;
   }
 
   public AlertDialogTask(String title, String message) {
     mTitle = title;
     mMessage = message;
-    mListType = ListType.MENU;
+    mInputType = InputType.MENU;
+    mItems = new ArrayList<String>();
     mSelectedItems = new TreeSet<Integer>();
+    mResultMap = new HashMap<String, Object>();
   }
 
   public void setPositiveButtonText(String text) {
@@ -76,17 +86,15 @@ class AlertDialogTask extends DialogTask {
    * @param items
    */
   public void setItems(JSONArray items) {
-    if (mItems == null) {
-      mItems = new CharSequence[items.length()];
-      for (int i = 0; i < items.length(); i++) {
-        try {
-          mItems[i] = items.getString(i);
-        } catch (JSONException e) {
-          throw new RuntimeException(e);
-        }
+    mItems.clear();
+    for (int i = 0; i < items.length(); i++) {
+      try {
+        mItems.add(items.getString(i));
+      } catch (JSONException e) {
+        throw new RuntimeException(e);
       }
-      mListType = ListType.MENU;
     }
+    mInputType = InputType.MENU;
   }
 
   /**
@@ -98,12 +106,10 @@ class AlertDialogTask extends DialogTask {
    *          the index of the item that is selected by default
    */
   public void setSingleChoiceItems(JSONArray items, int selected) {
-    if (mItems == null) {
-      setItems(items);
-      mSelectedItems.clear();
-      mSelectedItems.add(selected);
-      mListType = ListType.SINGLE_CHOICE;
-    }
+    setItems(items);
+    mSelectedItems.clear();
+    mSelectedItems.add(selected);
+    mInputType = InputType.SINGLE_CHOICE;
   }
 
   /**
@@ -116,16 +122,14 @@ class AlertDialogTask extends DialogTask {
    * @throws JSONException
    */
   public void setMultiChoiceItems(JSONArray items, JSONArray selected) throws JSONException {
-    if (mItems == null) {
-      setItems(items);
-      mSelectedItems.clear();
-      if (selected != null) {
-        for (int i = 0; i < selected.length(); i++) {
-          mSelectedItems.add(selected.getInt(i));
-        }
+    setItems(items);
+    mSelectedItems.clear();
+    if (selected != null) {
+      for (int i = 0; i < selected.length(); i++) {
+        mSelectedItems.add(selected.getInt(i));
       }
-      mListType = ListType.MULTI_CHOICE;
     }
+    mInputType = InputType.MULTI_CHOICE;
   }
 
   /**
@@ -133,6 +137,14 @@ class AlertDialogTask extends DialogTask {
    */
   public Set<Integer> getSelectedItems() {
     return mSelectedItems;
+  }
+
+  public void setTextInput() {
+    mInputType = InputType.PLAIN_TEXT;
+  }
+
+  public void setPasswordInput() {
+    mInputType = InputType.PASSWORD;
   }
 
   @Override
@@ -145,49 +157,75 @@ class AlertDialogTask extends DialogTask {
     if (mMessage != null && mItems == null) {
       builder.setMessage(mMessage);
     }
-    if (mItems != null) {
-      switch (mListType) {
-      // Add single choice menu items to dialog.
-      case SINGLE_CHOICE:
-        builder.setSingleChoiceItems(mItems, mSelectedItems.iterator().next(),
-            new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialog, int item) {
-                mSelectedItems.clear();
-                mSelectedItems.add(item);
-              }
-            });
-        break;
-      // Add multiple choice items to the dialog.
-      case MULTI_CHOICE:
-        boolean[] selectedItems = new boolean[mItems.length];
-        for (int i : mSelectedItems) {
-          selectedItems[i] = true;
+    switch (mInputType) {
+    // Add single choice menu items to dialog.
+    case SINGLE_CHOICE:
+      builder.setSingleChoiceItems(mItems.toArray(getItemsAsCharSequenceArray()), mSelectedItems
+          .iterator().next(), new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int item) {
+          mSelectedItems.clear();
+          mSelectedItems.add(item);
         }
-        builder.setMultiChoiceItems(mItems, selectedItems,
-            new DialogInterface.OnMultiChoiceClickListener() {
-              @Override
-              public void onClick(DialogInterface dialog, int item, boolean isChecked) {
-                if (isChecked) {
-                  mSelectedItems.add(item);
-                } else {
-                  mSelectedItems.remove(item);
-                }
-              }
-            });
-        break;
-      // Add standard, menu-like, items to dialog.
-      default:
-        builder.setItems(mItems, new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int item) {
-            Map<String, Integer> result = new HashMap<String, Integer>();
-            result.put("item", item);
-            dismissDialog();
-            setResult(result);
-          }
-        });
-        break;
+      });
+      break;
+    // Add multiple choice items to the dialog.
+    case MULTI_CHOICE:
+      boolean[] selectedItems = new boolean[mItems.size()];
+      for (int i : mSelectedItems) {
+        selectedItems[i] = true;
       }
+      builder.setMultiChoiceItems(getItemsAsCharSequenceArray(), selectedItems,
+          new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item, boolean isChecked) {
+              if (isChecked) {
+                mSelectedItems.add(item);
+              } else {
+                mSelectedItems.remove(item);
+              }
+            }
+          });
+      break;
+    // Add standard, menu-like, items to dialog.
+    case MENU:
+      builder.setItems(getItemsAsCharSequenceArray(), new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int item) {
+          Map<String, Integer> result = new HashMap<String, Integer>();
+          result.put("item", item);
+          dismissDialog();
+          setResult(result);
+        }
+      });
+      break;
+    // Add plain text input.
+    case PLAIN_TEXT:
+      final EditText plainTextInput = new EditText(getActivity());
+      builder.setView(plainTextInput);
+      plainTextInput.setOnKeyListener(new OnKeyListener() {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+          mResultMap.put("value", plainTextInput.getText().toString());
+          return false;
+        }
+      });
+      break;
+    // Add password input.
+    case PASSWORD:
+      final EditText passwordInput = new EditText(getActivity());
+      passwordInput.setInputType(android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+      passwordInput.setTransformationMethod(new PasswordTransformationMethod());
+      builder.setView(passwordInput);
+      passwordInput.setOnKeyListener(new OnKeyListener() {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+          mResultMap.put("value", passwordInput.getText().toString());
+          return false;
+        }
+      });
+      break;
+    default:
+      // No input type specified.
     }
     configureButtons(builder, getActivity());
     addOnCancelListener(builder, getActivity());
@@ -195,14 +233,17 @@ class AlertDialogTask extends DialogTask {
     mShowLatch.countDown();
   }
 
+  private CharSequence[] getItemsAsCharSequenceArray() {
+    return new CharSequence[mItems.size()];
+  }
+
   private Builder addOnCancelListener(final AlertDialog.Builder builder, final Activity activity) {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
-        Map<String, Boolean> result = new HashMap<String, Boolean>();
-        result.put("canceled", true);
+        mResultMap.put("canceled", true);
         dismissDialog();
-        setResult(result);
+        setResult(mResultMap);
       }
     });
   }
@@ -211,20 +252,19 @@ class AlertDialogTask extends DialogTask {
     DialogInterface.OnClickListener buttonListener = new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        Map<String, String> result = new HashMap<String, String>();
         switch (which) {
         case DialogInterface.BUTTON_POSITIVE:
-          result.put("which", "positive");
+          mResultMap.put("which", "positive");
           break;
         case DialogInterface.BUTTON_NEGATIVE:
-          result.put("which", "negative");
+          mResultMap.put("which", "negative");
           break;
         case DialogInterface.BUTTON_NEUTRAL:
-          result.put("which", "neutral");
+          mResultMap.put("which", "neutral");
           break;
         }
         dismissDialog();
-        setResult(result);
+        setResult(mResultMap);
       }
     };
     if (mNegativeButtonText != null) {

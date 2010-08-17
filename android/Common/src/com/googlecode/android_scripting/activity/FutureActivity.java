@@ -44,6 +44,7 @@ public class FutureActivity extends Activity {
     FutureActivityTaskExecutor taskQueue = ((BaseApplication) getApplication()).getTaskQueue();
     mTask = taskQueue.getTask(id);
     mTask.setActivity(this);
+    mTask.onCreate();
   }
 
   @Override

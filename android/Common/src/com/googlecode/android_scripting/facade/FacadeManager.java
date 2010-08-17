@@ -8,7 +8,7 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
-import com.googlecode.android_scripting.rpc.RpcDepreciated;
+import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 
@@ -52,8 +52,8 @@ public class FacadeManager extends RpcReceiverManager {
   public Object invoke(Class<? extends RpcReceiver> clazz, Method method, Object[] args)
       throws Exception {
     try {
-      if (method.isAnnotationPresent(RpcDepreciated.class)) {
-        String replacedBy = method.getAnnotation(RpcDepreciated.class).value();
+      if (method.isAnnotationPresent(RpcDeprecated.class)) {
+        String replacedBy = method.getAnnotation(RpcDeprecated.class).value();
         String title = method.getName() + " is depreciated";
         Log.notify(mService, title, title, String.format("Please use %s instead.", replacedBy));
       } else if (method.isAnnotationPresent(RpcMinSdk.class)) {

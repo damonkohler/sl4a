@@ -50,7 +50,7 @@ import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.language.SupportedLanguages;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.ParameterDescriptor;
-import com.googlecode.android_scripting.rpc.RpcDepreciated;
+import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
 import java.lang.reflect.Method;
@@ -108,7 +108,7 @@ public class ApiBrowser extends ListActivity {
               @Override
               public boolean apply(MethodDescriptor descriptor) {
                 Method method = descriptor.getMethod();
-                if (method.isAnnotationPresent(RpcDepreciated.class)) {
+                if (method.isAnnotationPresent(RpcDeprecated.class)) {
                   return false;
                 } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
                   int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();

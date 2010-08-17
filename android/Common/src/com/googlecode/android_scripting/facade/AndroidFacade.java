@@ -48,6 +48,7 @@ import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
+import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
@@ -297,6 +298,7 @@ public class AndroidFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Queries the user for a text input.")
+  @RpcDeprecated("dialogGetInput")
   public String getInput(
       @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("SL4A Input") final String title,
       @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message) {
@@ -304,6 +306,7 @@ public class AndroidFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Queries the user for a password.")
+  @RpcDeprecated("dialogGetPassword")
   public String getPassword(
       @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("SL4A Password Input") final String title,
       @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter password:") final String message) {
