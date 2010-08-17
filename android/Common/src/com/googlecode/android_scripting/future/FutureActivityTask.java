@@ -70,10 +70,6 @@ public abstract class FutureActivityTask<T> {
     return mResult.get();
   }
 
-  public Activity getHelperActivity() {
-    return mActivity;
-  }
-
   public void finish() {
     mActivity.finish();
   }

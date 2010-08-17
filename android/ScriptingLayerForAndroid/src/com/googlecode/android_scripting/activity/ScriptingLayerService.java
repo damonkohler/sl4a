@@ -36,6 +36,7 @@ import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
+import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 import com.googlecode.android_scripting.trigger.Trigger;
 
@@ -144,6 +145,15 @@ public class ScriptingLayerService extends Service {
       return;
     }
 
+    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    if (name != null && name.endsWith(HtmlInterpreter.HTML_EXTENSION)) {
+      launchHtmlScript(intent);
+      if (mProcessMap.isEmpty()) {
+        stopSelf(startId);
+      }
+      return;
+    }
+
     AndroidProxy proxy = null;
     InterpreterProcess interpreterProcess = null;
 
@@ -179,6 +189,12 @@ public class ScriptingLayerService extends Service {
       androidProxy.startLocal();
     }
     return androidProxy;
+  }
+
+  private void launchHtmlScript(Intent intent) {
+    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    File script = ScriptStorageAdapter.getExistingScript(name);
+    ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
   }
 
   private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {

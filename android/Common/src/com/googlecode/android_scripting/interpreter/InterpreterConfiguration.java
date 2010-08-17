@@ -30,8 +30,10 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -216,6 +218,11 @@ public class InterpreterConfiguration {
     mContext = context;
     mInterpreterSet = new CopyOnWriteArraySet<Interpreter>();
     mInterpreterSet.add(new ShellInterpreter());
+    try {
+      mInterpreterSet.add(new HtmlInterpreter(mContext));
+    } catch (IOException e) {
+      Log.e("Filed to instantiate HtmlInterpreter.", e);
+    }
     mObserverSet = new CopyOnWriteArraySet<ConfigurationObserver>();
     IntentFilter filter = new IntentFilter();
     filter.addAction(InterpreterConstants.ACTION_INTERPRETER_ADDED);
