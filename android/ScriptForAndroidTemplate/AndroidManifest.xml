@@ -26,7 +26,7 @@
       android:theme="@android:style/Theme.Translucent.NoTitleBar"
       android:launchMode="singleTask"
       android:configChanges="keyboardHidden|orientation"
-      android:name="com.googlecode.android_scripting.activity.ScriptingLayerServiceHelper"></activity>
+      android:name="com.googlecode.android_scripting.activity.FutureActivity"></activity>
   <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="keyboardHidden|orientation" android:name=".DialogActivity"></activity>
 </application>
   <uses-sdk

@@ -44,6 +44,7 @@ import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
+import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -157,6 +158,9 @@ public class InterpreterManager extends ListActivity {
   }
 
   private void launchTerminal(Interpreter interpreter) {
+    if (interpreter instanceof HtmlInterpreter) {
+      return;
+    }
     Intent intent = new Intent(this, ScriptingLayerService.class);
     intent.setAction(Constants.ACTION_LAUNCH_INTERPRETER);
     intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());

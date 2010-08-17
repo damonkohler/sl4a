@@ -25,7 +25,6 @@ public class WebViewTask extends FutureActivityTask<Void> {
 
   private WebView mView;
   private JavaScriptWrapper mWrapper;
-
   private final String mSource;
 
   public WebViewTask(String source, EventFacade facade) {
