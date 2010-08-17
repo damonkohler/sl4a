@@ -31,9 +31,6 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.text.method.PasswordTransformationMethod;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnKeyListener;
 import android.widget.EditText;
 
 /**
@@ -54,6 +51,8 @@ class AlertDialogTask extends DialogTask {
   private String mPositiveButtonText;
   private String mNegativeButtonText;
   private String mNeutralButtonText;
+
+  private EditText mEditText;
 
   private enum InputType {
     MENU, SINGLE_CHOICE, MULTI_CHOICE, PLAIN_TEXT, PASSWORD;
@@ -160,14 +159,14 @@ class AlertDialogTask extends DialogTask {
     switch (mInputType) {
     // Add single choice menu items to dialog.
     case SINGLE_CHOICE:
-      builder.setSingleChoiceItems(mItems.toArray(getItemsAsCharSequenceArray()), mSelectedItems
-          .iterator().next(), new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int item) {
-          mSelectedItems.clear();
-          mSelectedItems.add(item);
-        }
-      });
+      builder.setSingleChoiceItems(getItemsAsCharSequenceArray(), mSelectedItems.iterator().next(),
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+              mSelectedItems.clear();
+              mSelectedItems.add(item);
+            }
+          });
       break;
     // Add multiple choice items to the dialog.
     case MULTI_CHOICE:
@@ -198,31 +197,15 @@ class AlertDialogTask extends DialogTask {
         }
       });
       break;
-    // Add plain text input.
     case PLAIN_TEXT:
-      final EditText plainTextInput = new EditText(getActivity());
-      builder.setView(plainTextInput);
-      plainTextInput.setOnKeyListener(new OnKeyListener() {
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-          mResultMap.put("value", plainTextInput.getText().toString());
-          return false;
-        }
-      });
+      mEditText = new EditText(getActivity());
+      builder.setView(mEditText);
       break;
-    // Add password input.
     case PASSWORD:
-      final EditText passwordInput = new EditText(getActivity());
-      passwordInput.setInputType(android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
-      passwordInput.setTransformationMethod(new PasswordTransformationMethod());
-      builder.setView(passwordInput);
-      passwordInput.setOnKeyListener(new OnKeyListener() {
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-          mResultMap.put("value", passwordInput.getText().toString());
-          return false;
-        }
-      });
+      mEditText = new EditText(getActivity());
+      mEditText.setInputType(android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+      mEditText.setTransformationMethod(new PasswordTransformationMethod());
+      builder.setView(mEditText);
       break;
     default:
       // No input type specified.
@@ -234,7 +217,7 @@ class AlertDialogTask extends DialogTask {
   }
 
   private CharSequence[] getItemsAsCharSequenceArray() {
-    return new CharSequence[mItems.size()];
+    return mItems.toArray(new CharSequence[mItems.size()]);
   }
 
   private Builder addOnCancelListener(final AlertDialog.Builder builder, final Activity activity) {
@@ -242,8 +225,7 @@ class AlertDialogTask extends DialogTask {
       @Override
       public void onCancel(DialogInterface dialog) {
         mResultMap.put("canceled", true);
-        dismissDialog();
-        setResult(mResultMap);
+        setResult();
       }
     });
   }
@@ -263,8 +245,7 @@ class AlertDialogTask extends DialogTask {
           mResultMap.put("which", "neutral");
           break;
         }
-        dismissDialog();
-        setResult(mResultMap);
+        setResult();
       }
     };
     if (mNegativeButtonText != null) {
@@ -276,5 +257,13 @@ class AlertDialogTask extends DialogTask {
     if (mNeutralButtonText != null) {
       builder.setNeutralButton(mNeutralButtonText, buttonListener);
     }
+  }
+
+  private void setResult() {
+    dismissDialog();
+    if (mInputType == InputType.PLAIN_TEXT || mInputType == InputType.PASSWORD) {
+      mResultMap.put("value", mEditText.getText().toString());
+    }
+    setResult(mResultMap);
   }
 }
