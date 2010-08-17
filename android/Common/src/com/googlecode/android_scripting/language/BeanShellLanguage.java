@@ -16,6 +16,8 @@
 
 package com.googlecode.android_scripting.language;
 
+import com.googlecode.android_scripting.rpc.ParameterDescriptor;
+
 /**
  * Represents the BeanShell programming language.
  * 
@@ -35,6 +37,27 @@ public class BeanShellLanguage extends Language {
   }
 
   @Override
+  protected String getMethodCallText(String receiver, String method,
+      ParameterDescriptor[] parameters) {
+    StringBuilder result =
+        new StringBuilder().append(getApplyReceiverText(receiver)).append(getApplyOperatorText())
+            .append(method);
+    if (parameters.length > 0) {
+      result.append(getLeftParametersText());
+    } else {
+      result.append(getQuote());
+    }
+    String separator = "";
+    for (ParameterDescriptor parameter : parameters) {
+      result.append(separator).append(getValueText(parameter));
+      separator = getParameterSeparator();
+    }
+    result.append(getRightParametersText());
+
+    return result.toString();
+  }
+
+  @Override
   protected String getApplyOperatorText() {
     return ".call(\"";
   }
@@ -46,6 +69,6 @@ public class BeanShellLanguage extends Language {
 
   @Override
   protected String getRightParametersText() {
-    return ")";
+    return ");";
   }
 }

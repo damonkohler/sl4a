@@ -97,7 +97,7 @@ public class MediaRecorderFacade extends RpcReceiver {
       mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
     }
     mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
-    if (!FileUtils.mkDirs(targetPath)) {
+    if (!FileUtils.makeDirectories(targetPath)) {
       throw new RuntimeException(String.format("Cannot create directories for %s.", targetPath));
     }
     mMediaRecorder.setOutputFile(targetPath);
@@ -172,9 +172,9 @@ public class MediaRecorderFacade extends RpcReceiver {
         });
       }
     };
-    FutureActivityTaskExecutor taskQueue =
+    FutureActivityTaskExecutor taskExecutor =
         ((BaseApplication) mService.getApplication()).getTaskQueue();
-    taskQueue.execute(task);
+    taskExecutor.execute(task);
 
     Exception e = task.getResult();
     if (e != null) {

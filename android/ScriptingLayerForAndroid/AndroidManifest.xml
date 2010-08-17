@@ -132,8 +132,7 @@
     <activity
       android:name=".activity.FutureActivity"
       android:theme="@android:style/Theme.Translucent.NoTitleBar"
-      android:configChanges="keyboardHidden|orientation"
-      android:launchMode="singleTask" />
+      android:configChanges="keyboardHidden|orientation"/>
     <activity android:name="org.connectbot.HelpActivity" 
       android:configChanges="keyboardHidden|orientation" />
     <activity android:name="org.connectbot.HelpTopicActivity" 

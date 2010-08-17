@@ -68,7 +68,7 @@ public class FileUtils {
       Log.e("No script name specified.");
       return null;
     }
-    if (!mkDirs(name)) {
+    if (!makeDirectories(name)) {
       return null;
     }
     File file = new File(name);
@@ -82,7 +82,7 @@ public class FileUtils {
     return file;
   }
 
-  public static boolean mkDirs(String filename) {
+  public static boolean makeDirectories(String filename) {
     File file = new File(filename);
     File parent = file.getParentFile();
     if (!parent.exists()) {

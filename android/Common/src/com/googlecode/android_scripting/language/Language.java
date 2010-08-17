@@ -138,7 +138,7 @@ public abstract class Language {
   }
 
   /** Returns the parameter value suitable for code generation. */
-  private String getValueText(ParameterDescriptor parameter) {
+  protected String getValueText(ParameterDescriptor parameter) {
     if (parameter.getValue() == null) {
       return getNullValueText();
     } else if (parameter.getType().equals(String.class)) {

@@ -1,18 +1,18 @@
 package com.googlecode.android_scripting.language;
 
+import com.googlecode.android_scripting.Log;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.googlecode.android_scripting.Log;
 
 public class SupportedLanguages {
 
   private static enum KnownLanguage {
     // SHELL(".sh", ShellLanguage.class), // We don't really support Shell language
-    BEANSHELL(".bsh", BeanShellLanguage.class), JAVASCRIPT(".js", JavaScriptLanguage.class), LUA(
-        ".lua", LuaLanguage.class), PERL(".pl", PerlLanguage.class), PYTHON(".py",
-        PythonLanguage.class), RUBY(".rb", RubyLanguage.class), TCL(".tcl", TclLanguage.class),
-    PHP(".php", PhpLanguage.class);
+    HTML(".html", HtmlLanguage.class), BEANSHELL(".bsh", BeanShellLanguage.class), JAVASCRIPT(
+        ".js", JavaScriptLanguage.class), LUA(".lua", LuaLanguage.class), PERL(".pl",
+        PerlLanguage.class), PYTHON(".py", PythonLanguage.class), RUBY(".rb", RubyLanguage.class),
+    TCL(".tcl", TclLanguage.class), PHP(".php", PhpLanguage.class);
 
     private final String mmExtension;
     private final Class<? extends Language> mmClass;

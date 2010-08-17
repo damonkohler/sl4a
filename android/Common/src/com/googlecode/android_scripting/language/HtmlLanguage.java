@@ -16,5 +16,61 @@
 
 package com.googlecode.android_scripting.language;
 
+import com.googlecode.android_scripting.rpc.ParameterDescriptor;
+
 public class HtmlLanguage extends Language {
+
+  /** Returns the Android package import statement. */
+  @Override
+  protected String getImportStatement() {
+    return "<html>\n<head>\n<script>";
+  }
+
+  @Override
+  protected String getRpcReceiverDeclaration(String rpcReceiver) {
+    return String.format("var %s = new Android();\n</script>\n</head>\n<body>\n\n</body>\n</html>",
+        rpcReceiver);
+  }
+
+  @Override
+  protected String getMethodCallText(String receiver, String method,
+      ParameterDescriptor[] parameters) {
+    StringBuilder result =
+        new StringBuilder().append(getApplyReceiverText(receiver)).append(getApplyOperatorText())
+            .append(method);
+    if (parameters.length > 0) {
+      result.append(getLeftParametersText());
+    } else {
+      result.append(getQuote());
+    }
+    String separator = "";
+    for (ParameterDescriptor parameter : parameters) {
+      result.append(separator).append(getValueText(parameter));
+      separator = getParameterSeparator();
+    }
+    result.append(getRightParametersText());
+
+    return result.toString();
+  }
+
+  @Override
+  protected String getApplyOperatorText() {
+    return ".call('";
+  }
+
+  @Override
+  protected String getLeftParametersText() {
+    return "', ";
+  }
+
+  @Override
+  protected String getRightParametersText() {
+    return ");";
+  }
+
+  @Override
+  protected String getQuote() {
+    return "'";
+  }
+
 }

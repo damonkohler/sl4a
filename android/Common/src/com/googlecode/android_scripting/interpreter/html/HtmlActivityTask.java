@@ -3,7 +3,6 @@
 package com.googlecode.android_scripting.interpreter.html;
 
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.future.FutureActivityTask;
@@ -23,6 +22,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   private static final String ANDROID_JS =
       "javascript:function Android(){ this.id = 0, "
           + "this.call = function(){"
+          + "this.id += 1;"
           + "var method = arguments[0]; var args = [];for (var i=1; i<arguments.length; i++){args[i-1]=arguments[i];}"
           + "var request = JSON.stringify({'id': this.id, 'method': method,'params': args});"
           + "var response = droid_rpc.call(request);" + "return eval(\"(\" + response + \")\");"
@@ -44,24 +44,26 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   @Override
   public void onCreate() {
     mView = new WebView(getActivity());
+    mView.setId(1);
     mView.getSettings().setJavaScriptEnabled(true);
-
-    mView.setWebViewClient(new WebViewClient() {
-      @Override
-      public void onPageFinished(WebView view, String url) {
-        mView.loadUrl("javascript:" + mJsonSource);
-        mView.loadUrl(ANDROID_JS);
-      }
-    });
     mView.addJavascriptInterface(mWrapper, "droid_rpc");
     getActivity().setContentView(mView);
+    mView.loadUrl("javascript:" + mJsonSource);
+    mView.loadUrl(ANDROID_JS);
     mView.loadUrl(mSource);
+  }
+
+  @Override
+  public void onDestroy() {
+    mView.destroy();
+    mView = null;
   }
 
   private class JavaScriptWrapper {
 
     @SuppressWarnings("unused")
     public String call(String data) throws JSONException {
+      Log.v("Received: " + data);
       JSONObject request = new JSONObject(data);
       int id = request.getInt("id");
       String method = request.getString("method");

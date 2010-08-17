@@ -147,7 +147,7 @@ public class CameraFacade extends RpcReceiver {
     camera.takePicture(null, null, new PictureCallback() {
       @Override
       public void onPictureTaken(byte[] data, Camera camera) {
-        if (!FileUtils.mkDirs(path)) {
+        if (!FileUtils.makeDirectories(path)) {
           takePictureResult.mmResult = false;
           return;
         }
