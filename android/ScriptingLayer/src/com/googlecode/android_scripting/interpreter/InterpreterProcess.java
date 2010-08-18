@@ -16,6 +16,7 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.AndroidProxy;
 import com.googlecode.android_scripting.Process;
 
@@ -77,6 +78,7 @@ public class InterpreterProcess extends Process {
 
   @Override
   public void start(final Runnable shutdownHook) {
+    Analytics.track(mInterpreter.getName());
     // NOTE(damonkohler): String.isEmpty() doesn't work on Cupcake.
     if (!mCommand.equals("")) {
       addArgument(mCommand);
@@ -89,5 +91,4 @@ public class InterpreterProcess extends Process {
     super.kill();
     mProxy.shutdown();
   }
-
 }
