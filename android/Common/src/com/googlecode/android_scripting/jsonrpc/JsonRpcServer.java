@@ -16,15 +16,6 @@
 
 package com.googlecode.android_scripting.jsonrpc;
 
-import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.exception.Sl4aException;
-import com.googlecode.android_scripting.rpc.MethodDescriptor;
-import com.googlecode.android_scripting.rpc.RpcError;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,6 +30,14 @@ import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
+import com.googlecode.android_scripting.rpc.RpcError;
 
 /**
  * A JSON RPC server that forwards RPC calls to a specified receiver object.
@@ -84,7 +83,7 @@ public class JsonRpcServer {
       }
     }
 
-    private void process() throws JSONException, IOException, Sl4aException {
+    private void process() throws JSONException, IOException {
       String data;
       while ((data = mmReader.readLine()) != null) {
         Log.v("Received: " + data);
@@ -93,8 +92,13 @@ public class JsonRpcServer {
         String method = request.getString("method");
         JSONArray params = request.getJSONArray("params");
 
-        if (!mPassedAuthentication) {
-          checkHandshake(id, method, params);
+        // First RPC must be _authenticate if a handshake was specified.
+        if (!mPassedAuthentication && mHandshake != null) {
+          if (!checkHandshake(id, method, params)) {
+            // If the handshake check fails, the server dies.
+            shutdown();
+            break;
+          }
           mPassedAuthentication = true;
           continue;
         }
@@ -113,24 +117,16 @@ public class JsonRpcServer {
       }
     }
 
-    private void checkHandshake(int id, String method, JSONArray params) throws JSONException,
-        Sl4aException {
-      try {
-        if (!method.equals("_authenticate")) {
-          throw new Sl4aException(
-              "RPC method name does not match expected \"authenticate\", method = " + method);
-        }
-        if (mHandshake != null) {
-          String handshake = params.getString(0);
-          if (!mHandshake.equals(handshake)) {
-            throw new Sl4aException("Handshake does not match.");
-          }
-        }
-      } catch (Exception e) {
-        send(JsonRpcResult.error(id, new RpcError("Authentication failed: " + e.getMessage())));
-        throw new Sl4aException("Authentication failed", new Exception(e));
+    private boolean checkHandshake(int id, String method, JSONArray params) throws JSONException {
+      if (!method.equals("_authenticate")) {
+        return false;
+      }
+      if (!mHandshake.equals(params.getString(0))) {
+        send(JsonRpcResult.error(id, new RpcError("Authentication failed!")));
+        return false;
       }
       send(JsonRpcResult.result(id, true));
+      return true;
     }
 
     private void send(JSONObject result) {
