@@ -56,4 +56,28 @@ public class JsonRpcServerTest extends TestCase {
     client.close();
     server.shutdown();
   }
+
+  public void testInvalidHandshake() throws IOException, JSONException, InterruptedException {
+    JsonRpcServer server = new JsonRpcServer(null, "foo");
+    InetSocketAddress address = server.startLocal();
+    Socket client = new Socket();
+    client.connect(address);
+    PrintStream out = new PrintStream(client.getOutputStream());
+    out.println(buildRequest(0, "_authenticate", Lists.newArrayList("bar")));
+    BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+    JSONObject response = new JSONObject(in.readLine());
+    Object error = response.get("error");
+    assertTrue(JSONObject.NULL != error);
+    while (!out.checkError()) {
+      out.println(buildRequest(0, "makeToast", Lists.newArrayList("baz")));
+    }
+    client.close();
+    // Further connections should fail;
+    client = new Socket();
+    try {
+      client.connect(address);
+      fail();
+    } catch (IOException e) {
+    }
+  }
 }

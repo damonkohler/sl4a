@@ -94,12 +94,14 @@ public class JsonRpcServer {
 
         // First RPC must be _authenticate if a handshake was specified.
         if (!mPassedAuthentication && mHandshake != null) {
-          if (!checkHandshake(id, method, params)) {
-            // If the handshake check fails, the server dies.
+          if (!checkHandshake(method, params)) {
+            SecurityException exception = new SecurityException("Authentication failed!");
+            send(JsonRpcResult.error(id, exception));
             shutdown();
-            break;
+            throw exception;
           }
           mPassedAuthentication = true;
+          send(JsonRpcResult.result(id, true));
           continue;
         }
 
@@ -117,15 +119,10 @@ public class JsonRpcServer {
       }
     }
 
-    private boolean checkHandshake(int id, String method, JSONArray params) throws JSONException {
-      if (!method.equals("_authenticate")) {
+    private boolean checkHandshake(String method, JSONArray params) throws JSONException {
+      if (!method.equals("_authenticate") || !mHandshake.equals(params.getString(0))) {
         return false;
       }
-      if (!mHandshake.equals(params.getString(0))) {
-        send(JsonRpcResult.error(id, new RpcError("Authentication failed!")));
-        return false;
-      }
-      send(JsonRpcResult.result(id, true));
       return true;
     }
 
@@ -224,7 +221,11 @@ public class JsonRpcServer {
         while (!mStopServer) {
           try {
             Socket sock = mServer.accept();
-            startConnectionThread(sock);
+            if (!mStopServer) {
+              startConnectionThread(sock);
+            } else {
+              sock.close();
+            }
           } catch (IOException e) {
             if (!mStopServer) {
               Log.e("Failed to accept connection.", e);
