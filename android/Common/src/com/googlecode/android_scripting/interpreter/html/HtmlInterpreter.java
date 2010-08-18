@@ -39,6 +39,7 @@ public class HtmlInterpreter extends Interpreter {
     setInteractiveCommand("");
     setScriptCommand("%s");
     setLanguage(new HtmlLanguage());
+    setHasInteractiveMode(false);
     AssetManager am = context.getAssets();
     BufferedReader reader = new BufferedReader(new InputStreamReader(am.open("json2.js")));
     String line;

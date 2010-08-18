@@ -16,11 +16,11 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import android.content.Context;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-
-import android.content.Context;
 
 /**
  * Provides interpreter-specific info for execution/installation/removal purposes.
@@ -123,4 +123,9 @@ public interface InterpreterDescriptor {
    * Returns URL location of the extras archive.
    */
   public String getExtrasArchiveUrl();
+
+  /**
+   * Returns true if interpreter can be executed in interactive mode.
+   */
+  public boolean hasInteractiveMode();
 }

@@ -280,6 +280,19 @@ public class InterpreterConfiguration {
   }
 
   /**
+   * Returns the list of interpreters that support interactive mode execution.
+   */
+  public List<Interpreter> getInteractiveInterpreters() {
+    List<Interpreter> interpreters = new ArrayList<Interpreter>();
+    for (Interpreter i : mInterpreterSet) {
+      if (i.isInstalled() && i.hasInteractiveMode()) {
+        interpreters.add(i);
+      }
+    }
+    return interpreters;
+  }
+
+  /**
    * Returns the interpreter matching the provided name or null if no interpreter was found.
    */
   public Interpreter getInterpreterByName(String interpreterName) {

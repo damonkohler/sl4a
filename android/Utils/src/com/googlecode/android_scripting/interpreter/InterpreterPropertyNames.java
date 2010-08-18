@@ -53,4 +53,9 @@ public interface InterpreterPropertyNames {
    */
   public static final String SCRIPT_COMMAND = "scriptCommand";
 
+  /**
+   * Interpreter interactive mode flag.
+   */
+  public static final String HAS_INTERACTIVE_MODE = "hasInteractiveMode";
+
 }

@@ -16,16 +16,16 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import com.googlecode.android_scripting.language.Language;
+import com.googlecode.android_scripting.language.SupportedLanguages;
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.googlecode.android_scripting.language.Language;
-import com.googlecode.android_scripting.language.SupportedLanguages;
-import com.googlecode.android_scripting.rpc.MethodDescriptor;
 
 /**
  * Combines all the execution-related specs of a particular interpreter installed in the system.
@@ -42,6 +42,7 @@ public class Interpreter implements InterpreterPropertyNames {
   private String mInteractiveCommand;
   private String mScriptExecutionCommand;
   private File mBinary;
+  private boolean mHasInteractiveMode;
   private final List<String> mArguments;
   private final Map<String, String> mEnvironment;
   private Language mLanguage;
@@ -59,7 +60,7 @@ public class Interpreter implements InterpreterPropertyNames {
     String binary = data.get(BINARY);
     String interactiveCommand = data.get(INTERACTIVE_COMMAND);
     String scriptCommand = data.get(SCRIPT_COMMAND);
-
+    Boolean hasInteractiveMode = Boolean.parseBoolean(data.get(HAS_INTERACTIVE_MODE));
     Interpreter interpreter = new Interpreter();
     interpreter.setName(name);
     interpreter.setNiceName(niceName);
@@ -67,6 +68,7 @@ public class Interpreter implements InterpreterPropertyNames {
     interpreter.setBinary(new File(binary));
     interpreter.setInteractiveCommand(interactiveCommand);
     interpreter.setScriptCommand(scriptCommand);
+    interpreter.setHasInteractiveMode(hasInteractiveMode);
     interpreter.setLanguage(SupportedLanguages.getLanguageByExtension(extension));
     interpreter.putAllEnvironmentVariables(environment_variables);
     interpreter.addAllArguments(arguments.values());
@@ -119,6 +121,14 @@ public class Interpreter implements InterpreterPropertyNames {
 
   protected void setExtension(String extension) {
     mExtension = extension;
+  }
+
+  protected void setHasInteractiveMode(boolean hasInteractiveMode) {
+    mHasInteractiveMode = hasInteractiveMode;
+  }
+
+  public boolean hasInteractiveMode() {
+    return mHasInteractiveMode;
   }
 
   public String getExtension() {

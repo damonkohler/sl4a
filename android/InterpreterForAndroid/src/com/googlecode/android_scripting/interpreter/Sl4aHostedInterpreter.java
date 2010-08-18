@@ -16,13 +16,13 @@
 
 package com.googlecode.android_scripting.interpreter;
 
+import android.content.Context;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.content.Context;
 
 /**
  * A description of the interpreters hosted by the SL4A project.
@@ -82,6 +82,10 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
 
   public String getInteractiveCommand(Context context) {
     return "";
+  }
+
+  public boolean hasInteractiveMode() {
+    return true;
   }
 
   public String getScriptCommand(Context context) {

@@ -37,6 +37,7 @@ public class ShellInterpreter extends Interpreter {
     setInteractiveCommand("");
     setScriptCommand("%s");
     setLanguage(new ShellLanguage());
+    setHasInteractiveMode(true);
   }
 
   public boolean hasInterpreterArchive() {

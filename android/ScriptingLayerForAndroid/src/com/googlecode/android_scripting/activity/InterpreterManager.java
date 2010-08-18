@@ -182,12 +182,12 @@ public class InterpreterManager extends ListActivity {
   private class InterpreterListObserver extends DataSetObserver implements ConfigurationObserver {
     @Override
     public void onInvalidated() {
-      mInterpreterList = mConfiguration.getInstalledInterpreters();
+      mInterpreterList = mConfiguration.getInteractiveInterpreters();
     }
 
     @Override
     public void onChanged() {
-      mInterpreterList = mConfiguration.getInstalledInterpreters();
+      mInterpreterList = mConfiguration.getInteractiveInterpreters();
     }
 
     @Override

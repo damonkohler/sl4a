@@ -16,10 +16,6 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,6 +25,10 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * A provider that can be queried to obtain execution-related interpreter info.
@@ -142,6 +142,8 @@ public abstract class InterpreterProvider extends ContentProvider {
     values.put(InterpreterPropertyNames.INTERACTIVE_COMMAND, mDescriptor
         .getInteractiveCommand(mContext));
     values.put(InterpreterPropertyNames.SCRIPT_COMMAND, mDescriptor.getScriptCommand(mContext));
+    values.put(InterpreterPropertyNames.HAS_INTERACTIVE_MODE, Boolean.toString(mDescriptor
+        .hasInteractiveMode()));
     return values;
   }
 
