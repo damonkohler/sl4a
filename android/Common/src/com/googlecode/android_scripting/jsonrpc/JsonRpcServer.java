@@ -262,6 +262,9 @@ public class JsonRpcServer {
       networkThread.close();
     }
     // Notify all RPC receiving objects. They may have to clean up some of their state.
-    mRpcReceiverManager.shutdown();
+    if (mRpcReceiverManager != null) {
+      // Null check eases testing.
+      mRpcReceiverManager.shutdown();
+    }
   }
 }
