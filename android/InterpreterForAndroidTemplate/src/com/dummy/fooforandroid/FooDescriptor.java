@@ -99,4 +99,9 @@ public class FooDescriptor implements InterpreterDescriptor {
   public Map<String, String> getEnvironmentVariables(Context arg0) {
     return null;
   }
+
+  @Override
+  public boolean hasInteractiveMode() {
+    return false;
+  }
 }
