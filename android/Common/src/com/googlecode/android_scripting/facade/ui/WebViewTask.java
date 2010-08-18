@@ -34,6 +34,7 @@ public class WebViewTask extends FutureActivityTask<Void> {
 
   @Override
   public void onCreate() {
+    super.onCreate();
     mView = new WebView(getActivity());
     mView.getSettings().setJavaScriptEnabled(true);
     mView.addJavascriptInterface(mWrapper, "droid_events");

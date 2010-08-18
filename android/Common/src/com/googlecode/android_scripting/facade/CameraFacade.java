@@ -110,6 +110,7 @@ public class CameraFacade extends RpcReceiver {
     FutureActivityTask<SurfaceHolder> task = new FutureActivityTask<SurfaceHolder>() {
       @Override
       public void onCreate() {
+        super.onCreate();
         final SurfaceView view = new SurfaceView(getActivity());
         getActivity().setContentView(view, new LayoutParams(1, 1));
         getActivity().getWindow().setSoftInputMode(

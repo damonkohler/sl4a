@@ -16,12 +16,6 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import java.util.Map;
-import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.util.AndroidRuntimeException;
@@ -35,6 +29,12 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * UiFacade
@@ -55,11 +55,12 @@ public class UiFacade extends RpcReceiver {
   @Rpc(description = "Create a text input dialog.")
   public void dialogCreateInput(
       @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("Value") final String title,
-      @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message)
+      @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message,
+      @RpcParameter(name = "defaultText", description = "text to insert into the input box") @RpcOptional final String text)
       throws InterruptedException {
     dialogDismiss();
     mDialogTask = new AlertDialogTask(title, message);
-    ((AlertDialogTask) mDialogTask).setTextInput();
+    ((AlertDialogTask) mDialogTask).setTextInput(text);
   }
 
   @Rpc(description = "Create a password input dialog.")
@@ -75,9 +76,10 @@ public class UiFacade extends RpcReceiver {
   @Rpc(description = "Queries the user for a text input.")
   public String dialogGetInput(
       @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("Value") final String title,
-      @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message)
+      @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message,
+      @RpcParameter(name = "defaultText", description = "text to insert into the input box") @RpcOptional final String text)
       throws InterruptedException {
-    dialogCreateInput(title, message);
+    dialogCreateInput(title, message, text);
     dialogSetNegativeButtonText("Cancel");
     dialogSetPositiveButtonText("Ok");
     dialogShow();
@@ -265,6 +267,15 @@ public class UiFacade extends RpcReceiver {
       return ((AlertDialogTask) mDialogTask).getSelectedItems();
     } else {
       throw new AndroidRuntimeException("No dialog to add list to.");
+    }
+  }
+
+  @Rpc(description = "Sets whether the dialog is cancelable or not default is true.")
+  public void dialogSetCancellable(@RpcParameter(name = "isCancellable") Boolean isCancellable) {
+    if (mDialogTask != null && mDialogTask instanceof AlertDialogTask) {
+      ((AlertDialogTask) mDialogTask).setCancellable(isCancellable);
+    } else {
+      throw new AndroidRuntimeException("No alert dialog to set cancelable.");
     }
   }
 

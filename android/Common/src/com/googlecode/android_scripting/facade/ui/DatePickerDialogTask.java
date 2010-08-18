@@ -16,13 +16,13 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.util.AndroidRuntimeException;
 import android.widget.DatePicker;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Wrapper class for date picker dialog running in separate thread.
@@ -42,6 +42,7 @@ public class DatePickerDialogTask extends DialogTask {
 
   @Override
   public void onCreate() {
+    super.onCreate();
     mDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
       @Override
       public void onDateSet(DatePicker view, int year, int month, int day) {

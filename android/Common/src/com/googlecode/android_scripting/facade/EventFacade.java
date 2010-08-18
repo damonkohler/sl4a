@@ -38,12 +38,14 @@ public class EventFacade extends RpcReceiver {
    * exceeded.
    */
   private static final int MAX_QUEUE_SIZE = 1024;
-  final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
-  final Context mService;
+  private final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
+  private final Context mService;
+  private final Queue<EventObserver> mObserverList;
 
   public EventFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
+    mObserverList = new ConcurrentLinkedQueue<EventObserver>();
   }
 
   @Rpc(description = "Receives the most recent event (i.e. location or sensor update, etc.)", returns = "Map of event properties.")
@@ -59,9 +61,25 @@ public class EventFacade extends RpcReceiver {
     if (mEventQueue.size() > MAX_QUEUE_SIZE) {
       mEventQueue.remove();
     }
+    for (EventObserver observer : mObserverList) {
+      observer.onEventReceived(name, data);
+    }
   }
 
   @Override
   public void shutdown() {
+    mObserverList.clear();
+  }
+
+  public void addEventObserver(EventObserver observer) {
+    mObserverList.add(observer);
+  }
+
+  public void removeEventObserver(EventObserver observer) {
+    mObserverList.remove(observer);
+  }
+
+  public interface EventObserver {
+    public void onEventReceived(String eventName, Object data);
   }
 }

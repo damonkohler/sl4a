@@ -20,6 +20,10 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
@@ -78,6 +82,17 @@ public class FutureActivity extends Activity {
   protected void onDestroy() {
     super.onDestroy();
     mTask.onDestroy();
+  }
+
+  @Override
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    mTask.onCreateContextMenu(menu, v, menuInfo);
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
+    return mTask.onPrepareOptionsMenu(menu);
   }
 
   @Override

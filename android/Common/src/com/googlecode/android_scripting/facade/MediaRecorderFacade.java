@@ -145,6 +145,7 @@ public class MediaRecorderFacade extends RpcReceiver {
     FutureActivityTask<Exception> task = new FutureActivityTask<Exception>() {
       @Override
       public void onCreate() {
+        super.onCreate();
         final SurfaceView view = new SurfaceView(getActivity());
         getActivity().setContentView(view, new LayoutParams(1, 1));
         getActivity().getWindow().setSoftInputMode(

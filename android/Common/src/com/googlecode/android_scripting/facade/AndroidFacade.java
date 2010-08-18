@@ -16,10 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -51,6 +47,10 @@ import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AndroidFacade extends RpcReceiver {
   /**
@@ -113,6 +113,7 @@ public class AndroidFacade extends RpcReceiver {
     FutureActivityTask<Intent> task = new FutureActivityTask<Intent>() {
       @Override
       public void onCreate() {
+        super.onCreate();
         startActivityForResult(intent, 0);
       }
 
@@ -212,6 +213,7 @@ public class AndroidFacade extends RpcReceiver {
 
         @Override
         public void onCreate() {
+          super.onCreate();
           startActivity(intent);
         }
 
@@ -259,6 +261,7 @@ public class AndroidFacade extends RpcReceiver {
     final FutureActivityTask<String> task = new FutureActivityTask<String>() {
       @Override
       public void onCreate() {
+        super.onCreate();
         final EditText input = new EditText(getActivity());
         if (password) {
           input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);

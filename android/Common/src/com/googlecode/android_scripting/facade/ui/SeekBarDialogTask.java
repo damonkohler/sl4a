@@ -16,9 +16,6 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -27,6 +24,9 @@ import android.util.AndroidRuntimeException;
 import android.widget.SeekBar;
 
 import com.googlecode.android_scripting.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Wrapper class for dialog box with seek bar.
@@ -60,6 +60,7 @@ public class SeekBarDialogTask extends DialogTask {
 
   @Override
   public void onCreate() {
+    super.onCreate();
     mSeekBar = new SeekBar(getActivity());
     mSeekBar.setMax(mMax);
     mSeekBar.setProgress(mProgress);

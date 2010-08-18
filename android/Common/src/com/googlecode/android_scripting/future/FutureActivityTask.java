@@ -18,6 +18,11 @@ package com.googlecode.android_scripting.future;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.View;
+import android.view.Window;
+import android.view.ContextMenu.ContextMenuInfo;
 
 /**
  * Encapsulates an {@link Activity} and a {@link FutureObject}.
@@ -38,6 +43,7 @@ public abstract class FutureActivityTask<T> {
   }
 
   public void onCreate() {
+    mActivity.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
   }
 
   public void onStart() {
@@ -55,9 +61,12 @@ public abstract class FutureActivityTask<T> {
   public void onDestroy() {
   }
 
-  // public abstract void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo);
-  //  
-  // public abstract boolean onPrepareOptionsMenu(Menu menu);
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+  }
+
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    return false;
+  }
 
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
   }

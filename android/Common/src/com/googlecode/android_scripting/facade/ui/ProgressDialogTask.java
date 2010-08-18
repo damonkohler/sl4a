@@ -41,6 +41,7 @@ class ProgressDialogTask extends DialogTask {
 
   @Override
   public void onCreate() {
+    super.onCreate();
     mDialog = new ProgressDialog(getActivity());
     ((ProgressDialog) mDialog).setProgressStyle(mStyle);
     ((ProgressDialog) mDialog).setMax(mMax);

@@ -16,22 +16,22 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.text.method.PasswordTransformationMethod;
 import android.widget.EditText;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Wrapper class for alert dialog running in separate thread.
@@ -52,16 +52,19 @@ class AlertDialogTask extends DialogTask {
   private String mNegativeButtonText;
   private String mNeutralButtonText;
 
+  private boolean mIsCancellable = true;
+
   private EditText mEditText;
+  private String mDefaultText;
 
   private enum InputType {
-    MENU, SINGLE_CHOICE, MULTI_CHOICE, PLAIN_TEXT, PASSWORD;
+    DEFAULT, MENU, SINGLE_CHOICE, MULTI_CHOICE, PLAIN_TEXT, PASSWORD;
   }
 
   public AlertDialogTask(String title, String message) {
     mTitle = title;
     mMessage = message;
-    mInputType = InputType.MENU;
+    mInputType = InputType.DEFAULT;
     mItems = new ArrayList<String>();
     mSelectedItems = new TreeSet<Integer>();
     mResultMap = new HashMap<String, Object>();
@@ -77,6 +80,10 @@ class AlertDialogTask extends DialogTask {
 
   public void setNeutralButtonText(String text) {
     mNeutralButtonText = text;
+  }
+
+  public void setCancellable(boolean isCancellable) {
+    mIsCancellable = isCancellable;
   }
 
   /**
@@ -112,7 +119,7 @@ class AlertDialogTask extends DialogTask {
   }
 
   /**
-   * Set multi choice items.
+   * Set multi choice items. ertDialogTask.onCreate(AlertDialogTask.java:168
    * 
    * @param items
    *          a list of items as {@link String}s to display
@@ -138,7 +145,8 @@ class AlertDialogTask extends DialogTask {
     return mSelectedItems;
   }
 
-  public void setTextInput() {
+  public void setTextInput(String defaultText) {
+    mDefaultText = defaultText;
     mInputType = InputType.PLAIN_TEXT;
   }
 
@@ -148,12 +156,13 @@ class AlertDialogTask extends DialogTask {
 
   @Override
   public void onCreate() {
+    super.onCreate();
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     if (mTitle != null) {
       builder.setTitle(mTitle);
     }
     // Can't display both a message and items. We'll elect to show the items instead.
-    if (mMessage != null && mItems == null) {
+    if (mMessage != null && (mItems == null || mItems.isEmpty())) {
       builder.setMessage(mMessage);
     }
     switch (mInputType) {
@@ -199,6 +208,9 @@ class AlertDialogTask extends DialogTask {
       break;
     case PLAIN_TEXT:
       mEditText = new EditText(getActivity());
+      if (mDefaultText != null) {
+        mEditText.setText(mDefaultText);
+      }
       builder.setView(mEditText);
       break;
     case PASSWORD:
@@ -211,7 +223,11 @@ class AlertDialogTask extends DialogTask {
       // No input type specified.
     }
     configureButtons(builder, getActivity());
-    addOnCancelListener(builder, getActivity());
+    if (mIsCancellable) {
+      addOnCancelListener(builder, getActivity());
+    } else {
+      builder.setCancelable(false);
+    }
     mDialog = builder.show();
     mShowLatch.countDown();
   }
@@ -224,8 +240,8 @@ class AlertDialogTask extends DialogTask {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
-        mResultMap.put("canceled", true);
-        setResult();
+        mResultMap.put("canceled", "true");
+        setResult(false);
       }
     });
   }
@@ -237,15 +253,17 @@ class AlertDialogTask extends DialogTask {
         switch (which) {
         case DialogInterface.BUTTON_POSITIVE:
           mResultMap.put("which", "positive");
+          setResult(true);
           break;
         case DialogInterface.BUTTON_NEGATIVE:
           mResultMap.put("which", "negative");
+          setResult(false);
           break;
         case DialogInterface.BUTTON_NEUTRAL:
           mResultMap.put("which", "neutral");
+          setResult(false);
           break;
         }
-        setResult();
       }
     };
     if (mNegativeButtonText != null) {
@@ -259,9 +277,9 @@ class AlertDialogTask extends DialogTask {
     }
   }
 
-  private void setResult() {
+  private void setResult(boolean isPositive) {
     dismissDialog();
-    if (mInputType == InputType.PLAIN_TEXT || mInputType == InputType.PASSWORD) {
+    if (isPositive && (mInputType == InputType.PLAIN_TEXT || mInputType == InputType.PASSWORD)) {
       mResultMap.put("value", mEditText.getText().toString());
     }
     setResult(mResultMap);

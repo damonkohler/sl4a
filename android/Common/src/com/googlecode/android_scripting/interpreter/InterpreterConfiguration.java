@@ -30,6 +30,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.SingleThreadExecutor;
 import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 
@@ -42,9 +43,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Manages and provides access to the set of available interpreters.
@@ -321,19 +319,4 @@ public class InterpreterConfiguration {
     }
     return null;
   }
-
-  private class SingleThreadExecutor extends ThreadPoolExecutor {
-
-    public SingleThreadExecutor() {
-      super(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-    }
-
-    @Override
-    protected void afterExecute(Runnable r, Throwable t) {
-      if (t != null) {
-        throw new RuntimeException(t);
-      }
-    }
-  }
-
 }
