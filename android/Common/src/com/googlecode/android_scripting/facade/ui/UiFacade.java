@@ -301,7 +301,7 @@ public class UiFacade extends RpcReceiver {
 
   @Rpc(description = "Display a WebView with the given URL.")
   public void webViewShow(@RpcParameter(name = "url") String url) {
-    WebViewTask task = new WebViewTask(url, mManager.getReceiver(EventFacade.class));
+    WebViewTask task = new WebViewTask(url, this, mManager.getReceiver(EventFacade.class));
     mTaskQueue.execute(task);
   }
 

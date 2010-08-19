@@ -16,6 +16,10 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.webkit.WebView;
 
 import com.googlecode.android_scripting.facade.EventFacade;
@@ -26,10 +30,12 @@ public class WebViewTask extends FutureActivityTask<Void> {
   private WebView mView;
   private JavaScriptWrapper mWrapper;
   private final String mSource;
+  private final UiFacade mUiFacade;
 
-  public WebViewTask(String source, EventFacade facade) {
+  public WebViewTask(String source, UiFacade uiFacade, EventFacade eventFacade) {
     mSource = source;
-    mWrapper = new JavaScriptWrapper(facade);
+    mWrapper = new JavaScriptWrapper(eventFacade);
+    mUiFacade = uiFacade;
   }
 
   @Override
@@ -40,6 +46,16 @@ public class WebViewTask extends FutureActivityTask<Void> {
     mView.addJavascriptInterface(mWrapper, "droid_events");
     getActivity().setContentView(mView);
     mView.loadUrl(mSource);
+  }
+
+  @Override
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    mUiFacade.onCreateContextMenu(menu, v, menuInfo);
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    return mUiFacade.onPrepareOptionsMenu(menu);
   }
 
   private class JavaScriptWrapper {

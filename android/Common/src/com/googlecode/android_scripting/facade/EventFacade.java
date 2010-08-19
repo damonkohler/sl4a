@@ -19,11 +19,15 @@ package com.googlecode.android_scripting.facade;
 import android.content.Context;
 
 import com.googlecode.android_scripting.event.Event;
+import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
+import com.googlecode.android_scripting.rpc.RpcOptional;
+import com.googlecode.android_scripting.rpc.RpcParameter;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This facade exposes the functionality to read from the event queue as an RPC, and the
@@ -48,9 +52,36 @@ public class EventFacade extends RpcReceiver {
     mObserverList = new ConcurrentLinkedQueue<EventObserver>();
   }
 
-  @Rpc(description = "Receives the most recent event (i.e. location or sensor update, etc.)", returns = "Map of event properties.")
+  @Rpc(description = "Receives the most recent event (i.e. location or sensor update, etc.) and removes it from the event buffer (which stores up to "
+      + MAX_QUEUE_SIZE + " most recent events).", returns = "Map of event properties.")
   public Event receiveEvent() {
     return mEventQueue.poll();
+  }
+
+  @Rpc(description = "Blocks until the specific event occurs (this function does not remove the event from the buffer)", returns = "Map of event properties.")
+  public Event waitForEvent(
+      @RpcParameter(name = "event") final String event,
+      @RpcParameter(name = "timeout", description = "the maximum time to wait") @RpcOptional Integer timeout)
+      throws InterruptedException {
+    final FutureResult<Event> futureEvent = new FutureResult<Event>();
+    addEventObserver(new EventObserver() {
+      @Override
+      public void onEventReceived(String name, Object data) {
+        if (name.equals(event)) {
+          synchronized (futureEvent) {
+            if (!futureEvent.isDone()) {
+              futureEvent.set(new Event(name, data));
+              removeEventObserver(this);
+            }
+          }
+        }
+      }
+    });
+    if (timeout != null) {
+      return futureEvent.get(timeout, TimeUnit.MILLISECONDS);
+    } else {
+      return futureEvent.get();
+    }
   }
 
   /**
@@ -64,6 +95,7 @@ public class EventFacade extends RpcReceiver {
     for (EventObserver observer : mObserverList) {
       observer.onEventReceived(name, data);
     }
+
   }
 
   @Override

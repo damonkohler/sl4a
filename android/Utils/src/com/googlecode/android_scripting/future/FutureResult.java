@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class FutureResult<T> implements Future<T> {
 
   private final CountDownLatch mLatch = new CountDownLatch(1);
-  private T mResult;
+  private volatile T mResult;
 
   public void set(T result) {
     mResult = result;
@@ -59,7 +59,7 @@ public class FutureResult<T> implements Future<T> {
 
   @Override
   public boolean isDone() {
-    return mResult == null;
+    return mResult != null;
   }
 
 }

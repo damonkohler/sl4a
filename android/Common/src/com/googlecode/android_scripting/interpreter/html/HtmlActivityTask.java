@@ -146,7 +146,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
       }
       if (mEventMap.containsKey(eventName)) {
         for (Integer id : mEventMap.get(eventName)) {
-          mView.loadUrl(String.format("javascript:droid.callback(%d, %s);", id, json));
+          mView.loadUrl(String.format("javascript:droid._callback(%d, %s);", id, json));
         }
       }
     }

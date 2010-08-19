@@ -36,14 +36,23 @@ public class BatteryManagerFacade extends RpcReceiver {
     mSdkVersion = manager.getSdkLevel();
     IntentFilter filter = new IntentFilter();
     filter.addAction(Intent.ACTION_BATTERY_CHANGED);
-    mReceiver = new BatteryStateListener();
+    mReceiver = new BatteryStateListener(manager.getReceiver(EventFacade.class));
     mService.registerReceiver(mReceiver, filter);
   }
 
   private class BatteryStateListener extends BroadcastReceiver {
 
+    private final EventFacade mmEventFacade;
+
+    private BatteryStateListener(EventFacade facade) {
+      mmEventFacade = facade;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
+
+      mmEventFacade.postEvent("battery", null);
+
       mBatteryStatus = intent.getIntExtra("status", 1);
       mBatteryHealth = intent.getIntExtra("health", 1);
       mPlugType = intent.getIntExtra("plugged", -1);
