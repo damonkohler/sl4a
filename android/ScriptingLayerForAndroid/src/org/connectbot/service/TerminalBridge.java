@@ -28,9 +28,14 @@ import android.graphics.Typeface;
 import android.graphics.Bitmap.Config;
 import android.graphics.Paint.FontMetrics;
 import android.text.ClipboardManager;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 
 import de.mud.terminal.VDUBuffer;
@@ -814,6 +819,16 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
 
   public Paint getPaint() {
     return defaultPaint;
+  }
+
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    UiFacade facade = mProcess.getRpcReceiverManager().getReceiver(UiFacade.class);
+    facade.onCreateContextMenu(menu, v, menuInfo);
+  }
+
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    UiFacade facade = mProcess.getRpcReceiverManager().getReceiver(UiFacade.class);
+    return facade.onPrepareOptionsMenu(menu);
   }
 
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

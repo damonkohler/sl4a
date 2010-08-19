@@ -40,21 +40,10 @@ import java.util.concurrent.ExecutorService;
 public class HtmlActivityTask extends FutureActivityTask<Void> {
 
   private static final String PREFIX = "file://";
-  // TODO(raaar): put in a file.
-  private static final String ANDROID_JS =
-      "javascript:function Android(){ this.callbacks = [], this.id = 0, "
-          + "this.call = function(){"
-          + "this.id += 1;"
-          + "var method = arguments[0]; var args = [];for (var i=1; i<arguments.length; i++){args[i-1]=arguments[i];}"
-          + "var request = JSON.stringify({'id': this.id, 'method': method,'params': args});"
-          + "var response = droid_rpc.call(request); return eval(\"(\" + response + \")\");},"
-          + "this.register = function(event, receiver){"
-          + "var id = this.callbacks.push(receiver)-1; droid_callback.register(event, id);},"
-          + "this.callback = function(id, data){var receiver = this.callbacks[id];"
-          + "receiver(data);}}; var droid = new Android();";
 
   private final RpcReceiverManager mReceiverManager;
   private final String mJsonSource;
+  private final String mAndroidJsSource;
   private final String mSource;
   private final JavaScriptWrapper mWrapper;
   private final HtmlEventObserver mObserver;
@@ -62,9 +51,11 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   private ChromeClient mChromeClient;
   private WebView mView;
 
-  public HtmlActivityTask(RpcReceiverManager manager, String jsonSource, String file) {
+  public HtmlActivityTask(RpcReceiverManager manager, String androidJsSource, String jsonSource,
+      String file) {
     mReceiverManager = manager;
     mJsonSource = jsonSource;
+    mAndroidJsSource = androidJsSource;
     mSource = PREFIX + file;
     mWrapper = new JavaScriptWrapper();
     mObserver = new HtmlEventObserver();
@@ -89,7 +80,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mChromeClient = new ChromeClient(getActivity());
     mView.setWebChromeClient(mChromeClient);
     mView.loadUrl("javascript:" + mJsonSource);
-    mView.loadUrl(ANDROID_JS);
+    mView.loadUrl("javascript:" + mAndroidJsSource);
     mView.loadUrl(mSource);
   }
 
@@ -147,15 +138,15 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
 
     @Override
     public void onEventReceived(String eventName, Object data) {
-      String dataString = null;
+      JSONObject json = new JSONObject();
       try {
-        dataString = JsonBuilder.build(data).toString();
+        json.put("data", JsonBuilder.build(data));
       } catch (JSONException e) {
         Log.e(e);
       }
       if (mEventMap.containsKey(eventName)) {
         for (Integer id : mEventMap.get(eventName)) {
-          mView.loadUrl(String.format("javascript:droid.callback(%d, '%s');", id, dataString));
+          mView.loadUrl(String.format("javascript:droid.callback(%d, %s);", id, json));
         }
       }
     }

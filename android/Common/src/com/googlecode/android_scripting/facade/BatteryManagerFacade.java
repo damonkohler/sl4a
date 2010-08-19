@@ -7,45 +7,37 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 
-import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
 import java.lang.reflect.Field;
-import java.util.concurrent.CountDownLatch;
 
 public class BatteryManagerFacade extends RpcReceiver {
   private final Service mService;
   private final BatteryStateListener mReceiver;
 
-  private int mBatteryStatus = 1;
-  private int mBatteryHealth = 1;
-  private int mPlugType = -1;
+  private Integer mBatteryStatus = null;
+  private Integer mBatteryHealth = null;
+  private Integer mPlugType = null;
 
-  private boolean mBatteryPresent = false;
-  private int mBatteryLevel = -1;
-  private int mBatteryMaxLevel = 0;
-  private int mBatteryVoltage = -1;
-  private int mBatteryTemperature = -1;
+  private Boolean mBatteryPresent = null;
+  private Integer mBatteryLevel = null;
+  private Integer mBatteryMaxLevel = null;
+  private Integer mBatteryVoltage = null;
+  private Integer mBatteryTemperature = null;
   private String mBatteryTechnology = null;
-  private final CountDownLatch mLatch = new CountDownLatch(1);
 
-  private int sdkVersion = 3;
+  private int mSdkVersion = 3;
 
   public BatteryManagerFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
-    sdkVersion = manager.getSdkLevel();
+    mSdkVersion = manager.getSdkLevel();
     IntentFilter filter = new IntentFilter();
     filter.addAction(Intent.ACTION_BATTERY_CHANGED);
     mReceiver = new BatteryStateListener();
     mService.registerReceiver(mReceiver, filter);
-    try {
-      mLatch.await();
-    } catch (InterruptedException e) {
-      Log.e(e);
-    }
   }
 
   private class BatteryStateListener extends BroadcastReceiver {
@@ -55,7 +47,7 @@ public class BatteryManagerFacade extends RpcReceiver {
       mBatteryStatus = intent.getIntExtra("status", 1);
       mBatteryHealth = intent.getIntExtra("health", 1);
       mPlugType = intent.getIntExtra("plugged", -1);
-      if (sdkVersion >= 5) {
+      if (mSdkVersion >= 5) {
         mBatteryPresent =
             intent.getBooleanExtra(getBatteryManagerFieldValue("EXTRA_PRESENT"), false);
         mBatteryLevel = intent.getIntExtra(getBatteryManagerFieldValue("EXTRA_LEVEL"), -1);
@@ -65,7 +57,6 @@ public class BatteryManagerFacade extends RpcReceiver {
             intent.getIntExtra(getBatteryManagerFieldValue("EXTRA_TEMPERATURE"), -1);
         mBatteryTechnology = intent.getStringExtra(getBatteryManagerFieldValue("EXTRA_TECHNOLOGY"));
       }
-      mLatch.countDown();
     }
   }
 
@@ -115,7 +106,7 @@ public class BatteryManagerFacade extends RpcReceiver {
   @Rpc(description = "Returns current battery level (percentage)")
   @RpcMinSdk(5)
   public Integer batteryGetLevel() {
-    if (mBatteryMaxLevel == 100 || mBatteryMaxLevel == 0) {
+    if (mBatteryMaxLevel == null || mBatteryMaxLevel == 100 || mBatteryMaxLevel == 0) {
       return mBatteryLevel;
     } else {
       return (int) (mBatteryLevel * 100.0 / mBatteryMaxLevel);

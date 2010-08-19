@@ -599,6 +599,7 @@ public class ConsoleActivity extends Activity {
     if (bridge.getProcess() instanceof ScriptProcess) {
       menu.findItem(R.id.terminal_menu_exit_and_edit).setEnabled(true);
     }
+    bridge.onPrepareOptionsMenu(menu);
     return true;
   }
 
@@ -697,6 +698,7 @@ public class ConsoleActivity extends Activity {
     if (clipboard.hasText() && sessionOpen) {
       menu.add(Menu.NONE, MenuId.PASTE.getId(), Menu.NONE, R.string.terminal_menu_paste);
     }
+    bridge.onCreateContextMenu(menu, view, menuInfo);
   }
 
   @Override

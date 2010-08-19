@@ -27,10 +27,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class HtmlInterpreter extends Interpreter {
-
-  private final String mJson;
+  private static final String JSON_FILE = "json2.js";
+  private static final String ANDROID_JS_FILE = "android.js";
   public static final String HTML = "html";
   public static final String HTML_EXTENSION = ".html";
+
+  private final String mJson;
+  private final String mAndroidJs;
 
   public HtmlInterpreter(Context context) throws IOException {
     setExtension(HTML_EXTENSION);
@@ -40,14 +43,20 @@ public class HtmlInterpreter extends Interpreter {
     setScriptCommand("%s");
     setLanguage(new HtmlLanguage());
     setHasInteractiveMode(false);
+    mJson = readFromAssetsFile(context, JSON_FILE);
+    mAndroidJs = readFromAssetsFile(context, ANDROID_JS_FILE);
+  }
+
+  private String readFromAssetsFile(Context context, String name) throws IOException {
     AssetManager am = context.getAssets();
-    BufferedReader reader = new BufferedReader(new InputStreamReader(am.open("json2.js")));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(am.open(name)));
     String line;
     StringBuilder builder = new StringBuilder();
     while ((line = reader.readLine()) != null) {
       builder.append(line);
     }
-    mJson = builder.toString();
+    reader.close();
+    return builder.toString();
   }
 
   public boolean hasInterpreterArchive() {
@@ -78,5 +87,9 @@ public class HtmlInterpreter extends Interpreter {
 
   public String getJsonSource() {
     return mJson;
+  }
+
+  public String getAndroidJsSource() {
+    return mAndroidJs;
   }
 }

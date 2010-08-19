@@ -1,7 +1,5 @@
 package com.dummy.fooforandroid;
 
-import java.io.File;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -17,6 +15,9 @@ import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterUtils;
+import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
+
+import java.io.File;
 
 public class ScriptService extends Service {
 
@@ -63,15 +64,20 @@ public class ScriptService extends Service {
       script = FileUtils.copyFromStream(fileName, getResources().openRawResource(Script.ID));
     }
 
-    final AndroidProxy proxy = new AndroidProxy(this, null, true);
-    proxy.startLocal();
-    ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, null, new Runnable() {
-      @Override
-      public void run() {
-        proxy.shutdown();
-        stopSelf(startId);
-      }
-    });
+    if (Script.getFileExtension(this).equals(HtmlInterpreter.HTML_EXTENSION)) {
+      ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
+      stopSelf(startId);
+    } else {
+      final AndroidProxy proxy = new AndroidProxy(this, null, true);
+      proxy.startLocal();
+      ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, null, new Runnable() {
+        @Override
+        public void run() {
+          proxy.shutdown();
+          stopSelf(startId);
+        }
+      });
+    }
   }
 
   @Override

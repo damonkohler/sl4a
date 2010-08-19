@@ -52,7 +52,8 @@ public class ScriptLauncher {
     FutureActivityTaskExecutor executor =
         ((BaseApplication) service.getApplication()).getTaskQueue();
     HtmlActivityTask task =
-        new HtmlActivityTask(manager, interpreter.getJsonSource(), script.getAbsolutePath());
+        new HtmlActivityTask(manager, interpreter.getAndroidJsSource(),
+            interpreter.getJsonSource(), script.getAbsolutePath());
     executor.execute(task);
   }
 
