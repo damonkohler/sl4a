@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import android.content.Context;
-
 import com.googlecode.android_scripting.event.Event;
 import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
@@ -43,12 +41,10 @@ public class EventFacade extends RpcReceiver {
    */
   private static final int MAX_QUEUE_SIZE = 1024;
   private final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
-  private final Context mService;
   private final Queue<EventObserver> mObserverList;
 
   public EventFacade(FacadeManager manager) {
     super(manager);
-    mService = manager.getService();
     mObserverList = new ConcurrentLinkedQueue<EventObserver>();
   }
 

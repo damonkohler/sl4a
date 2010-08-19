@@ -393,4 +393,9 @@ public class AndroidFacade extends RpcReceiver {
     }
     return result;
   }
+
+  @Rpc(description = "Writes message to logcat.")
+  public void log(@RpcParameter(name = "message") String message) {
+    android.util.Log.v("SCRIPT", message);
+  }
 }

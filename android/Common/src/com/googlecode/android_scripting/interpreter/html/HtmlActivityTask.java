@@ -27,15 +27,15 @@ import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.RpcError;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class HtmlActivityTask extends FutureActivityTask<Void> {
 
@@ -68,13 +68,13 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mView = new WebView(getActivity());
     mView.setId(1);
     mView.getSettings().setJavaScriptEnabled(true);
-    mView.addJavascriptInterface(mWrapper, "droid_rpc");
+    mView.addJavascriptInterface(mWrapper, "_rpc_wrapper");
     mView.addJavascriptInterface(new Object() {
       @SuppressWarnings("unused")
       public void register(String event, int id) {
         mObserver.register(event, id);
       }
-    }, "droid_callback");
+    }, "_callback_wrapper");
     getActivity().setContentView(mView);
     mView.setOnCreateContextMenuListener(getActivity());
     mChromeClient = new ChromeClient(getActivity());

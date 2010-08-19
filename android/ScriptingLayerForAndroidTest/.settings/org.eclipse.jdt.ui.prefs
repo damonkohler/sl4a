@@ -1,4 +1,4 @@
-#Sat Jun 26 19:13:57 CEST 2010
+#Thu Aug 19 22:00:25 CEST 2010
 cleanup.add_default_serial_version_id=true
 cleanup.add_generated_serial_version_id=false
 cleanup.add_missing_annotations=true
@@ -55,6 +55,10 @@ eclipse.preferences.version=1
 editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup=true
 formatter_profile=_ASE
 formatter_settings_version=11
+org.eclipse.jdt.ui.ignorelowercasenames=true
+org.eclipse.jdt.ui.importorder=com;java;javax;org;
+org.eclipse.jdt.ui.ondemandthreshold=99
+org.eclipse.jdt.ui.staticondemandthreshold=99
 sp_cleanup.add_default_serial_version_id=true
 sp_cleanup.add_generated_serial_version_id=false
 sp_cleanup.add_missing_annotations=true
