@@ -2,7 +2,6 @@
 
 package com.googlecode.android_scripting.interpreter.html;
 
-import android.R;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -22,6 +21,7 @@ import com.googlecode.android_scripting.SingleThreadExecutor;
 import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.future.FutureActivityTask;
+import com.googlecode.android_scripting.jsonrpc.JsonBuilder;
 import com.googlecode.android_scripting.jsonrpc.JsonRpcResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
@@ -32,27 +32,33 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 public class HtmlActivityTask extends FutureActivityTask<Void> {
 
   private static final String PREFIX = "file://";
-
+  // TODO(raaar): put in a file.
   private static final String ANDROID_JS =
-      "javascript:function Android(){ this.id = 0, "
+      "javascript:function Android(){ this.callbacks = [], this.id = 0, "
           + "this.call = function(){"
           + "this.id += 1;"
           + "var method = arguments[0]; var args = [];for (var i=1; i<arguments.length; i++){args[i-1]=arguments[i];}"
           + "var request = JSON.stringify({'id': this.id, 'method': method,'params': args});"
-          + "var response = droid_rpc.call(request);" + "return eval(\"(\" + response + \")\");"
-          + "}}";
+          + "var response = droid_rpc.call(request); return eval(\"(\" + response + \")\");},"
+          + "this.register = function(event, receiver){"
+          + "var id = this.callbacks.push(receiver)-1; droid_callback.register(event, id);},"
+          + "this.callback = function(id, data){var receiver = this.callbacks[id];"
+          + "receiver(data);}}; var droid = new Android();";
 
   private final RpcReceiverManager mReceiverManager;
   private final String mJsonSource;
   private final String mSource;
   private final JavaScriptWrapper mWrapper;
   private final HtmlEventObserver mObserver;
+  private final UiFacade mUiFacade;
   private ChromeClient mChromeClient;
   private WebView mView;
 
@@ -63,19 +69,19 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mWrapper = new JavaScriptWrapper();
     mObserver = new HtmlEventObserver();
     mReceiverManager.getReceiver(EventFacade.class).addEventObserver(mObserver);
+    mUiFacade = mReceiverManager.getReceiver(UiFacade.class);
   }
 
   @Override
   public void onCreate() {
-    getActivity().setTheme(R.style.Theme);
     mView = new WebView(getActivity());
     mView.setId(1);
     mView.getSettings().setJavaScriptEnabled(true);
     mView.addJavascriptInterface(mWrapper, "droid_rpc");
     mView.addJavascriptInterface(new Object() {
       @SuppressWarnings("unused")
-      public void registerEventCallback(String event, String jsFunction) {
-        mObserver.registerEventCallback(event, jsFunction);
+      public void register(String event, int id) {
+        mObserver.register(event, id);
       }
     }, "droid_callback");
     getActivity().setContentView(mView);
@@ -90,17 +96,19 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   @Override
   public void onDestroy() {
     mReceiverManager.getReceiver(EventFacade.class).removeEventObserver(mObserver);
+    mReceiverManager.shutdown();
     mView.destroy();
     mView = null;
   }
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    mUiFacade.onCreateContextMenu(menu, v, menuInfo);
   }
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    return true;
+    return mUiFacade.onPrepareOptionsMenu(menu);
   }
 
   private class JavaScriptWrapper {
@@ -125,23 +133,36 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   }
 
   private class HtmlEventObserver implements EventFacade.EventObserver {
-    private Map<String, String> mEventMap = new HashMap<String, String>();
+    private Map<String, Set<Integer>> mEventMap = new HashMap<String, Set<Integer>>();
 
-    public void registerEventCallback(String eventName, String jsFunction) {
-      mEventMap.put(eventName, jsFunction);
+    public void register(String eventName, Integer id) {
+      if (mEventMap.containsKey(eventName)) {
+        mEventMap.get(eventName).add(id);
+      } else {
+        Set<Integer> idSet = new HashSet<Integer>();
+        idSet.add(id);
+        mEventMap.put(eventName, idSet);
+      }
     }
 
     @Override
     public void onEventReceived(String eventName, Object data) {
+      String dataString = null;
+      try {
+        dataString = JsonBuilder.build(data).toString();
+      } catch (JSONException e) {
+        Log.e(e);
+      }
       if (mEventMap.containsKey(eventName)) {
-        mView.loadUrl("javascript:" + mEventMap.get(eventName));
+        for (Integer id : mEventMap.get(eventName)) {
+          mView.loadUrl(String.format("javascript:droid.callback(%d, '%s');", id, dataString));
+        }
       }
     }
-
   }
 
   private class ChromeClient extends WebChromeClient {
-    private final static String JS_TITLE = "javaScript dialog";
+    private final static String JS_TITLE = "JavaScript Dialog";
 
     private final Activity mActivity;
     private final Resources mResources;
@@ -169,7 +190,6 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
       final UiFacade uiFacade = mReceiverManager.getReceiver(UiFacade.class);
       uiFacade.dialogCreateAlert(JS_TITLE, message);
       uiFacade.dialogSetPositiveButtonText(mResources.getString(android.R.string.ok));
-      uiFacade.dialogSetCancellable(false);
 
       mmExecutor.execute(new Runnable() {
 
@@ -205,8 +225,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
             throw new RuntimeException(e);
           }
           Map<String, Object> mResultMap = (Map<String, Object>) uiFacade.dialogGetResponse();
-
-          if (mResultMap.containsKey("which") && mResultMap.get("which").equals("positive")) {
+          if ("positive".equals(mResultMap.get("which"))) {
             result.confirm();
           } else {
             result.cancel();

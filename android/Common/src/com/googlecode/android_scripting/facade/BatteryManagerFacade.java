@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.CountDownLatch;
 
 public class BatteryManagerFacade extends RpcReceiver {
   private final Service mService;
@@ -27,6 +29,7 @@ public class BatteryManagerFacade extends RpcReceiver {
   private int mBatteryVoltage = -1;
   private int mBatteryTemperature = -1;
   private String mBatteryTechnology = null;
+  private final CountDownLatch mLatch = new CountDownLatch(1);
 
   private int sdkVersion = 3;
 
@@ -38,6 +41,11 @@ public class BatteryManagerFacade extends RpcReceiver {
     filter.addAction(Intent.ACTION_BATTERY_CHANGED);
     mReceiver = new BatteryStateListener();
     mService.registerReceiver(mReceiver, filter);
+    try {
+      mLatch.await();
+    } catch (InterruptedException e) {
+      Log.e(e);
+    }
   }
 
   private class BatteryStateListener extends BroadcastReceiver {
@@ -57,6 +65,7 @@ public class BatteryManagerFacade extends RpcReceiver {
             intent.getIntExtra(getBatteryManagerFieldValue("EXTRA_TEMPERATURE"), -1);
         mBatteryTechnology = intent.getStringExtra(getBatteryManagerFieldValue("EXTRA_TECHNOLOGY"));
       }
+      mLatch.countDown();
     }
   }
 

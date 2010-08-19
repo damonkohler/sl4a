@@ -19,6 +19,11 @@ package com.googlecode.android_scripting.facade.ui;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.util.AndroidRuntimeException;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.FutureActivityTaskExecutor;
@@ -34,7 +39,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * UiFacade
@@ -42,14 +49,30 @@ import java.util.Set;
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
 public class UiFacade extends RpcReceiver {
+  private static final int MENU_GROUP_ID;
+  static {
+    Random rnd = new Random();
+    MENU_GROUP_ID = rnd.nextInt();
+  }
+
   private final Service mService;
   private final FutureActivityTaskExecutor mTaskQueue;
   private DialogTask mDialogTask;
+
+  private final Set<UiMenuItem> mContextMenuItems;
+  private final Set<UiMenuItem> mOptionsMenuItems;
+  private final Set<UiMenuItem> mAddedOptionsMenuItems;
+
+  private final EventFacade mEventFacade;
 
   public UiFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
     mTaskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
+    mContextMenuItems = new CopyOnWriteArraySet<UiMenuItem>();
+    mOptionsMenuItems = new CopyOnWriteArraySet<UiMenuItem>();
+    mAddedOptionsMenuItems = new CopyOnWriteArraySet<UiMenuItem>();
+    mEventFacade = manager.getReceiver(EventFacade.class);
   }
 
   @Rpc(description = "Create a text input dialog.")
@@ -84,7 +107,11 @@ public class UiFacade extends RpcReceiver {
     dialogSetPositiveButtonText("Ok");
     dialogShow();
     Map<String, Object> response = (Map<String, Object>) dialogGetResponse();
-    return (String) response.get("value");
+    if ("positive".equals(response.get("which"))) {
+      return (String) response.get("value");
+    } else {
+      return null;
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -270,22 +297,92 @@ public class UiFacade extends RpcReceiver {
     }
   }
 
-  @Rpc(description = "Sets whether the dialog is cancelable or not default is true.")
-  public void dialogSetCancellable(@RpcParameter(name = "isCancellable") Boolean isCancellable) {
-    if (mDialogTask != null && mDialogTask instanceof AlertDialogTask) {
-      ((AlertDialogTask) mDialogTask).setCancellable(isCancellable);
-    } else {
-      throw new AndroidRuntimeException("No alert dialog to set cancelable.");
-    }
-  }
-
   @Rpc(description = "Display a WebView with the given URL.")
   public void webViewShow(@RpcParameter(name = "url") String url) {
     WebViewTask task = new WebViewTask(url, mManager.getReceiver(EventFacade.class));
     mTaskQueue.execute(task);
   }
 
+  @Rpc(description = "Adds a new item to context menu. This item displays the given title for its label, whenever clicked the specified event will be posted.")
+  public void addContextMenuItem(
+      @RpcParameter(name = "title") String title,
+      @RpcParameter(name = "event", description = "event that will be generated on menu item click") String event,
+      @RpcParameter(name = "eventData") @RpcOptional Object data) {
+    mContextMenuItems.add(new UiMenuItem(title, event, data, null));
+  }
+
+  @Rpc(description = "Adds a new item to options menu. This item displays the given title for its label, whenever clicked the specified event will be posted.")
+  public void addOptionsMenuItem(
+      @RpcParameter(name = "title") String title,
+      @RpcParameter(name = "event", description = "event that will be generated on menu item click") String event,
+      @RpcParameter(name = "eventData") @RpcOptional Object data,
+      @RpcParameter(name = "iconName") @RpcOptional String iconName) {
+    mOptionsMenuItems.add(new UiMenuItem(title, event, data, iconName));
+  }
+
+  @Rpc(description = "Removes all items previously added to context menu.")
+  public void clearContextMenu() {
+    mContextMenuItems.clear();
+  }
+
+  @Rpc(description = "Removes all items previously added to options menu.")
+  public void clearOptionsMenu() {
+    mOptionsMenuItems.clear();
+    mAddedOptionsMenuItems.clear();
+  }
+
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    for (UiMenuItem item : mContextMenuItems) {
+      MenuItem menuItem = menu.add(item.mmTitle);
+      menuItem.setOnMenuItemClickListener(item.mmListener);
+    }
+  }
+
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    if (mOptionsMenuItems.isEmpty()) {
+      menu.removeGroup(MENU_GROUP_ID);
+    } else {
+      int index = 0;
+      for (UiMenuItem item : mOptionsMenuItems) {
+        if (mAddedOptionsMenuItems.contains(item)) {
+          continue;
+        }
+        MenuItem menuItem = menu.add(MENU_GROUP_ID, index++, Menu.NONE, item.mmTitle);
+        if (item.mmIcon != null) {
+          menuItem.setIcon(mService.getResources()
+              .getIdentifier(item.mmIcon, "drawable", "android"));
+        }
+        menuItem.setOnMenuItemClickListener(item.mmListener);
+        mAddedOptionsMenuItems.add(item);
+      }
+    }
+    return true;
+  }
+
   @Override
   public void shutdown() {
+  }
+
+  private class UiMenuItem {
+
+    private final String mmTitle;
+    private final String mmEvent;
+    private final Object mmEventData;
+    private final String mmIcon;
+    private final MenuItem.OnMenuItemClickListener mmListener;
+
+    public UiMenuItem(String title, String event, Object data, String icon) {
+      mmTitle = title;
+      mmEvent = event;
+      mmEventData = data;
+      mmIcon = icon;
+      mmListener = new MenuItem.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+          mEventFacade.postEvent(mmEvent, mmEventData);
+          return true;
+        }
+      };
+    }
   }
 }

@@ -52,8 +52,6 @@ class AlertDialogTask extends DialogTask {
   private String mNegativeButtonText;
   private String mNeutralButtonText;
 
-  private boolean mIsCancellable = true;
-
   private EditText mEditText;
   private String mDefaultText;
 
@@ -80,10 +78,6 @@ class AlertDialogTask extends DialogTask {
 
   public void setNeutralButtonText(String text) {
     mNeutralButtonText = text;
-  }
-
-  public void setCancellable(boolean isCancellable) {
-    mIsCancellable = isCancellable;
   }
 
   /**
@@ -119,7 +113,7 @@ class AlertDialogTask extends DialogTask {
   }
 
   /**
-   * Set multi choice items. ertDialogTask.onCreate(AlertDialogTask.java:168
+   * Set multi choice items.
    * 
    * @param items
    *          a list of items as {@link String}s to display
@@ -162,7 +156,7 @@ class AlertDialogTask extends DialogTask {
       builder.setTitle(mTitle);
     }
     // Can't display both a message and items. We'll elect to show the items instead.
-    if (mMessage != null && (mItems == null || mItems.isEmpty())) {
+    if (mMessage != null && mItems.isEmpty()) {
       builder.setMessage(mMessage);
     }
     switch (mInputType) {
@@ -223,11 +217,7 @@ class AlertDialogTask extends DialogTask {
       // No input type specified.
     }
     configureButtons(builder, getActivity());
-    if (mIsCancellable) {
-      addOnCancelListener(builder, getActivity());
-    } else {
-      builder.setCancelable(false);
-    }
+    addOnCancelListener(builder, getActivity());
     mDialog = builder.show();
     mShowLatch.countDown();
   }
@@ -240,8 +230,8 @@ class AlertDialogTask extends DialogTask {
     return builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
       @Override
       public void onCancel(DialogInterface dialog) {
-        mResultMap.put("canceled", "true");
-        setResult(false);
+        mResultMap.put("canceled", true);
+        setResult();
       }
     });
   }
@@ -253,17 +243,16 @@ class AlertDialogTask extends DialogTask {
         switch (which) {
         case DialogInterface.BUTTON_POSITIVE:
           mResultMap.put("which", "positive");
-          setResult(true);
           break;
         case DialogInterface.BUTTON_NEGATIVE:
           mResultMap.put("which", "negative");
-          setResult(false);
           break;
         case DialogInterface.BUTTON_NEUTRAL:
           mResultMap.put("which", "neutral");
-          setResult(false);
+
           break;
         }
+        setResult();
       }
     };
     if (mNegativeButtonText != null) {
@@ -277,9 +266,9 @@ class AlertDialogTask extends DialogTask {
     }
   }
 
-  private void setResult(boolean isPositive) {
+  private void setResult() {
     dismissDialog();
-    if (isPositive && (mInputType == InputType.PLAIN_TEXT || mInputType == InputType.PASSWORD)) {
+    if (mInputType == InputType.PLAIN_TEXT || mInputType == InputType.PASSWORD) {
       mResultMap.put("value", mEditText.getText().toString());
     }
     setResult(mResultMap);

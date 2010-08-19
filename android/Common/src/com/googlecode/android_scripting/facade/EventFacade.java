@@ -68,7 +68,6 @@ public class EventFacade extends RpcReceiver {
 
   @Override
   public void shutdown() {
-    mObserverList.clear();
   }
 
   public void addEventObserver(EventObserver observer) {
