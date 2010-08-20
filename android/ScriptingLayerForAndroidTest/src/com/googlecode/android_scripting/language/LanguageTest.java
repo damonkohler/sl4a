@@ -15,9 +15,9 @@
  */
 package com.googlecode.android_scripting.language;
 
-import junit.framework.TestCase;
-
 import com.googlecode.android_scripting.rpc.ParameterDescriptor;
+
+import junit.framework.TestCase;
 
 /**
  * Tests languages support.
@@ -37,9 +37,11 @@ public class LanguageTest extends TestCase {
 
   public void testContentTemplate() {
     checkContentTemplate(
-        "source(\"/sdcard/sl4a/extras/bsh/android.bsh\");\n\ndroid = Android();\n", beanShell);
+        "source(\"/sdcard/com.googlecode.bshforandroid/extras/bsh/android.bsh\");\n\ndroid = Android();\n",
+        beanShell);
     checkContentTemplate(
-        "load(\"/sdcard/sl4a/extras/rhino/android.js\");\n\nvar droid = Android();\n", javaScript);
+        "load(\"/sdcard/com.googlecode.rhinoforandroid/extras/rhino/android.js\");\n\nvar droid = Android();\n",
+        javaScript);
     checkContentTemplate("require \"android\"\n\n", lua);
     checkContentTemplate("use Android;\n\nmy $droid = Android->new();\n", perl);
     checkContentTemplate("import android\n\ndroid = android.Android()\n", python);
