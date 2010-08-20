@@ -40,9 +40,6 @@ import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 import com.googlecode.android_scripting.trigger.Trigger;
 
-import org.connectbot.ConsoleActivity;
-import org.connectbot.service.TerminalManager;
-
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
@@ -51,6 +48,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.connectbot.ConsoleActivity;
+import org.connectbot.service.TerminalManager;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
@@ -194,7 +194,7 @@ public class ScriptingLayerService extends Service {
   private void launchHtmlScript(Intent intent) {
     String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     File script = ScriptStorageAdapter.getExistingScript(name);
-    ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
+    ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration, null);
   }
 
   private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {

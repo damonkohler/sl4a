@@ -97,7 +97,6 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mView.loadUrl("javascript:" + mJsonSource);
     mView.loadUrl("javascript:" + mAndroidJsSource);
     mView.loadUrl("javascript:" + generateAPIWrapper());
-
     mView.loadDataWithBaseURL(BASE_URL, mSource, "text/html", "utf-8", null);
   }
 
@@ -107,6 +106,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mReceiverManager.shutdown();
     mView.destroy();
     mView = null;
+    setResult(null);
   }
 
   @Override

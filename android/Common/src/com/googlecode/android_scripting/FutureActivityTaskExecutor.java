@@ -16,25 +16,25 @@
 
 package com.googlecode.android_scripting;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import android.content.Context;
+import android.app.Application;
 import android.content.Intent;
 
 import com.googlecode.android_scripting.activity.FutureActivity;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class FutureActivityTaskExecutor {
 
-  private final Context mService;
+  private final Application mApplication;
   private final Map<Integer, FutureActivityTask<?>> mTaskMap =
       new ConcurrentHashMap<Integer, FutureActivityTask<?>>();
   private final AtomicInteger mIdGenerator = new AtomicInteger(0);
 
-  public FutureActivityTaskExecutor(Context service) {
-    mService = service;
+  public FutureActivityTaskExecutor(Application application) {
+    mApplication = application;
   }
 
   public void execute(FutureActivityTask<?> task) {
@@ -48,9 +48,9 @@ public class FutureActivityTaskExecutor {
   }
 
   private void launchHelper(int id) {
-    Intent helper = new Intent(mService, FutureActivity.class);
+    Intent helper = new Intent(mApplication, FutureActivity.class);
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     helper.putExtra(Constants.EXTRA_TASK_ID, id);
-    mService.startActivity(helper);
+    mApplication.startActivity(helper);
   }
 }

@@ -37,7 +37,7 @@ public class ScriptLauncher {
   }
 
   public static void launchHtmlScript(File script, Service service, Intent intent,
-      InterpreterConfiguration config) {
+      InterpreterConfiguration config, final Runnable shutdownHook) {
     if (!script.exists()) {
       throw new RuntimeException("No such script to launch.");
     }
@@ -51,10 +51,23 @@ public class ScriptLauncher {
             .getFacadeClasses());
     FutureActivityTaskExecutor executor =
         ((BaseApplication) service.getApplication()).getTaskQueue();
-    HtmlActivityTask task =
+    final HtmlActivityTask task =
         new HtmlActivityTask(manager, interpreter.getAndroidJsSource(),
             interpreter.getJsonSource(), script.getAbsolutePath());
     executor.execute(task);
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          task.getResult();
+        } catch (InterruptedException e) {
+          Log.e(e);
+        }
+        if (shutdownHook != null) {
+          shutdownHook.run();
+        }
+      }
+    }).start();
   }
 
   public static InterpreterProcess launchInterpreter(final AndroidProxy proxy, Intent intent,
