@@ -29,6 +29,9 @@ import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Exposes the SensorManager related functionality.
  * 
@@ -111,49 +114,25 @@ public class SensorManagerFacade extends RpcReceiver {
     return mLight;
   }
 
-  @Rpc(description = "Returns the most recently received accelerometer xforce value.")
-  public Float sensorsGetXForce() {
-    return mXForce;
+  @Rpc(description = "Returns the most recently received accelerometer values.")
+  public List<Float> sensorsReadAccelerometer() {
+    synchronized (mSensorReadings) {
+      return Arrays.asList(mXForce, mYForce, mZForce);
+    }
   }
 
-  @Rpc(description = "Returns the most recently received accelerometer yforce value.")
-  public Float sensorsGetYForce() {
-    return mYForce;
+  @Rpc(description = "Returns the most recently received magnetic field values.")
+  public List<Float> sensorsReadMagnetometer() {
+    synchronized (mSensorReadings) {
+      return Arrays.asList(mXMag, mYMag, mZMag);
+    }
   }
 
-  @Rpc(description = "Returns the most recently received accelerometer zforce value.")
-  public Float sensorsGetZForce() {
-    return mZForce;
-  }
-
-  @Rpc(description = "Returns the most recently received magnetic field x value.")
-  public Float sensorsGetXMag() {
-    return mXMag;
-  }
-
-  @Rpc(description = "Returns the most recently received magnetic field y value.")
-  public Float sensorsGetYMag() {
-    return mYMag;
-  }
-
-  @Rpc(description = "Returns the most recently received magnetic field z value.")
-  public Float sensorsGetZMag() {
-    return mZMag;
-  }
-
-  @Rpc(description = "Returns the most recently received azimuth value.")
-  public Double sensorsGetAzimuth() {
-    return mAzimuth;
-  }
-
-  @Rpc(description = "Returns the most recently received pitch value.")
-  public Double sensorsGetPitch() {
-    return mPitch;
-  }
-
-  @Rpc(description = "Returns the most recently received roll value.")
-  public Double sensorsGetRoll() {
-    return mRoll;
+  @Rpc(description = "Returns the most recently received orientation values.")
+  public List<Double> sensorsReadOrientation() {
+    synchronized (mSensorReadings) {
+      return Arrays.asList(mAzimuth, mPitch, mRoll);
+    }
   }
 
   @Override

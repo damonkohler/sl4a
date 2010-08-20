@@ -18,6 +18,8 @@ package com.googlecode.android_scripting;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -93,6 +95,29 @@ public class FileUtils {
       }
     }
     return true;
+  }
+
+  public static String readFile(String name) throws IOException {
+    File file = new File(name);
+    if (!file.exists()) {
+      return null;
+    }
+    return readFile(file);
+  }
+
+  public static String readFile(File file) throws IOException {
+    if (file == null) {
+      return null;
+    }
+    FileReader reader = new FileReader(file);
+    StringBuilder out = new StringBuilder();
+    char[] buffer = new char[1024 * 4];
+    int numRead = 0;
+    while ((numRead = reader.read(buffer)) > -1) {
+      out.append(String.valueOf(buffer, 0, numRead));
+    }
+    reader.close();
+    return out.toString();
   }
 
 }

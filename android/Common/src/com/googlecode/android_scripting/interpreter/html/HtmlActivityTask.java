@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.View;
@@ -16,17 +17,21 @@ import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
+import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.SingleThreadExecutor;
 import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.future.FutureActivityTask;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.jsonrpc.JsonBuilder;
 import com.googlecode.android_scripting.jsonrpc.JsonRpcResult;
+import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.RpcError;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,12 +44,17 @@ import org.json.JSONObject;
 
 public class HtmlActivityTask extends FutureActivityTask<Void> {
 
+  private static final String ANDROID_PROTOTYPE_JS =
+      "Android.prototype.%1$s=function(){return this._call(\"%1$s\", arguments)};";
+
   private static final String PREFIX = "file://";
+  private static final String BASE_URL = PREFIX + InterpreterConstants.SCRIPTS_ROOT;
 
   private final RpcReceiverManager mReceiverManager;
   private final String mJsonSource;
   private final String mAndroidJsSource;
   private final String mSource;
+  private final String mBaseUrl;
   private final JavaScriptWrapper mWrapper;
   private final HtmlEventObserver mObserver;
   private final UiFacade mUiFacade;
@@ -56,11 +66,18 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mReceiverManager = manager;
     mJsonSource = jsonSource;
     mAndroidJsSource = androidJsSource;
-    mSource = PREFIX + file;
+    mBaseUrl = PREFIX + file;
     mWrapper = new JavaScriptWrapper();
     mObserver = new HtmlEventObserver();
     mReceiverManager.getReceiver(EventFacade.class).addEventObserver(mObserver);
     mUiFacade = mReceiverManager.getReceiver(UiFacade.class);
+    String source = null;
+    try {
+      source = FileUtils.readFile(Uri.parse(file).getPath());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    mSource = source;
   }
 
   @Override
@@ -81,7 +98,9 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mView.setWebChromeClient(mChromeClient);
     mView.loadUrl("javascript:" + mJsonSource);
     mView.loadUrl("javascript:" + mAndroidJsSource);
-    mView.loadUrl(mSource);
+    mView.loadUrl("javascript:" + generateAPIWrapper());
+
+    mView.loadDataWithBaseURL(BASE_URL, mSource, "text/html", "utf-8", null);
   }
 
   @Override
@@ -100,6 +119,16 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     return mUiFacade.onPrepareOptionsMenu(menu);
+  }
+
+  private String generateAPIWrapper() {
+    StringBuilder wrapper = new StringBuilder();
+    for (Class<? extends RpcReceiver> clazz : mReceiverManager.getRpcReceiverClasses()) {
+      for (MethodDescriptor rpc : MethodDescriptor.collectFrom(clazz)) {
+        wrapper.append(String.format(ANDROID_PROTOTYPE_JS, rpc.getName()));
+      }
+    }
+    return wrapper.toString();
   }
 
   private class JavaScriptWrapper {

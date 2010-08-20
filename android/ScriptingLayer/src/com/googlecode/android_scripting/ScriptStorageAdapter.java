@@ -22,7 +22,6 @@ import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -147,14 +146,6 @@ public class ScriptStorageAdapter {
     if (scriptFile == null) {
       return null;
     }
-    FileReader reader = new FileReader(scriptFile);
-    StringBuilder out = new StringBuilder();
-    char[] buffer = new char[1024 * 4];
-    int numRead = 0;
-    while ((numRead = reader.read(buffer)) > -1) {
-      out.append(String.valueOf(buffer, 0, numRead));
-    }
-    reader.close();
-    return out.toString();
+    return FileUtils.readFile(scriptFile);
   }
 }
