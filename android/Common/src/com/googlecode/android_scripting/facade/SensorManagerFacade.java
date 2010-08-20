@@ -41,6 +41,21 @@ public class SensorManagerFacade extends RpcReceiver {
   private final SensorManager mSensorManager;
   private Bundle mSensorReadings;
 
+  private volatile Integer mAccuracy;
+  private volatile Float mXForce;
+  private volatile Float mYForce;
+  private volatile Float mZForce;
+
+  private volatile Float mXMag;
+  private volatile Float mYMag;
+  private volatile Float mZMag;
+
+  private volatile Double mAzimuth;
+  private volatile Double mPitch;
+  private volatile Double mRoll;
+
+  private volatile Float mLight;
+
   private SensorEventListener mSensorListener;
 
   public SensorManagerFacade(FacadeManager manager) {
@@ -86,6 +101,61 @@ public class SensorManagerFacade extends RpcReceiver {
     }
   }
 
+  @Rpc(description = "Returns the most recently received accuracy value.")
+  public Integer sensorsGetAccuracy() {
+    return mAccuracy;
+  }
+
+  @Rpc(description = "Returns the most recently received light value.")
+  public Float sensorsGetLight() {
+    return mLight;
+  }
+
+  @Rpc(description = "Returns the most recently received accelerometer xforce value.")
+  public Float sensorsGetXForce() {
+    return mXForce;
+  }
+
+  @Rpc(description = "Returns the most recently received accelerometer yforce value.")
+  public Float sensorsGetYForce() {
+    return mYForce;
+  }
+
+  @Rpc(description = "Returns the most recently received accelerometer zforce value.")
+  public Float sensorsGetZForce() {
+    return mZForce;
+  }
+
+  @Rpc(description = "Returns the most recently received magnetic field x value.")
+  public Float sensorsGetXMag() {
+    return mXMag;
+  }
+
+  @Rpc(description = "Returns the most recently received magnetic field y value.")
+  public Float sensorsGetYMag() {
+    return mYMag;
+  }
+
+  @Rpc(description = "Returns the most recently received magnetic field z value.")
+  public Float sensorsGetZMag() {
+    return mZMag;
+  }
+
+  @Rpc(description = "Returns the most recently received azimuth value.")
+  public Double sensorsGetAzimuth() {
+    return mAzimuth;
+  }
+
+  @Rpc(description = "Returns the most recently received pitch value.")
+  public Double sensorsGetPitch() {
+    return mPitch;
+  }
+
+  @Rpc(description = "Returns the most recently received roll value.")
+  public Double sensorsGetRoll() {
+    return mRoll;
+  }
+
   @Override
   public void shutdown() {
     stopSensing();
@@ -121,6 +191,7 @@ public class SensorManagerFacade extends RpcReceiver {
       }
       synchronized (mSensorReadings) {
         mSensorReadings.putInt("accuracy", accuracy);
+        mAccuracy = accuracy;
         postEvent();
       }
     }
@@ -133,21 +204,29 @@ public class SensorManagerFacade extends RpcReceiver {
       synchronized (mSensorReadings) {
         switch (event.sensor.getType()) {
         case Sensor.TYPE_ACCELEROMETER:
-          mSensorReadings.putFloat("xforce", event.values[0]);
-          mSensorReadings.putFloat("yforce", event.values[1]);
-          mSensorReadings.putFloat("zforce", event.values[2]);
+          mXForce = event.values[0];
+          mYForce = event.values[1];
+          mZForce = event.values[2];
+          mSensorReadings.putFloat("xforce", mXForce);
+          mSensorReadings.putFloat("yforce", mYForce);
+          mSensorReadings.putFloat("zforce", mZForce);
 
           mmGravityValues = event.values.clone();
           break;
         case Sensor.TYPE_MAGNETIC_FIELD:
-          mSensorReadings.putFloat("xmag", event.values[0]);
-          mSensorReadings.putFloat("ymag", event.values[1]);
-          mSensorReadings.putFloat("zmag", event.values[2]);
+          mXMag = event.values[0];
+          mYMag = event.values[1];
+          mZMag = event.values[2];
+
+          mSensorReadings.putFloat("xmag", mXMag);
+          mSensorReadings.putFloat("ymag", mYMag);
+          mSensorReadings.putFloat("zmag", mZMag);
 
           mmGeomagneticValues = event.values.clone();
           break;
         case Sensor.TYPE_LIGHT:
-          mSensorReadings.putFloat("light", event.values[0]);
+          mLight = event.values[0];
+          mSensorReadings.putFloat("light", mLight);
           break;
         }
 
@@ -163,9 +242,14 @@ public class SensorManagerFacade extends RpcReceiver {
             mmAzimuth.add(mmOrientation[0]);
             mmPitch.add(mmOrientation[1]);
             mmRoll.add(mmOrientation[2]);
-            mSensorReadings.putDouble("azimuth", mmAzimuth.get());
-            mSensorReadings.putDouble("pitch", mmPitch.get());
-            mSensorReadings.putDouble("roll", mmRoll.get());
+
+            mAzimuth = mmAzimuth.get();
+            mPitch = mmPitch.get();
+            mRoll = mmRoll.get();
+
+            mSensorReadings.putDouble("azimuth", mAzimuth);
+            mSensorReadings.putDouble("pitch", mPitch);
+            mSensorReadings.putDouble("roll", mRoll);
           }
         }
         postEvent();
