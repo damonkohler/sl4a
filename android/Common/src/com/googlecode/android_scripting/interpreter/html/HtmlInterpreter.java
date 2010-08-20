@@ -27,10 +27,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class HtmlInterpreter extends Interpreter {
-  private static final String JSON_FILE = "json2.js";
-  private static final String ANDROID_JS_FILE = "android.js";
+
   public static final String HTML = "html";
   public static final String HTML_EXTENSION = ".html";
+
+  private static final String JSON_FILE = "json2.js";
+  private static final String ANDROID_JS_FILE = "android.js";
+  private static final String NICE_NAME = "HTML";
 
   private final String mJson;
   private final String mAndroidJs;
@@ -38,7 +41,7 @@ public class HtmlInterpreter extends Interpreter {
   public HtmlInterpreter(Context context) throws IOException {
     setExtension(HTML_EXTENSION);
     setName(HTML);
-    setNiceName("Html");
+    setNiceName(NICE_NAME);
     setInteractiveCommand("");
     setScriptCommand("%s");
     setLanguage(new HtmlLanguage());

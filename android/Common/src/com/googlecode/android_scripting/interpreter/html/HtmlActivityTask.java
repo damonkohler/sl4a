@@ -44,7 +44,8 @@ import org.json.JSONObject;
 public class HtmlActivityTask extends FutureActivityTask<Void> {
 
   private static final String ANDROID_PROTOTYPE_JS =
-      "Android.prototype.%1$s=function(){return this._call(\"%1$s\", arguments)};";
+      "Android.prototype.%1$s = function(var_args) { "
+          + "return this._call(\"%1$s\", Array.prototype.slice.call(arguments)); };";
 
   private static final String PREFIX = "file://";
   private static final String BASE_URL = PREFIX + InterpreterConstants.SCRIPTS_ROOT;
