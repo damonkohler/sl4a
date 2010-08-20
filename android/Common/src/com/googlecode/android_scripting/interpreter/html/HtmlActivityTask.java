@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.View;
@@ -54,7 +53,6 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   private final String mJsonSource;
   private final String mAndroidJsSource;
   private final String mSource;
-  private final String mBaseUrl;
   private final JavaScriptWrapper mWrapper;
   private final HtmlEventObserver mObserver;
   private final UiFacade mUiFacade;
@@ -66,14 +64,13 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mReceiverManager = manager;
     mJsonSource = jsonSource;
     mAndroidJsSource = androidJsSource;
-    mBaseUrl = PREFIX + file;
     mWrapper = new JavaScriptWrapper();
     mObserver = new HtmlEventObserver();
     mReceiverManager.getReceiver(EventFacade.class).addEventObserver(mObserver);
     mUiFacade = mReceiverManager.getReceiver(UiFacade.class);
     String source = null;
     try {
-      source = FileUtils.readFile(Uri.parse(file).getPath());
+      source = FileUtils.readFile(file);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

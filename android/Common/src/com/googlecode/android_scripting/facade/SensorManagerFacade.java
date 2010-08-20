@@ -114,21 +114,21 @@ public class SensorManagerFacade extends RpcReceiver {
     return mLight;
   }
 
-  @Rpc(description = "Returns the most recently received accelerometer values.")
+  @Rpc(description = "Returns the most recently received accelerometer values.", returns = "a List of Floats [(acceleration on the) X axis, Y axis, Z axis].")
   public List<Float> sensorsReadAccelerometer() {
     synchronized (mSensorReadings) {
       return Arrays.asList(mXForce, mYForce, mZForce);
     }
   }
 
-  @Rpc(description = "Returns the most recently received magnetic field values.")
+  @Rpc(description = "Returns the most recently received magnetic field values.", returns = "a List of Floats [(magnetic field value for) X axis, Y axis, Z axis].")
   public List<Float> sensorsReadMagnetometer() {
     synchronized (mSensorReadings) {
       return Arrays.asList(mXMag, mYMag, mZMag);
     }
   }
 
-  @Rpc(description = "Returns the most recently received orientation values.")
+  @Rpc(description = "Returns the most recently received orientation values.", returns = "a List of Doubles [azimuth, pitch, roll].")
   public List<Double> sensorsReadOrientation() {
     synchronized (mSensorReadings) {
       return Arrays.asList(mAzimuth, mPitch, mRoll);

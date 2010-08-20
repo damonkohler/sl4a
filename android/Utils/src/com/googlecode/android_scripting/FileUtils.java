@@ -99,14 +99,11 @@ public class FileUtils {
 
   public static String readFile(String name) throws IOException {
     File file = new File(name);
-    if (!file.exists()) {
-      return null;
-    }
     return readFile(file);
   }
 
   public static String readFile(File file) throws IOException {
-    if (file == null) {
+    if (file == null || !file.exists()) {
       return null;
     }
     FileReader reader = new FileReader(file);
