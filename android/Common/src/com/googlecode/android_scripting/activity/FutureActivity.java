@@ -28,6 +28,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FutureActivityTaskExecutor;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 
@@ -44,11 +45,12 @@ public class FutureActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Log.v("FutureActivity created.");
     int id = getIntent().getIntExtra(Constants.EXTRA_TASK_ID, 0);
     if (id == 0) {
-      throw new RuntimeException("FutureActivityTask id is not specified.");
+      throw new RuntimeException("FutureActivityTask ID is not specified.");
     }
-    FutureActivityTaskExecutor taskQueue = ((BaseApplication) getApplication()).getTaskQueue();
+    FutureActivityTaskExecutor taskQueue = ((BaseApplication) getApplication()).getTaskExecutor();
     mTask = taskQueue.getTask(id);
     mTask.setActivity(this);
     mTask.onCreate();

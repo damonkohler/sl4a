@@ -28,13 +28,13 @@ import com.googlecode.android_scripting.future.FutureActivityTask;
 
 public class FutureActivityTaskExecutor {
 
-  private final Context mService;
+  private final Context mContext;
   private final Map<Integer, FutureActivityTask<?>> mTaskMap =
       new ConcurrentHashMap<Integer, FutureActivityTask<?>>();
   private final AtomicInteger mIdGenerator = new AtomicInteger(0);
 
-  public FutureActivityTaskExecutor(Context service) {
-    mService = service;
+  public FutureActivityTaskExecutor(Context context) {
+    mContext = context;
   }
 
   public void execute(FutureActivityTask<?> task) {
@@ -48,9 +48,9 @@ public class FutureActivityTaskExecutor {
   }
 
   private void launchHelper(int id) {
-    Intent helper = new Intent(mService, FutureActivity.class);
+    Intent helper = new Intent(mContext, FutureActivity.class);
     helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     helper.putExtra(Constants.EXTRA_TASK_ID, id);
-    mService.startActivity(helper);
+    mContext.startActivity(helper);
   }
 }

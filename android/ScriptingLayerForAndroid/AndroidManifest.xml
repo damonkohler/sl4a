@@ -2,7 +2,7 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.googlecode.android_scripting"
-  android:versionName="1" 
+  android:versionName="1"
   android:versionCode="1">
   <application
     android:debuggable="true"
@@ -12,7 +12,8 @@
     <activity
       android:name=".activity.ScriptManager"
       android:configChanges="keyboardHidden|orientation"
-      android:windowSoftInputMode="adjustResize" android:launchMode="singleTop">
+      android:windowSoftInputMode="adjustResize"
+      android:launchMode="singleTop">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />
@@ -82,7 +83,9 @@
       android:name="org.connectbot.ConsoleActivity"
       android:theme="@android:style/Theme.NoTitleBar"
       android:configChanges="keyboardHidden|orientation"
-      android:windowSoftInputMode="stateAlwaysVisible|adjustResize" android:finishOnTaskLaunch="true" android:launchMode="singleTask">
+      android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+      android:finishOnTaskLaunch="true"
+      android:launchMode="singleTask">
     </activity>
     <activity
       android:name=".activity.ScriptEditor"
@@ -98,7 +101,9 @@
     </activity>
     <activity
       android:name=".activity.ApiBrowser"
-      android:configChanges="keyboardHidden|orientation" android:launchMode="singleTop" android:windowSoftInputMode="adjustResize">
+      android:configChanges="keyboardHidden|orientation"
+      android:launchMode="singleTop"
+      android:windowSoftInputMode="adjustResize">
       <intent-filter>
         <action
           android:name="android.intent.action.SEARCH" />
@@ -131,10 +136,13 @@
     </activity>
     <activity
       android:name=".activity.FutureActivity"
-      android:configChanges="keyboardHidden|orientation" android:theme="@android:style/Theme.Translucent"/>
-    <activity android:name="org.connectbot.HelpActivity" 
+      android:configChanges="keyboardHidden|orientation"
+      android:theme="@android:style/Theme.Translucent" />
+    <activity
+      android:name="org.connectbot.HelpActivity"
       android:configChanges="keyboardHidden|orientation" />
-    <activity android:name="org.connectbot.HelpTopicActivity" 
+    <activity
+      android:name="org.connectbot.HelpTopicActivity"
       android:configChanges="keyboardHidden|orientation" />
     <service
       android:name=".activity.ScriptingLayerService" />
@@ -169,10 +177,12 @@
       android:name="android.test.runner" />
     <activity
       android:name=".activity.ScriptProcessMonitor"
-      android:launchMode="singleTask" android:finishOnTaskLaunch="true"/>
+      android:launchMode="singleTask"
+      android:finishOnTaskLaunch="true" />
     <activity
       android:configChanges="keyboardHidden|orientation"
-      android:name="org.connectbot.util.ColorsActivity" android:theme="@android:style/Theme.Dialog">
+      android:name="org.connectbot.util.ColorsActivity"
+      android:theme="@android:style/Theme.Dialog">
       <intent-filter>
         <action
           android:name="com.googlecode.android_scripting.PICK_TERMINAL_COLORS" />

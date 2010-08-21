@@ -80,7 +80,7 @@ public class AndroidFacade extends RpcReceiver {
     mService = manager.getService();
     mIntent = manager.getIntent();
     BaseApplication application = ((BaseApplication) mService.getApplication());
-    mTaskQueue = application.getTaskQueue();
+    mTaskQueue = application.getTaskExecutor();
     mHandler = new Handler(mService.getMainLooper());
     mVibrator = (Vibrator) mService.getSystemService(Context.VIBRATOR_SERVICE);
     mNotificationManager =
