@@ -25,7 +25,8 @@
       android:name=".ScriptService" />
     <activity
       android:configChanges="keyboardHidden|orientation"
-      android:name="com.googlecode.android_scripting.activity.FutureActivity"></activity>
+      android:theme="@android:style/Theme.Translucent"
+      android:name="com.googlecode.android_scripting.activity.FutureActivity" />
     <activity
       android:theme="@android:style/Theme.Translucent.NoTitleBar"
       android:configChanges="keyboardHidden|orientation"

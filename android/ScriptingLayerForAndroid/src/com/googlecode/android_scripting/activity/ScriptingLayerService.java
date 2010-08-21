@@ -63,7 +63,7 @@ public class ScriptingLayerService extends Service {
   private NotificationManager mNotificationManager;
   private Notification mNotification;
   private final IBinder mBinder;
-  private volatile int modCount = 0;
+  private volatile int mModCount = 0;
   private InterpreterConfiguration mInterpreterConfiguration;
 
   private volatile WeakReference<InterpreterProcess> mRecentlyKilledProcess;
@@ -247,7 +247,7 @@ public class ScriptingLayerService extends Service {
 
   private void addProcess(InterpreterProcess process) {
     mProcessMap.put(process.getPort(), process);
-    modCount++;
+    mModCount++;
     updateNotification(process.getName() + " started.");
   }
 
@@ -256,7 +256,7 @@ public class ScriptingLayerService extends Service {
     if (process == null) {
       return null;
     }
-    modCount++;
+    mModCount++;
     updateNotification(process.getName() + " exited.");
     return process;
   }
@@ -274,7 +274,7 @@ public class ScriptingLayerService extends Service {
   }
 
   public int getModCount() {
-    return modCount;
+    return mModCount;
   }
 
   private void killAll() {

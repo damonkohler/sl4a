@@ -63,7 +63,7 @@ public class ScriptProcessMonitor extends ListActivity {
   private ScriptListAdapter mUpdater;
   private List<InterpreterProcess> mProcessList;
   private ScriptMonitorAdapter mAdapter;
-  private boolean isConnected = false;
+  private boolean mIsConnected = false;
 
   private ServiceConnection mConnection = new ServiceConnection() {
     @Override
@@ -71,13 +71,13 @@ public class ScriptProcessMonitor extends ListActivity {
       mService = ((ScriptingLayerService.LocalBinder) service).getService();
       mUpdater = new ScriptListAdapter();
       mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
-      isConnected = true;
+      mIsConnected = true;
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
       mService = null;
-      isConnected = false;
+      mIsConnected = false;
       mProcessList = null;
       mAdapter.notifyDataSetChanged();
     }
@@ -106,7 +106,7 @@ public class ScriptProcessMonitor extends ListActivity {
   @Override
   public void onResume() {
     super.onResume();
-    if (isConnected) {
+    if (mIsConnected) {
       try {
         mUpdater = new ScriptListAdapter();
         mTimer.scheduleAtFixedRate(mUpdater, 0, UPDATE_INTERVAL_SECS * 1000);
