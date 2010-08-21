@@ -174,7 +174,7 @@ public class MediaRecorderFacade extends RpcReceiver {
       }
     };
     FutureActivityTaskExecutor taskExecutor =
-        ((BaseApplication) mService.getApplication()).getTaskQueue();
+        ((BaseApplication) mService.getApplication()).getTaskExecutor();
     taskExecutor.execute(task);
 
     Exception e = task.getResult();

@@ -50,11 +50,12 @@ public class ScriptLauncher {
         new FacadeManager(FacadeConfiguration.getSdkLevel(), service, intent, FacadeConfiguration
             .getFacadeClasses());
     FutureActivityTaskExecutor executor =
-        ((BaseApplication) service.getApplication()).getTaskQueue();
+        ((BaseApplication) service.getApplication()).getTaskExecutor();
     final HtmlActivityTask task =
         new HtmlActivityTask(manager, interpreter.getAndroidJsSource(),
             interpreter.getJsonSource(), script.getAbsolutePath());
     executor.execute(task);
+
     new Thread(new Runnable() {
       @Override
       public void run() {

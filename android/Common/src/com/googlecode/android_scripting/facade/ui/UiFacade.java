@@ -66,7 +66,7 @@ public class UiFacade extends RpcReceiver {
   public UiFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
-    mTaskQueue = ((BaseApplication) mService.getApplication()).getTaskQueue();
+    mTaskQueue = ((BaseApplication) mService.getApplication()).getTaskExecutor();
     mContextMenuItems = new CopyOnWriteArrayList<UiMenuItem>();
     mOptionsMenuItems = new CopyOnWriteArrayList<UiMenuItem>();
     mEventFacade = manager.getReceiver(EventFacade.class);

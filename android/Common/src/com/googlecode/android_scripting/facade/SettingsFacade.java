@@ -185,7 +185,7 @@ public class SettingsFacade extends RpcReceiver {
     };
 
     FutureActivityTaskExecutor taskExecutor =
-        ((BaseApplication) mService.getApplication()).getTaskQueue();
+        ((BaseApplication) mService.getApplication()).getTaskExecutor();
     taskExecutor.execute(task);
 
     return oldValue;
