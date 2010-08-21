@@ -23,7 +23,7 @@ public class FeaturedInterpreters {
       FeaturedInterpreter interpreters[] =
           {
             new FeaturedInterpreter("BeanShell 2.0b4", ".bsh",
-                "http://android-scripting.googlecode.com/files/beanshell_for_android_r0.apk"),
+                "http://android-scripting.googlecode.com/files/beanshell_for_android_r1.apk"),
             new FeaturedInterpreter("JRuby-1.4", ".rb",
                 "http://android-scripting.googlecode.com/files/jruby_for_android_r0.apk"),
             new FeaturedInterpreter("Lua 5.1.4", ".lua",
@@ -35,7 +35,7 @@ public class FeaturedInterpreters {
             new FeaturedInterpreter("Rhino 1.7R2", ".js",
                 "http://android-scripting.googlecode.com/files/rhino_for_android_r0.apk"),
             new FeaturedInterpreter("PHP 5.3.3", ".php",
-                "http://php-for-android.googlecode.com/files/phpforandroid.apk") };
+                "http://php-for-android.googlecode.com/files/phpforandroid_r1.apk") };
 
       for (FeaturedInterpreter interpreter : interpreters) {
         mNameMap.put(interpreter.mmName, interpreter);
