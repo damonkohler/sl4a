@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2010 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.googlecode.android_scripting.facade;
 
 import android.app.Service;
@@ -8,6 +24,7 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
 
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcEvent;
@@ -15,7 +32,13 @@ import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
 import java.lang.reflect.Field;
 
+/**
+ * Exposes Batterymanager API.
+ * 
+ * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
+ */
 public class BatteryManagerFacade extends RpcReceiver {
+
   private final Service mService;
   private final BatteryStateListener mReceiver;
 
@@ -39,7 +62,7 @@ public class BatteryManagerFacade extends RpcReceiver {
     mService = manager.getService();
     mSdkVersion = manager.getSdkLevel();
     mReceiver = new BatteryStateListener(manager.getReceiver(EventFacade.class));
-    mBatteryData = new Bundle();
+    mBatteryData = null;
   }
 
   private class BatteryStateListener extends BroadcastReceiver {
@@ -88,6 +111,7 @@ public class BatteryManagerFacade extends RpcReceiver {
       Field f = BatteryManager.class.getField(name);
       return f.get(null).toString();
     } catch (Exception e) {
+      Log.e(e);
     }
     return null;
   }
@@ -108,11 +132,12 @@ public class BatteryManagerFacade extends RpcReceiver {
   @Rpc(description = "Stops tracking battery state.")
   public void batteryStopMonitoring() {
     mService.unregisterReceiver(mReceiver);
+    mBatteryData = null;
   }
 
   @Override
   public void shutdown() {
-    mService.unregisterReceiver(mReceiver);
+    batteryStopMonitoring();
   }
 
   @Rpc(description = "Returns  the most recently received battery status data:" + "\n1 - unknown;"

@@ -42,7 +42,8 @@ import java.util.List;
 public class SensorManagerFacade extends RpcReceiver {
   private final EventFacade mEventFacade;
   private final SensorManager mSensorManager;
-  private Bundle mSensorReadings;
+
+  private volatile Bundle mSensorReadings;
 
   private volatile Integer mAccuracy;
   private volatile Float mXForce;
@@ -92,16 +93,9 @@ public class SensorManagerFacade extends RpcReceiver {
 
   @Rpc(description = "Stops collecting sensor data.")
   public void stopSensing() {
-    if (mSensorManager == null) {
-      return;
-    }
     mSensorManager.unregisterListener(mSensorListener);
     mSensorListener = null;
-    if (mSensorReadings != null) {
-      synchronized (mSensorReadings) {
-        mSensorReadings = null;
-      }
-    }
+    mSensorReadings = null;
   }
 
   @Rpc(description = "Returns the most recently received accuracy value.")
