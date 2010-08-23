@@ -42,7 +42,6 @@ import android.widget.TextView;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
@@ -435,9 +434,14 @@ public class ScriptManager extends ListActivity {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      TextView view = new TextView(ScriptManager.this);
-      view.setPadding(2, 2, 2, 2);
-      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+      TextView view;
+      if (convertView == null) {
+        view = new TextView(ScriptManager.this);
+      } else {
+        view = (TextView) convertView;
+      }
+      view.setPadding(4, 4, 4, 4);
+      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
       view.setText(mScripts.get(position).getName());
       return view;
     }

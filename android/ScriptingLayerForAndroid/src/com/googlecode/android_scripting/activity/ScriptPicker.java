@@ -49,7 +49,7 @@ import java.util.List;
  */
 public class ScriptPicker extends ListActivity {
 
-  private List<File> mScriptList;
+  private List<File> mScripts;
   private ScriptPickerAdapter mAdapter;
   private InterpreterConfiguration mConfiguration;
 
@@ -58,7 +58,7 @@ public class ScriptPicker extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    mScriptList = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
+    mScripts = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
     mAdapter = new ScriptPickerAdapter();
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
@@ -151,7 +151,7 @@ public class ScriptPicker extends ListActivity {
   private class ScriptListObserver extends DataSetObserver {
     @Override
     public void onInvalidated() {
-      mScriptList = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
+      mScripts = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
     }
   }
 
@@ -159,12 +159,12 @@ public class ScriptPicker extends ListActivity {
 
     @Override
     public int getCount() {
-      return mScriptList.size();
+      return mScripts.size();
     }
 
     @Override
     public Object getItem(int position) {
-      return mScriptList.get(position);
+      return mScripts.get(position);
     }
 
     @Override
@@ -174,10 +174,15 @@ public class ScriptPicker extends ListActivity {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      TextView view = new TextView(ScriptPicker.this);
-      view.setPadding(2, 2, 2, 2);
-      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-      view.setText(mScriptList.get(position).getName());
+      TextView view;
+      if (convertView == null) {
+        view = new TextView(ScriptPicker.this);
+      } else {
+        view = (TextView) convertView;
+      }
+      view.setPadding(4, 4, 4, 4);
+      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
+      view.setText(mScripts.get(position).getName());
       return view;
     }
   }

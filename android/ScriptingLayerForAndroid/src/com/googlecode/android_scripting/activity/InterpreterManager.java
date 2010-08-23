@@ -54,7 +54,7 @@ public class InterpreterManager extends ListActivity {
 
   private InterpreterManagerAdapter mAdapter;
   private InterpreterListObserver mObserver;
-  private List<Interpreter> mInterpreterList;
+  private List<Interpreter> mInterpreters;
   private List<String> mFeaturedInterpreters;
   private InterpreterConfiguration mConfiguration;
 
@@ -70,7 +70,7 @@ public class InterpreterManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.interpreter_manager);
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    mInterpreterList = new ArrayList<Interpreter>();
+    mInterpreters = new ArrayList<Interpreter>();
     mAdapter = new InterpreterManagerAdapter();
     mObserver = new InterpreterListObserver();
     mAdapter.registerDataSetObserver(mObserver);
@@ -182,12 +182,12 @@ public class InterpreterManager extends ListActivity {
   private class InterpreterListObserver extends DataSetObserver implements ConfigurationObserver {
     @Override
     public void onInvalidated() {
-      mInterpreterList = mConfiguration.getInteractiveInterpreters();
+      mInterpreters = mConfiguration.getInteractiveInterpreters();
     }
 
     @Override
     public void onChanged() {
-      mInterpreterList = mConfiguration.getInteractiveInterpreters();
+      mInterpreters = mConfiguration.getInteractiveInterpreters();
     }
 
     @Override
@@ -205,12 +205,12 @@ public class InterpreterManager extends ListActivity {
 
     @Override
     public int getCount() {
-      return mInterpreterList.size();
+      return mInterpreters.size();
     }
 
     @Override
     public Object getItem(int position) {
-      return mInterpreterList.get(position);
+      return mInterpreters.get(position);
     }
 
     @Override
@@ -220,10 +220,15 @@ public class InterpreterManager extends ListActivity {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      TextView view = new TextView(InterpreterManager.this);
-      view.setPadding(2, 2, 2, 2);
-      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-      view.setText(mInterpreterList.get(position).getNiceName());
+      TextView view;
+      if (convertView == null) {
+        view = new TextView(InterpreterManager.this);
+      } else {
+        view = (TextView) convertView;
+      }
+      view.setPadding(4, 4, 4, 4);
+      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
+      view.setText(mInterpreters.get(position).getName());
       return view;
     }
   }

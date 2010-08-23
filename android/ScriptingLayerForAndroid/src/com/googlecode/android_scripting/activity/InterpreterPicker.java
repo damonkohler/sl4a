@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class InterpreterPicker extends ListActivity {
 
-  private List<Interpreter> mInterpreterList;
+  private List<Interpreter> mInterpreters;
   private InterpreterPickerAdapter mAdapter;
   private InterpreterConfiguration mConfiguration;
   private ScriptListObserver mObserver;
@@ -57,7 +57,7 @@ public class InterpreterPicker extends ListActivity {
     CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.script_manager);
     mObserver = new ScriptListObserver();
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    mInterpreterList = mConfiguration.getInstalledInterpreters();
+    mInterpreters = mConfiguration.getInstalledInterpreters();
     mConfiguration.registerObserver(mObserver);
     mAdapter = new InterpreterPickerAdapter();
     mAdapter.registerDataSetObserver(mObserver);
@@ -92,7 +92,7 @@ public class InterpreterPicker extends ListActivity {
   private class ScriptListObserver extends DataSetObserver implements ConfigurationObserver {
     @Override
     public void onInvalidated() {
-      mInterpreterList = mConfiguration.getInstalledInterpreters();
+      mInterpreters = mConfiguration.getInstalledInterpreters();
     }
 
     @Override
@@ -105,12 +105,12 @@ public class InterpreterPicker extends ListActivity {
 
     @Override
     public int getCount() {
-      return mInterpreterList.size();
+      return mInterpreters.size();
     }
 
     @Override
     public Object getItem(int position) {
-      return mInterpreterList.get(position);
+      return mInterpreters.get(position);
     }
 
     @Override
@@ -120,10 +120,15 @@ public class InterpreterPicker extends ListActivity {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      TextView view = new TextView(InterpreterPicker.this);
-      view.setPadding(2, 2, 2, 2);
-      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-      view.setText(mInterpreterList.get(position).getNiceName());
+      TextView view;
+      if (convertView == null) {
+        view = new TextView(InterpreterPicker.this);
+      } else {
+        view = (TextView) convertView;
+      }
+      view.setPadding(4, 4, 4, 4);
+      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
+      view.setText(mInterpreters.get(position).getName());
       return view;
     }
   }
