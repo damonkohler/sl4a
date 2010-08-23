@@ -16,11 +16,16 @@
 
 package com.googlecode.android_scripting;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 
@@ -115,6 +120,18 @@ public class FileUtils {
     }
     reader.close();
     return out.toString();
+  }
+
+  public static String readFromAssetsFile(Context context, String name) throws IOException {
+    AssetManager am = context.getAssets();
+    BufferedReader reader = new BufferedReader(new InputStreamReader(am.open(name)));
+    String line;
+    StringBuilder builder = new StringBuilder();
+    while ((line = reader.readLine()) != null) {
+      builder.append(line);
+    }
+    reader.close();
+    return builder.toString();
   }
 
 }

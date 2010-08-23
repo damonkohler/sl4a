@@ -26,15 +26,19 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 
 import com.googlecode.android_scripting.BaseApplication;
+import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.FutureActivityTaskExecutor;
 import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.FacadeManager;
+import com.googlecode.android_scripting.interpreter.html.HtmlActivityTask;
+import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -300,8 +304,10 @@ public class UiFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Display a WebView with the given URL.")
-  public void webViewShow(@RpcParameter(name = "url") String url) {
-    WebViewTask task = new WebViewTask(url, this, mManager.getReceiver(EventFacade.class));
+  public void webViewShow(@RpcParameter(name = "url") String url) throws IOException {
+    String jsonSrc = FileUtils.readFromAssetsFile(mService, HtmlInterpreter.JSON_FILE);
+    String AndroidJsSrc = FileUtils.readFromAssetsFile(mService, HtmlInterpreter.ANDROID_JS_FILE);
+    HtmlActivityTask task = new HtmlActivityTask(mManager, AndroidJsSrc, jsonSrc, url);
     mTaskQueue.execute(task);
   }
 

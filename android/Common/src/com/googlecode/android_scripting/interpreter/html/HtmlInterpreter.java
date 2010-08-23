@@ -17,23 +17,21 @@
 package com.googlecode.android_scripting.interpreter.html;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 
+import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.language.HtmlLanguage;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class HtmlInterpreter extends Interpreter {
 
   public static final String HTML = "html";
   public static final String HTML_EXTENSION = ".html";
 
-  private static final String JSON_FILE = "json2.js";
-  private static final String ANDROID_JS_FILE = "android.js";
-  private static final String NICE_NAME = "HTML";
+  public static final String JSON_FILE = "json2.js";
+  public static final String ANDROID_JS_FILE = "android.js";
+  public static final String HTML_NICE_NAME = "HTML";
 
   private final String mJson;
   private final String mAndroidJs;
@@ -41,25 +39,13 @@ public class HtmlInterpreter extends Interpreter {
   public HtmlInterpreter(Context context) throws IOException {
     setExtension(HTML_EXTENSION);
     setName(HTML);
-    setNiceName(NICE_NAME);
+    setNiceName(HTML_NICE_NAME);
     setInteractiveCommand("");
     setScriptCommand("%s");
     setLanguage(new HtmlLanguage());
     setHasInteractiveMode(false);
-    mJson = readFromAssetsFile(context, JSON_FILE);
-    mAndroidJs = readFromAssetsFile(context, ANDROID_JS_FILE);
-  }
-
-  private String readFromAssetsFile(Context context, String name) throws IOException {
-    AssetManager am = context.getAssets();
-    BufferedReader reader = new BufferedReader(new InputStreamReader(am.open(name)));
-    String line;
-    StringBuilder builder = new StringBuilder();
-    while ((line = reader.readLine()) != null) {
-      builder.append(line);
-    }
-    reader.close();
-    return builder.toString();
+    mJson = FileUtils.readFromAssetsFile(context, JSON_FILE);
+    mAndroidJs = FileUtils.readFromAssetsFile(context, ANDROID_JS_FILE);
   }
 
   public boolean hasInterpreterArchive() {

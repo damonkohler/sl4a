@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.View;
@@ -53,7 +54,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   private final RpcReceiverManager mReceiverManager;
   private final String mJsonSource;
   private final String mAndroidJsSource;
-  private final String mSource;
+  private final String mUrl;
   private final JavaScriptWrapper mWrapper;
   private final HtmlEventObserver mObserver;
   private final UiFacade mUiFacade;
@@ -61,7 +62,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   private WebView mView;
 
   public HtmlActivityTask(RpcReceiverManager manager, String androidJsSource, String jsonSource,
-      String file) {
+      String url) {
     mReceiverManager = manager;
     mJsonSource = jsonSource;
     mAndroidJsSource = androidJsSource;
@@ -69,13 +70,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mObserver = new HtmlEventObserver();
     mReceiverManager.getReceiver(EventFacade.class).addEventObserver(mObserver);
     mUiFacade = mReceiverManager.getReceiver(UiFacade.class);
-    String source = null;
-    try {
-      source = FileUtils.readFile(file);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    mSource = source;
+    mUrl = url;
   }
 
   @Override
@@ -97,7 +92,21 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mView.loadUrl("javascript:" + mJsonSource);
     mView.loadUrl("javascript:" + mAndroidJsSource);
     mView.loadUrl("javascript:" + generateAPIWrapper());
-    mView.loadDataWithBaseURL(BASE_URL, mSource, "text/html", "utf-8", null);
+    load();
+  }
+
+  private void load() {
+    if (!HtmlInterpreter.HTML.equals(Uri.parse(mUrl).getScheme())) {
+      String source = null;
+      try {
+        source = FileUtils.readFile(mUrl);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      mView.loadDataWithBaseURL(BASE_URL, source, "text/html", "utf-8", null);
+    } else {
+      mView.loadUrl(mUrl);
+    }
   }
 
   @Override
