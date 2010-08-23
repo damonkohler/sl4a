@@ -54,16 +54,16 @@ public class EventFacade extends RpcReceiver {
     return mEventQueue.poll();
   }
 
-  @Rpc(description = "Blocks until the specific event occurs (this function does not remove the event from the buffer)", returns = "Map of event properties.")
+  @Rpc(description = "Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.", returns = "Map of event properties.")
   public Event waitForEvent(
-      @RpcParameter(name = "event") final String event,
+      @RpcParameter(name = "eventName") final String eventName,
       @RpcParameter(name = "timeout", description = "the maximum time to wait") @RpcOptional Integer timeout)
       throws InterruptedException {
     final FutureResult<Event> futureEvent = new FutureResult<Event>();
     addEventObserver(new EventObserver() {
       @Override
       public void onEventReceived(String name, Object data) {
-        if (name.equals(event)) {
+        if (name.equals(eventName)) {
           synchronized (futureEvent) {
             if (!futureEvent.isDone()) {
               futureEvent.set(new Event(name, data));
