@@ -12,8 +12,7 @@
     <activity
       android:name=".ScriptActivity"
       android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar" 
-      android:launchMode="singleInstance">
+      android:theme="@android:style/Theme.Translucent.NoTitleBar">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />
@@ -27,7 +26,7 @@
       android:configChanges="keyboardHidden|orientation"
       android:name="com.googlecode.android_scripting.activity.FutureActivity" 
       android:theme="@android:style/Theme.Translucent" 
-      android:launchMode="standard" android:taskAffinity=""/>
+      android:launchMode="standard"/>
     <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" 
       android:configChanges="keyboardHidden|orientation" 
       android:name=".DialogActivity"/>
@@ -36,8 +35,8 @@
     android:minSdkVersion="3" />
   <uses-permission
     android:name="android.permission.INTERNET" />
-  <uses-permission
-    android:name="android.permission.VIBRATE" />
+  <!-- <uses-permission
+    android:name="android.permission.VIBRATE" /> -->
   <!-- <uses-permission
    android:name="android.permission.ACCESS_CHECKIN_PROPERTIES"/> -->
   <!-- <uses-permission
