@@ -34,7 +34,7 @@ public class Help {
   public static void show(final Activity activity) {
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
     builder.setItems(new CharSequence[] { "Wiki Documentation", "YouTube Screencasts",
-      "Terminal help" }, new DialogInterface.OnClickListener() {
+      "Terminal Help" }, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         switch (which) {
