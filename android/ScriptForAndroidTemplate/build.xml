@@ -1,6 +1,17 @@
 <?xml version="1.0" ?>
 <project default="main">
 	<target name="main">
+		<jar jarfile="libs/script.jar">
+		      <fileset dir="../ScriptingLayer/bin" includes="**/*.class"/> 
+		      <fileset dir="../Common/bin" includes="**/*.class"/>
+		      <fileset dir="../Utils/bin" includes="**/*.class"/>
+		      <fileset dir="../TextToSpeechFacade/bin" includes="**/*.class"/>
+		      <fileset dir="../SignalStrengthFacade/bin" includes="**/*.class"/>
+		      <fileset dir="../BluetoothFacade/bin" includes="**/*.class"/>
+		</jar>
+		<copy file="../ScriptingLayerForAndroid/libs/armeabi/libcom_googlecode_android_scripting_Exec.so" tofile="libs/armeabi/libcom_googlecode_android_scripting_Exec.so" overwrite="true" />
+		<copy file="../ScriptingLayerForAndroid/assets/android.js" tofile="assets/android.js" overwrite="true" />
+		<copy file="../ScriptingLayerForAndroid/assets/json2.js" tofile="assets/json2.js" overwrite="true" />
 		<zip destfile="../script_for_android_template.zip" basedir="./" includes="**/*" excludes=".project,build.xml,gen/**,bin/**,.externalToolBuilders/**,.tmp/**">
 			<fileset dir="./.tmp" includes="*"/>
 		</zip>

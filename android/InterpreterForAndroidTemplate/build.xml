@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
 <project default="main">
 	<target name="main">
+		<jar jarfile="libs/interpreter.jar">
+		      <fileset dir="../InterpreterForAndroid/bin" includes="**/*.class"/>
+		      <fileset dir="../Utils/bin" includes="**/*.class"/>
+		</jar>
 		<zip destfile="../interpreter_for_android_template.zip" basedir="./" includes="**/*" excludes=".project,build.xml,gen/**,bin/**,.externalToolBuilders/**,.tmp/**">
 			<fileset dir="./.tmp" includes="*"/>
 		</zip>

@@ -37,7 +37,7 @@ public class ScriptLauncher {
   }
 
   public static void launchHtmlScript(File script, Service service, Intent intent,
-      InterpreterConfiguration config, final Runnable shutdownHook) {
+      InterpreterConfiguration config) {
     if (!script.exists()) {
       throw new RuntimeException("No such script to launch.");
     }
@@ -46,7 +46,7 @@ public class ScriptLauncher {
     if (interpreter == null) {
       throw new RuntimeException("HtmlInterpreter is not available.");
     }
-    FacadeManager manager =
+    final FacadeManager manager =
         new FacadeManager(FacadeConfiguration.getSdkLevel(), service, intent, FacadeConfiguration
             .getFacadeClasses());
     FutureActivityTaskExecutor executor =
@@ -55,20 +55,6 @@ public class ScriptLauncher {
         new HtmlActivityTask(manager, interpreter.getAndroidJsSource(),
             interpreter.getJsonSource(), script.getAbsolutePath());
     executor.execute(task);
-
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          task.getResult();
-        } catch (InterruptedException e) {
-          Log.e(e);
-        }
-        if (shutdownHook != null) {
-          shutdownHook.run();
-        }
-      }
-    }).start();
   }
 
   public static InterpreterProcess launchInterpreter(final AndroidProxy proxy, Intent intent,

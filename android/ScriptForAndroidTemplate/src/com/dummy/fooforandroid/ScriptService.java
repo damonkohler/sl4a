@@ -87,14 +87,8 @@ public class ScriptService extends Service {
     }
 
     if (Script.getFileExtension(this).equals(HtmlInterpreter.HTML_EXTENSION)) {
-      ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration,
-          new Runnable() {
-            @Override
-            public void run() {
-              sendQuitIntent();
-              stopSelf(startId);
-            }
-          });
+      ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
+      stopSelf(startId);
     } else {
       final AndroidProxy proxy = new AndroidProxy(this, null, true);
       proxy.startLocal();
@@ -102,19 +96,12 @@ public class ScriptService extends Service {
         @Override
         public void run() {
           proxy.shutdown();
-          sendQuitIntent();
           stopSelf(startId);
         }
       });
     }
   }
 
-  private void sendQuitIntent() {
-    Intent intent = new Intent(this, ScriptActivity.class);
-    intent.setAction(ScriptActivity.ACTION_QUIT);
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    startActivity(intent);
-  }
 
   @Override
   public IBinder onBind(Intent intent) {

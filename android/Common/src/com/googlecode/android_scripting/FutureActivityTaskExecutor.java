@@ -16,8 +16,8 @@
 
 package com.googlecode.android_scripting;
 
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 
 import com.googlecode.android_scripting.activity.FutureActivity;
 import com.googlecode.android_scripting.future.FutureActivityTask;
@@ -49,7 +49,7 @@ public class FutureActivityTaskExecutor {
 
   private void launchHelper(int id) {
     Intent helper = new Intent(mContext, FutureActivity.class);
-    helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    helper.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
     helper.putExtra(Constants.EXTRA_TASK_ID, id);
     mContext.startActivity(helper);
   }

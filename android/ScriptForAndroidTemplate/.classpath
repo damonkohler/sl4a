@@ -6,6 +6,11 @@
 	<classpathentry kind="lib" path="/Common/libs/libGoogleAnalytics.jar"/>
 	<classpathentry kind="lib" path="/Common/libs/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="libs/locale_platform.jar"/>
-	<classpathentry kind="lib" path="libs/script.jar" sourcepath="/Common/src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BluetoothFacade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ScriptingLayer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SignalStrengthFacade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TextToSpeechFacade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

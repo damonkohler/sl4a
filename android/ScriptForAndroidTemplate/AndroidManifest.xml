@@ -11,9 +11,9 @@
     android:name=".ScriptApplication">
     <activity
       android:name=".ScriptActivity"
-      android:launchMode="singleTop"
       android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar">
+      android:theme="@android:style/Theme.Translucent.NoTitleBar" 
+      android:launchMode="singleInstance">
       <intent-filter>
         <action
           android:name="android.intent.action.MAIN" />
@@ -25,19 +25,19 @@
       android:name=".ScriptService" />
     <activity
       android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent"
-      android:name="com.googlecode.android_scripting.activity.FutureActivity" />
-    <activity
-      android:theme="@android:style/Theme.Translucent.NoTitleBar"
-      android:configChanges="keyboardHidden|orientation"
-      android:name=".DialogActivity" />
-  </application>
+      android:name="com.googlecode.android_scripting.activity.FutureActivity" 
+      android:theme="@android:style/Theme.Translucent" 
+      android:launchMode="standard" android:taskAffinity=""/>
+    <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" 
+      android:configChanges="keyboardHidden|orientation" 
+      android:name=".DialogActivity"/>
+</application>
   <uses-sdk
     android:minSdkVersion="3" />
   <uses-permission
     android:name="android.permission.INTERNET" />
-  <!-- <uses-permission
-    android:name="android.permission.VIBRATE" /> -->
+  <uses-permission
+    android:name="android.permission.VIBRATE" />
   <!-- <uses-permission
    android:name="android.permission.ACCESS_CHECKIN_PROPERTIES"/> -->
   <!-- <uses-permission

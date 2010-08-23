@@ -194,7 +194,7 @@ public class ScriptingLayerService extends Service {
   private void launchHtmlScript(Intent intent) {
     String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
     File script = ScriptStorageAdapter.getExistingScript(name);
-    ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration, null);
+    ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
   }
 
   private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {
