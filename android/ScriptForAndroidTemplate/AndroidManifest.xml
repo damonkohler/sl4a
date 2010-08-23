@@ -25,8 +25,7 @@
     <activity
       android:configChanges="keyboardHidden|orientation"
       android:name="com.googlecode.android_scripting.activity.FutureActivity" 
-      android:theme="@android:style/Theme.Translucent" 
-      android:launchMode="standard"/>
+      android:theme="@android:style/Theme.Translucent"/>
     <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" 
       android:configChanges="keyboardHidden|orientation" 
       android:name=".DialogActivity"/>
