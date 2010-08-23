@@ -3,15 +3,16 @@
 	<classpathentry excluding="doc" kind="src" path="src"/>
 	<classpathentry excluding="doc" kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Common"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/BluetoothFacade"/>
 	<classpathentry exported="true" kind="lib" path="libs/locale_platform.jar"/>
 	<classpathentry exported="true" kind="lib" path="/Common/libs/commons-codec-1.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="/Common/libs/libGoogleAnalytics.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/guava-r06.jar"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TextToSpeechFacade"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SignalStrengthFacade"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Utils"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/BluetoothFacade"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Common"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/InterpreterForAndroid"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ScriptingLayer"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SignalStrengthFacade"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TextToSpeechFacade"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Utils"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
