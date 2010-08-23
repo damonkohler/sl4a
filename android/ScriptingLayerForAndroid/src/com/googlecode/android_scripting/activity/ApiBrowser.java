@@ -310,8 +310,14 @@ public class ApiBrowser extends ListActivity {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-      TextView view = new TextView(ApiBrowser.this);
-      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+      TextView view;
+      if (convertView == null) {
+        view = new TextView(ApiBrowser.this);
+      } else {
+        view = (TextView) convertView;
+      }
+      view.setPadding(4, 4, 4, 4);
+      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
       if (mExpandedPositions.contains(position)) {
         view.setText(mMethodDescriptors.get(position).getHelp());
       } else {
