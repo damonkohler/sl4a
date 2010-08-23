@@ -228,7 +228,7 @@ public class InterpreterManager extends ListActivity {
       }
       view.setPadding(4, 4, 4, 4);
       view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
-      view.setText(mInterpreters.get(position).getName());
+      view.setText(mInterpreters.get(position).getNiceName());
       return view;
     }
   }
