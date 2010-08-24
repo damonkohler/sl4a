@@ -35,6 +35,9 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
   public static final String BASE_INSTALL_URL = "http://android-scripting.googlecode.com/files/";
   public static final String DALVIKVM = "/system/bin/dalvikvm";
 
+  // TODO(damonkohler): Remove getVersion() and pull these three version methods up in to the base
+  // class.
+
   public int getInterpreterVersion() {
     return getVersion();
   }
@@ -47,47 +50,47 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
     return getVersion();
   }
 
+  @Override
   public String getInterpreterArchiveName() {
     return String.format("%s_r%s.zip", getName(), getInterpreterVersion());
   }
 
+  @Override
   public String getExtrasArchiveName() {
     return String.format("%s_extras_r%s.zip", getName(), getExtrasVersion());
   }
 
+  @Override
   public String getScriptsArchiveName() {
     return String.format("%s_scripts_r%s.zip", getName(), getScriptsVersion());
   }
 
+  @Override
   public String getInterpreterArchiveUrl() {
     return BASE_INSTALL_URL + getInterpreterArchiveName();
   }
 
+  @Override
   public String getExtrasArchiveUrl() {
     return BASE_INSTALL_URL + getExtrasArchiveName();
   }
 
+  @Override
   public String getScriptsArchiveUrl() {
     return BASE_INSTALL_URL + getScriptsArchiveName();
   }
 
-  // TODO(damonkohler): This shouldn't be public.
-  public File getExtrasPath(Context context) {
-    if (!hasInterpreterArchive() && hasExtrasArchive()) {
-      return new File(InterpreterConstants.SDCARD_ROOT + this.getClass().getPackage().getName()
-          + InterpreterConstants.INTERPRETER_EXTRAS_ROOT, getName());
-    }
-    return InterpreterUtils.getInterpreterRoot(context, getName());
-  }
-
+  @Override
   public String getInteractiveCommand(Context context) {
     return "";
   }
 
+  @Override
   public boolean hasInteractiveMode() {
     return true;
   }
 
+  @Override
   public String getScriptCommand(Context context) {
     return "%s";
   }
@@ -100,5 +103,14 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
   @Override
   public Map<String, String> getEnvironmentVariables(Context context) {
     return new HashMap<String, String>();
+  }
+
+  // TODO(damonkohler): This shouldn't be public.
+  public File getExtrasPath(Context context) {
+    if (!hasInterpreterArchive() && hasExtrasArchive()) {
+      return new File(InterpreterConstants.SDCARD_ROOT + this.getClass().getPackage().getName()
+          + InterpreterConstants.INTERPRETER_EXTRAS_ROOT, getName());
+    }
+    return InterpreterUtils.getInterpreterRoot(context, getName());
   }
 }
