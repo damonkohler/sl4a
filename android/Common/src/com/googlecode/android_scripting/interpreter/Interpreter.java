@@ -60,7 +60,13 @@ public class Interpreter implements InterpreterPropertyNames {
     String binary = data.get(BINARY);
     String interactiveCommand = data.get(INTERACTIVE_COMMAND);
     String scriptCommand = data.get(SCRIPT_COMMAND);
-    Boolean hasInteractiveMode = Boolean.parseBoolean(data.get(HAS_INTERACTIVE_MODE));
+    Boolean hasInteractiveMode;
+    if (data.containsKey(HAS_INTERACTIVE_MODE)) {
+      hasInteractiveMode = Boolean.parseBoolean(data.get(HAS_INTERACTIVE_MODE));
+    } else {
+      // Default to true so that older interpreter APKs that don't have this value define stil work.
+      hasInteractiveMode = true;
+    }
     Interpreter interpreter = new Interpreter();
     interpreter.setName(name);
     interpreter.setNiceName(niceName);

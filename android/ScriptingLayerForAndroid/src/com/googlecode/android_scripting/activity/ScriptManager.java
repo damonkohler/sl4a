@@ -196,14 +196,14 @@ public class ScriptManager extends ListActivity {
     buildMenuIdMaps();
     buildAddMenu(menu);
     buildSwitchActivityMenu(menu);
-    menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
-        android.R.drawable.ic_menu_preferences);
+    menu.add(Menu.NONE, MenuId.SEARCH.getId(), Menu.NONE, "Search").setIcon(
+        R.drawable.ic_menu_search);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
     menu.add(Menu.NONE, MenuId.REFRESH.getId(), Menu.NONE, "Refresh").setIcon(
         R.drawable.ic_menu_refresh);
-    menu.add(Menu.NONE, MenuId.SEARCH.getId(), Menu.NONE, "Search").setIcon(
-        R.drawable.ic_menu_search);
+    menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
+        android.R.drawable.ic_menu_preferences);
     return true;
   }
 
