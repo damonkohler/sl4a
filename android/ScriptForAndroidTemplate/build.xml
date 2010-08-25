@@ -12,7 +12,7 @@
 		<copy file="../ScriptingLayerForAndroid/libs/armeabi/libcom_googlecode_android_scripting_Exec.so" tofile="libs/armeabi/libcom_googlecode_android_scripting_Exec.so" overwrite="true" />
 		<copy file="../ScriptingLayerForAndroid/assets/android.js" tofile="assets/android.js" overwrite="true" />
 		<copy file="../ScriptingLayerForAndroid/assets/json2.js" tofile="assets/json2.js" overwrite="true" />
-		<zip destfile="../script_for_android_template.zip" basedir="./" includes="**/*" excludes=".project,build.xml,gen/**,bin/**,.externalToolBuilders/**,.tmp/**">
+		<zip destfile="../script_for_android_template.zip" basedir="./" includes="**/*" excludes=".project,.classpath,build.xml,gen/**,bin/**,.externalToolBuilders/**,.tmp/**">
 			<fileset dir="./.tmp" includes="*"/>
 		</zip>
 	</target>
