@@ -16,14 +16,14 @@
 
 package com.googlecode.android_scripting.trigger;
 
-import java.io.Serializable;
-import java.util.UUID;
-
 import android.app.Service;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * The definition of the interface implemented by triggers. A trigger combines a script name with
@@ -91,8 +91,8 @@ public abstract class Trigger implements Serializable {
   /** Creates a view to display this trigger in the trigger manager. */
   public View getView(Context context) {
     TextView view = new TextView(context);
-    view.setPadding(2, 2, 2, 2);
-    view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+    view.setPadding(4, 4, 4, 4);
+    view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
     view.setText(getScriptName());
     return view;
   }

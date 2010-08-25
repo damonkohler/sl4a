@@ -35,8 +35,8 @@ import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
-import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.dialog.DurationPickerDialog;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.dialog.DurationPickerDialog.DurationPickedListener;
@@ -62,7 +62,7 @@ public class TriggerManager extends ListActivity {
   }
 
   private static enum MenuId {
-    SCHEDULE_REPEATING, SCHEDULE_INEXACT_REPEATING, RINGER_MODE_CONDITION, HELP;
+    SCHEDULE_REPEATING, SCHEDULE_INEXACT_REPEATING, RINGER_MODE_CONDITION, PREFERENCES, HELP;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -94,6 +94,10 @@ public class TriggerManager extends ListActivity {
     SubMenu addCondition = menu.addSubMenu("Add Condition");
     addCondition.setIcon(android.R.drawable.ic_menu_add);
     addCondition.add(Menu.NONE, MenuId.RINGER_MODE_CONDITION.getId(), Menu.NONE, "Ringer Mode");
+    menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
+        android.R.drawable.ic_menu_preferences);
+    menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
+        android.R.drawable.ic_menu_help);
     return true;
   }
 
@@ -102,6 +106,8 @@ public class TriggerManager extends ListActivity {
     int itemId = item.getItemId();
     if (itemId == MenuId.HELP.getId()) {
       Help.show(this);
+    } else if (itemId == MenuId.PREFERENCES.getId()) {
+      startActivity(new Intent(this, Preferences.class));
     } else if (itemId != Menu.NONE) {
       Intent intent = new Intent(this, ScriptPicker.class);
       intent.setAction(Intent.ACTION_PICK);
@@ -205,7 +211,8 @@ public class TriggerManager extends ListActivity {
               }
             });
       } else if (requestCode == MenuId.RINGER_MODE_CONDITION.getId()) {
-        mTriggerRepository.addTrigger(new EventTrigger(scriptName, new RingerModeEventListener.Factory()));
+        mTriggerRepository.addTrigger(new EventTrigger(scriptName,
+            new RingerModeEventListener.Factory()));
         mAdapter.notifyDataSetInvalidated();
       }
     }
