@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to mark RPC method as depreciated.
+ * Use this annotation to mark RPC method as deprecated.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

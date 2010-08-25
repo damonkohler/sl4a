@@ -54,7 +54,7 @@ public class FacadeManager extends RpcReceiverManager {
     try {
       if (method.isAnnotationPresent(RpcDeprecated.class)) {
         String replacedBy = method.getAnnotation(RpcDeprecated.class).value();
-        String title = method.getName() + " is depreciated";
+        String title = method.getName() + " is deprecated";
         Log.notify(mService, title, title, String.format("Please use %s instead.", replacedBy));
       } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
         int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();

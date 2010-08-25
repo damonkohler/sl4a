@@ -115,7 +115,7 @@ public class FacadeConfiguration {
   }
 
   /**
-   * Returns a list of not depreciated {@link MethodDescriptor} objects for facades supported by the
+   * Returns a list of not deprecated {@link MethodDescriptor} objects for facades supported by the
    * current SDK version.
    */
   public static List<MethodDescriptor> collectSupportedRpcDescriptors() {

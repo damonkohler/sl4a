@@ -21,9 +21,6 @@ import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 import com.googlecode.android_scripting.util.VisibleForTesting;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -34,6 +31,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * An adapter that wraps {@code Method}.
@@ -199,7 +199,7 @@ public final class MethodDescriptor {
 
     if (mMethod.isAnnotationPresent(RpcDeprecated.class)) {
       String replacedBy = mMethod.getAnnotation(RpcDeprecated.class).value();
-      helpBuilder.append(String.format("\n\nDepreciated! Please use %s instead.", replacedBy));
+      helpBuilder.append(String.format("\n\nDeprecated! Please use %s instead.", replacedBy));
     }
 
     return helpBuilder.toString();
