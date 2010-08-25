@@ -304,11 +304,21 @@ public class UiFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Display a WebView with the given URL.")
-  public void webViewShow(@RpcParameter(name = "url") String url) throws IOException {
+  public void webViewShow(
+      @RpcParameter(name = "url") String url,
+      @RpcParameter(name = "wait", description = "block until the user exits the WebView") @RpcOptional Boolean wait)
+      throws IOException {
     String jsonSrc = FileUtils.readFromAssetsFile(mService, HtmlInterpreter.JSON_FILE);
     String AndroidJsSrc = FileUtils.readFromAssetsFile(mService, HtmlInterpreter.ANDROID_JS_FILE);
     HtmlActivityTask task = new HtmlActivityTask(mManager, AndroidJsSrc, jsonSrc, url);
     mTaskQueue.execute(task);
+    if (wait != null && wait) {
+      try {
+        task.getResult();
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 
   @Rpc(description = "Adds a new item to context menu.")

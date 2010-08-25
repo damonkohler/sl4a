@@ -58,6 +58,7 @@ import org.json.JSONObject;
 
 public class HtmlActivityTask extends FutureActivityTask<Void> {
 
+  private static final String HTTP = "http";
   private static final String ANDROID_PROTOTYPE_JS =
       "Android.prototype.%1$s = function(var_args) { "
           + "return this._call(\"%1$s\", Array.prototype.slice.call(arguments)); };";
@@ -110,7 +111,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   }
 
   private void load() {
-    if (!HtmlInterpreter.HTML.equals(Uri.parse(mUrl).getScheme())) {
+    if (!HTTP.equals(Uri.parse(mUrl).getScheme())) {
       String source = null;
       try {
         source = FileUtils.readFile(mUrl);
