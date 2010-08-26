@@ -14,5 +14,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SignalStrengthFacade"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TextToSpeechFacade"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Utils"/>
+	<classpathentry kind="src" path="QuickAction"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

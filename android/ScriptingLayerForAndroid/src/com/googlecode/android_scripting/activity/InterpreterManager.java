@@ -18,19 +18,22 @@ package com.googlecode.android_scripting.activity;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -220,16 +223,32 @@ public class InterpreterManager extends ListActivity {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      TextView view;
+      LinearLayout container;
+
+      Interpreter interpreter = mInterpreters.get(position);
+
       if (convertView == null) {
-        view = new TextView(InterpreterManager.this);
+        LayoutInflater inflater =
+            (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        container = (LinearLayout) inflater.inflate(R.layout.list_item, null);
       } else {
-        view = (TextView) convertView;
+        container = (LinearLayout) convertView;
       }
-      view.setPadding(4, 4, 4, 4);
-      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
-      view.setText(mInterpreters.get(position).getNiceName());
-      return view;
+      ImageView img = (ImageView) container.findViewById(R.id.list_item_icon);
+
+      int imgId =
+          FeaturedInterpreters.getInterpreterIcon(InterpreterManager.this, interpreter
+              .getExtension());
+      if (imgId == 0) {
+        imgId = R.drawable.sl4a_logo_32;
+      }
+
+      img.setImageResource(imgId);
+
+      TextView text = (TextView) container.findViewById(R.id.list_item_title);
+
+      text.setText(interpreter.getNiceName());
+      return container;
     }
   }
 }

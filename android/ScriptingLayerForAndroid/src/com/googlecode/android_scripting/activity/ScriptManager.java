@@ -25,17 +25,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.TypedValue;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
@@ -60,6 +62,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
+import net.londatiga.android.ActionItem;
+import net.londatiga.android.QuickAction;
 
 /**
  * Manages creation, deletion, and execution of stored scripts.
@@ -79,6 +84,8 @@ public class ScriptManager extends ListActivity {
   private SearchManager mManager;
   private boolean mInSearchResultMode = false;
   private String mQuery = EMPTY;
+
+  private final Handler mHandler = new Handler();
 
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
@@ -276,11 +283,68 @@ public class ScriptManager extends ListActivity {
 
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    File script = (File) list.getItemAtPosition(position);
-    Intent intent = new Intent(this, ScriptingLayerService.class);
-    intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
-    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
-    startService(intent);
+    final File script = (File) list.getItemAtPosition(position);
+    final QuickAction actionMenu = new QuickAction(view);
+
+    ActionItem terminal = new ActionItem();
+    terminal.setIcon(getResources().getDrawable(R.drawable.terminal));
+    terminal.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(ScriptManager.this, ScriptingLayerService.class);
+        intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
+        intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
+        startService(intent);
+        dismissQuickActions(actionMenu);
+      }
+    });
+
+    final ActionItem background = new ActionItem();
+    background.setIcon(getResources().getDrawable(R.drawable.background));
+    background.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(ScriptManager.this, ScriptingLayerService.class);
+        intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
+        intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
+        startService(intent);
+        dismissQuickActions(actionMenu);
+      }
+    });
+
+    final ActionItem edit = new ActionItem();
+    edit.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_edit));
+    edit.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        editScript(script.getName());
+        dismissQuickActions(actionMenu);
+      }
+    });
+
+    final ActionItem delete = new ActionItem();
+    delete.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_delete));
+    delete.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        deleteScript(script);
+        dismissQuickActions(actionMenu);
+      }
+    });
+
+    actionMenu.addActionItems(terminal, background, edit, delete);
+    actionMenu.setAnimStyle(QuickAction.ANIM_GROW_FROM_CENTER);
+    actionMenu.show();
+
+  }
+
+  private void dismissQuickActions(final QuickAction action) {
+    mHandler.postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        action.dismiss();
+      }
+    }, 1);
   }
 
   /**
@@ -293,43 +357,6 @@ public class ScriptManager extends ListActivity {
     Intent i = new Intent(Constants.ACTION_EDIT_SCRIPT);
     i.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
     startActivity(i);
-  }
-
-  @Override
-  public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
-    menu.add(Menu.NONE, MenuId.EDIT.getId(), Menu.NONE, "Edit");
-    menu.add(Menu.NONE, MenuId.DELETE.getId(), Menu.NONE, "Delete");
-    menu.add(Menu.NONE, MenuId.START_SERVICE.getId(), Menu.NONE, "Start in Background");
-  }
-
-  @Override
-  public boolean onContextItemSelected(MenuItem item) {
-    AdapterView.AdapterContextMenuInfo info;
-    try {
-      info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-    } catch (ClassCastException e) {
-      Log.e("Bad menuInfo", e);
-      return false;
-    }
-
-    File script = (File) mAdapter.getItem(info.position);
-    if (script == null) {
-      Log.v("No script selected.");
-      return false;
-    }
-
-    int itemId = item.getItemId();
-    if (itemId == MenuId.DELETE.getId()) {
-      deleteScript(script);
-    } else if (itemId == MenuId.EDIT.getId()) {
-      editScript(script.getName());
-    } else if (itemId == MenuId.START_SERVICE.getId()) {
-      Intent intent = new Intent(this, ScriptingLayerService.class);
-      intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
-      startService(intent);
-    }
-    return true;
   }
 
   private void deleteScript(final File script) {
@@ -434,16 +461,31 @@ public class ScriptManager extends ListActivity {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      TextView view;
+      LinearLayout container;
+      File script = mScripts.get(position);
+
       if (convertView == null) {
-        view = new TextView(ScriptManager.this);
+        LayoutInflater inflater =
+            (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        container = (LinearLayout) inflater.inflate(R.layout.list_item, null);
       } else {
-        view = (TextView) convertView;
+        container = (LinearLayout) convertView;
       }
-      view.setPadding(4, 4, 4, 4);
-      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
-      view.setText(mScripts.get(position).getName());
-      return view;
+      ImageView img = (ImageView) container.findViewById(R.id.list_item_icon);
+      img.setBackgroundResource(R.drawable.file_bg);
+      img.setPadding(4, 4, 8, 8);
+
+      int imgId = FeaturedInterpreters.getInterpreterIcon(ScriptManager.this, script.getName());
+      if (imgId == 0) {
+        imgId = R.drawable.sl4a_logo_32;
+      }
+
+      img.setImageResource(imgId);
+
+      TextView text = (TextView) container.findViewById(R.id.list_item_title);
+
+      text.setText(mScripts.get(position).getName());
+      return container;
     }
   }
 }
