@@ -628,7 +628,8 @@ public class ConsoleActivity extends Activity {
         Message.obtain(disconnectHandler, -1, bridge).sendToTarget();
       }
       Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, bridge.getName());
+      ScriptProcess process = (ScriptProcess) bridge.getProcess();
+      intent.putExtra(Constants.EXTRA_SCRIPT, process.getPath());
       startActivity(intent);
       finish();
       break;

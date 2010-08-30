@@ -26,6 +26,8 @@ import android.os.Parcelable;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.trigger.Trigger;
 
+import java.io.File;
+
 public class IntentBuilders {
   /** An arbitrary value that is used to identify pending intents for executing scripts. */
   private static final int EXECUTE_SCRIPT_REQUEST_CODE = 0x12f412a;
@@ -47,12 +49,12 @@ public class IntentBuilders {
    *          the script to launch
    * @return the intent that will launch the script
    */
-  public static Intent buildStartInBackgroundIntent(String scriptName) {
+  public static Intent buildStartInBackgroundIntent(String script) {
     final ComponentName componentName = Constants.SL4A_SERVICE_LAUNCHER_COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
-    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+    intent.putExtra(Constants.EXTRA_SCRIPT, script);
     return intent;
   }
 
@@ -63,12 +65,12 @@ public class IntentBuilders {
    *          the script to launch
    * @return the intent that will launch the script
    */
-  public static Intent buildStartInTerminalIntent(String scriptName) {
+  public static Intent buildStartInTerminalIntent(String script) {
     final ComponentName componentName = Constants.SL4A_SERVICE_LAUNCHER_COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
-    intent.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+    intent.putExtra(Constants.EXTRA_SCRIPT, script);
     return intent;
   }
 
@@ -116,10 +118,11 @@ public class IntentBuilders {
    *          the icon resource to associate with the shortcut
    * @return the intent that will create the shortcut
    */
-  public static Intent buildBackgroundShortcutIntent(String scriptName, Parcelable iconResource) {
+  public static Intent buildBackgroundShortcutIntent(String script, Parcelable iconResource) {
     Intent intent = new Intent();
-    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, buildStartInBackgroundIntent(scriptName));
-    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, scriptName);
+    String name = new File(script).getName();
+    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, buildStartInBackgroundIntent(script));
+    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
     return intent;
   }
@@ -133,10 +136,11 @@ public class IntentBuilders {
    *          the icon resource to associate with the shortcut
    * @return the intent that will create the shortcut
    */
-  public static Intent buildTerminalShortcutIntent(String scriptName, Parcelable iconResource) {
+  public static Intent buildTerminalShortcutIntent(String script, Parcelable iconResource) {
     Intent intent = new Intent();
-    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, buildStartInTerminalIntent(scriptName));
-    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, scriptName);
+    String name = new File(script).getName();
+    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, buildStartInTerminalIntent(script));
+    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
     return intent;
   }
@@ -152,7 +156,7 @@ public class IntentBuilders {
    * @return {@link PendingIntent} object for running the trigger
    */
   public static PendingIntent buildTriggerIntent(Context context, Trigger trigger) {
-    final Intent intent = buildStartInBackgroundIntent(trigger.getScriptName());
+    final Intent intent = buildStartInBackgroundIntent(trigger.getScript());
     intent.putExtra(Constants.EXTRA_TRIGGER_ID, trigger.getId().toString());
     intent.setData(Uri.fromParts("trigger", trigger.getScriptName().toLowerCase(), ""
         + trigger.getId()));

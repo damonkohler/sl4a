@@ -92,7 +92,7 @@ public class ApiBrowser extends ListActivity {
     getListView().setFastScrollEnabled(true);
     mExpandedPositions = new HashSet<Integer>();
     updateAndFilterMethodDescriptors(null);
-    String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT);
     mIsLanguageSupported = SupportedLanguages.checkLanguageSupported(scriptName);
     mAdapter = new ApiBrowserAdapter();
     setListAdapter(mAdapter);

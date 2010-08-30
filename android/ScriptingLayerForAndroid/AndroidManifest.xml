@@ -159,6 +159,7 @@
     <activity
       android:name=".activity.ScriptsLiveFolder"
       android:label="Scripts"
+      android:icon="@drawable/live_folder"
       android:configChanges="keyboardHidden|orientation">
       <intent-filter>
         <action

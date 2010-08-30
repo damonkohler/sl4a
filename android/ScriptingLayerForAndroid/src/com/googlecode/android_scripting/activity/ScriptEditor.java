@@ -45,6 +45,7 @@ import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,6 +67,7 @@ public class ScriptEditor extends Activity {
   private InterpreterConfiguration mConfiguration;
   private ContentTextWatcher mWatcher;
   private EditHistory mHistory;
+  private String mPath;
 
   private boolean mIsUndoOrRedo = false;
 
@@ -101,9 +103,12 @@ public class ScriptEditor extends Activity {
     mWatcher = new ContentTextWatcher(mHistory);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     updatePreferences();
+    String script = getIntent().getStringExtra(Constants.EXTRA_SCRIPT);
 
-    String name = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    if (name != null) {
+    if (script != null) {
+      File file = new File(script);
+      String name = file.getName();
+      mPath = file.getParent();
       mNameText.setText(name);
       mNameText.setSelected(true);
       // NOTE: This appears to be the only way to get Android to put the cursor to the beginning of
@@ -111,13 +116,10 @@ public class ScriptEditor extends Activity {
       mNameText.setSelection(1);
       mNameText.extendSelection(0);
       mNameText.setSelection(0);
-    }
-
-    mLastSavedContent = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
-    if (mLastSavedContent == null) {
-      if (name != null) {
+      mLastSavedContent = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
+      if (mLastSavedContent == null) {
         try {
-          mLastSavedContent = ScriptStorageAdapter.readScript(name);
+          mLastSavedContent = ScriptStorageAdapter.readScript(script);
         } catch (IOException e) {
           Log.e("Failed to read script.", e);
           mLastSavedContent = "";
@@ -125,6 +127,7 @@ public class ScriptEditor extends Activity {
         }
       }
     }
+
     mContentText.setText(mLastSavedContent);
 
     InputFilter[] oldFilters = mContentText.getFilters();
@@ -172,14 +175,15 @@ public class ScriptEditor extends Activity {
       save();
       Intent intent = new Intent(this, ScriptingLayerService.class);
       intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, mNameText.getText().toString());
+      intent.putExtra(Constants.EXTRA_SCRIPT, new File(mPath, mNameText.getText().toString())
+          .getPath());
       startService(intent);
       finish();
     } else if (item.getItemId() == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, Preferences.class));
     } else if (item.getItemId() == MenuId.API_BROWSER.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, mNameText.getText().toString());
+      intent.putExtra(Constants.EXTRA_SCRIPT, mNameText.getText().toString());
       intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, mConfiguration.getInterpreterForScript(
           mNameText.getText().toString()).getName());
       intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());
@@ -216,7 +220,8 @@ public class ScriptEditor extends Activity {
 
   private void save() {
     mLastSavedContent = mContentText.getText().toString();
-    ScriptStorageAdapter.writeScript(mNameText.getText().toString(), mLastSavedContent);
+    String destination = new File(mPath, mNameText.getText().toString()).getPath();
+    ScriptStorageAdapter.writeScript(destination, mLastSavedContent);
     Toast.makeText(this, "Saved " + mNameText.getText().toString(), Toast.LENGTH_SHORT).show();
   }
 

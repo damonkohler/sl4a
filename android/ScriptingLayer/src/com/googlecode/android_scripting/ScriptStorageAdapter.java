@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,21 +46,17 @@ public class ScriptStorageAdapter {
   /**
    * Writes data to the script by name and overwrites any existing data.
    */
-  public static void writeScript(String name, String data) {
-    if (name == null || name.length() == 0) {
+  public static void writeScript(String file, String data) {
+    if (file == null || file.length() == 0) {
       Log.e("No script name specified.");
       return;
     }
 
-    File scriptsDirectory = new File(InterpreterConstants.SCRIPTS_ROOT);
-    if (!scriptsDirectory.exists()) {
-      Log.v("Creating scripts directory: " + InterpreterConstants.SCRIPTS_ROOT);
-      if (!scriptsDirectory.mkdirs()) {
-        Log.e("Failed to create scripts directory.");
-      }
+    File scriptFile = new File(file);
+    if (scriptFile.getParent() == null) {
+      scriptFile = new File(InterpreterConstants.SCRIPTS_ROOT, file);
     }
 
-    File scriptFile = new File(InterpreterConstants.SCRIPTS_ROOT, name);
     try {
       FileWriter stream = new FileWriter(scriptFile, false /* overwrite */);
       BufferedWriter out = new BufferedWriter(stream);
@@ -71,57 +68,76 @@ public class ScriptStorageAdapter {
   }
 
   /**
-   * Deletes the specified script by name.
-   */
-  public static void deleteScript(String name) {
-    File scriptFile = getExistingScript(name);
-    if (scriptFile == null) {
-      return;
-    }
-    if (scriptFile.exists()) {
-      if (!scriptFile.delete()) {
-        Log.e("Failed to delete script.");
-      }
-    } else {
-      Log.e("Script does not exist.");
-    }
-  }
-
-  /**
    * Returns a list of all available script {@link File}s.
    */
-  public static List<File> listAllScripts() {
-    File dir = new File(InterpreterConstants.SCRIPTS_ROOT);
+  public static List<File> listAllScripts(File dir) {
+    if (dir == null) {
+      dir = new File(InterpreterConstants.SCRIPTS_ROOT);
+    }
     if (dir.exists()) {
-      List<File> scripts = Arrays.asList(new File(InterpreterConstants.SCRIPTS_ROOT).listFiles());
-      Collections.sort(scripts);
+      List<File> scripts = Arrays.asList(dir.listFiles());
+      Collections.sort(scripts, new Comparator<File>() {
+        @Override
+        public int compare(File file1, File file2) {
+          if (file1.isDirectory() && !file2.isDirectory()) {
+            return -1;
+          } else if (!file1.isDirectory() && file2.isDirectory()) {
+            return 1;
+          }
+          return file1.compareTo(file2);
+        }
+      });
       return scripts;
     }
     return new ArrayList<File>();
   }
 
   /**
-   * Returns a list of all script {@link File}s for which there is an interpreter installed.
+   * Returns a list of script {@link File}s from the given folder for which there is an interpreter
+   * installed.
    */
-  public static List<File> listExecutableScripts(InterpreterConfiguration config) {
-    File dir = new File(InterpreterConstants.SCRIPTS_ROOT);
-    if (dir.exists()) {
-      // NOTE(damonkohler): Creating a LinkedList here is necessary in order to be able to filter it
-      // later.
-      List<File> scripts =
-          new LinkedList<File>(Arrays.asList(new File(InterpreterConstants.SCRIPTS_ROOT)
-              .listFiles()));
-      // Filter out any files that don't have interpreters installed.
-      for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
-        Interpreter interpreter = config.getInterpreterForScript(it.next().getName());
-        if (interpreter == null || !interpreter.isInstalled()) {
-          it.remove();
-        }
+  public static List<File> listExecutableScripts(File dir, InterpreterConfiguration config) {
+    // NOTE(damonkohler): Creating a LinkedList here is necessary in order to be able to filter it
+    // later.
+    List<File> scripts = new LinkedList<File>(listAllScripts(dir));
+    // Filter out any files that don't have interpreters installed.
+    for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
+      File script = it.next();
+      if (script.isDirectory()) {
+        continue;
       }
-      Collections.sort(scripts);
-      return scripts;
+      Interpreter interpreter = config.getInterpreterForScript(script.getName());
+      if (interpreter == null || !interpreter.isInstalled()) {
+        it.remove();
+      }
     }
-    return new ArrayList<File>();
+    return scripts;
+  }
+
+  /**
+   * Returns a list of all (including subfolders) script {@link File}s for which there is an
+   * interpreter installed.
+   */
+  public static List<File> listExecutableScriptsRecursively(File dir,
+      InterpreterConfiguration config) {
+    // NOTE(damonkohler): Creating a LinkedList here is necessary in order to be able to filter it
+    // later.
+    List<File> scripts = new LinkedList<File>();
+    List<File> files = listAllScripts(dir);
+
+    // Filter out any files that don't have interpreters installed.
+    for (Iterator<File> it = files.iterator(); it.hasNext();) {
+      File file = it.next();
+      if (file.isDirectory()) {
+        scripts.addAll(listExecutableScriptsRecursively(file, config));
+      }
+      Interpreter interpreter = config.getInterpreterForScript(file.getName());
+      if (interpreter != null && interpreter.isInstalled()) {
+        scripts.add(file);
+      }
+    }
+    Collections.sort(scripts);
+    return scripts;
   }
 
   /**
@@ -130,8 +146,11 @@ public class ScriptStorageAdapter {
    * @param name
    *          the name of the script to access
    */
-  public static File getExistingScript(String name) {
-    File scriptFile = new File(InterpreterConstants.SCRIPTS_ROOT, name);
+  public static File getExistingScript(String file) {
+    File scriptFile = new File(file);
+    if (scriptFile.getParent() == null) {
+      scriptFile = new File(InterpreterConstants.SCRIPTS_ROOT, file);
+    }
     if (scriptFile.exists()) {
       return scriptFile;
     }
@@ -141,8 +160,8 @@ public class ScriptStorageAdapter {
   /**
    * Returns the content of the specified script or null if the script does not exist.
    */
-  public static String readScript(String name) throws IOException {
-    File scriptFile = getExistingScript(name);
+  public static String readScript(String file) throws IOException {
+    File scriptFile = getExistingScript(file);
     if (scriptFile == null) {
       return null;
     }

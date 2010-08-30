@@ -69,7 +69,7 @@ public class ScriptService extends Service {
       if (FeaturedInterpreters.isSupported(fileName)) {
         Intent i = new Intent(this, DialogActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.putExtra(Constants.EXTRA_SCRIPT_NAME, fileName);
+        i.putExtra(Constants.EXTRA_SCRIPT, fileName);
         startActivity(i);
       } else {
         Log.e(this, "Cannot find an interpreter for script " + fileName);

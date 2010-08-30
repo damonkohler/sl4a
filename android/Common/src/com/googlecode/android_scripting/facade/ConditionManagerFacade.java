@@ -17,8 +17,8 @@ public class ConditionManagerFacade extends RpcReceiver {
 
   @Rpc(description = "Schedules a script for execution when the ringer volume is set to silent.")
   public void onRingerSilent(
-      @RpcParameter(name = "scriptName", description = "script to execute when the ringer volume is set to silent, or set to anything other than silent") String scriptName) {
-    mTriggerRepository.addTrigger(new EventTrigger(scriptName, new RingerModeEventListener.Factory()));
+      @RpcParameter(name = "script", description = "script to execute when the ringer volume is set to silent, or set to anything other than silent") String script) {
+    mTriggerRepository.addTrigger(new EventTrigger(script, new RingerModeEventListener.Factory()));
   }
 
   @Override

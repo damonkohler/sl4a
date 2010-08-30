@@ -44,8 +44,7 @@ public interface Constants {
   public static final String ACTION_LAUNCH_SERVER =
       "com.googlecode.android_scripting.action.LAUNCH_SERVER";
 
-  public static final String EXTRA_SCRIPT_NAME =
-      "com.googlecode.android_scripting.extra.SCRIPT_NAME";
+  public static final String EXTRA_SCRIPT = "com.googlecode.android_scripting.extra.SCRIPT";
   public static final String EXTRA_SCRIPT_CONTENT =
       "com.googlecode.android_scripting.extra.SCRIPT_CONTENT";
   public static final String EXTRA_INTERPRETER_NAME =

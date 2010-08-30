@@ -17,14 +17,17 @@
 package com.googlecode.android_scripting.activity;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -57,7 +60,7 @@ public class InterpreterPicker extends ListActivity {
     CustomizeWindow.requestCustomTitle(this, "Interpreters", R.layout.script_manager);
     mObserver = new ScriptListObserver();
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    mInterpreters = mConfiguration.getInstalledInterpreters();
+    mInterpreters = mConfiguration.getInteractiveInterpreters();
     mConfiguration.registerObserver(mObserver);
     mAdapter = new InterpreterPickerAdapter();
     mAdapter.registerDataSetObserver(mObserver);
@@ -92,7 +95,7 @@ public class InterpreterPicker extends ListActivity {
   private class ScriptListObserver extends DataSetObserver implements ConfigurationObserver {
     @Override
     public void onInvalidated() {
-      mInterpreters = mConfiguration.getInstalledInterpreters();
+      mInterpreters = mConfiguration.getInteractiveInterpreters();
     }
 
     @Override
@@ -120,16 +123,32 @@ public class InterpreterPicker extends ListActivity {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-      TextView view;
+      LinearLayout container;
+
+      Interpreter interpreter = mInterpreters.get(position);
+
       if (convertView == null) {
-        view = new TextView(InterpreterPicker.this);
+        LayoutInflater inflater =
+            (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        container = (LinearLayout) inflater.inflate(R.layout.list_item, null);
       } else {
-        view = (TextView) convertView;
+        container = (LinearLayout) convertView;
       }
-      view.setPadding(4, 4, 4, 4);
-      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
-      view.setText(mInterpreters.get(position).getNiceName());
-      return view;
+      ImageView img = (ImageView) container.findViewById(R.id.list_item_icon);
+
+      int imgId =
+          FeaturedInterpreters.getInterpreterIcon(InterpreterPicker.this, interpreter
+              .getExtension());
+      if (imgId == 0) {
+        imgId = R.drawable.sl4a_logo_32;
+      }
+
+      img.setImageResource(imgId);
+
+      TextView text = (TextView) container.findViewById(R.id.list_item_title);
+
+      text.setText(interpreter.getNiceName());
+      return container;
     }
   }
 }

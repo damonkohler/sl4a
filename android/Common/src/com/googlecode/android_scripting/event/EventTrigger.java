@@ -35,8 +35,8 @@ public class EventTrigger extends Trigger {
   private final EventFactory mEventFactory;
   private transient EventListener mEventListener;
 
-  public EventTrigger(String scriptName, EventFactory eventFactory) {
-    super(scriptName);
+  public EventTrigger(String script, EventFactory eventFactory) {
+    super(script);
     mEventFactory = eventFactory;
   }
 
@@ -46,7 +46,7 @@ public class EventTrigger extends Trigger {
     mEventListener.registerObserver(new EventObserver() {
       @Override
       public void run(Event event) {
-        Intent intent = IntentBuilders.buildStartInBackgroundIntent(getScriptName());
+        Intent intent = IntentBuilders.buildStartInBackgroundIntent(getScript());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         service.startActivity(intent);
       }

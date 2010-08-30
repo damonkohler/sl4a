@@ -145,7 +145,7 @@ public class ScriptingLayerService extends Service {
       return;
     }
 
-    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT);
     if (name != null && name.endsWith(HtmlInterpreter.HTML_EXTENSION)) {
       launchHtmlScript(intent);
       if (mProcessMap.isEmpty()) {
@@ -192,16 +192,16 @@ public class ScriptingLayerService extends Service {
   }
 
   private void launchHtmlScript(Intent intent) {
-    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    File script = ScriptStorageAdapter.getExistingScript(name);
-    ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
+    String script = intent.getStringExtra(Constants.EXTRA_SCRIPT);
+    File scriptFile = ScriptStorageAdapter.getExistingScript(script);
+    ScriptLauncher.launchHtmlScript(scriptFile, this, intent, mInterpreterConfiguration);
   }
 
   private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {
     final int port = proxy.getAddress().getPort();
-    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    File script = ScriptStorageAdapter.getExistingScript(name);
-    return ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, trigger,
+    String script = intent.getStringExtra(Constants.EXTRA_SCRIPT);
+    File scriptFile = ScriptStorageAdapter.getExistingScript(script);
+    return ScriptLauncher.launchScript(scriptFile, mInterpreterConfiguration, proxy, trigger,
         new Runnable() {
           @Override
           public void run() {

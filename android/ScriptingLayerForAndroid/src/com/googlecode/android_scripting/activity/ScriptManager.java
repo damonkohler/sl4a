@@ -27,16 +27,15 @@ import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,19 +46,24 @@ import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
-import com.googlecode.android_scripting.FeaturedInterpreters;
+import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.ScriptListAdapter;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.dialog.UsageTrackingConfirmation;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -84,7 +88,8 @@ public class ScriptManager extends ListActivity {
   private SearchManager mManager;
   private boolean mInSearchResultMode = false;
   private String mQuery = EMPTY;
-
+  private File mCurrentDir;
+  private final File mBaseDir = new File(InterpreterConstants.SCRIPTS_ROOT);
   private final Handler mHandler = new Handler();
 
   private static enum RequestCode {
@@ -92,8 +97,8 @@ public class ScriptManager extends ListActivity {
   }
 
   private static enum MenuId {
-    DELETE, EDIT, START_SERVICE, HELP, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES, LOGCAT_VIEWER,
-    TRIGGER_MANAGER, REFRESH, SEARCH;
+    DELETE, EDIT, START_SERVICE, HELP, FOLDER_ADD, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES,
+    LOGCAT_VIEWER, TRIGGER_MANAGER, REFRESH, SEARCH;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -103,8 +108,12 @@ public class ScriptManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
+    if (!FileUtils.makeDirectory(mBaseDir)) {
+      throw new RuntimeException("Failed to create scripts directory.");
+    }
+    mCurrentDir = mBaseDir;
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    mAdapter = new ScriptManagerAdapter();
+    mAdapter = new ScriptManagerAdapter(this);
     mObserver = new ScriptListObserver();
     mAdapter.registerDataSetObserver(mObserver);
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
@@ -128,9 +137,9 @@ public class ScriptManager extends ListActivity {
   private void updateAndFilterScriptList(final String query) {
     List<File> scripts;
     if (mPreferences.getBoolean("show_all_files", false)) {
-      scripts = ScriptStorageAdapter.listAllScripts();
+      scripts = ScriptStorageAdapter.listAllScripts(mCurrentDir);
     } else {
-      scripts = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
+      scripts = ScriptStorageAdapter.listExecutableScripts(mCurrentDir, mConfiguration);
     }
     mScripts = Lists.newArrayList(Collections2.filter(scripts, new Predicate<File>() {
       @Override
@@ -152,6 +161,21 @@ public class ScriptManager extends ListActivity {
 
     if (mScripts.size() == 0) {
       ((TextView) findViewById(android.R.id.empty)).setText("No matches found.");
+    }
+
+    if (!mCurrentDir.equals(mBaseDir)) {
+
+      mScripts.add(0, new File(mCurrentDir.getParent()) {
+        @Override
+        public boolean isDirectory() {
+          return true;
+        }
+
+        @Override
+        public String getName() {
+          return "..";
+        }
+      });
     }
   }
 
@@ -224,9 +248,15 @@ public class ScriptManager extends ListActivity {
   }
 
   private void buildMenuIdMaps() {
-    mAddMenuIds = new HashMap<Integer, Interpreter>();
+    mAddMenuIds = new LinkedHashMap<Integer, Interpreter>();
     int i = MenuId.values().length + Menu.FIRST;
     List<Interpreter> installed = mConfiguration.getInstalledInterpreters();
+    Collections.sort(installed, new Comparator<Interpreter>() {
+      @Override
+      public int compare(Interpreter interpreterA, Interpreter interpreterB) {
+        return interpreterA.getNiceName().compareTo(interpreterB.getNiceName());
+      }
+    });
     for (Interpreter interpreter : installed) {
       mAddMenuIds.put(i, interpreter);
       ++i;
@@ -237,6 +267,7 @@ public class ScriptManager extends ListActivity {
     Menu addMenu =
         menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, "Add").setIcon(
             android.R.drawable.ic_menu_add);
+    addMenu.add(Menu.NONE, MenuId.FOLDER_ADD.getId(), Menu.NONE, "Folder");
     for (Entry<Integer, Interpreter> entry : mAddMenuIds.entrySet()) {
       addMenu.add(Menu.NONE, entry.getKey(), Menu.NONE, entry.getValue().getNiceName());
     }
@@ -256,7 +287,8 @@ public class ScriptManager extends ListActivity {
       // Add a new script.
       Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
       Interpreter interpreter = mAddMenuIds.get(itemId);
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, interpreter.getExtension());
+      intent.putExtra(Constants.EXTRA_SCRIPT, new File(mCurrentDir.getPath(), interpreter
+          .getExtension()).getPath());
       intent.putExtra(Constants.EXTRA_SCRIPT_CONTENT, interpreter.getContentTemplate());
       intent.putExtra(Constants.EXTRA_IS_NEW_SCRIPT, true);
       startActivity(intent);
@@ -266,6 +298,8 @@ public class ScriptManager extends ListActivity {
     } else if (itemId == MenuId.QRCODE_ADD.getId()) {
       Intent intent = new Intent("com.google.zxing.client.android.SCAN");
       startActivityForResult(intent, RequestCode.QRCODE_ADD.ordinal());
+    } else if (itemId == MenuId.FOLDER_ADD.getId()) {
+      addFolder(null);
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, Preferences.class));
     } else if (itemId == MenuId.TRIGGER_MANAGER.getId()) {
@@ -282,8 +316,47 @@ public class ScriptManager extends ListActivity {
   }
 
   @Override
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+    final File file = mScripts.get(info.position);
+    if (!file.isDirectory() || !mCurrentDir.equals(mBaseDir) && info.position == 0) {
+      return;
+    }
+    final QuickAction actionMenu = new QuickAction(info.targetView);
+
+    final ActionItem edit = new ActionItem();
+    edit.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_edit));
+    edit.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        renameFolder(file, null);
+        dismissQuickActions(actionMenu);
+      }
+    });
+
+    final ActionItem delete = new ActionItem();
+    delete.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_delete));
+    delete.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        deleteScript(file);
+        dismissQuickActions(actionMenu);
+      }
+    });
+
+    actionMenu.addActionItems(edit, delete);
+    actionMenu.setAnimStyle(QuickAction.ANIM_GROW_FROM_CENTER);
+    actionMenu.show();
+  }
+
+  @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    final File script = (File) list.getItemAtPosition(position);
+    final File file = (File) list.getItemAtPosition(position);
+    if (file.isDirectory()) {
+      mCurrentDir = file;
+      mAdapter.notifyDataSetInvalidated();
+      return;
+    }
     final QuickAction actionMenu = new QuickAction(view);
 
     ActionItem terminal = new ActionItem();
@@ -293,7 +366,7 @@ public class ScriptManager extends ListActivity {
       public void onClick(View v) {
         Intent intent = new Intent(ScriptManager.this, ScriptingLayerService.class);
         intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
-        intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
+        intent.putExtra(Constants.EXTRA_SCRIPT, file.getPath());
         startService(intent);
         dismissQuickActions(actionMenu);
       }
@@ -306,7 +379,7 @@ public class ScriptManager extends ListActivity {
       public void onClick(View v) {
         Intent intent = new Intent(ScriptManager.this, ScriptingLayerService.class);
         intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
-        intent.putExtra(Constants.EXTRA_SCRIPT_NAME, script.getName());
+        intent.putExtra(Constants.EXTRA_SCRIPT, file.getPath());
         startService(intent);
         dismissQuickActions(actionMenu);
       }
@@ -317,7 +390,7 @@ public class ScriptManager extends ListActivity {
     edit.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        editScript(script.getName());
+        editScript(file.getPath());
         dismissQuickActions(actionMenu);
       }
     });
@@ -327,7 +400,7 @@ public class ScriptManager extends ListActivity {
     delete.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        deleteScript(script);
+        deleteScript(file);
         dismissQuickActions(actionMenu);
       }
     });
@@ -353,19 +426,23 @@ public class ScriptManager extends ListActivity {
    * @param scriptName
    *          the name of the script to edit
    */
-  private void editScript(String scriptName) {
+  private void editScript(String script) {
     Intent i = new Intent(Constants.ACTION_EDIT_SCRIPT);
-    i.putExtra(Constants.EXTRA_SCRIPT_NAME, scriptName);
+    i.putExtra(Constants.EXTRA_SCRIPT, script);
     startActivity(i);
   }
 
   private void deleteScript(final File script) {
     AlertDialog.Builder alert = new AlertDialog.Builder(this);
-    alert.setTitle("Delete Script");
+    if (script.isDirectory()) {
+      alert.setTitle("Delete Folder");
+    } else {
+      alert.setTitle("Delete Script");
+    }
     alert.setMessage("Would you like to delete " + script.getName() + "?");
     alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int whichButton) {
-        ScriptStorageAdapter.deleteScript(script.getName());
+        FileUtils.delete(script);
         mScripts.remove(script);
         mAdapter.notifyDataSetChanged();
       }
@@ -373,6 +450,101 @@ public class ScriptManager extends ListActivity {
     alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int whichButton) {
         // Ignore.
+      }
+    });
+    alert.show();
+  }
+
+  private void addFolder(String name) {
+    if (name == null) {
+      String defaultName = "untitled folder";
+      name = defaultName;
+      int i = 1;
+      for (File f : mScripts) {
+        if (f.isDirectory() && f.getName().equals(name)) {
+          i++;
+          name = String.format("%s %d", defaultName, i);
+        }
+      }
+    }
+    final EditText folderName = new EditText(this);
+    folderName.setText(name);
+    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    alert.setTitle("Add Folder");
+    alert.setView(folderName);
+    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int whichButton) {
+        String name = folderName.getText().toString();
+        if (name.length() == 0) {
+          showAlert("Folder name is empty.", name);
+          return;
+        } else {
+          for (File f : mScripts) {
+            if (f.getName().equals(name)) {
+              showAlert(String.format("Directory \"%s\" already exists.", name), name);
+              return;
+            }
+          }
+        }
+        File dir = new File(mCurrentDir, name);
+        if (!FileUtils.makeDirectory(dir)) {
+          throw new RuntimeException(String.format("Cannot create directory \"%s\"", dir.getPath()));
+        }
+        mAdapter.notifyDataSetInvalidated();
+      }
+
+      private void showAlert(String message, final String folderName) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(ScriptManager.this);
+        alert.setMessage(message);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+            addFolder(folderName);
+          }
+        });
+        alert.show();
+      }
+    });
+    alert.show();
+  }
+
+  private void renameFolder(final File dir, String name) {
+    if (name == null) {
+      name = dir.getName();
+    }
+    final EditText folderName = new EditText(this);
+    folderName.setText(name);
+    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    alert.setTitle("Rename Folder");
+    alert.setView(folderName);
+    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int whichButton) {
+        String name = folderName.getText().toString();
+        if (name.length() == 0) {
+          showAlert("Folder name is empty.", name);
+          return;
+        } else {
+          for (File f : mScripts) {
+            if (f.getName().equals(name)) {
+              showAlert(String.format("Directory \"%s\" already exists.", name), name);
+              return;
+            }
+          }
+        }
+        if (!FileUtils.remane(dir, name)) {
+          throw new RuntimeException(String.format("Cannot rename directory \"%s\"", dir.getPath()));
+        }
+        mAdapter.notifyDataSetInvalidated();
+      }
+
+      private void showAlert(String message, final String folderName) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(ScriptManager.this);
+        alert.setMessage(message);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+            renameFolder(dir, folderName);
+          }
+        });
+        alert.show();
       }
     });
     alert.show();
@@ -413,7 +585,8 @@ public class ScriptManager extends ListActivity {
     }
     String title = contents[0];
     String body = contents[1];
-    ScriptStorageAdapter.writeScript(title, body);
+    String destination = new File(mCurrentDir, title).getPath();
+    ScriptStorageAdapter.writeScript(destination, body);
   }
 
   @Override
@@ -442,50 +615,16 @@ public class ScriptManager extends ListActivity {
     }
   }
 
-  private class ScriptManagerAdapter extends BaseAdapter {
+  private class ScriptManagerAdapter extends ScriptListAdapter {
 
-    @Override
-    public int getCount() {
-      return mScripts.size();
+    public ScriptManagerAdapter(Context context) {
+      super(context);
     }
 
     @Override
-    public Object getItem(int position) {
-      return mScripts.get(position);
+    protected List<File> getScriptList() {
+      return mScripts;
     }
 
-    @Override
-    public long getItemId(int position) {
-      return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-      LinearLayout container;
-      File script = mScripts.get(position);
-
-      if (convertView == null) {
-        LayoutInflater inflater =
-            (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        container = (LinearLayout) inflater.inflate(R.layout.list_item, null);
-      } else {
-        container = (LinearLayout) convertView;
-      }
-      ImageView img = (ImageView) container.findViewById(R.id.list_item_icon);
-      img.setBackgroundResource(R.drawable.file_bg);
-      img.setPadding(4, 4, 8, 8);
-
-      int imgId = FeaturedInterpreters.getInterpreterIcon(ScriptManager.this, script.getName());
-      if (imgId == 0) {
-        imgId = R.drawable.sl4a_logo_32;
-      }
-
-      img.setImageResource(imgId);
-
-      TextView text = (TextView) container.findViewById(R.id.list_item_title);
-
-      text.setText(mScripts.get(position).getName());
-      return container;
-    }
   }
 }
