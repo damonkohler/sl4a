@@ -78,7 +78,6 @@ public class InterpreterManager extends ListActivity {
     mObserver = new InterpreterListObserver();
     mAdapter.registerDataSetObserver(mObserver);
     setListAdapter(mAdapter);
-    registerForContextMenu(getListView());
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     mFeaturedInterpreters = FeaturedInterpreters.getList();
