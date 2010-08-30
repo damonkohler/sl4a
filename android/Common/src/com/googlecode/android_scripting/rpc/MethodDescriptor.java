@@ -197,6 +197,11 @@ public final class MethodDescriptor {
       helpBuilder.append(rpcAnnotation.returns());
     }
 
+    if (mMethod.isAnnotationPresent(RpcEvent.class)) {
+      String eventName = mMethod.getAnnotation(RpcEvent.class).value();
+      helpBuilder.append(String.format("\n\nGenerates \"%s\" events.", eventName));
+    }
+
     if (mMethod.isAnnotationPresent(RpcDeprecated.class)) {
       String replacedBy = mMethod.getAnnotation(RpcDeprecated.class).value();
       helpBuilder.append(String.format("\n\nDeprecated! Please use %s instead.", replacedBy));

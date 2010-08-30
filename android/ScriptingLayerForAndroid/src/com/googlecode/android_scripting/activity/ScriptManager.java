@@ -110,7 +110,6 @@ public class ScriptManager extends ListActivity {
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
     updateAndFilterScriptList(mQuery);
     setListAdapter(mAdapter);
-    registerForContextMenu(getListView());
     UsageTrackingConfirmation.show(this);
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
