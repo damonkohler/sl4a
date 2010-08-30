@@ -16,14 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.net.URLEncoder;
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import org.json.JSONException;
-
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -42,6 +34,14 @@ import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import org.json.JSONException;
 
 /**
  * Exposes TelephonyManager functionality.
@@ -83,7 +83,7 @@ public class PhoneFacade extends RpcReceiver {
               mPhoneState.putString("state", "ringing");
               break;
             }
-            mEventFacade.postEvent("phone", mPhoneState);
+            mEventFacade.postEvent("phone", mPhoneState.clone());
           }
         };
       }
