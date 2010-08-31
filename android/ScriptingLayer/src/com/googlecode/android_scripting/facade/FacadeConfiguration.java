@@ -79,6 +79,7 @@ public class FacadeConfiguration {
     sFacadeClassList.add(WifiFacade.class);
     sFacadeClassList.add(UiFacade.class);
     sFacadeClassList.add(BatteryManagerFacade.class);
+    sFacadeClassList.add(ExecutionResultFacade.class);
 
     if (sdkVersion >= 4) {
       sFacadeClassList.add(TextToSpeechFacade.class);

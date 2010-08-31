@@ -42,16 +42,16 @@ import de.mud.terminal.VDUBuffer;
 import de.mud.terminal.VDUDisplay;
 import de.mud.terminal.vt320;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.connectbot.TerminalView;
 import org.connectbot.transport.AbsTransport;
 import org.connectbot.util.Colors;
 import org.connectbot.util.PreferenceConstants;
 import org.connectbot.util.SelectionArea;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Provides a bridge between a MUD terminal buffer and a possible TerminalView. This separation
@@ -822,13 +822,18 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
   }
 
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-    UiFacade facade = mProcess.getRpcReceiverManager().getReceiver(UiFacade.class);
-    facade.onCreateContextMenu(menu, v, menuInfo);
+    if (mProcess.isAlive()) {
+      UiFacade facade = mProcess.getRpcReceiverManager().getReceiver(UiFacade.class);
+      facade.onCreateContextMenu(menu, v, menuInfo);
+    }
   }
 
   public boolean onPrepareOptionsMenu(Menu menu) {
-    UiFacade facade = mProcess.getRpcReceiverManager().getReceiver(UiFacade.class);
-    return facade.onPrepareOptionsMenu(menu);
+    if (mProcess.isAlive()) {
+      UiFacade facade = mProcess.getRpcReceiverManager().getReceiver(UiFacade.class);
+      return facade.onPrepareOptionsMenu(menu);
+    }
+    return false;
   }
 
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
