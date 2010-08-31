@@ -166,8 +166,7 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
   }
 
   /**
-   * Create new terminal bridge with following parameters. We will immediately launch thread to
-   * start SSH connection and handle any hostkey verification and password authentication.
+   * Create new terminal bridge with following parameters.
    */
   public TerminalBridge(final TerminalManager manager, InterpreterProcess process, AbsTransport t)
       throws IOException {

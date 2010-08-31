@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Process {
 
@@ -39,12 +40,14 @@ public class Process {
   private final List<String> mArguments;
   private final Map<String, String> mEnvironment;
 
+  private static final int PID_INIT_VALUE = -1;
+
   private File mBinary;
   private String mName;
   private long mStartTime;
   private long mEndTime;
 
-  protected volatile Integer mPid;
+  protected final AtomicInteger mPid;
   protected FileDescriptor mFd;
   protected OutputStream mOut;
   protected InputStream mIn;
@@ -53,6 +56,7 @@ public class Process {
   public Process() {
     mArguments = new ArrayList<String>();
     mEnvironment = new HashMap<String, String>();
+    mPid = new AtomicInteger(PID_INIT_VALUE);
   }
 
   public void addArgument(String argument) {
@@ -79,7 +83,7 @@ public class Process {
   }
 
   public Integer getPid() {
-    return mPid;
+    return mPid.get();
   }
 
   public FileDescriptor getFd() {
@@ -115,17 +119,17 @@ public class Process {
     String[] argumentsArray = mArguments.toArray(new String[mArguments.size()]);
     mLog = new File(String.format("%s/%s.log", InterpreterConstants.SDCARD_SL4A_ROOT, getName()));
     mFd = Exec.createSubprocess(binaryPath, argumentsArray, getEnvironmentArray(), pid);
-    mPid = pid[0];
+    mPid.set(pid[0]);
     mOut = new FileOutputStream(mFd);
     mIn = new StreamGobbler(new FileInputStream(mFd), mLog, DEFAULT_BUFFER_SIZE);
     mStartTime = System.currentTimeMillis();
 
     new Thread(new Runnable() {
       public void run() {
-        int result = Exec.waitFor(mPid);
+        int result = Exec.waitFor(mPid.get());
         mEndTime = System.currentTimeMillis();
-        mPid = null;
-        Log.v("Process " + mPid + " exited with result code " + result + ".");
+        int pid = mPid.getAndSet(PID_INIT_VALUE);
+        Log.v("Process " + pid + " exited with result code " + result + ".");
         try {
           mIn.close();
         } catch (IOException e) {
@@ -154,13 +158,13 @@ public class Process {
 
   public void kill() {
     if (isAlive()) {
-      android.os.Process.killProcess(mPid);
+      android.os.Process.killProcess(mPid.get());
       Log.v("Killed process " + mPid);
     }
   }
 
   public boolean isAlive() {
-    return (mFd != null && mFd.valid()) && mPid != null;
+    return (mFd != null && mFd.valid()) && mPid.get() != PID_INIT_VALUE;
   }
 
   public String getUptime() {

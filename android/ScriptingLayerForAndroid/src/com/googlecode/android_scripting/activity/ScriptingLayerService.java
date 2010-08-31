@@ -166,14 +166,14 @@ public class ScriptingLayerService extends Service {
     } else {
       proxy = launchServer(intent, true);
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT)) {
-        launchTerminal(intent, proxy.getAddress());
+        launchTerminal(proxy.getAddress());
         interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
         ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT)) {
         interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
         ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_INTERPRETER)) {
-        launchTerminal(intent, proxy.getAddress());
+        launchTerminal(proxy.getAddress());
         interpreterProcess = launchInterpreter(intent, proxy);
       }
     }
@@ -232,7 +232,7 @@ public class ScriptingLayerService extends Service {
     });
   }
 
-  private void launchTerminal(Intent intent, InetSocketAddress address) {
+  private void launchTerminal(InetSocketAddress address) {
     Intent i = new Intent(this, ConsoleActivity.class);
     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     i.putExtra(Constants.EXTRA_PROXY_PORT, address.getPort());

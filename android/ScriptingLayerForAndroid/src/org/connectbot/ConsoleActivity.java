@@ -671,8 +671,8 @@ public class ConsoleActivity extends Activity {
   }
 
   private void doEmailTranscript() {
-    // Don't really want to supply an address, but currently it's required, otherwise we get an
-    // exception.
+    // Don't really want to supply an address, but currently it's required,
+    // otherwise we get an exception.
     TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
     TerminalBridge bridge = terminalView.bridge;
     // TODO(raaar): Replace with process log.
