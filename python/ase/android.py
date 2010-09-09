@@ -34,7 +34,8 @@ class Android(object):
     self.conn = socket.create_connection(addr)
     self.client = self.conn.makefile()
     self.id = 0
-    self._authenticate(HANDSHAKE)
+    if HANDSHAKE is not None:
+      self._authenticate(HANDSHAKE)
 
   def _rpc(self, method, *args):
     data = {'id': self.id,
