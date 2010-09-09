@@ -31,7 +31,7 @@ public class HtmlInterpreter extends Interpreter {
 
   public static final String JSON_FILE = "json2.js";
   public static final String ANDROID_JS_FILE = "android.js";
-  public static final String HTML_NICE_NAME = "HTML";
+  public static final String HTML_NICE_NAME = "HTML and JavaScript";
 
   private final String mJson;
   private final String mAndroidJs;
