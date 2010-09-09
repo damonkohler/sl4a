@@ -151,7 +151,7 @@ public class ScriptEditor extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
-    menu.add(0, MenuId.SAVE.getId(), 0, "Save").setIcon(android.R.drawable.ic_menu_save);
+    menu.add(0, MenuId.SAVE.getId(), 0, "Save & Exit").setIcon(android.R.drawable.ic_menu_save);
     menu.add(0, MenuId.SAVE_AND_RUN.getId(), 0, "Save & Run").setIcon(
         android.R.drawable.ic_media_play);
     menu.add(0, MenuId.PREFERENCES.getId(), 0, "Preferences").setIcon(
