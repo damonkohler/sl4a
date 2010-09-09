@@ -25,16 +25,18 @@ import android.os.Bundle;
 import android.os.IBinder;
 
 import com.googlecode.android_scripting.Constants;
-import com.googlecode.android_scripting.facade.ExecutionResultFacade;
+import com.googlecode.android_scripting.facade.ActivityResultFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 
-
+/**
+ * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
+ */
 public class ScriptActivity extends Activity {
-  
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (Constants.ACTION_LAUNCH_FOR_RESULT.equals(getIntent().getAction())) {
+    if (Constants.ACTION_LAUNCH_SCRIPT_FOR_RESULT.equals(getIntent().getAction())) {
       setTheme(android.R.style.Theme_Dialog);
       setContentView(R.layout.dialog);
       ServiceConnection connection = new ServiceConnection() {
@@ -43,21 +45,21 @@ public class ScriptActivity extends Activity {
           ScriptService scriptService = ((ScriptService.LocalBinder) service).getService();
           try {
             RpcReceiverManager manager = scriptService.getRpcReceiverManager();
-            ExecutionResultFacade resultFacade = manager.getReceiver(ExecutionResultFacade.class);
+            ActivityResultFacade resultFacade = manager.getReceiver(ActivityResultFacade.class);
             resultFacade.setActivity(ScriptActivity.this);
           } catch (InterruptedException e) {
             throw new RuntimeException(e);
           }
         }
 
-       @Override
+        @Override
         public void onServiceDisconnected(ComponentName name) {
-          // Ignore
+          // Ignore.
         }
       };
       bindService(new Intent(this, ScriptService.class), connection, Context.BIND_AUTO_CREATE);
       startService(new Intent(this, ScriptService.class));
-    }else{
+    } else {
       ScriptApplication application = (ScriptApplication) getApplication();
       if (application.readyToStart()) {
         startService(new Intent(this, ScriptService.class));

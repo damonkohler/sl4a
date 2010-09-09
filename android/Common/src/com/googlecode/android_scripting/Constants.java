@@ -24,8 +24,8 @@ public interface Constants {
       "com.googlecode.android_scripting.action.LAUNCH_FOREGROUND_SCRIPT";
   public static final String ACTION_LAUNCH_BACKGROUND_SCRIPT =
       "com.googlecode.android_scripting.action.LAUNCH_BACKGROUND_SCRIPT";
-  public static final String ACTION_LAUNCH_FOR_RESULT =
-      "com.googlecode.android_scripting.action.ACTION_LAUNCH_FOR_RESULT";
+  public static final String ACTION_LAUNCH_SCRIPT_FOR_RESULT =
+      "com.googlecode.android_scripting.action.ACTION_LAUNCH_SCRIPT_FOR_RESULT";
   public static final String ACTION_LAUNCH_INTERPRETER =
       "com.googlecode.android_scripting.action.LAUNCH_INTERPRETER";
   public static final String ACTION_EDIT_SCRIPT =
