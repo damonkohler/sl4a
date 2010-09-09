@@ -46,24 +46,17 @@ public class ScriptStorageAdapter {
   /**
    * Writes data to the script by name and overwrites any existing data.
    */
-  public static void writeScript(String file, String data) {
-    if (file == null || file.length() == 0) {
-      Log.e("No script name specified.");
-      return;
+  public static void writeScript(File script, String data) {
+    if (script.getParent() == null) {
+      script = new File(InterpreterConstants.SCRIPTS_ROOT, script.getPath());
     }
-
-    File scriptFile = new File(file);
-    if (scriptFile.getParent() == null) {
-      scriptFile = new File(InterpreterConstants.SCRIPTS_ROOT, file);
-    }
-
     try {
-      FileWriter stream = new FileWriter(scriptFile, false /* overwrite */);
+      FileWriter stream = new FileWriter(script, false /* overwrite */);
       BufferedWriter out = new BufferedWriter(stream);
       out.write(data);
       out.close();
     } catch (IOException e) {
-      Log.e("Failed to write script file.", e);
+      Log.e("Failed to write script.", e);
     }
   }
 
@@ -138,33 +131,5 @@ public class ScriptStorageAdapter {
     }
     Collections.sort(scripts);
     return scripts;
-  }
-
-  /**
-   * Returns the {@link File} object for the script or null if the script does not exist.
-   * 
-   * @param name
-   *          the name of the script to access
-   */
-  public static File getExistingScript(String file) {
-    File scriptFile = new File(file);
-    if (scriptFile.getParent() == null) {
-      scriptFile = new File(InterpreterConstants.SCRIPTS_ROOT, file);
-    }
-    if (scriptFile.exists()) {
-      return scriptFile;
-    }
-    return null;
-  }
-
-  /**
-   * Returns the content of the specified script or null if the script does not exist.
-   */
-  public static String readScript(String file) throws IOException {
-    File scriptFile = getExistingScript(file);
-    if (scriptFile == null) {
-      return null;
-    }
-    return FileUtils.readFile(scriptFile);
   }
 }

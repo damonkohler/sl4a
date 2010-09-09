@@ -585,8 +585,8 @@ public class ScriptManager extends ListActivity {
     }
     String title = contents[0];
     String body = contents[1];
-    String destination = new File(mCurrentDir, title).getPath();
-    ScriptStorageAdapter.writeScript(destination, body);
+    File script = new File(mCurrentDir, title);
+    ScriptStorageAdapter.writeScript(script, body);
   }
 
   @Override

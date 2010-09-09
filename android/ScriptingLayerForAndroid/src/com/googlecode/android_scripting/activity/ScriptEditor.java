@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
@@ -119,7 +120,7 @@ public class ScriptEditor extends Activity {
       mLastSavedContent = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
       if (mLastSavedContent == null) {
         try {
-          mLastSavedContent = ScriptStorageAdapter.readScript(script);
+          mLastSavedContent = FileUtils.readToString(script);
         } catch (IOException e) {
           Log.e("Failed to read script.", e);
           mLastSavedContent = "";
@@ -220,8 +221,8 @@ public class ScriptEditor extends Activity {
 
   private void save() {
     mLastSavedContent = mContentText.getText().toString();
-    String destination = new File(mPath, mNameText.getText().toString()).getPath();
-    ScriptStorageAdapter.writeScript(destination, mLastSavedContent);
+    File script = new File(mPath, mNameText.getText().toString());
+    ScriptStorageAdapter.writeScript(script, mLastSavedContent);
     Toast.makeText(this, "Saved " + mNameText.getText().toString(), Toast.LENGTH_SHORT).show();
   }
 

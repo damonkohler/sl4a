@@ -127,7 +127,7 @@ public class FileUtils {
     return file.renameTo(new File(file.getParent(), name));
   }
 
-  public static String readFile(String name) throws IOException {
+  public static String readToString(String name) throws IOException {
     File file = new File(name);
     return readFile(file);
   }

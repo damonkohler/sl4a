@@ -33,7 +33,6 @@ import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
-import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
@@ -192,16 +191,14 @@ public class ScriptingLayerService extends Service {
   }
 
   private void launchHtmlScript(Intent intent) {
-    String script = intent.getStringExtra(Constants.EXTRA_SCRIPT_PATH);
-    File scriptFile = ScriptStorageAdapter.getExistingScript(script);
-    ScriptLauncher.launchHtmlScript(scriptFile, this, intent, mInterpreterConfiguration);
+    File script = new File(intent.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
+    ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
   }
 
   private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {
     final int port = proxy.getAddress().getPort();
-    String script = intent.getStringExtra(Constants.EXTRA_SCRIPT_PATH);
-    File scriptFile = ScriptStorageAdapter.getExistingScript(script);
-    return ScriptLauncher.launchScript(scriptFile, mInterpreterConfiguration, proxy, trigger,
+    File script = new File(intent.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
+    return ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, trigger,
         new Runnable() {
           @Override
           public void run() {
