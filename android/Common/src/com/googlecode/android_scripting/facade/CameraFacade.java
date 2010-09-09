@@ -29,7 +29,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.view.SurfaceHolder.Callback;
-import android.view.ViewGroup.LayoutParams;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.FileUtils;
@@ -112,12 +111,10 @@ public class CameraFacade extends RpcReceiver {
       public void onCreate() {
         super.onCreate();
         final SurfaceView view = new SurfaceView(getActivity());
-        getActivity().setContentView(view, new LayoutParams(1, 1));
+        getActivity().setContentView(view);
         getActivity().getWindow().setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
-
         view.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
         view.getHolder().addCallback(new Callback() {
           @Override
           public void surfaceDestroyed(SurfaceHolder holder) {

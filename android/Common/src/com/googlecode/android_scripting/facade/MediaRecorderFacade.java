@@ -25,7 +25,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.view.SurfaceHolder.Callback;
-import android.view.ViewGroup.LayoutParams;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.FileUtils;
@@ -141,13 +140,15 @@ public class MediaRecorderFacade extends RpcReceiver {
     mMediaRecorder.release();
   }
 
+  // TODO(damonkohler): This shares a lot of code with the CameraFacade. It's probably worth moving
+  // it there.
   private FutureActivityTask<Exception> prepare() throws Exception {
     FutureActivityTask<Exception> task = new FutureActivityTask<Exception>() {
       @Override
       public void onCreate() {
         super.onCreate();
         final SurfaceView view = new SurfaceView(getActivity());
-        getActivity().setContentView(view, new LayoutParams(1, 1));
+        getActivity().setContentView(view);
         getActivity().getWindow().setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
         view.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -173,6 +174,7 @@ public class MediaRecorderFacade extends RpcReceiver {
         });
       }
     };
+
     FutureActivityTaskExecutor taskExecutor =
         ((BaseApplication) mService.getApplication()).getTaskExecutor();
     taskExecutor.execute(task);
@@ -181,7 +183,6 @@ public class MediaRecorderFacade extends RpcReceiver {
     if (e != null) {
       throw e;
     }
-
     return task;
   }
 
