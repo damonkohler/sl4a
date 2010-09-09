@@ -51,8 +51,6 @@ public class ScriptProvider extends ContentProvider {
   public static final String LIVEFOLDER = "liveFolder";
   public static final String SUGGESTIONS = "searchSuggestions/*/*";
 
-  private final String mRoot = new File(InterpreterConstants.SCRIPTS_ROOT).getPath();
-
   private final UriMatcher mUriMatcher;
 
   private Context mContext;
@@ -135,8 +133,6 @@ public class ScriptProvider extends ContentProvider {
     MatrixCursor cursor = new MatrixCursor(columns);
     int index = 0;
     for (File script : ScriptStorageAdapter.listExecutableScriptsRecursively(null, mConfiguration)) {
-      String scriptName = script.getName();
-      String path = script.getParent();
       int iconId = 0;
       if (script.isDirectory()) {
         iconId = R.drawable.folder;
@@ -149,12 +145,13 @@ public class ScriptProvider extends ContentProvider {
       ShortcutIconResource icon = ShortcutIconResource.fromContext(mContext, iconId);
       Intent intent = IntentBuilders.buildStartInBackgroundIntent(script);
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      String description = path;
-      if (path.startsWith(mRoot)) {
-        description = path.replaceAll(mRoot, "scripts");
+      String description = script.getAbsolutePath();
+      if (description.startsWith(InterpreterConstants.SCRIPTS_ROOT)) {
+        description = description.replaceAll(InterpreterConstants.SCRIPTS_ROOT, "scripts/");
       }
       Object[] row =
-          { index, scriptName, intent.toURI(), icon.resourceName, icon.packageName, description };
+          { index, script.getName(), intent.toURI(), icon.resourceName, icon.packageName,
+            description };
       cursor.addRow(row);
       ++index;
     }
