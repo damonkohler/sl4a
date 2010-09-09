@@ -57,6 +57,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
+ */
 public class HtmlActivityTask extends FutureActivityTask<Void> {
 
   private static final String HTTP = "http";
@@ -287,9 +290,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     public boolean onJsPrompt(WebView view, String url, final String message,
         final String defaultValue, final JsPromptResult result) {
       final UiFacade uiFacade = mReceiverManager.getReceiver(UiFacade.class);
-
       mmExecutor.execute(new Runnable() {
-
         @Override
         public void run() {
           String value = null;
@@ -305,9 +306,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
           }
         }
       });
-
       return true;
     }
-
   }
 }
