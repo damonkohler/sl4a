@@ -16,14 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -38,6 +30,14 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.UUID;
+import java.util.concurrent.Callable;
 
 public class BluetoothFacade extends RpcReceiver {
 
@@ -65,7 +65,7 @@ public class BluetoothFacade extends RpcReceiver {
     });
   }
 
-  @Rpc(description = "Connect to a device over Bluetooth.", returns = "True if the connection was established successfully.")
+  @Rpc(description = "Connect to a device over Bluetooth. Blocks until the connection is established or fails.", returns = "True if the connection was established successfully.")
   public boolean bluetoothConnect(
       @RpcParameter(name = "uuid", description = "The UUID passed here must match the UUID used by the server device.") @RpcDefault(DEFAULT_UUID) String uuid,
       @RpcParameter(name = "address", description = "The user will be presented with a list of discovered devices to choose from if an address is not provided.") @RpcOptional String address)
@@ -89,7 +89,7 @@ public class BluetoothFacade extends RpcReceiver {
     return true;
   }
 
-  @Rpc(description = "Listens for and accepts a Bluetooth connection.")
+  @Rpc(description = "Listens for and accepts a Bluetooth connection. Blocks until the connection is established or fails.")
   public void bluetoothAccept(@RpcParameter(name = "uuid") @RpcDefault(DEFAULT_UUID) String uuid)
       throws IOException {
     mServerSocket =
