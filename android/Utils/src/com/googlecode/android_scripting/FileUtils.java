@@ -99,6 +99,8 @@ public class FileUtils {
     return file;
   }
 
+  // TODO(damonkohler): These two directory making functions are only subtly different and should be
+  // unified.
   public static boolean makeDirectories(String filename) {
     File file = new File(filename);
     File parent = file.getParentFile();
@@ -127,12 +129,7 @@ public class FileUtils {
     return file.renameTo(new File(file.getParent(), name));
   }
 
-  public static String readToString(String name) throws IOException {
-    File file = new File(name);
-    return readFile(file);
-  }
-
-  public static String readFile(File file) throws IOException {
+  public static String readToString(File file) throws IOException {
     if (file == null || !file.exists()) {
       return null;
     }

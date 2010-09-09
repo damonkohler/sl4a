@@ -68,7 +68,7 @@ public class ScriptEditor extends Activity {
   private InterpreterConfiguration mConfiguration;
   private ContentTextWatcher mWatcher;
   private EditHistory mHistory;
-  private String mPath;
+  private File mScript;
 
   private boolean mIsUndoOrRedo = false;
 
@@ -104,28 +104,23 @@ public class ScriptEditor extends Activity {
     mWatcher = new ContentTextWatcher(mHistory);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     updatePreferences();
-    String script = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_PATH);
 
-    if (script != null) {
-      File file = new File(script);
-      String name = file.getName();
-      mPath = file.getParent();
-      mNameText.setText(name);
-      mNameText.setSelected(true);
-      // NOTE: This appears to be the only way to get Android to put the cursor to the beginning of
-      // the EditText field.
-      mNameText.setSelection(1);
-      mNameText.extendSelection(0);
-      mNameText.setSelection(0);
-      mLastSavedContent = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
-      if (mLastSavedContent == null) {
-        try {
-          mLastSavedContent = FileUtils.readToString(script);
-        } catch (IOException e) {
-          Log.e("Failed to read script.", e);
-          mLastSavedContent = "";
-        } finally {
-        }
+    mScript = new File(getIntent().getStringExtra(Constants.EXTRA_SCRIPT_PATH));
+    mNameText.setText(mScript.getName());
+    mNameText.setSelected(true);
+    // NOTE: This appears to be the only way to get Android to put the cursor to the beginning of
+    // the EditText field.
+    mNameText.setSelection(1);
+    mNameText.extendSelection(0);
+    mNameText.setSelection(0);
+    mLastSavedContent = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_CONTENT);
+    if (mLastSavedContent == null) {
+      try {
+        mLastSavedContent = FileUtils.readToString(mScript);
+      } catch (IOException e) {
+        Log.e("Failed to read script.", e);
+        mLastSavedContent = "";
+      } finally {
       }
     }
 
@@ -176,8 +171,7 @@ public class ScriptEditor extends Activity {
       save();
       Intent intent = new Intent(this, ScriptingLayerService.class);
       intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
-      intent.putExtra(Constants.EXTRA_SCRIPT_PATH, new File(mPath, mNameText.getText().toString())
-          .getPath());
+      intent.putExtra(Constants.EXTRA_SCRIPT_PATH, mScript.getAbsolutePath());
       startService(intent);
       finish();
     } else if (item.getItemId() == MenuId.PREFERENCES.getId()) {
@@ -221,8 +215,8 @@ public class ScriptEditor extends Activity {
 
   private void save() {
     mLastSavedContent = mContentText.getText().toString();
-    File script = new File(mPath, mNameText.getText().toString());
-    ScriptStorageAdapter.writeScript(script, mLastSavedContent);
+    mScript = new File(mScript.getParent(), mNameText.getText().toString());
+    ScriptStorageAdapter.writeScript(mScript, mLastSavedContent);
     Toast.makeText(this, "Saved " + mNameText.getText().toString(), Toast.LENGTH_SHORT).show();
   }
 

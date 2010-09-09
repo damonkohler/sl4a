@@ -45,6 +45,7 @@ import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.RpcError;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -118,7 +119,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     if (!HTTP.equals(Uri.parse(mUrl).getScheme())) {
       String source = null;
       try {
-        source = FileUtils.readToString(Uri.parse(mUrl).getPath());
+        source = FileUtils.readToString(new File(Uri.parse(mUrl).getPath()));
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

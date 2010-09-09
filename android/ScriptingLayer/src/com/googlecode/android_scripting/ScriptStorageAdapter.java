@@ -89,10 +89,10 @@ public class ScriptStorageAdapter {
    * Returns a list of script {@link File}s from the given folder for which there is an interpreter
    * installed.
    */
-  public static List<File> listExecutableScripts(File dir, InterpreterConfiguration config) {
+  public static List<File> listExecutableScripts(File directory, InterpreterConfiguration config) {
     // NOTE(damonkohler): Creating a LinkedList here is necessary in order to be able to filter it
     // later.
-    List<File> scripts = new LinkedList<File>(listAllScripts(dir));
+    List<File> scripts = new LinkedList<File>(listAllScripts(directory));
     // Filter out any files that don't have interpreters installed.
     for (Iterator<File> it = scripts.iterator(); it.hasNext();) {
       File script = it.next();
@@ -111,12 +111,12 @@ public class ScriptStorageAdapter {
    * Returns a list of all (including subfolders) script {@link File}s for which there is an
    * interpreter installed.
    */
-  public static List<File> listExecutableScriptsRecursively(File dir,
+  public static List<File> listExecutableScriptsRecursively(File directory,
       InterpreterConfiguration config) {
     // NOTE(damonkohler): Creating a LinkedList here is necessary in order to be able to filter it
     // later.
     List<File> scripts = new LinkedList<File>();
-    List<File> files = listAllScripts(dir);
+    List<File> files = listAllScripts(directory);
 
     // Filter out any files that don't have interpreters installed.
     for (Iterator<File> it = files.iterator(); it.hasNext();) {
