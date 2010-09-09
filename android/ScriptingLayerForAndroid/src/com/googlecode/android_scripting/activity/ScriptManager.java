@@ -33,7 +33,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -98,8 +97,8 @@ public class ScriptManager extends ListActivity {
   }
 
   private static enum MenuId {
-    DELETE, EDIT, START_SERVICE, HELP, FOLDER_ADD, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES,
-    LOGCAT_VIEWER, TRIGGER_MANAGER, REFRESH, SEARCH;
+    DELETE, HELP, FOLDER_ADD, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES, LOGCAT_VIEWER,
+    TRIGGER_MANAGER, REFRESH, SEARCH, RENAME;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -194,21 +193,29 @@ public class ScriptManager extends ListActivity {
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-    menu.add("Delete").setOnMenuItemClickListener(new OnMenuItemClickListener() {
-      @Override
-      public boolean onMenuItemClick(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info;
-        try {
-          info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        } catch (ClassCastException e) {
-          Log.e("Bad menuInfo", e);
-          return false;
-        }
-        File file = (File) mAdapter.getItem(info.position);
-        delete(file);
-        return true;
-      }
-    });
+    menu.add(Menu.NONE, MenuId.RENAME.getId(), Menu.NONE, "Rename");
+    menu.add(Menu.NONE, MenuId.DELETE.getId(), Menu.NONE, "Delete");
+  }
+
+  @Override
+  public boolean onContextItemSelected(MenuItem item) {
+    AdapterView.AdapterContextMenuInfo info;
+    try {
+      info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    } catch (ClassCastException e) {
+      Log.e("Bad menuInfo", e);
+      return false;
+    }
+    File file = (File) mAdapter.getItem(info.position);
+    int itemId = item.getItemId();
+    if (itemId == MenuId.DELETE.getId()) {
+      delete(file);
+      return true;
+    } else if (itemId == MenuId.RENAME.getId()) {
+      rename(file);
+      return true;
+    }
+    return false;
   }
 
   @Override
