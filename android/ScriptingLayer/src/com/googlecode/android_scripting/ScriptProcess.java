@@ -28,13 +28,13 @@ import java.io.File;
 public class ScriptProcess extends InterpreterProcess {
 
   private final Trigger mTrigger;
-  private final String mScript;
+  private final File mScript;
 
   public ScriptProcess(File script, InterpreterConfiguration configuration, AndroidProxy proxy,
       Trigger trigger) {
     super(configuration.getInterpreterForScript(script.getName()), proxy);
     mTrigger = trigger;
-    mScript = script.getPath();
+    mScript = script;
     String scriptName = script.getName();
     setName(scriptName);
     Interpreter interpreter = configuration.getInterpreterForScript(scriptName);
@@ -54,7 +54,7 @@ public class ScriptProcess extends InterpreterProcess {
   }
 
   public String getPath() {
-    return mScript;
+    return mScript.getPath();
   }
 
 }
