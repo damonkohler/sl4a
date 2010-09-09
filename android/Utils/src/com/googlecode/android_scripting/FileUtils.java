@@ -125,7 +125,7 @@ public class FileUtils {
     return true;
   }
 
-  public static boolean remane(File file, String name) {
+  public static boolean rename(File file, String name) {
     return file.renameTo(new File(file.getParent(), name));
   }
 

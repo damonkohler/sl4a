@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -111,20 +112,23 @@ public class ScriptManager extends ListActivity {
     if (!FileUtils.makeDirectory(mBaseDir)) {
       throw new RuntimeException("Failed to create scripts directory.");
     }
+
     mCurrentDir = mBaseDir;
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     mAdapter = new ScriptManagerAdapter(this);
     mObserver = new ScriptListObserver();
     mAdapter.registerDataSetObserver(mObserver);
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
+    mManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+    registerForContextMenu(getListView());
     updateAndFilterScriptList(mQuery);
     setListAdapter(mAdapter);
-    UsageTrackingConfirmation.show(this);
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     startService(IntentBuilders.buildTriggerServiceIntent());
-    mManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     handleIntent(getIntent());
+    UsageTrackingConfirmation.show(this);
     Analytics.trackActivity(this);
   }
 
@@ -186,6 +190,25 @@ public class ScriptManager extends ListActivity {
       updateAndFilterScriptList(query);
       mAdapter.notifyDataSetChanged();
     }
+  }
+
+  @Override
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    menu.add("Delete").setOnMenuItemClickListener(new OnMenuItemClickListener() {
+      @Override
+      public boolean onMenuItemClick(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info;
+        try {
+          info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        } catch (ClassCastException e) {
+          Log.e("Bad menuInfo", e);
+          return false;
+        }
+        File file = (File) mAdapter.getItem(info.position);
+        delete(file);
+        return true;
+      }
+    });
   }
 
   @Override
@@ -299,7 +322,7 @@ public class ScriptManager extends ListActivity {
       Intent intent = new Intent("com.google.zxing.client.android.SCAN");
       startActivityForResult(intent, RequestCode.QRCODE_ADD.ordinal());
     } else if (itemId == MenuId.FOLDER_ADD.getId()) {
-      addFolder(null);
+      addFolder();
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, Preferences.class));
     } else if (itemId == MenuId.TRIGGER_MANAGER.getId()) {
@@ -313,40 +336,6 @@ public class ScriptManager extends ListActivity {
       onSearchRequested();
     }
     return true;
-  }
-
-  @Override
-  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-    final File file = mScripts.get(info.position);
-    if (!file.isDirectory() || !mCurrentDir.equals(mBaseDir) && info.position == 0) {
-      return;
-    }
-    final QuickAction actionMenu = new QuickAction(info.targetView);
-
-    final ActionItem edit = new ActionItem();
-    edit.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_edit));
-    edit.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        renameFolder(file, null);
-        dismissQuickActions(actionMenu);
-      }
-    });
-
-    final ActionItem delete = new ActionItem();
-    delete.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_delete));
-    delete.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        deleteScript(file);
-        dismissQuickActions(actionMenu);
-      }
-    });
-
-    actionMenu.addActionItems(edit, delete);
-    actionMenu.setAnimStyle(QuickAction.ANIM_GROW_FROM_CENTER);
-    actionMenu.show();
   }
 
   @Override
@@ -390,7 +379,7 @@ public class ScriptManager extends ListActivity {
     edit.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        editScript(file.getPath());
+        editScript(file);
         dismissQuickActions(actionMenu);
       }
     });
@@ -400,18 +389,28 @@ public class ScriptManager extends ListActivity {
     delete.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        deleteScript(file);
+        delete(file);
         dismissQuickActions(actionMenu);
       }
     });
 
-    actionMenu.addActionItems(terminal, background, edit, delete);
+    final ActionItem rename = new ActionItem();
+    rename.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_save));
+    rename.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        rename(file);
+        dismissQuickActions(actionMenu);
+      }
+    });
+
+    actionMenu.addActionItems(terminal, background, edit, rename, delete);
     actionMenu.setAnimStyle(QuickAction.ANIM_GROW_FROM_CENTER);
     actionMenu.show();
-
   }
 
   private void dismissQuickActions(final QuickAction action) {
+    // HACK(damonkohler): Delay the dismissal to avoid an otherwise noticeable flicker.
     mHandler.postDelayed(new Runnable() {
       @Override
       public void run() {
@@ -423,27 +422,23 @@ public class ScriptManager extends ListActivity {
   /**
    * Opens the script for editing.
    * 
-   * @param scriptName
+   * @param script
    *          the name of the script to edit
    */
-  private void editScript(String script) {
+  private void editScript(File script) {
     Intent i = new Intent(Constants.ACTION_EDIT_SCRIPT);
-    i.putExtra(Constants.EXTRA_SCRIPT_PATH, script);
+    i.putExtra(Constants.EXTRA_SCRIPT_PATH, script.getAbsolutePath());
     startActivity(i);
   }
 
-  private void deleteScript(final File script) {
+  private void delete(final File file) {
     AlertDialog.Builder alert = new AlertDialog.Builder(this);
-    if (script.isDirectory()) {
-      alert.setTitle("Delete Folder");
-    } else {
-      alert.setTitle("Delete Script");
-    }
-    alert.setMessage("Would you like to delete " + script.getName() + "?");
+    alert.setTitle("Delete");
+    alert.setMessage("Would you like to delete " + file.getName() + "?");
     alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int whichButton) {
-        FileUtils.delete(script);
-        mScripts.remove(script);
+        FileUtils.delete(file);
+        mScripts.remove(file);
         mAdapter.notifyDataSetChanged();
       }
     });
@@ -455,20 +450,9 @@ public class ScriptManager extends ListActivity {
     alert.show();
   }
 
-  private void addFolder(String name) {
-    if (name == null) {
-      String defaultName = "untitled folder";
-      name = defaultName;
-      int i = 1;
-      for (File f : mScripts) {
-        if (f.isDirectory() && f.getName().equals(name)) {
-          i++;
-          name = String.format("%s %d", defaultName, i);
-        }
-      }
-    }
+  private void addFolder() {
     final EditText folderName = new EditText(this);
-    folderName.setText(name);
+    folderName.setHint("Folder Name");
     AlertDialog.Builder alert = new AlertDialog.Builder(this);
     alert.setTitle("Add Folder");
     alert.setView(folderName);
@@ -476,75 +460,50 @@ public class ScriptManager extends ListActivity {
       public void onClick(DialogInterface dialog, int whichButton) {
         String name = folderName.getText().toString();
         if (name.length() == 0) {
-          showAlert("Folder name is empty.", name);
+          Log.e(ScriptManager.this, "Folder name is empty.");
           return;
         } else {
           for (File f : mScripts) {
             if (f.getName().equals(name)) {
-              showAlert(String.format("Directory \"%s\" already exists.", name), name);
+              Log.e(ScriptManager.this, String.format("Folder \"%s\" already exists.", name));
               return;
             }
           }
         }
         File dir = new File(mCurrentDir, name);
         if (!FileUtils.makeDirectory(dir)) {
-          throw new RuntimeException(String.format("Cannot create directory \"%s\"", dir.getPath()));
+          Log.e(ScriptManager.this, String.format("Cannot create folder \"%s\".", name));
         }
         mAdapter.notifyDataSetInvalidated();
-      }
-
-      private void showAlert(String message, final String folderName) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(ScriptManager.this);
-        alert.setMessage(message);
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int whichButton) {
-            addFolder(folderName);
-          }
-        });
-        alert.show();
       }
     });
     alert.show();
   }
 
-  private void renameFolder(final File dir, String name) {
-    if (name == null) {
-      name = dir.getName();
-    }
-    final EditText folderName = new EditText(this);
-    folderName.setText(name);
+  private void rename(final File file) {
+    final EditText newName = new EditText(this);
+    newName.setText(file.getName());
     AlertDialog.Builder alert = new AlertDialog.Builder(this);
-    alert.setTitle("Rename Folder");
-    alert.setView(folderName);
+    alert.setTitle("Rename");
+    alert.setView(newName);
     alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int whichButton) {
-        String name = folderName.getText().toString();
+        String name = newName.getText().toString();
         if (name.length() == 0) {
-          showAlert("Folder name is empty.", name);
+          Log.e(ScriptManager.this, "Name is empty.");
           return;
         } else {
           for (File f : mScripts) {
             if (f.getName().equals(name)) {
-              showAlert(String.format("Directory \"%s\" already exists.", name), name);
+              Log.e(ScriptManager.this, String.format("\"%s\" already exists.", name));
               return;
             }
           }
         }
-        if (!FileUtils.remane(dir, name)) {
-          throw new RuntimeException(String.format("Cannot rename directory \"%s\"", dir.getPath()));
+        if (!FileUtils.rename(file, name)) {
+          throw new RuntimeException(String.format("Cannot rename \"%s\".", file.getPath()));
         }
         mAdapter.notifyDataSetInvalidated();
-      }
-
-      private void showAlert(String message, final String folderName) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(ScriptManager.this);
-        alert.setMessage(message);
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int whichButton) {
-            renameFolder(dir, folderName);
-          }
-        });
-        alert.show();
       }
     });
     alert.show();

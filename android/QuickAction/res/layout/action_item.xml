@@ -4,8 +4,8 @@
 	android:orientation="horizontal"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:paddingLeft="20dip"
-	android:paddingRight="20dip" 
+	android:paddingLeft="10dip"
+	android:paddingRight="10dip" 
 	android:gravity="center"
 	android:clickable="true"
 	android:background="@drawable/quickcontact_slider_btn">
