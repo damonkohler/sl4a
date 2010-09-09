@@ -32,9 +32,9 @@ public class ExactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
 
   private final long mFirstExecutionTimeMs;
 
-  public ExactRepeatingAlarmTrigger(String scriptName, long intervalMs, long firstExecutionTimeMs,
+  public ExactRepeatingAlarmTrigger(String script, long intervalMs, long firstExecutionTimeMs,
       boolean wakeUp) {
-    super(scriptName, intervalMs, wakeUp);
+    super(script, intervalMs, wakeUp);
     mFirstExecutionTimeMs = firstExecutionTimeMs;
   }
 

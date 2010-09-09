@@ -17,19 +17,52 @@
 package com.dummy.fooforandroid;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+
+import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.facade.ExecutionResultFacade;
+import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
+
 
 public class ScriptActivity extends Activity {
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ScriptApplication application = (ScriptApplication) getApplication();
-    if (application.readyToStart()) {
-      startService(new Intent(this, ScriptService.class));
+    if (Constants.ACTION_LAUNCH_FOR_RESULT.equals(getIntent().getAction())) {
+      setTheme(android.R.style.Theme_Dialog);
+      setContentView(R.layout.dialog);
+      ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+          ScriptService scriptService = ((ScriptService.LocalBinder) service).getService();
+          try {
+            RpcReceiverManager manager = scriptService.getRpcReceiverManager();
+            ExecutionResultFacade resultFacade = manager.getReceiver(ExecutionResultFacade.class);
+            resultFacade.setActivity(ScriptActivity.this);
+          } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+          }
+        }
 
+       @Override
+        public void onServiceDisconnected(ComponentName name) {
+          // Ignore
+        }
+      };
+      bindService(new Intent(this, ScriptService.class), connection, Context.BIND_AUTO_CREATE);
+      startService(new Intent(this, ScriptService.class));
+    }else{
+      ScriptApplication application = (ScriptApplication) getApplication();
+      if (application.readyToStart()) {
+        startService(new Intent(this, ScriptService.class));
+      }
+      finish();
     }
-    finish();
   }
 }

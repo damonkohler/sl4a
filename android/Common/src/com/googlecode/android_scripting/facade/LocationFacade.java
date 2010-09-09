@@ -16,11 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Service;
 import android.content.Context;
 import android.location.Address;
@@ -35,6 +30,11 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This facade exposes the LocationManager related functionality.
@@ -53,7 +53,7 @@ public class LocationFacade extends RpcReceiver {
     @Override
     public void onLocationChanged(Location location) {
       mLocationUpdates.put(location.getProvider(), location);
-      mEventFacade.postEvent("location", mLocationUpdates);
+      mEventFacade.postEvent("location", new HashMap<String, Location>(mLocationUpdates));
     }
 
     @Override

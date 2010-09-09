@@ -145,7 +145,7 @@ public class ScriptingLayerService extends Service {
       return;
     }
 
-    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT);
     if (name != null && name.endsWith(HtmlInterpreter.HTML_EXTENSION)) {
       launchHtmlScript(intent);
       if (mProcessMap.isEmpty()) {
@@ -166,14 +166,14 @@ public class ScriptingLayerService extends Service {
     } else {
       proxy = launchServer(intent, true);
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT)) {
-        launchTerminal(intent, proxy.getAddress());
+        launchTerminal(proxy.getAddress());
         interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
         ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT)) {
         interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
         ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_INTERPRETER)) {
-        launchTerminal(intent, proxy.getAddress());
+        launchTerminal(proxy.getAddress());
         interpreterProcess = launchInterpreter(intent, proxy);
       }
     }
@@ -192,16 +192,16 @@ public class ScriptingLayerService extends Service {
   }
 
   private void launchHtmlScript(Intent intent) {
-    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    File script = ScriptStorageAdapter.getExistingScript(name);
-    ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
+    String script = intent.getStringExtra(Constants.EXTRA_SCRIPT);
+    File scriptFile = ScriptStorageAdapter.getExistingScript(script);
+    ScriptLauncher.launchHtmlScript(scriptFile, this, intent, mInterpreterConfiguration);
   }
 
   private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {
     final int port = proxy.getAddress().getPort();
-    String name = intent.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
-    File script = ScriptStorageAdapter.getExistingScript(name);
-    return ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, trigger,
+    String script = intent.getStringExtra(Constants.EXTRA_SCRIPT);
+    File scriptFile = ScriptStorageAdapter.getExistingScript(script);
+    return ScriptLauncher.launchScript(scriptFile, mInterpreterConfiguration, proxy, trigger,
         new Runnable() {
           @Override
           public void run() {
@@ -232,7 +232,7 @@ public class ScriptingLayerService extends Service {
     });
   }
 
-  private void launchTerminal(Intent intent, InetSocketAddress address) {
+  private void launchTerminal(InetSocketAddress address) {
     Intent i = new Intent(this, ConsoleActivity.class);
     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     i.putExtra(Constants.EXTRA_PROXY_PORT, address.getPort());

@@ -16,19 +16,15 @@
 
 package com.googlecode.android_scripting.activity;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
@@ -36,11 +32,16 @@ import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.ScriptListAdapter;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
 import java.io.File;
 import java.util.List;
+
+import net.londatiga.android.ActionItem;
+import net.londatiga.android.QuickAction;
 
 /**
  * Presents available scripts and returns the selected one.
@@ -52,14 +53,17 @@ public class ScriptPicker extends ListActivity {
   private List<File> mScripts;
   private ScriptPickerAdapter mAdapter;
   private InterpreterConfiguration mConfiguration;
+  private File mCurrentDir;
+  private final File mBaseDir = new File(InterpreterConstants.SCRIPTS_ROOT);
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
+    mCurrentDir = mBaseDir;
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-    mScripts = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
-    mAdapter = new ScriptPickerAdapter();
+    mScripts = ScriptStorageAdapter.listExecutableScripts(null, mConfiguration);
+    mAdapter = new ScriptPickerAdapter(this);
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
     Analytics.trackActivity(this);
@@ -67,123 +71,135 @@ public class ScriptPicker extends ListActivity {
 
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    final File script = (File) list.getItemAtPosition(position);
+    final File file = (File) list.getItemAtPosition(position);
+    if (file.isDirectory()) {
+      mCurrentDir = file;
+      mAdapter.notifyDataSetInvalidated();
+      return;
+    }
+    QuickAction actionMenu = new QuickAction(view);
+    ActionItem terminal = new ActionItem();
+    terminal.setIcon(getResources().getDrawable(R.drawable.terminal));
+    ActionItem background = new ActionItem();
+    background.setIcon(getResources().getDrawable(R.drawable.background));
+
+    actionMenu.addActionItems(terminal, background);
 
     if (Intent.ACTION_PICK.equals(getIntent().getAction())) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setItems(new CharSequence[] { "Start in Terminal", "Start in Background" },
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              Intent intent = null;
-              if (which == 0) {
-                intent = IntentBuilders.buildStartInTerminalIntent(script.getName());
-              } else {
-                intent = IntentBuilders.buildStartInBackgroundIntent(script.getName());
-              }
-              if (intent != null) {
-                setResult(RESULT_OK, intent);
-              }
-              finish();
-            }
-          });
-      builder.show();
-      return;
-    }
 
-    if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setItems(new CharSequence[] { "Start in Terminal", "Start in Background" },
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              int icon =
-                  FeaturedInterpreters.getInterpreterIcon(ScriptPicker.this, script.getName());
-              if (icon == 0) {
-                icon = R.drawable.sl4a_logo_48;
-              }
-              Parcelable iconResource =
-                  Intent.ShortcutIconResource.fromContext(ScriptPicker.this, icon);
-              Intent intent = null;
-              if (which == 0) {
-                intent = IntentBuilders.buildTerminalShortcutIntent(script.getName(), iconResource);
-              } else {
-                intent =
-                    IntentBuilders.buildBackgroundShortcutIntent(script.getName(), iconResource);
-              }
-              if (intent != null) {
-                setResult(RESULT_OK, intent);
-              }
-              finish();
-            }
-          });
-      builder.show();
-      return;
-    }
+      terminal.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent intent = IntentBuilders.buildStartInTerminalIntent(file.getPath());
+          setResult(RESULT_OK, intent);
+          finish();
+        }
+      });
 
-    if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
-      final Intent intent = new Intent();
-      if (script.getName().length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName().substring(0,
-            com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH));
-      } else {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName());
+      background.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent intent = IntentBuilders.buildStartInBackgroundIntent(file.getPath());
+          setResult(RESULT_OK, intent);
+          finish();
+        }
+      });
+
+    } else if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
+      int icon = FeaturedInterpreters.getInterpreterIcon(ScriptPicker.this, file.getName());
+      if (icon == 0) {
+        icon = R.drawable.sl4a_logo_48;
       }
 
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setItems(new CharSequence[] { "Start in Terminal", "Start in Background" },
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              Bundle storeAndForwardExtras = new Bundle();
-              storeAndForwardExtras.putString(Constants.EXTRA_SCRIPT_NAME, script.getName());
-              storeAndForwardExtras.putBoolean(Constants.EXTRA_LAUNCH_IN_BACKGROUND, (which == 1));
-              intent.putExtra(com.twofortyfouram.Intent.EXTRA_BUNDLE, storeAndForwardExtras);
-              setResult(RESULT_OK, intent);
-              finish();
-            }
-          });
-      builder.show();
-      return;
+      final Parcelable iconResource =
+          Intent.ShortcutIconResource.fromContext(ScriptPicker.this, icon);
+
+      terminal.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent intent = IntentBuilders.buildTerminalShortcutIntent(file.getPath(), iconResource);
+          setResult(RESULT_OK, intent);
+          finish();
+        }
+      });
+
+      background.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Intent intent =
+              IntentBuilders.buildBackgroundShortcutIntent(file.getPath(), iconResource);
+          setResult(RESULT_OK, intent);
+          finish();
+        }
+      });
+    } else if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
+
+      final Intent intent = new Intent();
+      final Bundle storeAndForwardExtras = new Bundle();
+      storeAndForwardExtras.putString(Constants.EXTRA_SCRIPT, file.getPath());
+
+      if (file.getName().length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
+        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, file.getName().substring(0,
+            com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH));
+      } else {
+        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, file.getName());
+      }
+
+      terminal.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          storeAndForwardExtras.putBoolean(Constants.EXTRA_LAUNCH_IN_BACKGROUND, false);
+          intent.putExtra(com.twofortyfouram.Intent.EXTRA_BUNDLE, storeAndForwardExtras);
+          setResult(RESULT_OK, intent);
+          finish();
+        }
+      });
+
+      background.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          storeAndForwardExtras.putBoolean(Constants.EXTRA_LAUNCH_IN_BACKGROUND, true);
+          intent.putExtra(com.twofortyfouram.Intent.EXTRA_BUNDLE, storeAndForwardExtras);
+          setResult(RESULT_OK, intent);
+          finish();
+        }
+      });
     }
+
+    actionMenu.setAnimStyle(QuickAction.ANIM_GROW_FROM_CENTER);
+    actionMenu.show();
   }
 
   private class ScriptListObserver extends DataSetObserver {
     @Override
     public void onInvalidated() {
-      mScripts = ScriptStorageAdapter.listExecutableScripts(mConfiguration);
+      mScripts = ScriptStorageAdapter.listExecutableScripts(mCurrentDir, mConfiguration);
+      if (!mCurrentDir.equals(mBaseDir)) {
+        mScripts.add(0, new File(mCurrentDir.getParent()) {
+          @Override
+          public boolean isDirectory() {
+            return true;
+          }
+
+          @Override
+          public String getName() {
+            return "..";
+          }
+        });
+      }
     }
   }
 
-  private class ScriptPickerAdapter extends BaseAdapter {
+  private class ScriptPickerAdapter extends ScriptListAdapter {
 
-    @Override
-    public int getCount() {
-      return mScripts.size();
+    public ScriptPickerAdapter(Context context) {
+      super(context);
     }
 
     @Override
-    public Object getItem(int position) {
-      return mScripts.get(position);
+    protected List<File> getScriptList() {
+      return mScripts;
     }
 
-    @Override
-    public long getItemId(int position) {
-      return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-      TextView view;
-      if (convertView == null) {
-        view = new TextView(ScriptPicker.this);
-      } else {
-        view = (TextView) convertView;
-      }
-      view.setPadding(4, 4, 4, 4);
-      view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
-      view.setText(mScripts.get(position).getName());
-      return view;
-    }
   }
 }

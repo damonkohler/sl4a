@@ -19,6 +19,12 @@
         <category
           android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
+       <intent-filter>
+        <action
+          android:name="com.googlecode.android_scripting.action.ACTION_LAUNCH_FOR_RESULT" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
     </activity>
     <service
       android:name=".ScriptService" />

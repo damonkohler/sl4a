@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2010 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -31,9 +31,12 @@ import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterUtils;
+import com.googlecode.android_scripting.interpreter.html.HtmlActivityTask;
 import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
+import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 
 import java.io.File;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
@@ -44,6 +47,8 @@ public class ScriptService extends Service {
 
   private final IBinder mBinder;
   private InterpreterConfiguration mInterpreterConfiguration;
+  private RpcReceiverManager mManager;
+  private final CountDownLatch mLatch = new CountDownLatch(1);
 
   public class LocalBinder extends Binder {
     public ScriptService getService() {
@@ -66,10 +71,11 @@ public class ScriptService extends Service {
     String fileName = Script.getFileName(this);
     Interpreter interpreter = mInterpreterConfiguration.getInterpreterForScript(fileName);
     if (interpreter == null || !interpreter.isInstalled()) {
+      mLatch.countDown();
       if (FeaturedInterpreters.isSupported(fileName)) {
         Intent i = new Intent(this, DialogActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.putExtra(Constants.EXTRA_SCRIPT_NAME, fileName);
+        i.putExtra(Constants.EXTRA_SCRIPT, fileName);
         startActivity(i);
       } else {
         Log.e(this, "Cannot find an interpreter for script " + fileName);
@@ -87,11 +93,16 @@ public class ScriptService extends Service {
     }
 
     if (Script.getFileExtension(this).equals(HtmlInterpreter.HTML_EXTENSION)) {
-      ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
+      HtmlActivityTask htmlTask =
+          ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
+      mManager = htmlTask.getRpcReceiverManager();
+      mLatch.countDown();
       stopSelf(startId);
     } else {
       final AndroidProxy proxy = new AndroidProxy(this, null, true);
       proxy.startLocal();
+      mManager = proxy.getRpcReceiverManager();
+      mLatch.countDown();
       ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, null, new Runnable() {
         @Override
         public void run() {
@@ -102,6 +113,10 @@ public class ScriptService extends Service {
     }
   }
 
+  RpcReceiverManager getRpcReceiverManager() throws InterruptedException {
+    mLatch.await();
+    return mManager;
+  }
 
   @Override
   public IBinder onBind(Intent intent) {

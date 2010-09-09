@@ -39,8 +39,8 @@ public abstract class RepeatingAlarmTrigger extends Trigger {
   /** Whether or not to wake up the device. */
   protected final boolean mWakeUp;
 
-  public RepeatingAlarmTrigger(String scriptName, long intervalMs, boolean wakeUp) {
-    super(scriptName);
+  public RepeatingAlarmTrigger(String script, long intervalMs, boolean wakeUp) {
+    super(script);
     mIntervalMs = intervalMs;
     mWakeUp = wakeUp;
   }

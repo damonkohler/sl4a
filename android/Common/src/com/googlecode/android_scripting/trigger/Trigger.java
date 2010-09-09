@@ -22,6 +22,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -34,7 +35,8 @@ import java.util.UUID;
  */
 public abstract class Trigger implements Serializable {
   private static final long serialVersionUID = 5190219422732210378L;
-  private final String mScriptName;
+  private final String mScript;
+  private final String mName;
   private final UUID mId;
 
   /**
@@ -43,8 +45,9 @@ public abstract class Trigger implements Serializable {
    */
   private transient boolean mIsDeserializing = true;
 
-  public Trigger(String scriptName) {
-    mScriptName = scriptName;
+  public Trigger(String script) {
+    mScript = script;
+    mName = new File(mScript).getName();
     mId = UUID.randomUUID();
     mIsDeserializing = false;
   }
@@ -57,9 +60,14 @@ public abstract class Trigger implements Serializable {
   public void beforeTrigger(Service service) {
   }
 
+  /** Returns the name and path of the script to execute */
+  public final String getScript() {
+    return mScript;
+  }
+
   /** Returns the name of the script to execute */
   public final String getScriptName() {
-    return mScriptName;
+    return mName;
   }
 
   /** Returns this trigger's id. */
@@ -93,7 +101,7 @@ public abstract class Trigger implements Serializable {
     TextView view = new TextView(context);
     view.setPadding(4, 4, 4, 4);
     view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
-    view.setText(getScriptName());
+    view.setText(mName);
     return view;
   }
 }

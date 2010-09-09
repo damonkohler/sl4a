@@ -88,6 +88,10 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mUrl = url;
   }
 
+  public RpcReceiverManager getRpcReceiverManager() {
+    return mReceiverManager;
+  }
+
   @Override
   public void onCreate() {
     mView = new WebView(getActivity());
@@ -114,7 +118,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     if (!HTTP.equals(Uri.parse(mUrl).getScheme())) {
       String source = null;
       try {
-        source = FileUtils.readFile(mUrl);
+        source = FileUtils.readFile(Uri.parse(mUrl).getPath());
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

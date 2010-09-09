@@ -58,15 +58,25 @@ public class FileUtils {
     return success;
   }
 
-  public static void delete(File path) {
-    if (path.isDirectory()) {
-      for (File child : path.listFiles()) {
-        delete(child);
+  public static boolean delete(File path) {
+    boolean result = true;
+    if (path.exists()) {
+      if (path.isDirectory()) {
+        for (File child : path.listFiles()) {
+          result &= delete(child);
+        }
+        result &= path.delete(); // Delete empty directory.
       }
-      path.delete(); // Delete empty directory.
-    }
-    if (path.isFile()) {
-      path.delete();
+      if (path.isFile()) {
+        result &= path.delete();
+      }
+      if (!result) {
+        Log.e("Delete failed;");
+      }
+      return result;
+    } else {
+      Log.e("File does not exist.");
+      return false;
     }
   }
 
@@ -100,6 +110,21 @@ public class FileUtils {
       }
     }
     return true;
+  }
+
+  public static boolean makeDirectory(File newDir) {
+    if (!newDir.exists()) {
+      Log.v("Creating directory: " + newDir.getName());
+      if (!newDir.mkdirs()) {
+        Log.e("Failed to create directory.");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static boolean remane(File file, String name) {
+    return file.renameTo(new File(file.getParent(), name));
   }
 
   public static String readFile(String name) throws IOException {

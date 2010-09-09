@@ -36,7 +36,7 @@ public class ScriptLauncher {
     // Utility class.
   }
 
-  public static void launchHtmlScript(File script, Service service, Intent intent,
+  public static HtmlActivityTask launchHtmlScript(File script, Service service, Intent intent,
       InterpreterConfiguration config) {
     if (!script.exists()) {
       throw new RuntimeException("No such script to launch.");
@@ -55,6 +55,7 @@ public class ScriptLauncher {
         new HtmlActivityTask(manager, interpreter.getAndroidJsSource(),
             interpreter.getJsonSource(), script.getAbsolutePath());
     executor.execute(task);
+    return task;
   }
 
   public static InterpreterProcess launchInterpreter(final AndroidProxy proxy, Intent intent,

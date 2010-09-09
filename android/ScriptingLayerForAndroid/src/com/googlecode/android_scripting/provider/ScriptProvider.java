@@ -22,6 +22,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
+import android.content.Intent.ShortcutIconResource;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
@@ -30,9 +31,11 @@ import android.provider.LiveFolders;
 
 import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.IntentBuilders;
+import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
 import java.io.File;
 
@@ -47,6 +50,8 @@ public class ScriptProvider extends ContentProvider {
   public static final String AUTHORITY = ScriptProvider.class.getName().toLowerCase();
   public static final String LIVEFOLDER = "liveFolder";
   public static final String SUGGESTIONS = "searchSuggestions/*/*";
+
+  private final String mRoot = new File(InterpreterConstants.SCRIPTS_ROOT).getPath();
 
   private final UriMatcher mUriMatcher;
 
@@ -106,7 +111,7 @@ public class ScriptProvider extends ContentProvider {
           SearchManager.SUGGEST_COLUMN_QUERY, SearchManager.SUGGEST_COLUMN_SHORTCUT_ID };
     MatrixCursor cursor = new MatrixCursor(columns);
     int index = 0;
-    for (File script : ScriptStorageAdapter.listExecutableScripts(mConfiguration)) {
+    for (File script : ScriptStorageAdapter.listExecutableScripts(null, mConfiguration)) {
       String scriptName = script.getName().toLowerCase();
       if (!scriptName.contains(query)) {
         continue;
@@ -124,14 +129,32 @@ public class ScriptProvider extends ContentProvider {
   }
 
   private Cursor queryLiveFolder() {
-    String[] columns = { BaseColumns._ID, LiveFolders.NAME, LiveFolders.INTENT };
+    String[] columns =
+        { BaseColumns._ID, LiveFolders.NAME, LiveFolders.INTENT, LiveFolders.ICON_RESOURCE,
+          LiveFolders.ICON_PACKAGE, LiveFolders.DESCRIPTION };
     MatrixCursor cursor = new MatrixCursor(columns);
     int index = 0;
-    for (File script : ScriptStorageAdapter.listExecutableScripts(mConfiguration)) {
+    for (File script : ScriptStorageAdapter.listExecutableScriptsRecursively(null, mConfiguration)) {
       String scriptName = script.getName();
-      Intent intent = IntentBuilders.buildStartInBackgroundIntent(scriptName);
+      String path = script.getParent();
+      int iconId = 0;
+      if (script.isDirectory()) {
+        iconId = R.drawable.folder;
+      } else {
+        iconId = FeaturedInterpreters.getInterpreterIcon(mContext, script.getName());
+        if (iconId == 0) {
+          iconId = R.drawable.sl4a_logo_32;
+        }
+      }
+      ShortcutIconResource icon = ShortcutIconResource.fromContext(mContext, iconId);
+      Intent intent = IntentBuilders.buildStartInBackgroundIntent(script.getPath());
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      Object[] row = { index, scriptName, intent.toURI() };
+      String description = path;
+      if (path.startsWith(mRoot)) {
+        description = path.replaceAll(mRoot, "scripts");
+      }
+      Object[] row =
+          { index, scriptName, intent.toURI(), icon.resourceName, icon.packageName, description };
       cursor.addRow(row);
       ++index;
     }

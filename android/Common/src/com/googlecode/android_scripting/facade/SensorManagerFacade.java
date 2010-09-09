@@ -154,7 +154,7 @@ public class SensorManagerFacade extends RpcReceiver {
 
     private void postEvent() {
       mSensorReadings.putDouble("time", System.currentTimeMillis() / 1000.0);
-      mEventFacade.postEvent("sensors", mSensorReadings);
+      mEventFacade.postEvent("sensors", mSensorReadings.clone());
     }
 
     @Override

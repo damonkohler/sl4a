@@ -628,7 +628,8 @@ public class ConsoleActivity extends Activity {
         Message.obtain(disconnectHandler, -1, bridge).sendToTarget();
       }
       Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
-      intent.putExtra(Constants.EXTRA_SCRIPT_NAME, bridge.getName());
+      ScriptProcess process = (ScriptProcess) bridge.getProcess();
+      intent.putExtra(Constants.EXTRA_SCRIPT, process.getPath());
       startActivity(intent);
       finish();
       break;
@@ -670,8 +671,8 @@ public class ConsoleActivity extends Activity {
   }
 
   private void doEmailTranscript() {
-    // Don't really want to supply an address, but currently it's required, otherwise we get an
-    // exception.
+    // Don't really want to supply an address, but currently it's required,
+    // otherwise we get an exception.
     TerminalView terminalView = (TerminalView) findCurrentView(R.id.console_flip);
     TerminalBridge bridge = terminalView.bridge;
     // TODO(raaar): Replace with process log.

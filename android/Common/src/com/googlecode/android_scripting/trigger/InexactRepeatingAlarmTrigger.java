@@ -32,8 +32,8 @@ import com.googlecode.android_scripting.IntentBuilders;
 public class InexactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
   private static final long serialVersionUID = -9193318334645990578L;
 
-  public InexactRepeatingAlarmTrigger(String scriptName, long interval, boolean wakeUp) {
-    super(scriptName, interval, wakeUp);
+  public InexactRepeatingAlarmTrigger(String script, long interval, boolean wakeUp) {
+    super(script, interval, wakeUp);
   }
 
   @Override

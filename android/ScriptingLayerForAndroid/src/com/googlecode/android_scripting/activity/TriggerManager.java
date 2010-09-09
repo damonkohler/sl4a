@@ -183,13 +183,13 @@ public class TriggerManager extends ListActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (resultCode == RESULT_OK) {
-      final String scriptName = data.getStringExtra(Constants.EXTRA_SCRIPT_NAME);
+      final String script = data.getStringExtra(Constants.EXTRA_SCRIPT);
       if (requestCode == MenuId.SCHEDULE_REPEATING.getId()) {
         DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
             new DurationPickedListener() {
               @Override
               public void onSet(double duration) {
-                mAlarmTriggerManager.scheduleRepeating(duration, scriptName, true);
+                mAlarmTriggerManager.scheduleRepeating(duration, script, true);
                 mAdapter.notifyDataSetInvalidated();
               }
 
@@ -202,7 +202,7 @@ public class TriggerManager extends ListActivity {
             new DurationPickedListener() {
               @Override
               public void onSet(double duration) {
-                mAlarmTriggerManager.scheduleInexactRepeating(duration, scriptName, true);
+                mAlarmTriggerManager.scheduleInexactRepeating(duration, script, true);
                 mAdapter.notifyDataSetInvalidated();
               }
 
@@ -211,7 +211,7 @@ public class TriggerManager extends ListActivity {
               }
             });
       } else if (requestCode == MenuId.RINGER_MODE_CONDITION.getId()) {
-        mTriggerRepository.addTrigger(new EventTrigger(scriptName,
+        mTriggerRepository.addTrigger(new EventTrigger(script,
             new RingerModeEventListener.Factory()));
         mAdapter.notifyDataSetInvalidated();
       }
