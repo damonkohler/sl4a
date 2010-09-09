@@ -24,6 +24,8 @@ import android.content.Context;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.IntentBuilders;
 
+import java.io.File;
+
 /**
  * A trigger that fires at a specific fixed time.
  * 
@@ -39,13 +41,13 @@ public class AlarmTrigger extends Trigger {
   private transient Service mService;
 
   /**
-   * @param scriptName
+   * @param script
    *          name of the script to execute
    * @param executionTime
    *          execution time in seconds since epoch
    */
-  public AlarmTrigger(String scriptName, Context context, long executionTimeMs, boolean wakeup) {
-    super(scriptName);
+  public AlarmTrigger(File script, Context context, long executionTimeMs, boolean wakeup) {
+    super(script);
     mExecutionTimeMs = executionTimeMs;
     mWakeup = wakeup;
   }

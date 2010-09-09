@@ -21,6 +21,8 @@ import android.app.PendingIntent;
 
 import com.googlecode.android_scripting.IntentBuilders;
 
+import java.io.File;
+
 /**
  * A trigger that fires repeatedly with a fixed interval and starting time.
  * 
@@ -28,11 +30,12 @@ import com.googlecode.android_scripting.IntentBuilders;
  * 
  */
 public class ExactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
+
   private static final long serialVersionUID = -9125118724160624255L;
 
   private final long mFirstExecutionTimeMs;
 
-  public ExactRepeatingAlarmTrigger(String script, long intervalMs, long firstExecutionTimeMs,
+  public ExactRepeatingAlarmTrigger(File script, long intervalMs, long firstExecutionTimeMs,
       boolean wakeUp) {
     super(script, intervalMs, wakeUp);
     mFirstExecutionTimeMs = firstExecutionTimeMs;

@@ -22,6 +22,8 @@ import android.content.Intent;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.trigger.Trigger;
 
+import java.io.File;
+
 /**
  * A {@link EventTrigger} object combines a trigger with a condition. When the condition fires, the
  * trigger is invoked. The {@link EventTrigger} object takes care of proper serialization of the
@@ -35,7 +37,7 @@ public class EventTrigger extends Trigger {
   private final EventFactory mEventFactory;
   private transient EventListener mEventListener;
 
-  public EventTrigger(String script, EventFactory eventFactory) {
+  public EventTrigger(File script, EventFactory eventFactory) {
     super(script);
     mEventFactory = eventFactory;
   }

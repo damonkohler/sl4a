@@ -34,9 +34,10 @@ import java.util.UUID;
  * 
  */
 public abstract class Trigger implements Serializable {
+
   private static final long serialVersionUID = 5190219422732210378L;
-  private final String mScript;
-  private final String mName;
+
+  private final File mScript;
   private final UUID mId;
 
   /**
@@ -45,9 +46,8 @@ public abstract class Trigger implements Serializable {
    */
   private transient boolean mIsDeserializing = true;
 
-  public Trigger(String script) {
+  public Trigger(File script) {
     mScript = script;
-    mName = new File(mScript).getName();
     mId = UUID.randomUUID();
     mIsDeserializing = false;
   }
@@ -61,13 +61,13 @@ public abstract class Trigger implements Serializable {
   }
 
   /** Returns the name and path of the script to execute */
-  public final String getScript() {
+  public final File getScript() {
     return mScript;
   }
 
   /** Returns the name of the script to execute */
   public final String getScriptName() {
-    return mName;
+    return mScript.getName();
   }
 
   /** Returns this trigger's id. */
@@ -98,10 +98,11 @@ public abstract class Trigger implements Serializable {
 
   /** Creates a view to display this trigger in the trigger manager. */
   public View getView(Context context) {
+    // TODO(damonkohler): Change this to use XML layout.
     TextView view = new TextView(context);
     view.setPadding(4, 4, 4, 4);
     view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
-    view.setText(mName);
+    view.setText(getScriptName());
     return view;
   }
 }

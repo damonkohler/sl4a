@@ -133,6 +133,7 @@ public class ScriptManager extends ListActivity {
     handleIntent(intent);
   }
 
+  @SuppressWarnings("serial")
   private void updateAndFilterScriptList(final String query) {
     List<File> scripts;
     if (mPreferences.getBoolean("show_all_files", false)) {
@@ -162,8 +163,8 @@ public class ScriptManager extends ListActivity {
       ((TextView) findViewById(android.R.id.empty)).setText("No matches found.");
     }
 
+    // TODO(damonkohler): Extending the File class here seems odd.
     if (!mCurrentDir.equals(mBaseDir)) {
-
       mScripts.add(0, new File(mCurrentDir.getParent()) {
         @Override
         public boolean isDirectory() {
@@ -286,7 +287,7 @@ public class ScriptManager extends ListActivity {
       // Add a new script.
       Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
       Interpreter interpreter = mAddMenuIds.get(itemId);
-      intent.putExtra(Constants.EXTRA_SCRIPT, new File(mCurrentDir.getPath(), interpreter
+      intent.putExtra(Constants.EXTRA_SCRIPT_PATH, new File(mCurrentDir.getPath(), interpreter
           .getExtension()).getPath());
       intent.putExtra(Constants.EXTRA_SCRIPT_CONTENT, interpreter.getContentTemplate());
       intent.putExtra(Constants.EXTRA_IS_NEW_SCRIPT, true);
@@ -365,7 +366,7 @@ public class ScriptManager extends ListActivity {
       public void onClick(View v) {
         Intent intent = new Intent(ScriptManager.this, ScriptingLayerService.class);
         intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
-        intent.putExtra(Constants.EXTRA_SCRIPT, file.getPath());
+        intent.putExtra(Constants.EXTRA_SCRIPT_PATH, file.getPath());
         startService(intent);
         dismissQuickActions(actionMenu);
       }
@@ -378,7 +379,7 @@ public class ScriptManager extends ListActivity {
       public void onClick(View v) {
         Intent intent = new Intent(ScriptManager.this, ScriptingLayerService.class);
         intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
-        intent.putExtra(Constants.EXTRA_SCRIPT, file.getPath());
+        intent.putExtra(Constants.EXTRA_SCRIPT_PATH, file.getPath());
         startService(intent);
         dismissQuickActions(actionMenu);
       }
@@ -427,7 +428,7 @@ public class ScriptManager extends ListActivity {
    */
   private void editScript(String script) {
     Intent i = new Intent(Constants.ACTION_EDIT_SCRIPT);
-    i.putExtra(Constants.EXTRA_SCRIPT, script);
+    i.putExtra(Constants.EXTRA_SCRIPT_PATH, script);
     startActivity(i);
   }
 

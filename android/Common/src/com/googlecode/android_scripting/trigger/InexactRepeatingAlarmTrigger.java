@@ -21,6 +21,8 @@ import android.app.PendingIntent;
 
 import com.googlecode.android_scripting.IntentBuilders;
 
+import java.io.File;
+
 /**
  * A trigger that fires repeatedly with an approximate interval between events. This is a more
  * power-efficient version of {@link ExactRepeatingAlarmTrigger} with the drawback that the interval
@@ -30,9 +32,10 @@ import com.googlecode.android_scripting.IntentBuilders;
  * 
  */
 public class InexactRepeatingAlarmTrigger extends RepeatingAlarmTrigger {
+
   private static final long serialVersionUID = -9193318334645990578L;
 
-  public InexactRepeatingAlarmTrigger(String script, long interval, boolean wakeUp) {
+  public InexactRepeatingAlarmTrigger(File script, long interval, boolean wakeUp) {
     super(script, interval, wakeUp);
   }
 

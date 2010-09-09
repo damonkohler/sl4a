@@ -147,7 +147,7 @@ public class ScriptProvider extends ContentProvider {
         }
       }
       ShortcutIconResource icon = ShortcutIconResource.fromContext(mContext, iconId);
-      Intent intent = IntentBuilders.buildStartInBackgroundIntent(script.getPath());
+      Intent intent = IntentBuilders.buildStartInBackgroundIntent(script);
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       String description = path;
       if (path.startsWith(mRoot)) {

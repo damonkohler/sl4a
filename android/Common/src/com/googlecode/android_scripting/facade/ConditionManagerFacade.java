@@ -7,6 +7,8 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 
+import java.io.File;
+
 public class ConditionManagerFacade extends RpcReceiver {
   private final TriggerRepository mTriggerRepository;
 
@@ -17,8 +19,9 @@ public class ConditionManagerFacade extends RpcReceiver {
 
   @Rpc(description = "Schedules a script for execution when the ringer volume is set to silent.")
   public void onRingerSilent(
-      @RpcParameter(name = "script", description = "script to execute when the ringer volume is set to silent, or set to anything other than silent") String script) {
-    mTriggerRepository.addTrigger(new EventTrigger(script, new RingerModeEventListener.Factory()));
+      @RpcParameter(name = "script", description = "The path to a script to execute when the ringer mode changes.") String script) {
+    mTriggerRepository.addTrigger(new EventTrigger(new File(script),
+        new RingerModeEventListener.Factory()));
   }
 
   @Override

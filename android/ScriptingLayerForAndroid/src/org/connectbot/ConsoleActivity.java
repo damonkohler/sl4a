@@ -629,7 +629,7 @@ public class ConsoleActivity extends Activity {
       }
       Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
       ScriptProcess process = (ScriptProcess) bridge.getProcess();
-      intent.putExtra(Constants.EXTRA_SCRIPT, process.getPath());
+      intent.putExtra(Constants.EXTRA_SCRIPT_PATH, process.getPath());
       startActivity(intent);
       finish();
       break;

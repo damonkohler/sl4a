@@ -103,7 +103,7 @@ public class ScriptEditor extends Activity {
     mWatcher = new ContentTextWatcher(mHistory);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     updatePreferences();
-    String script = getIntent().getStringExtra(Constants.EXTRA_SCRIPT);
+    String script = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_PATH);
 
     if (script != null) {
       File file = new File(script);
@@ -175,7 +175,7 @@ public class ScriptEditor extends Activity {
       save();
       Intent intent = new Intent(this, ScriptingLayerService.class);
       intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
-      intent.putExtra(Constants.EXTRA_SCRIPT, new File(mPath, mNameText.getText().toString())
+      intent.putExtra(Constants.EXTRA_SCRIPT_PATH, new File(mPath, mNameText.getText().toString())
           .getPath());
       startService(intent);
       finish();
@@ -183,7 +183,7 @@ public class ScriptEditor extends Activity {
       startActivity(new Intent(this, Preferences.class));
     } else if (item.getItemId() == MenuId.API_BROWSER.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
-      intent.putExtra(Constants.EXTRA_SCRIPT, mNameText.getText().toString());
+      intent.putExtra(Constants.EXTRA_SCRIPT_PATH, mNameText.getText().toString());
       intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, mConfiguration.getInterpreterForScript(
           mNameText.getText().toString()).getName());
       intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());

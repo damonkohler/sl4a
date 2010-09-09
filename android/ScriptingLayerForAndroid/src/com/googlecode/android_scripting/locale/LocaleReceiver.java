@@ -24,11 +24,13 @@ import android.util.Log;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
 
+import java.io.File;
+
 public class LocaleReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    String script = intent.getStringExtra(Constants.EXTRA_SCRIPT);
+    final File script = new File(intent.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
     Log.v("LocaleReceiver", "Locale initiated launch of " + script);
     Intent launchIntent;
     if (intent.getBooleanExtra(Constants.EXTRA_LAUNCH_IN_BACKGROUND, false)) {

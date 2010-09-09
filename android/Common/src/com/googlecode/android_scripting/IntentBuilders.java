@@ -45,32 +45,32 @@ public class IntentBuilders {
   /**
    * Builds an intent that will launch a script in the background.
    * 
-   * @param scriptName
+   * @param script
    *          the script to launch
    * @return the intent that will launch the script
    */
-  public static Intent buildStartInBackgroundIntent(String script) {
+  public static Intent buildStartInBackgroundIntent(File script) {
     final ComponentName componentName = Constants.SL4A_SERVICE_LAUNCHER_COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
-    intent.putExtra(Constants.EXTRA_SCRIPT, script);
+    intent.putExtra(Constants.EXTRA_SCRIPT_PATH, script);
     return intent;
   }
 
   /**
    * Builds an intent that launches a script in a terminal.
    * 
-   * @param scriptName
+   * @param script
    *          the script to launch
    * @return the intent that will launch the script
    */
-  public static Intent buildStartInTerminalIntent(String script) {
+  public static Intent buildStartInTerminalIntent(File script) {
     final ComponentName componentName = Constants.SL4A_SERVICE_LAUNCHER_COMPONENT_NAME;
     Intent intent = new Intent();
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
-    intent.putExtra(Constants.EXTRA_SCRIPT, script);
+    intent.putExtra(Constants.EXTRA_SCRIPT_PATH, script);
     return intent;
   }
 
@@ -112,17 +112,16 @@ public class IntentBuilders {
   /**
    * Builds an intent that creates a shortcut to launch the provided script in the background.
    * 
-   * @param scriptName
+   * @param script
    *          the script to link to
    * @param iconResource
    *          the icon resource to associate with the shortcut
    * @return the intent that will create the shortcut
    */
-  public static Intent buildBackgroundShortcutIntent(String script, Parcelable iconResource) {
+  public static Intent buildBackgroundShortcutIntent(File script, Parcelable iconResource) {
     Intent intent = new Intent();
-    String name = new File(script).getName();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, buildStartInBackgroundIntent(script));
-    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, script.getName());
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
     return intent;
   }
@@ -130,17 +129,16 @@ public class IntentBuilders {
   /**
    * Builds an intent that creates a shortcut to launch the provided script in a terminal.
    * 
-   * @param scriptName
+   * @param script
    *          the script to link to
    * @param iconResource
    *          the icon resource to associate with the shortcut
    * @return the intent that will create the shortcut
    */
-  public static Intent buildTerminalShortcutIntent(String script, Parcelable iconResource) {
+  public static Intent buildTerminalShortcutIntent(File script, Parcelable iconResource) {
     Intent intent = new Intent();
-    String name = new File(script).getName();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, buildStartInTerminalIntent(script));
-    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, script.getName());
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
     return intent;
   }

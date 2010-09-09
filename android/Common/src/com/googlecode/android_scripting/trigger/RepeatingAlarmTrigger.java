@@ -24,6 +24,8 @@ import android.os.PowerManager.WakeLock;
 
 import com.googlecode.android_scripting.IntentBuilders;
 
+import java.io.File;
+
 public abstract class RepeatingAlarmTrigger extends Trigger {
   private static final String WAKE_LOCK_TAG =
       "com.googlecode.android_scripting.trigger.RepeatingAlarmTrigger";
@@ -39,7 +41,7 @@ public abstract class RepeatingAlarmTrigger extends Trigger {
   /** Whether or not to wake up the device. */
   protected final boolean mWakeUp;
 
-  public RepeatingAlarmTrigger(String script, long intervalMs, boolean wakeUp) {
+  public RepeatingAlarmTrigger(File script, long intervalMs, boolean wakeUp) {
     super(script);
     mIntervalMs = intervalMs;
     mWakeUp = wakeUp;

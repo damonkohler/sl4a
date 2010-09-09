@@ -36,8 +36,7 @@ public interface Constants {
       "com.googlecode.android_scripting.action.SAVE_AND_RUN_SCRIPT";
   public static final String ACTION_KILL_PROCESS =
       "com.googlecode.android_scripting.action.KILL_PROCESS";
-  public static final String ACTION_KILL_ALL = 
-      "com.googlecode.android_scripting.action.KILL_ALL";
+  public static final String ACTION_KILL_ALL = "com.googlecode.android_scripting.action.KILL_ALL";
   public static final String ACTION_SHOW_RUNNING_SCRIPTS =
       "com.googlecode.android_scripting.action.SHOW_RUNNING_SCRIPTS";
   public static final String ACTION_CANCEL_NOTIFICATION =
@@ -48,7 +47,8 @@ public interface Constants {
       "com.googlecode.android_scripting.action.LAUNCH_SERVER";
 
   public static final String EXTRA_RESULT = "SCRIPT_RESULT";
-  public static final String EXTRA_SCRIPT = "com.googlecode.android_scripting.extra.SCRIPT";
+  public static final String EXTRA_SCRIPT_PATH =
+      "com.googlecode.android_scripting.extra.SCRIPT_PATH";
   public static final String EXTRA_SCRIPT_CONTENT =
       "com.googlecode.android_scripting.extra.SCRIPT_CONTENT";
   public static final String EXTRA_INTERPRETER_NAME =
@@ -64,8 +64,7 @@ public interface Constants {
       "com.googlecode.android_scripting.extra.API_PROMPT_RPC_NAME";
   public static final String EXTRA_API_PROMPT_VALUES =
       "com.googlecode.android_scripting.extra.API_PROMPT_VALUES";
-  public static final String EXTRA_PROXY_PORT = 
-      "com.googlecode.android_scripting.extra.PROXY_PORT";
+  public static final String EXTRA_PROXY_PORT = "com.googlecode.android_scripting.extra.PROXY_PORT";
   public static final String EXTRA_PROCESS_ID =
       "com.googlecode.android_scripting.extra.SCRIPT_PROCESS_ID";
   public static final String EXTRA_IS_NEW_SCRIPT =
@@ -74,8 +73,7 @@ public interface Constants {
       "com.googlecode.android_scripting.extra.EXTRA_TRIGGER_ID";
   public static final String EXTRA_LAUNCH_IN_BACKGROUND =
       "com.googlecode.android_scripting.extra.EXTRA_LAUNCH_IN_BACKGROUND";
-  public static final String EXTRA_TASK_ID = 
-      "com.googlecode.android_scripting.extra.EXTRA_TASK_ID";
+  public static final String EXTRA_TASK_ID = "com.googlecode.android_scripting.extra.EXTRA_TASK_ID";
 
   // BluetoothDeviceManager
   public static final String EXTRA_DEVICE_ADDRESS =

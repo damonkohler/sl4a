@@ -71,12 +71,14 @@ public class ScriptPicker extends ListActivity {
 
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
-    final File file = (File) list.getItemAtPosition(position);
-    if (file.isDirectory()) {
-      mCurrentDir = file;
+    final File script = (File) list.getItemAtPosition(position);
+
+    if (script.isDirectory()) {
+      mCurrentDir = script;
       mAdapter.notifyDataSetInvalidated();
       return;
     }
+
     QuickAction actionMenu = new QuickAction(view);
     ActionItem terminal = new ActionItem();
     terminal.setIcon(getResources().getDrawable(R.drawable.terminal));
@@ -86,11 +88,10 @@ public class ScriptPicker extends ListActivity {
     actionMenu.addActionItems(terminal, background);
 
     if (Intent.ACTION_PICK.equals(getIntent().getAction())) {
-
       terminal.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
-          Intent intent = IntentBuilders.buildStartInTerminalIntent(file.getPath());
+          Intent intent = IntentBuilders.buildStartInTerminalIntent(script);
           setResult(RESULT_OK, intent);
           finish();
         }
@@ -99,14 +100,13 @@ public class ScriptPicker extends ListActivity {
       background.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
-          Intent intent = IntentBuilders.buildStartInBackgroundIntent(file.getPath());
+          Intent intent = IntentBuilders.buildStartInBackgroundIntent(script);
           setResult(RESULT_OK, intent);
           finish();
         }
       });
-
     } else if (Intent.ACTION_CREATE_SHORTCUT.equals(getIntent().getAction())) {
-      int icon = FeaturedInterpreters.getInterpreterIcon(ScriptPicker.this, file.getName());
+      int icon = FeaturedInterpreters.getInterpreterIcon(ScriptPicker.this, script.getName());
       if (icon == 0) {
         icon = R.drawable.sl4a_logo_48;
       }
@@ -117,7 +117,7 @@ public class ScriptPicker extends ListActivity {
       terminal.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
-          Intent intent = IntentBuilders.buildTerminalShortcutIntent(file.getPath(), iconResource);
+          Intent intent = IntentBuilders.buildTerminalShortcutIntent(script, iconResource);
           setResult(RESULT_OK, intent);
           finish();
         }
@@ -126,23 +126,21 @@ public class ScriptPicker extends ListActivity {
       background.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
-          Intent intent =
-              IntentBuilders.buildBackgroundShortcutIntent(file.getPath(), iconResource);
+          Intent intent = IntentBuilders.buildBackgroundShortcutIntent(script, iconResource);
           setResult(RESULT_OK, intent);
           finish();
         }
       });
     } else if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
-
       final Intent intent = new Intent();
       final Bundle storeAndForwardExtras = new Bundle();
-      storeAndForwardExtras.putString(Constants.EXTRA_SCRIPT, file.getPath());
+      storeAndForwardExtras.putString(Constants.EXTRA_SCRIPT_PATH, script.getPath());
 
-      if (file.getName().length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, file.getName().substring(0,
+      if (script.getName().length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
+        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName().substring(0,
             com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH));
       } else {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, file.getName());
+        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName());
       }
 
       terminal.setOnClickListener(new OnClickListener() {
@@ -171,9 +169,11 @@ public class ScriptPicker extends ListActivity {
   }
 
   private class ScriptListObserver extends DataSetObserver {
+    @SuppressWarnings("serial")
     @Override
     public void onInvalidated() {
       mScripts = ScriptStorageAdapter.listExecutableScripts(mCurrentDir, mConfiguration);
+      // TODO(damonkohler): Extending the File class here seems odd.
       if (!mCurrentDir.equals(mBaseDir)) {
         mScripts.add(0, new File(mCurrentDir.getParent()) {
           @Override

@@ -16,10 +16,11 @@
 
 package com.googlecode.android_scripting.trigger;
 
-import java.util.UUID;
-
 import android.app.AlarmManager;
 import android.content.Context;
+
+import java.io.File;
+import java.util.UUID;
 
 /**
  * A class keeping track of currently scheduled alarms in cooperation with the
@@ -50,7 +51,7 @@ public class AlarmTriggerManager {
    * @param wakeUp
    *          wake up the device even when asleep
    */
-  public void scheduleInexactRepeating(double interval, String script, boolean wakeUp) {
+  public void scheduleInexactRepeating(double interval, File script, boolean wakeUp) {
     mTriggerRepository.addTrigger(new InexactRepeatingAlarmTrigger(script,
         convertSecondsToMilliseconds(interval), wakeUp));
   }
@@ -65,7 +66,7 @@ public class AlarmTriggerManager {
    * @param wakeup
    *          if true then the phone will wake up when the alarm goes off
    */
-  public void scheduleRepeating(Double interval, String script, boolean wakeup) {
+  public void scheduleRepeating(Double interval, File script, boolean wakeup) {
     long firstExecutionTime = System.currentTimeMillis() + convertSecondsToMilliseconds(interval);
     mTriggerRepository.addTrigger(new ExactRepeatingAlarmTrigger(script,
         convertSecondsToMilliseconds(interval), firstExecutionTime, wakeup));
@@ -81,7 +82,7 @@ public class AlarmTriggerManager {
    * @param wakeup
    *          whether or not to wakeup the phone if its asleep
    */
-  public void schedule(Double executionTimeS, String script, boolean wakeup) {
+  public void schedule(Double executionTimeS, File script, boolean wakeup) {
     mTriggerRepository.addTrigger(new AlarmTrigger(script, mContext,
         convertSecondsToMilliseconds(executionTimeS), wakeup));
   }

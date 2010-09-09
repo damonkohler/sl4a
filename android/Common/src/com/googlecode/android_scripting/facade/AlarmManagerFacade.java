@@ -27,6 +27,8 @@ import com.googlecode.android_scripting.rpc.RpcParameter;
 import com.googlecode.android_scripting.trigger.AlarmTriggerManager;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 
+import java.io.File;
+
 /**
  * A facade exposing the functionality of the {@link AlarmManager}.
  * 
@@ -49,7 +51,7 @@ public class AlarmManagerFacade extends RpcReceiver {
       @RpcParameter(name = "interval", description = "the interval between invocations, in seconds") Double interval,
       @RpcParameter(name = "script", description = "the script to execute") String script,
       @RpcParameter(name = "wakeup", description = "whether or not to wakeup the device if asleep") @RpcDefault("true") Boolean wakeup) {
-    mAlarmManager.scheduleInexactRepeating(interval, script, wakeup);
+    mAlarmManager.scheduleInexactRepeating(interval, new File(script), wakeup);
   }
 
   @Rpc(description = "scheudles a script for (exact) regular execution")
@@ -63,7 +65,7 @@ public class AlarmManagerFacade extends RpcReceiver {
       firstExecutionTime = currentTime();
     }
 
-    mAlarmManager.scheduleRepeating(interval, script, wakeup);
+    mAlarmManager.scheduleRepeating(interval, new File(script), wakeup);
   }
 
   @Rpc(description = "schedules one-time execution of a script")
@@ -71,7 +73,7 @@ public class AlarmManagerFacade extends RpcReceiver {
       @RpcParameter(name = "script", description = "script to execute") String script,
       @RpcParameter(name = "time", description = "time of invocation, in seconds since epoch") Double time,
       @RpcParameter(name = "wakeup", description = "whether or not to wake up the device if asleep") @RpcDefault("true") Boolean wakeup) {
-    mAlarmManager.schedule(time, script, wakeup);
+    mAlarmManager.schedule(time, new File(script), wakeup);
   }
 
   @Rpc(description = "schedules one-time execution of a script, a given number of seconds from now")
@@ -79,7 +81,7 @@ public class AlarmManagerFacade extends RpcReceiver {
       @RpcParameter(name = "script", description = "script to execute") String script,
       @RpcParameter(name = "secondsFromNow", description = "after what time to execute the script") Double secondsFromNow,
       @RpcParameter(name = "wakeup", description = "whether or not to wake up the device if asleep") @RpcDefault("true") Boolean wakeup) {
-    mAlarmManager.schedule(currentTime() + secondsFromNow, script, wakeup);
+    mAlarmManager.schedule(currentTime() + secondsFromNow, new File(script), wakeup);
   }
 
   @Rpc(description = "cancels all scheduled regular executions of a given script")

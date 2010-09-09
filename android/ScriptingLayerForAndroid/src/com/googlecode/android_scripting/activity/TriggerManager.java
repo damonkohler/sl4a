@@ -46,6 +46,7 @@ import com.googlecode.android_scripting.trigger.AlarmTriggerManager;
 import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 
+import java.io.File;
 import java.util.List;
 
 public class TriggerManager extends ListActivity {
@@ -183,7 +184,7 @@ public class TriggerManager extends ListActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (resultCode == RESULT_OK) {
-      final String script = data.getStringExtra(Constants.EXTRA_SCRIPT);
+      final File script = new File(data.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
       if (requestCode == MenuId.SCHEDULE_REPEATING.getId()) {
         DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
             new DurationPickedListener() {

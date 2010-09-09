@@ -23,7 +23,7 @@ public class DialogActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT);
+    String scriptName = getIntent().getStringExtra(Constants.EXTRA_SCRIPT_PATH);
     String interpreter = FeaturedInterpreters.getInterpreterNameForScript(scriptName);
 
     if (interpreter == null) {
