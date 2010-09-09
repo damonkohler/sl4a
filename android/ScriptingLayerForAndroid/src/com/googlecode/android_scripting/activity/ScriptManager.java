@@ -597,7 +597,6 @@ public class ScriptManager extends ListActivity {
   }
 
   private class ScriptListObserver extends DataSetObserver implements ConfigurationObserver {
-
     @Override
     public void onInvalidated() {
       updateAndFilterScriptList(EMPTY);
@@ -616,7 +615,6 @@ public class ScriptManager extends ListActivity {
   }
 
   private class ScriptManagerAdapter extends ScriptListAdapter {
-
     public ScriptManagerAdapter(Context context) {
       super(context);
     }
@@ -625,6 +623,5 @@ public class ScriptManager extends ListActivity {
     protected List<File> getScriptList() {
       return mScripts;
     }
-
   }
 }

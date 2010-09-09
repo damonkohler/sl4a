@@ -64,21 +64,17 @@ public abstract class ScriptListAdapter extends BaseAdapter {
       container = (LinearLayout) convertView;
     }
 
-    ImageView img = (ImageView) container.findViewById(R.id.list_item_icon);
-    int imgId = 0;
+    ImageView icon = (ImageView) container.findViewById(R.id.list_item_icon);
+    int resourceId;
     if (script.isDirectory()) {
-      imgId = R.drawable.folder;
-      img.setBackgroundDrawable(null);
-      img.setPadding(0, 0, 0, 0);
+      resourceId = R.drawable.folder;
     } else {
-      img.setBackgroundResource(R.drawable.file_bg);
-      img.setPadding(4, 4, 8, 8);
-      imgId = FeaturedInterpreters.getInterpreterIcon(mContext, script.getName());
-      if (imgId == 0) {
-        imgId = R.drawable.sl4a_logo_32;
+      resourceId = FeaturedInterpreters.getInterpreterIcon(mContext, script.getName());
+      if (resourceId == 0) {
+        resourceId = R.drawable.sl4a_logo_32;
       }
     }
-    img.setImageResource(imgId);
+    icon.setImageResource(resourceId);
 
     TextView text = (TextView) container.findViewById(R.id.list_item_title);
     text.setText(getScriptList().get(position).getName());
