@@ -1,5 +1,5 @@
 /*
-EyesFreeFacade.java * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2010 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,23 +26,24 @@ import com.googlecode.android_scripting.rpc.RpcParameter;
 
 import java.io.Serializable;
 
-public class ExecutionResultFacade extends RpcReceiver {
+/**
+ * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
+ */
+public class ActivityResultFacade extends RpcReceiver {
 
   private static final String sRpcDescription =
-      "Sets the result of a script execution. "
-          + "Whenever the script APK is called via startActivityForResult(), "
-          + "the resulting intent will contain " + Constants.EXTRA_RESULT
+      "Sets the result of a script execution. Whenever the script APK is called via "
+          + "startActivityForResult(), the resulting intent will contain " + Constants.EXTRA_RESULT
           + " extra with the given value.";
-
   private static final String sCodeDescription =
-      "The result code to propagate back to the originating activity, "
-          + "often RESULT_CANCELED (0) or RESULT_OK (-1)";
+      "The result code to propagate back to the originating activity, often RESULT_CANCELED (0) "
+          + "or RESULT_OK (-1)";
 
   private Activity mActivity = null;
   private Intent mResult = null;
   private int mResultCode;
 
-  public ExecutionResultFacade(FacadeManager manager) {
+  public ActivityResultFacade(FacadeManager manager) {
     super(manager);
   }
 
