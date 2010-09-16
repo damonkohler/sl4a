@@ -15,6 +15,8 @@ lua/src/src/lua
 lua/src/src/luac
 lua/build/*
 lua/log
+android/PythonForAndroid/obj/*
+android/PythonForAndroid/libs/armeabi/*
 
 syntax: regexp
 (python|lua)/.*\.o
