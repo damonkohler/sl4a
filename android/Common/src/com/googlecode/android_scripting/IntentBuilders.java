@@ -54,7 +54,7 @@ public class IntentBuilders {
     Intent intent = new Intent();
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
-    intent.putExtra(Constants.EXTRA_SCRIPT_PATH, script);
+    intent.putExtra(Constants.EXTRA_SCRIPT_PATH, script.getAbsolutePath());
     return intent;
   }
 
@@ -70,7 +70,7 @@ public class IntentBuilders {
     Intent intent = new Intent();
     intent.setComponent(componentName);
     intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
-    intent.putExtra(Constants.EXTRA_SCRIPT_PATH, script);
+    intent.putExtra(Constants.EXTRA_SCRIPT_PATH, script.getAbsolutePath());
     return intent;
   }
 

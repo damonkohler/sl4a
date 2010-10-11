@@ -64,7 +64,8 @@ public class Interpreter implements InterpreterPropertyNames {
     if (data.containsKey(HAS_INTERACTIVE_MODE)) {
       hasInteractiveMode = Boolean.parseBoolean(data.get(HAS_INTERACTIVE_MODE));
     } else {
-      // Default to true so that older interpreter APKs that don't have this value define stil work.
+      // Default to true so that older interpreter APKs that don't have this value define still
+      // work.
       hasInteractiveMode = true;
     }
     Interpreter interpreter = new Interpreter();
