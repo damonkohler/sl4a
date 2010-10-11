@@ -39,6 +39,8 @@ import java.io.OutputStream;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import org.apache.commons.codec.binary.Base64;
+
 public class BluetoothFacade extends RpcReceiver {
 
   // UUID for SL4A.
@@ -63,6 +65,34 @@ public class BluetoothFacade extends RpcReceiver {
         return BluetoothAdapter.getDefaultAdapter();
       }
     });
+  }
+
+  @Rpc(description = "Send bytes over the currently open Bluetooth connection.")
+  public void bluetoothWriteBinary(
+      @RpcParameter(name = "base64", description = "A base64 encoded String of the bytes to be sent.") String base64)
+      throws IOException {
+    if (mOutputStream != null) {
+      mOutputStream.write(Base64.decodeBase64(base64));
+    } else {
+      throw new IOException("Bluetooth not ready.");
+    }
+  }
+
+  @Rpc(description = "Read up to bufferSize bytes and return a chunked, base64 encoded string.")
+  public String bluetoothReadBinary(
+      @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize) throws IOException {
+    if (mReader != null) {
+      byte[] buffer = new byte[bufferSize];
+      int bytesRead = mInputStream.read(buffer);
+      if (bytesRead == -1) {
+        Log.e("Read failed.");
+        throw new IOException("Read failed.");
+      }
+      byte[] truncatedBuffer = new byte[bytesRead];
+      System.arraycopy(buffer, 0, truncatedBuffer, 0, bytesRead);
+      return Base64.encodeBase64String(truncatedBuffer);
+    }
+    throw new IOException("Bluetooth not ready.");
   }
 
   @Rpc(description = "Connect to a device over Bluetooth. Blocks until the connection is established or fails.", returns = "True if the connection was established successfully.")
@@ -110,10 +140,10 @@ public class BluetoothFacade extends RpcReceiver {
     }
   }
 
-  @Rpc(description = "Sends bytes over the currently open Bluetooth connection.")
-  public void bluetoothWrite(@RpcParameter(name = "bytes") String bytes) throws IOException {
+  @Rpc(description = "Sends ASCII characters over the currently open Bluetooth connection.")
+  public void bluetoothWrite(@RpcParameter(name = "ascii") String ascii) throws IOException {
     if (mOutputStream != null) {
-      mOutputStream.write(bytes.getBytes());
+      mOutputStream.write(ascii.getBytes());
     } else {
       throw new IOException("Bluetooth not ready.");
     }
@@ -127,7 +157,7 @@ public class BluetoothFacade extends RpcReceiver {
     throw new IOException("Bluetooth not ready.");
   }
 
-  @Rpc(description = "Read up to bufferSize bytes.")
+  @Rpc(description = "Read up to bufferSize ASCII characters.")
   public String bluetoothRead(
       @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize) throws IOException {
     if (mReader != null) {

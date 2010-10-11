@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="libs/guava-r06.jar"/>
-	<classpathentry kind="lib" path="libs/commons-codec-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="libs/libGoogleAnalytics.jar"/>
 	<classpathentry kind="var" path="ANDROID_SDK/platforms/android-3/android.jar" sourcepath="/ANDROID_SDK/platforms/android-3/sources/"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
