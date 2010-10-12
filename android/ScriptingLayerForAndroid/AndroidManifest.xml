@@ -137,7 +137,7 @@
     <activity
       android:name=".activity.FutureActivity"
       android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent" />
+      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     <activity
       android:name="org.connectbot.HelpActivity"
       android:configChanges="keyboardHidden|orientation" />
