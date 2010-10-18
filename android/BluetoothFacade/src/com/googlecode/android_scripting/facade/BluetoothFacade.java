@@ -98,7 +98,7 @@ public class BluetoothFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Returns an estimate of the number of bytes available for reading without blocking.")
-  public Integer bluetoothAvailable() throws IOException {
+  public Integer bluetoothBytesAvailable() throws IOException {
     if (mInputStream != null) {
       return mInputStream.available();
     }
