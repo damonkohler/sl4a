@@ -99,15 +99,22 @@ public class BluetoothFacade extends RpcReceiver {
 
   @Rpc(description = "Returns an estimate of the number of bytes available for reading without blocking.")
   public Integer bluetoothAvailable() throws IOException {
-    return mInputStream.available();
+    if (mInputStream != null) {
+      return mInputStream.available();
+    }
+    throw new IOException("Bluetooth not ready.");
   }
 
   @Rpc(description = "Skips all pending input.")
   public void bluetoothSkipPendingInput() throws IOException {
-    long bytesSkipped;
-    do {
-      bytesSkipped = mInputStream.skip(mInputStream.available());
-    } while (bytesSkipped > 0);
+    if (mInputStream != null) {
+      long bytesSkipped;
+      do {
+        bytesSkipped = mInputStream.skip(mInputStream.available());
+      } while (bytesSkipped > 0);
+    } else {
+      throw new IOException("Bluetooth not ready.");
+    }
   }
 
   @Rpc(description = "Connect to a device over Bluetooth. Blocks until the connection is established or fails.", returns = "True if the connection was established successfully.")
