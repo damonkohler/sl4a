@@ -131,6 +131,9 @@ public class BluetoothFacade extends RpcReceiver {
       } else {
         return false;
       }
+    } else {
+      // Android only accepts all upper case addresses. This is only for convenience.
+      address = address.toUpperCase();
     }
     mDevice = mBluetoothAdapter.getRemoteDevice(address);
     mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
