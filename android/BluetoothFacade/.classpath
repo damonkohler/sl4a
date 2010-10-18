@@ -4,5 +4,6 @@
 	<classpathentry kind="var" path="ANDROID_SDK/platforms/android-6/android.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Common"/>
+	<classpathentry kind="lib" path="/Common/libs/commons-codec-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

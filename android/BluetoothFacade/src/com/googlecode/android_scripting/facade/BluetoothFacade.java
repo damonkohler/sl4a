@@ -72,27 +72,42 @@ public class BluetoothFacade extends RpcReceiver {
       @RpcParameter(name = "base64", description = "A base64 encoded String of the bytes to be sent.") String base64)
       throws IOException {
     if (mOutputStream != null) {
-      mOutputStream.write(Base64.decodeBase64(base64));
+      mOutputStream.write(Base64.decodeBase64(base64.getBytes()));
     } else {
       throw new IOException("Bluetooth not ready.");
     }
   }
 
-  @Rpc(description = "Read up to bufferSize bytes and return a chunked, base64 encoded string.")
+  @Rpc(description = "Read bufferSize bytes and return a chunked, base64 encoded string.")
   public String bluetoothReadBinary(
       @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize) throws IOException {
     if (mReader != null) {
       byte[] buffer = new byte[bufferSize];
-      int bytesRead = mInputStream.read(buffer);
-      if (bytesRead == -1) {
-        Log.e("Read failed.");
-        throw new IOException("Read failed.");
-      }
-      byte[] truncatedBuffer = new byte[bytesRead];
-      System.arraycopy(buffer, 0, truncatedBuffer, 0, bytesRead);
-      return Base64.encodeBase64String(truncatedBuffer);
+      int position = 0;
+      do {
+        int bytesRead = mInputStream.read(buffer, position, bufferSize - position);
+        if (bytesRead == -1) {
+          Log.e("Read failed.");
+          throw new IOException("Read failed.");
+        }
+        position += bytesRead;
+      } while (position < bufferSize);
+      return new String(Base64.encodeBase64(buffer));
     }
     throw new IOException("Bluetooth not ready.");
+  }
+
+  @Rpc(description = "Returns an estimate of the number of bytes available for reading without blocking.")
+  public Integer bluetoothAvailable() throws IOException {
+    return mInputStream.available();
+  }
+
+  @Rpc(description = "Skips all pending input.")
+  public void bluetoothSkipPendingInput() throws IOException {
+    long bytesSkipped;
+    do {
+      bytesSkipped = mInputStream.skip(mInputStream.available());
+    } while (bytesSkipped > 0);
   }
 
   @Rpc(description = "Connect to a device over Bluetooth. Blocks until the connection is established or fails.", returns = "True if the connection was established successfully.")
