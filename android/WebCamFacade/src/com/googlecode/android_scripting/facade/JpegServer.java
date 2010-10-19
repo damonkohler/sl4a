@@ -1,13 +1,7 @@
 package com.googlecode.android_scripting.facade;
 
+import java.io.OutputStream;
 import java.net.Socket;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.DefaultHttpServerConnection;
-import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.params.BasicHttpParams;
 
 import com.googlecode.android_scripting.SimpleServer;
 
@@ -26,16 +20,27 @@ class JpegServer extends SimpleServer {
     if (data == null) {
       return;
     }
-    DefaultHttpServerConnection connection = new DefaultHttpServerConnection();
-    connection.bind(socket, new BasicHttpParams());
-    connection.receiveRequestHeader();
-    HttpResponse response = new BasicHttpResponse(new ProtocolVersion("HTTP", 1, 1), 200, "OK");
-    // TODO(damonkohler): Add caching header.
-    response.addHeader("Content-Type", "image/jpg");
-    response.addHeader("Content-Length", "" + data.length);
-    response.setEntity(new ByteArrayEntity(data));
-    connection.sendResponseHeader(response);
-    connection.sendResponseEntity(response);
-    connection.flush();
+    OutputStream outputStream = socket.getOutputStream();
+    outputStream.write((
+        "HTTP/1.0 200 OK\r\n" +
+        "Server: SL4A\r\n" +
+        "Connection: close\r\n" +
+        "Max-Age: 0\r\n" +
+        "Expires: 0\r\n" +
+        "Cache-Control: no-cache, private\r\n" + 
+        "Pragma: no-cache\r\n" + 
+        "Content-Type: multipart/x-mixed-replace; boundary=--BoundaryString\r\n\r\n").getBytes());
+    while (true) {
+      data = mProvider.getJpeg();
+      if (data == null) {
+        return;
+      }
+      outputStream.write("--BoundaryString\r\n".getBytes());
+      outputStream.write("Content-type: image/jpg\r\n".getBytes());
+      outputStream.write(("Content-Length: " + data.length + "\r\n\r\n").getBytes());
+      outputStream.write(data);
+      outputStream.write("\r\n\r\n".getBytes());
+      outputStream.flush();
+    }
   }
 }

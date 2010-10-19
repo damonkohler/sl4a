@@ -73,7 +73,7 @@ public class WebCamFacade extends RpcReceiver {
     mService = manager.getService();
   }
 
-  @Rpc(description = "Starts a webcam stream and returns a Tuple of address and port for the stream. Load http://address:port/image.jpg to see the feed.")
+  @Rpc(description = "Starts an MJPEG stream and returns a Tuple of address and port for the stream.")
   public InetSocketAddress webcamStart(
       @RpcParameter(name = "resolutionLevel", description = "increasing this number provides higher resolution") @RpcDefault("0") Integer resolutionLevel,
       @RpcParameter(name = "jpegQuality", description = "a number from 0-100") @RpcDefault("20") Integer jpegQuality)

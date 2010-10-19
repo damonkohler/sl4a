@@ -37,7 +37,7 @@ public abstract class SimpleServer {
 
   private ServerSocket mServer;
   private Thread mServerThread;
-  private final CopyOnWriteArrayList<ConnectionThread> mNetworkThreads;
+  private final CopyOnWriteArrayList<ConnectionThread> mConnectionThreads;
   private volatile boolean mStopServer = false;
 
   protected abstract void handleConnection(Socket socket) throws Exception;
@@ -49,7 +49,7 @@ public abstract class SimpleServer {
    *          the {@link RpcReceiver}s to register with the server
    */
   public SimpleServer() {
-    mNetworkThreads = new CopyOnWriteArrayList<ConnectionThread>();
+    mConnectionThreads = new CopyOnWriteArrayList<ConnectionThread>();
   }
 
   private final class ConnectionThread extends Thread {
@@ -70,7 +70,7 @@ public abstract class SimpleServer {
         }
       } finally {
         close();
-        mNetworkThreads.remove(this);
+        mConnectionThreads.remove(this);
         Log.v("Server thread " + getId() + " died.");
       }
     }
@@ -162,7 +162,7 @@ public abstract class SimpleServer {
 
   private void startConnectionThread(final Socket sock) {
     ConnectionThread networkThread = new ConnectionThread(sock);
-    mNetworkThreads.add(networkThread);
+    mConnectionThreads.add(networkThread);
     networkThread.start();
   }
 
@@ -180,8 +180,8 @@ public abstract class SimpleServer {
     // threads. In the worst case, one of the running threads will already have
     // shut down. Since this is a CopyOnWriteList, we don't have to worry about
     // concurrency issues while iterating over the set of threads.
-    for (ConnectionThread networkThread : mNetworkThreads) {
-      networkThread.close();
+    for (ConnectionThread connectionThread : mConnectionThreads) {
+      connectionThread.close();
     }
   }
 }
