@@ -16,142 +16,30 @@
 
 package com.googlecode.android_scripting.jsonrpc;
 
+import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.SimpleServer;
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
+import com.googlecode.android_scripting.rpc.RpcError;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.googlecode.android_scripting.Log;
-import com.googlecode.android_scripting.rpc.MethodDescriptor;
-import com.googlecode.android_scripting.rpc.RpcError;
 
 /**
  * A JSON RPC server that forwards RPC calls to a specified receiver object.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class JsonRpcServer {
+public class JsonRpcServer extends SimpleServer {
 
   private final RpcReceiverManager mRpcReceiverManager;
-
-  private ServerSocket mServer;
-  private Thread mServerThread;
-  private final CopyOnWriteArrayList<ConnectionThread> mNetworkThreads;
-  private volatile boolean mStopServer = false;
-
   private final String mHandshake;
   private boolean mPassedAuthentication = false;
-
-  private final class ConnectionThread extends Thread {
-    private final Socket mmSocket;
-    private BufferedReader mmReader;
-    private PrintWriter mmWriter;
-
-    private ConnectionThread(Socket sock) {
-      mmSocket = sock;
-    }
-
-    @Override
-    public void run() {
-      Log.v("Server thread " + getId() + " started.");
-      try {
-        mmReader = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()), 8192);
-        mmWriter = new PrintWriter(mmSocket.getOutputStream(), true);
-        process();
-      } catch (Exception e) {
-        if (!mStopServer) {
-          Log.e("Server error.", e);
-        }
-      } finally {
-        close();
-        mNetworkThreads.remove(this);
-        Log.v("Server thread " + getId() + " died.");
-      }
-    }
-
-    private void process() throws JSONException, IOException {
-      String data;
-      while ((data = mmReader.readLine()) != null) {
-        Log.v("Received: " + data);
-        JSONObject request = new JSONObject(data);
-        int id = request.getInt("id");
-        String method = request.getString("method");
-        JSONArray params = request.getJSONArray("params");
-
-        // First RPC must be _authenticate if a handshake was specified.
-        if (!mPassedAuthentication && mHandshake != null) {
-          if (!checkHandshake(method, params)) {
-            SecurityException exception = new SecurityException("Authentication failed!");
-            send(JsonRpcResult.error(id, exception));
-            shutdown();
-            throw exception;
-          }
-          mPassedAuthentication = true;
-          send(JsonRpcResult.result(id, true));
-          continue;
-        }
-
-        MethodDescriptor rpc = mRpcReceiverManager.getMethodDescriptor(method);
-        if (rpc == null) {
-          send(JsonRpcResult.error(id, new RpcError("Unknown RPC.")));
-          continue;
-        }
-        try {
-          send(JsonRpcResult.result(id, rpc.invoke(mRpcReceiverManager, params)));
-        } catch (Throwable t) {
-          Log.e("Invocation error.", t);
-          send(JsonRpcResult.error(id, t));
-        }
-      }
-    }
-
-    private boolean checkHandshake(String method, JSONArray params) throws JSONException {
-      if (!method.equals("_authenticate") || !mHandshake.equals(params.getString(0))) {
-        return false;
-      }
-      return true;
-    }
-
-    private void send(JSONObject result) {
-      mmWriter.write(result + "\n");
-      mmWriter.flush();
-      Log.v("Sent: " + result);
-    }
-
-    private void close() {
-      if (mmSocket != null) {
-        try {
-          mmSocket.close();
-        } catch (IOException e) {
-          Log.e(e.getMessage(), e);
-        }
-      }
-      if (mmReader != null) {
-        try {
-          mmReader.close();
-        } catch (IOException e) {
-          Log.e(e.getMessage(), e);
-        }
-      }
-      if (mmWriter != null) {
-        mmWriter.close();
-      }
-    }
-  }
 
   /**
    * Construct a {@link JsonRpcServer} connected to the provided {@link RpcReceiver}s.
@@ -160,112 +48,71 @@ public class JsonRpcServer {
    *          the {@link RpcReceiver}s to register with the server
    */
   public JsonRpcServer(RpcReceiverManager manager, String handshake) {
+    super();
     mHandshake = handshake;
     mRpcReceiverManager = manager;
-    mNetworkThreads = new CopyOnWriteArrayList<ConnectionThread>();
   }
 
-  private InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {
-    Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
-    for (NetworkInterface netint : Collections.list(nets)) {
-      Enumeration<InetAddress> addresses = netint.getInetAddresses();
-      for (InetAddress address : Collections.list(addresses)) {
-        if (!address.getHostAddress().equals("127.0.0.1")) {
-          return address;
-        }
-      }
-    }
-    return InetAddress.getLocalHost();
-  }
-
-  /**
-   * Starts the RPC server bound to the localhost address.
-   * 
-   * @return the port that was allocated by the OS
-   */
-  public InetSocketAddress startLocal() {
-    InetAddress address;
-    try {
-      address = InetAddress.getLocalHost();
-      mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
-    } catch (Exception e) {
-      Log.e("Failed to start server.", e);
-      return null;
-    }
-    int port = start(address);
-    return new InetSocketAddress(address, port);
-  }
-
-  /**
-   * data Starts the RPC server bound to the public facing address.
-   * 
-   * @return the port that was allocated by the OS
-   */
-  public InetSocketAddress startPublic() {
-    InetAddress address;
-    try {
-      address = getPublicInetAddress();
-      mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
-    } catch (Exception e) {
-      Log.e("Failed to start server.", e);
-      return null;
-    }
-    int port = start(address);
-    return new InetSocketAddress(address, port);
-  }
-
-  private int start(InetAddress address) {
-    mServerThread = new Thread() {
-      @Override
-      public void run() {
-        while (!mStopServer) {
-          try {
-            Socket sock = mServer.accept();
-            if (!mStopServer) {
-              startConnectionThread(sock);
-            } else {
-              sock.close();
-            }
-          } catch (IOException e) {
-            if (!mStopServer) {
-              Log.e("Failed to accept connection.", e);
-            }
-          }
-        }
-      }
-    };
-    mServerThread.start();
-    Log.v("Bound to " + address.getHostAddress() + ":" + mServer.getLocalPort());
-    return mServer.getLocalPort();
-  }
-
-  private void startConnectionThread(final Socket sock) {
-    ConnectionThread networkThread = new ConnectionThread(sock);
-    mNetworkThreads.add(networkThread);
-    networkThread.start();
-  }
-
+  @Override
   public void shutdown() {
-    // Stop listening on the server socket to ensure that
-    // beyond this point there are no incoming requests.
-    mStopServer = true;
-    try {
-      mServer.close();
-    } catch (IOException e) {
-      Log.e("Failed to close server socket.", e);
-    }
-    // Since the server is not running, the mNetworkThreads set can only
-    // shrink from this point onward. We can just stop all of the running helper
-    // threads. In the worst case, one of the running threads will already have
-    // shut down. Since this is a CopyOnWriteList, we don't have to worry about
-    // concurrency issues while iterating over the set of threads.
-    for (ConnectionThread networkThread : mNetworkThreads) {
-      networkThread.close();
-    }
+    super.shutdown();
     // Notify all RPC receiving objects. They may have to clean up some of their state.
     if (mRpcReceiverManager != null) {
       // Null check eases testing.
       mRpcReceiverManager.shutdown();
     }
+  }
+
+  @Override
+  protected void handleConnection(Socket socket) throws Exception {
+    BufferedReader reader =
+        new BufferedReader(new InputStreamReader(socket.getInputStream()), 8192);
+    PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+    String data;
+    while ((data = reader.readLine()) != null) {
+      Log.v("Received: " + data);
+      JSONObject request = new JSONObject(data);
+      int id = request.getInt("id");
+      String method = request.getString("method");
+      JSONArray params = request.getJSONArray("params");
+
+      // First RPC must be _authenticate if a handshake was specified.
+      if (!mPassedAuthentication && mHandshake != null) {
+        if (!checkHandshake(method, params)) {
+          SecurityException exception = new SecurityException("Authentication failed!");
+          send(writer, JsonRpcResult.error(id, exception));
+          shutdown();
+          throw exception;
+        }
+        mPassedAuthentication = true;
+        send(writer, JsonRpcResult.result(id, true));
+        continue;
+      }
+
+      MethodDescriptor rpc = mRpcReceiverManager.getMethodDescriptor(method);
+      if (rpc == null) {
+        send(writer, JsonRpcResult.error(id, new RpcError("Unknown RPC.")));
+        continue;
+      }
+      try {
+        send(writer, JsonRpcResult.result(id, rpc.invoke(mRpcReceiverManager, params)));
+      } catch (Throwable t) {
+        Log.e("Invocation error.", t);
+        send(writer, JsonRpcResult.error(id, t));
+      }
+    }
+  }
+
+  private boolean checkHandshake(String method, JSONArray params) throws JSONException {
+    if (!method.equals("_authenticate") || !mHandshake.equals(params.getString(0))) {
+      return false;
+    }
+    return true;
+  }
+
+  private void send(PrintWriter writer, JSONObject result) {
+    writer.write(result + "\n");
+    writer.flush();
+    Log.v("Sent: " + result);
   }
 }
