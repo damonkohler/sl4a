@@ -114,7 +114,7 @@ public abstract class SimpleServer {
       return null;
     }
     int port = start(address);
-    return new InetSocketAddress(address, port);
+    return InetSocketAddress.createUnresolved(address.getHostAddress(), port);
   }
 
   /**
@@ -132,7 +132,7 @@ public abstract class SimpleServer {
       return null;
     }
     int port = start(address);
-    return new InetSocketAddress(address, port);
+    return InetSocketAddress.createUnresolved(address.getHostAddress(), port);
   }
 
   private int start(InetAddress address) {
