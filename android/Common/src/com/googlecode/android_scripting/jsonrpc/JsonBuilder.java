@@ -16,16 +16,6 @@
 
 package com.googlecode.android_scripting.jsonrpc;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
@@ -37,6 +27,17 @@ import android.telephony.NeighboringCellInfo;
 import android.telephony.gsm.GsmCellLocation;
 
 import com.googlecode.android_scripting.event.Event;
+
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class JsonBuilder {
 
@@ -111,7 +112,17 @@ public class JsonBuilder {
     if (data instanceof NeighboringCellInfo) {
       return buildNeighboringCellInfo((NeighboringCellInfo) data);
     }
+    if (data instanceof InetSocketAddress) {
+      return buildInetSocketAddress((InetSocketAddress) data);
+    }
     throw new JSONException("Failed to build JSON result.");
+  }
+
+  private static Object buildInetSocketAddress(InetSocketAddress data) {
+    JSONArray address = new JSONArray();
+    address.put(data.getHostName());
+    address.put(data.getPort());
+    return address;
   }
 
   private static <T> JSONArray buildJsonList(final List<T> list) throws JSONException {
