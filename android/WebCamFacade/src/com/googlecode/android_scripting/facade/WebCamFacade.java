@@ -41,6 +41,7 @@ public class WebCamFacade extends RpcReceiver {
   private Camera mCamera;
   private int mPreviewHeight;
   private int mPreviewWidth;
+  private int mJpegQuality;
   private final Executor mJpegCompressionExecutor = new SingleThreadExecutor();
 
   private final PreviewCallback mPreviewCallback = new PreviewCallback() {
@@ -62,7 +63,7 @@ public class WebCamFacade extends RpcReceiver {
     mJpegCompressionBuffer.reset();
     YuvImage yuvImage =
         new YuvImage(yuvData, ImageFormat.NV21, mPreviewWidth, mPreviewHeight, null);
-    yuvImage.compressToJpeg(new Rect(0, 0, mPreviewWidth, mPreviewHeight), 80,
+    yuvImage.compressToJpeg(new Rect(0, 0, mPreviewWidth, mPreviewHeight), mJpegQuality,
         mJpegCompressionBuffer);
     return mJpegCompressionBuffer.toByteArray();
   }
@@ -74,7 +75,8 @@ public class WebCamFacade extends RpcReceiver {
 
   @Rpc(description = "Starts a webcam stream and returns a Tuple of address and port for the stream. Load http://address:port/image.jpg to see the feed.")
   public InetSocketAddress webcamStart(
-      @RpcParameter(name = "resolutionLevel", description = "increasing this number provides higher resolution") @RpcDefault("0") Integer resolutionLevel)
+      @RpcParameter(name = "resolutionLevel", description = "increasing this number provides higher resolution") @RpcDefault("0") Integer resolutionLevel,
+      @RpcParameter(name = "jpegQuality", description = "a number from 0-100") @RpcDefault("20") Integer jpegQuality)
       throws Exception {
     try {
       mCamera = Camera.open();
@@ -93,6 +95,7 @@ public class WebCamFacade extends RpcReceiver {
       mPreviewHeight = previewSize.height;
       mPreviewWidth = previewSize.width;
       parameters.setPreviewSize(mPreviewWidth, mPreviewHeight);
+      mJpegQuality = Math.min(Math.max(jpegQuality, 0), 100);
       mCamera.setParameters(parameters);
       // TODO(damonkohler): Rotate image based on orientation.
       mPreviewTask = createPreviewTask();
