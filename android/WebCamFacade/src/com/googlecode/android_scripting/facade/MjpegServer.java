@@ -5,11 +5,11 @@ import java.net.Socket;
 
 import com.googlecode.android_scripting.SimpleServer;
 
-class JpegServer extends SimpleServer {
+class MjpegServer extends SimpleServer {
 
   private final JpegProvider mProvider;
 
-  public JpegServer(JpegProvider provider) {
+  public MjpegServer(JpegProvider provider) {
     super();
     mProvider = provider;
   }

@@ -36,7 +36,7 @@ public class WebCamFacade extends RpcReceiver {
   private volatile byte[] mJpegData;
   private volatile boolean mStreaming;
   private final ByteArrayOutputStream mJpegCompressionBuffer = new ByteArrayOutputStream();
-  private JpegServer mJpegServer;
+  private MjpegServer mJpegServer;
   private FutureActivityTask<SurfaceHolder> mPreviewTask;
   private Camera mCamera;
   private int mPreviewHeight;
@@ -102,7 +102,7 @@ public class WebCamFacade extends RpcReceiver {
       mCamera.startPreview();
       mStreaming = true;
       mCamera.setOneShotPreviewCallback(mPreviewCallback);
-      mJpegServer = new JpegServer(new JpegProvider() {
+      mJpegServer = new MjpegServer(new JpegProvider() {
         @Override
         public byte[] getJpeg() {
           return mJpegData;
