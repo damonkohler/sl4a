@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/BluetoothFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SignalStrengthFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TextToSpeechFacade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WebCamFacade"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

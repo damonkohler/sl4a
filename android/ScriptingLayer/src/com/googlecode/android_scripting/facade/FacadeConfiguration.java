@@ -95,6 +95,10 @@ public class FacadeConfiguration {
       sFacadeClassList.add(SignalStrengthFacade.class);
     }
 
+    if (sdkVersion >= 8) {
+      sFacadeClassList.add(WebCamFacade.class);
+    }
+
     for (Class<? extends RpcReceiver> recieverClass : sFacadeClassList) {
       for (MethodDescriptor rpcMethod : MethodDescriptor.collectFrom(recieverClass)) {
         sRpcs.put(rpcMethod.getName(), rpcMethod);

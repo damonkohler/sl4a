@@ -12,8 +12,9 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SignalStrengthFacade"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TextToSpeechFacade"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Utils"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/WebCamFacade"/>
 	<classpathentry kind="src" path="QuickAction"/>
 	<classpathentry exported="true" kind="lib" path="/Common/libs/guava-r06.jar"/>
-	<classpathentry kind="lib" path="/Common/libs/commons-codec-1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Common/libs/commons-codec-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

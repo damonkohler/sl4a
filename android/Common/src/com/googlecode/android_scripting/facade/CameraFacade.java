@@ -134,7 +134,6 @@ public class CameraFacade extends RpcReceiver {
     FutureActivityTaskExecutor taskQueue =
         ((BaseApplication) mService.getApplication()).getTaskExecutor();
     taskQueue.execute(task);
-
     camera.setPreviewDisplay(task.getResult());
     return task;
   }
