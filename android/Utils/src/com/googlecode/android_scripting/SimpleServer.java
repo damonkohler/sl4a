@@ -102,37 +102,43 @@ public abstract class SimpleServer {
   /**
    * Starts the RPC server bound to the localhost address.
    * 
-   * @return the port that was allocated by the OS
+   * @param port
+   *          the port to bind to or 0 to pick any unused port
+   * 
+   * @return the port that the server is bound to
    */
-  public InetSocketAddress startLocal() {
+  public InetSocketAddress startLocal(int port) {
     InetAddress address;
     try {
       address = InetAddress.getLocalHost();
-      mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
+      mServer = new ServerSocket(port, 5 /* backlog */, address);
     } catch (Exception e) {
       Log.e("Failed to start server.", e);
       return null;
     }
-    int port = start(address);
-    return InetSocketAddress.createUnresolved(address.getHostAddress(), port);
+    int boundPort = start(address);
+    return InetSocketAddress.createUnresolved(address.getHostAddress(), boundPort);
   }
 
   /**
    * data Starts the RPC server bound to the public facing address.
    * 
-   * @return the port that was allocated by the OS
+   * @param port
+   *          the port to bind to or 0 to pick any unused port
+   * 
+   * @return the port that the server is bound to
    */
-  public InetSocketAddress startPublic() {
+  public InetSocketAddress startPublic(int port) {
     InetAddress address;
     try {
       address = getPublicInetAddress();
-      mServer = new ServerSocket(0 /* port */, 5 /* backlog */, address);
+      mServer = new ServerSocket(port, 5 /* backlog */, address);
     } catch (Exception e) {
       Log.e("Failed to start server.", e);
       return null;
     }
-    int port = start(address);
-    return InetSocketAddress.createUnresolved(address.getHostAddress(), port);
+    int boundPort = start(address);
+    return InetSocketAddress.createUnresolved(address.getHostAddress(), boundPort);
   }
 
   private int start(InetAddress address) {

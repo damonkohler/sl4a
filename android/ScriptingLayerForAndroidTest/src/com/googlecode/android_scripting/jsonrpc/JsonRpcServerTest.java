@@ -44,7 +44,7 @@ public class JsonRpcServerTest extends TestCase {
 
   public void testValidHandshake() throws IOException, JSONException {
     JsonRpcServer server = new JsonRpcServer(null, "foo");
-    InetSocketAddress address = server.startLocal();
+    InetSocketAddress address = server.startLocal(0);
     Socket client = new Socket();
     client.connect(address);
     PrintStream out = new PrintStream(client.getOutputStream());
@@ -59,7 +59,7 @@ public class JsonRpcServerTest extends TestCase {
 
   public void testInvalidHandshake() throws IOException, JSONException, InterruptedException {
     JsonRpcServer server = new JsonRpcServer(null, "foo");
-    InetSocketAddress address = server.startLocal();
+    InetSocketAddress address = server.startLocal(0);
     Socket client = new Socket();
     client.connect(address);
     PrintStream out = new PrintStream(client.getOutputStream());

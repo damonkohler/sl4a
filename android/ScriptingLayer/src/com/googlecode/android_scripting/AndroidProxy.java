@@ -61,12 +61,12 @@ public class AndroidProxy {
   }
 
   public InetSocketAddress startLocal() {
-    mAddress = mJsonRpcServer.startLocal();
+    mAddress = mJsonRpcServer.startLocal(0);
     return mAddress;
   }
 
   public InetSocketAddress startPublic() {
-    mAddress = mJsonRpcServer.startPublic();
+    mAddress = mJsonRpcServer.startPublic(0);
     return mAddress;
   }
 

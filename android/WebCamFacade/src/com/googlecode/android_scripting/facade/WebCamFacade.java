@@ -28,21 +28,24 @@ import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
+import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
 public class WebCamFacade extends RpcReceiver {
 
   private final Service mService;
-  private volatile byte[] mJpegData;
-  private volatile boolean mStreaming;
+  private final Executor mJpegCompressionExecutor = new SingleThreadExecutor();
   private final ByteArrayOutputStream mJpegCompressionBuffer = new ByteArrayOutputStream();
-  private MjpegServer mJpegServer;
-  private FutureActivityTask<SurfaceHolder> mPreviewTask;
-  private Camera mCamera;
+
+  private boolean mStreaming;
+  private byte[] mJpegData;
   private int mPreviewHeight;
   private int mPreviewWidth;
   private int mJpegQuality;
-  private final Executor mJpegCompressionExecutor = new SingleThreadExecutor();
+
+  private MjpegServer mJpegServer;
+  private FutureActivityTask<SurfaceHolder> mPreviewTask;
+  private Camera mCamera;
 
   private final PreviewCallback mPreviewCallback = new PreviewCallback() {
     @Override
@@ -58,6 +61,7 @@ public class WebCamFacade extends RpcReceiver {
       });
     }
   };
+  private Parameters mParameters;
 
   private byte[] compressYuvToJpeg(final byte[] yuvData) {
     mJpegCompressionBuffer.reset();
@@ -76,27 +80,12 @@ public class WebCamFacade extends RpcReceiver {
   @Rpc(description = "Starts an MJPEG stream and returns a Tuple of address and port for the stream.")
   public InetSocketAddress webcamStart(
       @RpcParameter(name = "resolutionLevel", description = "increasing this number provides higher resolution") @RpcDefault("0") Integer resolutionLevel,
-      @RpcParameter(name = "jpegQuality", description = "a number from 0-100") @RpcDefault("20") Integer jpegQuality)
+      @RpcParameter(name = "jpegQuality", description = "a number from 0-100") @RpcDefault("20") Integer jpegQuality,
+      @RpcParameter(name = "port", description = "If port is specified, the webcam service will bind to port, otherwise it will pick any available port.") @RpcOptional Integer port)
       throws Exception {
     try {
-      mCamera = Camera.open();
-      Parameters parameters = mCamera.getParameters();
-      parameters.setPictureFormat(ImageFormat.JPEG);
-      parameters.setPreviewFormat(ImageFormat.JPEG);
-      List<Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
-      Collections.sort(supportedPreviewSizes, new Comparator<Size>() {
-        @Override
-        public int compare(Size o1, Size o2) {
-          return o1.width - o2.width;
-        }
-      });
-      Size previewSize =
-          supportedPreviewSizes.get(Math.min(resolutionLevel, supportedPreviewSizes.size() - 1));
-      mPreviewHeight = previewSize.height;
-      mPreviewWidth = previewSize.width;
-      parameters.setPreviewSize(mPreviewWidth, mPreviewHeight);
-      mJpegQuality = Math.min(Math.max(jpegQuality, 0), 100);
-      mCamera.setParameters(parameters);
+      openCamera();
+      setCameraParameters(resolutionLevel, jpegQuality);
       // TODO(damonkohler): Rotate image based on orientation.
       mPreviewTask = createPreviewTask();
       mCamera.startPreview();
@@ -108,15 +97,44 @@ public class WebCamFacade extends RpcReceiver {
           return mJpegData;
         }
       });
-      return mJpegServer.startPublic();
+      return mJpegServer.startPublic(port);
     } catch (Exception e) {
       mStreaming = false;
-      if (mCamera != null) {
-        mCamera.release();
-        mCamera = null;
-      }
+      releaseCamera();
       throw e;
     }
+  }
+
+  private void setCameraParameters(Integer resolutionLevel, Integer jpegQuality) {
+    mParameters.setPictureFormat(ImageFormat.JPEG);
+    mParameters.setPreviewFormat(ImageFormat.JPEG);
+    List<Size> supportedPreviewSizes = mParameters.getSupportedPreviewSizes();
+    Collections.sort(supportedPreviewSizes, new Comparator<Size>() {
+      @Override
+      public int compare(Size o1, Size o2) {
+        return o1.width - o2.width;
+      }
+    });
+    Size previewSize =
+        supportedPreviewSizes.get(Math.min(resolutionLevel, supportedPreviewSizes.size() - 1));
+    mPreviewHeight = previewSize.height;
+    mPreviewWidth = previewSize.width;
+    mParameters.setPreviewSize(mPreviewWidth, mPreviewHeight);
+    mJpegQuality = Math.min(Math.max(jpegQuality, 0), 100);
+    mCamera.setParameters(mParameters);
+  }
+
+  private void releaseCamera() {
+    if (mCamera != null) {
+      mCamera.release();
+      mCamera = null;
+    }
+    mParameters = null;
+  }
+
+  private void openCamera() {
+    mCamera = Camera.open();
+    mParameters = mCamera.getParameters();
   }
 
   @Rpc(description = "Stops the webcam stream.")
@@ -130,10 +148,7 @@ public class WebCamFacade extends RpcReceiver {
       mPreviewTask.finish();
       mPreviewTask = null;
     }
-    if (mCamera != null) {
-      mCamera.release();
-      mCamera = null;
-    }
+    releaseCamera();
   }
 
   private FutureActivityTask<SurfaceHolder> createPreviewTask() throws IOException,
