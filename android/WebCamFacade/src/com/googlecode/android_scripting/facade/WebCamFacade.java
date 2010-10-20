@@ -83,28 +83,50 @@ public class WebCamFacade extends RpcReceiver {
       @RpcParameter(name = "port", description = "If port is specified, the webcam service will bind to port, otherwise it will pick any available port.") @RpcDefault("0") Integer port)
       throws Exception {
     try {
-      openCamera();
-      setCameraParameters(resolutionLevel, jpegQuality);
-      // TODO(damonkohler): Rotate image based on orientation.
-      mPreviewTask = createPreviewTask();
-      mCamera.startPreview();
-      mStreaming = true;
-      mCamera.setOneShotPreviewCallback(mPreviewCallback);
-      mJpegServer = new MjpegServer(new JpegProvider() {
-        @Override
-        public byte[] getJpeg() {
-          return mJpegData;
-        }
-      });
-      return mJpegServer.startPublic(port);
+      openCamera(resolutionLevel, jpegQuality);
+      startStream();
+      return startServer(port);
     } catch (Exception e) {
-      mStreaming = false;
-      releaseCamera();
+      webcamStop();
       throw e;
     }
   }
 
-  private void setCameraParameters(Integer resolutionLevel, Integer jpegQuality) {
+  private InetSocketAddress startServer(Integer port) {
+    mJpegServer = new MjpegServer(new JpegProvider() {
+      @Override
+      public byte[] getJpeg() {
+        return mJpegData;
+      }
+    });
+    return mJpegServer.startPublic(port);
+  }
+
+  private void stopServer() {
+    if (mJpegServer != null) {
+      mJpegServer.shutdown();
+      mJpegServer = null;
+    }
+  }
+
+  @Rpc(description = "Adjusts the quality of the webcam stream while it is running.")
+  public void webcamAdjustQuality(
+      @RpcParameter(name = "resolutionLevel", description = "increasing this number provides higher resolution") @RpcDefault("0") Integer resolutionLevel,
+      @RpcParameter(name = "jpegQuality", description = "a number from 0-100") @RpcDefault("20") Integer jpegQuality)
+      throws Exception {
+    if (mStreaming == false) {
+      throw new IllegalStateException("Webcam not streaming.");
+    }
+    stopStream();
+    releaseCamera();
+    openCamera(resolutionLevel, jpegQuality);
+    startStream();
+  }
+
+  private void openCamera(Integer resolutionLevel, Integer jpegQuality) throws IOException,
+      InterruptedException {
+    mCamera = Camera.open();
+    mParameters = mCamera.getParameters();
     mParameters.setPictureFormat(ImageFormat.JPEG);
     mParameters.setPreviewFormat(ImageFormat.JPEG);
     List<Size> supportedPreviewSizes = mParameters.getSupportedPreviewSizes();
@@ -121,6 +143,22 @@ public class WebCamFacade extends RpcReceiver {
     mParameters.setPreviewSize(mPreviewWidth, mPreviewHeight);
     mJpegQuality = Math.min(Math.max(jpegQuality, 0), 100);
     mCamera.setParameters(mParameters);
+    // TODO(damonkohler): Rotate image based on orientation.
+    mPreviewTask = createPreviewTask();
+    mCamera.startPreview();
+  }
+
+  private void startStream() {
+    mStreaming = true;
+    mCamera.setOneShotPreviewCallback(mPreviewCallback);
+  }
+
+  private void stopStream() {
+    mStreaming = false;
+    if (mPreviewTask != null) {
+      mPreviewTask.finish();
+      mPreviewTask = null;
+    }
   }
 
   private void releaseCamera() {
@@ -131,22 +169,10 @@ public class WebCamFacade extends RpcReceiver {
     mParameters = null;
   }
 
-  private void openCamera() {
-    mCamera = Camera.open();
-    mParameters = mCamera.getParameters();
-  }
-
   @Rpc(description = "Stops the webcam stream.")
   public void webcamStop() {
-    mStreaming = false;
-    if (mJpegServer != null) {
-      mJpegServer.shutdown();
-      mJpegServer = null;
-    }
-    if (mPreviewTask != null) {
-      mPreviewTask.finish();
-      mPreviewTask = null;
-    }
+    stopServer();
+    stopStream();
     releaseCamera();
   }
 
