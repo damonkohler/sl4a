@@ -119,9 +119,12 @@ public class BluetoothFacade extends RpcReceiver {
 
   @Rpc(description = "Connect to a device over Bluetooth. Blocks until the connection is established or fails.", returns = "True if the connection was established successfully.")
   public boolean bluetoothConnect(
-      @RpcParameter(name = "uuid", description = "The UUID passed here must match the UUID used by the server device.") @RpcDefault(DEFAULT_UUID) String uuid,
+      @RpcParameter(name = "uuid", description = "The UUID passed here must match the UUID used by the server device.") @RpcOptional String uuid,
       @RpcParameter(name = "address", description = "The user will be presented with a list of discovered devices to choose from if an address is not provided.") @RpcOptional String address)
       throws IOException {
+    if (uuid == null) {
+      uuid = DEFAULT_UUID;
+    }
     if (address == null) {
       Intent deviceChooserIntent = new Intent();
       deviceChooserIntent.setComponent(Constants.BLUETOOTH_DEVICE_LIST_COMPONENT_NAME);

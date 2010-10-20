@@ -42,10 +42,12 @@ public class JsonRpcServer extends SimpleServer {
   private boolean mPassedAuthentication = false;
 
   /**
-   * Construct a {@link JsonRpcServer} connected to the provided {@link RpcReceiver}s.
+   * Construct a {@link JsonRpcServer} connected to the provided {@link RpcReceiverManager}.
    * 
-   * @param receivers
-   *          the {@link RpcReceiver}s to register with the server
+   * @param manager
+   *          the {@link RpcReceiverManager} to register with the server
+   * @param handshake
+   *          the secret handshake required for authorization to use this server
    */
   public JsonRpcServer(RpcReceiverManager manager, String handshake) {
     super();
