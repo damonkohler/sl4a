@@ -80,7 +80,6 @@ public class FacadeManager extends RpcReceiverManager {
         // TODO(Alexey): As an alternative, ask application for resource ids.
         String packageName = mService.getApplication().getPackageName();
         return mService.getResources().getIdentifier("script_logo_48", "drawable", packageName);
-        // return R.drawable.ase_logo_48;
       }
     };
   }

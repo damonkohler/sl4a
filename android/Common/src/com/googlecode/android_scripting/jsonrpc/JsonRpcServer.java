@@ -25,6 +25,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,36 +39,38 @@ import org.json.JSONObject;
  */
 public class JsonRpcServer extends SimpleServer {
 
-  private final RpcReceiverManager mRpcReceiverManager;
+  private final RpcReceiverManagerFactory mRpcReceiverManagerFactory;
+  private final List<RpcReceiverManager> mRpcReceiverManagers;
   private final String mHandshake;
   private boolean mPassedAuthentication = false;
 
   /**
    * Construct a {@link JsonRpcServer} connected to the provided {@link RpcReceiverManager}.
    * 
-   * @param manager
+   * @param managerFactory
    *          the {@link RpcReceiverManager} to register with the server
    * @param handshake
    *          the secret handshake required for authorization to use this server
    */
-  public JsonRpcServer(RpcReceiverManager manager, String handshake) {
+  public JsonRpcServer(RpcReceiverManagerFactory managerFactory, String handshake) {
     super();
     mHandshake = handshake;
-    mRpcReceiverManager = manager;
+    mRpcReceiverManagerFactory = managerFactory;
+    mRpcReceiverManagers = new ArrayList<RpcReceiverManager>();
   }
 
   @Override
   public void shutdown() {
     super.shutdown();
     // Notify all RPC receiving objects. They may have to clean up some of their state.
-    if (mRpcReceiverManager != null) {
-      // Null check eases testing.
-      mRpcReceiverManager.shutdown();
+    for (RpcReceiverManager manager : mRpcReceiverManagers) {
+      manager.shutdown();
     }
   }
 
   @Override
   protected void handleConnection(Socket socket) throws Exception {
+    RpcReceiverManager manager = mRpcReceiverManagerFactory.create();
     BufferedReader reader =
         new BufferedReader(new InputStreamReader(socket.getInputStream()), 8192);
     PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
@@ -91,13 +95,13 @@ public class JsonRpcServer extends SimpleServer {
         continue;
       }
 
-      MethodDescriptor rpc = mRpcReceiverManager.getMethodDescriptor(method);
+      MethodDescriptor rpc = manager.getMethodDescriptor(method);
       if (rpc == null) {
         send(writer, JsonRpcResult.error(id, new RpcError("Unknown RPC.")));
         continue;
       }
       try {
-        send(writer, JsonRpcResult.result(id, rpc.invoke(mRpcReceiverManager, params)));
+        send(writer, JsonRpcResult.result(id, rpc.invoke(manager, params)));
       } catch (Throwable t) {
         Log.e("Invocation error.", t);
         send(writer, JsonRpcResult.error(id, t));
