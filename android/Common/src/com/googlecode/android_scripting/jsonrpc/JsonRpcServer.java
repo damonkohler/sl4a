@@ -70,7 +70,8 @@ public class JsonRpcServer extends SimpleServer {
 
   @Override
   protected void handleConnection(Socket socket) throws Exception {
-    RpcReceiverManager manager = mRpcReceiverManagerFactory.create();
+    RpcReceiverManager receiverManager = mRpcReceiverManagerFactory.create();
+    mRpcReceiverManagers.add(receiverManager);
     BufferedReader reader =
         new BufferedReader(new InputStreamReader(socket.getInputStream()), 8192);
     PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
@@ -95,13 +96,13 @@ public class JsonRpcServer extends SimpleServer {
         continue;
       }
 
-      MethodDescriptor rpc = manager.getMethodDescriptor(method);
+      MethodDescriptor rpc = receiverManager.getMethodDescriptor(method);
       if (rpc == null) {
         send(writer, JsonRpcResult.error(id, new RpcError("Unknown RPC.")));
         continue;
       }
       try {
-        send(writer, JsonRpcResult.result(id, rpc.invoke(manager, params)));
+        send(writer, JsonRpcResult.result(id, rpc.invoke(receiverManager, params)));
       } catch (Throwable t) {
         Log.e("Invocation error.", t);
         send(writer, JsonRpcResult.error(id, t));
