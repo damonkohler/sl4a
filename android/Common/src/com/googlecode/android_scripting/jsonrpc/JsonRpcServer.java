@@ -39,7 +39,6 @@ public class JsonRpcServer extends SimpleServer {
 
   private final RpcReceiverManagerFactory mRpcReceiverManagerFactory;
   private final String mHandshake;
-  private boolean mPassedAuthentication = false;
 
   /**
    * Construct a {@link JsonRpcServer} connected to the provided {@link RpcReceiverManager}.
@@ -70,6 +69,7 @@ public class JsonRpcServer extends SimpleServer {
     BufferedReader reader =
         new BufferedReader(new InputStreamReader(socket.getInputStream()), 8192);
     PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+    boolean passedAuthentication = false;
     String data;
     while ((data = reader.readLine()) != null) {
       Log.v("Received: " + data);
@@ -79,14 +79,14 @@ public class JsonRpcServer extends SimpleServer {
       JSONArray params = request.getJSONArray("params");
 
       // First RPC must be _authenticate if a handshake was specified.
-      if (!mPassedAuthentication && mHandshake != null) {
+      if (!passedAuthentication && mHandshake != null) {
         if (!checkHandshake(method, params)) {
           SecurityException exception = new SecurityException("Authentication failed!");
           send(writer, JsonRpcResult.error(id, exception));
           shutdown();
           throw exception;
         }
-        mPassedAuthentication = true;
+        passedAuthentication = true;
         send(writer, JsonRpcResult.result(id, true));
         continue;
       }
