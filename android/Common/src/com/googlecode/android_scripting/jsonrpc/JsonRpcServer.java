@@ -25,8 +25,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +38,6 @@ import org.json.JSONObject;
 public class JsonRpcServer extends SimpleServer {
 
   private final RpcReceiverManagerFactory mRpcReceiverManagerFactory;
-  private final List<RpcReceiverManager> mRpcReceiverManagers;
   private final String mHandshake;
   private boolean mPassedAuthentication = false;
 
@@ -56,14 +53,13 @@ public class JsonRpcServer extends SimpleServer {
     super();
     mHandshake = handshake;
     mRpcReceiverManagerFactory = managerFactory;
-    mRpcReceiverManagers = new ArrayList<RpcReceiverManager>();
   }
 
   @Override
   public void shutdown() {
     super.shutdown();
     // Notify all RPC receiving objects. They may have to clean up some of their state.
-    for (RpcReceiverManager manager : mRpcReceiverManagers) {
+    for (RpcReceiverManager manager : mRpcReceiverManagerFactory.getRpcReceiverManagers()) {
       manager.shutdown();
     }
   }
@@ -71,7 +67,6 @@ public class JsonRpcServer extends SimpleServer {
   @Override
   protected void handleConnection(Socket socket) throws Exception {
     RpcReceiverManager receiverManager = mRpcReceiverManagerFactory.create();
-    mRpcReceiverManagers.add(receiverManager);
     BufferedReader reader =
         new BufferedReader(new InputStreamReader(socket.getInputStream()), 8192);
     PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);

@@ -20,9 +20,9 @@ import android.app.Service;
 import android.content.Intent;
 
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
-import com.googlecode.android_scripting.facade.FacadeManager;
+import com.googlecode.android_scripting.facade.FacadeManagerFactory;
 import com.googlecode.android_scripting.jsonrpc.JsonRpcServer;
-import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
+import com.googlecode.android_scripting.jsonrpc.RpcReceiverManagerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;
@@ -32,7 +32,7 @@ public class AndroidProxy {
   private InetSocketAddress mAddress;
   private final JsonRpcServer mJsonRpcServer;
   private final UUID mSecret;
-  private final FacadeManager mManager;
+  private final RpcReceiverManagerFactory mFacadeManagerFactory;
 
   /**
    * 
@@ -49,10 +49,10 @@ public class AndroidProxy {
     } else {
       mSecret = null;
     }
-    mManager =
-        new FacadeManager(FacadeConfiguration.getSdkLevel(), service, intent, FacadeConfiguration
-            .getFacadeClasses());
-    mJsonRpcServer = new JsonRpcServer(mManager, getSecret());
+    mFacadeManagerFactory =
+        new FacadeManagerFactory(FacadeConfiguration.getSdkLevel(), service, intent,
+            FacadeConfiguration.getFacadeClasses());
+    mJsonRpcServer = new JsonRpcServer(mFacadeManagerFactory, getSecret());
   }
 
   public InetSocketAddress getAddress() {
@@ -80,7 +80,7 @@ public class AndroidProxy {
     return mSecret.toString();
   }
 
-  public RpcReceiverManager getRpcReceiverManager() {
-    return mManager;
+  public RpcReceiverManagerFactory getRpcReceiverManagerFactory() {
+    return mFacadeManagerFactory;
   }
 }

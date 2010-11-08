@@ -47,7 +47,7 @@ public class ScriptService extends Service {
 
   private final IBinder mBinder;
   private InterpreterConfiguration mInterpreterConfiguration;
-  private RpcReceiverManager mManager;
+  private RpcReceiverManager mFacadeManager;
   private final CountDownLatch mLatch = new CountDownLatch(1);
 
   public class LocalBinder extends Binder {
@@ -95,13 +95,13 @@ public class ScriptService extends Service {
     if (Script.getFileExtension(this).equals(HtmlInterpreter.HTML_EXTENSION)) {
       HtmlActivityTask htmlTask =
           ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
-      mManager = htmlTask.getRpcReceiverManager();
+      mFacadeManager = htmlTask.getRpcReceiverManager();
       mLatch.countDown();
       stopSelf(startId);
     } else {
       final AndroidProxy proxy = new AndroidProxy(this, null, true);
       proxy.startLocal();
-      mManager = proxy.getRpcReceiverManager();
+      mFacadeManager = proxy.getRpcReceiverManagerFactory().getRpcReceiverManagers().get(0);
       mLatch.countDown();
       ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, null, new Runnable() {
         @Override
@@ -115,7 +115,7 @@ public class ScriptService extends Service {
 
   RpcReceiverManager getRpcReceiverManager() throws InterruptedException {
     mLatch.await();
-    return mManager;
+    return mFacadeManager;
   }
 
   @Override

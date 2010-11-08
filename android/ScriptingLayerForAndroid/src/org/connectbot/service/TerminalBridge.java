@@ -37,6 +37,8 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
+import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
+import com.googlecode.android_scripting.jsonrpc.RpcReceiverManagerFactory;
 
 import de.mud.terminal.VDUBuffer;
 import de.mud.terminal.VDUDisplay;
@@ -822,15 +824,23 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
 
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
     if (mProcess.isAlive()) {
-      UiFacade facade = mProcess.getRpcReceiverManager().getReceiver(UiFacade.class);
-      facade.onCreateContextMenu(menu, v, menuInfo);
+      RpcReceiverManagerFactory rpcReceiverManagerFactory = mProcess.getRpcReceiverManagerFactory();
+      for (RpcReceiverManager manager : rpcReceiverManagerFactory.getRpcReceiverManagers()) {
+        UiFacade facade = manager.getReceiver(UiFacade.class);
+        facade.onCreateContextMenu(menu, v, menuInfo);
+      }
     }
   }
 
   public boolean onPrepareOptionsMenu(Menu menu) {
+    boolean returnValue = false;
     if (mProcess.isAlive()) {
-      UiFacade facade = mProcess.getRpcReceiverManager().getReceiver(UiFacade.class);
-      return facade.onPrepareOptionsMenu(menu);
+      RpcReceiverManagerFactory rpcReceiverManagerFactory = mProcess.getRpcReceiverManagerFactory();
+      for (RpcReceiverManager manager : rpcReceiverManagerFactory.getRpcReceiverManagers()) {
+        UiFacade facade = manager.getReceiver(UiFacade.class);
+        returnValue = returnValue || facade.onPrepareOptionsMenu(menu);
+      }
+      return returnValue;
     }
     return false;
   }

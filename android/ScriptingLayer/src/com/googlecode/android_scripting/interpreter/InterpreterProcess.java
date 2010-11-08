@@ -19,7 +19,7 @@ package com.googlecode.android_scripting.interpreter;
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.AndroidProxy;
 import com.googlecode.android_scripting.Process;
-import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
+import com.googlecode.android_scripting.jsonrpc.RpcReceiverManagerFactory;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -77,8 +77,8 @@ public class InterpreterProcess extends Process {
     return mProxy.getSecret();
   }
 
-  public RpcReceiverManager getRpcReceiverManager() {
-    return mProxy.getRpcReceiverManager();
+  public RpcReceiverManagerFactory getRpcReceiverManagerFactory() {
+    return mProxy.getRpcReceiverManagerFactory();
   }
 
   @Override
