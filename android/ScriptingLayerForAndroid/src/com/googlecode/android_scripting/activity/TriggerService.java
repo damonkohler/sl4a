@@ -85,6 +85,8 @@ public class TriggerService extends Service {
     for (Thread t : mEventListenerThreads) {
       t.start();
     }
+
+    // TODO(felix.arends@gmail.com): Shutdown if there are no events.
   }
 
   /** Returns the notification to display whenever the service is running. */
