@@ -1,7 +1,5 @@
 package com.googlecode.android_scripting.facade;
 
-import java.util.List;
-
 import android.app.Service;
 import android.content.Context;
 import android.net.wifi.ScanResult;
@@ -13,6 +11,8 @@ import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.util.List;
 
 public class WifiFacade extends RpcReceiver {
 
@@ -60,8 +60,7 @@ public class WifiFacade extends RpcReceiver {
 
   @Rpc(description = "Checks Wifi state.", returns = "True if Wifi is enabled.")
   public Boolean checkWifiState() {
-    return mWifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED
-        || mWifi.getWifiState() == WifiManager.WIFI_STATE_ENABLING;
+    return mWifi.getWifiState() == WifiManager.WIFI_STATE_ENABLED;
   }
 
   @Rpc(description = "Toggle Wifi on and off.", returns = "True if Wifi is enabled.")
