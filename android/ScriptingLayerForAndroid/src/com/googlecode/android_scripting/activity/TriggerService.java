@@ -26,68 +26,60 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
-import com.googlecode.android_scripting.BaseApplication;
+import com.google.common.collect.Lists;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.trigger.Trigger;
-import com.googlecode.android_scripting.trigger.TriggerRepository;
-import com.googlecode.android_scripting.trigger.TriggerRepository.TriggerRepositoryObserver;
+import com.googlecode.android_scripting.facade.BatteryManagerFacade;
+import com.googlecode.android_scripting.facade.EventFacade;
+import com.googlecode.android_scripting.facade.FacadeConfiguration;
+import com.googlecode.android_scripting.facade.FacadeManager;
+import com.googlecode.android_scripting.facade.FacadeManagerFactory;
+import com.googlecode.android_scripting.trigger.EventListenerThread;
+
+import java.util.List;
 
 /**
  * The trigger service takes care of installing triggers serialized to the preference storage.
  * 
+ * <p>
  * The service also installs an alarm that keeps it running, unless the user force-quits the
  * service.
  * 
+ * <p>
  * When no triggers are installed the service shuts down silently as to not consume resources
  * unnecessarily.
  * 
- * @author Felix Arends (felix.arends@gmail.com) Damon Kohler (damonkohler@gmail.com)
+ * @author Felix Arends (felix.arends@gmail.com)
+ * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class TriggerService extends Service {
-  private TriggerRepository mTriggerRepository;
-  private static int mTriggerServiceNotificationId;
   private static final long TRIGGER_SERVICE_PING_MILLIS = 10 * 1000 * 60;
+  private static int mTriggerServiceNotificationId;
 
-  private final TriggerRepositoryObserver mAddTriggerListener = new TriggerRepositoryObserver() {
-    @Override
-    public void onAddTrigger(Trigger trigger) {
-      trigger.install(TriggerService.this);
-    }
-
-    @Override
-    public void onRemoveTrigger(Trigger trigger) {
-      if (mTriggerRepository.isEmpty()) {
-        stopSelf();
-      }
-    }
-  };
-
-  public TriggerService() {
-  }
-
-  private void initializeTriggers() {
-    for (Trigger trigger : mTriggerRepository.getAllTriggers()) {
-      trigger.install(this);
-    }
-  }
+  private final List<Thread> mEventListenerThreads = Lists.newArrayList();
 
   @Override
   public void onCreate() {
     super.onCreate();
+
     mTriggerServiceNotificationId = NotificationIdFactory.create();
-    BaseApplication application = (BaseApplication) getApplication();
-    mTriggerRepository = application.getTriggerRepository();
-    mTriggerRepository.registerAddTriggerListener(mAddTriggerListener);
-    if (mTriggerRepository.isEmpty()) {
-      stopSelf();
-    } else {
-      initializeTriggers();
-      ServiceUtils.setForeground(this, mTriggerServiceNotificationId, createNotification());
-      installAlarm();
-    }
+    ServiceUtils.setForeground(this, mTriggerServiceNotificationId, createNotification());
+    installAlarm();
+
+    FacadeManagerFactory facadeManagerFactory =
+        new FacadeManagerFactory(FacadeConfiguration.getSdkLevel(), this, null, FacadeConfiguration
+            .getFacadeClasses());
+    FacadeManager facadeManager = facadeManagerFactory.create();
+
+    BatteryManagerFacade batteryManagerFacade =
+        facadeManager.getReceiver(BatteryManagerFacade.class);
+    batteryManagerFacade.batteryStartMonitoring();
+
+    facadeManager.getReceiver(EventFacade.class);
+
+    mEventListenerThreads.add(new EventListenerThread("battery"));
   }
 
   /** Returns the notification to display whenever the service is running. */
@@ -133,7 +125,6 @@ public class TriggerService extends Service {
     NotificationManager manager =
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     manager.cancel(mTriggerServiceNotificationId);
-    mTriggerRepository.unregisterAddListener(mAddTriggerListener);
   }
 
   @Override
