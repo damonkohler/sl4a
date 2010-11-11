@@ -26,7 +26,6 @@ import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.interpreter.html.HtmlActivityTask;
 import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
-import com.googlecode.android_scripting.trigger.Trigger;
 
 import java.io.File;
 
@@ -79,11 +78,11 @@ public class ScriptLauncher {
   }
 
   public static ScriptProcess launchScript(File script, InterpreterConfiguration configuration,
-      final AndroidProxy proxy, Trigger trigger, Runnable shutdownHook) {
+      final AndroidProxy proxy, Runnable shutdownHook) {
     if (!script.exists()) {
       throw new RuntimeException("No such script to launch.");
     }
-    ScriptProcess process = new ScriptProcess(script, configuration, proxy, trigger);
+    ScriptProcess process = new ScriptProcess(script, configuration, proxy);
     if (shutdownHook == null) {
       process.start(new Runnable() {
         @Override

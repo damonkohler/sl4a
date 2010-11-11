@@ -19,13 +19,10 @@ package com.googlecode.android_scripting;
 import android.app.Application;
 
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
-import com.googlecode.android_scripting.trigger.TriggerRepository;
 
 public class BaseApplication extends Application {
 
   private final FutureActivityTaskExecutor mTaskExecutor = new FutureActivityTaskExecutor(this);
-
-  protected TriggerRepository mTriggerRepository;
 
   protected InterpreterConfiguration mConfiguration;
 
@@ -33,13 +30,8 @@ public class BaseApplication extends Application {
     return mTaskExecutor;
   }
 
-  public TriggerRepository getTriggerRepository() {
-    return mTriggerRepository;
-  }
-
   @Override
   public void onCreate() {
-    mTriggerRepository = new TriggerRepository(this);
     mConfiguration = new InterpreterConfiguration(this);
     mConfiguration.startDiscovering();
   }

@@ -30,28 +30,23 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.google.common.collect.Lists;
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
-import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.dialog.DurationPickerDialog;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.dialog.DurationPickerDialog.DurationPickedListener;
-import com.googlecode.android_scripting.event.EventTrigger;
-import com.googlecode.android_scripting.event.RingerModeEventListener;
-import com.googlecode.android_scripting.trigger.AlarmTriggerManager;
 import com.googlecode.android_scripting.trigger.Trigger;
-import com.googlecode.android_scripting.trigger.TriggerRepository;
 
 import java.io.File;
 import java.util.List;
 
 public class TriggerManager extends ListActivity {
-  private TriggerRepository mTriggerRepository;
-  private AlarmTriggerManager mAlarmTriggerManager;
   private TriggerAdapter mAdapter;
   private List<Trigger> mTriggerList;
 
@@ -73,9 +68,7 @@ public class TriggerManager extends ListActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Triggers", R.layout.trigger_manager);
-    mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
-    mAlarmTriggerManager = new AlarmTriggerManager(this, mTriggerRepository);
-    mTriggerList = mTriggerRepository.getAllTriggers();
+    mTriggerList = Lists.newArrayList();
     mAdapter = new TriggerAdapter();
     mAdapter.registerDataSetObserver(new TriggerListObserver());
     setListAdapter(mAdapter);
@@ -139,7 +132,7 @@ public class TriggerManager extends ListActivity {
     }
 
     if (item.getItemId() == ContextMenuId.REMOVE.getId()) {
-      mAlarmTriggerManager.cancelById(trigger.getId());
+      // TODO(felix.arends@gmail.com): actually remove the trigger.
     }
 
     mAdapter.notifyDataSetInvalidated();
@@ -154,7 +147,7 @@ public class TriggerManager extends ListActivity {
   private class TriggerListObserver extends DataSetObserver {
     @Override
     public void onInvalidated() {
-      mTriggerList = mTriggerRepository.getAllTriggers();
+      // TODO(felix.arends@gmail.com): Update the trigger list.
     }
   }
 
@@ -177,20 +170,21 @@ public class TriggerManager extends ListActivity {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-      return mTriggerList.get(position).getView(TriggerManager.this);
+      // TODO(felix.arends@gmail.com): Return the proper view for the trigger.
+      return new TextView(TriggerManager.this);
     }
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (resultCode == RESULT_OK) {
-      final File script = new File(data.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
+      new File(data.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
       if (requestCode == MenuId.SCHEDULE_REPEATING.getId()) {
         DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
             new DurationPickedListener() {
               @Override
               public void onSet(double duration) {
-                mAlarmTriggerManager.scheduleRepeating(duration, script, true);
+                // TODO(felix.arends@gmail.com): actually schedule the event
                 mAdapter.notifyDataSetInvalidated();
               }
 
@@ -203,7 +197,7 @@ public class TriggerManager extends ListActivity {
             new DurationPickedListener() {
               @Override
               public void onSet(double duration) {
-                mAlarmTriggerManager.scheduleInexactRepeating(duration, script, true);
+                // TODO(felix.arends@gmail.com): actually schedule the event
                 mAdapter.notifyDataSetInvalidated();
               }
 
@@ -212,8 +206,7 @@ public class TriggerManager extends ListActivity {
               }
             });
       } else if (requestCode == MenuId.RINGER_MODE_CONDITION.getId()) {
-        mTriggerRepository.addTrigger(new EventTrigger(script,
-            new RingerModeEventListener.Factory()));
+        // TODO(felix.arends@gmail.com): actually create the trigger
         mAdapter.notifyDataSetInvalidated();
       }
     }

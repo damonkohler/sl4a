@@ -37,7 +37,6 @@ import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
-import com.googlecode.android_scripting.trigger.Trigger;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -45,7 +44,6 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.connectbot.ConsoleActivity;
@@ -166,11 +164,9 @@ public class ScriptingLayerService extends Service {
       proxy = launchServer(intent, true);
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT)) {
         launchTerminal(proxy.getAddress());
-        interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
-        ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
+        interpreterProcess = launchScript(intent, proxy);
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT)) {
-        interpreterProcess = launchScript(intent, proxy, getTrigger(intent));
-        ((ScriptProcess) interpreterProcess).notifyTriggerOfStart(this);
+        interpreterProcess = launchScript(intent, proxy);
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_INTERPRETER)) {
         launchTerminal(proxy.getAddress());
         interpreterProcess = launchInterpreter(intent, proxy);
@@ -195,21 +191,20 @@ public class ScriptingLayerService extends Service {
     ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
   }
 
-  private ScriptProcess launchScript(Intent intent, AndroidProxy proxy, Trigger trigger) {
+  private ScriptProcess launchScript(Intent intent, AndroidProxy proxy) {
     final int port = proxy.getAddress().getPort();
     File script = new File(intent.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
-    return ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, trigger,
-        new Runnable() {
-          @Override
-          public void run() {
-            // TODO(damonkohler): This action actually kills the script rather than notifying the
-            // service that script exited on its own. We should distinguish between these two cases.
-            Intent intent = new Intent(ScriptingLayerService.this, ScriptingLayerService.class);
-            intent.setAction(Constants.ACTION_KILL_PROCESS);
-            intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
-            startService(intent);
-          }
-        });
+    return ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, new Runnable() {
+      @Override
+      public void run() {
+        // TODO(damonkohler): This action actually kills the script rather than notifying the
+        // service that script exited on its own. We should distinguish between these two cases.
+        Intent intent = new Intent(ScriptingLayerService.this, ScriptingLayerService.class);
+        intent.setAction(Constants.ACTION_KILL_PROCESS);
+        intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
+        startService(intent);
+      }
+    });
   }
 
   private InterpreterProcess launchInterpreter(Intent intent, AndroidProxy proxy) {
@@ -262,9 +257,6 @@ public class ScriptingLayerService extends Service {
     int processId = intent.getIntExtra(Constants.EXTRA_PROXY_PORT, 0);
     InterpreterProcess process = removeProcess(processId);
     if (process != null) {
-      if (process instanceof ScriptProcess) {
-        ((ScriptProcess) process).notifyTriggerOfShutDown(this);
-      }
       process.kill();
       mRecentlyKilledProcess = new WeakReference<InterpreterProcess>(process);
     }
@@ -277,9 +269,6 @@ public class ScriptingLayerService extends Service {
   private void killAll() {
     for (InterpreterProcess process : getScriptProcessesList()) {
       process = removeProcess(process.getPort());
-      if (process instanceof ScriptProcess) {
-        ((ScriptProcess) process).notifyTriggerOfShutDown(this);
-      }
       if (process != null) {
         process.kill();
       }
@@ -304,22 +293,6 @@ public class ScriptingLayerService extends Service {
   public void onDestroy() {
     super.onDestroy();
     mNotificationManager.cancel(mNotificationId);
-  }
-
-  /** Returns the {@link TriggerInfo} for the given intent, or null if none exists. */
-  private Trigger getTrigger(Intent intent) {
-    final BaseApplication application = (BaseApplication) getApplication();
-    final String triggerIdExtra = intent.getStringExtra(Constants.EXTRA_TRIGGER_ID);
-    if (triggerIdExtra == null) {
-      return null;
-    }
-
-    try {
-      final UUID triggerId = UUID.fromString(triggerIdExtra);
-      return application.getTriggerRepository().getById(triggerId);
-    } catch (IllegalArgumentException e) {
-      return null;
-    }
   }
 
   @Override
