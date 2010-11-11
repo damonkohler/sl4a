@@ -57,12 +57,6 @@ public class EventFacade extends RpcReceiver {
     mEventQueue.clear();
   }
 
-  @Rpc(description = "Returns and removes the oldest event (i.e. location or sensor update, etc.) from the event buffer.", returns = "Map of event properties.")
-  @RpcDeprecated(value = "eventPoll")
-  public Event receiveEvent() {
-    return mEventQueue.poll();
-  }
-
   @Rpc(description = "Returns and removes the oldest n events (i.e. location or sensor update, etc.) from the event buffer.", returns = "A List of Maps of event properties.")
   public List<Event> eventPoll(
       @RpcParameter(name = "number_of_events") @RpcDefault("1") Integer number_of_events) {
@@ -103,15 +97,6 @@ public class EventFacade extends RpcReceiver {
     }
   }
 
-  @Rpc(description = "Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.", returns = "Map of event properties.")
-  @RpcDeprecated("eventWaitFor")
-  public Event waitForEvent(
-      @RpcParameter(name = "eventName") final String eventName,
-      @RpcParameter(name = "timeout", description = "the maximum time to wait") @RpcOptional Integer timeout)
-      throws InterruptedException {
-    return eventWaitFor(eventName, timeout);
-  }
-
   /**
    * Posts an event with to the event queue.
    */
@@ -131,14 +116,27 @@ public class EventFacade extends RpcReceiver {
     postEvent(name, (Object) data);
   }
 
-  @Rpc(description = "Post an event to the event queue.")
   @RpcDeprecated("eventPost")
+  @Rpc(description = "Post an event to the event queue.")
   public void postEvent(@RpcParameter(name = "name") String name,
       @RpcParameter(name = "data") String data) {
     postEvent(name, data);
   }
 
-  @Override
+  @RpcDeprecated(value = "eventPoll")
+  @Rpc(description = "Returns and removes the oldest event (i.e. location or sensor update, etc.) from the event buffer.", returns = "Map of event properties.")
+  public Event receiveEvent() {
+    return mEventQueue.poll();
+  }
+  @RpcDeprecated("eventWaitFor")
+  @Rpc(description = "Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.", returns = "Map of event properties.")
+  public Event waitForEvent(
+      @RpcParameter(name = "eventName") final String eventName,
+      @RpcParameter(name = "timeout", description = "the maximum time to wait") @RpcOptional Integer timeout)
+      throws InterruptedException {
+    return eventWaitFor(eventName, timeout);
+  }
+  @Override
   public void shutdown() {
   }
 
