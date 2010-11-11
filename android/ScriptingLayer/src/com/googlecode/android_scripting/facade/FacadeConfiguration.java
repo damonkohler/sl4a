@@ -43,15 +43,15 @@ public class FacadeConfiguration {
   private final static SortedMap<String, MethodDescriptor> sRpcs =
       new TreeMap<String, MethodDescriptor>();
 
-  private static int sdkVersion;
+  private static int sSdkLevel;
 
   static {
 
     if (android.os.Build.VERSION.SDK == null) {
-      sdkVersion = Integer.MAX_VALUE;
+      sSdkLevel = 3;
     } else {
       try {
-        sdkVersion = Integer.parseInt(android.os.Build.VERSION.SDK);
+        sSdkLevel = Integer.parseInt(android.os.Build.VERSION.SDK);
       } catch (NumberFormatException e) {
         Log.e(e);
       }
@@ -81,21 +81,21 @@ public class FacadeConfiguration {
     sFacadeClassList.add(BatteryManagerFacade.class);
     sFacadeClassList.add(ActivityResultFacade.class);
 
-    if (sdkVersion >= 4) {
+    if (sSdkLevel >= 4) {
       sFacadeClassList.add(TextToSpeechFacade.class);
     } else {
       sFacadeClassList.add(EyesFreeFacade.class);
     }
 
-    if (sdkVersion >= 5) {
+    if (sSdkLevel >= 5) {
       sFacadeClassList.add(BluetoothFacade.class);
     }
 
-    if (sdkVersion >= 7) {
+    if (sSdkLevel >= 7) {
       sFacadeClassList.add(SignalStrengthFacade.class);
     }
 
-    if (sdkVersion >= 8) {
+    if (sSdkLevel >= 8) {
       sFacadeClassList.add(WebCamFacade.class);
     }
 
@@ -111,7 +111,7 @@ public class FacadeConfiguration {
   }
 
   public static int getSdkLevel() {
-    return sdkVersion;
+    return sSdkLevel;
   }
 
   /** Returns a list of {@link MethodDescriptor} objects for all facades. */
@@ -131,7 +131,7 @@ public class FacadeConfiguration {
         continue;
       } else if (method.isAnnotationPresent(RpcMinSdk.class)) {
         int requiredSdkLevel = method.getAnnotation(RpcMinSdk.class).value();
-        if (sdkVersion < requiredSdkLevel) {
+        if (sSdkLevel < requiredSdkLevel) {
           continue;
         }
       }

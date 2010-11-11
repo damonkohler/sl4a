@@ -40,8 +40,12 @@ import java.lang.reflect.Field;
 public class BatteryManagerFacade extends RpcReceiver {
 
   private final Service mService;
-  private final BatteryStateListener mReceiver;
+  private final EventFacade mEventFacade;
+  private final int mSdkVersion;
 
+  private BatteryStateListener mReceiver;
+
+  private volatile Bundle mBatteryData = null;
   private volatile Integer mBatteryStatus = null;
   private volatile Integer mBatteryHealth = null;
   private volatile Integer mPlugType = null;
@@ -53,15 +57,12 @@ public class BatteryManagerFacade extends RpcReceiver {
   private volatile Integer mBatteryTemperature = null;
   private volatile String mBatteryTechnology = null;
 
-  private volatile Bundle mBatteryData = null;
-
-  private int mSdkVersion = 3;
-
   public BatteryManagerFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
     mSdkVersion = manager.getSdkLevel();
-    mReceiver = new BatteryStateListener(manager.getReceiver(EventFacade.class));
+    mEventFacade = manager.getReceiver(EventFacade.class);
+    mReceiver = null;
     mBatteryData = null;
   }
 
@@ -124,14 +125,19 @@ public class BatteryManagerFacade extends RpcReceiver {
   @RpcEvent("battery")
   @Rpc(description = "Starts tracking battery state.")
   public void batteryStartMonitoring() {
-    IntentFilter filter = new IntentFilter();
-    filter.addAction(Intent.ACTION_BATTERY_CHANGED);
-    mService.registerReceiver(mReceiver, filter);
+    if (mReceiver == null) {
+      IntentFilter filter = new IntentFilter();
+      filter.addAction(Intent.ACTION_BATTERY_CHANGED);
+      mReceiver = new BatteryStateListener(mEventFacade);
+      mService.registerReceiver(mReceiver, filter);
+    }
   }
 
   @Rpc(description = "Stops tracking battery state.")
   public void batteryStopMonitoring() {
-    mService.unregisterReceiver(mReceiver);
+    if (mReceiver != null) {
+      mService.unregisterReceiver(mReceiver);
+    }
     mBatteryData = null;
   }
 
@@ -158,20 +164,20 @@ public class BatteryManagerFacade extends RpcReceiver {
   /** Power source is a USB port. */
   public static final int BATTERY_PLUGGED_USB = 2;
 
-  @Rpc(description = "Returns the most recently received plug type data:" + "\n-1 - unknown;"
-      + "\n0 - unplugged;" + "\n1 - power source is an AC charger;"
-      + "\n2 - power source is a USB port;")
+  @Rpc(description = "Returns the most recently received plug type data:" + "\n-1 - unknown"
+      + "\n0 - unplugged;" + "\n1 - power source is an AC charger"
+      + "\n2 - power source is a USB port")
   public Integer batteryGetPlugType() {
     return mPlugType;
   }
 
-  @Rpc(description = "Returns the most recently received battery presence data")
+  @Rpc(description = "Returns the most recently received battery presence data.")
   @RpcMinSdk(5)
   public Boolean batteryCheckPresent() {
     return mBatteryPresent;
   }
 
-  @Rpc(description = "Returns the most recently received battery level (percentage)")
+  @Rpc(description = "Returns the most recently received battery level (percentage).")
   @RpcMinSdk(5)
   public Integer batteryGetLevel() {
     if (mBatteryMaxLevel == null || mBatteryMaxLevel == 100 || mBatteryMaxLevel == 0) {
@@ -181,19 +187,19 @@ public class BatteryManagerFacade extends RpcReceiver {
     }
   }
 
-  @Rpc(description = "Returns the most recently received battery voltage")
+  @Rpc(description = "Returns the most recently received battery voltage.")
   @RpcMinSdk(5)
   public Integer batteryGetVoltage() {
     return mBatteryVoltage;
   }
 
-  @Rpc(description = "Returns the most recently received battery temperature")
+  @Rpc(description = "Returns the most recently received battery temperature.")
   @RpcMinSdk(5)
   public Integer batteryGetTemperature() {
     return mBatteryTemperature;
   }
 
-  @Rpc(description = "Returns the most recently received battery technology data")
+  @Rpc(description = "Returns the most recently received battery technology data.")
   @RpcMinSdk(5)
   public String batteryGetTechnology() {
     return mBatteryTechnology;
