@@ -18,6 +18,7 @@ package com.googlecode.android_scripting;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,6 +39,12 @@ public class FileUtils {
 
   private FileUtils() {
     // Utility class.
+  }
+
+  static public boolean externalStorageMounted() {
+    String state = Environment.getExternalStorageState();
+    return Environment.MEDIA_MOUNTED.equals(state)
+        || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
   }
 
   public static int chmod(File path, int mode) throws Exception {

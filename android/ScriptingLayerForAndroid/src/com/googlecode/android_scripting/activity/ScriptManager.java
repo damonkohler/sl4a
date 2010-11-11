@@ -108,8 +108,18 @@ public class ScriptManager extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
-    if (!FileUtils.makeDirectory(mBaseDir)) {
-      throw new RuntimeException("Failed to create scripts directory.");
+    if (FileUtils.externalStorageMounted()) {
+      if (!FileUtils.makeDirectory(mBaseDir)) {
+        new AlertDialog.Builder(this)
+            .setTitle("Error")
+            .setMessage(
+                "Failed to create scripts directory. Please check the permissions of your external storage media.")
+            .setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Ok", null).show();
+      }
+    } else {
+      new AlertDialog.Builder(this).setTitle("External Storage Unavilable").setMessage(
+          "Scripts will be unavailable as long as external storage is unavailable.").setIcon(
+          android.R.drawable.ic_dialog_alert).setPositiveButton("Ok", null).show();
     }
 
     mCurrentDir = mBaseDir;
