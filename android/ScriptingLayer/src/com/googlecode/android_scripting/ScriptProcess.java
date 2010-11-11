@@ -16,41 +16,23 @@
 
 package com.googlecode.android_scripting;
 
-import android.app.Service;
-
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
-import com.googlecode.android_scripting.trigger.Trigger;
 
 import java.io.File;
 
 public class ScriptProcess extends InterpreterProcess {
 
-  private final Trigger mTrigger;
   private final File mScript;
 
-  public ScriptProcess(File script, InterpreterConfiguration configuration, AndroidProxy proxy,
-      Trigger trigger) {
+  public ScriptProcess(File script, InterpreterConfiguration configuration, AndroidProxy proxy) {
     super(configuration.getInterpreterForScript(script.getName()), proxy);
-    mTrigger = trigger;
     mScript = script;
     String scriptName = script.getName();
     setName(scriptName);
     Interpreter interpreter = configuration.getInterpreterForScript(scriptName);
     setCommand(String.format(interpreter.getScriptCommand(), script.getAbsolutePath()));
-  }
-
-  public void notifyTriggerOfShutDown(Service service) {
-    if (mTrigger != null) {
-      mTrigger.afterTrigger(service);
-    }
-  }
-
-  public void notifyTriggerOfStart(Service service) {
-    if (mTrigger != null) {
-      mTrigger.beforeTrigger(service);
-    }
   }
 
   public String getPath() {

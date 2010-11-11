@@ -3,14 +3,12 @@ package com.googlecode.android_scripting.facade;
 import android.app.Service;
 import android.content.Intent;
 
-import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.exception.Sl4aException;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
-import com.googlecode.android_scripting.trigger.TriggerRepository;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,7 +18,6 @@ public class FacadeManager extends RpcReceiverManager {
 
   private final Service mService;
   private final Intent mIntent;
-  private final TriggerRepository mTriggerRepository;
   private int mSdkLevel;
 
   public FacadeManager(int sdkLevel, Service service, Intent intent,
@@ -29,7 +26,6 @@ public class FacadeManager extends RpcReceiverManager {
     mSdkLevel = sdkLevel;
     mService = service;
     mIntent = intent;
-    mTriggerRepository = ((BaseApplication) service.getApplication()).getTriggerRepository();
   }
 
   public int getSdkLevel() {
@@ -42,10 +38,6 @@ public class FacadeManager extends RpcReceiverManager {
 
   public Intent getIntent() {
     return mIntent;
-  }
-
-  public TriggerRepository getTriggerRepository() {
-    return mTriggerRepository;
   }
 
   @Override

@@ -58,12 +58,10 @@ public class FacadeConfiguration {
     }
 
     sFacadeClassList = new HashSet<Class<? extends RpcReceiver>>();
-    sFacadeClassList.add(AlarmManagerFacade.class);
     sFacadeClassList.add(AndroidFacade.class);
     sFacadeClassList.add(ApplicationManagerFacade.class);
     sFacadeClassList.add(CameraFacade.class);
     sFacadeClassList.add(CommonIntentsFacade.class);
-    sFacadeClassList.add(ConditionManagerFacade.class);
     sFacadeClassList.add(ContactsFacade.class);
     sFacadeClassList.add(EventFacade.class);
     sFacadeClassList.add(LocationFacade.class);

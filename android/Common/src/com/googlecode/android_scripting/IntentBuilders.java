@@ -20,11 +20,9 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Parcelable;
 
 import com.googlecode.android_scripting.interpreter.Interpreter;
-import com.googlecode.android_scripting.trigger.Trigger;
 
 import java.io.File;
 
@@ -141,26 +139,6 @@ public class IntentBuilders {
     intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, script.getName());
     intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
     return intent;
-  }
-
-  /**
-   * Creates a pending intent that can be used to execute the trigger with the given id.
-   * 
-   * @param context
-   *          the context under whose authority to launch the intent
-   * @param info
-   *          {@link Trigger} trigger to run
-   * 
-   * @return {@link PendingIntent} object for running the trigger
-   */
-  public static PendingIntent buildTriggerIntent(Context context, Trigger trigger) {
-    final Intent intent = buildStartInBackgroundIntent(trigger.getScript());
-    intent.putExtra(Constants.EXTRA_TRIGGER_ID, trigger.getId().toString());
-    intent.setData(Uri.fromParts("trigger", trigger.getScriptName().toLowerCase(), ""
-        + trigger.getId()));
-    intent.setComponent(Constants.SL4A_SERVICE_COMPONENT_NAME);
-    return PendingIntent.getService(context, EXECUTE_SCRIPT_REQUEST_CODE, intent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
   /**
