@@ -68,7 +68,6 @@ public class FacadeConfiguration {
     sFacadeClassList.add(EventFacade.class);
     sFacadeClassList.add(LocationFacade.class);
     sFacadeClassList.add(PhoneFacade.class);
-    sFacadeClassList.add(PulseGeneratorFacade.class);
     sFacadeClassList.add(MediaRecorderFacade.class);
     sFacadeClassList.add(SensorManagerFacade.class);
     sFacadeClassList.add(SettingsFacade.class);
