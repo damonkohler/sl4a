@@ -113,7 +113,7 @@ public class EventFacade extends RpcReceiver {
   @Rpc(description = "Post an event to the event queue.")
   public void eventPost(@RpcParameter(name = "name") String name,
       @RpcParameter(name = "data") String data) {
-    postEvent(name, (Object) data);
+    postEvent(name, data);
   }
 
   @RpcDeprecated("eventPost")
@@ -128,7 +128,8 @@ public class EventFacade extends RpcReceiver {
   public Event receiveEvent() {
     return mEventQueue.poll();
   }
-  @RpcDeprecated("eventWaitFor")
+
+  @RpcDeprecated("eventWaitFor")
   @Rpc(description = "Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.", returns = "Map of event properties.")
   public Event waitForEvent(
       @RpcParameter(name = "eventName") final String eventName,
@@ -136,7 +137,8 @@ public class EventFacade extends RpcReceiver {
       throws InterruptedException {
     return eventWaitFor(eventName, timeout);
   }
-  @Override
+
+  @Override
   public void shutdown() {
   }
 

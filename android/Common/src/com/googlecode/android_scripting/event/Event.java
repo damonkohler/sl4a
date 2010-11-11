@@ -16,14 +16,17 @@
 
 package com.googlecode.android_scripting.event;
 
+
 public class Event {
 
   private String mName;
   private Object mData;
+  private double mCreationTime;
 
   public Event(String name, Object data) {
     setName(name);
     setData(data);
+    mCreationTime = System.currentTimeMillis() * 1000;
   }
 
   public void setName(String name) {
@@ -40,5 +43,9 @@ public class Event {
 
   public Object getData() {
     return mData;
+  }
+
+  public double getCreationTime() {
+    return mCreationTime;
   }
 }

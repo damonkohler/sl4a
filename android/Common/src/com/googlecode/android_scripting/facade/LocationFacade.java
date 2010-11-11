@@ -25,6 +25,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import com.google.common.collect.Maps;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * This facade exposes the LocationManager related functionality.
@@ -51,9 +53,13 @@ public class LocationFacade extends RpcReceiver {
 
   private final LocationListener mLocationListener = new LocationListener() {
     @Override
-    public void onLocationChanged(Location location) {
+    public synchronized void onLocationChanged(Location location) {
       mLocationUpdates.put(location.getProvider(), location);
-      mEventFacade.postEvent("location", new HashMap<String, Location>(mLocationUpdates));
+      Map<String, Location> copy = Maps.newHashMap();
+      for (Entry<String, Location> entry : mLocationUpdates.entrySet()) {
+        copy.put(entry.getKey(), entry.getValue());
+      }
+      mEventFacade.postEvent("location", copy);
     }
 
     @Override
@@ -100,7 +106,7 @@ public class LocationFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Stops collecting location data.")
-  public void stopLocating() {
+  public synchronized void stopLocating() {
     mLocationManager.removeUpdates(mLocationListener);
     mLocationUpdates.clear();
   }

@@ -179,6 +179,7 @@ public class JsonBuilder {
     JSONObject result = new JSONObject();
     result.put("name", event.getName());
     result.put("data", build(event.getData()));
+    result.put("time", event.getCreationTime());
     return result;
   }
 

@@ -103,7 +103,7 @@ public class BatteryManagerFacade extends RpcReceiver {
       data.putInt("temperature", mBatteryTemperature);
       data.putString("technology", mBatteryTechnology);
       mBatteryData = data;
-      mmEventFacade.postEvent("battery", mBatteryData);
+      mmEventFacade.postEvent("battery", mBatteryData.clone());
     }
   }
 

@@ -393,6 +393,7 @@ public class UiFacade extends RpcReceiver {
       mmListener = new MenuItem.OnMenuItemClickListener() {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
+          // TODO(damonkohler): Does mmEventData need to be cloned somehow?
           mEventFacade.postEvent(mmEvent, mmEventData);
           return true;
         }

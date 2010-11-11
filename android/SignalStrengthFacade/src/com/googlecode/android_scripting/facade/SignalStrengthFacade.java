@@ -1,7 +1,5 @@
 package com.googlecode.android_scripting.facade;
 
-import java.util.concurrent.Callable;
-
 import android.app.Service;
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +11,8 @@ import com.googlecode.android_scripting.MainThread;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcEvent;
+
+import java.util.concurrent.Callable;
 
 /**
  * Exposes SignalStrength functionality.
@@ -45,7 +45,7 @@ public class SignalStrengthFacade extends RpcReceiver {
             mSignalStrengths.putInt("cdma_ecio", signalStrength.getCdmaEcio());
             mSignalStrengths.putInt("evdo_dbm", signalStrength.getEvdoDbm());
             mSignalStrengths.putInt("evdo_ecio", signalStrength.getEvdoEcio());
-            mEventFacade.postEvent("signal_strengths", mSignalStrengths);
+            mEventFacade.postEvent("signal_strengths", mSignalStrengths.clone());
           }
         };
       }
