@@ -30,12 +30,12 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Provides access to contacts related functionality.
@@ -67,14 +67,18 @@ public class ContactsFacade extends RpcReceiver {
 
   @Rpc(description = "Displays a list of phone numbers to pick from.", returns = "The selected phone number.")
   public String pickPhone() throws JSONException {
+    String result = null;
     Intent data = mCommonIntentsFacade.pick("content://contacts/phones");
-    Uri phoneData = data.getData();
-    Cursor c = mService.getContentResolver().query(phoneData, null, null, null, null);
-    String result = "";
-    if (c.moveToFirst()) {
-      result = c.getString(c.getColumnIndexOrThrow(PhonesColumns.NUMBER));
+    if (data != null) {
+      Uri phoneData = data.getData();
+      Cursor cursor = mService.getContentResolver().query(phoneData, null, null, null, null);
+      if (cursor != null) {
+        if (cursor.moveToFirst()) {
+          result = cursor.getString(cursor.getColumnIndexOrThrow(PhonesColumns.NUMBER));
+        }
+        cursor.close();
+      }
     }
-    c.close();
     return result;
   }
 
@@ -88,8 +92,6 @@ public class ContactsFacade extends RpcReceiver {
         result.add(columns[i]);
       }
       cursor.close();
-    } else {
-      result = null;
     }
     return result;
   }
@@ -100,10 +102,12 @@ public class ContactsFacade extends RpcReceiver {
     List<Integer> result = new ArrayList<Integer>();
     String[] columns = { "_id" };
     Cursor cursor = mContentResolver.query(CONTACTS_URI, columns, null, null, null);
-    while (cursor != null && cursor.moveToNext()) {
-      result.add(cursor.getInt(0));
+    if (cursor != null) {
+      while (cursor.moveToNext()) {
+        result.add(cursor.getInt(0));
+      }
+      cursor.close();
     }
-    cursor.close();
     return result;
   }
 
@@ -123,21 +127,23 @@ public class ContactsFacade extends RpcReceiver {
       }
     }
     Cursor cursor = mContentResolver.query(CONTACTS_URI, columns, null, null, null);
-    while (cursor != null && cursor.moveToNext()) {
-      JSONObject message = new JSONObject();
-      for (int i = 0; i < columns.length; i++) {
-        message.put(columns[i], cursor.getString(i));
+    if (cursor != null) {
+      while (cursor.moveToNext()) {
+        JSONObject message = new JSONObject();
+        for (int i = 0; i < columns.length; i++) {
+          message.put(columns[i], cursor.getString(i));
+        }
+        result.add(message);
       }
-      result.add(message);
+      cursor.close();
     }
-    cursor.close();
     return result;
   }
 
   @Rpc(description = "Returns contacts by ID.")
   public JSONObject contactsGetById(@RpcParameter(name = "id") Integer id,
       @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) throws JSONException {
-    JSONObject result = new JSONObject();
+    JSONObject result = null;
     Uri uri = buildUri(id);
     String[] columns;
     if (attributes == null || attributes.length() == 0) {
@@ -152,13 +158,12 @@ public class ContactsFacade extends RpcReceiver {
     }
     Cursor cursor = mContentResolver.query(uri, columns, null, null, null);
     if (cursor != null) {
+      result = new JSONObject();
       cursor.moveToFirst();
       for (int i = 0; i < columns.length; i++) {
         result.put(columns[i], cursor.getString(i));
       }
       cursor.close();
-    } else {
-      result = null;
     }
     return result;
   }
@@ -171,8 +176,6 @@ public class ContactsFacade extends RpcReceiver {
     if (cursor != null) {
       result = cursor.getCount();
       cursor.close();
-    } else {
-      result = 0;
     }
     return result;
   }
