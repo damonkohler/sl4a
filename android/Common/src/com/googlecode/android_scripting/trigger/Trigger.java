@@ -22,12 +22,19 @@ import com.googlecode.android_scripting.facade.FacadeManager;
 import java.io.Serializable;
 
 /**
- * The definition of the interface implemented by triggers. A trigger combines a script name with
- * the description of an event that causes the trigger to fire.
+ * Interface implemented by objects listening to events on the event queue inside of the
+ * {@link SerivceManager}.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
- * 
  */
 public interface Trigger extends Serializable {
+  /**
+   * Handles an event from the event queue.
+   * 
+   * @param event
+   *          Event to handle
+   * @param facadeManager
+   *          FacadeManager with all available facades
+   */
   void handleEvent(Event event, FacadeManager facadeManager);
 }

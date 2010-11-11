@@ -36,11 +36,7 @@ import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.facade.FacadeManagerFactory;
-import com.googlecode.android_scripting.trigger.EventListenerThread;
-import com.googlecode.android_scripting.trigger.ScriptTrigger;
-import com.googlecode.android_scripting.trigger.Trigger;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -82,10 +78,10 @@ public class TriggerService extends Service {
 
     facadeManager.getReceiver(EventFacade.class);
 
-    File script = new File("/sdcard/sl4a/scripts/say_time.py");
-    Trigger trigger = new ScriptTrigger(this, script);
-    mEventListenerThreads.add(new EventListenerThread(facadeManager, "battery", trigger));
+    // TODO(felix.arends@gmail.com): Reintroduce the trigger repository and load triggers from
+    // there.
 
+    // TODO(felix.arends@gmail.com): Just have one thread looping over the event queue.
     for (Thread t : mEventListenerThreads) {
       t.start();
     }
