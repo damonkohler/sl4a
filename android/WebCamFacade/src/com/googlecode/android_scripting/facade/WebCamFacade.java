@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2010 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.googlecode.android_scripting.facade;
 
 import java.io.ByteArrayOutputStream;
@@ -6,6 +22,7 @@ import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
 import android.app.Service;
@@ -23,7 +40,9 @@ import android.view.SurfaceHolder.Callback;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.FutureActivityTaskExecutor;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.SingleThreadExecutor;
+import com.googlecode.android_scripting.SimpleServer.SimpleServerObserver;
 import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
@@ -36,8 +55,10 @@ public class WebCamFacade extends RpcReceiver {
   private final Executor mJpegCompressionExecutor = new SingleThreadExecutor();
   private final ByteArrayOutputStream mJpegCompressionBuffer = new ByteArrayOutputStream();
 
+  private volatile byte[] mJpegData;
+
+  private CountDownLatch mJpegDataReady;
   private boolean mStreaming;
-  private byte[] mJpegData;
   private int mPreviewHeight;
   private int mPreviewWidth;
   private int mJpegQuality;
@@ -45,6 +66,7 @@ public class WebCamFacade extends RpcReceiver {
   private MjpegServer mJpegServer;
   private FutureActivityTask<SurfaceHolder> mPreviewTask;
   private Camera mCamera;
+  private Parameters mParameters;
 
   private final PreviewCallback mPreviewCallback = new PreviewCallback() {
     @Override
@@ -53,6 +75,7 @@ public class WebCamFacade extends RpcReceiver {
         @Override
         public void run() {
           mJpegData = compressYuvToJpeg(data);
+          mJpegDataReady.countDown();
           if (mStreaming) {
             camera.setOneShotPreviewCallback(mPreviewCallback);
           }
@@ -60,7 +83,12 @@ public class WebCamFacade extends RpcReceiver {
       });
     }
   };
-  private Parameters mParameters;
+
+  public WebCamFacade(FacadeManager manager) {
+    super(manager);
+    mService = manager.getService();
+    mJpegDataReady = new CountDownLatch(1);
+  }
 
   private byte[] compressYuvToJpeg(final byte[] yuvData) {
     mJpegCompressionBuffer.reset();
@@ -71,11 +99,6 @@ public class WebCamFacade extends RpcReceiver {
     return mJpegCompressionBuffer.toByteArray();
   }
 
-  public WebCamFacade(FacadeManager manager) {
-    super(manager);
-    mService = manager.getService();
-  }
-
   @Rpc(description = "Starts an MJPEG stream and returns a Tuple of address and port for the stream.")
   public InetSocketAddress webcamStart(
       @RpcParameter(name = "resolutionLevel", description = "increasing this number provides higher resolution") @RpcDefault("0") Integer resolutionLevel,
@@ -84,7 +107,6 @@ public class WebCamFacade extends RpcReceiver {
       throws Exception {
     try {
       openCamera(resolutionLevel, jpegQuality);
-      startStream();
       return startServer(port);
     } catch (Exception e) {
       webcamStop();
@@ -96,7 +118,27 @@ public class WebCamFacade extends RpcReceiver {
     mJpegServer = new MjpegServer(new JpegProvider() {
       @Override
       public byte[] getJpeg() {
+        try {
+          mJpegDataReady.await();
+        } catch (InterruptedException e) {
+          Log.e(e);
+        }
         return mJpegData;
+      }
+    });
+    mJpegServer.addObserver(new SimpleServerObserver() {
+      @Override
+      public void onDisconnect() {
+        if (mJpegServer.getNumberOfConnections() == 0 && mStreaming) {
+          stopStream();
+        }
+      }
+
+      @Override
+      public void onConnect() {
+        if (!mStreaming) {
+          startStream();
+        }
       }
     });
     return mJpegServer.startPublic(port);
@@ -154,6 +196,7 @@ public class WebCamFacade extends RpcReceiver {
   }
 
   private void stopStream() {
+    mJpegDataReady = new CountDownLatch(1);
     mStreaming = false;
     if (mPreviewTask != null) {
       mPreviewTask.finish();

@@ -16,6 +16,8 @@
 
 package com.googlecode.android_scripting;
 
+import com.google.common.collect.Lists;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -26,6 +28,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -35,27 +38,48 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public abstract class SimpleServer {
 
+  private final CopyOnWriteArrayList<ConnectionThread> mConnectionThreads =
+      new CopyOnWriteArrayList<ConnectionThread>();
+  private final List<SimpleServerObserver> mObservers = Lists.newArrayList();
+  private volatile boolean mStopServer = false;
   private ServerSocket mServer;
   private Thread mServerThread;
-  private final CopyOnWriteArrayList<ConnectionThread> mConnectionThreads;
-  private volatile boolean mStopServer = false;
+
+  public interface SimpleServerObserver {
+    public void onConnect();
+
+    public void onDisconnect();
+  }
 
   protected abstract void handleConnection(Socket socket) throws Exception;
 
-  /**
-   * Construct a {@link SimpleServer} connected to the provided {@link RpcReceiver}s.
-   * 
-   * @param receivers
-   *          the {@link RpcReceiver}s to register with the server
-   */
-  public SimpleServer() {
-    mConnectionThreads = new CopyOnWriteArrayList<ConnectionThread>();
+  /** Adds an observer. */
+  public void addObserver(SimpleServerObserver observer) {
+    mObservers.add(observer);
+  }
+
+  /** Removes an observer. */
+  public void removeObserver(SimpleServerObserver observer) {
+    mObservers.remove(observer);
+  }
+
+  private void notifyOnConnect() {
+    for (SimpleServerObserver observer : mObservers) {
+      observer.onConnect();
+    }
+  }
+
+  private void notifyOnDisconnect() {
+    for (SimpleServerObserver observer : mObservers) {
+      observer.onDisconnect();
+    }
   }
 
   private final class ConnectionThread extends Thread {
     private final Socket mmSocket;
 
     private ConnectionThread(Socket socket) {
+      setName("SimpleServer ConnectionThread " + getId());
       mmSocket = socket;
     }
 
@@ -71,6 +95,7 @@ public abstract class SimpleServer {
       } finally {
         close();
         mConnectionThreads.remove(this);
+        notifyOnDisconnect();
         Log.v("Server thread " + getId() + " died.");
       }
     }
@@ -84,6 +109,11 @@ public abstract class SimpleServer {
         }
       }
     }
+  }
+
+  /** Returns the number of active connections to this server. */
+  public int getNumberOfConnections() {
+    return mConnectionThreads.size();
   }
 
   private InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {
@@ -170,6 +200,7 @@ public abstract class SimpleServer {
     ConnectionThread networkThread = new ConnectionThread(sock);
     mConnectionThreads.add(networkThread);
     networkThread.start();
+    notifyOnConnect();
   }
 
   public void shutdown() {
@@ -188,6 +219,9 @@ public abstract class SimpleServer {
     // concurrency issues while iterating over the set of threads.
     for (ConnectionThread connectionThread : mConnectionThreads) {
       connectionThread.close();
+    }
+    for (SimpleServerObserver observer : mObservers) {
+      removeObserver(observer);
     }
   }
 }

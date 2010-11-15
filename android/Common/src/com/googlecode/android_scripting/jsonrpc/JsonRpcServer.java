@@ -49,7 +49,6 @@ public class JsonRpcServer extends SimpleServer {
    *          the secret handshake required for authorization to use this server
    */
   public JsonRpcServer(RpcReceiverManagerFactory managerFactory, String handshake) {
-    super();
     mHandshake = handshake;
     mRpcReceiverManagerFactory = managerFactory;
   }
