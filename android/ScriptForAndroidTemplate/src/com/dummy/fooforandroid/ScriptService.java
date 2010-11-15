@@ -16,7 +16,7 @@
 
 package com.dummy.fooforandroid;
 
-import android.app.Service;
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -26,7 +26,9 @@ import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.FileUtils;
+import com.googlecode.android_scripting.ForegroundService;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
@@ -43,12 +45,13 @@ import java.util.concurrent.CountDownLatch;
  * 
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
-public class ScriptService extends Service {
-
+public class ScriptService extends ForegroundService {
+  private final static int NOTIFICATION_ID = NotificationIdFactory.create();
+  private final CountDownLatch mLatch = new CountDownLatch(1);
   private final IBinder mBinder;
+
   private InterpreterConfiguration mInterpreterConfiguration;
   private RpcReceiverManager mFacadeManager;
-  private final CountDownLatch mLatch = new CountDownLatch(1);
 
   public class LocalBinder extends Binder {
     public ScriptService getService() {
@@ -57,7 +60,13 @@ public class ScriptService extends Service {
   }
 
   public ScriptService() {
+    super(NOTIFICATION_ID);
     mBinder = new LocalBinder();
+  }
+
+  @Override
+  public IBinder onBind(Intent intent) {
+    return mBinder;
   }
 
   @Override
@@ -103,7 +112,7 @@ public class ScriptService extends Service {
       proxy.startLocal();
       mFacadeManager = proxy.getRpcReceiverManagerFactory().getRpcReceiverManagers().get(0);
       mLatch.countDown();
-      ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, null, new Runnable() {
+      ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, new Runnable() {
         @Override
         public void run() {
           proxy.shutdown();
@@ -119,7 +128,7 @@ public class ScriptService extends Service {
   }
 
   @Override
-  public IBinder onBind(Intent intent) {
-    return mBinder;
+  protected Notification createNotification() {
+    return null;
   }
 }

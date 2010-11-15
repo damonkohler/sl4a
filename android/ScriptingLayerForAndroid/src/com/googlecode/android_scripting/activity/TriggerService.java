@@ -18,26 +18,20 @@ package com.googlecode.android_scripting.activity;
 
 import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
-import com.google.common.collect.Lists;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.ForegroundService;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.facade.BatteryManagerFacade;
-import com.googlecode.android_scripting.facade.EventFacade;
-import com.googlecode.android_scripting.facade.FacadeConfiguration;
-import com.googlecode.android_scripting.facade.FacadeManager;
-import com.googlecode.android_scripting.facade.FacadeManagerFactory;
-
-import java.util.List;
+import com.googlecode.android_scripting.trigger.TriggerRepository;
 
 /**
  * The trigger service takes care of installing triggers serialized to the preference storage.
@@ -53,44 +47,32 @@ import java.util.List;
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class TriggerService extends Service {
-  private static final long TRIGGER_SERVICE_PING_MILLIS = 10 * 1000 * 60;
-  private static int mTriggerServiceNotificationId;
+public class TriggerService extends ForegroundService {
+  private static final int NOTIFICATION_ID = NotificationIdFactory.create();
+  private static final long PING_MILLIS = 10 * 1000 * 60;
 
-  private final List<Thread> mEventListenerThreads = Lists.newArrayList();
+  private final IBinder mBinder;
+  private TriggerRepository mTriggerRepository;
+
+  public class LocalBinder extends Binder {
+    public TriggerService getService() {
+      return TriggerService.this;
+    }
+  }
+
+  public TriggerService() {
+    super(NOTIFICATION_ID);
+    mBinder = new LocalBinder();
+  }
 
   @Override
-  public void onCreate() {
-    super.onCreate();
-
-    mTriggerServiceNotificationId = NotificationIdFactory.create();
-    ServiceUtils.setForeground(this, mTriggerServiceNotificationId, createNotification());
-    installAlarm();
-
-    FacadeManagerFactory facadeManagerFactory =
-        new FacadeManagerFactory(FacadeConfiguration.getSdkLevel(), this, null, FacadeConfiguration
-            .getFacadeClasses());
-    FacadeManager facadeManager = facadeManagerFactory.create();
-
-    BatteryManagerFacade batteryManagerFacade =
-        facadeManager.getReceiver(BatteryManagerFacade.class);
-    batteryManagerFacade.batteryStartMonitoring();
-
-    facadeManager.getReceiver(EventFacade.class);
-
-    // TODO(felix.arends@gmail.com): Reintroduce the trigger repository and load triggers from
-    // there.
-
-    // TODO(felix.arends@gmail.com): Just have one thread looping over the event queue.
-    for (Thread t : mEventListenerThreads) {
-      t.start();
-    }
-
-    // TODO(felix.arends@gmail.com): Shutdown if there are no events.
+  public IBinder onBind(Intent intent) {
+    return mBinder;
   }
 
   /** Returns the notification to display whenever the service is running. */
-  private Notification createNotification() {
+  @Override
+  protected Notification createNotification() {
     Notification notification =
         new Notification(R.drawable.sl4a_logo_48, "SL4A Trigger Service is running...", System
             .currentTimeMillis());
@@ -105,7 +87,14 @@ public class TriggerService extends Service {
 
   @Override
   public void onStart(Intent intent, int startId) {
-    super.onStart(intent, startId);
+    mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
+    if (mTriggerRepository.getAllTriggers().size() == 0) {
+      stopSelfResult(startId);
+      return;
+    }
+    installAlarm();
+
+    // TODO(felix.arends@gmail.com): Load triggers from repository.
 
     if (intent.getAction() != null
         && Constants.ACTION_KILL_PROCESS.compareTo(intent.getAction()) == 0) {
@@ -117,25 +106,12 @@ public class TriggerService extends Service {
 
   private void installAlarm() {
     AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-        + TRIGGER_SERVICE_PING_MILLIS, TRIGGER_SERVICE_PING_MILLIS, IntentBuilders
-        .buildTriggerServicePendingIntent(this));
+    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + PING_MILLIS,
+        PING_MILLIS, IntentBuilders.buildTriggerServicePendingIntent(this));
   }
 
   private void uninstallAlarm() {
     AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
     alarmManager.cancel(IntentBuilders.buildTriggerServicePendingIntent(this));
-  }
-
-  @Override
-  public void onDestroy() {
-    NotificationManager manager =
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    manager.cancel(mTriggerServiceNotificationId);
-  }
-
-  @Override
-  public IBinder onBind(Intent intent) {
-    return null;
   }
 }

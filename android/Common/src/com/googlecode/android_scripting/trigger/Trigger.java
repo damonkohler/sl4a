@@ -37,4 +37,11 @@ public interface Trigger extends Serializable {
    *          FacadeManager with all available facades
    */
   void handleEvent(Event event, FacadeManager facadeManager);
+
+  /**
+   * Returns the event name that this {@link Trigger} is interested in.
+   */
+  // TODO(damonkohler): This could be removed by maintaining a reverse mapping from Trigger to event
+  // name in the TriggerRespository.
+  String getEventName();
 }

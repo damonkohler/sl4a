@@ -16,10 +16,12 @@ import java.io.File;
  */
 public class ScriptTrigger implements Trigger {
   private static final long serialVersionUID = 1804599219214041409L;
+  private transient final Service mService;
   private final File mScript;
-  private final Service mService;
+  private final String mEventName;
 
-  public ScriptTrigger(Service service, File script) {
+  public ScriptTrigger(Service service, String eventName, File script) {
+    mEventName = eventName;
     mScript = script;
     mService = service;
   }
@@ -27,8 +29,14 @@ public class ScriptTrigger implements Trigger {
   @Override
   public void handleEvent(Event event, FacadeManager facadeManager) {
     Intent intent = IntentBuilders.buildStartInBackgroundIntent(mScript);
-    // This is required since the context is not an activity.
+    // This is required since the script is being started from the TriggerService.
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    // TODO(damonkohler): Inject the facadeManager into the script's context.
     mService.startActivity(intent);
+  }
+
+  @Override
+  public String getEventName() {
+    return mEventName;
   }
 }

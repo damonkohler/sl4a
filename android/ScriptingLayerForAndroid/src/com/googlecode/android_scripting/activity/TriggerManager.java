@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -35,13 +34,13 @@ import android.widget.TextView;
 import com.google.common.collect.Lists;
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
+import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.dialog.DurationPickerDialog;
 import com.googlecode.android_scripting.dialog.Help;
-import com.googlecode.android_scripting.dialog.DurationPickerDialog.DurationPickedListener;
 import com.googlecode.android_scripting.trigger.Trigger;
+import com.googlecode.android_scripting.trigger.TriggerRepository;
 
 import java.io.File;
 import java.util.List;
@@ -49,6 +48,7 @@ import java.util.List;
 public class TriggerManager extends ListActivity {
   private TriggerAdapter mAdapter;
   private List<Trigger> mTriggerList;
+  private TriggerRepository mTriggerRepository;
 
   private static enum ContextMenuId {
     REMOVE;
@@ -58,7 +58,7 @@ public class TriggerManager extends ListActivity {
   }
 
   private static enum MenuId {
-    SCHEDULE_REPEATING, SCHEDULE_INEXACT_REPEATING, RINGER_MODE_CONDITION, PREFERENCES, HELP;
+    ADD, PREFERENCES, HELP;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -69,6 +69,7 @@ public class TriggerManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Triggers", R.layout.trigger_manager);
     mTriggerList = Lists.newArrayList();
+    mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
     mAdapter = new TriggerAdapter();
     mAdapter.registerDataSetObserver(new TriggerListObserver());
     setListAdapter(mAdapter);
@@ -80,14 +81,8 @@ public class TriggerManager extends ListActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    SubMenu addRepeating = menu.addSubMenu("Add Repeating");
-    addRepeating.setIcon(android.R.drawable.ic_menu_add);
-    addRepeating.add(Menu.NONE, MenuId.SCHEDULE_REPEATING.getId(), Menu.NONE, "Repeating");
-    addRepeating.add(Menu.NONE, MenuId.SCHEDULE_INEXACT_REPEATING.getId(), Menu.NONE,
-        "Power Efficient Repeating");
-    SubMenu addCondition = menu.addSubMenu("Add Condition");
-    addCondition.setIcon(android.R.drawable.ic_menu_add);
-    addCondition.add(Menu.NONE, MenuId.RINGER_MODE_CONDITION.getId(), Menu.NONE, "Ringer Mode");
+    menu.add(Menu.NONE, MenuId.ADD.getId(), Menu.NONE, "Add").setIcon(
+        android.R.drawable.ic_menu_add);
     menu.add(Menu.NONE, MenuId.PREFERENCES.getId(), Menu.NONE, "Preferences").setIcon(
         android.R.drawable.ic_menu_preferences);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
@@ -132,9 +127,8 @@ public class TriggerManager extends ListActivity {
     }
 
     if (item.getItemId() == ContextMenuId.REMOVE.getId()) {
-      // TODO(felix.arends@gmail.com): actually remove the trigger.
+      mTriggerRepository.remove(trigger);
     }
-
     mAdapter.notifyDataSetInvalidated();
     return true;
   }
@@ -145,9 +139,11 @@ public class TriggerManager extends ListActivity {
   }
 
   private class TriggerListObserver extends DataSetObserver {
+
     @Override
     public void onInvalidated() {
-      // TODO(felix.arends@gmail.com): Update the trigger list.
+      mTriggerList.clear();
+      mTriggerList.addAll(mTriggerRepository.getAllTriggers().values());
     }
   }
 
@@ -171,7 +167,9 @@ public class TriggerManager extends ListActivity {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
       // TODO(felix.arends@gmail.com): Return the proper view for the trigger.
-      return new TextView(TriggerManager.this);
+      TextView textView = new TextView(TriggerManager.this);
+      textView.setText("Not implemented.");
+      return textView;
     }
   }
 
@@ -179,35 +177,8 @@ public class TriggerManager extends ListActivity {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (resultCode == RESULT_OK) {
       new File(data.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
-      if (requestCode == MenuId.SCHEDULE_REPEATING.getId()) {
-        DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
-            new DurationPickedListener() {
-              @Override
-              public void onSet(double duration) {
-                // TODO(felix.arends@gmail.com): actually schedule the event
-                mAdapter.notifyDataSetInvalidated();
-              }
-
-              @Override
-              public void onCancel() {
-              }
-            });
-      } else if (requestCode == MenuId.SCHEDULE_INEXACT_REPEATING.getId()) {
-        DurationPickerDialog.getDurationFromDialog(this, "Repeat every",
-            new DurationPickedListener() {
-              @Override
-              public void onSet(double duration) {
-                // TODO(felix.arends@gmail.com): actually schedule the event
-                mAdapter.notifyDataSetInvalidated();
-              }
-
-              @Override
-              public void onCancel() {
-              }
-            });
-      } else if (requestCode == MenuId.RINGER_MODE_CONDITION.getId()) {
-        // TODO(felix.arends@gmail.com): actually create the trigger
-        mAdapter.notifyDataSetInvalidated();
+      if (requestCode == MenuId.ADD.getId()) {
+        // TODO(damonkohler): Actually create the trigger.
       }
     }
   }

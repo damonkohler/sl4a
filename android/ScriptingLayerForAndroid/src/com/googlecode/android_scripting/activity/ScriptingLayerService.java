@@ -19,7 +19,6 @@ package com.googlecode.android_scripting.activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
@@ -29,6 +28,7 @@ import android.widget.RemoteViews;
 import com.googlecode.android_scripting.AndroidProxy;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.ForegroundService;
 import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptLauncher;
@@ -54,20 +54,19 @@ import org.connectbot.service.TerminalManager;
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class ScriptingLayerService extends Service {
+public class ScriptingLayerService extends ForegroundService {
+  private static final int NOTIFICATION_ID = NotificationIdFactory.create();
 
+  private final IBinder mBinder;
   private final Map<Integer, InterpreterProcess> mProcessMap;
+  private volatile int mModCount = 0;
   private NotificationManager mNotificationManager;
   private Notification mNotification;
-  private final IBinder mBinder;
-  private volatile int mModCount = 0;
   private InterpreterConfiguration mInterpreterConfiguration;
 
   private volatile WeakReference<InterpreterProcess> mRecentlyKilledProcess;
 
   private TerminalManager mTerminalManager;
-
-  private static final int mNotificationId = NotificationIdFactory.create();
 
   public class LocalBinder extends Binder {
     public ScriptingLayerService getService() {
@@ -75,22 +74,28 @@ public class ScriptingLayerService extends Service {
     }
   }
 
+  @Override
+  public IBinder onBind(Intent intent) {
+    return mBinder;
+  }
+
   public ScriptingLayerService() {
+    super(NOTIFICATION_ID);
     mProcessMap = new ConcurrentHashMap<Integer, InterpreterProcess>();
     mBinder = new LocalBinder();
   }
 
   @Override
   public void onCreate() {
+    super.onCreate();
     mInterpreterConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
     mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     mRecentlyKilledProcess = new WeakReference<InterpreterProcess>(null);
     mTerminalManager = new TerminalManager(this);
-    createNotification();
-    ServiceUtils.setForeground(this, mNotificationId, mNotification);
   }
 
-  private void createNotification() {
+  @Override
+  protected Notification createNotification() {
     mNotification =
         new Notification(R.drawable.sl4a_notification_logo, null, System.currentTimeMillis());
     mNotification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
@@ -101,6 +106,7 @@ public class ScriptingLayerService extends Service {
     Intent notificationIntent = new Intent(this, ScriptingLayerService.class);
     notificationIntent.setAction(Constants.ACTION_SHOW_RUNNING_SCRIPTS);
     mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    return mNotification;
   }
 
   private void updateNotification(String tickerText) {
@@ -116,7 +122,7 @@ public class ScriptingLayerService extends Service {
       mNotification.tickerText = tickerText;
     }
     mNotification.contentView.setTextViewText(R.id.notification_message, message);
-    mNotificationManager.notify(mNotificationId, mNotification);
+    mNotificationManager.notify(NOTIFICATION_ID, mNotification);
   }
 
   @Override
@@ -287,17 +293,6 @@ public class ScriptingLayerService extends Service {
       return mRecentlyKilledProcess.get();
     }
     return p;
-  }
-
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-    mNotificationManager.cancel(mNotificationId);
-  }
-
-  @Override
-  public IBinder onBind(Intent intent) {
-    return mBinder;
   }
 
   public TerminalManager getTerminalManager() {
