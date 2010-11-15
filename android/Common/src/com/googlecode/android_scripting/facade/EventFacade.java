@@ -97,6 +97,12 @@ public class EventFacade extends RpcReceiver {
     }
   }
 
+  @Rpc(description = "Post an event to the event queue.")
+  public void eventPost(@RpcParameter(name = "name") String name,
+      @RpcParameter(name = "data") String data) {
+    postEvent(name, data);
+  }
+
   /**
    * Posts an event with to the event queue.
    */
@@ -108,12 +114,6 @@ public class EventFacade extends RpcReceiver {
     for (EventObserver observer : mObserverList) {
       observer.onEventReceived(name, data);
     }
-  }
-
-  @Rpc(description = "Post an event to the event queue.")
-  public void eventPost(@RpcParameter(name = "name") String name,
-      @RpcParameter(name = "data") String data) {
-    postEvent(name, data);
   }
 
   @RpcDeprecated("eventPost")

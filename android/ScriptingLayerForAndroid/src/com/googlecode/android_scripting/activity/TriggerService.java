@@ -26,12 +26,13 @@ import android.os.IBinder;
 import android.widget.RemoteViews;
 
 import com.googlecode.android_scripting.BaseApplication;
-import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.ForegroundService;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
+import com.googlecode.android_scripting.trigger.TriggerRepository.TriggerRepositoryObserver;
 
 /**
  * The trigger service takes care of installing triggers serialized to the preference storage.
@@ -74,7 +75,7 @@ public class TriggerService extends ForegroundService {
   @Override
   protected Notification createNotification() {
     Notification notification =
-        new Notification(R.drawable.sl4a_logo_48, "SL4A Trigger Service is running...", System
+        new Notification(R.drawable.sl4a_logo_48, "SL4A Trigger Service is running.", System
             .currentTimeMillis());
     notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
     notification.contentView.setTextViewText(R.id.notification_title, "SL4A Trigger Service");
@@ -85,23 +86,31 @@ public class TriggerService extends ForegroundService {
     return notification;
   }
 
+  private class RepositoryObserver implements TriggerRepositoryObserver {
+    @Override
+    public void onPut(Trigger trigger) {
+      // TODO(damonkohler): Spin up a new EventObserver.
+    }
+
+    @Override
+    public void onRemove(Trigger trigger) {
+      // TODO(damonkohler): Tear down EventObserver associated with trigger.
+      if (mTriggerRepository.isEmpty()) {
+        // TODO(damonkohler): Use stopSelfResult() which would require tracking startId.
+        stopSelf();
+      }
+    }
+  }
+
   @Override
   public void onStart(Intent intent, int startId) {
     mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
-    if (mTriggerRepository.getAllTriggers().size() == 0) {
+    if (mTriggerRepository.isEmpty()) {
       stopSelfResult(startId);
       return;
     }
+    mTriggerRepository.addObserver(new RepositoryObserver());
     installAlarm();
-
-    // TODO(felix.arends@gmail.com): Load triggers from repository.
-
-    if (intent.getAction() != null
-        && Constants.ACTION_KILL_PROCESS.compareTo(intent.getAction()) == 0) {
-      uninstallAlarm();
-      stopSelf();
-      return;
-    }
   }
 
   private void installAlarm() {
@@ -113,5 +122,11 @@ public class TriggerService extends ForegroundService {
   private void uninstallAlarm() {
     AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
     alarmManager.cancel(IntentBuilders.buildTriggerServicePendingIntent(this));
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    uninstallAlarm();
   }
 }

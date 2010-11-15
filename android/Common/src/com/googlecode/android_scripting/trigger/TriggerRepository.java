@@ -32,6 +32,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.codec.binary.Base64;
@@ -46,10 +47,15 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class TriggerRepository {
   /**
+   * The list of triggers is serialized to the shared preferences entry with this name.
+   */
+  private static final String TRIGGERS_PREF_KEY = "TRIGGERS";
+
+  /**
    * An interface for objects that are notified when a trigger is added to the repository.
    */
   public interface TriggerRepositoryObserver {
-    void onAdd(Trigger trigger);
+    void onPut(Trigger trigger);
 
     void onRemove(Trigger trigger);
   }
@@ -59,11 +65,6 @@ public class TriggerRepository {
   private final CopyOnWriteArrayList<TriggerRepositoryObserver> mTriggerObservers =
       new CopyOnWriteArrayList<TriggerRepositoryObserver>();
 
-  /**
-   * The list of triggers is serialized to the shared preferences entry with this name.
-   */
-  private static final String TRIGGERS_PREF_KEY = "TRIGGERS";
-
   private final SharedPreferences mPreferences;
 
   private Context mContext;
@@ -72,7 +73,12 @@ public class TriggerRepository {
     mContext = context;
     mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     String triggers = mPreferences.getString(TRIGGERS_PREF_KEY, null);
-    mTriggers.putAll(deserializeTriggersFromString(triggers));
+    // Iterate and add one at a time instead of using putAll() so that observers are notified.
+    Multimap<String, Trigger> deserializeTriggersFromString =
+        deserializeTriggersFromString(triggers);
+    for (Entry<String, Trigger> entry : deserializeTriggersFromString.entries()) {
+      put(entry.getValue());
+    }
   }
 
   /** Returns a list of all triggers. The list is unmodifiable. */
@@ -111,7 +117,7 @@ public class TriggerRepository {
   /** Notify all {@link TriggerRepositoryObserver}s that a {@link Trigger} was added. */
   private void notifyOnAdd(Trigger trigger) {
     for (TriggerRepositoryObserver observer : mTriggerObservers) {
-      observer.onAdd(trigger);
+      observer.onPut(trigger);
     }
   }
 
@@ -167,16 +173,15 @@ public class TriggerRepository {
     return mTriggers.isEmpty();
   }
 
-  /** Registers a listener that is invoked when a new trigger gets added. */
-  public void registerAddTriggerListener(TriggerRepositoryObserver listener) {
-    mTriggerObservers.add(listener);
+  /** Adds a {@link TriggerRepositoryObserver}. */
+  public void addObserver(TriggerRepositoryObserver observer) {
+    mTriggerObservers.add(observer);
   }
 
   /**
-   * Unregisters a previously registered listener. This is a no-op if the listener hasn't been
-   * registered.
+   * Removes a {@link TriggerRepositoryObserver}.
    */
-  public void unregisterAddListener(TriggerRepositoryObserver addTriggerListener) {
-    mTriggerObservers.remove(addTriggerListener);
+  public void removeObserver(TriggerRepositoryObserver observer) {
+    mTriggerObservers.remove(observer);
   }
 }
