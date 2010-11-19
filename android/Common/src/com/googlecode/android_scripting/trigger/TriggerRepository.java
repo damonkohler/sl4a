@@ -58,13 +58,24 @@ public class TriggerRepository {
    * An interface for objects that are notified when a trigger is added to the repository.
    */
   public interface TriggerRepositoryObserver {
+    /**
+     * Invoked just before the trigger is added to the repository.
+     * 
+     * @param trigger
+     *          The trigger about to be added to the repository.
+     */
     void onPut(Trigger trigger);
 
+    /**
+     * Invoked just after the trigger has been removed from the repository.
+     * 
+     * @param trigger
+     *          The trigger that has just been removed from the repository.
+     */
     void onRemove(Trigger trigger);
   }
 
-  private final Multimap<String, Trigger> mTriggers =
-      Multimaps.synchronizedListMultimap(ArrayListMultimap.<String, Trigger> create());
+  private final Multimap<String, Trigger> mTriggers;
   private final CopyOnWriteArrayList<TriggerRepositoryObserver> mTriggerObservers =
       new CopyOnWriteArrayList<TriggerRepositoryObserver>();
 
@@ -72,12 +83,7 @@ public class TriggerRepository {
     mContext = context;
     mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     String triggers = mPreferences.getString(TRIGGERS_PREF_KEY, null);
-    // Iterate and add one at a time instead of using putAll() so that observers are notified.
-    Multimap<String, Trigger> deserializeTriggersFromString =
-        deserializeTriggersFromString(triggers);
-    for (Entry<String, Trigger> entry : deserializeTriggersFromString.entries()) {
-      put(entry.getValue());
-    }
+    mTriggers = deserializeTriggersFromString(triggers);
   }
 
   /** Returns a list of all triggers. The list is unmodifiable. */
@@ -92,17 +98,15 @@ public class TriggerRepository {
    *          the {@link Trigger} to add
    */
   public synchronized void put(Trigger trigger) {
+    notifyOnAdd(trigger);
     mTriggers.put(trigger.getEventName(), trigger);
     storeTriggers();
-    notifyOnAdd(trigger);
     ensureTriggerServiceRunning();
   }
 
   /** Removes a specific {@link Trigger}. */
   public synchronized void remove(final Trigger trigger) {
-    synchronized (mTriggers) {
-      mTriggers.get(trigger.getEventName()).remove(trigger);
-    }
+    mTriggers.get(trigger.getEventName()).remove(trigger);
     storeTriggers();
     notifyOnRemove(trigger);
   }
@@ -128,7 +132,7 @@ public class TriggerRepository {
   }
 
   /** Writes the list of triggers to the shared preferences. */
-  private void storeTriggers() {
+  private synchronized void storeTriggers() {
     SharedPreferences.Editor editor = mPreferences.edit();
     final String triggerValue = serializeTriggersToString(mTriggers);
     if (triggerValue != null) {
@@ -168,13 +172,27 @@ public class TriggerRepository {
   }
 
   /** Returns {@code true} iff the list of triggers is empty. */
-  public boolean isEmpty() {
+  public synchronized boolean isEmpty() {
     return mTriggers.isEmpty();
   }
 
   /** Adds a {@link TriggerRepositoryObserver}. */
   public void addObserver(TriggerRepositoryObserver observer) {
     mTriggerObservers.add(observer);
+  }
+
+  /**
+   * Adds the given {@link TriggerRepositoryObserver} and invokes
+   * {@link TriggerRepositoryObserver#onPut} for all existing triggers.
+   * 
+   * @param observer
+   *          The observer to add.
+   */
+  public synchronized void bootstrapObserver(TriggerRepositoryObserver observer) {
+    addObserver(observer);
+    for (Entry<String, Trigger> trigger : mTriggers.entries()) {
+      observer.onPut(trigger.getValue());
+    }
   }
 
   /**

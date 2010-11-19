@@ -25,6 +25,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
+import com.google.common.base.Preconditions;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.ForegroundService;
 import com.googlecode.android_scripting.IntentBuilders;
@@ -35,6 +36,7 @@ import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.facade.EventFacade.EventObserver;
+import com.googlecode.android_scripting.trigger.EventGenerationControllingObserver;
 import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 import com.googlecode.android_scripting.trigger.TriggerRepository.TriggerRepositoryObserver;
@@ -82,12 +84,14 @@ public class TriggerService extends ForegroundService {
   public void onCreate() {
     super.onCreate();
 
-    mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
-    mTriggerRepository.addObserver(new RepositoryObserver());
     mFacadeManager =
         new FacadeManager(FacadeConfiguration.getSdkLevel(), this, null, FacadeConfiguration
             .getFacadeClasses());
     mEventFacade = mFacadeManager.getReceiver(EventFacade.class);
+
+    mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
+    mTriggerRepository.bootstrapObserver(new RepositoryObserver());
+    mTriggerRepository.bootstrapObserver(new EventGenerationControllingObserver(mFacadeManager));
     installAlarm();
   }
 
@@ -128,15 +132,19 @@ public class TriggerService extends ForegroundService {
   }
 
   private class RepositoryObserver implements TriggerRepositoryObserver {
+    int mTriggerCount = 0;
+
     @Override
     public void onPut(Trigger trigger) {
+      mTriggerCount++;
       mEventFacade.addNamedEventObserver(trigger.getEventName(), new TriggerEventObserver(trigger));
     }
 
     @Override
     public void onRemove(Trigger trigger) {
+      Preconditions.checkArgument(mTriggerCount > 0);
       // TODO(damonkohler): Tear down EventObserver associated with trigger.
-      if (mTriggerRepository.isEmpty()) {
+      if (--mTriggerCount == 0) {
         // TODO(damonkohler): Use stopSelfResult() which would require tracking startId.
         stopSelf();
       }
