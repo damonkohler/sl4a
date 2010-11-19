@@ -35,9 +35,13 @@ import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.facade.EventFacade.EventObserver;
+import com.googlecode.android_scripting.trigger.EventGenerationControllingObserver;
+import com.googlecode.android_scripting.trigger.ScriptTrigger;
 import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 import com.googlecode.android_scripting.trigger.TriggerRepository.TriggerRepositoryObserver;
+
+import java.io.File;
 
 /**
  * The trigger service takes care of installing triggers serialized to the preference storage.
@@ -84,10 +88,14 @@ public class TriggerService extends ForegroundService {
 
     mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
     mTriggerRepository.addObserver(new RepositoryObserver());
+    mTriggerRepository.addObserver(new EventGenerationControllingObserver(mFacadeManager,
+        mTriggerRepository));
     mFacadeManager =
         new FacadeManager(FacadeConfiguration.getSdkLevel(), this, null, FacadeConfiguration
             .getFacadeClasses());
     mEventFacade = mFacadeManager.getReceiver(EventFacade.class);
+    mTriggerRepository.put(new ScriptTrigger(this, "battery", new File(
+        "/sdcard/sl4a/scripts/say_time.py")));
     installAlarm();
   }
 
