@@ -1,9 +1,14 @@
 package com.googlecode.android_scripting.trigger;
 
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
+import com.googlecode.android_scripting.facade.FacadeManager;
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.trigger.TriggerRepository.TriggerRepositoryObserver;
 
 import java.util.Collection;
+import java.util.Map;
+
+import org.json.JSONArray;
 
 /**
  * A {@link TriggerRepositoryObserver} that starts and stops the monitoring of events depending on
@@ -13,12 +18,21 @@ import java.util.Collection;
  */
 public class StartEventMonitoringObserver implements TriggerRepositoryObserver {
   private final TriggerRepository mTriggerRepository;
-  private final FacadeConfiguration mFacadeConfiguration;
+  private final FacadeManager mFacadeManager;
+  private final Map<String, MethodDescriptor> mEventGeneratingMethodDescriptors;
 
-  public StartEventMonitoringObserver(TriggerRepository triggerRepository,
-      FacadeConfiguration facadeConfiguration) {
+  /**
+   * Creates a new StartEventMonitoringObserver for the given trigger repository.
+   * 
+   * @param facadeManager
+   * @param triggerRepository
+   */
+  public StartEventMonitoringObserver(FacadeManager facadeManager,
+      TriggerRepository triggerRepository) {
+    mFacadeManager = facadeManager;
     mTriggerRepository = triggerRepository;
-    mFacadeConfiguration = facadeConfiguration;
+    mEventGeneratingMethodDescriptors =
+        FacadeConfiguration.collectEventGeneratingMethodDescriptors();
   }
 
   @Override
@@ -40,10 +54,15 @@ public class StartEventMonitoringObserver implements TriggerRepositoryObserver {
   }
 
   private void startMonitoring(String eventName) {
-
+    MethodDescriptor eventGeneratingMethod = mEventGeneratingMethodDescriptors.get(eventName);
+    try {
+      eventGeneratingMethod.invoke(mFacadeManager, new JSONArray());
+    } catch (Throwable t) {
+      throw new RuntimeException(t);
+    }
   }
 
   private void stopMonitoring(String eventName) {
-
+    // TODO(felix.arends@gmail.com): stop monitoring the event for "eventName" here.
   }
 }

@@ -85,7 +85,8 @@ public class TriggerService extends ForegroundService {
 
     mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
     mTriggerRepository.addObserver(new RepositoryObserver());
-    mTriggerRepository.addObserver(new StartEventMonitoringObserver(mTriggerRepository));
+    mTriggerRepository.addObserver(new StartEventMonitoringObserver(mFacadeManager,
+        mTriggerRepository));
     mFacadeManager =
         new FacadeManager(FacadeConfiguration.getSdkLevel(), this, null, FacadeConfiguration
             .getFacadeClasses());
