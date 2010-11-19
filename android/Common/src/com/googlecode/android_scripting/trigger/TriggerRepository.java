@@ -55,6 +55,12 @@ public class TriggerRepository {
    * An interface for objects that are notified when a trigger is added to the repository.
    */
   public interface TriggerRepositoryObserver {
+    /**
+     * Invoked just before the trigger is added to the repository.
+     * 
+     * @param trigger
+     *          The trigger about to be added to the repository.
+     */
     void onPut(Trigger trigger);
 
     void onRemove(Trigger trigger);
@@ -93,9 +99,9 @@ public class TriggerRepository {
    *          the {@link Trigger} to add
    */
   public synchronized void put(Trigger trigger) {
+    notifyOnAdd(trigger);
     mTriggers.put(trigger.getEventName(), trigger);
     storeTriggers();
-    notifyOnAdd(trigger);
     ensureTriggerServiceRunning();
   }
 
