@@ -197,8 +197,8 @@ public final class MethodDescriptor {
       helpBuilder.append(rpcAnnotation.returns());
     }
 
-    if (mMethod.isAnnotationPresent(RpcEvent.class)) {
-      String eventName = mMethod.getAnnotation(RpcEvent.class).value();
+    if (mMethod.isAnnotationPresent(RpcStartEvent.class)) {
+      String eventName = mMethod.getAnnotation(RpcStartEvent.class).value();
       helpBuilder.append(String.format("\n\nGenerates \"%s\" events.", eventName));
     }
 

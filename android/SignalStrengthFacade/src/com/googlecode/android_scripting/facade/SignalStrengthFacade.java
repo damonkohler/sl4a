@@ -10,7 +10,8 @@ import android.telephony.TelephonyManager;
 import com.googlecode.android_scripting.MainThread;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
-import com.googlecode.android_scripting.rpc.RpcEvent;
+import com.googlecode.android_scripting.rpc.RpcStartEvent;
+import com.googlecode.android_scripting.rpc.RpcStopEvent;
 
 import java.util.concurrent.Callable;
 
@@ -53,7 +54,7 @@ public class SignalStrengthFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Starts tracking signal strengths.")
-  @RpcEvent("signal_strengths")
+  @RpcStartEvent("signal_strengths")
   public void startTrackingSignalStrengths() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
   }
@@ -64,6 +65,7 @@ public class SignalStrengthFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Stops tracking signal strength.")
+  @RpcStopEvent("signal_strengths")
   public void stopTrackingSignalStrengths() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
   }

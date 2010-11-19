@@ -29,8 +29,9 @@ import com.google.common.collect.Maps;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
-import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+import com.googlecode.android_scripting.rpc.RpcStartEvent;
+import com.googlecode.android_scripting.rpc.RpcStopEvent;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -90,7 +91,7 @@ public class LocationFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Starts collecting location data.")
-  @RpcEvent("location")
+  @RpcStartEvent("location")
   public void startLocating(
       @RpcParameter(name = "minDistance", description = "minimum time between updates in milliseconds") @RpcDefault("60000") Integer minUpdateTime,
       @RpcParameter(name = "minUpdateDistance", description = "minimum distance between updates in meters") @RpcDefault("30") Integer minUpdateDistance) {
@@ -106,6 +107,7 @@ public class LocationFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Stops collecting location data.")
+  @RpcStopEvent("location")
   public synchronized void stopLocating() {
     mLocationManager.removeUpdates(mLocationListener);
     mLocationUpdates.clear();

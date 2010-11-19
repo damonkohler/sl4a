@@ -32,8 +32,9 @@ import android.telephony.TelephonyManager;
 import com.googlecode.android_scripting.MainThread;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
-import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+import com.googlecode.android_scripting.rpc.RpcStartEvent;
+import com.googlecode.android_scripting.rpc.RpcStopEvent;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -96,7 +97,7 @@ public class PhoneFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Starts tracking phone state.")
-  @RpcEvent("phone")
+  @RpcStartEvent("phone")
   public void startTrackingPhoneState() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
   }
@@ -107,6 +108,7 @@ public class PhoneFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Stops tracking phone state.")
+  @RpcStopEvent("phone")
   public void stopTrackingPhoneState() {
     mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
   }

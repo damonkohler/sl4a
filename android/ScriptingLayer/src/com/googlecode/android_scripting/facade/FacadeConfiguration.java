@@ -22,8 +22,9 @@ import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.RpcDeprecated;
-import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
+import com.googlecode.android_scripting.rpc.RpcStartEvent;
+import com.googlecode.android_scripting.rpc.RpcStopEvent;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -140,14 +141,29 @@ public class FacadeConfiguration {
     return list;
   }
 
-  public static Map<String, MethodDescriptor> collectEventGeneratingMethodDescriptors() {
+  public static Map<String, MethodDescriptor> collectStartEventMethodDescriptors() {
     Map<String, MethodDescriptor> map = Maps.newHashMap();
     for (MethodDescriptor descriptor : sRpcs.values()) {
       Method method = descriptor.getMethod();
-      if (method.isAnnotationPresent(RpcEvent.class)) {
-        String eventName = method.getAnnotation(RpcEvent.class).value();
+      if (method.isAnnotationPresent(RpcStartEvent.class)) {
+        String eventName = method.getAnnotation(RpcStartEvent.class).value();
         if (map.containsKey(eventName)) {
-          throw new RuntimeException("Duplicate event generating method descriptor found.");
+          throw new RuntimeException("Duplicate start event method descriptor found.");
+        }
+        map.put(eventName, descriptor);
+      }
+    }
+    return map;
+  }
+
+  public static Map<String, MethodDescriptor> collectStopEventMethodDescriptors() {
+    Map<String, MethodDescriptor> map = Maps.newHashMap();
+    for (MethodDescriptor descriptor : sRpcs.values()) {
+      Method method = descriptor.getMethod();
+      if (method.isAnnotationPresent(RpcStopEvent.class)) {
+        String eventName = method.getAnnotation(RpcStopEvent.class).value();
+        if (map.containsKey(eventName)) {
+          throw new RuntimeException("Duplicate stop event method descriptor found.");
         }
         map.put(eventName, descriptor);
       }

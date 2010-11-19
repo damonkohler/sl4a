@@ -27,8 +27,9 @@ import android.os.Bundle;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
-import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
+import com.googlecode.android_scripting.rpc.RpcStartEvent;
+import com.googlecode.android_scripting.rpc.RpcStopEvent;
 
 import java.lang.reflect.Field;
 
@@ -122,8 +123,8 @@ public class BatteryManagerFacade extends RpcReceiver {
     return mBatteryData;
   }
 
-  @RpcEvent("battery")
   @Rpc(description = "Starts tracking battery state.")
+  @RpcStartEvent("battery")
   public void batteryStartMonitoring() {
     if (mReceiver == null) {
       IntentFilter filter = new IntentFilter();
@@ -134,6 +135,7 @@ public class BatteryManagerFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Stops tracking battery state.")
+  @RpcStopEvent("battery")
   public void batteryStopMonitoring() {
     if (mReceiver != null) {
       mService.unregisterReceiver(mReceiver);
