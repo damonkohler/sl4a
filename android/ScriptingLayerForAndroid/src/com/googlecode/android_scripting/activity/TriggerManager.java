@@ -16,8 +16,11 @@
 
 package com.googlecode.android_scripting.activity;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -39,15 +42,20 @@ import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.dialog.Help;
+import com.googlecode.android_scripting.facade.FacadeConfiguration;
+import com.googlecode.android_scripting.rpc.MethodDescriptor;
+import com.googlecode.android_scripting.trigger.ScriptTrigger;
 import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class TriggerManager extends ListActivity {
-  private TriggerAdapter mAdapter;
-  private List<Trigger> mTriggerList;
+  private ScriptTriggerAdapter mAdapter;
+  private List<ScriptTrigger> mTriggers;
   private TriggerRepository mTriggerRepository;
 
   private static enum ContextMenuId {
@@ -68,10 +76,10 @@ public class TriggerManager extends ListActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Triggers", R.layout.trigger_manager);
-    mTriggerList = Lists.newArrayList();
+    mTriggers = Lists.newArrayList();
     mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
-    mAdapter = new TriggerAdapter();
-    mAdapter.registerDataSetObserver(new TriggerListObserver());
+    mAdapter = new ScriptTriggerAdapter();
+    mAdapter.registerDataSetObserver(new ScriptTriggerListObserver());
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
     ActivityFlinger.attachView(getListView(), this);
@@ -138,25 +146,25 @@ public class TriggerManager extends ListActivity {
     mAdapter.notifyDataSetInvalidated();
   }
 
-  private class TriggerListObserver extends DataSetObserver {
+  private class ScriptTriggerListObserver extends DataSetObserver {
 
     @Override
     public void onInvalidated() {
-      mTriggerList.clear();
-      mTriggerList.addAll(mTriggerRepository.getAllTriggers().values());
+      mTriggers.clear();
+      // TODO(damonkohler): Bootstrap the TriggerRepositoryObserver.
     }
   }
 
-  private class TriggerAdapter extends BaseAdapter {
+  private class ScriptTriggerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-      return mTriggerList.size();
+      return mTriggers.size();
     }
 
     @Override
     public Trigger getItem(int position) {
-      return mTriggerList.get(position);
+      return mTriggers.get(position);
     }
 
     @Override
@@ -166,9 +174,9 @@ public class TriggerManager extends ListActivity {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-      // TODO(felix.arends@gmail.com): Return the proper view for the trigger.
+      ScriptTrigger trigger = mTriggers.get(position);
       TextView textView = new TextView(TriggerManager.this);
-      textView.setText("Not implemented.");
+      textView.setText(trigger.getEventName() + " " + trigger.getScript().getName());
       return textView;
     }
   }
@@ -176,9 +184,20 @@ public class TriggerManager extends ListActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (resultCode == RESULT_OK) {
-      new File(data.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
+      final File script = new File(data.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
       if (requestCode == MenuId.ADD.getId()) {
-        // TODO(damonkohler): Actually create the trigger.
+        Map<String, MethodDescriptor> eventMethodDescriptors =
+            FacadeConfiguration.collectStartEventMethodDescriptors();
+        final List<String> eventNames = Lists.newArrayList(eventMethodDescriptors.keySet());
+        Collections.sort(eventNames);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(eventNames.toArray(new CharSequence[eventNames.size()]),
+            new OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int position) {
+                mTriggerRepository.put(new ScriptTrigger(eventNames.get(position), script));
+              }
+            });
       }
     }
   }

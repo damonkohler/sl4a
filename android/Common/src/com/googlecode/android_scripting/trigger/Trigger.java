@@ -16,8 +16,9 @@
 
 package com.googlecode.android_scripting.trigger;
 
+import android.content.Context;
+
 import com.googlecode.android_scripting.event.Event;
-import com.googlecode.android_scripting.facade.FacadeManager;
 
 import java.io.Serializable;
 
@@ -33,10 +34,9 @@ public interface Trigger extends Serializable {
    * 
    * @param event
    *          Event to handle
-   * @param facadeManager
-   *          FacadeManager with all available facades
+   * @param context TODO
    */
-  void handleEvent(Event event, FacadeManager facadeManager);
+  void handleEvent(Event event, Context context);
 
   /**
    * Returns the event name that this {@link Trigger} is interested in.

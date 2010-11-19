@@ -38,7 +38,7 @@ public class EventListenerThread extends Thread {
     while (!interrupted()) {
       try {
         Event event = eventFacade.eventWaitFor(mEventName, null);
-        mTrigger.handleEvent(event, mFacadeManager);
+        mTrigger.handleEvent(event, null);
       } catch (InterruptedException e) {
         interrupt();
       }

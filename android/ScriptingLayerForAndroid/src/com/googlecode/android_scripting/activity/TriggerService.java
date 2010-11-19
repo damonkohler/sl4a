@@ -114,28 +114,23 @@ public class TriggerService extends ForegroundService {
     return notification;
   }
 
-  private static class TriggerEventObserver implements EventObserver {
-    private final FacadeManager mFacadeManager;
+  private class TriggerEventObserver implements EventObserver {
     private final Trigger mTrigger;
 
-    public TriggerEventObserver(FacadeManager facadeManager, Trigger trigger) {
-      mFacadeManager = facadeManager;
+    public TriggerEventObserver(Trigger trigger) {
       mTrigger = trigger;
     }
 
     @Override
     public void onEventReceived(Event event) {
-      if (event.nameEquals(mTrigger.getEventName())) {
-        mTrigger.handleEvent(event, mFacadeManager);
-      }
+      mTrigger.handleEvent(event, TriggerService.this);
     }
   }
 
   private class RepositoryObserver implements TriggerRepositoryObserver {
     @Override
     public void onPut(Trigger trigger) {
-      mEventFacade.addNamedEventObserver(trigger.getEventName(), new TriggerEventObserver(
-          mFacadeManager, trigger));
+      mEventFacade.addNamedEventObserver(trigger.getEventName(), new TriggerEventObserver(trigger));
     }
 
     @Override

@@ -51,6 +51,9 @@ public class TriggerRepository {
    */
   private static final String TRIGGERS_PREF_KEY = "TRIGGERS";
 
+  private final SharedPreferences mPreferences;
+  private final Context mContext;
+
   /**
    * An interface for objects that are notified when a trigger is added to the repository.
    */
@@ -64,10 +67,6 @@ public class TriggerRepository {
       Multimaps.synchronizedListMultimap(ArrayListMultimap.<String, Trigger> create());
   private final CopyOnWriteArrayList<TriggerRepositoryObserver> mTriggerObservers =
       new CopyOnWriteArrayList<TriggerRepositoryObserver>();
-
-  private final SharedPreferences mPreferences;
-
-  private Context mContext;
 
   public TriggerRepository(Context context) {
     mContext = context;
