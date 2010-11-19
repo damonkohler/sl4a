@@ -16,10 +16,11 @@ import org.json.JSONArray;
  * 
  * @author Felix Arends (felix.arends@gmail.com)
  */
-public class StartEventMonitoringObserver implements TriggerRepositoryObserver {
+public class EventGenerationControllingObserver implements TriggerRepositoryObserver {
   private final TriggerRepository mTriggerRepository;
   private final FacadeManager mFacadeManager;
-  private final Map<String, MethodDescriptor> mEventGeneratingMethodDescriptors;
+  private final Map<String, MethodDescriptor> mStartEventGeneratingMethodDescriptors;
+  private final Map<String, MethodDescriptor> mStopEventGeneratingMethodDescriptors;
 
   /**
    * Creates a new StartEventMonitoringObserver for the given trigger repository.
@@ -27,12 +28,13 @@ public class StartEventMonitoringObserver implements TriggerRepositoryObserver {
    * @param facadeManager
    * @param triggerRepository
    */
-  public StartEventMonitoringObserver(FacadeManager facadeManager,
+  public EventGenerationControllingObserver(FacadeManager facadeManager,
       TriggerRepository triggerRepository) {
     mFacadeManager = facadeManager;
     mTriggerRepository = triggerRepository;
-    mEventGeneratingMethodDescriptors =
-        FacadeConfiguration.collectEventGeneratingMethodDescriptors();
+    mStartEventGeneratingMethodDescriptors =
+        FacadeConfiguration.collectStartEventMethodDescriptors();
+    mStopEventGeneratingMethodDescriptors = FacadeConfiguration.collectStopEventMethodDescriptors();
   }
 
   @Override
@@ -54,15 +56,22 @@ public class StartEventMonitoringObserver implements TriggerRepositoryObserver {
   }
 
   private void startMonitoring(String eventName) {
-    MethodDescriptor eventGeneratingMethod = mEventGeneratingMethodDescriptors.get(eventName);
+    MethodDescriptor startEventGeneratingMethod =
+        mStartEventGeneratingMethodDescriptors.get(eventName);
     try {
-      eventGeneratingMethod.invoke(mFacadeManager, new JSONArray());
+      startEventGeneratingMethod.invoke(mFacadeManager, new JSONArray());
     } catch (Throwable t) {
       throw new RuntimeException(t);
     }
   }
 
   private void stopMonitoring(String eventName) {
-    // TODO(felix.arends@gmail.com): stop monitoring the event for "eventName" here.
+    MethodDescriptor stopEventGeneratingMethod =
+        mStopEventGeneratingMethodDescriptors.get(eventName);
+    try {
+      stopEventGeneratingMethod.invoke(mFacadeManager, new JSONArray());
+    } catch (Throwable t) {
+      throw new RuntimeException(t);
+    }
   }
 }
