@@ -88,7 +88,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mAndroidJsSource = androidJsSource;
     mWrapper = new JavaScriptWrapper();
     mObserver = new HtmlEventObserver();
-    mReceiverManager.getReceiver(EventFacade.class).addEventObserver(mObserver);
+    mReceiverManager.getReceiver(EventFacade.class).addGlobalEventObserver(mObserver);
     mUiFacade = mReceiverManager.getReceiver(UiFacade.class);
     mUrl = url;
   }

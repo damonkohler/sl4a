@@ -136,7 +136,8 @@ public class TriggerService extends ForegroundService {
   private class RepositoryObserver implements TriggerRepositoryObserver {
     @Override
     public void onPut(Trigger trigger) {
-      mEventFacade.addEventObserver(new TriggerEventObserver(mFacadeManager, trigger));
+      mEventFacade.addNamedEventObserver(trigger.getEventName(), new TriggerEventObserver(
+          mFacadeManager, trigger));
     }
 
     @Override
