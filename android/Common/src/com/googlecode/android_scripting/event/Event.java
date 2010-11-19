@@ -16,6 +16,7 @@
 
 package com.googlecode.android_scripting.event;
 
+import com.google.common.base.Preconditions;
 
 public class Event {
 
@@ -24,6 +25,7 @@ public class Event {
   private double mCreationTime;
 
   public Event(String name, Object data) {
+    Preconditions.checkNotNull(name);
     setName(name);
     setData(data);
     mCreationTime = System.currentTimeMillis() * 1000;
@@ -47,5 +49,9 @@ public class Event {
 
   public double getCreationTime() {
     return mCreationTime;
+  }
+
+  public boolean nameEquals(String name) {
+    return mName.equals(name);
   }
 }

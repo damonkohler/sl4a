@@ -34,6 +34,7 @@ import android.webkit.WebView;
 import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.SingleThreadExecutor;
+import com.googlecode.android_scripting.event.Event;
 import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.future.FutureActivityTask;
@@ -196,15 +197,15 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     }
 
     @Override
-    public void onEventReceived(String eventName, Object data) {
+    public void onEventReceived(Event event) {
       JSONObject json = new JSONObject();
       try {
-        json.put("data", JsonBuilder.build(data));
+        json.put("data", JsonBuilder.build(event.getData()));
       } catch (JSONException e) {
         Log.e(e);
       }
-      if (mEventMap.containsKey(eventName)) {
-        for (Integer id : mEventMap.get(eventName)) {
+      if (mEventMap.containsKey(event.getName())) {
+        for (Integer id : mEventMap.get(event.getName())) {
           mView.loadUrl(String.format("javascript:droid._callback(%d, %s);", id, json));
         }
       }

@@ -30,6 +30,11 @@ import com.googlecode.android_scripting.ForegroundService;
 import com.googlecode.android_scripting.IntentBuilders;
 import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.event.Event;
+import com.googlecode.android_scripting.facade.EventFacade;
+import com.googlecode.android_scripting.facade.FacadeConfiguration;
+import com.googlecode.android_scripting.facade.FacadeManager;
+import com.googlecode.android_scripting.facade.EventFacade.EventObserver;
 import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
 import com.googlecode.android_scripting.trigger.TriggerRepository.TriggerRepositoryObserver;
@@ -54,6 +59,8 @@ public class TriggerService extends ForegroundService {
 
   private final IBinder mBinder;
   private TriggerRepository mTriggerRepository;
+  private FacadeManager mFacadeManager;
+  private EventFacade mEventFacade;
 
   public class LocalBinder extends Binder {
     public TriggerService getService() {
@@ -86,10 +93,27 @@ public class TriggerService extends ForegroundService {
     return notification;
   }
 
+  private static class TriggerEventObserver implements EventObserver {
+    private final FacadeManager mFacadeManager;
+    private final Trigger mTrigger;
+
+    public TriggerEventObserver(FacadeManager facadeManager, Trigger trigger) {
+      mFacadeManager = facadeManager;
+      mTrigger = trigger;
+    }
+
+    @Override
+    public void onEventReceived(Event event) {
+      if (event.nameEquals(mTrigger.getEventName())) {
+        mTrigger.handleEvent(event, mFacadeManager);
+      }
+    }
+  }
+
   private class RepositoryObserver implements TriggerRepositoryObserver {
     @Override
     public void onPut(Trigger trigger) {
-      // TODO(damonkohler): Spin up a new EventObserver.
+      mEventFacade.addEventObserver(new TriggerEventObserver(mFacadeManager, trigger));
     }
 
     @Override
@@ -105,6 +129,10 @@ public class TriggerService extends ForegroundService {
   @Override
   public void onStart(Intent intent, int startId) {
     mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
+    mFacadeManager =
+        new FacadeManager(FacadeConfiguration.getSdkLevel(), this, intent, FacadeConfiguration
+            .getFacadeClasses());
+    mEventFacade = mFacadeManager.getReceiver(EventFacade.class);
     if (mTriggerRepository.isEmpty()) {
       stopSelfResult(startId);
       return;

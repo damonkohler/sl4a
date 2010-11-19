@@ -79,11 +79,11 @@ public class EventFacade extends RpcReceiver {
     final FutureResult<Event> futureEvent = new FutureResult<Event>();
     addEventObserver(new EventObserver() {
       @Override
-      public void onEventReceived(String name, Object data) {
-        if (name.equals(eventName)) {
+      public void onEventReceived(Event event) {
+        if (event.getName().equals(eventName)) {
           synchronized (futureEvent) {
             if (!futureEvent.isDone()) {
-              futureEvent.set(new Event(name, data));
+              futureEvent.set(event);
               removeEventObserver(this);
             }
           }
@@ -107,12 +107,13 @@ public class EventFacade extends RpcReceiver {
    * Posts an event with to the event queue.
    */
   public void postEvent(String name, Object data) {
-    mEventQueue.add(new Event(name, data));
+    Event event = new Event(name, data);
+    mEventQueue.add(event);
     if (mEventQueue.size() > MAX_QUEUE_SIZE) {
       mEventQueue.remove();
     }
     for (EventObserver observer : mObserverList) {
-      observer.onEventReceived(name, data);
+      observer.onEventReceived(event);
     }
   }
 
@@ -151,6 +152,6 @@ public class EventFacade extends RpcReceiver {
   }
 
   public interface EventObserver {
-    public void onEventReceived(String eventName, Object data);
+    public void onEventReceived(Event event);
   }
 }
