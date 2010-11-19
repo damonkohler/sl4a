@@ -63,6 +63,12 @@ public class TriggerRepository {
      */
     void onPut(Trigger trigger);
 
+    /**
+     * Invoked just after the trigger has been removed from the repository.
+     * 
+     * @param trigger
+     *          The trigger that has just been removed from the repository.
+     */
     void onRemove(Trigger trigger);
   }
 
@@ -107,9 +113,7 @@ public class TriggerRepository {
 
   /** Removes a specific {@link Trigger}. */
   public synchronized void remove(final Trigger trigger) {
-    synchronized (mTriggers) {
-      mTriggers.get(trigger.getEventName()).remove(trigger);
-    }
+    mTriggers.get(trigger.getEventName()).remove(trigger);
     storeTriggers();
     notifyOnRemove(trigger);
   }
@@ -135,7 +139,7 @@ public class TriggerRepository {
   }
 
   /** Writes the list of triggers to the shared preferences. */
-  private void storeTriggers() {
+  private synchronized void storeTriggers() {
     SharedPreferences.Editor editor = mPreferences.edit();
     final String triggerValue = serializeTriggersToString(mTriggers);
     if (triggerValue != null) {
@@ -175,7 +179,7 @@ public class TriggerRepository {
   }
 
   /** Returns {@code true} iff the list of triggers is empty. */
-  public boolean isEmpty() {
+  public synchronized boolean isEmpty() {
     return mTriggers.isEmpty();
   }
 
