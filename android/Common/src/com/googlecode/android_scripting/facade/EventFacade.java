@@ -16,7 +16,10 @@
 
 package com.googlecode.android_scripting.facade;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.googlecode.android_scripting.event.Event;
 import com.googlecode.android_scripting.future.FutureResult;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
@@ -29,6 +32,7 @@ import com.googlecode.android_scripting.rpc.RpcParameter;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,11 +49,13 @@ public class EventFacade extends RpcReceiver {
    */
   private static final int MAX_QUEUE_SIZE = 1024;
   private final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
-  private final Queue<EventObserver> mObserverList;
+  private final CopyOnWriteArrayList<EventObserver> mGlobalEventObservers =
+      new CopyOnWriteArrayList<EventObserver>();
+  private final Multimap<String, EventObserver> mNamedEventObservers =
+      Multimaps.synchronizedListMultimap(ArrayListMultimap.<String, EventObserver> create());
 
   public EventFacade(FacadeManager manager) {
     super(manager);
-    mObserverList = new ConcurrentLinkedQueue<EventObserver>();
   }
 
   @Rpc(description = "Clears all events from the event buffer.")
@@ -77,7 +83,7 @@ public class EventFacade extends RpcReceiver {
       @RpcParameter(name = "timeout", description = "the maximum time to wait") @RpcOptional Integer timeout)
       throws InterruptedException {
     final FutureResult<Event> futureEvent = new FutureResult<Event>();
-    addEventObserver(new EventObserver() {
+    addNamedEventObserver(eventName, new EventObserver() {
       @Override
       public void onEventReceived(Event event) {
         if (event.getName().equals(eventName)) {
@@ -112,8 +118,10 @@ public class EventFacade extends RpcReceiver {
     if (mEventQueue.size() > MAX_QUEUE_SIZE) {
       mEventQueue.remove();
     }
-    for (EventObserver observer : mObserverList) {
-      observer.onEventReceived(event);
+    synchronized (mNamedEventObservers) {
+      for (EventObserver observer : mNamedEventObservers.get(name)) {
+        observer.onEventReceived(event);
+      }
     }
   }
 
@@ -143,12 +151,17 @@ public class EventFacade extends RpcReceiver {
   public void shutdown() {
   }
 
-  public void addEventObserver(EventObserver observer) {
-    mObserverList.add(observer);
+  public void addNamedEventObserver(String eventName, EventObserver observer) {
+    mNamedEventObservers.put(eventName, observer);
+  }
+
+  public void addGlobalEventObserver(EventObserver observer) {
+    mGlobalEventObservers.add(observer);
   }
 
   public void removeEventObserver(EventObserver observer) {
-    mObserverList.remove(observer);
+    mNamedEventObservers.removeAll(observer);
+    mGlobalEventObservers.remove(observer);
   }
 
   public interface EventObserver {
