@@ -23,14 +23,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to mark an RPC as one that generates an event.
+ * Use this annotation to mark an RPC as one that stops generating events.
  * 
  * @author damonkohler@gmail.com (Damon Kohler)
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Documented
-public @interface RpcEvent {
-  /** The name of the event that is generated. */
+public @interface RpcStopEvent {
+  /** The name of the event that stops being generated. */
   public String value();
 }
