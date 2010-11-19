@@ -78,6 +78,27 @@ public class TriggerService extends ForegroundService {
     return mBinder;
   }
 
+  @Override
+  public void onCreate() {
+    super.onCreate();
+
+    mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
+    mTriggerRepository.addObserver(new RepositoryObserver());
+    mFacadeManager =
+        new FacadeManager(FacadeConfiguration.getSdkLevel(), this, null, FacadeConfiguration
+            .getFacadeClasses());
+    mEventFacade = mFacadeManager.getReceiver(EventFacade.class);
+    installAlarm();
+  }
+
+  @Override
+  public void onStart(Intent intent, int startId) {
+    if (mTriggerRepository.isEmpty()) {
+      stopSelfResult(startId);
+      return;
+    }
+  }
+
   /** Returns the notification to display whenever the service is running. */
   @Override
   protected Notification createNotification() {
@@ -124,21 +145,6 @@ public class TriggerService extends ForegroundService {
         stopSelf();
       }
     }
-  }
-
-  @Override
-  public void onStart(Intent intent, int startId) {
-    mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
-    mFacadeManager =
-        new FacadeManager(FacadeConfiguration.getSdkLevel(), this, intent, FacadeConfiguration
-            .getFacadeClasses());
-    mEventFacade = mFacadeManager.getReceiver(EventFacade.class);
-    if (mTriggerRepository.isEmpty()) {
-      stopSelfResult(startId);
-      return;
-    }
-    mTriggerRepository.addObserver(new RepositoryObserver());
-    installAlarm();
   }
 
   private void installAlarm() {
