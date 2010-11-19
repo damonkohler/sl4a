@@ -1,11 +1,11 @@
 package com.googlecode.android_scripting.trigger;
 
+import com.google.common.collect.Maps;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.trigger.TriggerRepository.TriggerRepositoryObserver;
 
-import java.util.Collection;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -17,10 +17,10 @@ import org.json.JSONArray;
  * @author Felix Arends (felix.arends@gmail.com)
  */
 public class EventGenerationControllingObserver implements TriggerRepositoryObserver {
-  private final TriggerRepository mTriggerRepository;
   private final FacadeManager mFacadeManager;
   private final Map<String, MethodDescriptor> mStartEventGeneratingMethodDescriptors;
   private final Map<String, MethodDescriptor> mStopEventGeneratingMethodDescriptors;
+  private final Map<String, Integer> mEventTriggerRefCounts = Maps.newHashMap();
 
   /**
    * Creates a new StartEventMonitoringObserver for the given trigger repository.
@@ -28,29 +28,41 @@ public class EventGenerationControllingObserver implements TriggerRepositoryObse
    * @param facadeManager
    * @param triggerRepository
    */
-  public EventGenerationControllingObserver(FacadeManager facadeManager,
-      TriggerRepository triggerRepository) {
+  public EventGenerationControllingObserver(FacadeManager facadeManager) {
     mFacadeManager = facadeManager;
-    mTriggerRepository = triggerRepository;
     mStartEventGeneratingMethodDescriptors =
         FacadeConfiguration.collectStartEventMethodDescriptors();
     mStopEventGeneratingMethodDescriptors = FacadeConfiguration.collectStopEventMethodDescriptors();
   }
 
+  private synchronized int incrementAndGetRefCount(String eventName) {
+    int refCount =
+        (mEventTriggerRefCounts.containsKey(eventName)) ? mEventTriggerRefCounts.get(eventName) : 0;
+    refCount++;
+    mEventTriggerRefCounts.put(eventName, refCount);
+    return refCount;
+  }
+
+  private synchronized int decrementAndGetRefCount(String eventName) {
+    int refCount =
+        (mEventTriggerRefCounts.containsKey(eventName)) ? mEventTriggerRefCounts.get(eventName) : 0;
+    refCount--;
+    mEventTriggerRefCounts.put(eventName, refCount);
+    return refCount;
+  }
+
   @Override
-  public void onPut(Trigger trigger) {
+  public synchronized void onPut(Trigger trigger) {
     // If we're not already monitoring the events corresponding to this trigger, do so.
-    Collection<Trigger> triggers = mTriggerRepository.getAllTriggers().get(trigger.getEventName());
-    if (triggers.isEmpty()) {
+    if (incrementAndGetRefCount(trigger.getEventName()) == 1) {
       startMonitoring(trigger.getEventName());
     }
   }
 
   @Override
-  public void onRemove(Trigger trigger) {
+  public synchronized void onRemove(Trigger trigger) {
     // If there are no more triggers listening to this event, then we need to stop monitoring.
-    Collection<Trigger> triggers = mTriggerRepository.getAllTriggers().get(trigger.getEventName());
-    if (triggers.isEmpty()) {
+    if (decrementAndGetRefCount(trigger.getEventName()) == 1) {
       stopMonitoring(trigger.getEventName());
     }
   }

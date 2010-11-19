@@ -72,8 +72,7 @@ public class TriggerRepository {
     void onRemove(Trigger trigger);
   }
 
-  private final Multimap<String, Trigger> mTriggers =
-      Multimaps.synchronizedListMultimap(ArrayListMultimap.<String, Trigger> create());
+  private final Multimap<String, Trigger> mTriggers;
   private final CopyOnWriteArrayList<TriggerRepositoryObserver> mTriggerObservers =
       new CopyOnWriteArrayList<TriggerRepositoryObserver>();
 
@@ -85,12 +84,7 @@ public class TriggerRepository {
     mContext = context;
     mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     String triggers = mPreferences.getString(TRIGGERS_PREF_KEY, null);
-    // Iterate and add one at a time instead of using putAll() so that observers are notified.
-    Multimap<String, Trigger> deserializeTriggersFromString =
-        deserializeTriggersFromString(triggers);
-    for (Entry<String, Trigger> entry : deserializeTriggersFromString.entries()) {
-      put(entry.getValue());
-    }
+    mTriggers = deserializeTriggersFromString(triggers);
   }
 
   /** Returns a list of all triggers. The list is unmodifiable. */
@@ -186,6 +180,20 @@ public class TriggerRepository {
   /** Adds a {@link TriggerRepositoryObserver}. */
   public void addObserver(TriggerRepositoryObserver observer) {
     mTriggerObservers.add(observer);
+  }
+
+  /**
+   * Adds the given {@link TriggerRepositoryObserver} and invokes
+   * {@link TriggerRepositoryObserver#onPut} for all existing triggers.
+   * 
+   * @param observer
+   *          The observer to add.
+   */
+  public synchronized void bootstrapObserver(TriggerRepositoryObserver observer) {
+    addObserver(observer);
+    for (Entry<String, Trigger> trigger : mTriggers.entries()) {
+      observer.onPut(trigger.getValue());
+    }
   }
 
   /**
