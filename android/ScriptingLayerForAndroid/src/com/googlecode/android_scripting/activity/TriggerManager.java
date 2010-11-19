@@ -21,7 +21,6 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -47,6 +46,7 @@ import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.trigger.ScriptTrigger;
 import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
+import com.googlecode.android_scripting.trigger.TriggerRepository.TriggerRepositoryObserver;
 
 import java.io.File;
 import java.util.Collections;
@@ -54,8 +54,9 @@ import java.util.List;
 import java.util.Map;
 
 public class TriggerManager extends ListActivity {
+  private final List<ScriptTrigger> mTriggers = Lists.newArrayList();
+
   private ScriptTriggerAdapter mAdapter;
-  private List<ScriptTrigger> mTriggers;
   private TriggerRepository mTriggerRepository;
 
   private static enum ContextMenuId {
@@ -76,12 +77,12 @@ public class TriggerManager extends ListActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Triggers", R.layout.trigger_manager);
-    mTriggers = Lists.newArrayList();
-    mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
+    ScriptTriggerListObserver observer = new ScriptTriggerListObserver();
     mAdapter = new ScriptTriggerAdapter();
-    mAdapter.registerDataSetObserver(new ScriptTriggerListObserver());
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
+    mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
+    mTriggerRepository.bootstrapObserver(observer);
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     Analytics.trackActivity(this);
@@ -137,7 +138,6 @@ public class TriggerManager extends ListActivity {
     if (item.getItemId() == ContextMenuId.REMOVE.getId()) {
       mTriggerRepository.remove(trigger);
     }
-    mAdapter.notifyDataSetInvalidated();
     return true;
   }
 
@@ -146,12 +146,18 @@ public class TriggerManager extends ListActivity {
     mAdapter.notifyDataSetInvalidated();
   }
 
-  private class ScriptTriggerListObserver extends DataSetObserver {
+  private class ScriptTriggerListObserver implements TriggerRepositoryObserver {
 
     @Override
-    public void onInvalidated() {
-      mTriggers.clear();
-      // TODO(damonkohler): Bootstrap the TriggerRepositoryObserver.
+    public void onPut(Trigger trigger) {
+      mTriggers.add((ScriptTrigger) trigger);
+      mAdapter.notifyDataSetInvalidated();
+    }
+
+    @Override
+    public void onRemove(Trigger trigger) {
+      mTriggers.remove(trigger);
+      mAdapter.notifyDataSetInvalidated();
     }
   }
 
@@ -198,6 +204,7 @@ public class TriggerManager extends ListActivity {
                 mTriggerRepository.put(new ScriptTrigger(eventNames.get(position), script));
               }
             });
+        builder.show();
       }
     }
   }
