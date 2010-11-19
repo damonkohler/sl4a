@@ -75,7 +75,7 @@ public class TriggerService extends ForegroundService {
   @Override
   protected Notification createNotification() {
     Notification notification =
-        new Notification(R.drawable.sl4a_logo_48, "SL4A Trigger Service is running.", System
+        new Notification(R.drawable.sl4a_logo_48, "SL4A Trigger Service started.", System
             .currentTimeMillis());
     notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
     notification.contentView.setTextViewText(R.id.notification_title, "SL4A Trigger Service");

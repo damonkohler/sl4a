@@ -16,11 +16,13 @@
 
 package com.googlecode.android_scripting.facade;
 
+import com.google.common.collect.Maps;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.RpcDeprecated;
+import com.googlecode.android_scripting.rpc.RpcEvent;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
 import java.lang.reflect.Method;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -120,7 +123,7 @@ public class FacadeConfiguration {
    * Returns a list of not deprecated {@link MethodDescriptor} objects for facades supported by the
    * current SDK version.
    */
-  public static List<MethodDescriptor> collectSupportedRpcDescriptors() {
+  public static List<MethodDescriptor> collectSupportedMethodDescriptors() {
     List<MethodDescriptor> list = new ArrayList<MethodDescriptor>();
     for (MethodDescriptor descriptor : sRpcs.values()) {
       Method method = descriptor.getMethod();
@@ -135,6 +138,21 @@ public class FacadeConfiguration {
       list.add(descriptor);
     }
     return list;
+  }
+
+  public static Map<String, MethodDescriptor> collectEventGeneratingMethodDescriptors() {
+    Map<String, MethodDescriptor> map = Maps.newHashMap();
+    for (MethodDescriptor descriptor : sRpcs.values()) {
+      Method method = descriptor.getMethod();
+      if (method.isAnnotationPresent(RpcEvent.class)) {
+        String eventName = method.getAnnotation(RpcEvent.class).value();
+        if (map.containsKey(eventName)) {
+          throw new RuntimeException("Duplicate event generating method descriptor found.");
+        }
+        map.put(eventName, descriptor);
+      }
+    }
+    return map;
   }
 
   /** Returns a method by name. */
