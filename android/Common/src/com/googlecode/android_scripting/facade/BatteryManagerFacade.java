@@ -139,6 +139,7 @@ public class BatteryManagerFacade extends RpcReceiver {
   public void batteryStopMonitoring() {
     if (mReceiver != null) {
       mService.unregisterReceiver(mReceiver);
+      mReceiver = null;
     }
     mBatteryData = null;
   }
