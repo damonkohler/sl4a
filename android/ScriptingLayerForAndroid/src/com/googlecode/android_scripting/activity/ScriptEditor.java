@@ -44,6 +44,7 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.dialog.Help;
+import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 
 import java.io.File;
@@ -169,10 +170,15 @@ public class ScriptEditor extends Activity {
       finish();
     } else if (item.getItemId() == MenuId.SAVE_AND_RUN.getId()) {
       save();
-      Intent intent = new Intent(this, ScriptingLayerService.class);
-      intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
-      intent.putExtra(Constants.EXTRA_SCRIPT_PATH, mScript.getAbsolutePath());
-      startService(intent);
+      Interpreter ip = mConfiguration.getInterpreterForScript(mNameText.getText().toString());
+      if (ip != null) { // may be editing unknown type
+        Intent intent = new Intent(this, ScriptingLayerService.class);
+        intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
+        intent.putExtra(Constants.EXTRA_SCRIPT_PATH, mScript.getAbsolutePath());
+        startService(intent);
+      } else {
+        Toast.makeText(this, "Can't run this type.", Toast.LENGTH_SHORT).show();
+      }
       finish();
     } else if (item.getItemId() == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, Preferences.class));
@@ -278,9 +284,8 @@ public class ScriptEditor extends Activity {
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart,
         int dend) {
       if (end - start == 1) {
-        String auto =
-            mConfiguration.getInterpreterForScript(mNameText.getText().toString()).getLanguage()
-                .autoClose(source.charAt(start));
+        Interpreter ip = mConfiguration.getInterpreterForScript(mNameText.getText().toString());
+        String auto = ip == null ? null : ip.getLanguage().autoClose(source.charAt(start));
         if (auto != null) {
           mScheduleMoveLeft = true;
           return auto;
