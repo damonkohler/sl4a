@@ -119,6 +119,21 @@ public class SettingsFacade extends RpcReceiver {
     return enabled;
   }
 
+  @Rpc(description = "Toggles vibrate mode on and off. If ringer=true then set Ringer setting, else set Notification setting", returns = "True if vibrate mode is enabled.")
+  public Boolean toggleVibrateMode(@RpcParameter(name = "enabled") @RpcOptional Boolean enabled,
+      @RpcParameter(name = "ringer") @RpcOptional Boolean ringer) {
+    int atype = ringer ? AudioManager.VIBRATE_TYPE_RINGER : AudioManager.VIBRATE_TYPE_NOTIFICATION;
+    int asetting = enabled ? AudioManager.VIBRATE_SETTING_ON : AudioManager.VIBRATE_SETTING_OFF;
+    mAudio.setVibrateSetting(atype, asetting);
+    return enabled;
+  }
+
+  @Rpc(description = "Checks Vibration setting. If ringer=true then query Ringer setting, else query Notification setting", returns = "True if vibrate mode is enabled.")
+  public Boolean getVibrateMode(@RpcParameter(name = "ringer") @RpcOptional Boolean ringer) {
+    int atype = ringer ? AudioManager.VIBRATE_TYPE_RINGER : AudioManager.VIBRATE_TYPE_NOTIFICATION;
+    return mAudio.shouldVibrate(atype);
+  }
+
   @Rpc(description = "Returns the maximum ringer volume.")
   public int getMaxRingerVolume() {
     return mAudio.getStreamMaxVolume(AudioManager.STREAM_RING);
