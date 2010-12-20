@@ -128,7 +128,7 @@ public class ScriptingLayerService extends ForegroundService {
   @Override
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
-
+    String errmsg = null;
     if (intent.getAction().equals(Constants.ACTION_KILL_ALL)) {
       killAll();
       stopSelf(startId);
@@ -159,7 +159,6 @@ public class ScriptingLayerService extends ForegroundService {
 
     AndroidProxy proxy = null;
     InterpreterProcess interpreterProcess = null;
-
     if (intent.getAction().equals(Constants.ACTION_LAUNCH_SERVER)) {
       proxy = launchServer(intent, false);
       // TODO(damonkohler): This is just to make things easier. Really, we shouldn't need to start
@@ -170,7 +169,14 @@ public class ScriptingLayerService extends ForegroundService {
       proxy = launchServer(intent, true);
       if (intent.getAction().equals(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT)) {
         launchTerminal(proxy.getAddress());
-        interpreterProcess = launchScript(intent, proxy);
+        try {
+          interpreterProcess = launchScript(intent, proxy);
+        } catch (RuntimeException e) {
+          errmsg =
+              "Unable to run " + intent.getStringExtra(Constants.EXTRA_SCRIPT_PATH) + "\n"
+                  + e.getMessage();
+          interpreterProcess = null;
+        }
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT)) {
         interpreterProcess = launchScript(intent, proxy);
       } else if (intent.getAction().equals(Constants.ACTION_LAUNCH_INTERPRETER)) {
@@ -178,7 +184,13 @@ public class ScriptingLayerService extends ForegroundService {
         interpreterProcess = launchInterpreter(intent, proxy);
       }
     }
-    addProcess(interpreterProcess);
+    if (errmsg != null) {
+      updateNotification(errmsg);
+    } else if (interpreterProcess == null) {
+      updateNotification("action not implemented: " + intent.getAction());
+    } else {
+      addProcess(interpreterProcess);
+    }
   }
 
   private AndroidProxy launchServer(Intent intent, boolean requiresHandshake) {
