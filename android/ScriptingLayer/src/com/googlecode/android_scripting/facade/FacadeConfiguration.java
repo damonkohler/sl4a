@@ -81,6 +81,7 @@ public class FacadeConfiguration {
     sFacadeClassList.add(UiFacade.class);
     sFacadeClassList.add(BatteryManagerFacade.class);
     sFacadeClassList.add(ActivityResultFacade.class);
+    sFacadeClassList.add(MediaPlayerFacade.class);
 
     if (sSdkLevel >= 4) {
       sFacadeClassList.add(TextToSpeechFacade.class);
