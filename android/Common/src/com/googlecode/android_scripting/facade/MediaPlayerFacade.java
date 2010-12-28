@@ -13,16 +13,14 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 /**
- * This facade exposes basic mediaplayer functioniality
+ * This facade exposes basic mediaPlayer functionality.
  * 
- * @author Robbie Matthews (rjmatthews62@gmail.com)
- * 
- */
-
-/**
- * Usage Notes:<br>
+ * <br>
+ * <br>
+ * <b>Usage Notes:</b><br>
  * mediaPlayerFacade maintains a list of media streams, identified by a user supplied tag. If the
  * tag is null or blank, this tag defaults to "default"<br>
  * Basic operation is: mediaPlayOpen("file:///sdcard/MP3/sample.mp3","mytag",true)<br>
@@ -31,40 +29,51 @@ import java.util.Set;
  * 
  * <br>
  * If play=true, then the media file will play immediately, otherwise it will wait for a
- * mediaPlayStart() command.
+ * {@link #mediaPlayStart mediaPlayerStart} command.
  * 
  * <br>
- * When done with the resource, use mediaPlayClose
+ * When done with the resource, use {@link #mediaPlayClose mediaPlayClose}
  * 
  * <br>
- * You can get information about the loaded media with mediaPlayInfo This returns a map with the
- * following elements:
+ * You can get information about the loaded media with {@link #mediaPlayInfo mediaPlayInfo} This
+ * returns a map with the following elements:
  * <ul>
- * <li>"tag" - tag for this module.
+ * <li>"tag" - user supplied tag identifying this mediaPlayer.
  * <li>"loaded" - true if loaded, false if not. If false, no other elements are returned.
  * <li>"duration" - length of the media in milliseconds.
- * <li>"position" - current position of playback in milliseconds. Controlled by mediaPlaySeek
- * <li>"isplaying" - shows whether media is playing. Controlled by mediaPlayPause and mediaPlayStart
+ * <li>"position" - current position of playback in milliseconds. Controlled by
+ * {@link #mediaPlaySeek mediaPlaySeek}
+ * <li>"isplaying" - shows whether media is playing. Controlled by {@link #mediaPlayPause
+ * mediaPlayPause} and {@link #mediaPlayStart mediaPlayStart}
  * <li>"url" - the url used to open this media.
- * <li>"looping" - whether media will loop. Controlled by mediaSetLooping
+ * <li>"looping" - whether media will loop. Controlled by {@link #mediaPlaySetLooping
+ * mediaPlaySetLooping}
  * </ul>
  * <br>
- * You can use mediaPlayList to get a list of the loaded tags. <br>
- * mediaIsPlaying will return true if the media is playing. (mediaPlayInfo)
+ * You can use {@link #mediaPlayList mediaPlayList} to get a list of the loaded tags. <br>
+ * {@link #mediaIsPlaying mediaIsPlaying} will return true if the media is playing.<br>
+ * 
+ * <b>Events:</b><br>
+ * A playing media will throw a <b>"media"</b> event on completion.
  * 
  * NB: In remote mode, a media file will continue playing after the script has finished unless an
- * explicit "mediaPlayClose" event is called.
+ * explicit {@link #mediaPlayClose mediaPlayClose} event is called.
+ * 
+ * @author Robbie Matthews (rjmatthews62@gmail.com)
  */
 
-public class MediaPlayerFacade extends RpcReceiver {
+public class MediaPlayerFacade extends RpcReceiver implements MediaPlayer.OnCompletionListener {
 
   private final Service mService;
   static private final Map<String, MediaPlayer> mPlayers = new Hashtable<String, MediaPlayer>();
   static private final Map<String, String> mUrls = new Hashtable<String, String>();
 
+  private final EventFacade mEventFacade;
+
   public MediaPlayerFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
+    mEventFacade = manager.getReceiver(EventFacade.class);
   }
 
   private String getDefault(String tag) {
@@ -98,6 +107,17 @@ public class MediaPlayerFacade extends RpcReceiver {
     mUrls.remove(tag);
   }
 
+  /**
+   * Open a media file.
+   * 
+   * @param url
+   *          to open, ie, file:///sdcard/MP3/bang.mp3
+   * @param tag
+   *          user supplied identifier, default="default"
+   * @param play
+   *          if true, start playing immediately, else open paused.
+   * @return true if media was opened successfully.
+   */
   @Rpc(description = "Open a media file", returns = "true if play successful")
   public synchronized boolean mediaPlay(
       @RpcParameter(name = "url", description = "url of media resource") String url,
@@ -108,6 +128,7 @@ public class MediaPlayerFacade extends RpcReceiver {
     mp = MediaPlayer.create(mService, Uri.parse(url));
     if (mp != null) {
       putMp(tag, mp, url);
+      mp.setOnCompletionListener(this);
       if (play) {
         mp.start();
       }
@@ -211,5 +232,25 @@ public class MediaPlayerFacade extends RpcReceiver {
     }
     mPlayers.clear();
     mUrls.clear();
+  }
+
+  @Override
+  public void onCompletion(MediaPlayer mp) {
+    String tag = getTag(mp);
+    if (tag != null) {
+      Map<String, Object> data = new HashMap<String, Object>();
+      data.put("action", "complete");
+      data.put("tag", tag);
+      mEventFacade.postEvent("media", data);
+    }
+  }
+
+  private String getTag(MediaPlayer mp) {
+    for (Entry<String, MediaPlayer> m : mPlayers.entrySet()) {
+      if (m.getValue() == mp) {
+        return m.getKey();
+      }
+    }
+    return null;
   }
 }
