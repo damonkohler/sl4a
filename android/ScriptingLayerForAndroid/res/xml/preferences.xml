@@ -106,4 +106,11 @@
       android:title="@string/pref_bell_vibrate_title"
       android:defaultValue="true" />
   </PreferenceCategory>
+  <PreferenceCategory
+	  android:title="Trigger Behaviour">
+	  <CheckBoxPreference 
+	    android:key="hideServiceNotifications"
+		android:title="@string/pref_hide_notifications" 
+		android:defaultValue="false" />
+	</PreferenceCategory>
 </PreferenceScreen>

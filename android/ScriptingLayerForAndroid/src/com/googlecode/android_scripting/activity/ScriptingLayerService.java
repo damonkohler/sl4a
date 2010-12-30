@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2009 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * Licensed under the Apache License, Version 2.0 (the "License"); you ay not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
  *
@@ -21,8 +21,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
 import com.googlecode.android_scripting.AndroidProxy;
@@ -48,6 +50,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.connectbot.ConsoleActivity;
 import org.connectbot.service.TerminalManager;
+import org.connectbot.util.PreferenceConstants;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
@@ -67,6 +70,9 @@ public class ScriptingLayerService extends ForegroundService {
   private volatile WeakReference<InterpreterProcess> mRecentlyKilledProcess;
 
   private TerminalManager mTerminalManager;
+
+  private SharedPreferences mPreferences = null;
+  private boolean mHide;
 
   public class LocalBinder extends Binder {
     public ScriptingLayerService getService() {
@@ -92,6 +98,8 @@ public class ScriptingLayerService extends ForegroundService {
     mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     mRecentlyKilledProcess = new WeakReference<InterpreterProcess>(null);
     mTerminalManager = new TerminalManager(this);
+    mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    mHide = mPreferences.getBoolean(PreferenceConstants.HIDE_NOTIFY, false);
   }
 
   @Override
@@ -258,7 +266,9 @@ public class ScriptingLayerService extends ForegroundService {
   private void addProcess(InterpreterProcess process) {
     mProcessMap.put(process.getPort(), process);
     mModCount++;
-    updateNotification(process.getName() + " started.");
+    if (!mHide) {
+      updateNotification(process.getName() + " started.");
+    }
   }
 
   private InterpreterProcess removeProcess(int port) {
@@ -267,7 +277,9 @@ public class ScriptingLayerService extends ForegroundService {
       return null;
     }
     mModCount++;
-    updateNotification(process.getName() + " exited.");
+    if (!mHide) {
+      updateNotification(process.getName() + " exited.");
+    }
     return process;
   }
 

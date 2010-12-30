@@ -148,7 +148,7 @@
   <string name="pref_encoding_title">Encoding</string>
   <!-- Host character encoding preference summary -->
   <string name="pref_encoding_summary">Character encoding for the host</string>
-  
+  <string name="pref_hide_notifications">Hide Notifications</string>
       <!-- Default screen rotation preference selection -->
   <string name="list_rotation_default">Default</string>
   <string name="list_rotation_land">Force landscape</string>
