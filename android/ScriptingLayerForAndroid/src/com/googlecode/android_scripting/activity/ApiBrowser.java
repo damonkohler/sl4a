@@ -20,6 +20,7 @@ import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.database.MatrixCursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -47,12 +48,14 @@ import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.language.SupportedLanguages;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.ParameterDescriptor;
 import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
@@ -74,7 +77,7 @@ public class ApiBrowser extends ListActivity {
   }
 
   private static enum ContextMenuId {
-    INSERT_TEXT, PROMPT_PARAMETERS;
+    INSERT_TEXT, PROMPT_PARAMETERS, HELP;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -201,6 +204,9 @@ public class ApiBrowser extends ListActivity {
     }
     menu.add(Menu.NONE, ContextMenuId.INSERT_TEXT.getId(), Menu.NONE, "Insert");
     menu.add(Menu.NONE, ContextMenuId.PROMPT_PARAMETERS.getId(), Menu.NONE, "Prompt");
+    if ((new File(InterpreterConstants.SDCARD_SL4A_DOC, "index.html")).exists()) {
+      menu.add(Menu.NONE, ContextMenuId.HELP.getId(), Menu.NONE, "Help");
+    }
   }
 
   @Override
@@ -235,6 +241,13 @@ public class ApiBrowser extends ListActivity {
       }
       intent.putExtra(Constants.EXTRA_API_PROMPT_VALUES, values);
       startActivityForResult(intent, RequestCode.RPC_PROMPT.ordinal());
+    } else if (item.getItemId() == ContextMenuId.HELP.getId()) {
+      String uri =
+          "file://" + InterpreterConstants.SDCARD_SL4A_DOC
+              + rpc.getDeclaringClass().getSimpleName() + ".html#" + rpc.getName();
+      Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setDataAndType(Uri.parse(uri), "text/html");
+      startActivity(intent);
     }
     return true;
   }

@@ -33,6 +33,8 @@ public interface InterpreterConstants {
 
   public static final String SCRIPTS_ROOT = SDCARD_SL4A_ROOT + "scripts/";
 
+  public static final String SDCARD_SL4A_DOC = SDCARD_SL4A_ROOT + "doc/";
+
   public static final String SL4A_DALVIK_CACHE_ROOT = "/dalvik-cache/";
 
   public static final String INTERPRETER_EXTRAS_ROOT = "/extras/";
@@ -49,7 +51,8 @@ public interface InterpreterConstants {
 
   // Interpreter content provider.
   public static final String PROVIDER_PROPERTIES = "com.googlecode.android_scripting.base";
-  public static final String PROVIDER_ENVIRONMENT_VARIABLES = "com.googlecode.android_scripting.env";
+  public static final String PROVIDER_ENVIRONMENT_VARIABLES =
+      "com.googlecode.android_scripting.env";
   public static final String PROVIDER_ARGUMENTS = "com.googlecode.android_scripting.args";
 
   public static final String INSTALLED_PREFERENCE_KEY = "SL4A.interpreter.installed";

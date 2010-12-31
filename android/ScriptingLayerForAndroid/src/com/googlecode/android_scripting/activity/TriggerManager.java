@@ -208,4 +208,10 @@ public class TriggerManager extends ListActivity {
       }
     }
   }
+
+  public void clickCancel(View v) {
+    for (Trigger t : mTriggerRepository.getAllTriggers().values()) {
+      mTriggerRepository.remove(t);
+    }
+  }
 }

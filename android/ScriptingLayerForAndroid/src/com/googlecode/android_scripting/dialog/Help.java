@@ -23,6 +23,11 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
+
+import java.io.File;
+import java.util.List;
+import java.util.Vector;
 
 import org.connectbot.HelpActivity;
 
@@ -33,8 +38,15 @@ public class Help {
 
   public static void show(final Activity activity) {
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-    builder.setItems(new CharSequence[] { "Wiki Documentation", "YouTube Screencasts",
-      "Terminal Help" }, new DialogInterface.OnClickListener() {
+    List<CharSequence> list = new Vector<CharSequence>();
+    list.add("Wiki Documentation");
+    list.add("YouTube Screencasts");
+    list.add("Terminal Help");
+    if ((new File(InterpreterConstants.SDCARD_SL4A_DOC, "index.html")).exists()) {
+      list.add("API Help");
+    }
+    CharSequence[] mylist = list.toArray(new CharSequence[list.size()]);
+    builder.setItems(mylist, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         switch (which) {
@@ -56,6 +68,14 @@ public class Help {
           Intent intent = new Intent(activity, HelpActivity.class);
           activity.startActivity(intent);
           break;
+        }
+        case 3: {
+          Intent intent = new Intent();
+          intent.setAction(Intent.ACTION_VIEW);
+          intent.setDataAndType(Uri.fromFile((new File(InterpreterConstants.SDCARD_SL4A_DOC,
+              "index.html"))), "text/html");
+          activity.startActivity(intent);
+
         }
         }
 
