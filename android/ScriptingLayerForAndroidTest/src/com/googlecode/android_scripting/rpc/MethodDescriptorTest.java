@@ -16,6 +16,8 @@
 
 package com.googlecode.android_scripting.rpc;
 
+import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,15 +29,6 @@ import junit.framework.TestCase;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
-import com.googlecode.android_scripting.rpc.Converter;
-import com.googlecode.android_scripting.rpc.MethodDescriptor;
-import com.googlecode.android_scripting.rpc.Rpc;
-import com.googlecode.android_scripting.rpc.RpcDefault;
-import com.googlecode.android_scripting.rpc.RpcError;
-import com.googlecode.android_scripting.rpc.RpcOptional;
-import com.googlecode.android_scripting.rpc.RpcParameter;
-
 /**
  * Tests {@link MethodDescriptor}.
  * 
@@ -44,7 +37,6 @@ import com.googlecode.android_scripting.rpc.RpcParameter;
 public class MethodDescriptorTest extends TestCase {
 
   public void testCollectFromClass() {
-    @SuppressWarnings("unused")
     class A extends RpcReceiver {
       public A() {
         super(null);
@@ -69,7 +61,6 @@ public class MethodDescriptorTest extends TestCase {
   }
 
   public void testGetDefaultValue() throws Exception {
-    @SuppressWarnings("unused")
     class A {
       @Rpc(description = "rpc", returns = "nothing")
       public void rpcString(

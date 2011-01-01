@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.util.List;
-
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,6 +24,12 @@ import android.content.pm.ResolveInfo;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.util.List;
+
+/**
+ * Provides Text To Speech services for API 3 or less.
+ */
 
 public class EyesFreeFacade extends RpcReceiver {
 

@@ -18,16 +18,24 @@ package com.googlecode.android_scripting.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.net.Uri;
 
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.connectbot.HelpActivity;
 
@@ -36,13 +44,52 @@ public class Help {
     // Utility class.
   }
 
+  private static int helpChecked = 0;
+
+  public static boolean checkApiHelp(Context context) {
+    byte[] buf = new byte[1024];
+    if (helpChecked == 0) {
+      try {
+        File dest = new File(InterpreterConstants.SDCARD_SL4A_DOC);
+        if (!dest.exists()) {
+          dest.mkdirs();
+        }
+        new File(InterpreterConstants.SDCARD_SL4A_DOC, "index.html");
+        AssetManager am = context.getAssets();
+        ZipInputStream z = new ZipInputStream(am.open("sl4adoc.zip"));
+        ZipEntry e;
+        while ((e = z.getNextEntry()) != null) {
+          File f = new File(InterpreterConstants.SDCARD_SL4A_DOC, e.getName());
+          if (!f.exists() || f.lastModified() < e.getTime()) {
+            if (!f.exists() && !f.getParentFile().exists()) {
+              f.getParentFile().mkdirs();
+            }
+            OutputStream o = new BufferedOutputStream(new FileOutputStream(f));
+            int len;
+            while ((len = z.read(buf)) > 0) {
+              o.write(buf, 0, len);
+            }
+            o.flush();
+            o.close();
+            f.setLastModified(e.getTime());
+          }
+        }
+        helpChecked = 1;
+      } catch (IOException e) {
+        helpChecked = -1;
+        return false;
+      }
+    }
+    return helpChecked > 0;
+  }
+
   public static void show(final Activity activity) {
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
     List<CharSequence> list = new Vector<CharSequence>();
     list.add("Wiki Documentation");
     list.add("YouTube Screencasts");
     list.add("Terminal Help");
-    if ((new File(InterpreterConstants.SDCARD_SL4A_DOC, "index.html")).exists()) {
+    if (checkApiHelp(activity)) {
       list.add("API Help");
     }
     CharSequence[] mylist = list.toArray(new CharSequence[list.size()]);
@@ -72,13 +119,12 @@ public class Help {
         case 3: {
           Intent intent = new Intent();
           intent.setAction(Intent.ACTION_VIEW);
-          intent.setDataAndType(Uri.fromFile((new File(InterpreterConstants.SDCARD_SL4A_DOC,
-              "index.html"))), "text/html");
+          Uri uri = Uri.fromFile(new File(InterpreterConstants.SDCARD_SL4A_DOC, "index.html"));
+          intent.setDataAndType(uri, "text/html");
           activity.startActivity(intent);
 
         }
         }
-
       }
     });
     builder.show();

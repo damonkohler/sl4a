@@ -45,6 +45,7 @@ import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
+import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
@@ -55,7 +56,6 @@ import com.googlecode.android_scripting.rpc.ParameterDescriptor;
 import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
@@ -204,7 +204,7 @@ public class ApiBrowser extends ListActivity {
     }
     menu.add(Menu.NONE, ContextMenuId.INSERT_TEXT.getId(), Menu.NONE, "Insert");
     menu.add(Menu.NONE, ContextMenuId.PROMPT_PARAMETERS.getId(), Menu.NONE, "Prompt");
-    if ((new File(InterpreterConstants.SDCARD_SL4A_DOC, "index.html")).exists()) {
+    if (Help.checkApiHelp(this)) {
       menu.add(Menu.NONE, ContextMenuId.HELP.getId(), Menu.NONE, "Help");
     }
   }
