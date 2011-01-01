@@ -92,4 +92,8 @@ public interface Constants {
       new ComponentName("com.googlecode.android_scripting",
           "com.googlecode.android_scripting.activity.TriggerService");
 
+  // Preference Keys
+
+  public static final String FORCE_BROWSER = "helpForceBrowser";
+  public final static String HIDE_NOTIFY = "hideServiceNotifications";
 }

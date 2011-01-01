@@ -15,6 +15,7 @@
  * limitations under the License.
 -->
 <resources>
+    <string name="help_force_browser">Force API Browser</string>
    <string
     name="stop_all">Stop All</string>
   <string

@@ -18,12 +18,16 @@ package com.googlecode.android_scripting.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 
+import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
@@ -83,6 +87,19 @@ public class Help {
     return helpChecked > 0;
   }
 
+  public static void showApiHelp(Context context, String help) {
+    Intent intent = new Intent();
+    intent.setAction(Intent.ACTION_VIEW);
+    Uri uri = Uri.parse("file://" + InterpreterConstants.SDCARD_SL4A_DOC + help);
+    intent.setDataAndType(uri, "text/html");
+    SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(context);
+    if (p.getBoolean(Constants.FORCE_BROWSER, true)) {
+      intent.setComponent(new ComponentName("com.android.browser",
+          "com.android.browser.BrowserActivity"));
+    }
+    context.startActivity(intent);
+  }
+
   public static void show(final Activity activity) {
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
     List<CharSequence> list = new Vector<CharSequence>();
@@ -117,12 +134,7 @@ public class Help {
           break;
         }
         case 3: {
-          Intent intent = new Intent();
-          intent.setAction(Intent.ACTION_VIEW);
-          Uri uri = Uri.fromFile(new File(InterpreterConstants.SDCARD_SL4A_DOC, "index.html"));
-          intent.setDataAndType(uri, "text/html");
-          activity.startActivity(intent);
-
+          showApiHelp(activity, "index.html");
         }
         }
       }

@@ -70,6 +70,4 @@ public class PreferenceConstants {
   public final static String COLOR_FG = "color_fg";
   public final static String COLOR_BG = "color_bg";
 
-  public final static String HIDE_NOTIFY = "hideServiceNotifications";
-
 }

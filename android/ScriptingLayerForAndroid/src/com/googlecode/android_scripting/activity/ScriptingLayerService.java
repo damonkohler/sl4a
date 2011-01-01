@@ -50,7 +50,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.connectbot.ConsoleActivity;
 import org.connectbot.service.TerminalManager;
-import org.connectbot.util.PreferenceConstants;
 
 /**
  * A service that allows scripts and the RPC server to run in the background.
@@ -99,7 +98,7 @@ public class ScriptingLayerService extends ForegroundService {
     mRecentlyKilledProcess = new WeakReference<InterpreterProcess>(null);
     mTerminalManager = new TerminalManager(this);
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    mHide = mPreferences.getBoolean(PreferenceConstants.HIDE_NOTIFY, false);
+    mHide = mPreferences.getBoolean(Constants.HIDE_NOTIFY, false);
   }
 
   @Override

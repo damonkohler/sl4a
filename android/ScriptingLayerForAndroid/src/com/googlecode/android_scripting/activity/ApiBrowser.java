@@ -20,7 +20,6 @@ import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.database.MatrixCursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -49,7 +48,6 @@ import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
-import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.language.SupportedLanguages;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.ParameterDescriptor;
@@ -242,12 +240,9 @@ public class ApiBrowser extends ListActivity {
       intent.putExtra(Constants.EXTRA_API_PROMPT_VALUES, values);
       startActivityForResult(intent, RequestCode.RPC_PROMPT.ordinal());
     } else if (item.getItemId() == ContextMenuId.HELP.getId()) {
-      String uri =
-          "file://" + InterpreterConstants.SDCARD_SL4A_DOC
-              + rpc.getDeclaringClass().getSimpleName() + ".html#" + rpc.getName();
-      Intent intent = new Intent(Intent.ACTION_VIEW);
-      intent.setDataAndType(Uri.parse(uri), "text/html");
-      startActivity(intent);
+      String help = rpc.getDeclaringClass().getSimpleName() + ".html#" + rpc.getName();
+      Help.showApiHelp(this, help);
+
     }
     return true;
   }

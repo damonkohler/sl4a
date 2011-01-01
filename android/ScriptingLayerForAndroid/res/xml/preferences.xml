@@ -26,7 +26,8 @@
       android:entries="@array/entries_fontsize_preference"
       android:entryValues="@array/entryvalues_fontsize_preference"
       android:dialogTitle="@string/dialog_title_fontsize_preference" />
-  </PreferenceCategory>
+  <CheckBoxPreference android:title="@string/help_force_browser" android:key="helpForceBrowser" android:defaultValue="true" android:summary="Force API Help to use default Android Browser"></CheckBoxPreference>
+</PreferenceCategory>
   <PreferenceCategory
     android:title="Terminal">
     <EditTextPreference
