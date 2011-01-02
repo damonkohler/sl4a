@@ -49,7 +49,7 @@ public class LogcatViewer extends ListActivity {
   private Process mLogcatProcess;
 
   private static enum MenuId {
-    HELP, PREFERENCES, JUMP_TO_BOTTOM;
+    HELP, PREFERENCES, JUMP_TO_BOTTOM, SHARE;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -113,6 +113,8 @@ public class LogcatViewer extends ListActivity {
         android.R.drawable.ic_menu_revert);
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
+    menu.add(Menu.NONE, MenuId.SHARE.getId(), Menu.NONE, "Share").setIcon(
+        android.R.drawable.ic_dialog_email);
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -125,6 +127,16 @@ public class LogcatViewer extends ListActivity {
       getListView().setSelection(mLogcatMessages.size() - 1);
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, Preferences.class));
+    } else if (itemId == MenuId.SHARE.getId()) {
+      Intent in = new Intent(Intent.ACTION_SEND);
+      StringBuilder b = new StringBuilder();
+      for (String s : mLogcatMessages) {
+        b.append(s + "\n");
+      }
+      in.putExtra(Intent.EXTRA_TEXT, b.toString());
+      in.putExtra(Intent.EXTRA_SUBJECT, "Logcat Dump");
+      in.setType("text/plain");
+      startActivity(Intent.createChooser(in, "Send Logcat to:"));
     }
     return super.onOptionsItemSelected(item);
   }
