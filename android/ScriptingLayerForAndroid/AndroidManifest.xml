@@ -5,10 +5,9 @@
   android:versionName="3x"
   android:versionCode="3">
   <application
-    android:debuggable="true"
     android:icon="@drawable/sl4a_logo_48"
     android:label="@string/application_title"
-    android:name=".Sl4aApplication">
+    android:name=".Sl4aApplication" android:debuggable="false">
     <activity
       android:name=".activity.ScriptManager"
       android:configChanges="keyboardHidden|orientation"

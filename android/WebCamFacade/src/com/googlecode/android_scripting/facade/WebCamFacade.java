@@ -17,11 +17,16 @@
 package com.googlecode.android_scripting.facade;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
@@ -33,6 +38,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
+import android.util.Base64;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
@@ -47,8 +53,37 @@ import com.googlecode.android_scripting.future.FutureActivityTask;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
+import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+/**
+ * Manages access to camera streaming.
+ * <br>
+ * <h3>Usage Notes</h3>
+ * <br><b>webCamStart</b> and <b>webCamStop</b> are used to start and stop an Mpeg stream on a given port. <b>webcamAdjustQuality</b> is used to ajust the quality of the streaming video.
+ * <br><b>cameraStartPreview</b> is used to get access to the camera preview screen. It will generate "preview" events as images become available.
+ * <br>The preview has two modes: data or file. If you pass a non-blank, writable file path to the <b>cameraStartPreview</b> it will store jpg images in that folder. 
+ * It is up to the caller to clean up these files after the fact. If no file element is provided, 
+ * the event will include the image data as a base64 encoded string. 
+ * <h3>Event details</h3>
+ * <br>The data element of the preview event will be a map, with the following elements defined.
+ * <ul>
+ * <li><b>format</b> - currently always "jpeg"
+ * <li><b>width</b> - image width (in pixels)
+ * <li><b>height</b> - image height (in pixels)
+ * <li><b>quality</b> - JPEG quality. Number from 1-100
+ * <li><b>filename</b> - Name of file where image was saved. Only relevant if filepath defined.
+ * <li><b>error</b> - included if there was an IOException saving file, ie, disk full or path write protected.
+ * <li><b>encoding</b> - Data encoding. If filepath defined, will be "file" otherwise "base64"
+ * <li><b>data</b> - Base64 encoded image data.
+ * </ul>
+ *<br>Note that "filename", "error" and "data" are mutual exclusive.
+ *<br>
+ *<br>The webcam and preview modes use the same resources, so you can't use them both at the same time. Stop one mode before starting the other.
+ *
+ * @author Robbie Matthews (rjmatthews62@gmail.com)
+ *
+ */
 public class WebCamFacade extends RpcReceiver {
 
   private final Service mService;
@@ -67,7 +102,10 @@ public class WebCamFacade extends RpcReceiver {
   private FutureActivityTask<SurfaceHolder> mPreviewTask;
   private Camera mCamera;
   private Parameters mParameters;
-
+  private final EventFacade mEventFacade;
+  private boolean mPreview;
+  private File mDest;
+  
   private final PreviewCallback mPreviewCallback = new PreviewCallback() {
     @Override
     public void onPreviewFrame(final byte[] data, final Camera camera) {
@@ -84,10 +122,48 @@ public class WebCamFacade extends RpcReceiver {
     }
   };
 
+  private final PreviewCallback mPreviewEvent = new PreviewCallback() {
+    @Override
+    public void onPreviewFrame(final byte[] data, final Camera camera) {
+      mJpegCompressionExecutor.execute(new Runnable() {
+        @Override
+        public void run() {
+          mJpegData = compressYuvToJpeg(data);
+          Map<String,Object> m = new HashMap<String, Object>(); 
+          m.put("format", "jpeg");
+          m.put("width", mPreviewWidth);
+          m.put("height", mPreviewHeight);
+          m.put("quality", mJpegQuality);
+          if (mDest!=null) {
+            try {
+              File dest=File.createTempFile("prv",".jpg",mDest);
+              OutputStream o = new FileOutputStream(dest);
+              o.write(mJpegData);
+              o.close();
+              m.put("encoding","file");
+              m.put("filename",dest.toString());
+            } catch (IOException e) {
+              m.put("error", e.toString());
+            }
+          }
+          else {
+            m.put("encoding","Base64");
+            m.put("data", Base64.encodeToString(mJpegData, Base64.DEFAULT));
+          }
+          mEventFacade.postEvent("preview", m);
+          if (mPreview) {
+            camera.setOneShotPreviewCallback(mPreviewEvent);
+          }
+        }
+      });
+    }
+  };
+  
   public WebCamFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
     mJpegDataReady = new CountDownLatch(1);
+    mEventFacade = manager.getReceiver(EventFacade.class);
   }
 
   private byte[] compressYuvToJpeg(final byte[] yuvData) {
@@ -253,8 +329,54 @@ public class WebCamFacade extends RpcReceiver {
     return task;
   }
 
+  @Rpc(description = "Start Preview Mode. Throws 'preview' events.",returns="True if successful")
+  public boolean cameraStartPreview(
+          @RpcParameter(name = "resolutionLevel", description = "increasing this number provides higher resolution") @RpcDefault("0") Integer resolutionLevel,
+          @RpcParameter(name = "jpegQuality", description = "a number from 0-100") @RpcDefault("20") Integer jpegQuality,
+          @RpcParameter(name = "filepath", description = "Path to store jpeg files.") @RpcOptional String filepath)
+      throws InterruptedException {
+    mDest=null;
+    if (filepath!=null && (filepath.length()>0)) {
+      mDest = new File(filepath);
+      if (!mDest.exists()) mDest.mkdirs();
+      if (!(mDest.isDirectory() && mDest.canWrite())) {
+        return false;
+      }
+    }
+      
+    try {
+      openCamera(resolutionLevel, jpegQuality);
+    } catch (IOException e) {
+      Log.e(e);
+      return false;
+    }
+    startPreview();
+    return true;
+  }
+
+  @Rpc(description = "Stop the preview mode.")
+  public void cameraStopPreview() {
+    stopPreview();
+  }
+
+  private void startPreview() {
+    mPreview = true;
+    mCamera.setOneShotPreviewCallback(mPreviewEvent);
+  }
+  
+  private void stopPreview() {
+    mPreview = false;
+    if (mPreviewTask!=null)
+    {
+      mPreviewTask.finish();
+      mPreviewTask=null;
+    }
+    releaseCamera();
+  }
+
   @Override
   public void shutdown() {
+    mPreview=false;
     webcamStop();
   }
 }
