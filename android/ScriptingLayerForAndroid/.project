@@ -36,5 +36,10 @@
 			<type>2</type>
 			<locationURI>_android_QuickAction/src</locationURI>
 		</link>
+		<link>
+			<name>QuickAction_src</name>
+			<type>2</type>
+			<locationURI>_android_QuickAction_4ee25263/src</locationURI>
+		</link>
 	</linkedResources>
 </projectDescription>

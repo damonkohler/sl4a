@@ -9,5 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/BluetoothFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SignalStrengthFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TextToSpeechFacade"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.6.0_22/lib/tools.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
