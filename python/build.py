@@ -146,6 +146,7 @@ map(rm, find('android/python/bin', 'python$')[1])
 map(rm, find('android', '\.py$')[0])
 map(rm, find('android', '\.c$')[0])
 map(rm, find('android', 'test')[0])
+map(rm, find('android', '\.pyo$')[0])
 
 rm('android/python/share')
 rm('android/python/include')

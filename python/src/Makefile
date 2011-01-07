@@ -1,4 +1,3 @@
-# Generated automatically from Makefile.pre by makesetup.
 # Top-level Makefile for Python
 #
 # As distributed, this file is called Makefile.pre.in; it is processed
@@ -78,7 +77,7 @@ PY_CFLAGS=	$(CFLAGS) $(CPPFLAGS) $(CFLAGSFORSHARED) -DPy_BUILD_CORE
 MACHDEP=	linux2
 
 # Install prefix for architecture-independent files
-prefix=		$(shell pwd)/android/python
+prefix=		/home/robbie/android-scripting/python/src/android/python
 
 # Install prefix for architecture-dependent files
 exec_prefix=	${prefix}
@@ -176,8 +175,7 @@ UNICODE_OBJS=   Objects/unicodeobject.o Objects/unicodectype.o
 
 PYTHON=		python$(EXE)
 BUILDPYTHON=	python$(BUILDEXE)
-HOSTPYTHON=hostpython
-
+HOSTPYTHON=	hostpython$(BUILDEXE)
 # The task to run while instrument when building the profile-opt target
 PROFILE_TASK=	$(srcdir)/Tools/pybench/pybench.py -n 2 --with-gc --with-syscheck
 #PROFILE_TASK=	$(srcdir)/Lib/test/regrtest.py
@@ -223,7 +221,7 @@ GRAMMAR_INPUT=	$(srcdir)/Grammar/Grammar
 ##########################################################################
 # Parser
 PGEN=		Parser/pgen$(EXE)
-HOSTPGEN=Parser/hostpgen
+HOSTPGEN=	Parser/hostpgen$(EXE)
 
 POBJS=		\
 		Parser/acceler.o \
@@ -389,7 +387,7 @@ build_all_generate_profile:
 	$(MAKE) all CFLAGS="$(CFLAGS) -fprofile-generate" LIBS="$(LIBS) -lgcov"
 
 run_profile_task:
-	./$(HOSTPYTHON) $(PROFILE_TASK)
+	./$(BUILDPYTHON) $(PROFILE_TASK)
 
 build_all_use_profile:
 	$(MAKE) all CFLAGS="$(CFLAGS) -fprofile-use"
@@ -407,14 +405,14 @@ $(BUILDPYTHON):	Modules/python.o $(LIBRARY) $(LDLIBRARY)
 			$(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
 
 platform: $(BUILDPYTHON)
-	$(RUNSHARED) ./$(HOSTPYTHON) -E -c 'import sys ; from distutils.util import get_platform ; print get_platform()+"-"+sys.version[0:3]' >platform
+	$(RUNSHARED) ./$(BUILDPYTHON) -E -c 'import sys ; from distutils.util import get_platform ; print get_platform()+"-"+sys.version[0:3]' >platform
 
 
 # Build the shared modules
 sharedmods: $(BUILDPYTHON)
 	@case $$MAKEFLAGS in \
-	*s*) $(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' ./$(HOSTPYTHON) -E $(srcdir)/setup.py -q build;; \
-	*) $(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' ./$(HOSTPYTHON) -E $(srcdir)/setup.py build;; \
+	*s*) $(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' ./hostpython -E $(srcdir)/setup.py -q build;; \
+	*) $(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' ./hostpython -E $(srcdir)/setup.py build;; \
 	esac
 
 # Build static library
@@ -695,7 +693,7 @@ $(LIBRARY_OBJS) $(MODOBJS) Modules/python.o: $(PYTHON_HEADERS)
 
 TESTOPTS=	-l $(EXTRATESTOPTS)
 TESTPROG=	$(srcdir)/Lib/test/regrtest.py
-TESTPYTHON=	$(RUNSHARED) ./$(HOSTPYTHON) -E -tt
+TESTPYTHON=	$(RUNSHARED) ./$(BUILDPYTHON) -E -tt
 test:		all platform
 		-find $(srcdir)/Lib -name '*.py[co]' -print | xargs rm -f
 		-$(TESTPYTHON) $(TESTPROG) $(TESTOPTS)
@@ -718,7 +716,7 @@ testuniversal:	all platform
 		-find $(srcdir)/Lib -name '*.py[co]' -print | xargs rm -f
 		-$(TESTPYTHON) $(TESTPROG) $(TESTOPTS) -uall
 		$(TESTPYTHON) $(TESTPROG) $(TESTOPTS) -uall
-		$(RUNSHARED) /usr/libexec/oah/translate ./$(HOSTPYTHON) -E -tt $(TESTPROG) $(TESTOPTS) -uall
+		$(RUNSHARED) /usr/libexec/oah/translate ./$(BUILDPYTHON) -E -tt $(TESTPROG) $(TESTOPTS) -uall
 
 
 # Like testall, but with a single pass only
@@ -879,6 +877,7 @@ libinstall:	build_all $(srcdir)/Lib/$(PLATDIR)
 			echo $(INSTALL_DATA) $$i $(LIBDEST); \
 		fi; \
 	done
+	echo "Subdirs"
 	@for d in $(LIBSUBDIRS); \
 	do \
 		a=$(srcdir)/Lib/$$d; \
@@ -905,24 +904,29 @@ libinstall:	build_all $(srcdir)/Lib/$(PLATDIR)
 		done; \
 	done
 	$(INSTALL_DATA) $(srcdir)/LICENSE $(DESTDIR)$(LIBDEST)/LICENSE.txt
-	PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
-		./$(HOSTPYTHON) -Wi -tt $(DESTDIR)$(LIBDEST)/compileall.py \
+	echo "Part 1"
+	$(RUNSHARED) \
+		python -Wi -tt $(DESTDIR)$(LIBDEST)/compileall.py \
 		-d $(LIBDEST) -f \
 		-x 'bad_coding|badsyntax|site-packages' $(DESTDIR)$(LIBDEST)
+	echo "Part 2"
 	PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
-		./$(HOSTPYTHON) -Wi -tt -O $(DESTDIR)$(LIBDEST)/compileall.py \
+		python -Wi -tt -O $(DESTDIR)$(LIBDEST)/compileall.py \
 		-d $(LIBDEST) -f \
 		-x 'bad_coding|badsyntax|site-packages' $(DESTDIR)$(LIBDEST)
+	echo "Part 3"
 	-PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
 		./$(HOSTPYTHON) -Wi -t $(DESTDIR)$(LIBDEST)/compileall.py \
 		-d $(LIBDEST)/site-packages -f \
 		-x badsyntax $(DESTDIR)$(LIBDEST)/site-packages
+	echo "Part 4"
 	-PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
 		./$(HOSTPYTHON) -Wi -t -O $(DESTDIR)$(LIBDEST)/compileall.py \
 		-d $(LIBDEST)/site-packages -f \
 		-x badsyntax $(DESTDIR)$(LIBDEST)/site-packages
-	-PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
-		./$(HOSTPYTHON) -Wi -t -c "import lib2to3.pygram, lib2to3.patcomp;lib2to3.patcomp.PatternCompiler()"
+	echo "Part 5"
+	$(RUNSHARED) \
+		python -Wi -t -c "import lib2to3.pygram, lib2to3.patcomp;lib2to3.patcomp.PatternCompiler()"
 
 # Create the PLATDIR source directory, if one wasn't distributed..
 $(srcdir)/Lib/$(PLATDIR):
@@ -1020,7 +1024,7 @@ libainstall:	all
 # Install the dynamically loadable modules
 # This goes into $(exec_prefix)
 sharedinstall:
-	$(RUNSHARED) ./$(HOSTPYTHON) -E $(srcdir)/setup.py install \
+	$(RUNSHARED) ./hostpython -E $(srcdir)/setup.py install \
 	   	--prefix=$(prefix) \
 		--install-scripts=$(BINDIR) \
 		--install-platlib=$(DESTSHARED) \
@@ -1058,7 +1062,7 @@ frameworkinstallstructure:	$(LDLIBRARY)
 		fi; \
 	done
 	$(LN) -fsn include/python$(VERSION) $(DESTDIR)$(prefix)/Headers
-	sed 's/%VERSION%/'"`$(RUNSHARED) ./$(HOSTPYTHON) -c 'import platform; print platform.python_version()'`"'/g' < $(RESSRCDIR)/Info.plist > $(DESTDIR)$(prefix)/Resources/Info.plist
+	sed 's/%VERSION%/'"`$(RUNSHARED) ./$(BUILDPYTHON) -c 'import platform; print platform.python_version()'`"'/g' < $(RESSRCDIR)/Info.plist > $(DESTDIR)$(prefix)/Resources/Info.plist
 	$(LN) -fsn $(VERSION) $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/Versions/Current
 	$(LN) -fsn Versions/Current/$(PYTHONFRAMEWORK) $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/$(PYTHONFRAMEWORK)
 	$(LN) -fsn Versions/Current/Headers $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/Headers
@@ -1100,7 +1104,7 @@ frameworkinstallextras:
 # This installs a few of the useful scripts in Tools/scripts
 scriptsinstall:
 	SRCDIR=$(srcdir) $(RUNSHARED) \
-	./$(HOSTPYTHON) $(srcdir)/Tools/scripts/setup.py install \
+	./$(BUILDPYTHON) $(srcdir)/Tools/scripts/setup.py install \
 	--prefix=$(prefix) \
 	--install-scripts=$(BINDIR) \
 	--root=/$(DESTDIR)
@@ -1122,7 +1126,7 @@ config.status:	$(srcdir)/configure
 
 # Run reindent on the library
 reindent:
-	./$(HOSTPYTHON) $(srcdir)/Tools/scripts/reindent.py -r $(srcdir)/Lib
+	./$(BUILDPYTHON) $(srcdir)/Tools/scripts/reindent.py -r $(srcdir)/Lib
 
 # Rerun configure with the same options as it was run last time,
 # provided the config.status script exists
@@ -1159,7 +1163,6 @@ clean: pycremoval
 	find . -name '*.s[ol]' -exec rm -f {} ';'
 	find $(srcdir)/build -name 'fficonfig.h' -exec rm -f {} ';' || true
 	find $(srcdir)/build -name 'fficonfig.py' -exec rm -f {} ';' || true
-	rm -rf $(srcdir)/android
 
 profile-removal:
 	find . -name '*.gc??' -exec rm -f {} ';'
@@ -1219,7 +1222,7 @@ funny:
 
 # Perform some verification checks on any modified files.
 patchcheck:
-	$(RUNSHARED) ./$(HOSTPYTHON) $(srcdir)/Tools/scripts/patchcheck.py
+	$(RUNSHARED) ./$(BUILDPYTHON) $(srcdir)/Tools/scripts/patchcheck.py
 
 # Dependencies
 
