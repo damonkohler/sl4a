@@ -1,0 +1,13 @@
+This application generates API documentation.
+
+To compile RpcDoclet in Eclipse, go to Windows-->Preferences-->Java-->Build Path-->Classpath Variables
+
+Add "JDK" and point it to a valid jdk environment (ie, C:\program files\java\jdk1.6.0_11)
+
+RpcDoclet needs to be able to find "lib/tools.jar" to compile.
+
+TextDocumentationGenerator creates a wiki version of the current API Reference (suitable for the code.google.com wiki) - run it, then cut and paste the console output into your wiki page.
+
+RpcDoclet is a javadoc add on that combines javadoc and Rpc annotations into a more detailled API reference. 
+
+Run javadoc.xml with the javadoc wizard in eclipse... you'll probably need to modify the -dest parameter.

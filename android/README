@@ -1,4 +1,3 @@
-This directory contains Eclipse projects related to the Android Scripting
-Environment.
+This directory contains Eclipse projects related to the Scripting Layer For Android.
 
-AndroidScriptingEnvironment/ contains the main ASE project.
+ScriptingLayerForAndroid/ contains the main SL4A project.
