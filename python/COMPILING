@@ -26,5 +26,6 @@ Add to the path:
 )
 
 Find "prefix=" in python_src/src/Makefile, and make it = <PATH_TO_ANDROID_SCRIPTING>/python/src/android/python
+If you are having problems, I suggest modifying build.py from "make install -k" to "make install" ... the -k causes make to try to ignore errors, which actually made it harder to debug.
 
 

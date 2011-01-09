@@ -38,6 +38,10 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
   // TODO(damonkohler): Remove getVersion() and pull these three version methods up in to the base
   // class.
 
+  public String getBaseInstallUrl() {
+    return BASE_INSTALL_URL;
+  }
+
   public int getInterpreterVersion() {
     return getVersion();
   }
@@ -67,17 +71,17 @@ public abstract class Sl4aHostedInterpreter implements InterpreterDescriptor {
 
   @Override
   public String getInterpreterArchiveUrl() {
-    return BASE_INSTALL_URL + getInterpreterArchiveName();
+    return getBaseInstallUrl() + getInterpreterArchiveName();
   }
 
   @Override
   public String getExtrasArchiveUrl() {
-    return BASE_INSTALL_URL + getExtrasArchiveName();
+    return getBaseInstallUrl() + getExtrasArchiveName();
   }
 
   @Override
   public String getScriptsArchiveUrl() {
-    return BASE_INSTALL_URL + getScriptsArchiveName();
+    return getBaseInstallUrl() + getScriptsArchiveName();
   }
 
   @Override

@@ -15,7 +15,6 @@
 
 /* Define this if you have AtheOS threads. */
 /* #undef ATHEOS_THREADS */
-
 /* Define this if you have BeOS threads. */
 /* #undef BEOS_THREADS */
 
@@ -380,7 +379,7 @@
 #define HAVE_LINUX_NETLINK_H 1
 
 /* Define to 1 if you have the <linux/tipc.h> header file. */
-#define HAVE_LINUX_TIPC_H 1
+/* #define HAVE_LINUX_TIPC_H 1 */
 
 /* Define to 1 if you have the `log1p' function. */
 #define HAVE_LOG1P 1

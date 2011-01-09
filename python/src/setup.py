@@ -576,7 +576,7 @@ class PyBuildExt(build_ext):
         exts.append( Extension('audioop', ['audioop.c']) )
 
         # Disabled on 64-bit platforms
-        if sys.maxint != 9223372036854775807L:
+        if True: #sys.maxint != 9223372036854775807L:
             # Operations on images
             exts.append( Extension('imageop', ['imageop.c']) )
         else:
@@ -1245,7 +1245,7 @@ class PyBuildExt(build_ext):
                 missing.append('_codecs_%s' % loc)
 
         # Dynamic loading module
-        if sys.maxint == 0x7fffffff:
+        if True: #sys.maxint == 0x7fffffff:
             # This requires sizeof(int) == sizeof(long) == sizeof(char*)
             dl_inc = find_file('dlfcn.h', [], inc_dirs)
             if (dl_inc is not None) and (platform not in ['atheos']):

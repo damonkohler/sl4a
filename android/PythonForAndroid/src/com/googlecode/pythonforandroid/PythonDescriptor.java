@@ -16,15 +16,15 @@
 
 package com.googlecode.pythonforandroid;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterUtils;
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PythonDescriptor extends Sl4aHostedInterpreter {
 
@@ -32,6 +32,11 @@ public class PythonDescriptor extends Sl4aHostedInterpreter {
   private static final String ENV_HOME = "PYTHONHOME";
   private static final String ENV_PATH = "PYTHONPATH";
   private static final String ENV_TEMP = "TEMP";
+
+  @Override
+  public String getBaseInstallUrl() { // TODO: Change back to standard path for official release
+    return "http://www.mithril.com.au/android/"; // This is for testing only.
+  }
 
   public String getExtension() {
     return ".py";
@@ -58,17 +63,17 @@ public class PythonDescriptor extends Sl4aHostedInterpreter {
   }
 
   public int getVersion() {
-    return 7;
+    return 8;
   }
 
   @Override
   public int getExtrasVersion() {
-    return 8;
+    return 9;
   }
 
   @Override
   public int getScriptsVersion() {
-    return 8;
+    return 7;
   }
 
   @Override

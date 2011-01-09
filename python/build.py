@@ -103,7 +103,8 @@ os.chdir('src')
 assert os.path.exists('Parser/hostpgen'), 'hostpgen not found'
 
 run('make')
-run('make install -k', False)
+#run('make install -k', False)
+run('make install')
 
 assert os.path.exists('android'), 'build result not found'
 
