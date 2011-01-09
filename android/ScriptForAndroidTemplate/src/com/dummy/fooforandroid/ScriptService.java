@@ -47,6 +47,7 @@ import java.util.concurrent.CountDownLatch;
  * A service that allows scripts and the RPC server to run in the background.
  * 
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
+ * @author Manuel Narango
  */
 public class ScriptService extends ForegroundService {
 	private final static int NOTIFICATION_ID = NotificationIdFactory.create();
