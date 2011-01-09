@@ -77,7 +77,7 @@ PY_CFLAGS=	$(CFLAGS) $(CPPFLAGS) $(CFLAGSFORSHARED) -DPy_BUILD_CORE
 MACHDEP=	linux2
 
 # Install prefix for architecture-independent files
-prefix=		/home/robbie/android-scripting/python/src/android/python
+prefix=		$(SL4A_TRUNK)/python/src/android/python
 
 # Install prefix for architecture-dependent files
 exec_prefix=	${prefix}

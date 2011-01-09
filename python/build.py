@@ -90,6 +90,8 @@ if match is None:
   sys.exit(1)
 android_src = match.group(1)
 os.environ['ANDROID_SRC'] = android_src
+os.environ['SL4A_TRUNK'] = os.path.abspath('..');
+print os.environ['SL4A_TRUNK']
 
 agcc_path = subprocess.Popen(['which', 'agcc'],
                              stdout=subprocess.PIPE).communicate()[0]

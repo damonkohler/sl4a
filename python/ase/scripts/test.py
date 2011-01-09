@@ -15,7 +15,7 @@ droid = android.Android()
 
 def event_loop():
   for i in range(10):
-    e = droid.receiveEvent()
+    e = droid.eventPoll(1)
     if e.result is not None:
       return True
     time.sleep(2)
@@ -36,8 +36,8 @@ def test_gdata():
   client = gdata.docs.service.DocsService()
 
   # Authenticate using your Google Docs email address and password.
-  username = droid.getInput('Username').result
-  password = droid.getPassword('Password', 'For ' + username).result
+  username = droid.dialogGetInput('Username').result
+  password = droid.dialogGetPassword('Password', 'For ' + username).result
   try:
     client.ClientLogin(username, password)
   except:
