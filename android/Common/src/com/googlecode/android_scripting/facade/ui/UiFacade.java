@@ -196,6 +196,7 @@ public class UiFacade extends RpcReceiver {
   @Rpc(description = "Show dialog.")
   public void dialogShow() throws InterruptedException {
     if (mDialogTask != null && mDialogTask.getDialog() == null) {
+      mDialogTask.setEventFacade(mEventFacade);
       mTaskQueue.execute(mDialogTask);
       mDialogTask.getShowLatch().await();
     } else {

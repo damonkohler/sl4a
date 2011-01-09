@@ -23,15 +23,15 @@ import android.content.DialogInterface;
 import android.text.method.PasswordTransformationMethod;
 import android.widget.EditText;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * Wrapper class for alert dialog running in separate thread.
@@ -273,4 +273,5 @@ class AlertDialogTask extends DialogTask {
     }
     setResult(mResultMap);
   }
+
 }

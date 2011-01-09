@@ -80,7 +80,7 @@ public class EventFacade extends RpcReceiver {
   @Rpc(description = "Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.", returns = "Map of event properties.")
   public Event eventWaitFor(
       @RpcParameter(name = "eventName") final String eventName,
-      @RpcParameter(name = "timeout", description = "the maximum time to wait") @RpcOptional Integer timeout)
+      @RpcParameter(name = "timeout", description = "the maximum time to wait (in ms)") @RpcOptional Integer timeout)
       throws InterruptedException {
     final FutureResult<Event> futureEvent = new FutureResult<Event>();
     addNamedEventObserver(eventName, new EventObserver() {
@@ -93,6 +93,35 @@ public class EventFacade extends RpcReceiver {
               removeEventObserver(this);
             }
           }
+        }
+      }
+    });
+    if (timeout != null) {
+      return futureEvent.get(timeout, TimeUnit.MILLISECONDS);
+    } else {
+      return futureEvent.get();
+    }
+  }
+
+  @Rpc(description = "Blocks until an event occurs. The returned event is removed from the buffer.", returns = "Map of event properties.")
+  public Event eventWait(
+      @RpcParameter(name = "timeout", description = "the maximum time to wait") @RpcOptional Integer timeout)
+      throws InterruptedException {
+    final FutureResult<Event> futureEvent = new FutureResult<Event>();
+    synchronized (mEventQueue) { // Anything in queue?
+      if (mEventQueue.size() > 0) {
+        return mEventQueue.poll(); // return it.
+      }
+    }
+    addGlobalEventObserver(new EventObserver() {
+      @Override
+      public void onEventReceived(Event event) { // set up observer for any events.
+        synchronized (futureEvent) {
+          if (!futureEvent.isDone()) {
+            futureEvent.set(event);
+            removeEventObserver(this);
+          }
+          mEventQueue.remove(event);
         }
       }
     });
@@ -120,6 +149,11 @@ public class EventFacade extends RpcReceiver {
     }
     synchronized (mNamedEventObservers) {
       for (EventObserver observer : mNamedEventObservers.get(name)) {
+        observer.onEventReceived(event);
+      }
+    }
+    synchronized (mGlobalEventObservers) {
+      for (EventObserver observer : mGlobalEventObservers) {
         observer.onEventReceived(event);
       }
     }

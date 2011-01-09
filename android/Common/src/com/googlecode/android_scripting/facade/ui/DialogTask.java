@@ -16,15 +16,35 @@
 
 package com.googlecode.android_scripting.facade.ui;
 
-import java.util.concurrent.CountDownLatch;
-
 import android.app.Dialog;
 
+import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.future.FutureActivityTask;
+
+import java.util.concurrent.CountDownLatch;
 
 abstract class DialogTask extends FutureActivityTask<Object> {
 
   protected Dialog mDialog;
+  private EventFacade mEventFacade;
+
+  public EventFacade getEventFacade() {
+    return mEventFacade;
+  }
+
+  public void setEventFacade(EventFacade mEventFacade) {
+    this.mEventFacade = mEventFacade;
+  }
+
+  @Override
+  protected void setResult(Object o) {
+    super.setResult(o);
+    EventFacade e = getEventFacade();
+    if (e != null) {
+      e.postEvent("dialog", o);
+    }
+  }
+
   protected final CountDownLatch mShowLatch = new CountDownLatch(1);
 
   /**
