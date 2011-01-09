@@ -18,6 +18,7 @@ package com.dummy.fooforandroid;
 
 import android.app.Notification;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -38,6 +39,8 @@ import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -46,89 +49,158 @@ import java.util.concurrent.CountDownLatch;
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
 public class ScriptService extends ForegroundService {
-  private final static int NOTIFICATION_ID = NotificationIdFactory.create();
-  private final CountDownLatch mLatch = new CountDownLatch(1);
-  private final IBinder mBinder;
+	private final static int NOTIFICATION_ID = NotificationIdFactory.create();
+	private final CountDownLatch mLatch = new CountDownLatch(1);
+	private final IBinder mBinder;
 
-  private InterpreterConfiguration mInterpreterConfiguration;
-  private RpcReceiverManager mFacadeManager;
+	private InterpreterConfiguration mInterpreterConfiguration;
+	private RpcReceiverManager mFacadeManager;
 
-  public class LocalBinder extends Binder {
-    public ScriptService getService() {
-      return ScriptService.this;
-    }
-  }
+	public class LocalBinder extends Binder {
+		public ScriptService getService() {
+			return ScriptService.this;
+		}
+	}
 
-  public ScriptService() {
-    super(NOTIFICATION_ID);
-    mBinder = new LocalBinder();
-  }
+	public ScriptService() {
+		super(NOTIFICATION_ID);
+		mBinder = new LocalBinder();
+	}
 
-  @Override
-  public IBinder onBind(Intent intent) {
-    return mBinder;
-  }
+	@Override
+	public IBinder onBind(Intent intent) {
+		return mBinder;
+	}
 
-  @Override
-  public void onCreate() {
-    mInterpreterConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
-  }
+	@Override
+	public void onCreate() {
+		mInterpreterConfiguration = ((BaseApplication) getApplication())
+				.getInterpreterConfiguration();
+	}
 
-  @Override
-  public void onStart(Intent intent, final int startId) {
-    super.onStart(intent, startId);
-    String fileName = Script.getFileName(this);
-    Interpreter interpreter = mInterpreterConfiguration.getInterpreterForScript(fileName);
-    if (interpreter == null || !interpreter.isInstalled()) {
-      mLatch.countDown();
-      if (FeaturedInterpreters.isSupported(fileName)) {
-        Intent i = new Intent(this, DialogActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.putExtra(Constants.EXTRA_SCRIPT_PATH, fileName);
-        startActivity(i);
-      } else {
-        Log.e(this, "Cannot find an interpreter for script " + fileName);
-      }
-      stopSelf(startId);
-      return;
-    }
+	@Override
+	public void onStart(Intent intent, final int startId) {
+		super.onStart(intent, startId);
+		String fileName = Script.getFileName(this);
+		Interpreter interpreter = mInterpreterConfiguration
+				.getInterpreterForScript(fileName);
+		if (interpreter == null || !interpreter.isInstalled()) {
+			mLatch.countDown();
+			if (FeaturedInterpreters.isSupported(fileName)) {
+				Intent i = new Intent(this, DialogActivity.class);
+				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				i.putExtra(Constants.EXTRA_SCRIPT_PATH, fileName);
+				startActivity(i);
+			} else {
+				Log
+						.e(this, "Cannot find an interpreter for script "
+								+ fileName);
+			}
+			stopSelf(startId);
+			return;
+		}
 
-    // Copies script to internal memory.
-    fileName = InterpreterUtils.getInterpreterRoot(this).getAbsolutePath() + "/" + fileName;
-    File script = new File(fileName);
-    // TODO(raaar): Check size here!
-    if (!script.exists()) {
-      script = FileUtils.copyFromStream(fileName, getResources().openRawResource(Script.ID));
-    }
+		// Copies script to internal memory.
+		fileName = InterpreterUtils.getInterpreterRoot(this).getAbsolutePath()
+				+ "/" + fileName;
+		File script = new File(fileName);
+		// TODO(raaar): Check size here!
+		if (!script.exists()) {
+			script = FileUtils.copyFromStream(fileName, getResources()
+					.openRawResource(Script.ID));
+		}
+		copyResourcesToLocal(); // Copy all resources
 
-    if (Script.getFileExtension(this).equals(HtmlInterpreter.HTML_EXTENSION)) {
-      HtmlActivityTask htmlTask =
-          ScriptLauncher.launchHtmlScript(script, this, intent, mInterpreterConfiguration);
-      mFacadeManager = htmlTask.getRpcReceiverManager();
-      mLatch.countDown();
-      stopSelf(startId);
-    } else {
-      final AndroidProxy proxy = new AndroidProxy(this, null, true);
-      proxy.startLocal();
-      mFacadeManager = proxy.getRpcReceiverManagerFactory().getRpcReceiverManagers().get(0);
-      mLatch.countDown();
-      ScriptLauncher.launchScript(script, mInterpreterConfiguration, proxy, new Runnable() {
-        @Override
-        public void run() {
-          proxy.shutdown();
-          stopSelf(startId);
-        }
-      });
-    }
-  }
+		if (Script.getFileExtension(this)
+				.equals(HtmlInterpreter.HTML_EXTENSION)) {
+			HtmlActivityTask htmlTask = ScriptLauncher.launchHtmlScript(script,
+					this, intent, mInterpreterConfiguration);
+			mFacadeManager = htmlTask.getRpcReceiverManager();
+			mLatch.countDown();
+			stopSelf(startId);
+		} else {
+			final AndroidProxy proxy = new AndroidProxy(this, null, true);
+			proxy.startLocal();
+			mFacadeManager = proxy.getRpcReceiverManagerFactory()
+					.getRpcReceiverManagers().get(0);
+			mLatch.countDown();
+			ScriptLauncher.launchScript(script, mInterpreterConfiguration,
+					proxy, new Runnable() {
+						@Override
+						public void run() {
+							proxy.shutdown();
+							stopSelf(startId);
+						}
+					});
+		}
+	}
 
-  RpcReceiverManager getRpcReceiverManager() throws InterruptedException {
-    mLatch.await();
-    return mFacadeManager;
-  }
+	RpcReceiverManager getRpcReceiverManager() throws InterruptedException {
+		mLatch.await();
+		return mFacadeManager;
+	}
 
-  @Override
-  protected Notification createNotification() {
-    return null;
-  }
+	@Override
+	protected Notification createNotification() {
+		return null;
+	}
+
+	private boolean needsToBeUpdated(String filename, InputStream content) {
+		File script = new File(filename);
+		FileInputStream fin;
+		Log.d("Checking if " + filename + " exists");
+
+		if (!script.exists()) {
+			Log.d("not found");
+			return true;
+		}
+
+		Log.d("Comparing file with content");
+		try {
+			fin = new FileInputStream(filename);
+			int c;
+			while ((c = fin.read()) != -1) {
+				if (c != content.read()) {
+					Log.d("Something changed replacing");
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			Log.d("Something failed during comparing");
+			Log.e(e);
+			return true;
+		}
+		Log.d("No need to update " + filename);
+		return false;
+	}
+
+	private void copyResourcesToLocal() {
+		String name, sFileName;
+		InputStream content;
+		R.raw a = new R.raw();
+		java.lang.reflect.Field[] t = R.raw.class.getFields();
+		Resources resources = getResources();
+		for (int i = 0; i < t.length; i++) {
+			try {
+				name = resources.getText(t[i].getInt(a)).toString();
+				sFileName = name.substring(name.lastIndexOf('/') + 1, name
+						.length());
+				content = getResources().openRawResource(t[i].getInt(a));
+
+				// Copies script to internal memory only if changes were made
+				sFileName = InterpreterUtils.getInterpreterRoot(this)
+						.getAbsolutePath()
+						+ "/" + sFileName;
+				if (needsToBeUpdated(sFileName, content)) {
+					Log.d("Copying from stream " + sFileName);
+					content.reset();
+					FileUtils.copyFromStream(sFileName, content);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 }
