@@ -9,4 +9,6 @@
     android:layout_margin="3dip"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" />
+
+<Button android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="3dip" android:id="@+id/btnModule" android:text="Import Module"></Button>
 </LinearLayout>

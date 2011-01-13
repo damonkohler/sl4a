@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2010 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -55,6 +54,7 @@ public abstract class Main extends Activity {
   protected SharedPreferences mPreferences;
   protected InterpreterDescriptor mDescriptor;
   protected Button mButton;
+  protected LinearLayout mLayout;
 
   protected abstract InterpreterDescriptor getDescriptor();
 
@@ -116,10 +116,10 @@ public abstract class Main extends Activity {
 
   // TODO(alexey): Pull out to a layout XML?
   protected void initializeViews() {
-    LinearLayout layout = new LinearLayout(this);
-    layout.setOrientation(LinearLayout.VERTICAL);
-    layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-    layout.setGravity(Gravity.CENTER_HORIZONTAL);
+    mLayout = new LinearLayout(this);
+    mLayout.setOrientation(LinearLayout.VERTICAL);
+    mLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+    mLayout.setGravity(Gravity.CENTER_HORIZONTAL);
 
     mButton = new Button(this);
     MarginLayoutParams marginParams =
@@ -128,8 +128,8 @@ public abstract class Main extends Activity {
     int marginPixels = (int) (MARGIN_DIP * scale + 0.5f);
     marginParams.setMargins(marginPixels, marginPixels, marginPixels, marginPixels);
     mButton.setLayoutParams(marginParams);
-    layout.addView(mButton);
-    setContentView(layout);
+    mLayout.addView(mButton);
+    setContentView(mLayout);
   }
 
   protected void prepareInstallButton() {
@@ -203,8 +203,14 @@ public abstract class Main extends Activity {
   }
 
   protected boolean checkInstalled() {
-    boolean isInstalled = mPreferences.getBoolean(InterpreterConstants.INSTALLED_PREFERENCE_KEY, false);
+    boolean isInstalled =
+        mPreferences.getBoolean(InterpreterConstants.INSTALLED_PREFERENCE_KEY, false);
     broadcastInstallationStateChange(isInstalled);
     return isInstalled;
   }
+
+  public LinearLayout getLayout() {
+    return mLayout;
+  }
+
 }
