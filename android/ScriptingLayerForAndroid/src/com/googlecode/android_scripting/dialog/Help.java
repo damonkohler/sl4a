@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import com.googlecode.android_scripting.Constants;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
@@ -80,6 +81,7 @@ public class Help {
         }
         helpChecked = 1;
       } catch (IOException e) {
+        Log.e("Help not found ", e);
         helpChecked = -1;
         return false;
       }
