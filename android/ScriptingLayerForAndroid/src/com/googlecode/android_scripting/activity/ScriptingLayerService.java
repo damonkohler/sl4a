@@ -194,7 +194,7 @@ public class ScriptingLayerService extends ForegroundService {
     if (errmsg != null) {
       updateNotification(errmsg);
     } else if (interpreterProcess == null) {
-      updateNotification("action not implemented: " + intent.getAction());
+      updateNotification("Action not implemented: " + intent.getAction());
     } else {
       addProcess(interpreterProcess);
     }

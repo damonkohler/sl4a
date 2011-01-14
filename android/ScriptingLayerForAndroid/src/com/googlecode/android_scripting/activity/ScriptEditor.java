@@ -170,14 +170,17 @@ public class ScriptEditor extends Activity {
       finish();
     } else if (item.getItemId() == MenuId.SAVE_AND_RUN.getId()) {
       save();
-      Interpreter ip = mConfiguration.getInterpreterForScript(mNameText.getText().toString());
-      if (ip != null) { // may be editing unknown type
+      Interpreter interpreter =
+          mConfiguration.getInterpreterForScript(mNameText.getText().toString());
+      if (interpreter != null) { // We may be editing an unknown type.
         Intent intent = new Intent(this, ScriptingLayerService.class);
         intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
         intent.putExtra(Constants.EXTRA_SCRIPT_PATH, mScript.getAbsolutePath());
         startService(intent);
       } else {
-        Toast.makeText(this, "Can't run this type.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Can't run this type.", Toast.LENGTH_SHORT).show(); // TODO: Should
+                                                                                 // actually remove
+                                                                                 // menu option.
       }
       finish();
     } else if (item.getItemId() == MenuId.PREFERENCES.getId()) {

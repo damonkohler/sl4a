@@ -51,8 +51,9 @@ import java.util.zip.ZipFile;
  * 
  * @author Damon
  * @author Robbie Matthews (rjmatthews62@gmail.com)
- * 
+ * @author Manuel Narango
  */
+
 public class PythonMain extends Main {
   Button mBtnModules;
   File mDownloads;
@@ -67,33 +68,34 @@ public class PythonMain extends Main {
   final Handler mModuleHandler = new Handler() {
 
     @Override
-    public void handleMessage(Message msg) {
-      Bundle b = msg.getData();
-      boolean running = b.getBoolean("running");
+    public void handleMessage(Message message) {
+      Bundle bundle = message.getData();
+      boolean running = bundle.getBoolean("running");
       if (running) {
-        if (b.containsKey("max")) {
+        if (bundle.containsKey("max")) {
           mProgress.setProgress(0);
-          mProgress.setMax(b.getInt("max"));
-        } else if (b.containsKey("pos")) {
-          mProgress.setProgress(b.getInt("pos"));
-        } else if (b.containsKey("message")) {
-          mProgress.setMessage(b.getString("message"));
+          mProgress.setMax(bundle.getInt("max"));
+        } else if (bundle.containsKey("pos")) {
+          mProgress.setProgress(bundle.getInt("pos"));
+        } else if (bundle.containsKey("message")) {
+          mProgress.setMessage(bundle.getString("message"));
         } else {
           mProgress.incrementProgressBy(1);
         }
       } else {
         mProgress.dismiss();
-        String info = msg.getData().getString("info");
+        String info = message.getData().getString("info");
         if (info != null) {
           showMessage("Import Module", info);
         }
       }
     }
   };
+
   private Button mBtnBrowse;
   private File mFrom;
-  private File mSopath;
-  private File mPypath;
+  private File mSoPath;
+  private File mPythonPath;
 
   @Override
   protected InterpreterDescriptor getDescriptor() {
@@ -115,8 +117,22 @@ public class PythonMain extends Main {
   @Override
   protected void initializeViews() {
     super.initializeViews();
-    mDownloads = new File(Environment.getExternalStorageDirectory(), "download");
-    LinearLayout layout = getLayout();
+
+    for (File f : new File(Environment.getExternalStorageDirectory().getAbsolutePath()).listFiles()) {
+      if (f.isDirectory()) {
+        if (f.getName().toLowerCase().startsWith("download")) {
+          mDownloads = f;
+          break;
+        }
+      }
+    }
+
+    if (mDownloads == null) {
+      mDownloads =
+          new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "download");
+    }
+
+    LinearLayout mlayout = getLayout();
 
     MarginLayoutParams marginParams =
         new MarginLayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
@@ -126,7 +142,7 @@ public class PythonMain extends Main {
     mBtnModules = new Button(this);
     mBtnModules.setLayoutParams(marginParams);
     mBtnModules.setText("Import Modules");
-    mLayout.addView(mBtnModules);
+    mlayout.addView(mBtnModules);
     mBtnModules.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
         doImportModule();
@@ -135,7 +151,7 @@ public class PythonMain extends Main {
     mBtnBrowse = new Button(this);
     mBtnBrowse.setLayoutParams(marginParams);
     mBtnBrowse.setText("Browse Modules");
-    layout.addView(mBtnBrowse);
+    mlayout.addView(mBtnBrowse);
     mBtnBrowse.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
         doBrowseModule();
@@ -177,17 +193,15 @@ public class PythonMain extends Main {
     mList = flist.toArray(new CharSequence[flist.size()]);
     builder.setItems(mList, new DialogInterface.OnClickListener() {
 
-      // @Override
+      @Override
       public void onClick(DialogInterface dialog, int which) {
         mModule = (String) mList[which];
         performImport(mModule);
         mDialog.dismiss();
       }
     });
-    // builder.setPositiveButton("OK", buttonListener);
     builder.setNegativeButton("Cancel", buttonListener);
     builder.setNeutralButton("Help", buttonListener);
-    // builder.setMessage("Select module to import");
     mModule = null;
     mDialog = builder.show();
     if (mModule != null) {
@@ -196,15 +210,15 @@ public class PythonMain extends Main {
 
   protected void performImport(String module) {
     mFrom = new File(mDownloads, mModule);
-    mSopath = new File(InterpreterUtils.getInterpreterRoot(this), "python/lib/python2.6");
-    mPypath = new File(mDescriptor.getEnvironmentVariables(this).get("PYTHONPATH"));
+    mSoPath = new File(InterpreterUtils.getInterpreterRoot(this), "python/lib/python2.6");
+    mPythonPath = new File(mDescriptor.getEnvironmentVariables(this).get("PYTHONPATH"));
 
     prompt("Install module " + module, new DialogInterface.OnClickListener() {
 
       @Override
       public void onClick(DialogInterface dialog, int which) {
         if (which == AlertDialog.BUTTON_POSITIVE) {
-          extract("Extracting " + mModule, mFrom, mPypath, mSopath);
+          extract("Extracting " + mModule, mFrom, mPythonPath, mSoPath);
         }
       }
     });
@@ -265,10 +279,10 @@ public class PythonMain extends Main {
       boolean hasSo = false;
       List<ZipEntry> list = new ArrayList<ZipEntry>();
       try {
-        ZipFile z = new ZipFile(from);
+        ZipFile zipfile = new ZipFile(from);
         int cnt = 0;
-        sendmsg(true, "max", z.size());
-        Enumeration<? extends ZipEntry> entries = z.entries();
+        sendmsg(true, "max", zipfile.size());
+        Enumeration<? extends ZipEntry> entries = zipfile.entries();
         while (entries.hasMoreElements()) {
           ZipEntry ex = entries.nextElement();
           if (ex.getName().endsWith(".so")) {
@@ -276,14 +290,14 @@ public class PythonMain extends Main {
           }
           list.add(ex);
         }
-        for (ZipEntry e : list) {
+        for (ZipEntry entry : list) {
           cnt += 1;
-          if (e.isDirectory()) {
+          if (entry.isDirectory()) {
             continue;
           }
           useshared = hasSo;
           File dpath = useshared ? sopath : pypath;
-          File f = new File(dpath, e.getName());
+          File f = new File(dpath, entry.getName());
           File p = f.getParentFile();
           if (!p.exists()) {
             p.mkdirs();
@@ -293,52 +307,52 @@ public class PythonMain extends Main {
             }
           }
           sendmsg(true, "pos", cnt);
-          OutputStream o = new BufferedOutputStream(new FileOutputStream(f));
-          InputStream is = z.getInputStream(e);
+          OutputStream output = new BufferedOutputStream(new FileOutputStream(f));
+          InputStream input = zipfile.getInputStream(entry);
           int len;
-          while ((len = is.read(buf)) > 0) {
-            o.write(buf, 0, len);
+          while ((len = input.read(buf)) > 0) {
+            output.write(buf, 0, len);
           }
-          is.close();
-          o.flush();
-          o.close();
+          input.close();
+          output.flush();
+          output.close();
 
-          f.setLastModified(e.getTime());
-          FileUtils.chmod(f, e.getName().endsWith(".so") ? 0755 : 0644);
+          f.setLastModified(entry.getTime());
+          FileUtils.chmod(f, entry.getName().endsWith(".so") ? 0755 : 0644);
         }
         sendmsg(false, "Success");
-      } catch (Exception e) {
-        sendmsg(false, "Error" + e);
+      } catch (Exception entry) {
+        sendmsg(false, "Error" + entry);
       }
     }
 
     private void sendmsg(boolean running, String info) {
-      Message msg = mHandler.obtainMessage();
-      Bundle b = new Bundle();
-      b.putBoolean("running", running);
+      Message message = mHandler.obtainMessage();
+      Bundle bundle = new Bundle();
+      bundle.putBoolean("running", running);
       if (info != null) {
-        b.putString("info", info);
+        bundle.putString("info", info);
       }
-      msg.setData(b);
-      mHandler.sendMessage(msg);
+      message.setData(bundle);
+      mHandler.sendMessage(message);
     }
 
     private void sendmsg(boolean running, String key, int value) {
-      Message msg = mHandler.obtainMessage();
-      Bundle b = new Bundle();
-      b.putBoolean("running", running);
-      b.putInt(key, value);
-      msg.setData(b);
-      mHandler.sendMessage(msg);
+      Message message = mHandler.obtainMessage();
+      Bundle bundle = new Bundle();
+      bundle.putBoolean("running", running);
+      bundle.putInt(key, value);
+      message.setData(bundle);
+      mHandler.sendMessage(message);
     }
 
     private void sendmsg(boolean running, String key, String value) {
-      Message msg = mHandler.obtainMessage();
-      Bundle b = new Bundle();
-      b.putBoolean("running", running);
-      b.putString(key, value);
-      msg.setData(b);
-      mHandler.sendMessage(msg);
+      Message message = mHandler.obtainMessage();
+      Bundle bundle = new Bundle();
+      bundle.putBoolean("running", running);
+      bundle.putString(key, value);
+      message.setData(bundle);
+      mHandler.sendMessage(message);
     }
   }
 }
