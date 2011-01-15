@@ -17,8 +17,10 @@
 package com.googlecode.android_scripting.activity;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.ClipboardManager;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.googlecode.android_scripting.ActivityFlinger;
 import com.googlecode.android_scripting.Analytics;
@@ -49,7 +52,7 @@ public class LogcatViewer extends ListActivity {
   private Process mLogcatProcess;
 
   private static enum MenuId {
-    HELP, PREFERENCES, JUMP_TO_BOTTOM, SHARE;
+    HELP, PREFERENCES, JUMP_TO_BOTTOM, SHARE, COPY;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -115,7 +118,17 @@ public class LogcatViewer extends ListActivity {
         android.R.drawable.ic_menu_help);
     menu.add(Menu.NONE, MenuId.SHARE.getId(), Menu.NONE, "Share").setIcon(
         android.R.drawable.ic_dialog_email);
+    menu.add(Menu.NONE, MenuId.COPY.getId(), Menu.NONE, "Copy").setIcon(
+        android.R.drawable.ic_menu_edit);
     return super.onCreateOptionsMenu(menu);
+  }
+
+  private String getAsString() {
+    StringBuilder builder = new StringBuilder();
+    for (String message : mLogcatMessages) {
+      builder.append(message + "\n");
+    }
+    return builder.toString();
   }
 
   @Override
@@ -128,15 +141,15 @@ public class LogcatViewer extends ListActivity {
     } else if (itemId == MenuId.PREFERENCES.getId()) {
       startActivity(new Intent(this, Preferences.class));
     } else if (itemId == MenuId.SHARE.getId()) {
-      Intent in = new Intent(Intent.ACTION_SEND);
-      StringBuilder b = new StringBuilder();
-      for (String s : mLogcatMessages) {
-        b.append(s + "\n");
-      }
-      in.putExtra(Intent.EXTRA_TEXT, b.toString());
-      in.putExtra(Intent.EXTRA_SUBJECT, "Logcat Dump");
-      in.setType("text/plain");
-      startActivity(Intent.createChooser(in, "Send Logcat to:"));
+      Intent intent = new Intent(Intent.ACTION_SEND);
+      intent.putExtra(Intent.EXTRA_TEXT, getAsString().toString());
+      intent.putExtra(Intent.EXTRA_SUBJECT, "Logcat Dump");
+      intent.setType("text/plain");
+      startActivity(Intent.createChooser(intent, "Send Logcat to:"));
+    } else if (itemId == MenuId.COPY.getId()) {
+      ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+      clipboard.setText(getAsString());
+      Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show();
     }
     return super.onOptionsItemSelected(item);
   }

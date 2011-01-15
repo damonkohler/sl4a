@@ -37,8 +37,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -60,23 +60,23 @@ public class Help {
           dest.mkdirs();
         }
         new File(InterpreterConstants.SDCARD_SL4A_DOC, "index.html");
-        AssetManager am = context.getAssets();
-        ZipInputStream z = new ZipInputStream(am.open("sl4adoc.zip"));
-        ZipEntry e;
-        while ((e = z.getNextEntry()) != null) {
-          File f = new File(InterpreterConstants.SDCARD_SL4A_DOC, e.getName());
-          if (!f.exists() || f.lastModified() < e.getTime()) {
-            if (!f.exists() && !f.getParentFile().exists()) {
-              f.getParentFile().mkdirs();
+        AssetManager assetManager = context.getAssets();
+        ZipInputStream zip = new ZipInputStream(assetManager.open("sl4adoc.zip"));
+        ZipEntry entry;
+        while ((entry = zip.getNextEntry()) != null) {
+          File file = new File(InterpreterConstants.SDCARD_SL4A_DOC, entry.getName());
+          if (!file.exists() || file.lastModified() < entry.getTime()) {
+            if (!file.exists() && !file.getParentFile().exists()) {
+              file.getParentFile().mkdirs();
             }
-            OutputStream o = new BufferedOutputStream(new FileOutputStream(f));
+            OutputStream output = new BufferedOutputStream(new FileOutputStream(file));
             int len;
-            while ((len = z.read(buf)) > 0) {
-              o.write(buf, 0, len);
+            while ((len = zip.read(buf)) > 0) {
+              output.write(buf, 0, len);
             }
-            o.flush();
-            o.close();
-            f.setLastModified(e.getTime());
+            output.flush();
+            output.close();
+            file.setLastModified(entry.getTime());
           }
         }
         helpChecked = 1;
@@ -104,7 +104,7 @@ public class Help {
 
   public static void show(final Activity activity) {
     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-    List<CharSequence> list = new Vector<CharSequence>();
+    List<CharSequence> list = new ArrayList<CharSequence>();
     list.add("Wiki Documentation");
     list.add("YouTube Screencasts");
     list.add("Terminal Help");

@@ -37,11 +37,11 @@ abstract class DialogTask extends FutureActivityTask<Object> {
   }
 
   @Override
-  protected void setResult(Object o) {
-    super.setResult(o);
-    EventFacade e = getEventFacade();
-    if (e != null) {
-      e.postEvent("dialog", o);
+  protected void setResult(Object object) {
+    super.setResult(object);
+    EventFacade eventFacade = getEventFacade();
+    if (eventFacade != null) {
+      eventFacade.postEvent("dialog", object);
     }
   }
 

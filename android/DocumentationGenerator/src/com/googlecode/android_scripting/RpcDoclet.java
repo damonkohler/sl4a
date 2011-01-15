@@ -51,27 +51,27 @@ public class RpcDoclet {
 
   public boolean run() {
     System.out.println("Started in " + System.getProperty("user.dir"));
-    String x;
+    String temp;
     for (String[] list : mRoot.options()) {
-      x = "";
+      temp = "";
       if (list[0].equals("-dest")) {
         mDest = list[1];
       }
       for (String s : list) {
-        x += s + " : ";
+        temp += s + " : ";
       }
-      addln(x);
+      addln(temp);
     }
     try {
       if (mDest == null) {
         System.out.println("Must define destination path (-dest <pathname<>)");
         return false;
       }
-      File f = new File(mDest);
-      if (!f.exists()) {
-        f.mkdirs();
+      File file = new File(mDest);
+      if (!file.exists()) {
+        file.mkdirs();
       }
-      if (!f.isDirectory() || !f.canWrite()) {
+      if (!file.isDirectory() || !file.canWrite()) {
         System.out.println("Can't write to destination path.");
         return false;
       }
@@ -114,8 +114,8 @@ public class RpcDoclet {
   }
 
   private void createIndex(List<ClassDoc> classlist) throws IOException {
-    File f = new File(mDest + "/index.html");
-    mOutput = new PrintWriter(f);
+    File file = new File(mDest + "/index.html");
+    mOutput = new PrintWriter(file);
     outputln("<html><head><title>SL4A API Help</title></head>");
     outputln("<body>");
     outputln("<h1>SL4A API Help</h1>");
@@ -131,8 +131,8 @@ public class RpcDoclet {
   private void dumpClassDetail(ClassDoc clazz) throws IOException {
     List<MethodDoc> methodlist = new Vector<MethodDoc>();
     addln(clazz.name());
-    File f = new File(mDest + "/" + clazz.name() + ".html");
-    mOutput = new PrintWriter(f);
+    File file = new File(mDest + "/" + clazz.name() + ".html");
+    mOutput = new PrintWriter(file);
     outputln("<html><head><title>SL4A API Help -" + clazz.name() + "</title></head>");
     outputln("<body>");
     outputln("<h1>SL4A API Help -" + clazz.name() + "</h1>");
@@ -142,28 +142,28 @@ public class RpcDoclet {
       outputln("<br>" + t.name() + " " + t.text());
     }
     outputln("<table border=1>");
-    for (MethodDoc m : clazz.methods()) {
-      if (methodHasRpc(m)) {
-        methodlist.add(m);
+    for (MethodDoc method : clazz.methods()) {
+      if (methodHasRpc(method)) {
+        methodlist.add(method);
       }
     }
     Collections.sort(methodlist);
-    for (MethodDoc m : methodlist) {
-      output("<tr><td>" + anchor(m.name()) + "<b>" + m.name() + "</b></td>");
+    for (MethodDoc method : methodlist) {
+      output("<tr><td>" + anchor(method.name()) + "<b>" + method.name() + "</b></td>");
       output("<td>");
-      Map<String, AnnotationDesc> amap = buildAnnotations(m);
+      Map<String, AnnotationDesc> amap = buildAnnotations(method);
       AnnotationDesc rpc = amap.get("Rpc");
       Map<String, String> mlist = buildAnnotationDetails(rpc);
       if (mlist.containsKey("description")) {
         outputln(htmlLines(mlist.get("description")));
       }
-      listRpcParameters(m);
+      listRpcParameters(method);
       if (mlist.containsKey("returns")) {
-        outputln("<br><b>returns: (" + m.returnType().simpleTypeName() + ")</b> "
+        outputln("<br><b>returns: (" + method.returnType().simpleTypeName() + ")</b> "
             + mlist.get("returns"));
       }
-      if (m.commentText() != null && !m.commentText().isEmpty()) {
-        outputln("<br>" + m.commentText());
+      if (method.commentText() != null && !method.commentText().isEmpty()) {
+        outputln("<br>" + method.commentText());
       }
       if (amap.containsKey("RpcMinSdk")) {
         outputln("<br><i>Min SDK level="
@@ -178,26 +178,26 @@ public class RpcDoclet {
   }
 
   private void listRpcParameters(MethodDoc m) throws IOException {
-    AnnotationDesc a;
+    AnnotationDesc annotation;
     Map<String, String> d;
     String s;
-    for (Parameter p : m.parameters()) {
-      Map<String, AnnotationDesc> plist = buildAnnotations(p.annotations());
-      if ((a = plist.get("RpcParameter")) != null) {
-        d = buildAnnotationDetails(a);
+    for (Parameter parameter : m.parameters()) {
+      Map<String, AnnotationDesc> paramList = buildAnnotations(parameter.annotations());
+      if ((annotation = paramList.get("RpcParameter")) != null) {
+        d = buildAnnotationDetails(annotation);
         String name = d.get("name");
         if (name == null) {
-          name = p.name();
+          name = parameter.name();
         }
-        s = "<br><b>" + name + " (" + p.type().simpleTypeName() + ")</b> ";
+        s = "<br><b>" + name + " (" + parameter.type().simpleTypeName() + ")</b> ";
         if (d.containsKey("description")) {
           s = s + htmlLines(d.get("description"));
         }
-        if (plist.containsKey("RpcOptional")) {
+        if (paramList.containsKey("RpcOptional")) {
           s = s + " (optional)";
         }
-        if (plist.containsKey("RpcDefault")) {
-          d = buildAnnotationDetails(plist.get("RpcDefault"));
+        if (paramList.containsKey("RpcDefault")) {
+          d = buildAnnotationDetails(paramList.get("RpcDefault"));
           s = s + " (default=" + d.get("value") + ")";
         }
         outputln(s);
@@ -205,16 +205,16 @@ public class RpcDoclet {
     }
   }
 
-  private String expandTags(Doc d) {
+  private String expandTags(Doc doc) {
     StringBuilder result = new StringBuilder();
-    for (Tag tag : d.inlineTags()) {
+    for (Tag tag : doc.inlineTags()) {
       if (tag.name().equals("Text")) {
         result.append(tag.text());
       } else {
-        StringTokenizer tk = new StringTokenizer(tag.text());
+        StringTokenizer tokenizer = new StringTokenizer(tag.text());
         if (tag.kind().equals("@see")) {
-          String link = tk.nextToken();
-          String name = (tk.hasMoreTokens() ? tk.nextToken() : link);
+          String link = tokenizer.nextToken();
+          String name = (tokenizer.hasMoreTokens() ? tokenizer.nextToken() : link);
           result.append(link(link, name));
         } else {
           result.append("[" + tag.name() + ":" + tag.text() + "]");
@@ -226,8 +226,8 @@ public class RpcDoclet {
 
   private Map<String, AnnotationDesc> buildAnnotations(AnnotationDesc[] annotations) {
     Map<String, AnnotationDesc> result = new LinkedHashMap<String, AnnotationDesc>();
-    for (AnnotationDesc a : annotations) {
-      result.put(a.annotationType().name(), a);
+    for (AnnotationDesc annotation : annotations) {
+      result.put(annotation.annotationType().name(), annotation);
     }
     return result;
   }
@@ -236,16 +236,16 @@ public class RpcDoclet {
     return buildAnnotations(doc.annotations());
   }
 
-  private String trimQuotes(String s) {
-    if (!s.startsWith("\"")) {
-      return s;
+  private String trimQuotes(String value) {
+    if (!value.startsWith("\"")) {
+      return value;
     }
-    return s.substring(1, s.lastIndexOf("\""));
+    return value.substring(1, value.lastIndexOf("\""));
   }
 
-  private Map<String, String> buildAnnotationDetails(AnnotationDesc a) {
+  private Map<String, String> buildAnnotationDetails(AnnotationDesc annotation) {
     Map<String, String> result = new HashMap<String, String>();
-    for (ElementValuePair e : a.elementValues()) {
+    for (ElementValuePair e : annotation.elementValues()) {
       result.put(e.element().name(), trimQuotes(e.value().toString()));
     }
     return result;
@@ -263,34 +263,34 @@ public class RpcDoclet {
     return commentText;
   }
 
-  private String htmlLines(String s) {
-    addln(s);
-    return s.replace("\\n", "<br>").replace("\n", "<br>");
+  private String htmlLines(String value) {
+    addln(value);
+    return value.replace("\\n", "<br>").replace("\n", "<br>");
   }
 
-  private void addln(Object msg) {
-    System.out.println(msg);
+  private void addln(Object message) {
+    System.out.println(message);
   }
 
-  private void output(String msg) throws IOException {
-    mOutput.print(msg);
+  private void output(String message) throws IOException {
+    mOutput.print(message);
   }
 
-  private void outputln(String msg) throws IOException {
-    mOutput.println(msg);
+  private void outputln(String message) throws IOException {
+    mOutput.println(message);
   }
 
   private boolean hasRpc(ClassDoc clazz) {
-    for (MethodDoc m : clazz.methods()) {
-      if (methodHasRpc(m)) {
+    for (MethodDoc method : clazz.methods()) {
+      if (methodHasRpc(method)) {
         return true;
       }
     }
     return false;
   }
 
-  private boolean methodHasRpc(MethodDoc m) {
-    for (AnnotationDesc a : m.annotations()) {
+  private boolean methodHasRpc(MethodDoc method) {
+    for (AnnotationDesc a : method.annotations()) {
       if (a.annotationType().name().equals("Rpc")) {
         return true;
       }

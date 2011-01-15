@@ -80,7 +80,7 @@ public class MediaPlayerFacade extends RpcReceiver implements MediaPlayer.OnComp
     return (tag == null || tag.equals("")) ? "default" : tag;
   }
 
-  private MediaPlayer getMp(String tag) {
+  private MediaPlayer getPlayer(String tag) {
     tag = getDefault(tag);
     return mPlayers.get(tag);
   }
@@ -90,71 +90,60 @@ public class MediaPlayerFacade extends RpcReceiver implements MediaPlayer.OnComp
     return mUrls.get(tag);
   }
 
-  private void putMp(String tag, MediaPlayer mp, String url) {
+  private void putMp(String tag, MediaPlayer player, String url) {
     tag = getDefault(tag);
-    mPlayers.put(tag, mp);
+    mPlayers.put(tag, player);
     mUrls.put(tag, url);
   }
 
   private void removeMp(String tag) {
     tag = getDefault(tag);
-    MediaPlayer mp = mPlayers.get(tag);
-    if (mp != null) {
-      mp.stop();
-      mp.release();
+    MediaPlayer player = mPlayers.get(tag);
+    if (player != null) {
+      player.stop();
+      player.release();
     }
     mPlayers.remove(tag);
     mUrls.remove(tag);
   }
 
-  /**
-   * Open a media file.
-   * 
-   * @param url
-   *          to open, ie, file:///sdcard/MP3/bang.mp3
-   * @param tag
-   *          user supplied identifier, default="default"
-   * @param play
-   *          if true, start playing immediately, else open paused.
-   * @return true if media was opened successfully.
-   */
   @Rpc(description = "Open a media file", returns = "true if play successful")
   public synchronized boolean mediaPlay(
       @RpcParameter(name = "url", description = "url of media resource") String url,
       @RpcParameter(name = "tag", description = "string identifying resource") @RpcDefault(value = "default") String tag,
       @RpcParameter(name = "play", description = "start playing immediately") @RpcDefault(value = "true") Boolean play) {
     removeMp(tag);
-    MediaPlayer mp = getMp(tag);
-    mp = MediaPlayer.create(mService, Uri.parse(url));
-    if (mp != null) {
-      putMp(tag, mp, url);
-      mp.setOnCompletionListener(this);
+    MediaPlayer player = getPlayer(tag);
+    player = MediaPlayer.create(mService, Uri.parse(url));
+    if (player != null) {
+      putMp(tag, player, url);
+      player.setOnCompletionListener(this);
       if (play) {
-        mp.start();
+        player.start();
       }
     }
-    return mp != null;
+    return player != null;
   }
 
   @Rpc(description = "pause playing media file", returns = "true if successful")
   public synchronized boolean mediaPlayPause(
       @RpcParameter(name = "tag", description = "string identifying resource") @RpcDefault(value = "default") String tag) {
-    MediaPlayer mp = getMp(tag);
-    if (mp == null) {
+    MediaPlayer player = getPlayer(tag);
+    if (player == null) {
       return false;
     }
-    mp.pause();
+    player.pause();
     return true;
   }
 
   @Rpc(description = "start playing media file", returns = "true if successful")
   public synchronized boolean mediaPlayStart(
       @RpcParameter(name = "tag", description = "string identifying resource") @RpcDefault(value = "default") String tag) {
-    MediaPlayer mp = getMp(tag);
-    if (mp == null) {
+    MediaPlayer player = getPlayer(tag);
+    if (player == null) {
       return false;
     }
-    mp.start();
+    player.start();
     return mediaIsPlaying(tag);
   }
 
@@ -168,25 +157,25 @@ public class MediaPlayerFacade extends RpcReceiver implements MediaPlayer.OnComp
   @Rpc(description = "Checks if media file is playing.", returns = "true if playing")
   public synchronized boolean mediaIsPlaying(
       @RpcParameter(name = "tag", description = "string identifying resource") @RpcDefault(value = "default") String tag) {
-    MediaPlayer mp = getMp(tag);
-    return (mp == null) ? false : mp.isPlaying();
+    MediaPlayer player = getPlayer(tag);
+    return (player == null) ? false : player.isPlaying();
   }
 
   @Rpc(description = "Information on current media", returns = "Media Information")
   public synchronized Map<String, Object> mediaPlayInfo(
       @RpcParameter(name = "tag", description = "string identifying resource") @RpcDefault(value = "default") String tag) {
     Map<String, Object> result = new HashMap<String, Object>();
-    MediaPlayer mp = getMp(tag);
+    MediaPlayer player = getPlayer(tag);
     result.put("tag", getDefault(tag));
-    if (mp == null) {
+    if (player == null) {
       result.put("loaded", false);
     } else {
       result.put("loaded", true);
-      result.put("duration", mp.getDuration());
-      result.put("position", mp.getCurrentPosition());
-      result.put("isplaying", mp.isPlaying());
+      result.put("duration", player.getDuration());
+      result.put("position", player.getCurrentPosition());
+      result.put("isplaying", player.isPlaying());
       result.put("url", getUrl(tag));
-      result.put("looping", mp.isLooping());
+      result.put("looping", player.isLooping());
     }
     return result;
   }
@@ -200,11 +189,11 @@ public class MediaPlayerFacade extends RpcReceiver implements MediaPlayer.OnComp
   public synchronized boolean mediaPlaySetLooping(
       @RpcParameter(name = "enabled") @RpcDefault(value = "true") Boolean enabled,
       @RpcParameter(name = "tag", description = "string identifying resource") @RpcDefault(value = "default") String tag) {
-    MediaPlayer mp = getMp(tag);
-    if (mp == null) {
+    MediaPlayer player = getPlayer(tag);
+    if (player == null) {
       return false;
     }
-    mp.setLooping(enabled);
+    player.setLooping(enabled);
     return true;
   }
 
@@ -212,22 +201,22 @@ public class MediaPlayerFacade extends RpcReceiver implements MediaPlayer.OnComp
   public synchronized int mediaPlaySeek(
       @RpcParameter(name = "msec", description = "Position in millseconds") Integer msec,
       @RpcParameter(name = "tag", description = "string identifying resource") @RpcDefault(value = "default") String tag) {
-    MediaPlayer mp = getMp(tag);
-    if (mp == null) {
+    MediaPlayer player = getPlayer(tag);
+    if (player == null) {
       return 0;
     }
-    mp.seekTo(msec);
-    return mp.getCurrentPosition();
+    player.seekTo(msec);
+    return player.getCurrentPosition();
   }
 
   @Override
   public synchronized void shutdown() {
     for (String key : mPlayers.keySet()) {
-      MediaPlayer mp = mPlayers.get(key);
-      if (mp != null) {
-        mp.stop();
-        mp.release();
-        mp = null;
+      MediaPlayer player = mPlayers.get(key);
+      if (player != null) {
+        player.stop();
+        player.release();
+        player = null;
       }
     }
     mPlayers.clear();
@@ -235,8 +224,8 @@ public class MediaPlayerFacade extends RpcReceiver implements MediaPlayer.OnComp
   }
 
   @Override
-  public void onCompletion(MediaPlayer mp) {
-    String tag = getTag(mp);
+  public void onCompletion(MediaPlayer player) {
+    String tag = getTag(player);
     if (tag != null) {
       Map<String, Object> data = new HashMap<String, Object>();
       data.put("action", "complete");
@@ -245,9 +234,9 @@ public class MediaPlayerFacade extends RpcReceiver implements MediaPlayer.OnComp
     }
   }
 
-  private String getTag(MediaPlayer mp) {
+  private String getTag(MediaPlayer player) {
     for (Entry<String, MediaPlayer> m : mPlayers.entrySet()) {
-      if (m.getValue() == mp) {
+      if (m.getValue() == player) {
         return m.getKey();
       }
     }

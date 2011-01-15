@@ -130,28 +130,28 @@ public class WebCamFacade extends RpcReceiver {
         @Override
         public void run() {
           mJpegData = compressYuvToJpeg(data);
-          Map<String,Object> m = new HashMap<String, Object>(); 
-          m.put("format", "jpeg");
-          m.put("width", mPreviewWidth);
-          m.put("height", mPreviewHeight);
-          m.put("quality", mJpegQuality);
+          Map<String,Object> map = new HashMap<String, Object>(); 
+          map.put("format", "jpeg");
+          map.put("width", mPreviewWidth);
+          map.put("height", mPreviewHeight);
+          map.put("quality", mJpegQuality);
           if (mDest!=null) {
             try {
               File dest=File.createTempFile("prv",".jpg",mDest);
-              OutputStream o = new FileOutputStream(dest);
-              o.write(mJpegData);
-              o.close();
-              m.put("encoding","file");
-              m.put("filename",dest.toString());
+              OutputStream output = new FileOutputStream(dest);
+              output.write(mJpegData);
+              output.close();
+              map.put("encoding","file");
+              map.put("filename",dest.toString());
             } catch (IOException e) {
-              m.put("error", e.toString());
+              map.put("error", e.toString());
             }
           }
           else {
-            m.put("encoding","Base64");
-            m.put("data", Base64.encodeToString(mJpegData, Base64.DEFAULT));
+            map.put("encoding","Base64");
+            map.put("data", Base64.encodeToString(mJpegData, Base64.DEFAULT));
           }
-          mEventFacade.postEvent("preview", m);
+          mEventFacade.postEvent("preview", map);
           if (mPreview) {
             camera.setOneShotPreviewCallback(mPreviewEvent);
           }
