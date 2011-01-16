@@ -132,6 +132,17 @@ public class FileUtils {
     return true;
   }
 
+  public static File getExternalDownload() {
+    try {
+      Class<?> c = Class.forName("android.os.Environment");
+      Method m = c.getDeclaredMethod("getExternalStoragePublicDirectory", String.class);
+      String download = c.getDeclaredField("DIRECTORY_DOWNLOADS").get(null).toString();
+      return (File) m.invoke(null, download);
+    } catch (Exception e) {
+      return new File(Environment.getExternalStorageDirectory(), "Download");
+    }
+  }
+
   public static boolean rename(File file, String name) {
     return file.renameTo(new File(file.getParent(), name));
   }

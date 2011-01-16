@@ -16,7 +16,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 import com.googlecode.android_scripting.AsyncTaskListener;
 import com.googlecode.android_scripting.FileUtils;
@@ -54,8 +53,11 @@ import java.util.zip.ZipFile;
  * @author Manuel Narango
  */
 
+// TODO:(Robbie) The whole Import Module is more of a proof of concept than a fully realised
+// process. Needs some means of checking that these are properly formatted zip files, and probably a
+// means of uninstalling as well. Import handling could well be a separate activity, too.
 public class PythonMain extends Main {
-  Button mBtnModules;
+  Button mButtonModules;
   File mDownloads;
 
   private Dialog mDialog;
@@ -92,7 +94,7 @@ public class PythonMain extends Main {
     }
   };
 
-  private Button mBtnBrowse;
+  private Button mButtonBrowse;
   private File mFrom;
   private File mSoPath;
   private File mPythonPath;
@@ -118,41 +120,38 @@ public class PythonMain extends Main {
   protected void initializeViews() {
     super.initializeViews();
 
-    for (File f : new File(Environment.getExternalStorageDirectory().getAbsolutePath()).listFiles()) {
-      if (f.isDirectory()) {
-        if (f.getName().toLowerCase().startsWith("download")) {
-          mDownloads = f;
-          break;
+    mDownloads = FileUtils.getExternalDownload();
+    if (!mDownloads.exists()) {
+      for (File file : new File(Environment.getExternalStorageDirectory().getAbsolutePath())
+          .listFiles()) {
+        if (file.isDirectory()) {
+          if (file.getName().toLowerCase().startsWith("download")) {
+            mDownloads = file;
+            break;
+          }
         }
       }
     }
-
-    if (mDownloads == null) {
-      mDownloads =
-          new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "download");
-    }
-
-    LinearLayout mlayout = getLayout();
 
     MarginLayoutParams marginParams =
         new MarginLayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
     final float scale = getResources().getDisplayMetrics().density;
     int marginPixels = (int) (MARGIN_DIP * scale + 0.5f);
     marginParams.setMargins(marginPixels, marginPixels, marginPixels, marginPixels);
-    mBtnModules = new Button(this);
-    mBtnModules.setLayoutParams(marginParams);
-    mBtnModules.setText("Import Modules");
-    mlayout.addView(mBtnModules);
-    mBtnModules.setOnClickListener(new OnClickListener() {
+    mButtonModules = new Button(this);
+    mButtonModules.setLayoutParams(marginParams);
+    mButtonModules.setText("Import Modules");
+    mLayout.addView(mButtonModules);
+    mButtonModules.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
         doImportModule();
       }
     });
-    mBtnBrowse = new Button(this);
-    mBtnBrowse.setLayoutParams(marginParams);
-    mBtnBrowse.setText("Browse Modules");
-    mlayout.addView(mBtnBrowse);
-    mBtnBrowse.setOnClickListener(new OnClickListener() {
+    mButtonBrowse = new Button(this);
+    mButtonBrowse.setLayoutParams(marginParams);
+    mButtonBrowse.setText("Browse Modules");
+    mLayout.addView(mButtonBrowse);
+    mButtonBrowse.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
         doBrowseModule();
       }
