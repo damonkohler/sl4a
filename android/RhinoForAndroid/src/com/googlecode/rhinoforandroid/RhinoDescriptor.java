@@ -76,10 +76,6 @@ public class RhinoDescriptor extends Sl4aHostedInterpreter {
     return Arrays.asList("-Xss128k", "-classpath", absolutePathToJar,
         "com.android.internal.util.WithFramework", "org.mozilla.javascript.tools.shell.Main", "-O",
         "-1");
-    /*
-     * return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
-     * absolutePathToJar, "org.mozilla.javascript.tools.shell.Main", "-O", "-1");
-     */
   }
 
   @Override
