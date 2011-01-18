@@ -73,8 +73,13 @@ public class RhinoDescriptor extends Sl4aHostedInterpreter {
   @Override
   public List<String> getArguments(Context context) {
     String absolutePathToJar = new File(getExtrasPath(context), RHINO_JAR).getAbsolutePath();
-    return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
-        absolutePathToJar, "org.mozilla.javascript.tools.shell.Main", "-O", "-1");
+    return Arrays.asList("-Xss128k", "-classpath", absolutePathToJar,
+        "com.android.internal.util.WithFramework", "org.mozilla.javascript.tools.shell.Main", "-O",
+        "-1");
+    /*
+     * return Arrays.asList("-Xbootclasspath:/system/framework/core.jar", "-Xss128k", "-classpath",
+     * absolutePathToJar, "org.mozilla.javascript.tools.shell.Main", "-O", "-1");
+     */
   }
 
   @Override
