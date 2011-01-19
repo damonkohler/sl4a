@@ -295,18 +295,14 @@ public class PythonMain extends Main {
             continue;
           }
           useshared = hasSo;
-          File dpath = useshared ? sopath : pypath;
-          File f = new File(dpath, entry.getName());
-          File p = f.getParentFile();
-          if (!p.exists()) {
-            p.mkdirs();
-            while (p != null && !p.equals(dpath)) {
-              FileUtils.chmod(p, 0775);
-              p = p.getParentFile();
-            }
+          File destinationPath = useshared ? sopath : pypath;
+          File destinationFile = new File(destinationPath, entry.getName());
+          File parentFile = destinationFile.getParentFile();
+          if (!parentFile.exists()) {
+            FileUtils.makeDirectoriesSensibly(parentFile);
           }
           sendmsg(true, "pos", cnt);
-          OutputStream output = new BufferedOutputStream(new FileOutputStream(f));
+          OutputStream output = new BufferedOutputStream(new FileOutputStream(destinationFile));
           InputStream input = zipfile.getInputStream(entry);
           int len;
           while ((len = input.read(buf)) > 0) {
@@ -316,8 +312,8 @@ public class PythonMain extends Main {
           output.flush();
           output.close();
 
-          f.setLastModified(entry.getTime());
-          FileUtils.chmod(f, entry.getName().endsWith(".so") ? 0755 : 0644);
+          destinationFile.setLastModified(entry.getTime());
+          FileUtils.chmod(destinationFile, entry.getName().endsWith(".so") ? 0755 : 0644);
         }
         sendmsg(false, "Success");
       } catch (Exception entry) {

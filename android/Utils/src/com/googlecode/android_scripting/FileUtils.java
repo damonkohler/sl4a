@@ -132,6 +132,32 @@ public class FileUtils {
     return true;
   }
 
+  public static boolean makeDirectoriesChmod(File newDir, int mode) {
+    boolean result = false;
+    if (newDir.exists()) {
+      return true;
+    }
+    File parent = newDir.getParentFile();
+    if (!parent.exists()) {
+      if (!makeDirectoriesChmod(parent, mode)) {
+        return false;
+      }
+    }
+    result = newDir.mkdir();
+    if (result) {
+      try {
+        chmod(newDir, mode);
+      } catch (Exception e) {
+        Log.e("Failed to set permissions.");
+      }
+    }
+    return result;
+  }
+
+  public static boolean makeDirectoriesSensibly(File newDir) {
+    return makeDirectoriesChmod(newDir, 0755);
+  }
+
   public static File getExternalDownload() {
     try {
       Class<?> c = Class.forName("android.os.Environment");
