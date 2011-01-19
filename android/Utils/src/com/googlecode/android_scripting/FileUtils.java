@@ -138,7 +138,7 @@ public class FileUtils {
       return true;
     }
     File parent = newDir.getParentFile();
-    if (!parent.exists()) {
+    if (parent != null && !parent.exists()) {
       if (!makeDirectoriesChmod(parent, mode)) {
         return false;
       }
