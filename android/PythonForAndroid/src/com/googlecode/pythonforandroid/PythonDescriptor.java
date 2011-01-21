@@ -32,6 +32,7 @@ public class PythonDescriptor extends Sl4aHostedInterpreter {
   private static final String ENV_HOME = "PYTHONHOME";
   private static final String ENV_PATH = "PYTHONPATH";
   private static final String ENV_TEMP = "TEMP";
+  private static final String ENV_LD = "LD_LIBRARY_PATH";
 
   @Override
   public String getBaseInstallUrl() { // TODO: Change back to standard path for official release
@@ -63,17 +64,17 @@ public class PythonDescriptor extends Sl4aHostedInterpreter {
   }
 
   public int getVersion() {
-    return 8;
+    return 10;
   }
 
   @Override
   public int getExtrasVersion() {
-    return 9;
+    return 10;
   }
 
   @Override
   public int getScriptsVersion() {
-    return 8;
+    return 10;
   }
 
   @Override
@@ -91,7 +92,7 @@ public class PythonDescriptor extends Sl4aHostedInterpreter {
     return file.getAbsolutePath();
   }
 
-  private String getExtras() {
+  public String getExtras() {
     File file = new File(getExtrasRoot(), getName());
     return file.getAbsolutePath();
   }
@@ -108,7 +109,9 @@ public class PythonDescriptor extends Sl4aHostedInterpreter {
   public Map<String, String> getEnvironmentVariables(Context context) {
     Map<String, String> values = new HashMap<String, String>();
     values.put(ENV_HOME, getHome(context));
-    values.put(ENV_PATH, getExtras());
+    values.put(ENV_LD, getHome(context) + "/lib");
+    values.put(ENV_PATH, getExtras() + ":" + getHome(context) + "/lib/python2.6/lib-dynload" + ":"
+        + getHome(context) + "/lib/python2.6");
     values.put(ENV_TEMP, getTemp());
     return values;
   }

@@ -37,6 +37,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.googlecode.android_scripting.BaseApplication;
+import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.FutureActivityTaskExecutor;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.NotificationIdFactory;
@@ -47,6 +48,11 @@ import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -397,5 +403,19 @@ public class AndroidFacade extends RpcReceiver {
   @Rpc(description = "Writes message to logcat.")
   public void log(@RpcParameter(name = "message") String message) {
     android.util.Log.v("SCRIPT", message);
+  }
+
+  @Rpc(description = "A map of various useful environment details")
+  public Map<String, Object> environment() {
+    Map<String, Object> result = new HashMap<String, Object>();
+    Map<String, Object> zone = new HashMap<String, Object>();
+    TimeZone tz = TimeZone.getDefault();
+    zone.put("id", tz.getID());
+    zone.put("display", tz.getDisplayName());
+    zone.put("offset", tz.getOffset((new Date()).getTime()));
+    result.put("TZ", zone);
+    result.put("SDK", android.os.Build.VERSION.SDK);
+    result.put("download", FileUtils.getExternalDownload().getAbsolutePath());
+    return result;
   }
 }
