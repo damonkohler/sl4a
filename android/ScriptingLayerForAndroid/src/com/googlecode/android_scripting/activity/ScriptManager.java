@@ -109,7 +109,7 @@ public class ScriptManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
     if (FileUtils.externalStorageMounted()) {
-      if (!FileUtils.makeDirectory(mBaseDir)) {
+      if (!FileUtils.makeDirectories(mBaseDir, 0755)) {
         new AlertDialog.Builder(this)
             .setTitle("Error")
             .setMessage(
@@ -488,7 +488,7 @@ public class ScriptManager extends ListActivity {
           }
         }
         File dir = new File(mCurrentDir, name);
-        if (!FileUtils.makeDirectory(dir)) {
+        if (!FileUtils.makeDirectories(dir, 0755)) {
           Log.e(ScriptManager.this, String.format("Cannot create folder \"%s\".", name));
         }
         mAdapter.notifyDataSetInvalidated();

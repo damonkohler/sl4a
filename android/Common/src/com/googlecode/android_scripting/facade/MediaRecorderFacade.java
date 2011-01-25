@@ -74,11 +74,10 @@ public class MediaRecorderFacade extends RpcReceiver {
       @RpcParameter(name = "duration") @RpcOptional Double duration,
       @RpcParameter(name = "recordAudio") @RpcDefault("true") Boolean recordAudio) throws Exception {
     int ms = convertSecondsToMilliseconds(duration);
-    startVideoRecording(targetPath, ms, recordAudio);
+    startVideoRecording(new File(targetPath), ms, recordAudio);
   }
 
-  private void startVideoRecording(String targetPath, int milliseconds, boolean withAudio)
-      throws Exception {
+  private void startVideoRecording(File file, int milliseconds, boolean withAudio) throws Exception {
     mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
     if (withAudio) {
       int audioSource = MediaRecorder.AudioSource.MIC;
@@ -96,10 +95,11 @@ public class MediaRecorderFacade extends RpcReceiver {
       mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
     }
     mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
-    if (!FileUtils.makeDirectories(targetPath)) {
-      throw new RuntimeException(String.format("Cannot create directories for %s.", targetPath));
+    if (!FileUtils.makeDirectories(file.getParentFile(), 0755)) {
+      throw new RuntimeException(String
+          .format("Cannot create directories for %s.", file.toString()));
     }
-    mMediaRecorder.setOutputFile(targetPath);
+    mMediaRecorder.setOutputFile(file.getAbsolutePath());
     if (milliseconds > 0) {
       mMediaRecorder.setMaxDuration(milliseconds);
     }

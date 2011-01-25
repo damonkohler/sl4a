@@ -297,10 +297,7 @@ public class PythonMain extends Main {
           useshared = hasSo;
           File destinationPath = useshared ? sopath : pypath;
           File destinationFile = new File(destinationPath, entry.getName());
-          File parentFile = destinationFile.getParentFile();
-          if (!parentFile.exists()) {
-            FileUtils.makeDirectoriesSensibly(parentFile);
-          }
+          FileUtils.makeDirectories(destinationFile.getParentFile(), 0755);
           sendmsg(true, "pos", cnt);
           OutputStream output = new BufferedOutputStream(new FileOutputStream(destinationFile));
           InputStream input = zipfile.getInputStream(entry);

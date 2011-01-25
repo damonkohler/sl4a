@@ -92,10 +92,10 @@ public class FileUtils {
       Log.e("No script name specified.");
       return null;
     }
-    if (!makeDirectories(name)) {
+    File file = new File(name);
+    if (!makeDirectories(file.getParentFile(), 0755)) {
       return null;
     }
-    File file = new File(name);
     try {
       OutputStream output = new FileOutputStream(file);
       IoUtils.copy(input, output);
@@ -106,56 +106,25 @@ public class FileUtils {
     return file;
   }
 
-  // TODO(damonkohler): These two directory making functions are only subtly different and should be
-  // unified.
-  public static boolean makeDirectories(String filename) {
-    File file = new File(filename);
-    File parent = file.getParentFile();
-    if (!parent.exists()) {
-      Log.v("Creating directory: " + parent.getAbsolutePath());
-      if (!parent.mkdirs()) {
-        Log.e("Failed to create a directory.");
-        return false;
-      }
+  public static boolean makeDirectories(File directory, int mode) {
+    File parent = directory;
+    while (parent.getParentFile() != null && !parent.exists()) {
+      parent = parent.getParentFile();
     }
-    return true;
-  }
-
-  public static boolean makeDirectory(File newDir) {
-    if (!newDir.exists()) {
-      Log.v("Creating directory: " + newDir.getName());
-      if (!newDir.mkdirs()) {
+    if (!directory.exists()) {
+      Log.v("Creating directory: " + directory.getName());
+      if (!directory.mkdirs()) {
         Log.e("Failed to create directory.");
         return false;
       }
     }
+    try {
+      recursiveChmod(parent, mode);
+    } catch (Exception e) {
+      Log.e(e);
+      return false;
+    }
     return true;
-  }
-
-  public static boolean makeDirectoriesChmod(File newDir, int mode) {
-    boolean result = false;
-    if (newDir.exists()) {
-      return true;
-    }
-    File parent = newDir.getParentFile();
-    if (parent != null && !parent.exists()) {
-      if (!makeDirectoriesChmod(parent, mode)) {
-        return false;
-      }
-    }
-    result = newDir.mkdir();
-    if (result) {
-      try {
-        chmod(newDir, mode);
-      } catch (Exception e) {
-        Log.e("Failed to set permissions.");
-      }
-    }
-    return result;
-  }
-
-  public static boolean makeDirectoriesSensibly(File newDir) {
-    return makeDirectoriesChmod(newDir, 0755);
   }
 
   public static File getExternalDownload() {

@@ -68,7 +68,7 @@ public class CameraFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Take a picture and save it to the specified path.", returns = "A map of Booleans autoFocus and takePicture where True indicates success.")
-  public Bundle cameraCapturePicture(@RpcParameter(name = "path") final String path,
+  public Bundle cameraCapturePicture(@RpcParameter(name = "targetPath") final String targetPath,
       @RpcParameter(name = "useAutoFocus") @RpcDefault("true") Boolean useAutoFocus)
       throws InterruptedException {
     final BooleanResult autoFocusResult = new BooleanResult();
@@ -90,7 +90,7 @@ public class CameraFacade extends RpcReceiver {
       if (useAutoFocus) {
         autoFocus(autoFocusResult, camera);
       }
-      takePicture(path, takePictureResult, camera);
+      takePicture(new File(targetPath), takePictureResult, camera);
       previewTask.finish();
     } catch (Exception e) {
       Log.e(e);
@@ -138,18 +138,18 @@ public class CameraFacade extends RpcReceiver {
     return task;
   }
 
-  private void takePicture(final String path, final BooleanResult takePictureResult,
+  private void takePicture(final File file, final BooleanResult takePictureResult,
       final Camera camera) throws InterruptedException {
     final CountDownLatch latch = new CountDownLatch(1);
     camera.takePicture(null, null, new PictureCallback() {
       @Override
       public void onPictureTaken(byte[] data, Camera camera) {
-        if (!FileUtils.makeDirectories(path)) {
+        if (!FileUtils.makeDirectories(file.getParentFile(), 0755)) {
           takePictureResult.mmResult = false;
           return;
         }
         try {
-          FileOutputStream output = new FileOutputStream(path);
+          FileOutputStream output = new FileOutputStream(file);
           output.write(data);
           output.close();
           takePictureResult.mmResult = true;
@@ -190,9 +190,10 @@ public class CameraFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Starts the image capture application to take a picture and saves it to the specified path.")
-  public void cameraInteractiveCapturePicture(@RpcParameter(name = "path") final String path) {
+  public void cameraInteractiveCapturePicture(
+      @RpcParameter(name = "targetPath") final String targetPath) {
     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    File file = new File(path);
+    File file = new File(targetPath);
     intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
     AndroidFacade facade = mManager.getReceiver(AndroidFacade.class);
     facade.startActivityForResult(intent);
