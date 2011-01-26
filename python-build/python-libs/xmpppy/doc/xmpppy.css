@@ -1,0 +1,70 @@
+/*  xmpppy.css - The stylesheet of the xmpppy homepage
+ *
+ * Parts are taken of ickle stylesheet
+ *
+ * Copyleft 2005 by Marek Kubica
+ *
+ * Version 0.0.20050507
+ *
+ */ 
+
+/* set a background color, a light grey*/
+body {
+	background-color: #F2F2F2;
+}
+
+/* fonts - no serif */
+a, p, ul, td, div {
+	font-family: sans-serif;
+}
+
+/* hyperlinks: blue, not decorated, just bold */
+a {
+	text-decoration: none;
+	color: #00488F;
+	font-weight: bold;
+}
+
+/* the head table, blue like the sf.net logo */
+table.head {
+	width: 100%;
+	background-color: #00488F;
+	text-align: right;
+	border-collapse: collapse;
+}
+
+td.head {
+	padding: 0px;
+}
+
+table.content {
+	padding: 5px;
+	border-spacing: 30px;
+}
+
+td.sflogo {
+	width: 99%;
+}
+
+/* the conentent of the left side fills 80% of the screen */
+td.leftside {
+	width: 80%;
+}
+
+/* the links on the right side fill the remaining 20%
+ * and are displayed on top 
+ */
+td.rightside {
+	width: 20%;
+	vertical-align: top;
+}
+
+/* not simple bullets, but squares */
+ul {
+	list-style-type: square;
+}
+
+/* blockquotes in italic */
+blockquote {
+	font-style: italic;
+}

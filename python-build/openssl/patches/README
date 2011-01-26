@@ -1,0 +1,37 @@
+progs.patch:
+
+Fixup sources under the apps/ directory that are not built under the android environment.
+
+
+arm-asm.patch.patch:
+
+ARM assembly routines (AES, BN, SHA1, SHA256, SHA512)
+
+
+small_records.patch:
+
+Reduce OpenSSL memory consumption.
+SSL records may be as large as 16K, but are typically < 2K.  In
+addition, a historic bug in Windows allowed records to be as large
+32K.  OpenSSL statically allocates read and write buffers (34K and
+18K respectively) used for processing records.
+With this patch, OpenSSL statically allocates 4K + 4K buffers, with
+the option of dynamically growing buffers to 34K + 4K, which is a
+saving of 44K per connection for the typical case.
+
+
+handshake_cutthrough.patch
+
+Enables SSL3+ clients to send application data immediately following the
+Finished message even when negotiating full-handshakes.  With this patch,
+clients can negotiate SSL connections in 1-RTT even when performing
+full-handshakes.
+
+
+bad_version.patch
+
+Addresses CVE-2010-0740 http://www.openssl.org/news/secadv_20100324.txt
+A peer can send us a mal-formed packet and we'll copy its 'version'
+number in order to send an error back. However, if the version number
+is an internal OpenSSL value (like DTLS1_VERSION) then we'll assume
+that we have a valid DTLS state and crash when sending an alert.

@@ -1,0 +1,359 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module atom.http_interface</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="atom.html"><font color="#ffffff">atom</font></a>.http_interface</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/atom/http_interface.py">/usr/local/svn/gdata-python-client/src/atom/http_interface.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;module&nbsp;provides&nbsp;a&nbsp;common&nbsp;interface&nbsp;for&nbsp;all&nbsp;HTTP&nbsp;requests.<br>
+&nbsp;<br>
+<a href="#HttpResponse">HttpResponse</a>:&nbsp;Represents&nbsp;the&nbsp;server's&nbsp;response&nbsp;to&nbsp;an&nbsp;HTTP&nbsp;request.&nbsp;Provides<br>
+&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;interface&nbsp;identical&nbsp;to&nbsp;httplib.HTTPResponse&nbsp;which&nbsp;is&nbsp;the&nbsp;response<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expected&nbsp;from&nbsp;higher&nbsp;level&nbsp;classes&nbsp;which&nbsp;use&nbsp;HttpClient.request.<br>
+&nbsp;<br>
+<a href="#GenericHttpClient">GenericHttpClient</a>:&nbsp;Provides&nbsp;an&nbsp;interface&nbsp;(superclass)&nbsp;for&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;responsible&nbsp;for&nbsp;making&nbsp;HTTP&nbsp;requests.&nbsp;Subclasses&nbsp;of&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;used&nbsp;in&nbsp;AtomService&nbsp;and&nbsp;GDataService&nbsp;to&nbsp;make&nbsp;requests&nbsp;to&nbsp;the&nbsp;server.&nbsp;By<br>
+&nbsp;&nbsp;&nbsp;&nbsp;changing&nbsp;the&nbsp;http_client&nbsp;member&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;the&nbsp;AtomService&nbsp;is&nbsp;able&nbsp;to&nbsp;make<br>
+&nbsp;&nbsp;&nbsp;&nbsp;HTTP&nbsp;requests&nbsp;using&nbsp;different&nbsp;logic&nbsp;(for&nbsp;example,&nbsp;when&nbsp;running&nbsp;on&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Google&nbsp;App&nbsp;Engine,&nbsp;the&nbsp;http_client&nbsp;makes&nbsp;requests&nbsp;using&nbsp;the&nbsp;App&nbsp;Engine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;urlfetch&nbsp;API).</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="StringIO.html">StringIO</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.http_interface.html#GenericHttpClient">GenericHttpClient</a>
+</font></dt><dt><font face="helvetica, arial"><a href="atom.http_interface.html#GenericToken">GenericToken</a>
+</font></dt><dt><font face="helvetica, arial"><a href="atom.http_interface.html#HttpResponse">HttpResponse</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.http_interface.html#Error">Error</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.http_interface.html#ContentLengthRequired">ContentLengthRequired</a>
+</font></dt><dt><font face="helvetica, arial"><a href="atom.http_interface.html#UnparsableUrlObject">UnparsableUrlObject</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ContentLengthRequired">class <strong>ContentLengthRequired</strong></a>(<a href="atom.http_interface.html#Error">Error</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="atom.http_interface.html#ContentLengthRequired">ContentLengthRequired</a></dd>
+<dd><a href="atom.http_interface.html#Error">Error</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="atom.http_interface.html#Error">Error</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="ContentLengthRequired-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#ContentLengthRequired-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;x.__class__.__doc__&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x74d100&gt;<dd><tt>T.<a href="#ContentLengthRequired-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="ContentLengthRequired-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ContentLengthRequired-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ContentLengthRequired-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#ContentLengthRequired-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ContentLengthRequired-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ContentLengthRequired-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="ContentLengthRequired-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#ContentLengthRequired-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="ContentLengthRequired-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ContentLengthRequired-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#ContentLengthRequired-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="ContentLengthRequired-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ContentLengthRequired-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="ContentLengthRequired-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ContentLengthRequired-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#ContentLengthRequired-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="ContentLengthRequired-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Error">class <strong>Error</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="atom.http_interface.html#Error">Error</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="Error-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#Error-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;x.__class__.__doc__&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x74d100&gt;<dd><tt>T.<a href="#Error-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="Error-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#Error-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="Error-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#Error-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="Error-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Error-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Error-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Error-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Error-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="Error-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Error-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Error-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#Error-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Error-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="Error-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#Error-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="Error-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="GenericHttpClient">class <strong>GenericHttpClient</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="GenericHttpClient-__init__"><strong>__init__</strong></a>(self, http_client, headers<font color="#909090">=None</font>)</dt><dd><tt>Args:<br>
+&nbsp;&nbsp;http_client:&nbsp;An&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;provides&nbsp;a&nbsp;request&nbsp;method&nbsp;to&nbsp;make&nbsp;an&nbsp;HTTP&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;request.&nbsp;The&nbsp;request&nbsp;method&nbsp;in&nbsp;<a href="#GenericHttpClient">GenericHttpClient</a>&nbsp;performs&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;call-through&nbsp;to&nbsp;the&nbsp;contained&nbsp;HTTP&nbsp;client&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;&nbsp;headers:&nbsp;A&nbsp;dictionary&nbsp;containing&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;should&nbsp;be&nbsp;included<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;every&nbsp;HTTP&nbsp;request.&nbsp;Common&nbsp;persistent&nbsp;headers&nbsp;include&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'User-Agent'.</tt></dd></dl>
+
+<dl><dt><a name="GenericHttpClient-delete"><strong>delete</strong></a>(self, url, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="GenericHttpClient-get"><strong>get</strong></a>(self, url, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="GenericHttpClient-post"><strong>post</strong></a>(self, url, data, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="GenericHttpClient-put"><strong>put</strong></a>(self, url, data, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="GenericHttpClient-request"><strong>request</strong></a>(self, operation, url, data<font color="#909090">=None</font>, headers<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>debug</strong> = False</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="GenericToken">class <strong>GenericToken</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;an&nbsp;Authorization&nbsp;token&nbsp;to&nbsp;be&nbsp;added&nbsp;to&nbsp;HTTP&nbsp;requests.<br>
+&nbsp;<br>
+Some&nbsp;Authorization&nbsp;headers&nbsp;included&nbsp;calculated&nbsp;fields&nbsp;(digital<br>
+signatures&nbsp;for&nbsp;example)&nbsp;which&nbsp;are&nbsp;based&nbsp;on&nbsp;the&nbsp;parameters&nbsp;of&nbsp;the&nbsp;HTTP<br>
+request.&nbsp;Therefore&nbsp;the&nbsp;token&nbsp;is&nbsp;responsible&nbsp;for&nbsp;signing&nbsp;the&nbsp;request<br>
+and&nbsp;adding&nbsp;the&nbsp;Authorization&nbsp;header.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="GenericToken-perform_request"><strong>perform_request</strong></a>(self, http_client, operation, url, data<font color="#909090">=None</font>, headers<font color="#909090">=None</font>)</dt><dd><tt>For&nbsp;the&nbsp;<a href="#GenericToken">GenericToken</a>,&nbsp;no&nbsp;Authorization&nbsp;token&nbsp;is&nbsp;set.</tt></dd></dl>
+
+<dl><dt><a name="GenericToken-valid_for_scope"><strong>valid_for_scope</strong></a>(self, url)</dt><dd><tt>Tells&nbsp;the&nbsp;caller&nbsp;if&nbsp;the&nbsp;token&nbsp;authorizes&nbsp;access&nbsp;to&nbsp;the&nbsp;desired&nbsp;URL.<br>
+&nbsp;<br>
+Since&nbsp;the&nbsp;generic&nbsp;token&nbsp;doesn't&nbsp;add&nbsp;an&nbsp;auth&nbsp;header,&nbsp;it&nbsp;is&nbsp;not&nbsp;valid&nbsp;for<br>
+any&nbsp;scope.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HttpResponse">class <strong>HttpResponse</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="HttpResponse-__init__"><strong>__init__</strong></a>(self, body<font color="#909090">=None</font>, status<font color="#909090">=None</font>, reason<font color="#909090">=None</font>, headers<font color="#909090">=None</font>)</dt><dd><tt>Constructor&nbsp;for&nbsp;an&nbsp;<a href="#HttpResponse">HttpResponse</a>&nbsp;<a href="__builtin__.html#object">object</a>.&nbsp;<br>
+&nbsp;<br>
+<a href="#HttpResponse">HttpResponse</a>&nbsp;represents&nbsp;the&nbsp;server's&nbsp;response&nbsp;to&nbsp;an&nbsp;HTTP&nbsp;request&nbsp;from<br>
+the&nbsp;client.&nbsp;The&nbsp;HttpClient.request&nbsp;method&nbsp;returns&nbsp;a&nbsp;httplib.HTTPResponse<br>
+<a href="__builtin__.html#object">object</a>&nbsp;and&nbsp;this&nbsp;<a href="#HttpResponse">HttpResponse</a>&nbsp;class&nbsp;is&nbsp;designed&nbsp;to&nbsp;mirror&nbsp;the&nbsp;interface<br>
+exposed&nbsp;by&nbsp;httplib.HTTPResponse.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;body:&nbsp;A&nbsp;file&nbsp;like&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;with&nbsp;a&nbsp;<a href="#HttpResponse-read">read</a>()&nbsp;method.&nbsp;The&nbsp;body&nbsp;could&nbsp;also<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;a&nbsp;string,&nbsp;and&nbsp;the&nbsp;constructor&nbsp;will&nbsp;wrap&nbsp;it&nbsp;so&nbsp;that&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#HttpResponse">HttpResponse</a>.<a href="#HttpResponse-read">read</a>(self)&nbsp;will&nbsp;return&nbsp;the&nbsp;full&nbsp;string.<br>
+&nbsp;&nbsp;status:&nbsp;The&nbsp;HTTP&nbsp;status&nbsp;code&nbsp;as&nbsp;an&nbsp;int.&nbsp;Example:&nbsp;200,&nbsp;201,&nbsp;404.<br>
+&nbsp;&nbsp;reason:&nbsp;The&nbsp;HTTP&nbsp;status&nbsp;message&nbsp;which&nbsp;follows&nbsp;the&nbsp;code.&nbsp;Example:&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK,&nbsp;Created,&nbsp;Not&nbsp;Found<br>
+&nbsp;&nbsp;headers:&nbsp;A&nbsp;dictionary&nbsp;containing&nbsp;the&nbsp;HTTP&nbsp;headers&nbsp;in&nbsp;the&nbsp;server's&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.&nbsp;A&nbsp;common&nbsp;header&nbsp;in&nbsp;the&nbsp;response&nbsp;is&nbsp;Content-Length.</tt></dd></dl>
+
+<dl><dt><a name="HttpResponse-getheader"><strong>getheader</strong></a>(self, name, default<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="HttpResponse-read"><strong>read</strong></a>(self, amt<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UnparsableUrlObject">class <strong>UnparsableUrlObject</strong></a>(<a href="atom.http_interface.html#Error">Error</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="atom.http_interface.html#UnparsableUrlObject">UnparsableUrlObject</a></dd>
+<dd><a href="atom.http_interface.html#Error">Error</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="atom.http_interface.html#Error">Error</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="UnparsableUrlObject-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#UnparsableUrlObject-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;x.__class__.__doc__&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x74d100&gt;<dd><tt>T.<a href="#UnparsableUrlObject-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="UnparsableUrlObject-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#UnparsableUrlObject-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="UnparsableUrlObject-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#UnparsableUrlObject-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="UnparsableUrlObject-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#UnparsableUrlObject-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="UnparsableUrlObject-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#UnparsableUrlObject-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="UnparsableUrlObject-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UnparsableUrlObject-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#UnparsableUrlObject-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="UnparsableUrlObject-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#UnparsableUrlObject-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="UnparsableUrlObject-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UnparsableUrlObject-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#UnparsableUrlObject-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="UnparsableUrlObject-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>USER_AGENT</strong> = '%s GData-Python/1.3.3'<br>
+<strong>__author__</strong> = 'api.jscudder (Jeff Scudder)'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">api.jscudder&nbsp;(Jeff&nbsp;Scudder)</td></tr></table>
+</body></html>

@@ -1,0 +1,14 @@
+application: your-app-id-here
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /
+  static_files: welcome.html
+  upload: welcome.html
+
+
+- url: /.*
+  login: required
+  script: blogapp.py

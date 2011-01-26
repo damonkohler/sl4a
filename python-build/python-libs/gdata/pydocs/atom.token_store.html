@@ -1,0 +1,119 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module atom.token_store</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="atom.html"><font color="#ffffff">atom</font></a>.token_store</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/atom/token_store.py">/usr/local/svn/gdata-python-client/src/atom/token_store.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;module&nbsp;provides&nbsp;a&nbsp;<a href="#TokenStore">TokenStore</a>&nbsp;class&nbsp;which&nbsp;is&nbsp;designed&nbsp;to&nbsp;manage<br>
+auth&nbsp;tokens&nbsp;required&nbsp;for&nbsp;different&nbsp;services.<br>
+&nbsp;<br>
+Each&nbsp;token&nbsp;is&nbsp;valid&nbsp;for&nbsp;a&nbsp;set&nbsp;of&nbsp;scopes&nbsp;which&nbsp;is&nbsp;the&nbsp;start&nbsp;of&nbsp;a&nbsp;URL.&nbsp;An&nbsp;HTTP<br>
+client&nbsp;will&nbsp;use&nbsp;a&nbsp;token&nbsp;store&nbsp;to&nbsp;find&nbsp;a&nbsp;valid&nbsp;Authorization&nbsp;header&nbsp;to&nbsp;send<br>
+in&nbsp;requests&nbsp;to&nbsp;the&nbsp;specified&nbsp;URL.&nbsp;If&nbsp;the&nbsp;HTTP&nbsp;client&nbsp;determines&nbsp;that&nbsp;a&nbsp;token<br>
+has&nbsp;expired&nbsp;or&nbsp;been&nbsp;revoked,&nbsp;it&nbsp;can&nbsp;remove&nbsp;the&nbsp;token&nbsp;from&nbsp;the&nbsp;store&nbsp;so&nbsp;that<br>
+it&nbsp;will&nbsp;not&nbsp;be&nbsp;used&nbsp;in&nbsp;future&nbsp;requests.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="atom.html">atom</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.token_store.html#TokenStore">TokenStore</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TokenStore">class <strong>TokenStore</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Manages&nbsp;Authorization&nbsp;tokens&nbsp;which&nbsp;will&nbsp;be&nbsp;sent&nbsp;in&nbsp;HTTP&nbsp;headers.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TokenStore-__init__"><strong>__init__</strong></a>(self, scoped_tokens<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="TokenStore-add_token"><strong>add_token</strong></a>(self, token)</dt><dd><tt>Adds&nbsp;a&nbsp;new&nbsp;token&nbsp;to&nbsp;the&nbsp;store&nbsp;(replaces&nbsp;tokens&nbsp;with&nbsp;the&nbsp;same&nbsp;scope).<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;token:&nbsp;A&nbsp;subclass&nbsp;of&nbsp;http_interface.GenericToken.&nbsp;The&nbsp;token&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;is&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;responsible&nbsp;for&nbsp;adding&nbsp;the&nbsp;Authorization&nbsp;header&nbsp;to&nbsp;the&nbsp;HTTP&nbsp;request.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;scopes&nbsp;defined&nbsp;in&nbsp;the&nbsp;token&nbsp;are&nbsp;used&nbsp;to&nbsp;determine&nbsp;if&nbsp;the&nbsp;token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;valid&nbsp;for&nbsp;a&nbsp;requested&nbsp;scope&nbsp;when&nbsp;find_token&nbsp;is&nbsp;called.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;True&nbsp;if&nbsp;the&nbsp;token&nbsp;was&nbsp;added,&nbsp;False&nbsp;if&nbsp;the&nbsp;token&nbsp;was&nbsp;not&nbsp;added&nbsp;becase<br>
+&nbsp;&nbsp;no&nbsp;scopes&nbsp;were&nbsp;provided.</tt></dd></dl>
+
+<dl><dt><a name="TokenStore-find_token"><strong>find_token</strong></a>(self, url)</dt><dd><tt>Selects&nbsp;an&nbsp;Authorization&nbsp;header&nbsp;token&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;for&nbsp;the&nbsp;URL.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;url:&nbsp;str&nbsp;or&nbsp;atom.url.Url&nbsp;or&nbsp;a&nbsp;list&nbsp;containing&nbsp;the&nbsp;same.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;URL&nbsp;which&nbsp;is&nbsp;going&nbsp;to&nbsp;be&nbsp;requested.&nbsp;All<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tokens&nbsp;are&nbsp;examined&nbsp;to&nbsp;see&nbsp;if&nbsp;any&nbsp;scopes&nbsp;begin&nbsp;match&nbsp;the&nbsp;beginning<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;URL.&nbsp;The&nbsp;first&nbsp;match&nbsp;found&nbsp;is&nbsp;returned.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;token&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;should&nbsp;execute&nbsp;the&nbsp;HTTP&nbsp;request.&nbsp;If&nbsp;there&nbsp;was<br>
+&nbsp;&nbsp;no&nbsp;token&nbsp;for&nbsp;the&nbsp;url&nbsp;(the&nbsp;url&nbsp;did&nbsp;not&nbsp;begin&nbsp;with&nbsp;any&nbsp;of&nbsp;the&nbsp;token<br>
+&nbsp;&nbsp;scopes&nbsp;available),&nbsp;then&nbsp;the&nbsp;atom.http_interface.GenericToken&nbsp;will&nbsp;be&nbsp;<br>
+&nbsp;&nbsp;returned&nbsp;because&nbsp;the&nbsp;GenericToken&nbsp;calls&nbsp;through&nbsp;to&nbsp;the&nbsp;http&nbsp;client<br>
+&nbsp;&nbsp;without&nbsp;adding&nbsp;an&nbsp;Authorization&nbsp;header.</tt></dd></dl>
+
+<dl><dt><a name="TokenStore-remove_all_tokens"><strong>remove_all_tokens</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TokenStore-remove_token"><strong>remove_token</strong></a>(self, token)</dt><dd><tt>Removes&nbsp;the&nbsp;token&nbsp;from&nbsp;the&nbsp;token_store.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;used&nbsp;when&nbsp;a&nbsp;token&nbsp;is&nbsp;determined&nbsp;to&nbsp;be&nbsp;invalid.&nbsp;If&nbsp;the<br>
+token&nbsp;was&nbsp;found&nbsp;by&nbsp;find_token,&nbsp;but&nbsp;resulted&nbsp;in&nbsp;a&nbsp;401&nbsp;or&nbsp;403&nbsp;error&nbsp;stating<br>
+that&nbsp;the&nbsp;token&nbsp;was&nbsp;invlid,&nbsp;then&nbsp;the&nbsp;token&nbsp;should&nbsp;be&nbsp;removed&nbsp;to&nbsp;prevent<br>
+future&nbsp;use.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;True&nbsp;if&nbsp;a&nbsp;token&nbsp;was&nbsp;found&nbsp;and&nbsp;then&nbsp;removed&nbsp;from&nbsp;the&nbsp;token<br>
+&nbsp;&nbsp;store.&nbsp;False&nbsp;if&nbsp;the&nbsp;token&nbsp;was&nbsp;not&nbsp;in&nbsp;the&nbsp;<a href="#TokenStore">TokenStore</a>.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>SCOPE_ALL</strong> = 'http'<br>
+<strong>__author__</strong> = 'api.jscudder (Jeff Scudder)'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">api.jscudder&nbsp;(Jeff&nbsp;Scudder)</td></tr></table>
+</body></html>

@@ -1,0 +1,1132 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package gdata.books</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gdata.html"><font color="#ffffff">gdata</font></a>.books</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/gdata/books/__init__.py">/usr/local/svn/gdata-python-client/src/gdata/books/__init__.py</a></font></td></tr></table>
+    <p><tt>Data&nbsp;Models&nbsp;for&nbsp;books.service<br>
+&nbsp;<br>
+All&nbsp;classes&nbsp;can&nbsp;be&nbsp;instantiated&nbsp;from&nbsp;an&nbsp;xml&nbsp;string&nbsp;using&nbsp;their&nbsp;FromString<br>
+class&nbsp;method.<br>
+&nbsp;<br>
+Notes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;<a href="#Book">Book</a>.title&nbsp;displays&nbsp;the&nbsp;first&nbsp;dc:title&nbsp;because&nbsp;the&nbsp;returned&nbsp;XML<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;repeats&nbsp;that&nbsp;datum&nbsp;as&nbsp;atom:title.<br>
+There&nbsp;is&nbsp;an&nbsp;undocumented&nbsp;gbs:openAccess&nbsp;element&nbsp;that&nbsp;is&nbsp;not&nbsp;parsed.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="gdata.books.service.html">service</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="gdata.html#GDataEntry">gdata.GDataEntry</a>(<a href="atom.html#Entry">atom.Entry</a>, <a href="gdata.html#LinkFinder">gdata.LinkFinder</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.books.html#Book">Book</a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>, <a href="gdata.html#GDataEntry">gdata.GDataEntry</a>)
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="gdata.html#GDataFeed">gdata.GDataFeed</a>(<a href="atom.html#Feed">atom.Feed</a>, <a href="gdata.html#LinkFinder">gdata.LinkFinder</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.books.html#BookFeed">BookFeed</a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>, <a href="gdata.html#GDataFeed">gdata.GDataFeed</a>)
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="gdata.books.html#_AtomFromString">_AtomFromString</a>(<a href="atom.html#AtomBase">atom.AtomBase</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.books.html#Book">Book</a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>, <a href="gdata.html#GDataEntry">gdata.GDataEntry</a>)
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#BookFeed">BookFeed</a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>, <a href="gdata.html#GDataFeed">gdata.GDataFeed</a>)
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Creator">Creator</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Date">Date</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Description">Description</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Embeddability">Embeddability</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Format">Format</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Identifier">Identifier</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Publisher">Publisher</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Rating">Rating</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Review">Review</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Subject">Subject</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Title">Title</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gdata.books.html#Viewability">Viewability</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Book">class <strong>Book</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>, <a href="gdata.html#GDataEntry">gdata.GDataEntry</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;an&nbsp;&lt;entry&gt;&nbsp;from&nbsp;either&nbsp;a&nbsp;search,&nbsp;annotation,&nbsp;library,&nbsp;or&nbsp;single<br>
+item&nbsp;feed.&nbsp;Note&nbsp;that&nbsp;dc_title&nbsp;attribute&nbsp;is&nbsp;the&nbsp;proper&nbsp;title&nbsp;of&nbsp;the&nbsp;volume,<br>
+title&nbsp;is&nbsp;an&nbsp;atom&nbsp;element&nbsp;and&nbsp;may&nbsp;not&nbsp;represent&nbsp;the&nbsp;full&nbsp;title.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Book">Book</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="gdata.html#GDataEntry">gdata.GDataEntry</a></dd>
+<dd><a href="atom.html#Entry">atom.Entry</a></dd>
+<dd><a href="atom.html#FeedEntryParent">atom.FeedEntryParent</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="gdata.html#LinkFinder">gdata.LinkFinder</a></dd>
+<dd><a href="atom.html#LinkFinder">atom.LinkFinder</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Book-GetAnnotationLink"><strong>GetAnnotationLink</strong></a>(self)</dt><dd><tt>Returns&nbsp;the&nbsp;atom.Link&nbsp;object&nbsp;representing&nbsp;the&nbsp;Annotation&nbsp;URI.<br>
+Note&nbsp;that&nbsp;the&nbsp;use&nbsp;of&nbsp;www.books&nbsp;in&nbsp;the&nbsp;href&nbsp;of&nbsp;this&nbsp;link&nbsp;seems&nbsp;to&nbsp;make<br>
+this&nbsp;information&nbsp;useless.&nbsp;Using&nbsp;books.service.ANNOTATION_FEED&nbsp;and&nbsp;<br>
+BOOK_SERVER&nbsp;to&nbsp;construct&nbsp;your&nbsp;URI&nbsp;seems&nbsp;to&nbsp;work&nbsp;better.</tt></dd></dl>
+
+<dl><dt><a name="Book-GetInfoLink"><strong>GetInfoLink</strong></a>(self)</dt><dd><tt>Returns&nbsp;the&nbsp;atom.Link&nbsp;object&nbsp;representing&nbsp;the&nbsp;human-readable&nbsp;info&nbsp;URI.</tt></dd></dl>
+
+<dl><dt><a name="Book-GetPreviewLink"><strong>GetPreviewLink</strong></a>(self)</dt><dd><tt>Returns&nbsp;the&nbsp;atom.Link&nbsp;object&nbsp;representing&nbsp;the&nbsp;preview&nbsp;URI.</tt></dd></dl>
+
+<dl><dt><a name="Book-GetThumbnailLink"><strong>GetThumbnailLink</strong></a>(self)</dt><dd><tt>Returns&nbsp;the&nbsp;atom.Link&nbsp;object&nbsp;representing&nbsp;the&nbsp;thumbnail&nbsp;URI.</tt></dd></dl>
+
+<dl><dt><a name="Book-__init__"><strong>__init__</strong></a>(self, creator<font color="#909090">=None</font>, date<font color="#909090">=None</font>, description<font color="#909090">=None</font>, format<font color="#909090">=None</font>, author<font color="#909090">=None</font>, identifier<font color="#909090">=None</font>, publisher<font color="#909090">=None</font>, subject<font color="#909090">=None</font>, dc_title<font color="#909090">=None</font>, viewability<font color="#909090">=None</font>, embeddability<font color="#909090">=None</font>, review<font color="#909090">=None</font>, rating<font color="#909090">=None</font>, category<font color="#909090">=None</font>, content<font color="#909090">=None</font>, contributor<font color="#909090">=None</font>, atom_id<font color="#909090">=None</font>, link<font color="#909090">=None</font>, published<font color="#909090">=None</font>, rights<font color="#909090">=None</font>, source<font color="#909090">=None</font>, summary<font color="#909090">=None</font>, title<font color="#909090">=None</font>, control<font color="#909090">=None</font>, updated<font color="#909090">=None</font>, text<font color="#909090">=None</font>, extension_elements<font color="#909090">=None</font>, extension_attributes<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="Book-clean_annotations"><strong>clean_annotations</strong></a>(self)</dt><dd><tt>Clear&nbsp;all&nbsp;annotations&nbsp;from&nbsp;an&nbsp;item.&nbsp;Useful&nbsp;for&nbsp;taking&nbsp;an&nbsp;item&nbsp;from<br>
+another&nbsp;user's&nbsp;library/annotation&nbsp;feed&nbsp;and&nbsp;adding&nbsp;it&nbsp;to&nbsp;the&nbsp;<br>
+authenticated&nbsp;user's&nbsp;library&nbsp;without&nbsp;adopting&nbsp;annotations.</tt></dd></dl>
+
+<dl><dt><a name="Book-get_google_id"><strong>get_google_id</strong></a>(self)</dt><dd><tt>Get&nbsp;Google's&nbsp;ID&nbsp;of&nbsp;the&nbsp;item.</tt></dd></dl>
+
+<dl><dt><a name="Book-get_label"><strong>get_label</strong></a>(self)</dt><dd><tt>Get&nbsp;users&nbsp;label&nbsp;for&nbsp;the&nbsp;item&nbsp;as&nbsp;a&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="Book-remove_label"><strong>remove_label</strong></a>(self)</dt><dd><tt>Clear&nbsp;the&nbsp;user's&nbsp;label&nbsp;for&nbsp;the&nbsp;item</tt></dd></dl>
+
+<dl><dt><a name="Book-set_label"><strong>set_label</strong></a>(self, term)</dt><dd><tt>Clear&nbsp;pre-existing&nbsp;label&nbsp;for&nbsp;the&nbsp;item&nbsp;and&nbsp;set&nbsp;term&nbsp;as&nbsp;the&nbsp;label.</tt></dd></dl>
+
+<dl><dt><a name="Book-set_rating"><strong>set_rating</strong></a>(self, value)</dt><dd><tt>Set&nbsp;user's&nbsp;rating.&nbsp;Must&nbsp;be&nbsp;an&nbsp;integral&nbsp;string&nbsp;between&nbsp;1&nbsp;nad&nbsp;5</tt></dd></dl>
+
+<dl><dt><a name="Book-set_review"><strong>set_review</strong></a>(self, text, type<font color="#909090">='text'</font>, lang<font color="#909090">='en'</font>)</dt><dd><tt>Set&nbsp;user's&nbsp;review&nbsp;text</tt></dd></dl>
+
+<dl><dt><a name="Book-to_dict"><strong>to_dict</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;the&nbsp;book's&nbsp;available&nbsp;metadata.&nbsp;If&nbsp;the&nbsp;data<br>
+cannot&nbsp;be&nbsp;discovered,&nbsp;it&nbsp;is&nbsp;not&nbsp;included&nbsp;as&nbsp;a&nbsp;key&nbsp;in&nbsp;the&nbsp;returned&nbsp;dict.<br>
+The&nbsp;possible&nbsp;keys&nbsp;are:&nbsp;authors,&nbsp;embeddability,&nbsp;date,&nbsp;description,&nbsp;<br>
+format,&nbsp;identifiers,&nbsp;publishers,&nbsp;rating,&nbsp;review,&nbsp;subjects,&nbsp;title,&nbsp;and<br>
+viewability.<br>
+&nbsp;<br>
+Notes:<br>
+&nbsp;&nbsp;*&nbsp;Plural&nbsp;keys&nbsp;will&nbsp;be&nbsp;lists<br>
+&nbsp;&nbsp;*&nbsp;Singular&nbsp;keys&nbsp;will&nbsp;be&nbsp;strings<br>
+&nbsp;&nbsp;*&nbsp;<a href="#Title">Title</a>,&nbsp;despite&nbsp;usually&nbsp;being&nbsp;a&nbsp;list,&nbsp;joins&nbsp;the&nbsp;title&nbsp;and&nbsp;subtitle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;a&nbsp;space&nbsp;as&nbsp;a&nbsp;single&nbsp;string.<br>
+&nbsp;&nbsp;*&nbsp;embeddability&nbsp;and&nbsp;viewability&nbsp;only&nbsp;return&nbsp;the&nbsp;portion&nbsp;of&nbsp;the&nbsp;URI&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;after&nbsp;#<br>
+&nbsp;&nbsp;*&nbsp;identifiers&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;tuples,&nbsp;where&nbsp;the&nbsp;first&nbsp;item&nbsp;of&nbsp;each&nbsp;tuple<br>
+&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;the&nbsp;type&nbsp;of&nbsp;identifier&nbsp;and&nbsp;the&nbsp;second&nbsp;item&nbsp;is&nbsp;the&nbsp;identifying<br>
+&nbsp;&nbsp;&nbsp;&nbsp;string.&nbsp;Note&nbsp;that&nbsp;while&nbsp;doing&nbsp;dict()&nbsp;on&nbsp;this&nbsp;tuple&nbsp;may&nbsp;be&nbsp;possible,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;some&nbsp;items&nbsp;may&nbsp;have&nbsp;multiple&nbsp;of&nbsp;the&nbsp;same&nbsp;identifier&nbsp;and&nbsp;converting<br>
+&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;a&nbsp;dict&nbsp;may&nbsp;resulted&nbsp;in&nbsp;collisions/dropped&nbsp;data.<br>
+&nbsp;&nbsp;*&nbsp;<a href="#Rating">Rating</a>&nbsp;returns&nbsp;only&nbsp;the&nbsp;user's&nbsp;rating.&nbsp;See&nbsp;<a href="#Rating">Rating</a>&nbsp;class&nbsp;for&nbsp;precise<br>
+&nbsp;&nbsp;&nbsp;&nbsp;definition.</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Book-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="gdata.html#GDataEntry">gdata.GDataEntry</a>:<br>
+<dl><dt><a name="Book-GetMediaURL"><strong>GetMediaURL</strong></a>(self)</dt><dd><tt>Returns&nbsp;the&nbsp;URL&nbsp;to&nbsp;the&nbsp;media&nbsp;content,&nbsp;if&nbsp;the&nbsp;entry&nbsp;is&nbsp;a&nbsp;media&nbsp;entry.<br>
+Otherwise&nbsp;returns&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="Book-IsMedia"><strong>IsMedia</strong></a>(self)</dt><dd><tt>Determines&nbsp;whether&nbsp;or&nbsp;not&nbsp;an&nbsp;entry&nbsp;is&nbsp;a&nbsp;GData&nbsp;Media&nbsp;entry.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="gdata.html#GDataEntry">gdata.GDataEntry</a>:<br>
+<dl><dt><strong>id</strong></dt>
+</dl>
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Book-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Book-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Book-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="gdata.html#LinkFinder">gdata.LinkFinder</a>:<br>
+<dl><dt><a name="Book-GetAclLink"><strong>GetAclLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Book-GetEditLink"><strong>GetEditLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Book-GetEditMediaLink"><strong>GetEditMediaLink</strong></a>(self)</dt><dd><tt>The&nbsp;Picasa&nbsp;API&nbsp;mistakenly&nbsp;returns&nbsp;media-edit&nbsp;rather&nbsp;than&nbsp;edit-media,&nbsp;but<br>
+this&nbsp;may&nbsp;change&nbsp;soon.</tt></dd></dl>
+
+<dl><dt><a name="Book-GetFeedLink"><strong>GetFeedLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Book-GetHtmlLink"><strong>GetHtmlLink</strong></a>(self)</dt><dd><tt>Find&nbsp;the&nbsp;first&nbsp;link&nbsp;with&nbsp;rel&nbsp;of&nbsp;alternate&nbsp;and&nbsp;type&nbsp;of&nbsp;text/html<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;An&nbsp;atom.Link&nbsp;or&nbsp;None&nbsp;if&nbsp;no&nbsp;links&nbsp;matched</tt></dd></dl>
+
+<dl><dt><a name="Book-GetNextLink"><strong>GetNextLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Book-GetPostLink"><strong>GetPostLink</strong></a>(self)</dt><dd><tt>Get&nbsp;a&nbsp;link&nbsp;containing&nbsp;the&nbsp;POST&nbsp;target&nbsp;URL.<br>
+&nbsp;<br>
+The&nbsp;POST&nbsp;target&nbsp;URL&nbsp;is&nbsp;used&nbsp;to&nbsp;insert&nbsp;new&nbsp;entries.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;link&nbsp;object&nbsp;with&nbsp;a&nbsp;rel&nbsp;matching&nbsp;the&nbsp;POST&nbsp;type.</tt></dd></dl>
+
+<dl><dt><a name="Book-GetPrevLink"><strong>GetPrevLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Book-GetSelfLink"><strong>GetSelfLink</strong></a>(self)</dt><dd><tt>Find&nbsp;the&nbsp;first&nbsp;link&nbsp;with&nbsp;rel&nbsp;set&nbsp;to&nbsp;'self'<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;An&nbsp;atom.Link&nbsp;or&nbsp;none&nbsp;if&nbsp;none&nbsp;of&nbsp;the&nbsp;links&nbsp;had&nbsp;rel&nbsp;equal&nbsp;to&nbsp;'self'</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#LinkFinder">atom.LinkFinder</a>:<br>
+<dl><dt><a name="Book-GetAlternateLink"><strong>GetAlternateLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Book-GetLicenseLink"><strong>GetLicenseLink</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BookFeed">class <strong>BookFeed</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>, <a href="gdata.html#GDataFeed">gdata.GDataFeed</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;feed&nbsp;of&nbsp;entries&nbsp;from&nbsp;a&nbsp;search.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#BookFeed">BookFeed</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="gdata.html#GDataFeed">gdata.GDataFeed</a></dd>
+<dd><a href="atom.html#Feed">atom.Feed</a></dd>
+<dd><a href="atom.html#Source">atom.Source</a></dd>
+<dd><a href="atom.html#FeedEntryParent">atom.FeedEntryParent</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="gdata.html#LinkFinder">gdata.LinkFinder</a></dd>
+<dd><a href="atom.html#LinkFinder">atom.LinkFinder</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="BookFeed-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="gdata.html#GDataFeed">gdata.GDataFeed</a>:<br>
+<dl><dt><a name="BookFeed-__init__"><strong>__init__</strong></a>(self, author<font color="#909090">=None</font>, category<font color="#909090">=None</font>, contributor<font color="#909090">=None</font>, generator<font color="#909090">=None</font>, icon<font color="#909090">=None</font>, atom_id<font color="#909090">=None</font>, link<font color="#909090">=None</font>, logo<font color="#909090">=None</font>, rights<font color="#909090">=None</font>, subtitle<font color="#909090">=None</font>, title<font color="#909090">=None</font>, updated<font color="#909090">=None</font>, entry<font color="#909090">=None</font>, total_results<font color="#909090">=None</font>, start_index<font color="#909090">=None</font>, items_per_page<font color="#909090">=None</font>, extension_elements<font color="#909090">=None</font>, extension_attributes<font color="#909090">=None</font>, text<font color="#909090">=None</font>)</dt><dd><tt>Constructor&nbsp;for&nbsp;Source<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;author:&nbsp;list&nbsp;(optional)&nbsp;A&nbsp;list&nbsp;of&nbsp;Author&nbsp;instances&nbsp;which&nbsp;belong&nbsp;to&nbsp;this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class.<br>
+&nbsp;&nbsp;category:&nbsp;list&nbsp;(optional)&nbsp;A&nbsp;list&nbsp;of&nbsp;Category&nbsp;instances<br>
+&nbsp;&nbsp;contributor:&nbsp;list&nbsp;(optional)&nbsp;A&nbsp;list&nbsp;on&nbsp;Contributor&nbsp;instances<br>
+&nbsp;&nbsp;generator:&nbsp;Generator&nbsp;(optional)&nbsp;<br>
+&nbsp;&nbsp;icon:&nbsp;Icon&nbsp;(optional)&nbsp;<br>
+&nbsp;&nbsp;id:&nbsp;Id&nbsp;(optional)&nbsp;The&nbsp;entry's&nbsp;Id&nbsp;element<br>
+&nbsp;&nbsp;link:&nbsp;list&nbsp;(optional)&nbsp;A&nbsp;list&nbsp;of&nbsp;Link&nbsp;instances<br>
+&nbsp;&nbsp;logo:&nbsp;Logo&nbsp;(optional)&nbsp;<br>
+&nbsp;&nbsp;rights:&nbsp;Rights&nbsp;(optional)&nbsp;The&nbsp;entry's&nbsp;Rights&nbsp;element<br>
+&nbsp;&nbsp;subtitle:&nbsp;Subtitle&nbsp;(optional)&nbsp;The&nbsp;entry's&nbsp;subtitle&nbsp;element<br>
+&nbsp;&nbsp;title:&nbsp;<a href="#Title">Title</a>&nbsp;(optional)&nbsp;the&nbsp;entry's&nbsp;title&nbsp;element<br>
+&nbsp;&nbsp;updated:&nbsp;Updated&nbsp;(optional)&nbsp;the&nbsp;entry's&nbsp;updated&nbsp;element<br>
+&nbsp;&nbsp;entry:&nbsp;list&nbsp;(optional)&nbsp;A&nbsp;list&nbsp;of&nbsp;the&nbsp;Entry&nbsp;instances&nbsp;contained&nbsp;in&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;feed.<br>
+&nbsp;&nbsp;text:&nbsp;String&nbsp;(optional)&nbsp;The&nbsp;text&nbsp;contents&nbsp;of&nbsp;the&nbsp;element.&nbsp;This&nbsp;is&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contents&nbsp;of&nbsp;the&nbsp;Entry's&nbsp;XML&nbsp;text&nbsp;node.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Example:&nbsp;&lt;foo&gt;This&nbsp;is&nbsp;the&nbsp;text&lt;/foo&gt;)<br>
+&nbsp;&nbsp;extension_elements:&nbsp;list&nbsp;(optional)&nbsp;A&nbsp;list&nbsp;of&nbsp;ExtensionElement&nbsp;instances<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;are&nbsp;children&nbsp;of&nbsp;this&nbsp;element.<br>
+&nbsp;&nbsp;extension_attributes:&nbsp;dict&nbsp;(optional)&nbsp;A&nbsp;dictionary&nbsp;of&nbsp;strings&nbsp;which&nbsp;are&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;values&nbsp;for&nbsp;additional&nbsp;XML&nbsp;attributes&nbsp;of&nbsp;this&nbsp;element.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="gdata.html#GDataFeed">gdata.GDataFeed</a>:<br>
+<dl><dt><strong>generator</strong></dt>
+</dl>
+<dl><dt><strong>id</strong></dt>
+</dl>
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="BookFeed-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="BookFeed-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="BookFeed-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="gdata.html#LinkFinder">gdata.LinkFinder</a>:<br>
+<dl><dt><a name="BookFeed-GetAclLink"><strong>GetAclLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BookFeed-GetEditLink"><strong>GetEditLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BookFeed-GetEditMediaLink"><strong>GetEditMediaLink</strong></a>(self)</dt><dd><tt>The&nbsp;Picasa&nbsp;API&nbsp;mistakenly&nbsp;returns&nbsp;media-edit&nbsp;rather&nbsp;than&nbsp;edit-media,&nbsp;but<br>
+this&nbsp;may&nbsp;change&nbsp;soon.</tt></dd></dl>
+
+<dl><dt><a name="BookFeed-GetFeedLink"><strong>GetFeedLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BookFeed-GetHtmlLink"><strong>GetHtmlLink</strong></a>(self)</dt><dd><tt>Find&nbsp;the&nbsp;first&nbsp;link&nbsp;with&nbsp;rel&nbsp;of&nbsp;alternate&nbsp;and&nbsp;type&nbsp;of&nbsp;text/html<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;An&nbsp;atom.Link&nbsp;or&nbsp;None&nbsp;if&nbsp;no&nbsp;links&nbsp;matched</tt></dd></dl>
+
+<dl><dt><a name="BookFeed-GetNextLink"><strong>GetNextLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BookFeed-GetPostLink"><strong>GetPostLink</strong></a>(self)</dt><dd><tt>Get&nbsp;a&nbsp;link&nbsp;containing&nbsp;the&nbsp;POST&nbsp;target&nbsp;URL.<br>
+&nbsp;<br>
+The&nbsp;POST&nbsp;target&nbsp;URL&nbsp;is&nbsp;used&nbsp;to&nbsp;insert&nbsp;new&nbsp;entries.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;link&nbsp;object&nbsp;with&nbsp;a&nbsp;rel&nbsp;matching&nbsp;the&nbsp;POST&nbsp;type.</tt></dd></dl>
+
+<dl><dt><a name="BookFeed-GetPrevLink"><strong>GetPrevLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BookFeed-GetSelfLink"><strong>GetSelfLink</strong></a>(self)</dt><dd><tt>Find&nbsp;the&nbsp;first&nbsp;link&nbsp;with&nbsp;rel&nbsp;set&nbsp;to&nbsp;'self'<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;An&nbsp;atom.Link&nbsp;or&nbsp;none&nbsp;if&nbsp;none&nbsp;of&nbsp;the&nbsp;links&nbsp;had&nbsp;rel&nbsp;equal&nbsp;to&nbsp;'self'</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#LinkFinder">atom.LinkFinder</a>:<br>
+<dl><dt><a name="BookFeed-GetAlternateLink"><strong>GetAlternateLink</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BookFeed-GetLicenseLink"><strong>GetLicenseLink</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Creator">class <strong>Creator</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;&lt;dc:creator&gt;&nbsp;element&nbsp;identifies&nbsp;an&nbsp;author-or&nbsp;more&nbsp;generally,&nbsp;an&nbsp;entity<br>
+responsible&nbsp;for&nbsp;creating&nbsp;the&nbsp;volume&nbsp;in&nbsp;question.&nbsp;Examples&nbsp;of&nbsp;a&nbsp;creator<br>
+include&nbsp;a&nbsp;person,&nbsp;an&nbsp;organization,&nbsp;or&nbsp;a&nbsp;service.&nbsp;In&nbsp;the&nbsp;case&nbsp;of&nbsp;<br>
+anthologies,&nbsp;proceedings,&nbsp;or&nbsp;other&nbsp;edited&nbsp;works,&nbsp;this&nbsp;field&nbsp;may&nbsp;be&nbsp;used&nbsp;to&nbsp;<br>
+indicate&nbsp;editors&nbsp;or&nbsp;other&nbsp;entities&nbsp;responsible&nbsp;for&nbsp;collecting&nbsp;the&nbsp;volume's&nbsp;<br>
+contents.<br>
+&nbsp;<br>
+This&nbsp;element&nbsp;appears&nbsp;as&nbsp;a&nbsp;child&nbsp;of&nbsp;&lt;entry&gt;.&nbsp;If&nbsp;there&nbsp;are&nbsp;multiple&nbsp;authors&nbsp;or<br>
+contributors&nbsp;to&nbsp;the&nbsp;book,&nbsp;there&nbsp;may&nbsp;be&nbsp;multiple&nbsp;&lt;dc:creator&gt;&nbsp;elements&nbsp;in&nbsp;the<br>
+volume&nbsp;entry&nbsp;(one&nbsp;for&nbsp;each&nbsp;creator&nbsp;or&nbsp;contributor).<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Creator">Creator</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Creator-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Creator-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Creator-__init__"><strong>__init__</strong></a>(*args, **kwargs)</dt><dd><tt>#&nbsp;The&nbsp;deprecated_function&nbsp;wraps&nbsp;the&nbsp;actual&nbsp;call&nbsp;to&nbsp;f.</tt></dd></dl>
+
+<dl><dt><a name="Creator-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Creator-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Date">class <strong>Date</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;&lt;dc:date&gt;&nbsp;element&nbsp;indicates&nbsp;the&nbsp;publication&nbsp;date&nbsp;of&nbsp;the&nbsp;specific&nbsp;volume<br>
+in&nbsp;question.&nbsp;If&nbsp;the&nbsp;book&nbsp;is&nbsp;a&nbsp;reprint,&nbsp;this&nbsp;is&nbsp;the&nbsp;reprint&nbsp;date,&nbsp;not&nbsp;the&nbsp;<br>
+original&nbsp;publication&nbsp;date.&nbsp;The&nbsp;date&nbsp;is&nbsp;encoded&nbsp;according&nbsp;to&nbsp;the&nbsp;ISO-8601&nbsp;<br>
+standard&nbsp;(and&nbsp;more&nbsp;specifically,&nbsp;the&nbsp;W3CDTF&nbsp;profile).<br>
+&nbsp;<br>
+The&nbsp;&lt;dc:date&gt;&nbsp;element&nbsp;can&nbsp;appear&nbsp;only&nbsp;as&nbsp;a&nbsp;child&nbsp;of&nbsp;&lt;entry&gt;.<br>
+&nbsp;<br>
+Usually&nbsp;only&nbsp;the&nbsp;year&nbsp;or&nbsp;the&nbsp;year&nbsp;and&nbsp;the&nbsp;month&nbsp;are&nbsp;given.<br>
+&nbsp;<br>
+YYYY-MM-DDThh:mm:ssTZD&nbsp;&nbsp;TZD&nbsp;=&nbsp;-hh:mm&nbsp;or&nbsp;+hh:mm<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Date">Date</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Date-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Date-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Date-__init__"><strong>__init__</strong></a>(*args, **kwargs)</dt><dd><tt>#&nbsp;The&nbsp;deprecated_function&nbsp;wraps&nbsp;the&nbsp;actual&nbsp;call&nbsp;to&nbsp;f.</tt></dd></dl>
+
+<dl><dt><a name="Date-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Date-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Description">class <strong>Description</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;&lt;dc:description&gt;&nbsp;element&nbsp;includes&nbsp;text&nbsp;that&nbsp;describes&nbsp;a&nbsp;book&nbsp;or&nbsp;book&nbsp;<br>
+result.&nbsp;In&nbsp;a&nbsp;search&nbsp;result&nbsp;feed,&nbsp;this&nbsp;may&nbsp;be&nbsp;a&nbsp;search&nbsp;result&nbsp;"snippet"&nbsp;that<br>
+contains&nbsp;the&nbsp;words&nbsp;around&nbsp;the&nbsp;user's&nbsp;search&nbsp;term.&nbsp;For&nbsp;a&nbsp;single&nbsp;volume&nbsp;feed,<br>
+this&nbsp;element&nbsp;may&nbsp;contain&nbsp;a&nbsp;synopsis&nbsp;of&nbsp;the&nbsp;book.<br>
+&nbsp;<br>
+The&nbsp;&lt;dc:description&gt;&nbsp;element&nbsp;can&nbsp;appear&nbsp;only&nbsp;as&nbsp;a&nbsp;child&nbsp;of&nbsp;&lt;entry&gt;<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Description">Description</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Description-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Description-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Description-__init__"><strong>__init__</strong></a>(*args, **kwargs)</dt><dd><tt>#&nbsp;The&nbsp;deprecated_function&nbsp;wraps&nbsp;the&nbsp;actual&nbsp;call&nbsp;to&nbsp;f.</tt></dd></dl>
+
+<dl><dt><a name="Description-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Description-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Embeddability">class <strong>Embeddability</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Many&nbsp;of&nbsp;the&nbsp;books&nbsp;found&nbsp;on&nbsp;Google&nbsp;<a href="#Book">Book</a>&nbsp;Search&nbsp;can&nbsp;be&nbsp;embedded&nbsp;on&nbsp;third-party<br>
+sites&nbsp;using&nbsp;the&nbsp;Embedded&nbsp;Viewer.&nbsp;The&nbsp;&lt;gbs:embeddability&gt;&nbsp;element&nbsp;indicates&nbsp;<br>
+whether&nbsp;a&nbsp;particular&nbsp;book&nbsp;result&nbsp;is&nbsp;available&nbsp;for&nbsp;embedding.&nbsp;By&nbsp;definition,<br>
+a&nbsp;book&nbsp;that&nbsp;cannot&nbsp;be&nbsp;previewed&nbsp;on&nbsp;<a href="#Book">Book</a>&nbsp;Search&nbsp;cannot&nbsp;be&nbsp;embedded&nbsp;on&nbsp;third-<br>
+party&nbsp;sites.<br>
+&nbsp;<br>
+The&nbsp;&lt;gbs:embeddability&gt;&nbsp;element&nbsp;can&nbsp;appear&nbsp;only&nbsp;as&nbsp;a&nbsp;child&nbsp;of&nbsp;&lt;entry&gt;.<br>
+&nbsp;<br>
+The&nbsp;value&nbsp;attribute&nbsp;will&nbsp;take&nbsp;on&nbsp;one&nbsp;of&nbsp;the&nbsp;following&nbsp;URIs:<br>
+embeddable:&nbsp;<a href="http://schemas.google.com/books/2008#embeddable">http://schemas.google.com/books/2008#embeddable</a><br>
+not&nbsp;embeddable:&nbsp;<a href="http://schemas.google.com/books/2008#not_embeddable">http://schemas.google.com/books/2008#not_embeddable</a><br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Embeddability">Embeddability</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Embeddability-__init__"><strong>__init__</strong></a>(self, value<font color="#909090">=None</font>, text<font color="#909090">=None</font>, extension_elements<font color="#909090">=None</font>, extension_attributes<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Embeddability-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Embeddability-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Embeddability-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Embeddability-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Format">class <strong>Format</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;&lt;dc:format&gt;&nbsp;element&nbsp;describes&nbsp;the&nbsp;physical&nbsp;properties&nbsp;of&nbsp;the&nbsp;volume.&nbsp;<br>
+Currently,&nbsp;it&nbsp;indicates&nbsp;the&nbsp;number&nbsp;of&nbsp;pages&nbsp;in&nbsp;the&nbsp;book,&nbsp;but&nbsp;more&nbsp;<br>
+information&nbsp;may&nbsp;be&nbsp;added&nbsp;to&nbsp;this&nbsp;field&nbsp;in&nbsp;the&nbsp;future.<br>
+&nbsp;<br>
+This&nbsp;element&nbsp;can&nbsp;appear&nbsp;only&nbsp;as&nbsp;a&nbsp;child&nbsp;of&nbsp;&lt;entry&gt;.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Format">Format</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Format-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Format-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Format-__init__"><strong>__init__</strong></a>(*args, **kwargs)</dt><dd><tt>#&nbsp;The&nbsp;deprecated_function&nbsp;wraps&nbsp;the&nbsp;actual&nbsp;call&nbsp;to&nbsp;f.</tt></dd></dl>
+
+<dl><dt><a name="Format-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Format-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Identifier">class <strong>Identifier</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;&lt;dc:identifier&gt;&nbsp;element&nbsp;provides&nbsp;an&nbsp;unambiguous&nbsp;reference&nbsp;to&nbsp;a&nbsp;<br>
+particular&nbsp;book.<br>
+*&nbsp;Every&nbsp;&lt;entry&gt;&nbsp;contains&nbsp;at&nbsp;least&nbsp;one&nbsp;&lt;dc:identifier&gt;&nbsp;child.<br>
+*&nbsp;The&nbsp;first&nbsp;identifier&nbsp;is&nbsp;always&nbsp;the&nbsp;unique&nbsp;string&nbsp;<a href="#Book">Book</a>&nbsp;Search&nbsp;has&nbsp;assigned<br>
+&nbsp;&nbsp;to&nbsp;the&nbsp;volume&nbsp;(such&nbsp;as&nbsp;s1gVAAAAYAAJ).&nbsp;This&nbsp;is&nbsp;the&nbsp;ID&nbsp;that&nbsp;appears&nbsp;in&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;book's&nbsp;URL&nbsp;in&nbsp;the&nbsp;<a href="#Book">Book</a>&nbsp;Search&nbsp;GUI,&nbsp;as&nbsp;well&nbsp;as&nbsp;in&nbsp;the&nbsp;URL&nbsp;of&nbsp;that&nbsp;book's&nbsp;<br>
+&nbsp;&nbsp;single&nbsp;item&nbsp;feed.<br>
+*&nbsp;Many&nbsp;books&nbsp;contain&nbsp;additional&nbsp;&lt;dc:identifier&gt;&nbsp;elements.&nbsp;These&nbsp;provide&nbsp;<br>
+&nbsp;&nbsp;alternate,&nbsp;external&nbsp;identifiers&nbsp;to&nbsp;the&nbsp;volume.&nbsp;Such&nbsp;identifiers&nbsp;may&nbsp;<br>
+&nbsp;&nbsp;include&nbsp;the&nbsp;ISBNs,&nbsp;ISSNs,&nbsp;Library&nbsp;of&nbsp;Congress&nbsp;Control&nbsp;Numbers&nbsp;(LCCNs),&nbsp;<br>
+&nbsp;&nbsp;and&nbsp;OCLC&nbsp;numbers;&nbsp;they&nbsp;are&nbsp;prepended&nbsp;with&nbsp;a&nbsp;corresponding&nbsp;namespace&nbsp;<br>
+&nbsp;&nbsp;prefix&nbsp;(such&nbsp;as&nbsp;"ISBN:").<br>
+*&nbsp;Any&nbsp;&lt;dc:identifier&gt;&nbsp;can&nbsp;be&nbsp;passed&nbsp;to&nbsp;the&nbsp;Dynamic&nbsp;Links,&nbsp;used&nbsp;to&nbsp;<br>
+&nbsp;&nbsp;instantiate&nbsp;an&nbsp;Embedded&nbsp;Viewer,&nbsp;or&nbsp;even&nbsp;used&nbsp;to&nbsp;construct&nbsp;static&nbsp;links&nbsp;to<br>
+&nbsp;&nbsp;<a href="#Book">Book</a>&nbsp;Search.<br>
+The&nbsp;&lt;dc:identifier&gt;&nbsp;element&nbsp;can&nbsp;appear&nbsp;only&nbsp;as&nbsp;a&nbsp;child&nbsp;of&nbsp;&lt;entry&gt;.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Identifier">Identifier</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Identifier-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Identifier-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Identifier-__init__"><strong>__init__</strong></a>(*args, **kwargs)</dt><dd><tt>#&nbsp;The&nbsp;deprecated_function&nbsp;wraps&nbsp;the&nbsp;actual&nbsp;call&nbsp;to&nbsp;f.</tt></dd></dl>
+
+<dl><dt><a name="Identifier-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Identifier-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Publisher">class <strong>Publisher</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;&lt;dc:publisher&gt;&nbsp;element&nbsp;contains&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;entity&nbsp;responsible&nbsp;for&nbsp;<br>
+producing&nbsp;and&nbsp;distributing&nbsp;the&nbsp;volume&nbsp;(usually&nbsp;the&nbsp;specific&nbsp;edition&nbsp;of&nbsp;this<br>
+book).&nbsp;Examples&nbsp;of&nbsp;a&nbsp;publisher&nbsp;include&nbsp;a&nbsp;person,&nbsp;an&nbsp;organization,&nbsp;or&nbsp;a&nbsp;<br>
+service.<br>
+&nbsp;<br>
+This&nbsp;element&nbsp;can&nbsp;appear&nbsp;only&nbsp;as&nbsp;a&nbsp;child&nbsp;of&nbsp;&lt;entry&gt;.&nbsp;If&nbsp;there&nbsp;is&nbsp;more&nbsp;than&nbsp;<br>
+one&nbsp;publisher,&nbsp;multiple&nbsp;&lt;dc:publisher&gt;&nbsp;elements&nbsp;may&nbsp;appear.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Publisher">Publisher</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Publisher-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Publisher-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Publisher-__init__"><strong>__init__</strong></a>(*args, **kwargs)</dt><dd><tt>#&nbsp;The&nbsp;deprecated_function&nbsp;wraps&nbsp;the&nbsp;actual&nbsp;call&nbsp;to&nbsp;f.</tt></dd></dl>
+
+<dl><dt><a name="Publisher-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Publisher-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Rating">class <strong>Rating</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>All&nbsp;attributes&nbsp;must&nbsp;take&nbsp;an&nbsp;integral&nbsp;string&nbsp;between&nbsp;1&nbsp;and&nbsp;5.<br>
+The&nbsp;min,&nbsp;max,&nbsp;and&nbsp;average&nbsp;attributes&nbsp;represent&nbsp;'community'&nbsp;ratings.&nbsp;The<br>
+value&nbsp;attribute&nbsp;is&nbsp;the&nbsp;user's&nbsp;(of&nbsp;the&nbsp;feed&nbsp;from&nbsp;which&nbsp;the&nbsp;item&nbsp;is&nbsp;fetched,<br>
+not&nbsp;necessarily&nbsp;the&nbsp;authenticated&nbsp;user)&nbsp;rating&nbsp;of&nbsp;the&nbsp;book.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Rating">Rating</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Rating-__init__"><strong>__init__</strong></a>(self, min<font color="#909090">=None</font>, max<font color="#909090">=None</font>, average<font color="#909090">=None</font>, value<font color="#909090">=None</font>, text<font color="#909090">=None</font>, extension_elements<font color="#909090">=None</font>, extension_attributes<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Rating-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Rating-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Rating-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Rating-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Review">class <strong>Review</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>When&nbsp;present,&nbsp;the&nbsp;&lt;gbs:review&gt;&nbsp;element&nbsp;contains&nbsp;a&nbsp;user-generated&nbsp;review&nbsp;for<br>
+a&nbsp;given&nbsp;book.&nbsp;This&nbsp;element&nbsp;currently&nbsp;appears&nbsp;only&nbsp;in&nbsp;the&nbsp;user&nbsp;library&nbsp;and&nbsp;<br>
+user&nbsp;annotation&nbsp;feeds,&nbsp;as&nbsp;a&nbsp;child&nbsp;of&nbsp;&lt;entry&gt;.<br>
+&nbsp;<br>
+type:&nbsp;text,&nbsp;html,&nbsp;xhtml<br>
+xml:lang:&nbsp;id&nbsp;of&nbsp;the&nbsp;language,&nbsp;a&nbsp;guess,&nbsp;(always&nbsp;two&nbsp;letters?)<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Review">Review</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Review-__init__"><strong>__init__</strong></a>(self, type<font color="#909090">=None</font>, lang<font color="#909090">=None</font>, text<font color="#909090">=None</font>, extension_elements<font color="#909090">=None</font>, extension_attributes<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Review-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Review-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Review-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Review-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Subject">class <strong>Subject</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;&lt;dc:subject&gt;&nbsp;element&nbsp;identifies&nbsp;the&nbsp;topic&nbsp;of&nbsp;the&nbsp;book.&nbsp;Usually&nbsp;this&nbsp;is&nbsp;<br>
+a&nbsp;Library&nbsp;of&nbsp;Congress&nbsp;<a href="#Subject">Subject</a>&nbsp;Heading&nbsp;(LCSH)&nbsp;or&nbsp;&nbsp;<a href="#Book">Book</a>&nbsp;Industry&nbsp;Standards&nbsp;<br>
+and&nbsp;Communications&nbsp;<a href="#Subject">Subject</a>&nbsp;Heading&nbsp;(BISAC).<br>
+&nbsp;<br>
+The&nbsp;&lt;dc:subject&gt;&nbsp;element&nbsp;can&nbsp;appear&nbsp;only&nbsp;as&nbsp;a&nbsp;child&nbsp;of&nbsp;&lt;entry&gt;.&nbsp;There&nbsp;may&nbsp;<br>
+be&nbsp;multiple&nbsp;&lt;dc:subject&gt;&nbsp;elements&nbsp;per&nbsp;entry.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Subject">Subject</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Subject-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Subject-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Subject-__init__"><strong>__init__</strong></a>(*args, **kwargs)</dt><dd><tt>#&nbsp;The&nbsp;deprecated_function&nbsp;wraps&nbsp;the&nbsp;actual&nbsp;call&nbsp;to&nbsp;f.</tt></dd></dl>
+
+<dl><dt><a name="Subject-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Subject-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Title">class <strong>Title</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;&lt;dc:title&gt;&nbsp;element&nbsp;contains&nbsp;the&nbsp;title&nbsp;of&nbsp;a&nbsp;book&nbsp;as&nbsp;it&nbsp;was&nbsp;published.&nbsp;If<br>
+a&nbsp;book&nbsp;has&nbsp;a&nbsp;subtitle,&nbsp;it&nbsp;appears&nbsp;as&nbsp;a&nbsp;second&nbsp;&lt;dc:title&gt;&nbsp;element&nbsp;in&nbsp;the&nbsp;book<br>
+result's&nbsp;&lt;entry&gt;.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Title">Title</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Title-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Title-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Title-__init__"><strong>__init__</strong></a>(*args, **kwargs)</dt><dd><tt>#&nbsp;The&nbsp;deprecated_function&nbsp;wraps&nbsp;the&nbsp;actual&nbsp;call&nbsp;to&nbsp;f.</tt></dd></dl>
+
+<dl><dt><a name="Title-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Title-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Viewability">class <strong>Viewability</strong></a>(<a href="gdata.books.html#_AtomFromString">_AtomFromString</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Google&nbsp;<a href="#Book">Book</a>&nbsp;Search&nbsp;respects&nbsp;the&nbsp;user's&nbsp;local&nbsp;copyright&nbsp;restrictions.&nbsp;As&nbsp;a&nbsp;<br>
+result,&nbsp;previews&nbsp;or&nbsp;full&nbsp;views&nbsp;of&nbsp;some&nbsp;books&nbsp;are&nbsp;not&nbsp;available&nbsp;in&nbsp;all&nbsp;<br>
+locations.&nbsp;The&nbsp;&lt;gbs:viewability&gt;&nbsp;element&nbsp;indicates&nbsp;whether&nbsp;a&nbsp;book&nbsp;is&nbsp;fully&nbsp;<br>
+viewable,&nbsp;can&nbsp;be&nbsp;previewed,&nbsp;or&nbsp;only&nbsp;has&nbsp;"about&nbsp;the&nbsp;book"&nbsp;information.&nbsp;These<br>
+three&nbsp;"viewability&nbsp;modes"&nbsp;are&nbsp;the&nbsp;same&nbsp;ones&nbsp;returned&nbsp;by&nbsp;the&nbsp;Dynamic&nbsp;Links&nbsp;<br>
+API.<br>
+&nbsp;<br>
+The&nbsp;&lt;gbs:viewability&gt;&nbsp;element&nbsp;can&nbsp;appear&nbsp;only&nbsp;as&nbsp;a&nbsp;child&nbsp;of&nbsp;&lt;entry&gt;.<br>
+&nbsp;<br>
+The&nbsp;value&nbsp;attribute&nbsp;will&nbsp;take&nbsp;the&nbsp;form&nbsp;of&nbsp;the&nbsp;following&nbsp;URIs&nbsp;to&nbsp;represent<br>
+the&nbsp;relevant&nbsp;viewing&nbsp;capability:<br>
+&nbsp;<br>
+Full&nbsp;View:&nbsp;<a href="http://schemas.google.com/books/2008#view_all_pages">http://schemas.google.com/books/2008#view_all_pages</a><br>
+Limited&nbsp;Preview:&nbsp;<a href="http://schemas.google.com/books/2008#view_partial">http://schemas.google.com/books/2008#view_partial</a><br>
+Snippet&nbsp;View/No&nbsp;Preview:&nbsp;<a href="http://schemas.google.com/books/2008#view_no_pages">http://schemas.google.com/books/2008#view_no_pages</a><br>
+Unknown&nbsp;view:&nbsp;<a href="http://schemas.google.com/books/2008#view_unknown">http://schemas.google.com/books/2008#view_unknown</a><br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.books.html#Viewability">Viewability</a></dd>
+<dd><a href="gdata.books.html#_AtomFromString">_AtomFromString</a></dd>
+<dd><a href="atom.html#AtomBase">atom.AtomBase</a></dd>
+<dd><a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Viewability-__init__"><strong>__init__</strong></a>(self, value<font color="#909090">=None</font>, text<font color="#909090">=None</font>, extension_elements<font color="#909090">=None</font>, extension_attributes<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Class methods inherited from <a href="gdata.books.html#_AtomFromString">_AtomFromString</a>:<br>
+<dl><dt><a name="Viewability-FromString"><strong>FromString</strong></a>(cls, s)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#AtomBase">atom.AtomBase</a>:<br>
+<dl><dt><a name="Viewability-ToString"><strong>ToString</strong></a>(self, string_encoding<font color="#909090">='UTF-8'</font>)</dt><dd><tt>Converts&nbsp;the&nbsp;Atom&nbsp;object&nbsp;to&nbsp;a&nbsp;string&nbsp;containing&nbsp;XML.</tt></dd></dl>
+
+<dl><dt><a name="Viewability-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><a name="Viewability-FindExtensions"><strong>FindExtensions</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>)</dt><dd><tt>Searches&nbsp;extension&nbsp;elements&nbsp;for&nbsp;child&nbsp;nodes&nbsp;with&nbsp;the&nbsp;desired&nbsp;name.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;extension&nbsp;elements&nbsp;within&nbsp;this&nbsp;object&nbsp;whose&nbsp;tag<br>
+and/or&nbsp;namespace&nbsp;match&nbsp;those&nbsp;passed&nbsp;in.&nbsp;To&nbsp;find&nbsp;all&nbsp;extensions&nbsp;in<br>
+a&nbsp;particular&nbsp;namespace,&nbsp;specify&nbsp;the&nbsp;namespace&nbsp;but&nbsp;not&nbsp;the&nbsp;tag&nbsp;name.<br>
+If&nbsp;you&nbsp;specify&nbsp;only&nbsp;the&nbsp;tag,&nbsp;the&nbsp;result&nbsp;list&nbsp;may&nbsp;contain&nbsp;extension<br>
+elements&nbsp;in&nbsp;multiple&nbsp;namespaces.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;tag<br>
+&nbsp;&nbsp;namespace:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;desired&nbsp;namespace<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;elements&nbsp;whose&nbsp;tag&nbsp;and/or&nbsp;namespace&nbsp;match&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.html#ExtensionContainer">atom.ExtensionContainer</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ANNOTATION_REL</strong> = 'http://schemas.google.com/books/2008/annotation'<br>
+<strong>BOOK_SEARCH_NAMESPACE</strong> = 'http://schemas.google.com/books/2008'<br>
+<strong>DC_NAMESPACE</strong> = 'http://purl.org/dc/terms'<br>
+<strong>EMBEDDABLE</strong> = 'http://schemas.google.com/books/2008#embeddable'<br>
+<strong>FULL_VIEW</strong> = 'http://schemas.google.com/books/2008#view_all_pages'<br>
+<strong>INFO_REL</strong> = 'http://schemas.google.com/books/2008/info'<br>
+<strong>LABEL_SCHEME</strong> = 'http://schemas.google.com/books/2008/labels'<br>
+<strong>NOT_EMBEDDABLE</strong> = 'http://schemas.google.com/books/2008#not_embeddable'<br>
+<strong>NO_VIEW</strong> = 'http://schemas.google.com/books/2008#view_no_pages'<br>
+<strong>PARTIAL_VIEW</strong> = 'http://schemas.google.com/books/2008#view_partial'<br>
+<strong>PREVIEW_REL</strong> = 'http://schemas.google.com/books/2008/preview'<br>
+<strong>THUMBNAIL_REL</strong> = 'http://schemas.google.com/books/2008/thumbnail'<br>
+<strong>UNKNOWN_VIEW</strong> = 'http://schemas.google.com/books/2008#view_unknown'<br>
+<strong>__author__</strong> = 'James Sams &lt;sams.james@gmail.com&gt;'<br>
+<strong>__copyright__</strong> = 'Apache License v2.0'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">James&nbsp;Sams&nbsp;&lt;sams.james@gmail.com&gt;</td></tr></table>
+</body></html>

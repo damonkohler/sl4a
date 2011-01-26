@@ -1,0 +1,102 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module gdata.test_config</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gdata.html"><font color="#ffffff">gdata</font></a>.test_config</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/gdata/test_config.py">/usr/local/svn/gdata-python-client/src/gdata/test_config.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;Copyright&nbsp;(C)&nbsp;2009&nbsp;Google&nbsp;Inc.<br>
+#<br>
+#&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;(the&nbsp;"License");<br>
+#&nbsp;you&nbsp;may&nbsp;not&nbsp;use&nbsp;this&nbsp;file&nbsp;except&nbsp;in&nbsp;compliance&nbsp;with&nbsp;the&nbsp;License.<br>
+#&nbsp;You&nbsp;may&nbsp;obtain&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;License&nbsp;at<br>
+#<br>
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a><br>
+#<br>
+#&nbsp;Unless&nbsp;required&nbsp;by&nbsp;applicable&nbsp;law&nbsp;or&nbsp;agreed&nbsp;to&nbsp;in&nbsp;writing,&nbsp;software<br>
+#&nbsp;distributed&nbsp;under&nbsp;the&nbsp;License&nbsp;is&nbsp;distributed&nbsp;on&nbsp;an&nbsp;"AS&nbsp;IS"&nbsp;BASIS,<br>
+#&nbsp;WITHOUT&nbsp;WARRANTIES&nbsp;OR&nbsp;CONDITIONS&nbsp;OF&nbsp;ANY&nbsp;KIND,&nbsp;either&nbsp;express&nbsp;or&nbsp;implied.<br>
+#&nbsp;See&nbsp;the&nbsp;License&nbsp;for&nbsp;the&nbsp;specific&nbsp;language&nbsp;governing&nbsp;permissions&nbsp;and<br>
+#&nbsp;limitations&nbsp;under&nbsp;the&nbsp;License.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="atom.html">atom</a><br>
+<a href="gdata.html">gdata</a><br>
+</td><td width="25%" valign=top><a href="inspect.html">inspect</a><br>
+<a href="gdata.test_config_template.html">gdata.test_config_template</a><br>
+</td><td width="25%" valign=top><a href="unittest.html">unittest</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-build_suite"><strong>build_suite</strong></a>(classes)</dt><dd><tt>Creates&nbsp;a&nbsp;TestSuite&nbsp;for&nbsp;all&nbsp;unit&nbsp;test&nbsp;classes&nbsp;in&nbsp;the&nbsp;list.<br>
+&nbsp;<br>
+Assumes&nbsp;that&nbsp;each&nbsp;of&nbsp;the&nbsp;classes&nbsp;in&nbsp;the&nbsp;list&nbsp;has&nbsp;unit&nbsp;test&nbsp;methods&nbsp;which<br>
+begin&nbsp;with&nbsp;'test'.&nbsp;Calls&nbsp;unittest.makeSuite.<br>
+&nbsp;<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;A&nbsp;new&nbsp;unittest.TestSuite&nbsp;containing&nbsp;a&nbsp;test&nbsp;suite&nbsp;for&nbsp;all&nbsp;classes.</tt></dd></dl>
+ <dl><dt><a name="-check_data_classes"><strong>check_data_classes</strong></a>(test, classes)</dt></dl>
+ <dl><dt><a name="-close_client"><strong>close_client</strong></a>(client)</dt><dd><tt>Saves&nbsp;the&nbsp;recoded&nbsp;responses&nbsp;to&nbsp;a&nbsp;temp&nbsp;file&nbsp;if&nbsp;the&nbsp;config&nbsp;file&nbsp;allows.<br>
+&nbsp;<br>
+This&nbsp;should&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;unit&nbsp;test's&nbsp;tearDown&nbsp;method.<br>
+&nbsp;<br>
+Checks&nbsp;to&nbsp;see&nbsp;if&nbsp;settings.CACHE_RESPONSES&nbsp;is&nbsp;True,&nbsp;to&nbsp;make&nbsp;sure&nbsp;we&nbsp;only<br>
+save&nbsp;sessions&nbsp;to&nbsp;repeat&nbsp;if&nbsp;the&nbsp;user&nbsp;desires.</tt></dd></dl>
+ <dl><dt><a name="-close_service"><strong>close_service</strong></a>(service)</dt></dl>
+ <dl><dt><a name="-configure_cache"><strong>configure_cache</strong></a>(client, test_name)</dt><dd><tt>Loads&nbsp;or&nbsp;begins&nbsp;a&nbsp;cached&nbsp;session&nbsp;to&nbsp;record&nbsp;HTTP&nbsp;traffic.<br>
+&nbsp;<br>
+Should&nbsp;be&nbsp;called&nbsp;at&nbsp;the&nbsp;beginning&nbsp;of&nbsp;each&nbsp;test&nbsp;method.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;client:&nbsp;a&nbsp;gdata.GDClient&nbsp;whose&nbsp;http_client&nbsp;member&nbsp;has&nbsp;been&nbsp;replaced<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;a&nbsp;atom.mock_http_core.MockHttpClient&nbsp;so&nbsp;that&nbsp;repeated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;executions&nbsp;can&nbsp;used&nbsp;cached&nbsp;responses&nbsp;instead&nbsp;of&nbsp;contacting<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;server.<br>
+&nbsp;&nbsp;test_name:&nbsp;str&nbsp;The&nbsp;name&nbsp;of&nbsp;this&nbsp;test&nbsp;method.&nbsp;Examples:&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'TestClass.test_x_works',&nbsp;'TestClass.test_crud_operations'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;used&nbsp;to&nbsp;name&nbsp;the&nbsp;recording&nbsp;of&nbsp;the&nbsp;HTTP&nbsp;requests&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;responses,&nbsp;so&nbsp;it&nbsp;should&nbsp;be&nbsp;unique&nbsp;to&nbsp;each&nbsp;test&nbsp;method&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test&nbsp;case.</tt></dd></dl>
+ <dl><dt><a name="-configure_client"><strong>configure_client</strong></a>(client, config, case_name)</dt><dd><tt>Sets&nbsp;up&nbsp;a&nbsp;mock&nbsp;client&nbsp;which&nbsp;will&nbsp;reuse&nbsp;a&nbsp;saved&nbsp;session.<br>
+&nbsp;<br>
+Should&nbsp;be&nbsp;called&nbsp;during&nbsp;setUp&nbsp;of&nbsp;each&nbsp;unit&nbsp;test.<br>
+&nbsp;<br>
+Handles&nbsp;authentication&nbsp;to&nbsp;allow&nbsp;the&nbsp;GDClient&nbsp;to&nbsp;make&nbsp;requests&nbsp;which<br>
+require&nbsp;an&nbsp;auth&nbsp;header.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;client:&nbsp;a&nbsp;gdata.GDClient&nbsp;whose&nbsp;http_client&nbsp;member&nbsp;should&nbsp;be&nbsp;replaced<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;a&nbsp;atom.mock_http_core.MockHttpClient&nbsp;so&nbsp;that&nbsp;repeated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;executions&nbsp;can&nbsp;used&nbsp;cached&nbsp;responses&nbsp;instead&nbsp;of&nbsp;contacting<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;server.<br>
+&nbsp;&nbsp;config:&nbsp;a&nbsp;dict&nbsp;of&nbsp;test&nbsp;specific&nbsp;settings&nbsp;from&nbsp;the&nbsp;gdata.test_config<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;module.&nbsp;Examples&nbsp;can&nbsp;be&nbsp;found&nbsp;in&nbsp;gdata.test_config_template<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;look&nbsp;at&nbsp;BloggerConfig&nbsp;and&nbsp;ContactsConfig.<br>
+&nbsp;&nbsp;case_name:&nbsp;str&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;test&nbsp;case&nbsp;class.&nbsp;Examples:&nbsp;'BloggerTest',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'ContactsTest'.&nbsp;Used&nbsp;to&nbsp;save&nbsp;a&nbsp;session<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;the&nbsp;ClientLogin&nbsp;auth&nbsp;token&nbsp;request,&nbsp;so&nbsp;the&nbsp;case_name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;should&nbsp;be&nbsp;reused&nbsp;if&nbsp;and&nbsp;only&nbsp;if&nbsp;the&nbsp;same&nbsp;username,&nbsp;password,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;service&nbsp;are&nbsp;being&nbsp;used.</tt></dd></dl>
+ <dl><dt><a name="-configure_service"><strong>configure_service</strong></a>(service, config, case_name)</dt><dd><tt>Sets&nbsp;up&nbsp;a&nbsp;mock&nbsp;GDataService&nbsp;v1&nbsp;client&nbsp;to&nbsp;reuse&nbsp;recorded&nbsp;sessions.<br>
+&nbsp;<br>
+Should&nbsp;be&nbsp;called&nbsp;during&nbsp;setUp&nbsp;of&nbsp;each&nbsp;unit&nbsp;test.&nbsp;This&nbsp;is&nbsp;a&nbsp;duplicate&nbsp;of<br>
+configure_client,&nbsp;modified&nbsp;to&nbsp;handle&nbsp;old&nbsp;v1&nbsp;service&nbsp;classes.</tt></dd></dl>
+ <dl><dt><a name="-configure_service_cache"><strong>configure_service_cache</strong></a>(service, test_name)</dt><dd><tt>Loads&nbsp;or&nbsp;starts&nbsp;a&nbsp;session&nbsp;recording&nbsp;for&nbsp;a&nbsp;v1&nbsp;Service&nbsp;object.<br>
+&nbsp;<br>
+Duplicates&nbsp;the&nbsp;behavior&nbsp;of&nbsp;configure_cache,&nbsp;but&nbsp;the&nbsp;target&nbsp;for&nbsp;this<br>
+function&nbsp;is&nbsp;a&nbsp;v1&nbsp;Service&nbsp;object&nbsp;instead&nbsp;of&nbsp;a&nbsp;v2&nbsp;Client.</tt></dd></dl>
+</td></tr></table>
+</body></html>

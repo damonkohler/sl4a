@@ -1,0 +1,216 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module atom.core</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="atom.html"><font color="#ffffff">atom</font></a>.core</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/atom/core.py">/usr/local/svn/gdata-python-client/src/atom/core.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;&nbsp;&nbsp;&nbsp;Copyright&nbsp;(C)&nbsp;2008&nbsp;Google&nbsp;Inc.<br>
+#<br>
+#&nbsp;&nbsp;&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;(the&nbsp;"License");<br>
+#&nbsp;&nbsp;&nbsp;you&nbsp;may&nbsp;not&nbsp;use&nbsp;this&nbsp;file&nbsp;except&nbsp;in&nbsp;compliance&nbsp;with&nbsp;the&nbsp;License.<br>
+#&nbsp;&nbsp;&nbsp;You&nbsp;may&nbsp;obtain&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;License&nbsp;at<br>
+#<br>
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a><br>
+#<br>
+#&nbsp;&nbsp;&nbsp;Unless&nbsp;required&nbsp;by&nbsp;applicable&nbsp;law&nbsp;or&nbsp;agreed&nbsp;to&nbsp;in&nbsp;writing,&nbsp;software<br>
+#&nbsp;&nbsp;&nbsp;distributed&nbsp;under&nbsp;the&nbsp;License&nbsp;is&nbsp;distributed&nbsp;on&nbsp;an&nbsp;"AS&nbsp;IS"&nbsp;BASIS,<br>
+#&nbsp;&nbsp;&nbsp;WITHOUT&nbsp;WARRANTIES&nbsp;OR&nbsp;CONDITIONS&nbsp;OF&nbsp;ANY&nbsp;KIND,&nbsp;either&nbsp;express&nbsp;or&nbsp;implied.<br>
+#&nbsp;&nbsp;&nbsp;See&nbsp;the&nbsp;License&nbsp;for&nbsp;the&nbsp;specific&nbsp;language&nbsp;governing&nbsp;permissions&nbsp;and<br>
+#&nbsp;&nbsp;&nbsp;limitations&nbsp;under&nbsp;the&nbsp;License.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="xml.etree.cElementTree.html">xml.etree.cElementTree</a><br>
+</td><td width="25%" valign=top><a href="inspect.html">inspect</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.core.html#XmlAttribute">XmlAttribute</a>
+</font></dt><dt><font face="helvetica, arial"><a href="atom.core.html#XmlElement">XmlElement</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="XmlAttribute">class <strong>XmlAttribute</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="XmlAttribute-__init__"><strong>__init__</strong></a>(self, qname, value)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="XmlElement">class <strong>XmlElement</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;an&nbsp;element&nbsp;node&nbsp;in&nbsp;an&nbsp;XML&nbsp;document.<br>
+&nbsp;<br>
+The&nbsp;text&nbsp;member&nbsp;is&nbsp;a&nbsp;UTF-8&nbsp;encoded&nbsp;str&nbsp;or&nbsp;unicode.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="XmlElement-FindChildren"><strong>FindChildren</strong></a> = <a href="#XmlElement-get_elements">get_elements</a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>, version<font color="#909090">=1</font>)</dt></dl>
+
+<dl><dt><a name="XmlElement-FindExtensions"><strong>FindExtensions</strong></a> = <a href="#XmlElement-get_elements">get_elements</a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>, version<font color="#909090">=1</font>)</dt></dl>
+
+<dl><dt><a name="XmlElement-GetAttributes"><strong>GetAttributes</strong></a> = <a href="#XmlElement-get_attributes">get_attributes</a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>, version<font color="#909090">=1</font>)</dt></dl>
+
+<dl><dt><a name="XmlElement-GetElements"><strong>GetElements</strong></a> = <a href="#XmlElement-get_elements">get_elements</a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>, version<font color="#909090">=1</font>)</dt></dl>
+
+<dl><dt><a name="XmlElement-ToString"><strong>ToString</strong></a> = <a href="#XmlElement-to_string">to_string</a>(self, version<font color="#909090">=1</font>, encoding<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="XmlElement-__init__"><strong>__init__</strong></a>(self, text<font color="#909090">=None</font>, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="XmlElement-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="XmlElement-get_attributes"><strong>get_attributes</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>, version<font color="#909090">=1</font>)</dt><dd><tt>Find&nbsp;all&nbsp;attributes&nbsp;which&nbsp;match&nbsp;the&nbsp;tag&nbsp;and&nbsp;namespace.<br>
+&nbsp;<br>
+To&nbsp;find&nbsp;all&nbsp;attributes&nbsp;in&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;call&nbsp;get_attributes&nbsp;with&nbsp;the&nbsp;tag<br>
+and&nbsp;namespace&nbsp;both&nbsp;set&nbsp;to&nbsp;None&nbsp;(the&nbsp;default).&nbsp;This&nbsp;method&nbsp;searches&nbsp;<br>
+through&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>'s&nbsp;members&nbsp;and&nbsp;the&nbsp;attributes&nbsp;stored&nbsp;in&nbsp;<br>
+_other_attributes&nbsp;which&nbsp;did&nbsp;not&nbsp;fit&nbsp;any&nbsp;of&nbsp;the&nbsp;XML&nbsp;parsing&nbsp;rules&nbsp;for&nbsp;this<br>
+class.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str<br>
+&nbsp;&nbsp;namespace:&nbsp;str<br>
+&nbsp;&nbsp;version:&nbsp;int&nbsp;Specifies&nbsp;the&nbsp;version&nbsp;of&nbsp;the&nbsp;XML&nbsp;rules&nbsp;to&nbsp;be&nbsp;used&nbsp;when&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;searching&nbsp;for&nbsp;matching&nbsp;attributes.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;<a href="#XmlAttribute">XmlAttribute</a>&nbsp;objects&nbsp;for&nbsp;the&nbsp;matching&nbsp;attributes.</tt></dd></dl>
+
+<dl><dt><a name="XmlElement-get_elements"><strong>get_elements</strong></a>(self, tag<font color="#909090">=None</font>, namespace<font color="#909090">=None</font>, version<font color="#909090">=1</font>)</dt><dd><tt>Find&nbsp;all&nbsp;sub&nbsp;elements&nbsp;which&nbsp;match&nbsp;the&nbsp;tag&nbsp;and&nbsp;namespace.<br>
+&nbsp;<br>
+To&nbsp;find&nbsp;all&nbsp;elements&nbsp;in&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;call&nbsp;get_elements&nbsp;with&nbsp;the&nbsp;tag&nbsp;and<br>
+namespace&nbsp;both&nbsp;set&nbsp;to&nbsp;None&nbsp;(the&nbsp;default).&nbsp;This&nbsp;method&nbsp;searches&nbsp;through<br>
+the&nbsp;<a href="__builtin__.html#object">object</a>'s&nbsp;members&nbsp;and&nbsp;the&nbsp;elements&nbsp;stored&nbsp;in&nbsp;_other_elements&nbsp;which<br>
+did&nbsp;not&nbsp;match&nbsp;any&nbsp;of&nbsp;the&nbsp;XML&nbsp;parsing&nbsp;rules&nbsp;for&nbsp;this&nbsp;class.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;tag:&nbsp;str<br>
+&nbsp;&nbsp;namespace:&nbsp;str<br>
+&nbsp;&nbsp;version:&nbsp;int&nbsp;Specifies&nbsp;the&nbsp;version&nbsp;of&nbsp;the&nbsp;XML&nbsp;rules&nbsp;to&nbsp;be&nbsp;used&nbsp;when&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;searching&nbsp;for&nbsp;matching&nbsp;elements.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;list&nbsp;of&nbsp;the&nbsp;matching&nbsp;XmlElements.</tt></dd></dl>
+
+<dl><dt><a name="XmlElement-to_string"><strong>to_string</strong></a>(self, version<font color="#909090">=1</font>, encoding<font color="#909090">=None</font>)</dt><dd><tt>Converts&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;XML.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>attributes</strong></dt>
+</dl>
+<dl><dt><strong>children</strong></dt>
+</dl>
+<dl><dt><strong>extension_attributes</strong></dt>
+</dl>
+<dl><dt><strong>extension_elements</strong></dt>
+</dl>
+<dl><dt><strong>namespace</strong></dt>
+</dl>
+<dl><dt><strong>tag</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>text</strong> = None</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-Parse"><strong>Parse</strong></a> = parse(xml_string, target_class<font color="#909090">=None</font>, version<font color="#909090">=1</font>, encoding<font color="#909090">=None</font>)</dt><dd><tt>Parses&nbsp;the&nbsp;XML&nbsp;string&nbsp;according&nbsp;to&nbsp;the&nbsp;rules&nbsp;for&nbsp;the&nbsp;target_class.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;xml_string:&nbsp;str&nbsp;or&nbsp;unicode<br>
+&nbsp;&nbsp;target_class:&nbsp;<a href="#XmlElement">XmlElement</a>&nbsp;or&nbsp;a&nbsp;subclass.&nbsp;If&nbsp;None&nbsp;is&nbsp;specified,&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#XmlElement">XmlElement</a>&nbsp;class&nbsp;is&nbsp;used.<br>
+&nbsp;&nbsp;version:&nbsp;int&nbsp;(optional)&nbsp;The&nbsp;version&nbsp;of&nbsp;the&nbsp;schema&nbsp;which&nbsp;should&nbsp;be&nbsp;used&nbsp;when<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;converting&nbsp;the&nbsp;XML&nbsp;into&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>.&nbsp;The&nbsp;default&nbsp;is&nbsp;1.<br>
+&nbsp;&nbsp;encoding:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;character&nbsp;encoding&nbsp;of&nbsp;the&nbsp;bytes&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xml_string.&nbsp;Default&nbsp;is&nbsp;'UTF-8'.</tt></dd></dl>
+ <dl><dt><a name="-XmlElementFromString"><strong>XmlElementFromString</strong></a> = parse(xml_string, target_class<font color="#909090">=None</font>, version<font color="#909090">=1</font>, encoding<font color="#909090">=None</font>)</dt><dd><tt>Parses&nbsp;the&nbsp;XML&nbsp;string&nbsp;according&nbsp;to&nbsp;the&nbsp;rules&nbsp;for&nbsp;the&nbsp;target_class.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;xml_string:&nbsp;str&nbsp;or&nbsp;unicode<br>
+&nbsp;&nbsp;target_class:&nbsp;<a href="#XmlElement">XmlElement</a>&nbsp;or&nbsp;a&nbsp;subclass.&nbsp;If&nbsp;None&nbsp;is&nbsp;specified,&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#XmlElement">XmlElement</a>&nbsp;class&nbsp;is&nbsp;used.<br>
+&nbsp;&nbsp;version:&nbsp;int&nbsp;(optional)&nbsp;The&nbsp;version&nbsp;of&nbsp;the&nbsp;schema&nbsp;which&nbsp;should&nbsp;be&nbsp;used&nbsp;when<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;converting&nbsp;the&nbsp;XML&nbsp;into&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>.&nbsp;The&nbsp;default&nbsp;is&nbsp;1.<br>
+&nbsp;&nbsp;encoding:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;character&nbsp;encoding&nbsp;of&nbsp;the&nbsp;bytes&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xml_string.&nbsp;Default&nbsp;is&nbsp;'UTF-8'.</tt></dd></dl>
+ <dl><dt><a name="-parse"><strong>parse</strong></a>(xml_string, target_class<font color="#909090">=None</font>, version<font color="#909090">=1</font>, encoding<font color="#909090">=None</font>)</dt><dd><tt>Parses&nbsp;the&nbsp;XML&nbsp;string&nbsp;according&nbsp;to&nbsp;the&nbsp;rules&nbsp;for&nbsp;the&nbsp;target_class.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;xml_string:&nbsp;str&nbsp;or&nbsp;unicode<br>
+&nbsp;&nbsp;target_class:&nbsp;<a href="#XmlElement">XmlElement</a>&nbsp;or&nbsp;a&nbsp;subclass.&nbsp;If&nbsp;None&nbsp;is&nbsp;specified,&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#XmlElement">XmlElement</a>&nbsp;class&nbsp;is&nbsp;used.<br>
+&nbsp;&nbsp;version:&nbsp;int&nbsp;(optional)&nbsp;The&nbsp;version&nbsp;of&nbsp;the&nbsp;schema&nbsp;which&nbsp;should&nbsp;be&nbsp;used&nbsp;when<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;converting&nbsp;the&nbsp;XML&nbsp;into&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>.&nbsp;The&nbsp;default&nbsp;is&nbsp;1.<br>
+&nbsp;&nbsp;encoding:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;character&nbsp;encoding&nbsp;of&nbsp;the&nbsp;bytes&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xml_string.&nbsp;Default&nbsp;is&nbsp;'UTF-8'.</tt></dd></dl>
+ <dl><dt><a name="-xml_element_from_string"><strong>xml_element_from_string</strong></a> = parse(xml_string, target_class<font color="#909090">=None</font>, version<font color="#909090">=1</font>, encoding<font color="#909090">=None</font>)</dt><dd><tt>Parses&nbsp;the&nbsp;XML&nbsp;string&nbsp;according&nbsp;to&nbsp;the&nbsp;rules&nbsp;for&nbsp;the&nbsp;target_class.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;xml_string:&nbsp;str&nbsp;or&nbsp;unicode<br>
+&nbsp;&nbsp;target_class:&nbsp;<a href="#XmlElement">XmlElement</a>&nbsp;or&nbsp;a&nbsp;subclass.&nbsp;If&nbsp;None&nbsp;is&nbsp;specified,&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#XmlElement">XmlElement</a>&nbsp;class&nbsp;is&nbsp;used.<br>
+&nbsp;&nbsp;version:&nbsp;int&nbsp;(optional)&nbsp;The&nbsp;version&nbsp;of&nbsp;the&nbsp;schema&nbsp;which&nbsp;should&nbsp;be&nbsp;used&nbsp;when<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;converting&nbsp;the&nbsp;XML&nbsp;into&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>.&nbsp;The&nbsp;default&nbsp;is&nbsp;1.<br>
+&nbsp;&nbsp;encoding:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;character&nbsp;encoding&nbsp;of&nbsp;the&nbsp;bytes&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xml_string.&nbsp;Default&nbsp;is&nbsp;'UTF-8'.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>STRING_ENCODING</strong> = 'utf-8'<br>
+<strong>__author__</strong> = 'j.s@google.com (Jeff Scudder)'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">j.s@google.com&nbsp;(Jeff&nbsp;Scudder)</td></tr></table>
+</body></html>

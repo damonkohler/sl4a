@@ -64,17 +64,17 @@ public class PythonDescriptor extends Sl4aHostedInterpreter {
   }
 
   public int getVersion() {
-    return 10;
+    return 11;
   }
 
   @Override
   public int getExtrasVersion() {
-    return 10;
+    return 11;
   }
 
   @Override
   public int getScriptsVersion() {
-    return 10;
+    return 11;
   }
 
   @Override

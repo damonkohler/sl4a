@@ -1,0 +1,10 @@
+# Copyright 2010 Google Inc. All Rights Reserved.
+#Tue Sep 21 13:32:25 PDT 2010
+currentVersion=1.0.6
+version=1.0.6
+isNative=true
+feedurl=http\://www.bzip.org/CHANGES
+name=bzip2
+keywords=bzip2
+onDevice=true
+homepage=http\://www.bzip.org/

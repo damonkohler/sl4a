@@ -1,0 +1,245 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module atom.mock_http_core</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="atom.html"><font color="#ffffff">atom</font></a>.mock_http_core</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/atom/mock_http_core.py">/usr/local/svn/gdata-python-client/src/atom/mock_http_core.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;Copyright&nbsp;(C)&nbsp;2009&nbsp;Google&nbsp;Inc.<br>
+#<br>
+#&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;(the&nbsp;"License");<br>
+#&nbsp;you&nbsp;may&nbsp;not&nbsp;use&nbsp;this&nbsp;file&nbsp;except&nbsp;in&nbsp;compliance&nbsp;with&nbsp;the&nbsp;License.<br>
+#&nbsp;You&nbsp;may&nbsp;obtain&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;License&nbsp;at<br>
+#<br>
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a><br>
+#<br>
+#&nbsp;Unless&nbsp;required&nbsp;by&nbsp;applicable&nbsp;law&nbsp;or&nbsp;agreed&nbsp;to&nbsp;in&nbsp;writing,&nbsp;software<br>
+#&nbsp;distributed&nbsp;under&nbsp;the&nbsp;License&nbsp;is&nbsp;distributed&nbsp;on&nbsp;an&nbsp;"AS&nbsp;IS"&nbsp;BASIS,<br>
+#&nbsp;WITHOUT&nbsp;WARRANTIES&nbsp;OR&nbsp;CONDITIONS&nbsp;OF&nbsp;ANY&nbsp;KIND,&nbsp;either&nbsp;express&nbsp;or&nbsp;implied.<br>
+#&nbsp;See&nbsp;the&nbsp;License&nbsp;for&nbsp;the&nbsp;specific&nbsp;language&nbsp;governing&nbsp;permissions&nbsp;and<br>
+#&nbsp;limitations&nbsp;under&nbsp;the&nbsp;License.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="StringIO.html">StringIO</a><br>
+<a href="atom.html">atom</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="pickle.html">pickle</a><br>
+</td><td width="25%" valign=top><a href="tempfile.html">tempfile</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.mock_http_core.html#EchoHttpClient">EchoHttpClient</a>
+</font></dt><dt><font face="helvetica, arial"><a href="atom.mock_http_core.html#MockHttpClient">MockHttpClient</a>
+</font></dt><dt><font face="helvetica, arial"><a href="atom.mock_http_core.html#SettableHttpClient">SettableHttpClient</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="atom.http_core.html#HttpResponse">atom.http_core.HttpResponse</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.mock_http_core.html#MockHttpResponse">MockHttpResponse</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="EchoHttpClient">class <strong>EchoHttpClient</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Sends&nbsp;the&nbsp;request&nbsp;data&nbsp;back&nbsp;in&nbsp;the&nbsp;response.<br>
+&nbsp;<br>
+Used&nbsp;to&nbsp;check&nbsp;the&nbsp;formatting&nbsp;of&nbsp;the&nbsp;request&nbsp;as&nbsp;it&nbsp;was&nbsp;sent.&nbsp;Always&nbsp;responds<br>
+with&nbsp;a&nbsp;200&nbsp;OK,&nbsp;and&nbsp;some&nbsp;information&nbsp;from&nbsp;the&nbsp;HTTP&nbsp;request&nbsp;is&nbsp;returned&nbsp;in<br>
+special&nbsp;Echo-X&nbsp;headers&nbsp;in&nbsp;the&nbsp;response.&nbsp;The&nbsp;following&nbsp;headers&nbsp;are&nbsp;added<br>
+in&nbsp;the&nbsp;response:<br>
+'Echo-Host':&nbsp;The&nbsp;host&nbsp;name&nbsp;and&nbsp;port&nbsp;number&nbsp;to&nbsp;which&nbsp;the&nbsp;HTTP&nbsp;connection&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;made.&nbsp;If&nbsp;no&nbsp;port&nbsp;was&nbsp;passed&nbsp;in,&nbsp;the&nbsp;header&nbsp;will&nbsp;contain<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;host:None.<br>
+'Echo-Uri':&nbsp;The&nbsp;path&nbsp;portion&nbsp;of&nbsp;the&nbsp;URL&nbsp;being&nbsp;requested.&nbsp;/example?x=1&amp;y=2<br>
+'Echo-Scheme':&nbsp;The&nbsp;beginning&nbsp;of&nbsp;the&nbsp;URL,&nbsp;usually&nbsp;'http'&nbsp;or&nbsp;'https'<br>
+'Echo-Method':&nbsp;The&nbsp;HTTP&nbsp;method&nbsp;being&nbsp;used,&nbsp;'GET',&nbsp;'POST',&nbsp;'PUT',&nbsp;etc.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="EchoHttpClient-request"><strong>request</strong></a>(self, http_request)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MockHttpClient">class <strong>MockHttpClient</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="MockHttpClient-AddResponse"><strong>AddResponse</strong></a> = <a href="#MockHttpClient-add_response">add_response</a>(self, http_request, status, reason, headers<font color="#909090">=None</font>, body<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="MockHttpClient-Request"><strong>Request</strong></a> = <a href="#MockHttpClient-request">request</a>(self, http_request)</dt></dl>
+
+<dl><dt><a name="MockHttpClient-__init__"><strong>__init__</strong></a>(self, recordings<font color="#909090">=None</font>, real_client<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="MockHttpClient-add_response"><strong>add_response</strong></a>(self, http_request, status, reason, headers<font color="#909090">=None</font>, body<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="MockHttpClient-close_session"><strong>close_session</strong></a>(self)</dt><dd><tt>Saves&nbsp;recordings&nbsp;in&nbsp;the&nbsp;temporary&nbsp;file&nbsp;named&nbsp;in&nbsp;use_cached_session.</tt></dd></dl>
+
+<dl><dt><a name="MockHttpClient-delete_session"><strong>delete_session</strong></a>(self, name<font color="#909090">=None</font>)</dt><dd><tt>Removes&nbsp;recordings&nbsp;from&nbsp;a&nbsp;previous&nbsp;live&nbsp;request.</tt></dd></dl>
+
+<dl><dt><a name="MockHttpClient-get_cache_file_name"><strong>get_cache_file_name</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MockHttpClient-request"><strong>request</strong></a>(self, http_request)</dt><dd><tt>Provide&nbsp;a&nbsp;recorded&nbsp;response,&nbsp;or&nbsp;record&nbsp;a&nbsp;response&nbsp;for&nbsp;replay.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;real_client&nbsp;is&nbsp;set,&nbsp;the&nbsp;request&nbsp;will&nbsp;be&nbsp;made&nbsp;using&nbsp;the<br>
+real_client,&nbsp;and&nbsp;the&nbsp;response&nbsp;from&nbsp;the&nbsp;server&nbsp;will&nbsp;be&nbsp;recorded.<br>
+If&nbsp;the&nbsp;real_client&nbsp;is&nbsp;None&nbsp;(the&nbsp;default),&nbsp;this&nbsp;method&nbsp;will&nbsp;examine<br>
+the&nbsp;recordings&nbsp;and&nbsp;find&nbsp;the&nbsp;first&nbsp;which&nbsp;matches.</tt></dd></dl>
+
+<dl><dt><a name="MockHttpClient-use_cached_session"><strong>use_cached_session</strong></a>(self, name<font color="#909090">=None</font>, real_http_client<font color="#909090">=None</font>)</dt><dd><tt>Attempts&nbsp;to&nbsp;load&nbsp;recordings&nbsp;from&nbsp;a&nbsp;previous&nbsp;live&nbsp;request.<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;temp&nbsp;file&nbsp;with&nbsp;the&nbsp;recordings&nbsp;exists,&nbsp;then&nbsp;it&nbsp;is&nbsp;used&nbsp;to&nbsp;fulfill<br>
+requests.&nbsp;If&nbsp;the&nbsp;file&nbsp;does&nbsp;not&nbsp;exist,&nbsp;then&nbsp;a&nbsp;real&nbsp;client&nbsp;is&nbsp;used&nbsp;to&nbsp;<br>
+actually&nbsp;make&nbsp;the&nbsp;desired&nbsp;HTTP&nbsp;requests.&nbsp;Requests&nbsp;and&nbsp;responses&nbsp;are<br>
+recorded&nbsp;and&nbsp;will&nbsp;be&nbsp;written&nbsp;to&nbsp;the&nbsp;desired&nbsp;temprary&nbsp;cache&nbsp;file&nbsp;when<br>
+close_session&nbsp;is&nbsp;called.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;name:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;file&nbsp;name&nbsp;of&nbsp;session&nbsp;file&nbsp;to&nbsp;be&nbsp;used.&nbsp;The&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;loaded&nbsp;from&nbsp;the&nbsp;temporary&nbsp;directory&nbsp;of&nbsp;this&nbsp;machine.&nbsp;If&nbsp;no&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;passed&nbsp;in,&nbsp;a&nbsp;default&nbsp;name&nbsp;will&nbsp;be&nbsp;constructed&nbsp;using&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cache_name_prefix,&nbsp;cache_case_name,&nbsp;and&nbsp;cache_test_name&nbsp;of&nbsp;this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;&nbsp;real_http_client:&nbsp;atom.http_core.HttpClient&nbsp;the&nbsp;real&nbsp;client&nbsp;to&nbsp;be&nbsp;used<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;the&nbsp;cached&nbsp;recordings&nbsp;are&nbsp;not&nbsp;found.&nbsp;If&nbsp;the&nbsp;default<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;is&nbsp;used,&nbsp;this&nbsp;will&nbsp;be&nbsp;an&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;atom.http_core.HttpClient.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>cache_case_name</strong> = ''</dl>
+
+<dl><dt><strong>cache_name_prefix</strong> = 'gdata_live_test'</dl>
+
+<dl><dt><strong>cache_test_name</strong> = ''</dl>
+
+<dl><dt><strong>debug</strong> = None</dl>
+
+<dl><dt><strong>real_client</strong> = None</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MockHttpResponse">class <strong>MockHttpResponse</strong></a>(<a href="atom.http_core.html#HttpResponse">atom.http_core.HttpResponse</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="atom.mock_http_core.html#MockHttpResponse">MockHttpResponse</a></dd>
+<dd><a href="atom.http_core.html#HttpResponse">atom.http_core.HttpResponse</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="MockHttpResponse-__init__"><strong>__init__</strong></a>(self, status<font color="#909090">=None</font>, reason<font color="#909090">=None</font>, headers<font color="#909090">=None</font>, body<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="MockHttpResponse-read"><strong>read</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="atom.http_core.html#HttpResponse">atom.http_core.HttpResponse</a>:<br>
+<dl><dt><a name="MockHttpResponse-getheader"><strong>getheader</strong></a>(self, name, default<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="MockHttpResponse-getheaders"><strong>getheaders</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.http_core.html#HttpResponse">atom.http_core.HttpResponse</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="atom.http_core.html#HttpResponse">atom.http_core.HttpResponse</a>:<br>
+<dl><dt><strong>reason</strong> = None</dl>
+
+<dl><dt><strong>status</strong> = None</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SettableHttpClient">class <strong>SettableHttpClient</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;HTTP&nbsp;Client&nbsp;which&nbsp;responds&nbsp;with&nbsp;the&nbsp;data&nbsp;given&nbsp;in&nbsp;set_response.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SettableHttpClient-__init__"><strong>__init__</strong></a>(self, status, reason, body, headers)</dt><dd><tt>Configures&nbsp;the&nbsp;response&nbsp;for&nbsp;the&nbsp;server.<br>
+&nbsp;<br>
+See&nbsp;set_response&nbsp;for&nbsp;details&nbsp;on&nbsp;the&nbsp;arguments&nbsp;to&nbsp;the&nbsp;constructor.</tt></dd></dl>
+
+<dl><dt><a name="SettableHttpClient-request"><strong>request</strong></a>(self, http_request)</dt></dl>
+
+<dl><dt><a name="SettableHttpClient-set_response"><strong>set_response</strong></a>(self, status, reason, body, headers)</dt><dd><tt>Determines&nbsp;the&nbsp;response&nbsp;which&nbsp;will&nbsp;be&nbsp;sent&nbsp;for&nbsp;each&nbsp;request.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;status:&nbsp;An&nbsp;int&nbsp;for&nbsp;the&nbsp;HTTP&nbsp;status&nbsp;code,&nbsp;example:&nbsp;200,&nbsp;404,&nbsp;etc.<br>
+&nbsp;&nbsp;reason:&nbsp;String&nbsp;for&nbsp;the&nbsp;HTTP&nbsp;reason,&nbsp;example:&nbsp;OK,&nbsp;NOT&nbsp;FOUND,&nbsp;etc.<br>
+&nbsp;&nbsp;body:&nbsp;The&nbsp;body&nbsp;of&nbsp;the&nbsp;HTTP&nbsp;response&nbsp;as&nbsp;a&nbsp;string&nbsp;or&nbsp;a&nbsp;file-like&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(something&nbsp;with&nbsp;a&nbsp;read&nbsp;method).&nbsp;<br>
+&nbsp;&nbsp;headers:&nbsp;dict&nbsp;of&nbsp;strings&nbsp;containing&nbsp;the&nbsp;HTTP&nbsp;headers&nbsp;in&nbsp;the&nbsp;response.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__author__</strong> = 'j.s@google.com (Jeff Scudder)'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">j.s@google.com&nbsp;(Jeff&nbsp;Scudder)</td></tr></table>
+</body></html>
