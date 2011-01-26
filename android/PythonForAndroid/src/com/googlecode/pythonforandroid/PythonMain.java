@@ -64,7 +64,6 @@ public class PythonMain extends Main {
   protected String mModule;
   private CharSequence[] mList;
   private ProgressDialog mProgress;
-  private AlertDialog mPrompt;
   private boolean mPromptResult;
 
   final Handler mModuleHandler = new Handler() {
@@ -252,7 +251,7 @@ public class PythonMain extends Main {
     builder.setMessage(message);
     builder.setNegativeButton("Cancel", btnlisten);
     builder.setPositiveButton("OK", btnlisten);
-    mPrompt = builder.show();
+    builder.show();
     return mPromptResult;
   }
 
@@ -334,15 +333,6 @@ public class PythonMain extends Main {
       Bundle bundle = new Bundle();
       bundle.putBoolean("running", running);
       bundle.putInt(key, value);
-      message.setData(bundle);
-      mHandler.sendMessage(message);
-    }
-
-    private void sendmsg(boolean running, String key, String value) {
-      Message message = mHandler.obtainMessage();
-      Bundle bundle = new Bundle();
-      bundle.putBoolean("running", running);
-      bundle.putString(key, value);
       message.setData(bundle);
       mHandler.sendMessage(message);
     }
