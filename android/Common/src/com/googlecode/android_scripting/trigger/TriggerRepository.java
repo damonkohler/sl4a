@@ -35,7 +35,7 @@ import java.io.ObjectOutputStream;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64Codec;
 
 /**
  * A repository maintaining all currently scheduled triggers. This includes, for example, alarms or
@@ -149,7 +149,7 @@ public class TriggerRepository {
     }
     try {
       final ByteArrayInputStream inputStream =
-          new ByteArrayInputStream(Base64.decodeBase64(triggers.getBytes()));
+          new ByteArrayInputStream(Base64Codec.decodeBase64(triggers.getBytes()));
       final ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
       return (Multimap<String, Trigger>) objectInputStream.readObject();
     } catch (Exception e) {
@@ -164,7 +164,7 @@ public class TriggerRepository {
       final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       final ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
       objectOutputStream.writeObject(triggers);
-      return new String(Base64.encodeBase64(outputStream.toByteArray()));
+      return new String(Base64Codec.encodeBase64(outputStream.toByteArray()));
     } catch (IOException e) {
       Log.e(e);
       return null;

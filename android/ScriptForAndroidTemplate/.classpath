@@ -10,7 +10,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/SignalStrengthFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TextToSpeechFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
-	<classpathentry kind="lib" path="libs/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="libs/libGoogleAnalytics.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

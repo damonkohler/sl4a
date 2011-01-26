@@ -36,10 +36,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64Codec;
 
 public class BluetoothFacade extends RpcReceiver {
 
@@ -47,14 +49,9 @@ public class BluetoothFacade extends RpcReceiver {
   private static final String DEFAULT_UUID = "457807c0-4897-11df-9879-0800200c9a66";
   private static final String SDP_NAME = "SL4A";
 
+  private Map<String, BluetoothConnection> connections = new HashMap<String, BluetoothConnection>();
   private AndroidFacade mAndroidFacade;
   private BluetoothAdapter mBluetoothAdapter;
-  private BluetoothSocket mSocket;
-  private BluetoothServerSocket mServerSocket;
-  private BluetoothDevice mDevice;
-  private OutputStream mOutputStream;
-  private InputStream mInputStream;
-  private BufferedReader mReader;
 
   public BluetoothFacade(FacadeManager manager) {
     super(manager);
@@ -67,64 +64,72 @@ public class BluetoothFacade extends RpcReceiver {
     });
   }
 
+  @Rpc(description = "Returns true when there's an active Bluetooth connection.")
+  public Map<String, String> bluetoothActiveConnections() {
+    Map<String, String> out = new HashMap<String, String>();
+    for (Map.Entry<String, BluetoothConnection> entry : connections.entrySet()) {
+      if (entry.getValue().isConnected()) {
+        out.put(entry.getKey(), entry.getValue().getRemoteBluetoothAddress());
+      }
+    }
+
+    return out;
+  }
+
+  private BluetoothConnection getConnection(String connID) throws IOException {
+    BluetoothConnection conn = null;
+    if (connID.trim().length() > 0) {
+      conn = connections.get(connID);
+    } else if (connections.size() == 1) {
+      conn = (BluetoothConnection) connections.values().toArray()[0];
+    }
+    if (conn == null) {
+      throw new IOException("Bluetooth not ready for this connID.");
+    }
+    return conn;
+  }
+
   @Rpc(description = "Send bytes over the currently open Bluetooth connection.")
   public void bluetoothWriteBinary(
-      @RpcParameter(name = "base64", description = "A base64 encoded String of the bytes to be sent.") String base64)
+      @RpcParameter(name = "base64", description = "A base64 encoded String of the bytes to be sent.") String base64,
+      @RpcParameter(name = "connID", description = "Connection id") @RpcDefault("") @RpcOptional String connID)
       throws IOException {
-    if (mOutputStream != null) {
-      mOutputStream.write(Base64.decodeBase64(base64.getBytes()));
-    } else {
-      throw new IOException("Bluetooth not ready.");
+    BluetoothConnection conn = getConnection(connID);
+    try {
+      conn.write(Base64Codec.decodeBase64(base64));
+    } catch (IOException e) {
+      connections.remove(conn.getUUID());
+      throw e;
     }
   }
 
-  @Rpc(description = "Read bufferSize bytes and return a chunked, base64 encoded string.")
+  @Rpc(description = "Read up to bufferSize bytes and return a chunked, base64 encoded string.")
   public String bluetoothReadBinary(
-      @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize) throws IOException {
-    if (mReader != null) {
-      byte[] buffer = new byte[bufferSize];
-      int position = 0;
-      do {
-        int bytesRead = mInputStream.read(buffer, position, bufferSize - position);
-        if (bytesRead == -1) {
-          Log.e("Read failed.");
-          throw new IOException("Read failed.");
-        }
-        position += bytesRead;
-      } while (position < bufferSize);
-      return new String(Base64.encodeBase64(buffer));
+      @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize,
+      @RpcParameter(name = "connID", description = "Connection id") @RpcDefault("") @RpcOptional String connID)
+      throws IOException {
+
+    BluetoothConnection conn = getConnection(connID);
+    try {
+      return Base64Codec.encodeBase64String(conn.readBinary(bufferSize));
+    } catch (IOException e) {
+      connections.remove(conn.getUUID());
+      throw e;
     }
-    throw new IOException("Bluetooth not ready.");
   }
 
-  @Rpc(description = "Returns an estimate of the number of bytes available for reading without blocking.")
-  public Integer bluetoothBytesAvailable() throws IOException {
-    if (mInputStream != null) {
-      return mInputStream.available();
-    }
-    throw new IOException("Bluetooth not ready.");
-  }
-
-  @Rpc(description = "Skips all pending input.")
-  public void bluetoothSkipPendingInput() throws IOException {
-    if (mInputStream != null) {
-      long bytesSkipped;
-      do {
-        bytesSkipped = mInputStream.skip(mInputStream.available());
-      } while (bytesSkipped > 0);
-    } else {
-      throw new IOException("Bluetooth not ready.");
-    }
+  private String addConnection(BluetoothConnection conn) {
+    String uuid = UUID.randomUUID().toString();
+    connections.put(uuid, conn);
+    conn.setUUID(uuid);
+    return uuid;
   }
 
   @Rpc(description = "Connect to a device over Bluetooth. Blocks until the connection is established or fails.", returns = "True if the connection was established successfully.")
-  public boolean bluetoothConnect(
-      @RpcParameter(name = "uuid", description = "The UUID passed here must match the UUID used by the server device.") @RpcOptional String uuid,
+  public String bluetoothConnect(
+      @RpcParameter(name = "uuid", description = "The UUID passed here must match the UUID used by the server device.") @RpcDefault(DEFAULT_UUID) String uuid,
       @RpcParameter(name = "address", description = "The user will be presented with a list of discovered devices to choose from if an address is not provided.") @RpcOptional String address)
       throws IOException {
-    if (uuid == null) {
-      uuid = DEFAULT_UUID;
-    }
     if (address == null) {
       Intent deviceChooserIntent = new Intent();
       deviceChooserIntent.setComponent(Constants.BLUETOOTH_DEVICE_LIST_COMPONENT_NAME);
@@ -132,29 +137,29 @@ public class BluetoothFacade extends RpcReceiver {
       if (result != null && result.hasExtra(Constants.EXTRA_DEVICE_ADDRESS)) {
         address = result.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
       } else {
-        return false;
+        return null;
       }
-    } else {
-      // Android only accepts all upper case addresses. This is only for convenience.
-      address = address.toUpperCase();
     }
+    BluetoothDevice mDevice;
+    BluetoothSocket mSocket;
+    BluetoothConnection conn;
     mDevice = mBluetoothAdapter.getRemoteDevice(address);
     mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
     // Always cancel discovery because it will slow down a connection.
     mBluetoothAdapter.cancelDiscovery();
     mSocket.connect();
-    connected();
-    return true;
+    conn = new BluetoothConnection(mSocket);
+    return addConnection(conn);
   }
 
   @Rpc(description = "Listens for and accepts a Bluetooth connection. Blocks until the connection is established or fails.")
-  public void bluetoothAccept(@RpcParameter(name = "uuid") @RpcDefault(DEFAULT_UUID) String uuid)
+  public String bluetoothAccept(@RpcParameter(name = "uuid") @RpcDefault(DEFAULT_UUID) String uuid)
       throws IOException {
-    mServerSocket =
+    BluetoothServerSocket mServerSocket =
         mBluetoothAdapter.listenUsingRfcommWithServiceRecord(SDP_NAME, UUID.fromString(uuid));
-    mSocket = mServerSocket.accept();
-    mDevice = mSocket.getRemoteDevice();
-    connected();
+    BluetoothSocket mSocket = mServerSocket.accept();
+    BluetoothConnection conn = new BluetoothConnection(mSocket, mServerSocket);
+    return addConnection(conn);
   }
 
   @Rpc(description = "Requests that the device be discoverable for Bluetooth connections.")
@@ -169,48 +174,64 @@ public class BluetoothFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Sends ASCII characters over the currently open Bluetooth connection.")
-  public void bluetoothWrite(@RpcParameter(name = "ascii") String ascii) throws IOException {
-    if (mOutputStream != null) {
-      mOutputStream.write(ascii.getBytes());
-    } else {
-      throw new IOException("Bluetooth not ready.");
+  public void bluetoothWrite(@RpcParameter(name = "ascii") String ascii,
+      @RpcParameter(name = "connID", description = "Connection id") @RpcDefault("") String connID)
+      throws IOException {
+    BluetoothConnection conn = getConnection(connID);
+    try {
+      conn.write(ascii);
+    } catch (IOException e) {
+      connections.remove(conn.getUUID());
+      throw e;
     }
   }
 
   @Rpc(description = "Returns True if the next read is guaranteed not to block.")
-  public Boolean bluetoothReadReady() throws IOException {
-    if (mReader != null) {
-      return mReader.ready();
+  public Boolean bluetoothReadReady(
+      @RpcParameter(name = "connID", description = "Connection id") @RpcDefault("") @RpcOptional String connID)
+      throws IOException {
+    BluetoothConnection conn = getConnection(connID);
+    try {
+      return conn.readReady();
+    } catch (IOException e) {
+      connections.remove(conn.getUUID());
+      throw e;
     }
-    throw new IOException("Bluetooth not ready.");
   }
 
   @Rpc(description = "Read up to bufferSize ASCII characters.")
   public String bluetoothRead(
-      @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize) throws IOException {
-    if (mReader != null) {
-      char[] buffer = new char[bufferSize];
-      int bytesRead = mReader.read(buffer);
-      if (bytesRead == -1) {
-        Log.e("Read failed.");
-        throw new IOException("Read failed.");
-      }
-      return new String(buffer, 0, bytesRead);
+      @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize,
+      @RpcParameter(name = "connID", description = "Connection id") @RpcOptional @RpcDefault("") String connID)
+      throws IOException {
+    BluetoothConnection conn = getConnection(connID);
+    try {
+      return conn.read(bufferSize);
+    } catch (IOException e) {
+      connections.remove(conn.getUUID());
+      throw e;
     }
-    throw new IOException("Bluetooth not ready.");
   }
 
   @Rpc(description = "Read the next line.")
-  public String bluetoothReadLine() throws IOException {
-    if (mReader != null) {
-      return mReader.readLine();
+  public String bluetoothReadLine(
+      @RpcParameter(name = "connID", description = "Connection id") @RpcOptional @RpcDefault("") String connID)
+      throws IOException {
+    BluetoothConnection conn = getConnection(connID);
+    try {
+      return conn.readLine();
+    } catch (IOException e) {
+      connections.remove(conn.getUUID());
+      throw e;
     }
-    throw new IOException("Bluetooth not ready.");
   }
 
   @Rpc(description = "Returns the name of the connected device.")
-  public String bluetoothGetConnectedDeviceName() {
-    return mDevice.getName();
+  public String bluetoothGetConnectedDeviceName(
+      @RpcParameter(name = "connID", description = "Connection id") @RpcOptional @RpcDefault("") String connID)
+      throws IOException {
+    BluetoothConnection conn = getConnection(connID);
+    return conn.getConnectedDeviceName();
   }
 
   @Rpc(description = "Checks Bluetooth state.", returns = "True if Bluetooth is enabled.")
@@ -238,19 +259,158 @@ public class BluetoothFacade extends RpcReceiver {
     } else {
       // TODO(damonkohler): Add support for prompting on disable.
       // TODO(damonkohler): Make this synchronous as well.
+      shutdown();
       mBluetoothAdapter.disable();
     }
     return enabled;
   }
 
-  public void connected() throws IOException {
-    mOutputStream = mSocket.getOutputStream();
-    mInputStream = mSocket.getInputStream();
-    mReader = new BufferedReader(new InputStreamReader(mInputStream, "ASCII"));
+  @Rpc(description = "Stops Bluetooth connection.")
+  public void bluetoothStop(
+      @RpcParameter(name = "connID", description = "Connection id") @RpcOptional @RpcDefault("") String connID) {
+    BluetoothConnection conn;
+    try {
+      conn = getConnection(connID);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return;
+    }
+    if (conn == null) {
+      return;
+    }
+
+    conn.stop();
+    connections.remove(conn.getUUID());
   }
 
-  @Rpc(description = "Stops Bluetooth connection.")
-  public void bluetoothStop() {
+  @Override
+  public void shutdown() {
+    for (Map.Entry<String, BluetoothConnection> entry : connections.entrySet()) {
+      entry.getValue().stop();
+    }
+    connections.clear();
+  }
+}
+
+class BluetoothConnection {
+  private BluetoothSocket mSocket;
+  private BluetoothDevice mDevice;
+  private OutputStream mOutputStream;
+  private InputStream mInputStream;
+  private BufferedReader mReader;
+  private BluetoothServerSocket mServerSocket;
+  private String UUID;
+
+  public BluetoothConnection(BluetoothSocket mSocket) throws IOException {
+    this(mSocket, null);
+  }
+
+  public BluetoothConnection(BluetoothSocket mSocket, BluetoothServerSocket mServerSocket)
+      throws IOException {
+    this.mSocket = mSocket;
+    mOutputStream = mSocket.getOutputStream();
+    mInputStream = mSocket.getInputStream();
+    mDevice = mSocket.getRemoteDevice();
+    mReader = new BufferedReader(new InputStreamReader(mInputStream, "ASCII"));
+    this.mServerSocket = mServerSocket;
+  }
+
+  public void setUUID(String UUID) {
+    this.UUID = UUID;
+  }
+
+  public String getUUID() {
+    return UUID;
+  }
+
+  public String getRemoteBluetoothAddress() {
+    return mDevice.getAddress();
+  }
+
+  public boolean isConnected() {
+    if (mSocket == null) {
+      return false;
+    }
+    try {
+      mSocket.getRemoteDevice();
+      mInputStream.available();
+      mReader.ready();
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  public void write(byte[] out) throws IOException {
+    if (mOutputStream != null) {
+      mOutputStream.write(out);
+    } else {
+      throw new IOException("Bluetooth not ready.");
+    }
+  }
+
+  public void write(String out) throws IOException {
+    this.write(out.getBytes());
+  }
+
+  public Boolean readReady() throws IOException {
+    if (mReader != null) {
+      return mReader.ready();
+    }
+    throw new IOException("Bluetooth not ready.");
+  }
+
+  public byte[] readBinary() throws IOException {
+    return this.readBinary(4096);
+  }
+
+  public byte[] readBinary(int bufferSize) throws IOException {
+    if (mReader != null) {
+      byte[] buffer = new byte[bufferSize];
+      int bytesRead = mInputStream.read(buffer);
+      if (bytesRead == -1) {
+        Log.e("Read failed.");
+        throw new IOException("Read failed.");
+      }
+      byte[] truncatedBuffer = new byte[bytesRead];
+      System.arraycopy(buffer, 0, truncatedBuffer, 0, bytesRead);
+      return truncatedBuffer;
+    }
+
+    throw new IOException("Bluetooth not ready.");
+
+  }
+
+  public String read() throws IOException {
+    return this.read(4096);
+  }
+
+  public String read(int bufferSize) throws IOException {
+    if (mReader != null) {
+      char[] buffer = new char[bufferSize];
+      int bytesRead = mReader.read(buffer);
+      if (bytesRead == -1) {
+        Log.e("Read failed.");
+        throw new IOException("Read failed.");
+      }
+      return new String(buffer, 0, bytesRead);
+    }
+    throw new IOException("Bluetooth not ready.");
+  }
+
+  public String readLine() throws IOException {
+    if (mReader != null) {
+      return mReader.readLine();
+    }
+    throw new IOException("Bluetooth not ready.");
+  }
+
+  public String getConnectedDeviceName() {
+    return mDevice.getName();
+  }
+
+  public void stop() {
     if (mSocket != null) {
       try {
         mSocket.close();
@@ -267,6 +427,7 @@ public class BluetoothFacade extends RpcReceiver {
       }
     }
     mServerSocket = null;
+
     if (mInputStream != null) {
       try {
         mInputStream.close();
@@ -291,10 +452,5 @@ public class BluetoothFacade extends RpcReceiver {
       }
     }
     mReader = null;
-  }
-
-  @Override
-  public void shutdown() {
-    bluetoothStop();
   }
 }
