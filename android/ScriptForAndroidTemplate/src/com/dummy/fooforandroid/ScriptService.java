@@ -56,7 +56,8 @@ public class ScriptService extends ForegroundService {
 
 	private InterpreterConfiguration mInterpreterConfiguration;
 	private RpcReceiverManager mFacadeManager;
-
+    private AndroidProxy mProxy;
+    
 	public class LocalBinder extends Binder {
 		public ScriptService getService() {
 			return ScriptService.this;
@@ -75,6 +76,7 @@ public class ScriptService extends ForegroundService {
 
 	@Override
 	public void onCreate() {
+		super.onCreate();
 		mInterpreterConfiguration = ((BaseApplication) getApplication())
 				.getInterpreterConfiguration();
 	}
@@ -120,16 +122,14 @@ public class ScriptService extends ForegroundService {
 			mLatch.countDown();
 			stopSelf(startId);
 		} else {
-			final AndroidProxy proxy = new AndroidProxy(this, null, true);
-			proxy.startLocal();
-			mFacadeManager = proxy.getRpcReceiverManagerFactory()
-					.getRpcReceiverManagers().get(0);
+			mProxy = new AndroidProxy(this, null, true);
+			mProxy.startLocal();
 			mLatch.countDown();
 			ScriptLauncher.launchScript(script, mInterpreterConfiguration,
-					proxy, new Runnable() {
+					mProxy, new Runnable() {
 						@Override
 						public void run() {
-							proxy.shutdown();
+							mProxy.shutdown();
 							stopSelf(startId);
 						}
 					});
@@ -138,6 +138,10 @@ public class ScriptService extends ForegroundService {
 
 	RpcReceiverManager getRpcReceiverManager() throws InterruptedException {
 		mLatch.await();
+		if (mFacadeManager==null) { // Facade manage may not be available on startup.
+		mFacadeManager = mProxy.getRpcReceiverManagerFactory()
+		.getRpcReceiverManagers().get(0);
+		}
 		return mFacadeManager;
 	}
 

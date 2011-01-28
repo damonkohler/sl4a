@@ -4,12 +4,14 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="libs/locale_platform.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/BluetoothFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ScriptingLayer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SignalStrengthFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TextToSpeechFacade"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
 	<classpathentry kind="lib" path="libs/libGoogleAnalytics.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BluetoothFacade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WebCamFacade"/>
+	<classpathentry kind="lib" path="/Common/libs/guava-r06.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
