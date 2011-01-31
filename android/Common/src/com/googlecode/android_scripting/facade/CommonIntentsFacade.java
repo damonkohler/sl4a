@@ -10,10 +10,10 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import java.io.File;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
 
 public class CommonIntentsFacade extends RpcReceiver {
 

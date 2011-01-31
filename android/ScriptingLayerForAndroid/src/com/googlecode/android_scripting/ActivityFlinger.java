@@ -16,12 +16,6 @@
 
 package com.googlecode.android_scripting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +29,12 @@ import com.googlecode.android_scripting.activity.InterpreterManager;
 import com.googlecode.android_scripting.activity.LogcatViewer;
 import com.googlecode.android_scripting.activity.ScriptManager;
 import com.googlecode.android_scripting.activity.TriggerManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class ActivityFlinger {
 

@@ -36,16 +36,13 @@ public class FeaturedInterpreters {
                 "http://android-scripting.googlecode.com/files/rhino_for_android_r1.apk"),
             new FeaturedInterpreter("PHP 5.3.3", ".php",
                 "http://php-for-android.googlecode.com/files/phpforandroid_r1.apk") };
-
       for (FeaturedInterpreter interpreter : interpreters) {
         mNameMap.put(interpreter.mmName, interpreter);
         mExtensionMap.put(interpreter.mmExtension, interpreter);
       }
-
     } catch (MalformedURLException e) {
       Log.e(e);
     }
-
   }
 
   public static List<String> getList() {

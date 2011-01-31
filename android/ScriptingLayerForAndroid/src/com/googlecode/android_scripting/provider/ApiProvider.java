@@ -16,9 +16,6 @@
 
 package com.googlecode.android_scripting.provider;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-
 import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -35,6 +32,9 @@ import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
+
+import java.lang.reflect.Method;
+import java.util.Collection;
 
 public class ApiProvider extends ContentProvider {
 

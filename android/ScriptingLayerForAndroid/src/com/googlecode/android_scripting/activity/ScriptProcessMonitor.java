@@ -41,11 +41,11 @@ import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 
-import org.connectbot.ConsoleActivity;
-
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import org.connectbot.ConsoleActivity;
 
 /**
  * An activity that allows to monitor running scripts.

@@ -32,7 +32,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;

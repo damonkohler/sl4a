@@ -16,13 +16,6 @@
 
 package com.googlecode.android_scripting.facade;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -31,13 +24,19 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.telephony.gsm.SmsManager;
 
-
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Provides access to SMS related functionality.

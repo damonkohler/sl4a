@@ -16,14 +16,14 @@
 
 package com.googlecode.android_scripting.bluetooth;
 
-import java.util.Set;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+
+import java.util.Set;
 
 public class BluetoothDiscoveryHelper {
 

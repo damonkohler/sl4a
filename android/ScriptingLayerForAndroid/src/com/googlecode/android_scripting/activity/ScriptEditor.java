@@ -178,9 +178,8 @@ public class ScriptEditor extends Activity {
         intent.putExtra(Constants.EXTRA_SCRIPT_PATH, mScript.getAbsolutePath());
         startService(intent);
       } else {
-        Toast.makeText(this, "Can't run this type.", Toast.LENGTH_SHORT).show(); // TODO: Should
-                                                                                 // actually remove
-                                                                                 // menu option.
+        // TODO(damonkohler): Should remove menu option.
+        Toast.makeText(this, "Can't run this type.", Toast.LENGTH_SHORT).show();
       }
       finish();
     } else if (item.getItemId() == MenuId.PREFERENCES.getId()) {

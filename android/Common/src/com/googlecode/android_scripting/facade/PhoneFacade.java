@@ -23,7 +23,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Contacts.People;
+import android.provider.Contacts.PhonesColumns;
 import android.telephony.CellLocation;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.PhoneStateListener;
@@ -117,7 +117,7 @@ public class PhoneFacade extends RpcReceiver {
   public void phoneCall(@RpcParameter(name = "uri") final String uriString) throws Exception {
     Uri uri = Uri.parse(uriString);
     if (uri.getScheme().equals("content")) {
-      String phoneNumberColumn = People.NUMBER;
+      String phoneNumberColumn = PhonesColumns.NUMBER;
       String selectWhere = null;
       if ((FacadeManager.class.cast(mManager)).getSdkLevel() >= 5) {
         Class<?> contactsContract_Data_class =

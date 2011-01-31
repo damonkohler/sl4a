@@ -47,7 +47,8 @@ public class BluetoothDeviceList extends ListActivity {
   }
 
   private final DeviceListAdapter mAdapter = new DeviceListAdapter();
-  private final BluetoothDiscoveryHelper mBluetoothHelper = new BluetoothDiscoveryHelper(this, mAdapter);
+  private final BluetoothDiscoveryHelper mBluetoothHelper =
+      new BluetoothDiscoveryHelper(this, mAdapter);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

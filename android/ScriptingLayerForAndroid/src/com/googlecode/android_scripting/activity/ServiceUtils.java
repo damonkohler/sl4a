@@ -16,15 +16,15 @@
 
 package com.googlecode.android_scripting.activity;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 
 import com.googlecode.android_scripting.Log;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * A utility class supplying helper methods for {@link Service} objects.

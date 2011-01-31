@@ -34,7 +34,8 @@ public interface Trigger extends Serializable {
    * 
    * @param event
    *          Event to handle
-   * @param context TODO
+   * @param context
+   *          TODO
    */
   void handleEvent(Event event, Context context);
 
