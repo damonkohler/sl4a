@@ -1,0 +1,345 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module atom.http</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="atom.html"><font color="#ffffff">atom</font></a>.http</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/atom/http.py">/usr/local/svn/gdata-python-client/src/atom/http.py</a></font></td></tr></table>
+    <p><tt>HttpClients&nbsp;in&nbsp;this&nbsp;module&nbsp;use&nbsp;httplib&nbsp;to&nbsp;make&nbsp;HTTP&nbsp;requests.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;make&nbsp;HTTP&nbsp;requests&nbsp;based&nbsp;on&nbsp;httplib,&nbsp;but&nbsp;there&nbsp;are&nbsp;environments<br>
+in&nbsp;which&nbsp;an&nbsp;httplib&nbsp;based&nbsp;approach&nbsp;will&nbsp;not&nbsp;work&nbsp;(if&nbsp;running&nbsp;in&nbsp;Google&nbsp;App<br>
+Engine&nbsp;for&nbsp;example).&nbsp;In&nbsp;those&nbsp;cases,&nbsp;higher&nbsp;level&nbsp;classes&nbsp;(like&nbsp;AtomService<br>
+and&nbsp;GDataService)&nbsp;can&nbsp;swap&nbsp;out&nbsp;the&nbsp;<a href="#HttpClient">HttpClient</a>&nbsp;to&nbsp;transparently&nbsp;use&nbsp;a&nbsp;<br>
+different&nbsp;mechanism&nbsp;for&nbsp;making&nbsp;HTTP&nbsp;requests.<br>
+&nbsp;<br>
+&nbsp;&nbsp;<a href="#HttpClient">HttpClient</a>:&nbsp;Contains&nbsp;a&nbsp;request&nbsp;method&nbsp;which&nbsp;performs&nbsp;an&nbsp;HTTP&nbsp;call&nbsp;to&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<a href="#ProxiedHttpClient">ProxiedHttpClient</a>:&nbsp;Contains&nbsp;a&nbsp;request&nbsp;method&nbsp;which&nbsp;connects&nbsp;to&nbsp;a&nbsp;proxy&nbsp;using<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;settings&nbsp;stored&nbsp;in&nbsp;operating&nbsp;system&nbsp;environment&nbsp;variables&nbsp;then&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;performs&nbsp;an&nbsp;HTTP&nbsp;call&nbsp;to&nbsp;the&nbsp;endpoint&nbsp;server.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="atom.html">atom</a><br>
+<a href="base64.html">base64</a><br>
+</td><td width="25%" valign=top><a href="httplib.html">httplib</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="socket.html">socket</a><br>
+<a href="types.html">types</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="atom.http_interface.html#Error">atom.http_interface.Error</a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.http.html#ProxyError">ProxyError</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.http.html#HttpClient">HttpClient</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.http.html#ProxiedHttpClient">ProxiedHttpClient</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.http.html#TestConfigurationError">TestConfigurationError</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HttpClient">class <strong>HttpClient</strong></a>(<a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="atom.http.html#HttpClient">HttpClient</a></dd>
+<dd><a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="HttpClient-__init__"><strong>__init__</strong></a>(self, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="HttpClient-request"><strong>request</strong></a>(self, operation, url, data<font color="#909090">=None</font>, headers<font color="#909090">=None</font>)</dt><dd><tt>Performs&nbsp;an&nbsp;HTTP&nbsp;call&nbsp;to&nbsp;the&nbsp;server,&nbsp;supports&nbsp;GET,&nbsp;POST,&nbsp;PUT,&nbsp;and&nbsp;<br>
+DELETE.<br>
+&nbsp;<br>
+Usage&nbsp;example,&nbsp;perform&nbsp;and&nbsp;HTTP&nbsp;GET&nbsp;on&nbsp;<a href="http://www.google.com/">http://www.google.com/</a>:<br>
+&nbsp;&nbsp;import&nbsp;atom.http<br>
+&nbsp;&nbsp;client&nbsp;=&nbsp;atom.http.<a href="#HttpClient">HttpClient</a>()<br>
+&nbsp;&nbsp;http_response&nbsp;=&nbsp;client.<a href="#HttpClient-request">request</a>('GET',&nbsp;'<a href="http://www.google.com/">http://www.google.com/</a>')<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;operation:&nbsp;str&nbsp;The&nbsp;HTTP&nbsp;operation&nbsp;to&nbsp;be&nbsp;performed.&nbsp;This&nbsp;is&nbsp;usually&nbsp;one<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;'GET',&nbsp;'POST',&nbsp;'PUT',&nbsp;or&nbsp;'DELETE'<br>
+&nbsp;&nbsp;data:&nbsp;filestream,&nbsp;list&nbsp;of&nbsp;parts,&nbsp;or&nbsp;other&nbsp;object&nbsp;which&nbsp;can&nbsp;be&nbsp;converted<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;a&nbsp;string.&nbsp;Should&nbsp;be&nbsp;set&nbsp;to&nbsp;None&nbsp;when&nbsp;performing&nbsp;a&nbsp;GET&nbsp;or&nbsp;DELETE.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;data&nbsp;is&nbsp;a&nbsp;file-like&nbsp;object&nbsp;which&nbsp;can&nbsp;be&nbsp;read,&nbsp;this&nbsp;method&nbsp;will&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read&nbsp;a&nbsp;chunk&nbsp;of&nbsp;100K&nbsp;bytes&nbsp;at&nbsp;a&nbsp;time&nbsp;and&nbsp;send&nbsp;them.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;data&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;parts&nbsp;to&nbsp;be&nbsp;sent,&nbsp;each&nbsp;part&nbsp;will&nbsp;be&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evaluated&nbsp;and&nbsp;sent.<br>
+&nbsp;&nbsp;url:&nbsp;The&nbsp;full&nbsp;URL&nbsp;to&nbsp;which&nbsp;the&nbsp;request&nbsp;should&nbsp;be&nbsp;sent.&nbsp;Can&nbsp;be&nbsp;a&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;atom.url.Url.<br>
+&nbsp;&nbsp;headers:&nbsp;dict&nbsp;of&nbsp;strings.&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;should&nbsp;be&nbsp;sent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;request.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>v2_http_client</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><a name="HttpClient-delete"><strong>delete</strong></a>(self, url, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="HttpClient-get"><strong>get</strong></a>(self, url, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="HttpClient-post"><strong>post</strong></a>(self, url, data, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="HttpClient-put"><strong>put</strong></a>(self, url, data, headers<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><strong>debug</strong> = False</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ProxiedHttpClient">class <strong>ProxiedHttpClient</strong></a>(<a href="atom.http.html#HttpClient">HttpClient</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Performs&nbsp;an&nbsp;HTTP&nbsp;request&nbsp;through&nbsp;a&nbsp;proxy.<br>
+&nbsp;<br>
+The&nbsp;proxy&nbsp;settings&nbsp;are&nbsp;obtained&nbsp;from&nbsp;enviroment&nbsp;variables.&nbsp;The&nbsp;URL&nbsp;of&nbsp;the&nbsp;<br>
+proxy&nbsp;server&nbsp;is&nbsp;assumed&nbsp;to&nbsp;be&nbsp;stored&nbsp;in&nbsp;the&nbsp;environment&nbsp;variables&nbsp;<br>
+'https_proxy'&nbsp;and&nbsp;'http_proxy'&nbsp;respectively.&nbsp;If&nbsp;the&nbsp;proxy&nbsp;server&nbsp;requires<br>
+a&nbsp;Basic&nbsp;Auth&nbsp;authorization&nbsp;header,&nbsp;the&nbsp;username&nbsp;and&nbsp;password&nbsp;are&nbsp;expected&nbsp;to&nbsp;<br>
+be&nbsp;in&nbsp;the&nbsp;'proxy-username'&nbsp;or&nbsp;'proxy_username'&nbsp;variable&nbsp;and&nbsp;the&nbsp;<br>
+'proxy-password'&nbsp;or&nbsp;'proxy_password'&nbsp;variable.<br>
+&nbsp;<br>
+After&nbsp;connecting&nbsp;to&nbsp;the&nbsp;proxy&nbsp;server,&nbsp;the&nbsp;request&nbsp;is&nbsp;completed&nbsp;as&nbsp;in&nbsp;<br>
+<a href="#HttpClient">HttpClient</a>.request.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="atom.http.html#ProxiedHttpClient">ProxiedHttpClient</a></dd>
+<dd><a href="atom.http.html#HttpClient">HttpClient</a></dd>
+<dd><a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods inherited from <a href="atom.http.html#HttpClient">HttpClient</a>:<br>
+<dl><dt><a name="ProxiedHttpClient-__init__"><strong>__init__</strong></a>(self, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="ProxiedHttpClient-request"><strong>request</strong></a>(self, operation, url, data<font color="#909090">=None</font>, headers<font color="#909090">=None</font>)</dt><dd><tt>Performs&nbsp;an&nbsp;HTTP&nbsp;call&nbsp;to&nbsp;the&nbsp;server,&nbsp;supports&nbsp;GET,&nbsp;POST,&nbsp;PUT,&nbsp;and&nbsp;<br>
+DELETE.<br>
+&nbsp;<br>
+Usage&nbsp;example,&nbsp;perform&nbsp;and&nbsp;HTTP&nbsp;GET&nbsp;on&nbsp;<a href="http://www.google.com/">http://www.google.com/</a>:<br>
+&nbsp;&nbsp;import&nbsp;atom.http<br>
+&nbsp;&nbsp;client&nbsp;=&nbsp;atom.http.<a href="#HttpClient">HttpClient</a>()<br>
+&nbsp;&nbsp;http_response&nbsp;=&nbsp;client.<a href="#ProxiedHttpClient-request">request</a>('GET',&nbsp;'<a href="http://www.google.com/">http://www.google.com/</a>')<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;operation:&nbsp;str&nbsp;The&nbsp;HTTP&nbsp;operation&nbsp;to&nbsp;be&nbsp;performed.&nbsp;This&nbsp;is&nbsp;usually&nbsp;one<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;'GET',&nbsp;'POST',&nbsp;'PUT',&nbsp;or&nbsp;'DELETE'<br>
+&nbsp;&nbsp;data:&nbsp;filestream,&nbsp;list&nbsp;of&nbsp;parts,&nbsp;or&nbsp;other&nbsp;object&nbsp;which&nbsp;can&nbsp;be&nbsp;converted<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;a&nbsp;string.&nbsp;Should&nbsp;be&nbsp;set&nbsp;to&nbsp;None&nbsp;when&nbsp;performing&nbsp;a&nbsp;GET&nbsp;or&nbsp;DELETE.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;data&nbsp;is&nbsp;a&nbsp;file-like&nbsp;object&nbsp;which&nbsp;can&nbsp;be&nbsp;read,&nbsp;this&nbsp;method&nbsp;will&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read&nbsp;a&nbsp;chunk&nbsp;of&nbsp;100K&nbsp;bytes&nbsp;at&nbsp;a&nbsp;time&nbsp;and&nbsp;send&nbsp;them.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;data&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;parts&nbsp;to&nbsp;be&nbsp;sent,&nbsp;each&nbsp;part&nbsp;will&nbsp;be&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evaluated&nbsp;and&nbsp;sent.<br>
+&nbsp;&nbsp;url:&nbsp;The&nbsp;full&nbsp;URL&nbsp;to&nbsp;which&nbsp;the&nbsp;request&nbsp;should&nbsp;be&nbsp;sent.&nbsp;Can&nbsp;be&nbsp;a&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;atom.url.Url.<br>
+&nbsp;&nbsp;headers:&nbsp;dict&nbsp;of&nbsp;strings.&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;should&nbsp;be&nbsp;sent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;request.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="atom.http.html#HttpClient">HttpClient</a>:<br>
+<dl><dt><strong>v2_http_client</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><a name="ProxiedHttpClient-delete"><strong>delete</strong></a>(self, url, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="ProxiedHttpClient-get"><strong>get</strong></a>(self, url, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="ProxiedHttpClient-post"><strong>post</strong></a>(self, url, data, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="ProxiedHttpClient-put"><strong>put</strong></a>(self, url, data, headers<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><strong>debug</strong> = False</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ProxyError">class <strong>ProxyError</strong></a>(<a href="atom.http_interface.html#Error">atom.http_interface.Error</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="atom.http.html#ProxyError">ProxyError</a></dd>
+<dd><a href="atom.http_interface.html#Error">atom.http_interface.Error</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors inherited from <a href="atom.http_interface.html#Error">atom.http_interface.Error</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="ProxyError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#ProxyError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;x.__class__.__doc__&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x74d100&gt;<dd><tt>T.<a href="#ProxyError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="ProxyError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ProxyError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ProxyError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#ProxyError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ProxyError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ProxyError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="ProxyError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#ProxyError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="ProxyError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ProxyError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#ProxyError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="ProxyError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ProxyError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="ProxyError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ProxyError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#ProxyError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="ProxyError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TestConfigurationError">class <strong>TestConfigurationError</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="atom.http.html#TestConfigurationError">TestConfigurationError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="TestConfigurationError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#TestConfigurationError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;x.__class__.__doc__&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x74d100&gt;<dd><tt>T.<a href="#TestConfigurationError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="TestConfigurationError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#TestConfigurationError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="TestConfigurationError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#TestConfigurationError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="TestConfigurationError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#TestConfigurationError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="TestConfigurationError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#TestConfigurationError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="TestConfigurationError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="TestConfigurationError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#TestConfigurationError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="TestConfigurationError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#TestConfigurationError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="TestConfigurationError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="TestConfigurationError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#TestConfigurationError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="TestConfigurationError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>DEFAULT_CONTENT_TYPE</strong> = 'application/atom+xml'<br>
+<strong>__author__</strong> = 'api.jscudder (Jeff Scudder)'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">api.jscudder&nbsp;(Jeff&nbsp;Scudder)</td></tr></table>
+</body></html>

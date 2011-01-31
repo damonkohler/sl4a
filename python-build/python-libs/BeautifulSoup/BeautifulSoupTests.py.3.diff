@@ -1,0 +1,122 @@
+433c433
+<         self.assertTrue('attr' in BeautifulSoup(text).foo)
+---
+>         self.assertTrue(BeautifulSoup(text).foo.has_key('attr'))
+622c622
+<         self.assertSoupEquals('<x t="x&#241;">', '<x t="x\xc3\xb1"></x>',
+---
+>         self.assertSoupEquals('<x t="x&#241;">', b'<x t="x\xc3\xb1"></x>',
+624c624
+<         self.assertSoupEquals('<x t="x&#xf1;">', '<x t="x\xc3\xb1"></x>',
+---
+>         self.assertSoupEquals('<x t="x&#xf1;">', b'<x t="x\xc3\xb1"></x>',
+671c671
+<         markup = "<foo>\x92</foo>"
+---
+>         markup = b"<foo>\x92</foo>"
+675c675
+<         hebrew = "\xed\xe5\xec\xf9"
+---
+>         hebrew = b"\xed\xe5\xec\xf9"
+687c687
+<         self.assertEquals(utf8, '<foo>\xc3\xbc</foo>')
+---
+>         self.assertEquals(utf8, b'<foo>\xc3\xbc</foo>')
+714,715c714,715
+<         euc_jp = '<?xml version="1.0 encoding="euc-jp"?>\n<foo>\n\xa4\xb3\xa4\xec\xa4\xcfEUC-JP\xa4\xc7\xa5\xb3\xa1\xbc\xa5\xc7\xa5\xa3\xa5\xf3\xa5\xb0\xa4\xb5\xa4\xec\xa4\xbf\xc6\xfc\xcb\xdc\xb8\xec\xa4\xce\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xc7\xa4\xb9\xa1\xa3\n</foo>\n'
+<         utf8 = "<?xml version='1.0' encoding='utf-8'?>\n<foo>\n\xe3\x81\x93\xe3\x82\x8c\xe3\x81\xafEUC-JP\xe3\x81\xa7\xe3\x82\xb3\xe3\x83\xbc\xe3\x83\x87\xe3\x82\xa3\xe3\x83\xb3\xe3\x82\xb0\xe3\x81\x95\xe3\x82\x8c\xe3\x81\x9f\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e\xe3\x81\xae\xe3\x83\x95\xe3\x82\xa1\xe3\x82\xa4\xe3\x83\xab\xe3\x81\xa7\xe3\x81\x99\xe3\x80\x82\n</foo>\n"
+---
+>         euc_jp = b'<?xml version="1.0 encoding="euc-jp"?>\n<foo>\n\xa4\xb3\xa4\xec\xa4\xcfEUC-JP\xa4\xc7\xa5\xb3\xa1\xbc\xa5\xc7\xa5\xa3\xa5\xf3\xa5\xb0\xa4\xb5\xa4\xec\xa4\xbf\xc6\xfc\xcb\xdc\xb8\xec\xa4\xce\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xc7\xa4\xb9\xa1\xa3\n</foo>\n'
+>         utf8 = b"<?xml version='1.0' encoding='utf-8'?>\n<foo>\n\xe3\x81\x93\xe3\x82\x8c\xe3\x81\xafEUC-JP\xe3\x81\xa7\xe3\x82\xb3\xe3\x83\xbc\xe3\x83\x87\xe3\x82\xa3\xe3\x83\xb3\xe3\x82\xb0\xe3\x81\x95\xe3\x82\x8c\xe3\x81\x9f\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e\xe3\x81\xae\xe3\x83\x95\xe3\x82\xa1\xe3\x82\xa4\xe3\x83\xab\xe3\x81\xa7\xe3\x81\x99\xe3\x80\x82\n</foo>\n"
+726c726
+<         old_text = "<?xml encoding='windows-1252'><foo>\x92</foo>"
+---
+>         old_text = b"<?xml encoding='windows-1252'><foo>\x92</foo>"
+731c731
+<         no_shift_jis_html = '''<html><head>\n<meta http-equiv="Content-language" content="ja" /></head><body><pre>\n\x82\xb1\x82\xea\x82\xcdShift-JIS\x82\xc5\x83R\x81[\x83f\x83B\x83\x93\x83O\x82\xb3\x82\xea\x82\xbd\x93\xfa\x96{\x8c\xea\x82\xcc\x83t\x83@\x83C\x83\x8b\x82\xc5\x82\xb7\x81B\n</pre></body></html>'''
+---
+>         no_shift_jis_html = b'''<html><head>\n<meta http-equiv="Content-language" content="ja" /></head><body><pre>\n\x82\xb1\x82\xea\x82\xcdShift-JIS\x82\xc5\x83R\x81[\x83f\x83B\x83\x93\x83O\x82\xb3\x82\xea\x82\xbd\x93\xfa\x96{\x8c\xea\x82\xcc\x83t\x83@\x83C\x83\x8b\x82\xc5\x82\xb7\x81B\n</pre></body></html>'''
+741,742c741,742
+<         meta_tag = ('<meta content="text/html; charset=x-sjis" '
+<                     'http-equiv="Content-type" />')
+---
+>         meta_tag = (b'<meta content="text/html; charset=x-sjis" '
+>                     b'http-equiv="Content-type" />')
+744,750c744,750
+<             '<html><head>\n%s\n'
+<             '<meta http-equiv="Content-language" content="ja" />'
+<             '</head><body><pre>\n'
+<             '\x82\xb1\x82\xea\x82\xcdShift-JIS\x82\xc5\x83R\x81[\x83f'
+<             '\x83B\x83\x93\x83O\x82\xb3\x82\xea\x82\xbd\x93\xfa\x96{\x8c'
+<             '\xea\x82\xcc\x83t\x83@\x83C\x83\x8b\x82\xc5\x82\xb7\x81B\n'
+<             '</pre></body></html>') % meta_tag
+---
+>             b'<html><head>\n' + meta_tag + b'\n'
+>             b'<meta http-equiv="Content-language" content="ja" />'
+>             b'</head><body><pre>\n'
+>             b'\x82\xb1\x82\xea\x82\xcdShift-JIS\x82\xc5\x83R\x81[\x83f'
+>             b'\x83B\x83\x93\x83O\x82\xb3\x82\xea\x82\xbd\x93\xfa\x96{\x8c'
+>             b'\xea\x82\xcc\x83t\x83@\x83C\x83\x8b\x82\xc5\x82\xb7\x81B\n'
+>             b'</pre></body></html>')
+763c763
+<         content_type = str(soup.meta)
+---
+>         content_type = soup.meta.decode()
+768c768
+<         index = content_type.find('charset=')
+---
+>         index = content_type.find(b'charset=')
+773,783c773,783
+<                 '<html><head>\n'
+<                 '<meta content="text/html; charset=utf-8" '
+<                 'http-equiv="Content-type" />\n'
+<                 '<meta http-equiv="Content-language" content="ja" />'
+<                 '</head><body><pre>\n'
+<                 '\xe3\x81\x93\xe3\x82\x8c\xe3\x81\xafShift-JIS\xe3\x81\xa7\xe3'
+<                 '\x82\xb3\xe3\x83\xbc\xe3\x83\x87\xe3\x82\xa3\xe3\x83\xb3\xe3'
+<                 '\x82\xb0\xe3\x81\x95\xe3\x82\x8c\xe3\x81\x9f\xe6\x97\xa5\xe6'
+<                 '\x9c\xac\xe8\xaa\x9e\xe3\x81\xae\xe3\x83\x95\xe3\x82\xa1\xe3'
+<                 '\x82\xa4\xe3\x83\xab\xe3\x81\xa7\xe3\x81\x99\xe3\x80\x82\n'
+<                 '</pre></body></html>'))
+---
+>                 b'<html><head>\n'
+>                 b'<meta content="text/html; charset=utf-8" '
+>                 b'http-equiv="Content-type" />\n'
+>                 b'<meta http-equiv="Content-language" content="ja" />'
+>                 b'</head><body><pre>\n'
+>                 b'\xe3\x81\x93\xe3\x82\x8c\xe3\x81\xafShift-JIS\xe3\x81\xa7\xe3'
+>                 b'\x82\xb3\xe3\x83\xbc\xe3\x83\x87\xe3\x82\xa3\xe3\x83\xb3\xe3'
+>                 b'\x82\xb0\xe3\x81\x95\xe3\x82\x8c\xe3\x81\x9f\xe6\x97\xa5\xe6'
+>                 b'\x9c\xac\xe8\xaa\x9e\xe3\x81\xae\xe3\x83\x95\xe3\x82\xa1\xe3'
+>                 b'\x82\xa4\xe3\x83\xab\xe3\x81\xa7\xe3\x81\x99\xe3\x80\x82\n'
+>                 b'</pre></body></html>'))
+788c788
+<         isolatin = """<html><meta http-equiv="Content-type" content="text/html; charset=ISO-Latin-1" />Sacr\xe9 bleu!</html>"""
+---
+>         isolatin = b"""<html><meta http-equiv="Content-type" content="text/html; charset=ISO-Latin-1" />Sacr\xe9 bleu!</html>"""
+792c792
+<         utf8 = utf8.replace("\xe9", "\xc3\xa9")
+---
+>         utf8 = utf8.replace(b"\xe9", b"\xc3\xa9")
+796,797c796,797
+<         iso_8859_8= '<HEAD>\n<TITLE>Hebrew (ISO 8859-8) in Visual Directionality</TITLE>\n\n\n\n</HEAD>\n<BODY>\n<H1>Hebrew (ISO 8859-8) in Visual Directionality</H1>\n\xed\xe5\xec\xf9\n</BODY>\n'
+<         utf8 = '<head>\n<title>Hebrew (ISO 8859-8) in Visual Directionality</title>\n</head>\n<body>\n<h1>Hebrew (ISO 8859-8) in Visual Directionality</h1>\n\xd7\x9d\xd7\x95\xd7\x9c\xd7\xa9\n</body>\n'
+---
+>         iso_8859_8= b'<HEAD>\n<TITLE>Hebrew (ISO 8859-8) in Visual Directionality</TITLE>\n\n\n\n</HEAD>\n<BODY>\n<H1>Hebrew (ISO 8859-8) in Visual Directionality</H1>\n\xed\xe5\xec\xf9\n</BODY>\n'
+>         utf8 = b'<head>\n<title>Hebrew (ISO 8859-8) in Visual Directionality</title>\n</head>\n<body>\n<h1>Hebrew (ISO 8859-8) in Visual Directionality</h1>\n\xd7\x9d\xd7\x95\xd7\x9c\xd7\xa9\n</body>\n'
+802c802
+<         self.assertSoupEquals("\x91Foo\x92 <!--blah-->",
+---
+>         self.assertSoupEquals(b"\x91Foo\x92 <!--blah-->",
+806c806
+<         smartQuotes = "Il a dit, \x8BSacr&eacute; bl&#101;u!\x9b"
+---
+>         smartQuotes = b"Il a dit, \x8BSacr&eacute; bl&#101;u!\x9b"
+812c812
+<                           'Il a dit, \xe2\x80\xb9Sacr\xc3\xa9 bleu!\xe2\x80\xba')
+---
+>                           b'Il a dit, \xe2\x80\xb9Sacr\xc3\xa9 bleu!\xe2\x80\xba')
+815c815
+<         utf_8 = "\343\202\261\343\203\274\343\202\277\343\202\244 Watch"
+---
+>         utf_8 = b"\343\202\261\343\203\274\343\202\277\343\202\244 Watch"

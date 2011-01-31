@@ -1,0 +1,200 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module atom.mock_service</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="atom.html"><font color="#ffffff">atom</font></a>.mock_service</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/atom/mock_service.py">/usr/local/svn/gdata-python-client/src/atom/mock_service.py</a></font></td></tr></table>
+    <p><tt>MockService&nbsp;provides&nbsp;CRUD&nbsp;ops.&nbsp;for&nbsp;mocking&nbsp;calls&nbsp;to&nbsp;AtomPub&nbsp;services.<br>
+&nbsp;<br>
+MockService:&nbsp;Exposes&nbsp;the&nbsp;publicly&nbsp;used&nbsp;methods&nbsp;of&nbsp;AtomService&nbsp;to&nbsp;provide<br>
+&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;mock&nbsp;interface&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;in&nbsp;unit&nbsp;tests.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="atom.html">atom</a><br>
+</td><td width="25%" valign=top><a href="pickle.html">pickle</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="atom.mock_service.html#MockHttpResponse">MockHttpResponse</a>
+</font></dt><dt><font face="helvetica, arial"><a href="atom.mock_service.html#MockRequest">MockRequest</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MockHttpResponse">class <strong>MockHttpResponse</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Returned&nbsp;from&nbsp;MockService&nbsp;crud&nbsp;methods&nbsp;as&nbsp;the&nbsp;server's&nbsp;response.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="MockHttpResponse-__init__"><strong>__init__</strong></a>(self, body<font color="#909090">=None</font>, status<font color="#909090">=None</font>, reason<font color="#909090">=None</font>, headers<font color="#909090">=None</font>)</dt><dd><tt>Construct&nbsp;a&nbsp;mock&nbsp;HTTPResponse&nbsp;and&nbsp;set&nbsp;members.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;body:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;HTTP&nbsp;body&nbsp;of&nbsp;the&nbsp;server's&nbsp;response.&nbsp;<br>
+&nbsp;&nbsp;status:&nbsp;int&nbsp;(optional)&nbsp;<br>
+&nbsp;&nbsp;reason:&nbsp;str&nbsp;(optional)<br>
+&nbsp;&nbsp;headers:&nbsp;dict&nbsp;(optional)</tt></dd></dl>
+
+<dl><dt><a name="MockHttpResponse-getheader"><strong>getheader</strong></a>(self, header_name)</dt></dl>
+
+<dl><dt><a name="MockHttpResponse-read"><strong>read</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MockRequest">class <strong>MockRequest</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;request&nbsp;made&nbsp;to&nbsp;an&nbsp;AtomPub&nbsp;server.<br>
+&nbsp;<br>
+These&nbsp;objects&nbsp;are&nbsp;used&nbsp;to&nbsp;determine&nbsp;if&nbsp;a&nbsp;client&nbsp;request&nbsp;matches&nbsp;a&nbsp;recorded<br>
+HTTP&nbsp;request&nbsp;to&nbsp;determine&nbsp;what&nbsp;the&nbsp;mock&nbsp;server's&nbsp;response&nbsp;will&nbsp;be.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="MockRequest-ConcealSecrets"><strong>ConcealSecrets</strong></a>(self, conceal_func)</dt><dd><tt>Conceal&nbsp;secret&nbsp;data&nbsp;in&nbsp;this&nbsp;request.</tt></dd></dl>
+
+<dl><dt><a name="MockRequest-IsMatch"><strong>IsMatch</strong></a>(self, other_request)</dt><dd><tt>Check&nbsp;to&nbsp;see&nbsp;if&nbsp;the&nbsp;other_request&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;this&nbsp;request.<br>
+&nbsp;<br>
+Used&nbsp;to&nbsp;determine&nbsp;if&nbsp;a&nbsp;recording&nbsp;matches&nbsp;an&nbsp;incoming&nbsp;request&nbsp;so&nbsp;that&nbsp;a<br>
+recorded&nbsp;response&nbsp;should&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;client.<br>
+&nbsp;<br>
+The&nbsp;matching&nbsp;is&nbsp;not&nbsp;exact,&nbsp;only&nbsp;the&nbsp;operation&nbsp;and&nbsp;URL&nbsp;are&nbsp;examined&nbsp;<br>
+currently.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;other_request:&nbsp;<a href="#MockRequest">MockRequest</a>&nbsp;The&nbsp;request&nbsp;which&nbsp;we&nbsp;want&nbsp;to&nbsp;check&nbsp;this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(self)&nbsp;<a href="#MockRequest">MockRequest</a>&nbsp;against&nbsp;to&nbsp;see&nbsp;if&nbsp;they&nbsp;are&nbsp;equivalent.</tt></dd></dl>
+
+<dl><dt><a name="MockRequest-__init__"><strong>__init__</strong></a>(self, operation, uri, host<font color="#909090">=None</font>, ssl<font color="#909090">=False</font>, port<font color="#909090">=None</font>, data<font color="#909090">=None</font>, extra_headers<font color="#909090">=None</font>, url_params<font color="#909090">=None</font>, escape_params<font color="#909090">=True</font>, content_type<font color="#909090">='application/atom+xml'</font>)</dt><dd><tt>Constructor&nbsp;for&nbsp;a&nbsp;<a href="#MockRequest">MockRequest</a><br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;operation:&nbsp;str&nbsp;One&nbsp;of&nbsp;'GET',&nbsp;'POST',&nbsp;'PUT',&nbsp;or&nbsp;'DELETE'&nbsp;this&nbsp;is&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP&nbsp;operation&nbsp;requested&nbsp;on&nbsp;the&nbsp;resource.<br>
+&nbsp;&nbsp;uri:&nbsp;str&nbsp;The&nbsp;URL&nbsp;describing&nbsp;the&nbsp;resource&nbsp;to&nbsp;be&nbsp;modified&nbsp;or&nbsp;feed&nbsp;to&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retrieved.&nbsp;This&nbsp;should&nbsp;include&nbsp;the&nbsp;protocol&nbsp;(http/https)&nbsp;and&nbsp;the&nbsp;host<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(aka&nbsp;domain).&nbsp;For&nbsp;example,&nbsp;these&nbsp;are&nbsp;some&nbsp;valud&nbsp;full_uris:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'<a href="http://example.com">http://example.com</a>',&nbsp;'https://www.google.com/accounts/ClientLogin'<br>
+&nbsp;&nbsp;host:&nbsp;str&nbsp;(optional)&nbsp;The&nbsp;server&nbsp;name&nbsp;which&nbsp;will&nbsp;be&nbsp;placed&nbsp;at&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;beginning&nbsp;of&nbsp;the&nbsp;URL&nbsp;if&nbsp;the&nbsp;uri&nbsp;parameter&nbsp;does&nbsp;not&nbsp;begin&nbsp;with&nbsp;'http'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Examples&nbsp;include&nbsp;'example.com',&nbsp;'www.google.com',&nbsp;'www.blogger.com'.<br>
+&nbsp;&nbsp;ssl:&nbsp;boolean&nbsp;(optional)&nbsp;If&nbsp;true,&nbsp;the&nbsp;request&nbsp;URL&nbsp;will&nbsp;begin&nbsp;with&nbsp;https&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;instead&nbsp;of&nbsp;http.<br>
+&nbsp;&nbsp;data:&nbsp;ElementTree,&nbsp;filestream,&nbsp;list&nbsp;of&nbsp;parts,&nbsp;or&nbsp;other&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;converted&nbsp;to&nbsp;a&nbsp;string.&nbsp;(optional)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Should&nbsp;be&nbsp;set&nbsp;to&nbsp;None&nbsp;when&nbsp;performing&nbsp;a&nbsp;GET&nbsp;or&nbsp;PUT.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;data&nbsp;is&nbsp;a&nbsp;file-like&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;read,&nbsp;the&nbsp;constructor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;read&nbsp;the&nbsp;entire&nbsp;file&nbsp;into&nbsp;memory.&nbsp;If&nbsp;the&nbsp;data&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parts&nbsp;to&nbsp;be&nbsp;sent,&nbsp;each&nbsp;part&nbsp;will&nbsp;be&nbsp;evaluated&nbsp;and&nbsp;stored.<br>
+&nbsp;&nbsp;extra_headers:&nbsp;dict&nbsp;(optional)&nbsp;HTTP&nbsp;headers&nbsp;included&nbsp;in&nbsp;the&nbsp;request.<br>
+&nbsp;&nbsp;url_params:&nbsp;dict&nbsp;(optional)&nbsp;Key&nbsp;value&nbsp;pairs&nbsp;which&nbsp;should&nbsp;be&nbsp;added&nbsp;to&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;URL&nbsp;as&nbsp;URL&nbsp;parameters&nbsp;in&nbsp;the&nbsp;request.&nbsp;For&nbsp;example&nbsp;uri='/',&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url_parameters={'foo':'1','bar':'2'}&nbsp;could&nbsp;become&nbsp;'/?foo=1&amp;bar=2'.<br>
+&nbsp;&nbsp;escape_params:&nbsp;boolean&nbsp;(optional)&nbsp;Perform&nbsp;URL&nbsp;escaping&nbsp;on&nbsp;the&nbsp;keys&nbsp;and&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;values&nbsp;specified&nbsp;in&nbsp;url_params.&nbsp;Defaults&nbsp;to&nbsp;True.<br>
+&nbsp;&nbsp;content_type:&nbsp;str&nbsp;(optional)&nbsp;Provides&nbsp;the&nbsp;MIME&nbsp;type&nbsp;of&nbsp;the&nbsp;data&nbsp;being&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sent.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-ConcealValueWithSha"><strong>ConcealValueWithSha</strong></a>(source)</dt></dl>
+ <dl><dt><a name="-DumpRecordings"><strong>DumpRecordings</strong></a>(conceal_func<font color="#909090">=&lt;function ConcealValueWithSha at 0xb660c8&gt;</font>)</dt></dl>
+ <dl><dt><a name="-HttpRequest"><strong>HttpRequest</strong></a>(service, operation, data, uri, extra_headers<font color="#909090">=None</font>, url_params<font color="#909090">=None</font>, escape_params<font color="#909090">=True</font>, content_type<font color="#909090">='application/atom+xml'</font>)</dt><dd><tt>Simulates&nbsp;an&nbsp;HTTP&nbsp;call&nbsp;to&nbsp;the&nbsp;server,&nbsp;makes&nbsp;an&nbsp;actual&nbsp;HTTP&nbsp;request&nbsp;if&nbsp;<br>
+real_request_handler&nbsp;is&nbsp;set.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;operates&nbsp;in&nbsp;two&nbsp;different&nbsp;modes&nbsp;depending&nbsp;on&nbsp;if&nbsp;<br>
+real_request_handler&nbsp;is&nbsp;set&nbsp;or&nbsp;not.&nbsp;If&nbsp;real_request_handler&nbsp;is&nbsp;not&nbsp;set,<br>
+HttpRequest&nbsp;will&nbsp;look&nbsp;in&nbsp;this&nbsp;module's&nbsp;recordings&nbsp;list&nbsp;to&nbsp;find&nbsp;a&nbsp;response<br>
+which&nbsp;matches&nbsp;the&nbsp;parameters&nbsp;in&nbsp;the&nbsp;function&nbsp;call.&nbsp;If&nbsp;real_request_handler<br>
+is&nbsp;set,&nbsp;this&nbsp;function&nbsp;will&nbsp;call&nbsp;real_request_handler.HttpRequest,&nbsp;add&nbsp;the<br>
+response&nbsp;to&nbsp;the&nbsp;recordings&nbsp;list,&nbsp;and&nbsp;respond&nbsp;with&nbsp;the&nbsp;actual&nbsp;response.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;service:&nbsp;atom.AtomService&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;contains&nbsp;some&nbsp;of&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;needed&nbsp;to&nbsp;make&nbsp;the&nbsp;request.&nbsp;The&nbsp;following&nbsp;members&nbsp;are&nbsp;used&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;construct&nbsp;the&nbsp;HTTP&nbsp;call:&nbsp;server&nbsp;(str),&nbsp;additional_headers&nbsp;(dict),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port&nbsp;(int),&nbsp;and&nbsp;ssl&nbsp;(bool).<br>
+&nbsp;&nbsp;operation:&nbsp;str&nbsp;The&nbsp;HTTP&nbsp;operation&nbsp;to&nbsp;be&nbsp;performed.&nbsp;This&nbsp;is&nbsp;usually&nbsp;one&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'GET',&nbsp;'POST',&nbsp;'PUT',&nbsp;or&nbsp;'DELETE'<br>
+&nbsp;&nbsp;data:&nbsp;ElementTree,&nbsp;filestream,&nbsp;list&nbsp;of&nbsp;parts,&nbsp;or&nbsp;other&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;converted&nbsp;to&nbsp;a&nbsp;string.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Should&nbsp;be&nbsp;set&nbsp;to&nbsp;None&nbsp;when&nbsp;performing&nbsp;a&nbsp;GET&nbsp;or&nbsp;PUT.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;data&nbsp;is&nbsp;a&nbsp;file-like&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;read,&nbsp;this&nbsp;method&nbsp;will&nbsp;read<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;chunk&nbsp;of&nbsp;100K&nbsp;bytes&nbsp;at&nbsp;a&nbsp;time&nbsp;and&nbsp;send&nbsp;them.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;data&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;parts&nbsp;to&nbsp;be&nbsp;sent,&nbsp;each&nbsp;part&nbsp;will&nbsp;be&nbsp;evaluated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;sent.<br>
+&nbsp;&nbsp;uri:&nbsp;The&nbsp;beginning&nbsp;of&nbsp;the&nbsp;URL&nbsp;to&nbsp;which&nbsp;the&nbsp;request&nbsp;should&nbsp;be&nbsp;sent.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Examples:&nbsp;'/',&nbsp;'/base/feeds/snippets',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'/m8/feeds/contacts/default/base'<br>
+&nbsp;&nbsp;extra_headers:&nbsp;dict&nbsp;of&nbsp;strings.&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;should&nbsp;be&nbsp;sent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;request.&nbsp;These&nbsp;headers&nbsp;are&nbsp;in&nbsp;addition&nbsp;to&nbsp;those&nbsp;stored&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service.additional_headers.<br>
+&nbsp;&nbsp;url_params:&nbsp;dict&nbsp;of&nbsp;strings.&nbsp;Key&nbsp;value&nbsp;pairs&nbsp;to&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;URL&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL&nbsp;parameters.&nbsp;For&nbsp;example&nbsp;{'foo':'bar',&nbsp;'test':'param'}&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;become&nbsp;?foo=bar&amp;test=param.<br>
+&nbsp;&nbsp;escape_params:&nbsp;bool&nbsp;default&nbsp;True.&nbsp;If&nbsp;true,&nbsp;the&nbsp;keys&nbsp;and&nbsp;values&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url_params&nbsp;will&nbsp;be&nbsp;URL&nbsp;escaped&nbsp;when&nbsp;the&nbsp;form&nbsp;is&nbsp;constructed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Special&nbsp;characters&nbsp;converted&nbsp;to&nbsp;%XX&nbsp;form.)<br>
+&nbsp;&nbsp;content_type:&nbsp;str&nbsp;The&nbsp;MIME&nbsp;type&nbsp;for&nbsp;the&nbsp;data&nbsp;being&nbsp;sent.&nbsp;Defaults&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'application/atom+xml',&nbsp;this&nbsp;is&nbsp;only&nbsp;used&nbsp;if&nbsp;data&nbsp;is&nbsp;set.</tt></dd></dl>
+ <dl><dt><a name="-LoadRecordings"><strong>LoadRecordings</strong></a>(recordings_file_or_string)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__author__</strong> = 'api.jscudder (Jeffrey Scudder)'<br>
+<strong>real_request_handler</strong> = None<br>
+<strong>recordings</strong> = []</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">api.jscudder&nbsp;(Jeffrey&nbsp;Scudder)</td></tr></table>
+</body></html>

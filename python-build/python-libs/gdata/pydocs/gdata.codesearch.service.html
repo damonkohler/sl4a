@@ -1,0 +1,805 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module gdata.codesearch.service</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gdata.html"><font color="#ffffff">gdata</font></a>.<a href="gdata.codesearch.html"><font color="#ffffff">codesearch</font></a>.service</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/gdata/codesearch/service.py">/usr/local/svn/gdata-python-client/src/gdata/codesearch/service.py</a></font></td></tr></table>
+    <p><tt><a href="#CodesearchService">CodesearchService</a>&nbsp;extends&nbsp;<a href="gdata.service.html#GDataService">GDataService</a>&nbsp;to&nbsp;streamline&nbsp;Google&nbsp;Codesearch&nbsp;<br>
+operations</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="atom.html">atom</a><br>
+</td><td width="25%" valign=top><a href="gdata.html">gdata</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="gdata.service.html#GDataService">gdata.service.GDataService</a>(<a href="atom.service.html#AtomService">atom.service.AtomService</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.codesearch.service.html#CodesearchService">CodesearchService</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="gdata.service.html#Query">gdata.service.Query</a>(<a href="__builtin__.html#dict">__builtin__.dict</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.codesearch.service.html#CodesearchQuery">CodesearchQuery</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CodesearchQuery">class <strong>CodesearchQuery</strong></a>(<a href="gdata.service.html#Query">gdata.service.Query</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Object&nbsp;used&nbsp;to&nbsp;construct&nbsp;the&nbsp;query&nbsp;to&nbsp;the&nbsp;Google&nbsp;Codesearch&nbsp;feed.&nbsp;here&nbsp;only&nbsp;as&nbsp;a&nbsp;shorcut<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.codesearch.service.html#CodesearchQuery">CodesearchQuery</a></dd>
+<dd><a href="gdata.service.html#Query">gdata.service.Query</a></dd>
+<dd><a href="__builtin__.html#dict">__builtin__.dict</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="CodesearchQuery-__init__"><strong>__init__</strong></a>(self, feed<font color="#909090">='/codesearch/feeds/search'</font>, text_query<font color="#909090">=None</font>, params<font color="#909090">=None</font>, categories<font color="#909090">=None</font>)</dt><dd><tt>Constructor&nbsp;for&nbsp;Codesearch&nbsp;<a href="gdata.service.html#Query">Query</a>.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;feed:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;path&nbsp;for&nbsp;the&nbsp;feed.&nbsp;(e.g.&nbsp;'/codesearch/feeds/search')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;text_query:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;contents&nbsp;of&nbsp;the&nbsp;q&nbsp;query&nbsp;parameter.&nbsp;This<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;is&nbsp;URL&nbsp;escaped&nbsp;upon&nbsp;conversion&nbsp;to&nbsp;a&nbsp;URI.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;params:&nbsp;dict&nbsp;(optional)&nbsp;Parameter&nbsp;value&nbsp;string&nbsp;pairs&nbsp;which&nbsp;become&nbsp;URL<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;params&nbsp;when&nbsp;translated&nbsp;to&nbsp;a&nbsp;URI.&nbsp;These&nbsp;parameters&nbsp;are&nbsp;added&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;query's&nbsp;items.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;categories:&nbsp;list&nbsp;(optional)&nbsp;List&nbsp;of&nbsp;category&nbsp;strings&nbsp;which&nbsp;should&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;included&nbsp;as&nbsp;query&nbsp;categories.&nbsp;See&nbsp;gdata.service.<a href="gdata.service.html#Query">Query</a>&nbsp;for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;additional&nbsp;documentation.<br>
+&nbsp;<br>
+Yelds:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;<a href="#CodesearchQuery">CodesearchQuery</a>&nbsp;object&nbsp;to&nbsp;construct&nbsp;a&nbsp;URI&nbsp;based&nbsp;on&nbsp;Codesearch&nbsp;feed</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="gdata.service.html#Query">gdata.service.Query</a>:<br>
+<dl><dt><a name="CodesearchQuery-ToUri"><strong>ToUri</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CodesearchQuery-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="gdata.service.html#Query">gdata.service.Query</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>alt</strong></dt>
+<dd><tt>The&nbsp;feed&nbsp;query's&nbsp;alt&nbsp;parameter</tt></dd>
+</dl>
+<dl><dt><strong>author</strong></dt>
+<dd><tt>The&nbsp;feed&nbsp;query's&nbsp;author&nbsp;parameter</tt></dd>
+</dl>
+<dl><dt><strong>max_results</strong></dt>
+<dd><tt>The&nbsp;feed&nbsp;query's&nbsp;max-results&nbsp;parameter</tt></dd>
+</dl>
+<dl><dt><strong>orderby</strong></dt>
+<dd><tt>The&nbsp;feed&nbsp;query's&nbsp;orderby&nbsp;parameter</tt></dd>
+</dl>
+<dl><dt><strong>published_max</strong></dt>
+<dd><tt>The&nbsp;feed&nbsp;query's&nbsp;published-max&nbsp;parameter</tt></dd>
+</dl>
+<dl><dt><strong>published_min</strong></dt>
+<dd><tt>The&nbsp;feed&nbsp;query's&nbsp;published-min&nbsp;parameter</tt></dd>
+</dl>
+<dl><dt><strong>start_index</strong></dt>
+<dd><tt>The&nbsp;feed&nbsp;query's&nbsp;start-index&nbsp;parameter</tt></dd>
+</dl>
+<dl><dt><strong>text_query</strong></dt>
+<dd><tt>The&nbsp;feed&nbsp;query's&nbsp;q&nbsp;parameter</tt></dd>
+</dl>
+<dl><dt><strong>updated_max</strong></dt>
+<dd><tt>The&nbsp;feed&nbsp;query's&nbsp;updated-max&nbsp;parameter</tt></dd>
+</dl>
+<dl><dt><strong>updated_min</strong></dt>
+<dd><tt>The&nbsp;feed&nbsp;query's&nbsp;updated-min&nbsp;parameter</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
+<dl><dt><a name="CodesearchQuery-__cmp__"><strong>__cmp__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__cmp__">__cmp__</a>(y)&nbsp;&lt;==&gt;&nbsp;cmp(x,y)</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-__contains__">__contains__</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#CodesearchQuery-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-__sizeof__"><strong>__sizeof__</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-__sizeof__">__sizeof__</a>()&nbsp;-&gt;&nbsp;size&nbsp;of&nbsp;D&nbsp;in&nbsp;memory,&nbsp;in&nbsp;bytes</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-clear"><strong>clear</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-clear">clear</a>()&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Remove&nbsp;all&nbsp;items&nbsp;from&nbsp;D.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-copy"><strong>copy</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-copy">copy</a>()&nbsp;-&gt;&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-get"><strong>get</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-get">get</a>(k[,d])&nbsp;-&gt;&nbsp;D[k]&nbsp;if&nbsp;k&nbsp;in&nbsp;D,&nbsp;else&nbsp;d.&nbsp;&nbsp;d&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-has_key"><strong>has_key</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-has_key">has_key</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-items"><strong>items</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-items">items</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;(key,&nbsp;value)&nbsp;pairs,&nbsp;as&nbsp;2-tuples</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-iteritems"><strong>iteritems</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-iteritems">iteritems</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;(key,&nbsp;value)&nbsp;items&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-iterkeys"><strong>iterkeys</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-iterkeys">iterkeys</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;keys&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-itervalues"><strong>itervalues</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-itervalues">itervalues</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;values&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-keys"><strong>keys</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-keys">keys</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;keys</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-pop"><strong>pop</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-pop">pop</a>(k[,d])&nbsp;-&gt;&nbsp;v,&nbsp;remove&nbsp;specified&nbsp;key&nbsp;and&nbsp;return&nbsp;the&nbsp;corresponding&nbsp;value<br>
+If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nbsp;given,&nbsp;otherwise&nbsp;KeyError&nbsp;is&nbsp;raised</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-popitem"><strong>popitem</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-popitem">popitem</a>()&nbsp;-&gt;&nbsp;(k,&nbsp;v),&nbsp;remove&nbsp;and&nbsp;return&nbsp;some&nbsp;(key,&nbsp;value)&nbsp;pair&nbsp;as&nbsp;a<br>
+2-tuple;&nbsp;but&nbsp;raise&nbsp;KeyError&nbsp;if&nbsp;D&nbsp;is&nbsp;empty</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-setdefault"><strong>setdefault</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#CodesearchQuery-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-update"><strong>update</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-update">update</a>(E,&nbsp;**F)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;E&nbsp;and&nbsp;F:&nbsp;for&nbsp;k&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;E[k]<br>
+(if&nbsp;E&nbsp;has&nbsp;keys&nbsp;else:&nbsp;for&nbsp;(k,&nbsp;v)&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;v)&nbsp;then:&nbsp;for&nbsp;k&nbsp;in&nbsp;F:&nbsp;D[k]&nbsp;=&nbsp;F[k]</tt></dd></dl>
+
+<dl><dt><a name="CodesearchQuery-values"><strong>values</strong></a>(...)</dt><dd><tt>D.<a href="#CodesearchQuery-values">values</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;values</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x7569a0&gt;<dd><tt>T.<a href="#CodesearchQuery-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<dl><dt><strong>fromkeys</strong> = &lt;built-in method fromkeys of type object at 0xa507c0&gt;<dd><tt>dict.<a href="#CodesearchQuery-fromkeys">fromkeys</a>(S[,v])&nbsp;-&gt;&nbsp;New&nbsp;dict&nbsp;with&nbsp;keys&nbsp;from&nbsp;S&nbsp;and&nbsp;values&nbsp;equal&nbsp;to&nbsp;v.<br>
+v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CodesearchService">class <strong>CodesearchService</strong></a>(<a href="gdata.service.html#GDataService">gdata.service.GDataService</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Client&nbsp;extension&nbsp;for&nbsp;Google&nbsp;codesearch&nbsp;service<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.codesearch.service.html#CodesearchService">CodesearchService</a></dd>
+<dd><a href="gdata.service.html#GDataService">gdata.service.GDataService</a></dd>
+<dd><a href="atom.service.html#AtomService">atom.service.AtomService</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="CodesearchService-GetSnippetsFeed"><strong>GetSnippetsFeed</strong></a>(self, text_query<font color="#909090">=None</font>)</dt><dd><tt>Retrieve&nbsp;Codesearch&nbsp;feed&nbsp;for&nbsp;a&nbsp;keyword<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;text_query&nbsp;:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;contents&nbsp;of&nbsp;the&nbsp;q&nbsp;query&nbsp;parameter.&nbsp;This<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;is&nbsp;URL&nbsp;escaped&nbsp;upon&nbsp;conversion&nbsp;to&nbsp;a&nbsp;URI.<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;CodesearchFeed&nbsp;objects&nbsp;representing&nbsp;the&nbsp;feed&nbsp;returned&nbsp;by&nbsp;the&nbsp;server</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-Query"><strong>Query</strong></a>(self, uri, converter<font color="#909090">=&lt;function CodesearchFeedFromString at 0x7f6b5cd362a8&gt;</font>)</dt><dd><tt>Queries&nbsp;the&nbsp;Codesearch&nbsp;feed&nbsp;and&nbsp;returns&nbsp;the&nbsp;resulting&nbsp;feed&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;entries.<br>
+&nbsp;<br>
+Args:<br>
+uri:&nbsp;string&nbsp;The&nbsp;full&nbsp;URI&nbsp;to&nbsp;be&nbsp;queried.&nbsp;This&nbsp;can&nbsp;contain&nbsp;query<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameters,&nbsp;a&nbsp;hostname,&nbsp;or&nbsp;simply&nbsp;the&nbsp;relative&nbsp;path&nbsp;to&nbsp;a&nbsp;Document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;feed.&nbsp;The&nbsp;DocumentQuery&nbsp;object&nbsp;is&nbsp;useful&nbsp;when&nbsp;constructing<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query&nbsp;parameters.<br>
+converter:&nbsp;func&nbsp;(optional)&nbsp;A&nbsp;function&nbsp;which&nbsp;will&nbsp;be&nbsp;executed&nbsp;on&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;retrieved&nbsp;item,&nbsp;generally&nbsp;to&nbsp;render&nbsp;it&nbsp;into&nbsp;a&nbsp;Python&nbsp;object.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By&nbsp;default&nbsp;the&nbsp;CodesearchFeedFromString&nbsp;function&nbsp;is&nbsp;used&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;a&nbsp;CodesearchFeed&nbsp;object.&nbsp;This&nbsp;is&nbsp;because&nbsp;most&nbsp;feed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queries&nbsp;will&nbsp;result&nbsp;in&nbsp;a&nbsp;feed&nbsp;and&nbsp;not&nbsp;a&nbsp;single&nbsp;entry.<br>
+&nbsp;<br>
+Returns&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;CodesearchFeed&nbsp;objects&nbsp;representing&nbsp;the&nbsp;feed&nbsp;returned&nbsp;by&nbsp;the&nbsp;server</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-__init__"><strong>__init__</strong></a>(self, email<font color="#909090">=None</font>, password<font color="#909090">=None</font>, source<font color="#909090">=None</font>, server<font color="#909090">='www.google.com'</font>, additional_headers<font color="#909090">=None</font>, **kwargs)</dt><dd><tt>Creates&nbsp;a&nbsp;client&nbsp;for&nbsp;the&nbsp;Google&nbsp;codesearch&nbsp;service.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;email:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;user's&nbsp;email&nbsp;address,&nbsp;used&nbsp;for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;authentication.<br>
+&nbsp;&nbsp;password:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;user's&nbsp;password.<br>
+&nbsp;&nbsp;source:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;user's&nbsp;application.<br>
+&nbsp;&nbsp;server:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;server&nbsp;to&nbsp;which&nbsp;a&nbsp;connection<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;be&nbsp;opened.&nbsp;Default&nbsp;value:&nbsp;'www.google.com'.<br>
+&nbsp;&nbsp;**kwargs:&nbsp;The&nbsp;other&nbsp;parameters&nbsp;to&nbsp;pass&nbsp;to&nbsp;gdata.service.<a href="gdata.service.html#GDataService">GDataService</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constructor.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="gdata.service.html#GDataService">gdata.service.GDataService</a>:<br>
+<dl><dt><a name="CodesearchService-AuthSubTokenInfo"><strong>AuthSubTokenInfo</strong></a>(self)</dt><dd><tt>Fetches&nbsp;the&nbsp;AuthSub&nbsp;token's&nbsp;metadata&nbsp;from&nbsp;the&nbsp;server.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;NonAuthSubToken&nbsp;if&nbsp;the&nbsp;user's&nbsp;auth&nbsp;token&nbsp;is&nbsp;not&nbsp;an&nbsp;AuthSub&nbsp;token</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-ClientLogin"><strong>ClientLogin</strong></a>(self, username, password, account_type<font color="#909090">=None</font>, service<font color="#909090">=None</font>, auth_service_url<font color="#909090">=None</font>, source<font color="#909090">=None</font>, captcha_token<font color="#909090">=None</font>, captcha_response<font color="#909090">=None</font>)</dt><dd><tt>Convenience&nbsp;method&nbsp;for&nbsp;authenticating&nbsp;using&nbsp;ProgrammaticLogin.&nbsp;<br>
+&nbsp;<br>
+Sets&nbsp;values&nbsp;for&nbsp;email,&nbsp;password,&nbsp;and&nbsp;other&nbsp;optional&nbsp;members.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;username:<br>
+&nbsp;&nbsp;password:<br>
+&nbsp;&nbsp;account_type:&nbsp;string&nbsp;(optional)<br>
+&nbsp;&nbsp;service:&nbsp;string&nbsp;(optional)<br>
+&nbsp;&nbsp;auth_service_url:&nbsp;string&nbsp;(optional)<br>
+&nbsp;&nbsp;captcha_token:&nbsp;string&nbsp;(optional)<br>
+&nbsp;&nbsp;captcha_response:&nbsp;string&nbsp;(optional)</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-Delete"><strong>Delete</strong></a>(self, uri, extra_headers<font color="#909090">=None</font>, url_params<font color="#909090">=None</font>, escape_params<font color="#909090">=True</font>, redirects_remaining<font color="#909090">=4</font>)</dt><dd><tt>Deletes&nbsp;the&nbsp;entry&nbsp;at&nbsp;the&nbsp;given&nbsp;URI.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;uri:&nbsp;string&nbsp;The&nbsp;URI&nbsp;of&nbsp;the&nbsp;entry&nbsp;to&nbsp;be&nbsp;deleted.&nbsp;Example:&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'/base/feeds/items/ITEM-ID'<br>
+&nbsp;&nbsp;extra_headers:&nbsp;dict&nbsp;(optional)&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;are&nbsp;to&nbsp;be&nbsp;included.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;client&nbsp;automatically&nbsp;sets&nbsp;the&nbsp;Content-Type&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authorization&nbsp;headers.<br>
+&nbsp;&nbsp;url_params:&nbsp;dict&nbsp;(optional)&nbsp;Additional&nbsp;URL&nbsp;parameters&nbsp;to&nbsp;be&nbsp;included<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;URI.&nbsp;These&nbsp;are&nbsp;translated&nbsp;into&nbsp;query&nbsp;arguments<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;form&nbsp;'&amp;dict_key=value&amp;...'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:&nbsp;{'max-results':&nbsp;'250'}&nbsp;becomes&nbsp;&amp;max-results=250<br>
+&nbsp;&nbsp;escape_params:&nbsp;boolean&nbsp;(optional)&nbsp;If&nbsp;false,&nbsp;the&nbsp;calling&nbsp;code&nbsp;has&nbsp;already<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ensured&nbsp;that&nbsp;the&nbsp;query&nbsp;will&nbsp;form&nbsp;a&nbsp;valid&nbsp;URL&nbsp;(all<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reserved&nbsp;characters&nbsp;have&nbsp;been&nbsp;escaped).&nbsp;If&nbsp;true,&nbsp;this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method&nbsp;will&nbsp;escape&nbsp;the&nbsp;query&nbsp;and&nbsp;any&nbsp;URL&nbsp;parameters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;provided.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;True&nbsp;if&nbsp;the&nbsp;entry&nbsp;was&nbsp;deleted.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-FetchOAuthRequestToken"><strong>FetchOAuthRequestToken</strong></a>(self, scopes<font color="#909090">=None</font>, extra_parameters<font color="#909090">=None</font>, request_url<font color="#909090">='https://www.google.com/accounts/OAuthGetRequestToken'</font>, oauth_callback<font color="#909090">=None</font>)</dt><dd><tt>Fetches&nbsp;and&nbsp;sets&nbsp;the&nbsp;OAuth&nbsp;request&nbsp;token&nbsp;and&nbsp;returns&nbsp;it.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;scopes:&nbsp;string&nbsp;or&nbsp;list&nbsp;of&nbsp;string&nbsp;base&nbsp;URL(s)&nbsp;of&nbsp;the&nbsp;service(s)&nbsp;to&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;accessed.&nbsp;If&nbsp;None,&nbsp;then&nbsp;this&nbsp;method&nbsp;tries&nbsp;to&nbsp;determine&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scope(s)&nbsp;from&nbsp;the&nbsp;current&nbsp;service.<br>
+&nbsp;&nbsp;extra_parameters:&nbsp;dict&nbsp;(optional)&nbsp;key-value&nbsp;pairs&nbsp;as&nbsp;any&nbsp;additional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameters&nbsp;to&nbsp;be&nbsp;included&nbsp;in&nbsp;the&nbsp;URL&nbsp;and&nbsp;signature&nbsp;while&nbsp;making&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;request&nbsp;for&nbsp;fetching&nbsp;an&nbsp;OAuth&nbsp;request&nbsp;token.&nbsp;All&nbsp;the&nbsp;OAuth&nbsp;parameters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;added&nbsp;by&nbsp;default.&nbsp;But&nbsp;if&nbsp;provided&nbsp;through&nbsp;this&nbsp;argument,&nbsp;any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;parameters&nbsp;will&nbsp;be&nbsp;overwritten.&nbsp;For&nbsp;e.g.&nbsp;a&nbsp;default&nbsp;parameter<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;oauth_version&nbsp;1.0&nbsp;can&nbsp;be&nbsp;overwritten&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extra_parameters&nbsp;=&nbsp;{'oauth_version':&nbsp;'2.0'}<br>
+&nbsp;&nbsp;request_url:&nbsp;Request&nbsp;token&nbsp;URL.&nbsp;The&nbsp;default&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'https://www.google.com/accounts/OAuthGetRequestToken'.<br>
+&nbsp;&nbsp;oauth_callback:&nbsp;str&nbsp;(optional)&nbsp;If&nbsp;set,&nbsp;it&nbsp;is&nbsp;assume&nbsp;the&nbsp;client&nbsp;is&nbsp;using<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;OAuth&nbsp;v1.0a&nbsp;protocol&nbsp;where&nbsp;the&nbsp;callback&nbsp;url&nbsp;is&nbsp;sent&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;request&nbsp;token&nbsp;step.&nbsp;&nbsp;If&nbsp;the&nbsp;oauth_callback&nbsp;is&nbsp;also&nbsp;set&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extra_params,&nbsp;this&nbsp;value&nbsp;will&nbsp;override&nbsp;that&nbsp;one.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;fetched&nbsp;request&nbsp;token&nbsp;as&nbsp;a&nbsp;gdata.auth.OAuthToken&nbsp;object.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;FetchingOAuthRequestTokenFailed&nbsp;if&nbsp;the&nbsp;server&nbsp;responded&nbsp;to&nbsp;the&nbsp;request<br>
+&nbsp;&nbsp;with&nbsp;an&nbsp;error.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-GenerateAuthSubURL"><strong>GenerateAuthSubURL</strong></a>(self, next, scope, secure<font color="#909090">=False</font>, session<font color="#909090">=True</font>, domain<font color="#909090">='default'</font>)</dt><dd><tt>Generate&nbsp;a&nbsp;URL&nbsp;at&nbsp;which&nbsp;the&nbsp;user&nbsp;will&nbsp;login&nbsp;and&nbsp;be&nbsp;redirected&nbsp;back.<br>
+&nbsp;<br>
+Users&nbsp;enter&nbsp;their&nbsp;credentials&nbsp;on&nbsp;a&nbsp;Google&nbsp;login&nbsp;page&nbsp;and&nbsp;a&nbsp;token&nbsp;is&nbsp;sent<br>
+to&nbsp;the&nbsp;URL&nbsp;specified&nbsp;in&nbsp;next.&nbsp;See&nbsp;documentation&nbsp;for&nbsp;AuthSub&nbsp;login&nbsp;at:<br>
+<a href="http://code.google.com/apis/accounts/docs/AuthSub.html">http://code.google.com/apis/accounts/docs/AuthSub.html</a><br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;next:&nbsp;string&nbsp;The&nbsp;URL&nbsp;user&nbsp;will&nbsp;be&nbsp;sent&nbsp;to&nbsp;after&nbsp;logging&nbsp;in.<br>
+&nbsp;&nbsp;scope:&nbsp;string&nbsp;or&nbsp;list&nbsp;of&nbsp;strings.&nbsp;The&nbsp;URLs&nbsp;of&nbsp;the&nbsp;services&nbsp;to&nbsp;be&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;accessed.<br>
+&nbsp;&nbsp;secure:&nbsp;boolean&nbsp;(optional)&nbsp;Determines&nbsp;whether&nbsp;or&nbsp;not&nbsp;the&nbsp;issued&nbsp;token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;a&nbsp;secure&nbsp;token.<br>
+&nbsp;&nbsp;session:&nbsp;boolean&nbsp;(optional)&nbsp;Determines&nbsp;whether&nbsp;or&nbsp;not&nbsp;the&nbsp;issued&nbsp;token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;be&nbsp;upgraded&nbsp;to&nbsp;a&nbsp;session&nbsp;token.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-GenerateOAuthAuthorizationURL"><strong>GenerateOAuthAuthorizationURL</strong></a>(self, request_token<font color="#909090">=None</font>, callback_url<font color="#909090">=None</font>, extra_params<font color="#909090">=None</font>, include_scopes_in_callback<font color="#909090">=False</font>, scopes_param_prefix<font color="#909090">='oauth_token_scope'</font>, request_url<font color="#909090">='https://www.google.com/accounts/OAuthAuthorizeToken'</font>)</dt><dd><tt>Generates&nbsp;URL&nbsp;at&nbsp;which&nbsp;user&nbsp;will&nbsp;login&nbsp;to&nbsp;authorize&nbsp;the&nbsp;request&nbsp;token.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;request_token:&nbsp;gdata.auth.OAuthToken&nbsp;(optional)&nbsp;OAuth&nbsp;request&nbsp;token.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;not&nbsp;specified,&nbsp;then&nbsp;the&nbsp;current&nbsp;token&nbsp;will&nbsp;be&nbsp;used&nbsp;if&nbsp;it&nbsp;is&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;&lt;gdata.auth.OAuthToken&gt;,&nbsp;else&nbsp;it&nbsp;is&nbsp;found&nbsp;by&nbsp;looking&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;token_store&nbsp;by&nbsp;looking&nbsp;for&nbsp;a&nbsp;token&nbsp;for&nbsp;the&nbsp;current&nbsp;scope.&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;callback_url:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;URL&nbsp;user&nbsp;will&nbsp;be&nbsp;sent&nbsp;to&nbsp;after<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logging&nbsp;in&nbsp;and&nbsp;granting&nbsp;access.<br>
+&nbsp;&nbsp;extra_params:&nbsp;dict&nbsp;(optional)&nbsp;Additional&nbsp;parameters&nbsp;to&nbsp;be&nbsp;sent.<br>
+&nbsp;&nbsp;include_scopes_in_callback:&nbsp;Boolean&nbsp;(default=False)&nbsp;if&nbsp;set&nbsp;to&nbsp;True,&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'callback_url'&nbsp;is&nbsp;present,&nbsp;the&nbsp;'callback_url'&nbsp;will&nbsp;be&nbsp;modified&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include&nbsp;the&nbsp;scope(s)&nbsp;from&nbsp;the&nbsp;request&nbsp;token&nbsp;as&nbsp;a&nbsp;URL&nbsp;parameter.&nbsp;The<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key&nbsp;for&nbsp;the&nbsp;'callback'&nbsp;URL's&nbsp;scope&nbsp;parameter&nbsp;will&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OAUTH_SCOPE_URL_PARAM_NAME.&nbsp;The&nbsp;benefit&nbsp;of&nbsp;including&nbsp;the&nbsp;scope&nbsp;URL&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;parameter&nbsp;to&nbsp;the&nbsp;'callback'&nbsp;URL,&nbsp;is&nbsp;that&nbsp;the&nbsp;page&nbsp;which&nbsp;receives<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;OAuth&nbsp;token&nbsp;will&nbsp;be&nbsp;able&nbsp;to&nbsp;tell&nbsp;which&nbsp;URLs&nbsp;the&nbsp;token&nbsp;grants<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;access&nbsp;to.<br>
+&nbsp;&nbsp;scopes_param_prefix:&nbsp;string&nbsp;(default='oauth_token_scope')&nbsp;The&nbsp;URL<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameter&nbsp;key&nbsp;which&nbsp;maps&nbsp;to&nbsp;the&nbsp;list&nbsp;of&nbsp;valid&nbsp;scopes&nbsp;for&nbsp;the&nbsp;token.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;URL&nbsp;parameter&nbsp;will&nbsp;be&nbsp;included&nbsp;in&nbsp;the&nbsp;callback&nbsp;URL&nbsp;along&nbsp;with<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;scopes&nbsp;of&nbsp;the&nbsp;token&nbsp;as&nbsp;value&nbsp;if&nbsp;include_scopes_in_callback=True.<br>
+&nbsp;&nbsp;request_url:&nbsp;Authorization&nbsp;URL.&nbsp;The&nbsp;default&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'https://www.google.com/accounts/OAuthAuthorizeToken'.<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;string&nbsp;URL&nbsp;at&nbsp;which&nbsp;the&nbsp;user&nbsp;is&nbsp;required&nbsp;to&nbsp;login.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;NonOAuthToken&nbsp;if&nbsp;the&nbsp;user's&nbsp;request&nbsp;token&nbsp;is&nbsp;not&nbsp;an&nbsp;OAuth&nbsp;token&nbsp;or&nbsp;if&nbsp;a<br>
+&nbsp;&nbsp;request&nbsp;token&nbsp;was&nbsp;not&nbsp;available.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-Get"><strong>Get</strong></a>(self, uri, extra_headers<font color="#909090">=None</font>, redirects_remaining<font color="#909090">=4</font>, encoding<font color="#909090">='UTF-8'</font>, converter<font color="#909090">=None</font>)</dt><dd><tt><a href="gdata.service.html#Query">Query</a>&nbsp;the&nbsp;GData&nbsp;API&nbsp;with&nbsp;the&nbsp;given&nbsp;URI<br>
+&nbsp;<br>
+The&nbsp;uri&nbsp;is&nbsp;the&nbsp;portion&nbsp;of&nbsp;the&nbsp;URI&nbsp;after&nbsp;the&nbsp;server&nbsp;value&nbsp;<br>
+(ex:&nbsp;www.google.com).<br>
+&nbsp;<br>
+To&nbsp;perform&nbsp;a&nbsp;query&nbsp;against&nbsp;Google&nbsp;Base,&nbsp;set&nbsp;the&nbsp;server&nbsp;to&nbsp;<br>
+'base.google.com'&nbsp;and&nbsp;set&nbsp;the&nbsp;uri&nbsp;to&nbsp;'/base/feeds/...',&nbsp;where&nbsp;...&nbsp;is&nbsp;<br>
+your&nbsp;query.&nbsp;For&nbsp;example,&nbsp;to&nbsp;find&nbsp;snippets&nbsp;for&nbsp;all&nbsp;digital&nbsp;cameras&nbsp;uri&nbsp;<br>
+should&nbsp;be&nbsp;set&nbsp;to:&nbsp;'/base/feeds/snippets?bq=digital+camera'<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;uri:&nbsp;string&nbsp;The&nbsp;query&nbsp;in&nbsp;the&nbsp;form&nbsp;of&nbsp;a&nbsp;URI.&nbsp;Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'/base/feeds/snippets?bq=digital+camera'.<br>
+&nbsp;&nbsp;extra_headers:&nbsp;dictionary&nbsp;(optional)&nbsp;Extra&nbsp;HTTP&nbsp;headers&nbsp;to&nbsp;be&nbsp;included<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;GET&nbsp;request.&nbsp;These&nbsp;headers&nbsp;are&nbsp;in&nbsp;addition&nbsp;to&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;those&nbsp;stored&nbsp;in&nbsp;the&nbsp;client's&nbsp;additional_headers&nbsp;property.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;client&nbsp;automatically&nbsp;sets&nbsp;the&nbsp;Content-Type&nbsp;and&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authorization&nbsp;headers.<br>
+&nbsp;&nbsp;redirects_remaining:&nbsp;int&nbsp;(optional)&nbsp;Tracks&nbsp;the&nbsp;number&nbsp;of&nbsp;additional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redirects&nbsp;this&nbsp;method&nbsp;will&nbsp;allow.&nbsp;If&nbsp;the&nbsp;service&nbsp;object&nbsp;receives<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;redirect&nbsp;and&nbsp;remaining&nbsp;is&nbsp;0,&nbsp;it&nbsp;will&nbsp;not&nbsp;follow&nbsp;the&nbsp;redirect.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;was&nbsp;added&nbsp;to&nbsp;avoid&nbsp;infinite&nbsp;redirect&nbsp;loops.<br>
+&nbsp;&nbsp;encoding:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;character&nbsp;encoding&nbsp;for&nbsp;the&nbsp;server's<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.&nbsp;Default&nbsp;is&nbsp;UTF-8<br>
+&nbsp;&nbsp;converter:&nbsp;func&nbsp;(optional)&nbsp;A&nbsp;function&nbsp;which&nbsp;will&nbsp;transform<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;server's&nbsp;results&nbsp;before&nbsp;it&nbsp;is&nbsp;returned.&nbsp;Example:&nbsp;use&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GDataFeedFromString&nbsp;to&nbsp;parse&nbsp;the&nbsp;server&nbsp;response&nbsp;as&nbsp;if&nbsp;it<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;were&nbsp;a&nbsp;GDataFeed.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;If&nbsp;there&nbsp;is&nbsp;no&nbsp;ResultsTransformer&nbsp;specified&nbsp;in&nbsp;the&nbsp;call,&nbsp;a&nbsp;GDataFeed&nbsp;<br>
+&nbsp;&nbsp;or&nbsp;GDataEntry&nbsp;depending&nbsp;on&nbsp;which&nbsp;is&nbsp;sent&nbsp;from&nbsp;the&nbsp;server.&nbsp;If&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;response&nbsp;is&nbsp;niether&nbsp;a&nbsp;feed&nbsp;or&nbsp;entry&nbsp;and&nbsp;there&nbsp;is&nbsp;no&nbsp;ResultsTransformer,<br>
+&nbsp;&nbsp;return&nbsp;a&nbsp;string.&nbsp;If&nbsp;there&nbsp;is&nbsp;a&nbsp;ResultsTransformer,&nbsp;the&nbsp;returned&nbsp;value&nbsp;<br>
+&nbsp;&nbsp;will&nbsp;be&nbsp;that&nbsp;of&nbsp;the&nbsp;ResultsTransformer&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-GetAuthSubToken"><strong>GetAuthSubToken</strong></a>(self)</dt><dd><tt>Returns&nbsp;the&nbsp;AuthSub&nbsp;token&nbsp;as&nbsp;a&nbsp;string.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;token&nbsp;is&nbsp;an&nbsp;gdta.auth.AuthSubToken,&nbsp;the&nbsp;Authorization&nbsp;Label<br>
+("AuthSub&nbsp;token")&nbsp;is&nbsp;removed.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;examines&nbsp;the&nbsp;current_token&nbsp;to&nbsp;see&nbsp;if&nbsp;it&nbsp;is&nbsp;an&nbsp;AuthSubToken<br>
+or&nbsp;SecureAuthSubToken.&nbsp;If&nbsp;not,&nbsp;it&nbsp;searches&nbsp;the&nbsp;token_store&nbsp;for&nbsp;a&nbsp;token<br>
+which&nbsp;matches&nbsp;the&nbsp;current&nbsp;scope.<br>
+&nbsp;<br>
+The&nbsp;current&nbsp;scope&nbsp;is&nbsp;determined&nbsp;by&nbsp;the&nbsp;service&nbsp;name&nbsp;string&nbsp;member.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;If&nbsp;the&nbsp;current_token&nbsp;is&nbsp;set&nbsp;to&nbsp;an&nbsp;AuthSubToken/SecureAuthSubToken,<br>
+&nbsp;&nbsp;return&nbsp;the&nbsp;token&nbsp;string.&nbsp;If&nbsp;there&nbsp;is&nbsp;no&nbsp;current_token,&nbsp;a&nbsp;token&nbsp;string<br>
+&nbsp;&nbsp;for&nbsp;a&nbsp;token&nbsp;which&nbsp;matches&nbsp;the&nbsp;service&nbsp;object's&nbsp;default&nbsp;scope&nbsp;is&nbsp;returned.<br>
+&nbsp;&nbsp;If&nbsp;there&nbsp;are&nbsp;no&nbsp;tokens&nbsp;valid&nbsp;for&nbsp;the&nbsp;scope,&nbsp;returns&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-GetClientLoginToken"><strong>GetClientLoginToken</strong></a>(self)</dt><dd><tt>Returns&nbsp;the&nbsp;token&nbsp;string&nbsp;for&nbsp;the&nbsp;current&nbsp;token&nbsp;or&nbsp;a&nbsp;token&nbsp;matching&nbsp;the&nbsp;<br>
+service&nbsp;scope.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;current_token&nbsp;is&nbsp;a&nbsp;ClientLoginToken,&nbsp;the&nbsp;token&nbsp;string&nbsp;for&nbsp;<br>
+the&nbsp;current&nbsp;token&nbsp;is&nbsp;returned.&nbsp;If&nbsp;the&nbsp;current_token&nbsp;is&nbsp;not&nbsp;set,&nbsp;this&nbsp;method<br>
+searches&nbsp;for&nbsp;a&nbsp;token&nbsp;in&nbsp;the&nbsp;token_store&nbsp;which&nbsp;is&nbsp;valid&nbsp;for&nbsp;the&nbsp;service&nbsp;<br>
+object's&nbsp;current&nbsp;scope.<br>
+&nbsp;<br>
+The&nbsp;current&nbsp;scope&nbsp;is&nbsp;determined&nbsp;by&nbsp;the&nbsp;service&nbsp;name&nbsp;string&nbsp;member.<br>
+The&nbsp;token&nbsp;string&nbsp;is&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;Authorization&nbsp;header,&nbsp;it&nbsp;doesn&nbsp;not<br>
+include&nbsp;the&nbsp;ClientLogin&nbsp;label.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-GetEntry"><strong>GetEntry</strong></a>(self, uri, extra_headers<font color="#909090">=None</font>)</dt><dd><tt><a href="gdata.service.html#Query">Query</a>&nbsp;the&nbsp;GData&nbsp;API&nbsp;with&nbsp;the&nbsp;given&nbsp;URI&nbsp;and&nbsp;receive&nbsp;an&nbsp;Entry.<br>
+&nbsp;<br>
+See&nbsp;also&nbsp;documentation&nbsp;for&nbsp;gdata.service.Get<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;uri:&nbsp;string&nbsp;The&nbsp;query&nbsp;in&nbsp;the&nbsp;form&nbsp;of&nbsp;a&nbsp;URI.&nbsp;Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'/base/feeds/snippets?bq=digital+camera'.<br>
+&nbsp;&nbsp;extra_headers:&nbsp;dictionary&nbsp;(optional)&nbsp;Extra&nbsp;HTTP&nbsp;headers&nbsp;to&nbsp;be&nbsp;included<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;GET&nbsp;request.&nbsp;These&nbsp;headers&nbsp;are&nbsp;in&nbsp;addition&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;those&nbsp;stored&nbsp;in&nbsp;the&nbsp;client's&nbsp;additional_headers&nbsp;property.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;client&nbsp;automatically&nbsp;sets&nbsp;the&nbsp;Content-Type&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authorization&nbsp;headers.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;GDataEntry&nbsp;built&nbsp;from&nbsp;the&nbsp;XML&nbsp;in&nbsp;the&nbsp;server's&nbsp;response.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-GetFeed"><strong>GetFeed</strong></a>(self, uri, extra_headers<font color="#909090">=None</font>, converter<font color="#909090">=&lt;function GDataFeedFromString at 0x7f6b5b849488&gt;</font>)</dt><dd><tt><a href="gdata.service.html#Query">Query</a>&nbsp;the&nbsp;GData&nbsp;API&nbsp;with&nbsp;the&nbsp;given&nbsp;URI&nbsp;and&nbsp;receive&nbsp;a&nbsp;Feed.<br>
+&nbsp;<br>
+See&nbsp;also&nbsp;documentation&nbsp;for&nbsp;gdata.service.Get<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;uri:&nbsp;string&nbsp;The&nbsp;query&nbsp;in&nbsp;the&nbsp;form&nbsp;of&nbsp;a&nbsp;URI.&nbsp;Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'/base/feeds/snippets?bq=digital+camera'.<br>
+&nbsp;&nbsp;extra_headers:&nbsp;dictionary&nbsp;(optional)&nbsp;Extra&nbsp;HTTP&nbsp;headers&nbsp;to&nbsp;be&nbsp;included<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;GET&nbsp;request.&nbsp;These&nbsp;headers&nbsp;are&nbsp;in&nbsp;addition&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;those&nbsp;stored&nbsp;in&nbsp;the&nbsp;client's&nbsp;additional_headers&nbsp;property.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;client&nbsp;automatically&nbsp;sets&nbsp;the&nbsp;Content-Type&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authorization&nbsp;headers.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;GDataFeed&nbsp;built&nbsp;from&nbsp;the&nbsp;XML&nbsp;in&nbsp;the&nbsp;server's&nbsp;response.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-GetMedia"><strong>GetMedia</strong></a>(self, uri, extra_headers<font color="#909090">=None</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;MediaSource&nbsp;containing&nbsp;media&nbsp;and&nbsp;its&nbsp;metadata&nbsp;from&nbsp;the&nbsp;given<br>
+URI&nbsp;string.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-GetNext"><strong>GetNext</strong></a>(self, feed)</dt><dd><tt>Requests&nbsp;the&nbsp;next&nbsp;'page'&nbsp;of&nbsp;results&nbsp;in&nbsp;the&nbsp;feed.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;uses&nbsp;the&nbsp;feed's&nbsp;next&nbsp;link&nbsp;to&nbsp;request&nbsp;an&nbsp;additional&nbsp;feed<br>
+and&nbsp;uses&nbsp;the&nbsp;class&nbsp;of&nbsp;the&nbsp;feed&nbsp;to&nbsp;convert&nbsp;the&nbsp;results&nbsp;of&nbsp;the&nbsp;GET&nbsp;request.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;feed:&nbsp;atom.Feed&nbsp;or&nbsp;a&nbsp;subclass.&nbsp;The&nbsp;feed&nbsp;should&nbsp;contain&nbsp;a&nbsp;next&nbsp;link&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;type&nbsp;of&nbsp;the&nbsp;feed&nbsp;will&nbsp;be&nbsp;applied&nbsp;to&nbsp;the&nbsp;results&nbsp;from&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server.&nbsp;The&nbsp;new&nbsp;feed&nbsp;which&nbsp;is&nbsp;returned&nbsp;will&nbsp;be&nbsp;of&nbsp;the&nbsp;same&nbsp;class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;this&nbsp;feed&nbsp;which&nbsp;was&nbsp;passed&nbsp;in.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;A&nbsp;new&nbsp;feed&nbsp;representing&nbsp;the&nbsp;next&nbsp;set&nbsp;of&nbsp;results&nbsp;in&nbsp;the&nbsp;server's&nbsp;feed.<br>
+&nbsp;&nbsp;The&nbsp;type&nbsp;of&nbsp;this&nbsp;feed&nbsp;will&nbsp;match&nbsp;that&nbsp;of&nbsp;the&nbsp;feed&nbsp;argument.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-GetOAuthInputParameters"><strong>GetOAuthInputParameters</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CodesearchService-Post"><strong>Post</strong></a>(self, data, uri, extra_headers<font color="#909090">=None</font>, url_params<font color="#909090">=None</font>, escape_params<font color="#909090">=True</font>, redirects_remaining<font color="#909090">=4</font>, media_source<font color="#909090">=None</font>, converter<font color="#909090">=None</font>)</dt><dd><tt>Insert&nbsp;or&nbsp;update&nbsp;&nbsp;data&nbsp;into&nbsp;a&nbsp;GData&nbsp;service&nbsp;at&nbsp;the&nbsp;given&nbsp;URI.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;data:&nbsp;string,&nbsp;ElementTree._Element,&nbsp;atom.Entry,&nbsp;or&nbsp;gdata.GDataEntry&nbsp;The<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;XML&nbsp;to&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;uri.<br>
+&nbsp;&nbsp;uri:&nbsp;string&nbsp;The&nbsp;location&nbsp;(feed)&nbsp;to&nbsp;which&nbsp;the&nbsp;data&nbsp;should&nbsp;be&nbsp;inserted.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:&nbsp;'/base/feeds/items'.<br>
+&nbsp;&nbsp;extra_headers:&nbsp;dict&nbsp;(optional)&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;are&nbsp;to&nbsp;be&nbsp;included.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;client&nbsp;automatically&nbsp;sets&nbsp;the&nbsp;Content-Type,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authorization,&nbsp;and&nbsp;Content-Length&nbsp;headers.<br>
+&nbsp;&nbsp;url_params:&nbsp;dict&nbsp;(optional)&nbsp;Additional&nbsp;URL&nbsp;parameters&nbsp;to&nbsp;be&nbsp;included<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;URI.&nbsp;These&nbsp;are&nbsp;translated&nbsp;into&nbsp;query&nbsp;arguments<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;form&nbsp;'&amp;dict_key=value&amp;...'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:&nbsp;{'max-results':&nbsp;'250'}&nbsp;becomes&nbsp;&amp;max-results=250<br>
+&nbsp;&nbsp;escape_params:&nbsp;boolean&nbsp;(optional)&nbsp;If&nbsp;false,&nbsp;the&nbsp;calling&nbsp;code&nbsp;has&nbsp;already<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ensured&nbsp;that&nbsp;the&nbsp;query&nbsp;will&nbsp;form&nbsp;a&nbsp;valid&nbsp;URL&nbsp;(all<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reserved&nbsp;characters&nbsp;have&nbsp;been&nbsp;escaped).&nbsp;If&nbsp;true,&nbsp;this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method&nbsp;will&nbsp;escape&nbsp;the&nbsp;query&nbsp;and&nbsp;any&nbsp;URL&nbsp;parameters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;provided.<br>
+&nbsp;&nbsp;media_source:&nbsp;MediaSource&nbsp;(optional)&nbsp;Container&nbsp;for&nbsp;the&nbsp;media&nbsp;to&nbsp;be&nbsp;sent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;along&nbsp;with&nbsp;the&nbsp;entry,&nbsp;if&nbsp;provided.<br>
+&nbsp;&nbsp;converter:&nbsp;func&nbsp;(optional)&nbsp;A&nbsp;function&nbsp;which&nbsp;will&nbsp;be&nbsp;executed&nbsp;on&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server's&nbsp;response.&nbsp;Often&nbsp;this&nbsp;is&nbsp;a&nbsp;function&nbsp;like<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GDataEntryFromString&nbsp;which&nbsp;will&nbsp;parse&nbsp;the&nbsp;body&nbsp;of&nbsp;the&nbsp;server's<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response&nbsp;and&nbsp;return&nbsp;a&nbsp;GDataEntry.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;If&nbsp;the&nbsp;post&nbsp;succeeded,&nbsp;this&nbsp;method&nbsp;will&nbsp;return&nbsp;a&nbsp;GDataFeed,&nbsp;GDataEntry,<br>
+&nbsp;&nbsp;or&nbsp;the&nbsp;results&nbsp;of&nbsp;running&nbsp;converter&nbsp;on&nbsp;the&nbsp;server's&nbsp;result&nbsp;body&nbsp;(if<br>
+&nbsp;&nbsp;converter&nbsp;was&nbsp;specified).</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-PostOrPut"><strong>PostOrPut</strong></a>(self, verb, data, uri, extra_headers<font color="#909090">=None</font>, url_params<font color="#909090">=None</font>, escape_params<font color="#909090">=True</font>, redirects_remaining<font color="#909090">=4</font>, media_source<font color="#909090">=None</font>, converter<font color="#909090">=None</font>)</dt><dd><tt>Insert&nbsp;data&nbsp;into&nbsp;a&nbsp;GData&nbsp;service&nbsp;at&nbsp;the&nbsp;given&nbsp;URI.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;verb:&nbsp;string,&nbsp;either&nbsp;'POST'&nbsp;or&nbsp;'PUT'<br>
+&nbsp;&nbsp;data:&nbsp;string,&nbsp;ElementTree._Element,&nbsp;atom.Entry,&nbsp;or&nbsp;gdata.GDataEntry&nbsp;The<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;XML&nbsp;to&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;uri.&nbsp;<br>
+&nbsp;&nbsp;uri:&nbsp;string&nbsp;The&nbsp;location&nbsp;(feed)&nbsp;to&nbsp;which&nbsp;the&nbsp;data&nbsp;should&nbsp;be&nbsp;inserted.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:&nbsp;'/base/feeds/items'.&nbsp;<br>
+&nbsp;&nbsp;extra_headers:&nbsp;dict&nbsp;(optional)&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;are&nbsp;to&nbsp;be&nbsp;included.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;client&nbsp;automatically&nbsp;sets&nbsp;the&nbsp;Content-Type,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authorization,&nbsp;and&nbsp;Content-Length&nbsp;headers.<br>
+&nbsp;&nbsp;url_params:&nbsp;dict&nbsp;(optional)&nbsp;Additional&nbsp;URL&nbsp;parameters&nbsp;to&nbsp;be&nbsp;included<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;URI.&nbsp;These&nbsp;are&nbsp;translated&nbsp;into&nbsp;query&nbsp;arguments<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;form&nbsp;'&amp;dict_key=value&amp;...'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:&nbsp;{'max-results':&nbsp;'250'}&nbsp;becomes&nbsp;&amp;max-results=250<br>
+&nbsp;&nbsp;escape_params:&nbsp;boolean&nbsp;(optional)&nbsp;If&nbsp;false,&nbsp;the&nbsp;calling&nbsp;code&nbsp;has&nbsp;already<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ensured&nbsp;that&nbsp;the&nbsp;query&nbsp;will&nbsp;form&nbsp;a&nbsp;valid&nbsp;URL&nbsp;(all<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reserved&nbsp;characters&nbsp;have&nbsp;been&nbsp;escaped).&nbsp;If&nbsp;true,&nbsp;this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method&nbsp;will&nbsp;escape&nbsp;the&nbsp;query&nbsp;and&nbsp;any&nbsp;URL&nbsp;parameters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;provided.<br>
+&nbsp;&nbsp;media_source:&nbsp;MediaSource&nbsp;(optional)&nbsp;Container&nbsp;for&nbsp;the&nbsp;media&nbsp;to&nbsp;be&nbsp;sent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;along&nbsp;with&nbsp;the&nbsp;entry,&nbsp;if&nbsp;provided.<br>
+&nbsp;&nbsp;converter:&nbsp;func&nbsp;(optional)&nbsp;A&nbsp;function&nbsp;which&nbsp;will&nbsp;be&nbsp;executed&nbsp;on&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server's&nbsp;response.&nbsp;Often&nbsp;this&nbsp;is&nbsp;a&nbsp;function&nbsp;like&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GDataEntryFromString&nbsp;which&nbsp;will&nbsp;parse&nbsp;the&nbsp;body&nbsp;of&nbsp;the&nbsp;server's&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response&nbsp;and&nbsp;return&nbsp;a&nbsp;GDataEntry.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;If&nbsp;the&nbsp;post&nbsp;succeeded,&nbsp;this&nbsp;method&nbsp;will&nbsp;return&nbsp;a&nbsp;GDataFeed,&nbsp;GDataEntry,<br>
+&nbsp;&nbsp;or&nbsp;the&nbsp;results&nbsp;of&nbsp;running&nbsp;converter&nbsp;on&nbsp;the&nbsp;server's&nbsp;result&nbsp;body&nbsp;(if<br>
+&nbsp;&nbsp;converter&nbsp;was&nbsp;specified).</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-ProgrammaticLogin"><strong>ProgrammaticLogin</strong></a>(self, captcha_token<font color="#909090">=None</font>, captcha_response<font color="#909090">=None</font>)</dt><dd><tt>Authenticates&nbsp;the&nbsp;user&nbsp;and&nbsp;sets&nbsp;the&nbsp;GData&nbsp;Auth&nbsp;token.<br>
+&nbsp;<br>
+Login&nbsp;retreives&nbsp;a&nbsp;temporary&nbsp;auth&nbsp;token&nbsp;which&nbsp;must&nbsp;be&nbsp;used&nbsp;with&nbsp;all<br>
+requests&nbsp;to&nbsp;GData&nbsp;services.&nbsp;The&nbsp;auth&nbsp;token&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;GData&nbsp;client<br>
+object.<br>
+&nbsp;<br>
+Login&nbsp;is&nbsp;also&nbsp;used&nbsp;to&nbsp;respond&nbsp;to&nbsp;a&nbsp;captcha&nbsp;challenge.&nbsp;If&nbsp;the&nbsp;user's&nbsp;login<br>
+attempt&nbsp;failed&nbsp;with&nbsp;a&nbsp;CaptchaRequired&nbsp;error,&nbsp;the&nbsp;user&nbsp;can&nbsp;respond&nbsp;by<br>
+calling&nbsp;Login&nbsp;with&nbsp;the&nbsp;captcha&nbsp;token&nbsp;and&nbsp;the&nbsp;answer&nbsp;to&nbsp;the&nbsp;challenge.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;captcha_token:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;identifier&nbsp;for&nbsp;the&nbsp;captcha&nbsp;challenge<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;was&nbsp;presented&nbsp;to&nbsp;the&nbsp;user.<br>
+&nbsp;&nbsp;captcha_response:&nbsp;string&nbsp;(optional)&nbsp;The&nbsp;user's&nbsp;answer&nbsp;to&nbsp;the&nbsp;captch&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;challenge.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;CaptchaRequired&nbsp;if&nbsp;the&nbsp;login&nbsp;service&nbsp;will&nbsp;require&nbsp;a&nbsp;captcha&nbsp;response<br>
+&nbsp;&nbsp;BadAuthentication&nbsp;if&nbsp;the&nbsp;login&nbsp;service&nbsp;rejected&nbsp;the&nbsp;username&nbsp;or&nbsp;password<br>
+&nbsp;&nbsp;Error&nbsp;if&nbsp;the&nbsp;login&nbsp;service&nbsp;responded&nbsp;with&nbsp;a&nbsp;403&nbsp;different&nbsp;from&nbsp;the&nbsp;above</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-Put"><strong>Put</strong></a>(self, data, uri, extra_headers<font color="#909090">=None</font>, url_params<font color="#909090">=None</font>, escape_params<font color="#909090">=True</font>, redirects_remaining<font color="#909090">=3</font>, media_source<font color="#909090">=None</font>, converter<font color="#909090">=None</font>)</dt><dd><tt>Updates&nbsp;an&nbsp;entry&nbsp;at&nbsp;the&nbsp;given&nbsp;URI.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;data:&nbsp;string,&nbsp;ElementTree._Element,&nbsp;or&nbsp;xml_wrapper.ElementWrapper&nbsp;The&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;XML&nbsp;containing&nbsp;the&nbsp;updated&nbsp;data.<br>
+&nbsp;&nbsp;uri:&nbsp;string&nbsp;A&nbsp;URI&nbsp;indicating&nbsp;entry&nbsp;to&nbsp;which&nbsp;the&nbsp;update&nbsp;will&nbsp;be&nbsp;applied.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:&nbsp;'/base/feeds/items/ITEM-ID'<br>
+&nbsp;&nbsp;extra_headers:&nbsp;dict&nbsp;(optional)&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;are&nbsp;to&nbsp;be&nbsp;included.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;client&nbsp;automatically&nbsp;sets&nbsp;the&nbsp;Content-Type,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authorization,&nbsp;and&nbsp;Content-Length&nbsp;headers.<br>
+&nbsp;&nbsp;url_params:&nbsp;dict&nbsp;(optional)&nbsp;Additional&nbsp;URL&nbsp;parameters&nbsp;to&nbsp;be&nbsp;included<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;URI.&nbsp;These&nbsp;are&nbsp;translated&nbsp;into&nbsp;query&nbsp;arguments<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;form&nbsp;'&amp;dict_key=value&amp;...'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example:&nbsp;{'max-results':&nbsp;'250'}&nbsp;becomes&nbsp;&amp;max-results=250<br>
+&nbsp;&nbsp;escape_params:&nbsp;boolean&nbsp;(optional)&nbsp;If&nbsp;false,&nbsp;the&nbsp;calling&nbsp;code&nbsp;has&nbsp;already<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ensured&nbsp;that&nbsp;the&nbsp;query&nbsp;will&nbsp;form&nbsp;a&nbsp;valid&nbsp;URL&nbsp;(all<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reserved&nbsp;characters&nbsp;have&nbsp;been&nbsp;escaped).&nbsp;If&nbsp;true,&nbsp;this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method&nbsp;will&nbsp;escape&nbsp;the&nbsp;query&nbsp;and&nbsp;any&nbsp;URL&nbsp;parameters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;provided.<br>
+&nbsp;&nbsp;converter:&nbsp;func&nbsp;(optional)&nbsp;A&nbsp;function&nbsp;which&nbsp;will&nbsp;be&nbsp;executed&nbsp;on&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server's&nbsp;response.&nbsp;Often&nbsp;this&nbsp;is&nbsp;a&nbsp;function&nbsp;like&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GDataEntryFromString&nbsp;which&nbsp;will&nbsp;parse&nbsp;the&nbsp;body&nbsp;of&nbsp;the&nbsp;server's&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response&nbsp;and&nbsp;return&nbsp;a&nbsp;GDataEntry.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;If&nbsp;the&nbsp;put&nbsp;succeeded,&nbsp;this&nbsp;method&nbsp;will&nbsp;return&nbsp;a&nbsp;GDataFeed,&nbsp;GDataEntry,<br>
+&nbsp;&nbsp;or&nbsp;the&nbsp;results&nbsp;of&nbsp;running&nbsp;converter&nbsp;on&nbsp;the&nbsp;server's&nbsp;result&nbsp;body&nbsp;(if<br>
+&nbsp;&nbsp;converter&nbsp;was&nbsp;specified).</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-RevokeAuthSubToken"><strong>RevokeAuthSubToken</strong></a>(self)</dt><dd><tt>Revokes&nbsp;an&nbsp;existing&nbsp;AuthSub&nbsp;token.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;NonAuthSubToken&nbsp;if&nbsp;the&nbsp;user's&nbsp;auth&nbsp;token&nbsp;is&nbsp;not&nbsp;an&nbsp;AuthSub&nbsp;token</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-RevokeOAuthToken"><strong>RevokeOAuthToken</strong></a>(self, request_url<font color="#909090">='https://www.google.com/accounts/AuthSubRevokeToken'</font>)</dt><dd><tt>Revokes&nbsp;an&nbsp;existing&nbsp;OAuth&nbsp;token.<br>
+&nbsp;<br>
+request_url:&nbsp;Token&nbsp;revoke&nbsp;URL.&nbsp;The&nbsp;default&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'https://www.google.com/accounts/AuthSubRevokeToken'.<br>
+Raises:<br>
+&nbsp;&nbsp;NonOAuthToken&nbsp;if&nbsp;the&nbsp;user's&nbsp;auth&nbsp;token&nbsp;is&nbsp;not&nbsp;an&nbsp;OAuth&nbsp;token.<br>
+&nbsp;&nbsp;RevokingOAuthTokenFailed&nbsp;if&nbsp;request&nbsp;for&nbsp;revoking&nbsp;an&nbsp;OAuth&nbsp;token&nbsp;failed.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-SetAuthSubToken"><strong>SetAuthSubToken</strong></a>(self, token, scopes<font color="#909090">=None</font>, rsa_key<font color="#909090">=None</font>)</dt><dd><tt>Sets&nbsp;the&nbsp;token&nbsp;sent&nbsp;in&nbsp;requests&nbsp;to&nbsp;an&nbsp;AuthSub&nbsp;token.<br>
+&nbsp;<br>
+Sets&nbsp;the&nbsp;current_token&nbsp;and&nbsp;attempts&nbsp;to&nbsp;add&nbsp;the&nbsp;token&nbsp;to&nbsp;the&nbsp;token_store.<br>
+&nbsp;<br>
+Only&nbsp;use&nbsp;this&nbsp;method&nbsp;if&nbsp;you&nbsp;have&nbsp;received&nbsp;a&nbsp;token&nbsp;from&nbsp;the&nbsp;AuthSub<br>
+service.&nbsp;The&nbsp;auth&nbsp;token&nbsp;is&nbsp;set&nbsp;automatically&nbsp;when&nbsp;<a href="#CodesearchService-UpgradeToSessionToken">UpgradeToSessionToken</a>()<br>
+is&nbsp;used.&nbsp;See&nbsp;documentation&nbsp;for&nbsp;Google&nbsp;AuthSub&nbsp;here:<br>
+<a href="http://code.google.com/apis/accounts/AuthForWebApps.html">http://code.google.com/apis/accounts/AuthForWebApps.html</a>&nbsp;<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;token:&nbsp;gdata.auth.AuthSubToken&nbsp;or&nbsp;gdata.auth.SecureAuthSubToken&nbsp;or&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;token&nbsp;returned&nbsp;by&nbsp;the&nbsp;AuthSub&nbsp;service.&nbsp;If&nbsp;the&nbsp;token&nbsp;is&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AuthSubToken&nbsp;or&nbsp;SecureAuthSubToken,&nbsp;the&nbsp;scope&nbsp;information&nbsp;stored&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;token&nbsp;is&nbsp;used.&nbsp;If&nbsp;the&nbsp;token&nbsp;is&nbsp;a&nbsp;string,&nbsp;the&nbsp;scopes&nbsp;parameter&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;used&nbsp;to&nbsp;determine&nbsp;the&nbsp;valid&nbsp;scopes.<br>
+&nbsp;scopes:&nbsp;list&nbsp;of&nbsp;URLs&nbsp;for&nbsp;which&nbsp;the&nbsp;token&nbsp;is&nbsp;valid.&nbsp;This&nbsp;is&nbsp;only&nbsp;used<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;the&nbsp;token&nbsp;parameter&nbsp;is&nbsp;a&nbsp;string.<br>
+&nbsp;rsa_key:&nbsp;string&nbsp;(optional)&nbsp;Private&nbsp;key&nbsp;required&nbsp;for&nbsp;RSA_SHA1&nbsp;signature<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method.&nbsp;&nbsp;This&nbsp;parameter&nbsp;is&nbsp;necessary&nbsp;if&nbsp;the&nbsp;token&nbsp;is&nbsp;a&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;representing&nbsp;a&nbsp;secure&nbsp;token.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-SetClientLoginToken"><strong>SetClientLoginToken</strong></a>(self, token, scopes<font color="#909090">=None</font>)</dt><dd><tt>Sets&nbsp;the&nbsp;token&nbsp;sent&nbsp;in&nbsp;requests&nbsp;to&nbsp;a&nbsp;ClientLogin&nbsp;token.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;sets&nbsp;the&nbsp;current_token&nbsp;to&nbsp;a&nbsp;new&nbsp;ClientLoginToken&nbsp;and&nbsp;it&nbsp;<br>
+also&nbsp;attempts&nbsp;to&nbsp;add&nbsp;the&nbsp;ClientLoginToken&nbsp;to&nbsp;the&nbsp;token_store.<br>
+&nbsp;<br>
+Only&nbsp;use&nbsp;this&nbsp;method&nbsp;if&nbsp;you&nbsp;have&nbsp;received&nbsp;a&nbsp;token&nbsp;from&nbsp;the&nbsp;ClientLogin<br>
+service.&nbsp;The&nbsp;auth_token&nbsp;is&nbsp;set&nbsp;automatically&nbsp;when&nbsp;<a href="#CodesearchService-ProgrammaticLogin">ProgrammaticLogin</a>()<br>
+is&nbsp;used.&nbsp;See&nbsp;documentation&nbsp;for&nbsp;Google&nbsp;ClientLogin&nbsp;here:<br>
+<a href="http://code.google.com/apis/accounts/docs/AuthForInstalledApps.html">http://code.google.com/apis/accounts/docs/AuthForInstalledApps.html</a><br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;token:&nbsp;string&nbsp;or&nbsp;instance&nbsp;of&nbsp;a&nbsp;ClientLoginToken.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-SetOAuthInputParameters"><strong>SetOAuthInputParameters</strong></a>(self, signature_method, consumer_key, consumer_secret<font color="#909090">=None</font>, rsa_key<font color="#909090">=None</font>, two_legged_oauth<font color="#909090">=False</font>, requestor_id<font color="#909090">=None</font>)</dt><dd><tt>Sets&nbsp;parameters&nbsp;required&nbsp;for&nbsp;using&nbsp;OAuth&nbsp;authentication&nbsp;mechanism.<br>
+&nbsp;<br>
+NOTE:&nbsp;Though&nbsp;consumer_secret&nbsp;and&nbsp;rsa_key&nbsp;are&nbsp;optional,&nbsp;either&nbsp;of&nbsp;the&nbsp;two<br>
+is&nbsp;required&nbsp;depending&nbsp;on&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;signature_method.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;signature_method:&nbsp;class&nbsp;which&nbsp;provides&nbsp;implementation&nbsp;for&nbsp;strategy&nbsp;class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;oauth.oauth.OAuthSignatureMethod.&nbsp;Signature&nbsp;method&nbsp;to&nbsp;be&nbsp;used&nbsp;for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signing&nbsp;each&nbsp;request.&nbsp;Valid&nbsp;implementations&nbsp;are&nbsp;provided&nbsp;as&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constants&nbsp;defined&nbsp;by&nbsp;gdata.auth.OAuthSignatureMethod.&nbsp;Currently<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;they&nbsp;are&nbsp;gdata.auth.OAuthSignatureMethod.RSA_SHA1&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gdata.auth.OAuthSignatureMethod.HMAC_SHA1<br>
+&nbsp;&nbsp;consumer_key:&nbsp;string&nbsp;Domain&nbsp;identifying&nbsp;third_party&nbsp;web&nbsp;application.<br>
+&nbsp;&nbsp;consumer_secret:&nbsp;string&nbsp;(optional)&nbsp;Secret&nbsp;generated&nbsp;during&nbsp;registration.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Required&nbsp;only&nbsp;for&nbsp;HMAC_SHA1&nbsp;signature&nbsp;method.<br>
+&nbsp;&nbsp;rsa_key:&nbsp;string&nbsp;(optional)&nbsp;Private&nbsp;key&nbsp;required&nbsp;for&nbsp;RSA_SHA1&nbsp;signature<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;method.<br>
+&nbsp;&nbsp;two_legged_oauth:&nbsp;boolean&nbsp;(optional)&nbsp;Enables&nbsp;two-legged&nbsp;OAuth&nbsp;process.<br>
+&nbsp;&nbsp;requestor_id:&nbsp;string&nbsp;(optional)&nbsp;User&nbsp;email&nbsp;adress&nbsp;to&nbsp;make&nbsp;requests&nbsp;on<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;their&nbsp;behalf.&nbsp;&nbsp;This&nbsp;parameter&nbsp;should&nbsp;only&nbsp;be&nbsp;set&nbsp;when&nbsp;two_legged_oauth<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;True.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-SetOAuthToken"><strong>SetOAuthToken</strong></a>(self, oauth_token)</dt><dd><tt>Attempts&nbsp;to&nbsp;set&nbsp;the&nbsp;current&nbsp;token&nbsp;and&nbsp;add&nbsp;it&nbsp;to&nbsp;the&nbsp;token&nbsp;store.<br>
+&nbsp;<br>
+The&nbsp;oauth_token&nbsp;can&nbsp;be&nbsp;any&nbsp;OAuth&nbsp;token&nbsp;i.e.&nbsp;unauthorized&nbsp;request&nbsp;token,<br>
+authorized&nbsp;request&nbsp;token&nbsp;or&nbsp;access&nbsp;token.<br>
+This&nbsp;method&nbsp;also&nbsp;attempts&nbsp;to&nbsp;add&nbsp;the&nbsp;token&nbsp;to&nbsp;the&nbsp;token&nbsp;store.<br>
+Use&nbsp;this&nbsp;method&nbsp;any&nbsp;time&nbsp;you&nbsp;want&nbsp;the&nbsp;current&nbsp;token&nbsp;to&nbsp;point&nbsp;to&nbsp;the<br>
+oauth_token&nbsp;passed.&nbsp;For&nbsp;e.g.&nbsp;call&nbsp;this&nbsp;method&nbsp;with&nbsp;the&nbsp;request&nbsp;token<br>
+you&nbsp;receive&nbsp;from&nbsp;FetchOAuthRequestToken.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;request_token:&nbsp;gdata.auth.OAuthToken&nbsp;OAuth&nbsp;request&nbsp;token.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-UpgradeToOAuthAccessToken"><strong>UpgradeToOAuthAccessToken</strong></a>(self, authorized_request_token<font color="#909090">=None</font>, request_url<font color="#909090">='https://www.google.com/accounts/OAuthGetAccessToken'</font>, oauth_version<font color="#909090">='1.0'</font>, oauth_verifier<font color="#909090">=None</font>)</dt><dd><tt>Upgrades&nbsp;the&nbsp;authorized&nbsp;request&nbsp;token&nbsp;to&nbsp;an&nbsp;access&nbsp;token&nbsp;and&nbsp;returns&nbsp;it<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;authorized_request_token:&nbsp;gdata.auth.OAuthToken&nbsp;(optional)&nbsp;OAuth&nbsp;request<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;token.&nbsp;If&nbsp;not&nbsp;specified,&nbsp;then&nbsp;the&nbsp;current&nbsp;token&nbsp;will&nbsp;be&nbsp;used&nbsp;if&nbsp;it&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;type&nbsp;&lt;gdata.auth.OAuthToken&gt;,&nbsp;else&nbsp;it&nbsp;is&nbsp;found&nbsp;by&nbsp;looking&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;token_store&nbsp;by&nbsp;looking&nbsp;for&nbsp;a&nbsp;token&nbsp;for&nbsp;the&nbsp;current&nbsp;scope.<br>
+&nbsp;&nbsp;request_url:&nbsp;Access&nbsp;token&nbsp;URL.&nbsp;The&nbsp;default&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'https://www.google.com/accounts/OAuthGetAccessToken'.<br>
+&nbsp;&nbsp;oauth_version:&nbsp;str&nbsp;(default='1.0')&nbsp;oauth_version&nbsp;parameter.&nbsp;All&nbsp;other<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'oauth_'&nbsp;parameters&nbsp;are&nbsp;added&nbsp;by&nbsp;default.&nbsp;This&nbsp;parameter&nbsp;too,&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;added&nbsp;by&nbsp;default&nbsp;but&nbsp;here&nbsp;you&nbsp;can&nbsp;override&nbsp;it's&nbsp;value.<br>
+&nbsp;&nbsp;oauth_verifier:&nbsp;str&nbsp;(optional)&nbsp;If&nbsp;present,&nbsp;it&nbsp;is&nbsp;assumed&nbsp;that&nbsp;the&nbsp;client<br>
+&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;use&nbsp;the&nbsp;OAuth&nbsp;v1.0a&nbsp;protocol&nbsp;which&nbsp;includes&nbsp;passing&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;oauth_verifier&nbsp;(as&nbsp;returned&nbsp;by&nbsp;the&nbsp;SP)&nbsp;in&nbsp;the&nbsp;access&nbsp;token&nbsp;step.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;Access&nbsp;token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;NonOAuthToken&nbsp;if&nbsp;the&nbsp;user's&nbsp;authorized&nbsp;request&nbsp;token&nbsp;is&nbsp;not&nbsp;an&nbsp;OAuth<br>
+&nbsp;&nbsp;token&nbsp;or&nbsp;if&nbsp;an&nbsp;authorized&nbsp;request&nbsp;token&nbsp;was&nbsp;not&nbsp;available.<br>
+&nbsp;&nbsp;TokenUpgradeFailed&nbsp;if&nbsp;the&nbsp;server&nbsp;responded&nbsp;to&nbsp;the&nbsp;request&nbsp;with&nbsp;an&nbsp;<br>
+&nbsp;&nbsp;error.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-UpgradeToSessionToken"><strong>UpgradeToSessionToken</strong></a>(self, token<font color="#909090">=None</font>)</dt><dd><tt>Upgrades&nbsp;a&nbsp;single&nbsp;use&nbsp;AuthSub&nbsp;token&nbsp;to&nbsp;a&nbsp;session&nbsp;token.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;token:&nbsp;A&nbsp;gdata.auth.AuthSubToken&nbsp;or&nbsp;gdata.auth.SecureAuthSubToken<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(optional)&nbsp;which&nbsp;is&nbsp;good&nbsp;for&nbsp;a&nbsp;single&nbsp;use&nbsp;but&nbsp;can&nbsp;be&nbsp;upgraded<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;a&nbsp;session&nbsp;token.&nbsp;If&nbsp;no&nbsp;token&nbsp;is&nbsp;passed&nbsp;in,&nbsp;the&nbsp;token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;found&nbsp;by&nbsp;looking&nbsp;in&nbsp;the&nbsp;token_store&nbsp;by&nbsp;looking&nbsp;for&nbsp;a&nbsp;token<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;the&nbsp;current&nbsp;scope.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;NonAuthSubToken&nbsp;if&nbsp;the&nbsp;user's&nbsp;auth&nbsp;token&nbsp;is&nbsp;not&nbsp;an&nbsp;AuthSub&nbsp;token<br>
+&nbsp;&nbsp;TokenUpgradeFailed&nbsp;if&nbsp;the&nbsp;server&nbsp;responded&nbsp;to&nbsp;the&nbsp;request&nbsp;with&nbsp;an&nbsp;<br>
+&nbsp;&nbsp;error.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-upgrade_to_session_token"><strong>upgrade_to_session_token</strong></a>(self, token)</dt><dd><tt>Upgrades&nbsp;a&nbsp;single&nbsp;use&nbsp;AuthSub&nbsp;token&nbsp;to&nbsp;a&nbsp;session&nbsp;token.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;token:&nbsp;A&nbsp;gdata.auth.AuthSubToken&nbsp;or&nbsp;gdata.auth.SecureAuthSubToken<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;is&nbsp;good&nbsp;for&nbsp;a&nbsp;single&nbsp;use&nbsp;but&nbsp;can&nbsp;be&nbsp;upgraded&nbsp;to&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;session&nbsp;token.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;The&nbsp;upgraded&nbsp;token&nbsp;as&nbsp;a&nbsp;gdata.auth.AuthSubToken&nbsp;object.<br>
+&nbsp;<br>
+Raises:<br>
+&nbsp;&nbsp;TokenUpgradeFailed&nbsp;if&nbsp;the&nbsp;server&nbsp;responded&nbsp;to&nbsp;the&nbsp;request&nbsp;with&nbsp;an&nbsp;<br>
+&nbsp;&nbsp;error.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="gdata.service.html#GDataService">gdata.service.GDataService</a>:<br>
+<dl><dt><strong>captcha_token</strong></dt>
+<dd><tt>Get&nbsp;the&nbsp;captcha&nbsp;token&nbsp;for&nbsp;a&nbsp;login&nbsp;request.</tt></dd>
+</dl>
+<dl><dt><strong>captcha_url</strong></dt>
+<dd><tt>Get&nbsp;the&nbsp;captcha&nbsp;URL&nbsp;for&nbsp;a&nbsp;login&nbsp;request.</tt></dd>
+</dl>
+<dl><dt><strong>source</strong></dt>
+<dd><tt>The&nbsp;source&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;application&nbsp;making&nbsp;the&nbsp;request.&nbsp;<br>
+It&nbsp;should&nbsp;be&nbsp;in&nbsp;the&nbsp;form&nbsp;company_id-app_name-app_version</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="gdata.service.html#GDataService">gdata.service.GDataService</a>:<br>
+<dl><dt><strong>auth_token</strong> = None</dl>
+
+<dl><dt><strong>handler</strong> = None</dl>
+
+<dl><dt><strong>tokens</strong> = None</dl>
+
+<hr>
+Methods inherited from <a href="atom.service.html#AtomService">atom.service.AtomService</a>:<br>
+<dl><dt><a name="CodesearchService-UseBasicAuth"><strong>UseBasicAuth</strong></a>(self, username, password, for_proxy<font color="#909090">=False</font>)</dt><dd><tt>Sets&nbsp;an&nbsp;Authenticaiton:&nbsp;Basic&nbsp;HTTP&nbsp;header&nbsp;containing&nbsp;plaintext.<br>
+&nbsp;<br>
+Deprecated,&nbsp;use&nbsp;use_basic_auth&nbsp;instead.<br>
+&nbsp;<br>
+The&nbsp;username&nbsp;and&nbsp;password&nbsp;are&nbsp;base64&nbsp;encoded&nbsp;and&nbsp;added&nbsp;to&nbsp;an&nbsp;HTTP&nbsp;header<br>
+which&nbsp;will&nbsp;be&nbsp;included&nbsp;in&nbsp;each&nbsp;request.&nbsp;Note&nbsp;that&nbsp;your&nbsp;username&nbsp;and&nbsp;<br>
+password&nbsp;are&nbsp;sent&nbsp;in&nbsp;plaintext.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;username:&nbsp;str<br>
+&nbsp;&nbsp;password:&nbsp;str</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-request"><strong>request</strong></a>(*args, **kwargs)</dt><dd><tt>#&nbsp;The&nbsp;deprecated_function&nbsp;wraps&nbsp;the&nbsp;actual&nbsp;call&nbsp;to&nbsp;f.</tt></dd></dl>
+
+<dl><dt><a name="CodesearchService-use_basic_auth"><strong>use_basic_auth</strong></a>(self, username, password, scopes<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.service.html#AtomService">atom.service.AtomService</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>debug</strong></dt>
+<dd><tt>If&nbsp;True,&nbsp;HTTP&nbsp;debug&nbsp;information&nbsp;is&nbsp;printed.</tt></dd>
+</dl>
+<dl><dt><strong>override_token</strong></dt>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="atom.service.html#AtomService">atom.service.AtomService</a>:<br>
+<dl><dt><strong>auto_set_current_token</strong> = True</dl>
+
+<dl><dt><strong>auto_store_tokens</strong> = True</dl>
+
+<dl><dt><strong>current_token</strong> = None</dl>
+
+<dl><dt><strong>port</strong> = 80</dl>
+
+<dl><dt><strong>ssl</strong> = False</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__author__</strong> = 'Benoit Chesneau'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Benoit&nbsp;Chesneau</td></tr></table>
+</body></html>

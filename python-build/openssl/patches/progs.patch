@@ -1,0 +1,78 @@
+diff -uarp openssl-0.9.8k.orig/apps/progs.h openssl-0.9.8k/apps/progs.h
+--- openssl-0.9.8k.orig/apps/progs.h	2008-04-03 16:03:41.000000000 -0700
++++ openssl-0.9.8k/apps/progs.h	2009-09-29 18:07:01.000000000 -0700
+@@ -22,7 +22,9 @@ extern int ecparam_main(int argc,char *a
+ extern int x509_main(int argc,char *argv[]);
+ extern int genrsa_main(int argc,char *argv[]);
+ extern int gendsa_main(int argc,char *argv[]);
++#if 0 /* ANDROID */
+ extern int s_server_main(int argc,char *argv[]);
++#endif
+ extern int s_client_main(int argc,char *argv[]);
+ extern int speed_main(int argc,char *argv[]);
+ extern int s_time_main(int argc,char *argv[]);
+@@ -39,7 +41,9 @@ extern int spkac_main(int argc,char *arg
+ extern int smime_main(int argc,char *argv[]);
+ extern int rand_main(int argc,char *argv[]);
+ extern int engine_main(int argc,char *argv[]);
++#ifndef OPENSSL_NO_OCSP
+ extern int ocsp_main(int argc,char *argv[]);
++#endif
+ extern int prime_main(int argc,char *argv[]);
+ 
+ #define FUNC_TYPE_GENERAL	1
+@@ -97,7 +101,9 @@ FUNCTION functions[] = {
+ 	{FUNC_TYPE_GENERAL,"gendsa",gendsa_main},
+ #endif
+ #if !defined(OPENSSL_NO_SOCK) && !(defined(OPENSSL_NO_SSL2) && defined(OPENSSL_NO_SSL3))
+-	{FUNC_TYPE_GENERAL,"s_server",s_server_main},
++#if 0 /* ANDROID */
++        {FUNC_TYPE_GENERAL,"s_server",s_server_main},
++#endif
+ #endif
+ #if !defined(OPENSSL_NO_SOCK) && !(defined(OPENSSL_NO_SSL2) && defined(OPENSSL_NO_SSL3))
+ 	{FUNC_TYPE_GENERAL,"s_client",s_client_main},
+@@ -129,7 +135,9 @@ FUNCTION functions[] = {
+ #ifndef OPENSSL_NO_ENGINE
+ 	{FUNC_TYPE_GENERAL,"engine",engine_main},
+ #endif
++#ifndef OPENSSL_NO_OCSP
+ 	{FUNC_TYPE_GENERAL,"ocsp",ocsp_main},
++#endif
+ 	{FUNC_TYPE_GENERAL,"prime",prime_main},
+ #ifndef OPENSSL_NO_MD2
+ 	{FUNC_TYPE_MD,"md2",dgst_main},
+diff -uarp openssl-0.9.8k.orig/apps/speed.c openssl-0.9.8k/apps/speed.c
+--- openssl-0.9.8k.orig/apps/speed.c	2009-01-07 02:48:22.000000000 -0800
++++ openssl-0.9.8k/apps/speed.c	2009-09-29 18:06:38.000000000 -0700
+@@ -108,12 +108,12 @@
+ #include <signal.h>
+ #endif
+ 
+-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(OPENSSL_SYS_MACOSX)
++#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(OPENSSL_SYS_MACOSX) || defined(HAVE_ANDROID_OS)
+ # define USE_TOD
+ #elif !defined(OPENSSL_SYS_MSDOS) && !defined(OPENSSL_SYS_VXWORKS) && (!defined(OPENSSL_SYS_VMS) || defined(__DECC))
+ # define TIMES
+ #endif
+-#if !defined(_UNICOS) && !defined(__OpenBSD__) && !defined(sgi) && !defined(__FreeBSD__) && !(defined(__bsdi) || defined(__bsdi__)) && !defined(_AIX) && !defined(OPENSSL_SYS_MPE) && !defined(__NetBSD__) && !defined(OPENSSL_SYS_VXWORKS) /* FIXME */
++#if !defined(_UNICOS) && !defined(__OpenBSD__) && !defined(sgi) && !defined(__FreeBSD__) && !(defined(__bsdi) || defined(__bsdi__)) && !defined(_AIX) && !defined(OPENSSL_SYS_MPE) && !defined(__NetBSD__) && !defined(OPENSSL_SYS_VXWORKS) && !defined(HAVE_ANDROID_OS) /* FIXME */
+ # define TIMEB
+ #endif
+ 
+@@ -1836,6 +1836,7 @@ int MAIN(int argc, char **argv)
+ 			}
+ 		}
+ 
++#if 0 /* ANDROID */
+ 	if (doit[D_IGE_128_AES])
+ 		{
+ 		for (j=0; j<SIZE_NUM; j++)
+@@ -1879,6 +1880,7 @@ int MAIN(int argc, char **argv)
+ 			}
+ 		}
+ #endif
++#endif
+ #ifndef OPENSSL_NO_CAMELLIA
+ 	if (doit[D_CBC_128_CML])
+ 		{

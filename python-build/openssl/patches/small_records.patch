@@ -1,0 +1,333 @@
+diff --git openssl-0.9.8m/ssl/d1_pkt.c openssl-0.9.8m/ssl/d1_pkt.c
+index ca2d73f..2af5272 100644
+--- openssl-0.9.8m/ssl/d1_pkt.c
++++ openssl-0.9.8m/ssl/d1_pkt.c
+@@ -571,6 +571,24 @@ again:
+ 			goto again;
+ 			}
+ 
++		/* If we receive a valid record larger than the current buffer size,
++		 * allocate some memory for it.
++		 */
++		if (rr->length > s->s3->rbuf.len - DTLS1_RT_HEADER_LENGTH)
++			{
++			unsigned char *pp;
++			unsigned int newlen = rr->length + DTLS1_RT_HEADER_LENGTH;
++			if ((pp=OPENSSL_realloc(s->s3->rbuf.buf, newlen))==NULL)
++				{
++				SSLerr(SSL_F_DTLS1_GET_RECORD,ERR_R_MALLOC_FAILURE);
++				return(-1);
++				}
++			p = pp + (p - s->s3->rbuf.buf);
++			s->s3->rbuf.buf=pp;
++			s->s3->rbuf.len=newlen;
++			s->packet= &(s->s3->rbuf.buf[0]);
++			}
++
+ 		s->client_version = version;
+ 		/* now s->rstate == SSL_ST_READ_BODY */
+ 		}
+@@ -1300,6 +1318,7 @@ int do_dtls1_write(SSL *s, int type, const unsigned char *buf, unsigned int len,
+ 	SSL3_BUFFER *wb;
+ 	SSL_SESSION *sess;
+ 	int bs;
++	unsigned int len_with_overhead = len + SSL3_RT_DEFAULT_WRITE_OVERHEAD;
+ 
+ 	/* first check if there is a SSL3_BUFFER still being written
+ 	 * out.  This will happen with non blocking IO */
+@@ -1309,6 +1328,16 @@ int do_dtls1_write(SSL *s, int type, const unsigned char *buf, unsigned int len,
+ 		return(ssl3_write_pending(s,type,buf,len));
+ 		}
+ 
++	if (s->s3->wbuf.len < len_with_overhead)
++		{
++		if ((p=OPENSSL_realloc(s->s3->wbuf.buf, len_with_overhead)) == NULL) {
++			SSLerr(SSL_F_DO_DTLS1_WRITE,ERR_R_MALLOC_FAILURE);
++			goto err;
++		}
++		s->s3->wbuf.buf = p;
++		s->s3->wbuf.len = len_with_overhead;
++		}
++
+ 	/* If we have an alert to send, lets send it */
+ 	if (s->s3->alert_dispatch)
+ 		{
+diff --git openssl-0.9.8m/ssl/s23_srvr.c openssl-0.9.8m/ssl/s23_srvr.c
+index be05911..42f7de4 100644
+--- openssl-0.9.8m/ssl/s23_srvr.c
++++ openssl-0.9.8m/ssl/s23_srvr.c
+@@ -412,8 +412,13 @@ int ssl23_get_client_hello(SSL *s)
+ 		v[0] = p[3]; /* == SSL3_VERSION_MAJOR */
+ 		v[1] = p[4];
+ 
++/* The SSL2 protocol allows n to be larger, just pick
++ * a reasonable buffer size. */
++#if SSL3_RT_DEFAULT_PACKET_SIZE < 1024*4 - SSL3_RT_DEFAULT_WRITE_OVERHEAD
++#error "SSL3_RT_DEFAULT_PACKET_SIZE is too small."
++#endif
+ 		n=((p[0]&0x7f)<<8)|p[1];
+-		if (n > (1024*4))
++		if (n > SSL3_RT_DEFAULT_PACKET_SIZE - 2)
+ 			{
+ 			SSLerr(SSL_F_SSL23_GET_CLIENT_HELLO,SSL_R_RECORD_TOO_LARGE);
+ 			goto err;
+diff --git openssl-0.9.8m/ssl/s3_both.c openssl-0.9.8m/ssl/s3_both.c
+index 7f46225..73f6002 100644
+--- openssl-0.9.8m/ssl/s3_both.c
++++ openssl-0.9.8m/ssl/s3_both.c
+@@ -631,11 +631,18 @@ int ssl3_setup_buffers(SSL *s)
+ 
+ 	if (s->s3->rbuf.buf == NULL)
+ 		{
+-		if (s->options & SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER)
+-			extra=SSL3_RT_MAX_EXTRA;
++		if (SSL_get_mode(s) & SSL_MODE_SMALL_BUFFERS)
++			{
++			len = SSL3_RT_DEFAULT_PACKET_SIZE;
++			}
+ 		else
+-			extra=0;
+-		len = SSL3_RT_MAX_PACKET_SIZE + extra;
++			{
++			if (s->options & SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER)
++				extra=SSL3_RT_MAX_EXTRA;
++			else
++				extra=0;
++			len = SSL3_RT_MAX_PACKET_SIZE + extra;
++			}
+ 		if ((p=OPENSSL_malloc(len)) == NULL)
+ 			goto err;
+ 		s->s3->rbuf.buf = p;
+@@ -644,8 +651,17 @@ int ssl3_setup_buffers(SSL *s)
+ 
+ 	if (s->s3->wbuf.buf == NULL)
+ 		{
+-		len = SSL3_RT_MAX_PACKET_SIZE;
+-		len += headerlen + 256; /* extra space for empty fragment */
++		if (SSL_get_mode(s) & SSL_MODE_SMALL_BUFFERS)
++			{
++			len = SSL3_RT_DEFAULT_PACKET_SIZE;
++			}
++		else
++			{
++			len = SSL3_RT_MAX_PACKET_SIZE;
++			}
++		len += SSL3_RT_DEFAULT_WRITE_OVERHEAD; /* extra space for empty
++                                                          fragment, header, MAC
++                                                          and padding */
+ 		if ((p=OPENSSL_malloc(len)) == NULL)
+ 			goto err;
+ 		s->s3->wbuf.buf = p;
+diff --git openssl-0.9.8m/ssl/s3_pkt.c openssl-0.9.8m/ssl/s3_pkt.c
+index a2ba574..6fe4004 100644
+--- openssl-0.9.8m/ssl/s3_pkt.c
++++ openssl-0.9.8m/ssl/s3_pkt.c
+@@ -259,7 +259,8 @@ static int ssl3_get_record(SSL *s)
+ 		extra=SSL3_RT_MAX_EXTRA;
+ 	else
+ 		extra=0;
+-	if (extra != s->s3->rbuf.len - SSL3_RT_MAX_PACKET_SIZE)
++	if (!(SSL_get_mode(s) & SSL_MODE_SMALL_BUFFERS) &&
++		extra != s->s3->rbuf.len - SSL3_RT_MAX_PACKET_SIZE)
+ 		{
+ 		/* actually likely an application error: SLS_OP_MICROSOFT_BIG_SSLV3_BUFFER
+ 		 * set after ssl3_setup_buffers() was done */
+@@ -312,6 +313,21 @@ again:
+ 			goto f_err;
+ 			}
+ 
++		/* If we receive a valid record larger than the current buffer size,
++		 * allocate some memory for it.
++		 */
++		if (rr->length > s->s3->rbuf.len - SSL3_RT_HEADER_LENGTH)
++			{
++			if ((p=OPENSSL_realloc(s->s3->rbuf.buf, rr->length + SSL3_RT_HEADER_LENGTH))==NULL)
++				{
++				SSLerr(SSL_F_SSL3_GET_RECORD,ERR_R_MALLOC_FAILURE);
++				goto err;
++				}
++			s->s3->rbuf.buf=p;
++			s->s3->rbuf.len=rr->length + SSL3_RT_HEADER_LENGTH;
++			s->packet= &(s->s3->rbuf.buf[0]);
++			}
++
+ 		/* now s->rstate == SSL_ST_READ_BODY */
+ 		}
+ 
+@@ -525,6 +541,7 @@ int ssl3_write_bytes(SSL *s, int type, const void *buf_, int len)
+ 	const unsigned char *buf=buf_;
+ 	unsigned int tot,n,nw;
+ 	int i;
++    unsigned int max_plain_length;
+ 
+ 	s->rwstate=SSL_NOTHING;
+ 	tot=s->s3->wnum;
+@@ -544,8 +562,13 @@ int ssl3_write_bytes(SSL *s, int type, c
+ 	n=(len-tot);
+ 	for (;;)
+ 		{
+-		if (n > SSL3_RT_MAX_PLAIN_LENGTH)
+-			nw=SSL3_RT_MAX_PLAIN_LENGTH;
++		if (type == SSL3_RT_APPLICATION_DATA && (SSL_get_mode(s) & SSL_MODE_SMALL_BUFFERS))
++			max_plain_length = SSL3_RT_DEFAULT_PLAIN_LENGTH;
++		else
++			max_plain_length = SSL3_RT_MAX_PLAIN_LENGTH;
++
++		if (n > max_plain_length)
++			nw = max_plain_length;
+ 		else
+ 			nw=n;
+ 
+@@ -629,7 +651,9 @@ static int do_ssl3_write(SSL *s, int type, const unsigned char *buf,
+ 			if (prefix_len <= 0)
+ 				goto err;
+ 
+-			if (s->s3->wbuf.len < (size_t)prefix_len + SSL3_RT_MAX_PACKET_SIZE)
++			if (s->s3->wbuf.len < (size_t)prefix_len +
++				((SSL_get_mode(s) & SSL_MODE_SMALL_BUFFERS) ? SSL3_RT_DEFAULT_PACKET_SIZE :
++					SSL3_RT_MAX_PACKET_SIZE))
+ 				{
+ 				/* insufficient space */
+ 				SSLerr(SSL_F_DO_SSL3_WRITE, ERR_R_INTERNAL_ERROR);
+@@ -640,6 +665,18 @@ static int do_ssl3_write(SSL *s, int typ
+ 		s->s3->empty_fragment_done = 1;
+ 		}
+ 
++	/* resize if necessary to hold the data. */
++	if (len + SSL3_RT_DEFAULT_WRITE_OVERHEAD > wb->len)
++		{
++		if ((p=OPENSSL_realloc(wb->buf, len + SSL3_RT_DEFAULT_WRITE_OVERHEAD))==NULL)
++			{
++			SSLerr(SSL_F_DO_SSL3_WRITE,ERR_R_MALLOC_FAILURE);
++			goto err;
++			}
++		wb->buf = p;
++		wb->len = len + SSL3_RT_DEFAULT_WRITE_OVERHEAD;
++		}
++
+ 	p = wb->buf + prefix_len;
+ 
+ 	/* write the header */
+diff --git openssl-0.9.8m/ssl/ssl.h openssl-0.9.8m/ssl/ssl.h
+index 47ce1ea..16a90a8 100644
+--- openssl-0.9.8m/ssl/ssl.h
++++ openssl-0.9.8m/ssl/ssl.h
+@@ -560,7 +560,9 @@ typedef struct ssl_session_st
+ #define SSL_MODE_AUTO_RETRY 0x00000004L
+ /* Don't attempt to automatically build certificate chain */
+ #define SSL_MODE_NO_AUTO_CHAIN 0x00000008L
+-
++/* Use small read and write buffers: (a) lazy allocate read buffers for
++ * large incoming records, and (b) limit the size of outgoing records. */
++#define SSL_MODE_SMALL_BUFFERS 0x00000010L
+ 
+ /* Note: SSL[_CTX]_set_{options,mode} use |= op on the previous value,
+  * they cannot be used to clear bits. */
+diff --git openssl-0.9.8m/ssl/ssl3.h openssl-0.9.8m/ssl/ssl3.h
+index 7e6afee..b5b8683 100644
+--- openssl-0.9.8m/ssl/ssl3.h
++++ openssl-0.9.8m/ssl/ssl3.h
+@@ -256,6 +256,9 @@ extern "C" {
+ #define SSL3_RT_MAX_EXTRA			(16384)
+ #endif
+ 
++/* Default buffer length used for writen records.  Thus a generated record
++ * will contain plaintext no larger than this value. */
++#define SSL3_RT_DEFAULT_PLAIN_LENGTH	2048
+ #define SSL3_RT_MAX_PLAIN_LENGTH		16384
+ #ifdef OPENSSL_NO_COMP
+ #define SSL3_RT_MAX_COMPRESSED_LENGTH	SSL3_RT_MAX_PLAIN_LENGTH
+@@ -263,6 +266,12 @@ extern "C" {
+ #define SSL3_RT_MAX_COMPRESSED_LENGTH	(1024+SSL3_RT_MAX_PLAIN_LENGTH)
+ #endif
+ #define SSL3_RT_MAX_ENCRYPTED_LENGTH	(1024+SSL3_RT_MAX_COMPRESSED_LENGTH)
++/* Extra space for empty fragment, headers, MAC, and padding. */
++#define SSL3_RT_DEFAULT_WRITE_OVERHEAD  256
++#define SSL3_RT_DEFAULT_PACKET_SIZE     4096 - SSL3_RT_DEFAULT_WRITE_OVERHEAD
++#if SSL3_RT_DEFAULT_PLAIN_LENGTH + SSL3_RT_DEFAULT_WRITE_OVERHEAD > SSL3_RT_DEFAULT_PACKET_SIZE
++#error "Insufficient space allocated for write buffers."
++#endif
+ #define SSL3_RT_MAX_PACKET_SIZE		(SSL3_RT_MAX_ENCRYPTED_LENGTH+SSL3_RT_HEADER_LENGTH)
+ #define SSL3_RT_MAX_DATA_SIZE			(1024*1024)
+ 
+diff --git openssl-0.9.8m/ssl/ssltest.c openssl-0.9.8m/ssl/ssltest.c
+index b09c542..09d3502 100644
+--- openssl-0.9.8m/ssl/ssltest.c
++++ openssl-0.9.8m/ssl/ssltest.c
+@@ -277,6 +277,8 @@ static void sv_usage(void)
+ 	               "                 (default is sect163r2).\n");
+ #endif
+ 	fprintf(stderr," -test_cipherlist - verifies the order of the ssl cipher lists\n");
++	fprintf(stderr," -c_small_records - enable client side use of small SSL record buffers\n");
++	fprintf(stderr," -s_small_records - enable server side use of small SSL record buffers\n");
+ 	}
+ 
+ static void print_details(SSL *c_ssl, const char *prefix)
+@@ -431,6 +433,9 @@ int main(int argc, char *argv[])
+ #ifdef OPENSSL_FIPS
+ 	int fips_mode=0;
+ #endif
++	int ssl_mode = 0;
++	int c_small_records=0;
++	int s_small_records=0;
+ 
+ 	verbose = 0;
+ 	debug = 0;
+@@ -619,6 +624,14 @@ int main(int argc, char *argv[])
+ 			{
+ 			test_cipherlist = 1;
+ 			}
++		else if (strcmp(*argv, "-c_small_records") == 0)
++			{
++			c_small_records = 1;
++			}
++		else if (strcmp(*argv, "-s_small_records") == 0)
++			{
++			s_small_records = 1;
++			}
+ 		else
+ 			{
+ 			fprintf(stderr,"unknown option %s\n",*argv);
+@@ -755,6 +768,21 @@ bad:
+ 		SSL_CTX_set_cipher_list(s_ctx,cipher);
+ 		}
+ 
++	ssl_mode = 0;
++	if (c_small_records)
++		{
++		ssl_mode = SSL_CTX_get_mode(c_ctx);
++		ssl_mode |= SSL_MODE_SMALL_BUFFERS;
++		SSL_CTX_set_mode(c_ctx, ssl_mode);
++		}
++	ssl_mode = 0;
++	if (s_small_records)
++		{
++		ssl_mode = SSL_CTX_get_mode(s_ctx);
++		ssl_mode |= SSL_MODE_SMALL_BUFFERS;
++		SSL_CTX_set_mode(s_ctx, ssl_mode);
++		}
++
+ #ifndef OPENSSL_NO_DH
+ 	if (!no_dhe)
+ 		{
+diff --git openssl-0.9.8m/test/testssl openssl-0.9.8m/test/testssl
+index 8ac90ae..a9b2e24 100644
+--- openssl-0.9.8m/test/testssl
++++ openssl-0.9.8m/test/testssl
+@@ -70,6 +70,16 @@ $ssltest -client_auth $CA $extra || exit 1
+ echo test sslv2/sslv3 with both client and server authentication
+ $ssltest -server_auth -client_auth $CA $extra || exit 1
+ 
++echo test sslv2/sslv3 with both client and server authentication and small client buffers
++$ssltest -server_auth -client_auth -c_small_records $CA $extra || exit 1
++
++echo test sslv2/sslv3 with both client and server authentication and small server buffers
++$ssltest -server_auth -client_auth -s_small_records $CA $extra || exit 1
++
++echo test sslv2/sslv3 with both client and server authentication and small client and server buffers
++$ssltest -server_auth -client_auth -c_small_records -s_small_records $CA $extra || exit 1
++
++
+ echo test sslv2 via BIO pair
+ $ssltest -bio_pair -ssl2 $extra || exit 1
+ 

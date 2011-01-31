@@ -1,0 +1,10 @@
+This is bzip-1.0.6 from http://www.bzip.org/.
+
+No changes were made apart from the following:
+
+* added README.android (this file)
+* added Android.mk
+* added CleanSpec.mk
+* added ThirdPartyProject.prop
+* copied LICENSE to NOTICE
+* added empty MODULE_LICENSE_BSD_LIKE

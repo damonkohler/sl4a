@@ -36,8 +36,7 @@
       android:configChanges="keyboardHidden|orientation" 
       android:name=".DialogActivity"/>
 </application>
-  <uses-sdk
-    android:minSdkVersion="3" />
+  <uses-sdk android:minSdkVersion="4"/>
   <uses-permission
     android:name="android.permission.INTERNET" />
   <!-- <uses-permission
@@ -282,4 +281,8 @@
    android:name="android.permission.WRITE_SYNC_SETTINGS"/> -->
   <!-- <uses-permission
    android:name="android.permission.WRITE_USER_DICTIONARY"/> -->
+
+
+<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 </manifest>

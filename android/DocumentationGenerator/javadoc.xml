@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="javadoc">
     <target name="javadoc">
-        <javadoc access="public" additionalparam="-dest /home/robbie/sl4a/doc " classpath="/home/robbie/android-sdk-linux_86/platforms/android-3/android.jar:/home/robbie/android-scripting/android/Common/libs/guava-r06.jar:/home/robbie/android-scripting/android/Utils/bin:/home/robbie/android-scripting/android/Common/bin:/home/robbie/android-sdk-linux_86/platforms/android-7/android.jar:/home/robbie/android-scripting/android/Common/libs/commons-codec-1.3.jar:/home/robbie/android-sdk-linux_86/platforms/android-4/android.jar:/home/robbie/android-sdk-linux_86/platforms/android-8/android.jar:/home/robbie/android-scripting/android/Common/libs/libGoogleAnalytics.jar" packagenames="com.googlecode.android_scripting.interpreter.html,com.googlecode.android_scripting.language,com.googlecode.android_scripting.facade,com.googlecode.android_scripting.bluetooth,com.googlecode.android_scripting.event,com.googlecode.android_scripting.future,com.googlecode.android_scripting.activity,com.googlecode.android_scripting.interpreter,com.googlecode.android_scripting.jsonrpc,com.googlecode.android_scripting.rpc,com.googlecode.android_scripting.facade.ui,com.googlecode.android_scripting.interpreter.shell,com.googlecode.android_scripting.util,com.googlecode.android_scripting.trigger" sourcefiles="/home/robbie/android-scripting/android/Common/src/com/googlecode/android_scripting/Analytics.java,/home/robbie/android-scripting/android/Common/src/com/googlecode/android_scripting/BaseApplication.java,/home/robbie/android-scripting/android/Common/src/com/googlecode/android_scripting/IntentBuilders.java,/home/robbie/android-scripting/android/Common/src/com/googlecode/android_scripting/Process.java,/home/robbie/android-scripting/android/Common/src/com/googlecode/android_scripting/FutureActivityTaskExecutor.java,/home/robbie/android-scripting/android/Common/src/com/googlecode/android_scripting/Version.java,/home/robbie/android-scripting/android/Common/src/com/googlecode/android_scripting/Exec.java,/home/robbie/android-scripting/android/Common/src/com/googlecode/android_scripting/FeaturedInterpreters.java,/home/robbie/android-scripting/android/Common/src/com/googlecode/android_scripting/Constants.java" sourcepath="/home/robbie/android-scripting/android/Common/src:/home/robbie/android-scripting/android/WebCamFacade/src:/home/robbie/android-scripting/android/TextToSpeechFacade/src:/home/robbie/android-scripting/android/BluetoothFacade/src:/home/robbie/android-scripting/android/SignalStrengthFacade/src">
-            <doclet name="com.googlecode.android_scripting.RpcDoclet" path="/home/robbie/android-scripting/android/DocumentationGenerator/bin"/>
+        <javadoc access="public" 
+        	additionalparam="-dest doc" 
+        	classpath="../Utils/bin;../Common/bin" 
+        	packagenames="com.googlecode.android_scripting.facade,com.googlecode.android_scripting.rpc,com.googlecode.android_scripting.facade.ui" 
+        	sourcepath="../Common/src;../BluetoothFacade/src;../SignalStrengthFacade/src;../TextToSpeechFacade/src;../WebCamFacade/src">
+            <doclet name="com.googlecode.android_scripting.RpcDoclet" path="bin"/>
         </javadoc>
-    </target>
+		<zip destfile="../ScriptingLayertForAndroid/assets/sl4adoc.zip" basedir="./" includes="**/*">
+			<fileset dir="./.tmp" includes="*"/>
+		</zip>
+</target>
 </project>

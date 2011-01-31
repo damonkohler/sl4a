@@ -10,4 +10,9 @@ TextDocumentationGenerator creates a wiki version of the current API Reference (
 
 RpcDoclet is a javadoc add on that combines javadoc and Rpc annotations into a more detailled API reference. 
 
-Run javadoc.xml with the javadoc wizard in eclipse... you'll probably need to modify the -dest parameter.
+To build the onboard api help, run: javadoc.xml as an ant build. You may need to modify the ant environment variables to tell it where to find javadoc.exe if it isn't in the path.
+ie:
+javadoc.xml-->Run as-->Ant Build...-->Environment Variables-->New-->PATH C:\Program Files\Java\jdk1.6.0_11\bin;${env_var:Path}
+
+This will create a doc folder with the api help html files, and zip these into ../ScriptingLayerForAndroid/assets/sl4adoc.zip
+

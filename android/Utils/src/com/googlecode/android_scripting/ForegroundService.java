@@ -44,7 +44,9 @@ public abstract class ForegroundService extends Service {
 
     // Fall back on the old API.
     setForeground(true);
-    mNotificationManager.notify(mNotificationId, notification);
+    if (notification != null) {
+      mNotificationManager.notify(mNotificationId, notification);
+    }
   }
 
   /**

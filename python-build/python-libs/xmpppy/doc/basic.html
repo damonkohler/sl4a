@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="ru-RU" lang="ru-RU" xmlns="http://www.w3.org/1999/xhtml">
+<!-- $Id: basic.html,v 1.5 2004/12/26 08:12:42 snakeru Exp $ -->
+    <head>
+        <meta content="text/html; charset=koi8-r" http-equiv="content-type" />
+        <title>Xmpppy usage - basics.</title>
+    </head>
+    <body>
+<!--
+basic
+Объясняется принципы простейшего скриптования. Фактически уровень README.py.
+advanced
+Вольное изложение предмета
+expert
+описание API каждого модуля
+-->
+<h1>Preface.</h1>
+<p>English is not my native language. If you see any bugs in this text, please, let me know.</p>
+<h1>Basic</h1>
+<h2>Introduction.</h2>
+<p>This documents topic is for people who want to quickly try xmpppy for a simple task, like
+writing a command-line script for sending a single message.</p>
+<h2>Writing a simple script</h2>
+<p>This example demonstrates a simple script that sends message to one
+recipient.
+Example:</p>
+<pre>
+xsend test@jabber.org Hello there!
+</pre>
+<p>You don't have a similar tool in your toolkit? Using the xmpppy
+library it can be created easily.
+<br />What? Already have one? Hmm. Maybe you want to simplify things a bit, or just curious how
+to do it one more way? Anyway - let's start now!
+<br />
+First - we declare ourself as a python script and importing needed modules:</p>
+<pre>
+#!/usr/bin/python
+import sys,os,xmpp
+</pre>
+<p>After it we have to check if we have enough arguments on the command-line:</p>
+<pre>
+if len(sys.argv) &lt; 2:
+    print "Syntax: xsend JID text"
+    sys.exit(0)
+</pre>
+<p>After it we must decode arguments. Omitting all checks to simplify our script:</p>
+<pre>
+tojid=sys.argv[1]
+text=' '.join(sys.argv[2:])
+</pre>
+<p>One more non-jabber step: We have to to get our Jabber ID and login
+details. Presuming that all info
+stored in ~/.xsend file:</p>
+<pre>
+jidparams={}
+if os.access(os.environ['HOME']+'/.xsend',os.R_OK):
+    for ln in open(os.environ['HOME']+'/.xsend').readlines():
+        key,val=ln.strip().split('=',1)
+        jidparams[key.lower()]=val
+for mandatory in ['jid','password']:
+    if mandatory not in jidparams.keys():
+        open(os.environ['HOME']+'/.xsend','w').write('#JID=romeo@montague.net\n#PASSWORD=juliet\n')
+        print 'Please ensure the ~/.xsend file has valid JID for sending messages.'
+        sys.exit(0)
+</pre>
+<p>Phew! The most complex (non-jabber ;) ) part is finished. From now on we have to:</p>
+<ul>
+  <li>connect to jabber server</li>
+  <li>authenticate ourselves</li>
+  <li>submit a message</li>
+</ul>
+<p>Let's start:
+<br />
+0. To connect we must have a client instance. Calculating our server name and 
+creating Client class instance for it:</p>
+<pre>
+jid=xmpp.protocol.JID(jidparams['jid'])
+cl=xmpp.Client(jid.getDomain(),debug=[])
+</pre>
+<p>1. Connect and authenticate with credentials from the config file.</p>
+<pre>
+cl.connect()
+cl.auth(jid.getNode(),jidparams['password'])
+</pre>
+<p>2. We can go online now (by sending the inital presence) but will not do that, as it is not nessessary for sending a message.
+So we send a message now!</p>
+<pre>
+#cl.sendInitialPresence()
+cl.send(xmpp.protocol.Message(tojid,text))
+</pre>
+<p>We're done! The session must now be closed but since we have not registered
+disconnect handler we will just leave it to python and TCP/IP layer.
+All jabber servers that I know handle <span style="font-style: italic;">such</span>
+disconnects correctly.
+<br />
+You can download this script <a href="examples/xsend.py">here</a>.</p>
+<h3>What now?</h3>
+<p>If you were impressed of how the things were done with xmpppy, you may be interested in
+more thorough examination of xmpppy library. The &quot;advanced&quot; and &quot;expert&quot;
+parts of this document are here to help you.
+<br />
+&quot;<a href="advanced.html">Advanced</a>&quot; (isn't writed yet) part is much like another tutorial and
+describing common principles of XMPP usage via xmpppy prism. It describes ideas that are the foundation of XML handling with the
+simplexml library, the essence of dispatcher's work and how messages are processed, and
+some guidelines to write more complex programs and uses of the library.
+<br />
+&quot;<a href="apidocs/">Expert</a>&quot; part is full library API description documentation.
+This is epydoc generated output - all info is taken from the xmpppy code so you can re-generate it at any time.
+</p>
+</body>
+</html>

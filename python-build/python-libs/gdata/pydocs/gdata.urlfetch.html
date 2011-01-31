@@ -1,0 +1,212 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module gdata.urlfetch</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gdata.html"><font color="#ffffff">gdata</font></a>.urlfetch</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/svn/gdata-python-client/src/gdata/urlfetch.py">/usr/local/svn/gdata-python-client/src/gdata/urlfetch.py</a></font></td></tr></table>
+    <p><tt>Provides&nbsp;HTTP&nbsp;functions&nbsp;for&nbsp;gdata.service&nbsp;to&nbsp;use&nbsp;on&nbsp;Google&nbsp;App&nbsp;Engine<br>
+&nbsp;<br>
+<a href="#AppEngineHttpClient">AppEngineHttpClient</a>:&nbsp;Provides&nbsp;an&nbsp;HTTP&nbsp;request&nbsp;method&nbsp;which&nbsp;uses&nbsp;App&nbsp;Engine's<br>
+&nbsp;&nbsp;&nbsp;urlfetch&nbsp;API.&nbsp;Set&nbsp;the&nbsp;http_client&nbsp;member&nbsp;of&nbsp;a&nbsp;GDataService&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;instance&nbsp;of&nbsp;an&nbsp;<a href="#AppEngineHttpClient">AppEngineHttpClient</a>&nbsp;to&nbsp;allow&nbsp;the&nbsp;gdata&nbsp;library&nbsp;to&nbsp;run&nbsp;on<br>
+&nbsp;&nbsp;&nbsp;Google&nbsp;App&nbsp;Engine.<br>
+&nbsp;<br>
+run_on_appengine:&nbsp;Function&nbsp;which&nbsp;will&nbsp;modify&nbsp;an&nbsp;existing&nbsp;GDataService&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;&nbsp;&nbsp;to&nbsp;allow&nbsp;it&nbsp;to&nbsp;run&nbsp;on&nbsp;App&nbsp;Engine.&nbsp;It&nbsp;works&nbsp;by&nbsp;creating&nbsp;a&nbsp;new&nbsp;instance&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;the&nbsp;<a href="#AppEngineHttpClient">AppEngineHttpClient</a>&nbsp;and&nbsp;replacing&nbsp;the&nbsp;GDataService&nbsp;<a href="__builtin__.html#object">object</a>'s&nbsp;<br>
+&nbsp;&nbsp;&nbsp;http_client.<br>
+&nbsp;<br>
+HttpRequest:&nbsp;Function&nbsp;that&nbsp;wraps&nbsp;google.appengine.api.urlfetch.Fetch&nbsp;in&nbsp;a&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;common&nbsp;interface&nbsp;which&nbsp;is&nbsp;used&nbsp;by&nbsp;gdata.service.GDataService.&nbsp;In&nbsp;other&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;words,&nbsp;this&nbsp;module&nbsp;can&nbsp;be&nbsp;used&nbsp;as&nbsp;the&nbsp;gdata&nbsp;service&nbsp;request&nbsp;handler&nbsp;so&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;that&nbsp;all&nbsp;HTTP&nbsp;requests&nbsp;will&nbsp;be&nbsp;performed&nbsp;by&nbsp;the&nbsp;hosting&nbsp;Google&nbsp;App&nbsp;Engine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;server.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="StringIO.html">StringIO</a><br>
+</td><td width="25%" valign=top><a href="atom.html">atom</a><br>
+</td><td width="25%" valign=top><a href="google.appengine.api.urlfetch.html">google.appengine.api.urlfetch</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.urlfetch.html#HttpResponse">HttpResponse</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gdata.urlfetch.html#AppEngineHttpClient">AppEngineHttpClient</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AppEngineHttpClient">class <strong>AppEngineHttpClient</strong></a>(<a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gdata.urlfetch.html#AppEngineHttpClient">AppEngineHttpClient</a></dd>
+<dd><a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="AppEngineHttpClient-__init__"><strong>__init__</strong></a>(self, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="AppEngineHttpClient-request"><strong>request</strong></a>(self, operation, url, data<font color="#909090">=None</font>, headers<font color="#909090">=None</font>)</dt><dd><tt>Performs&nbsp;an&nbsp;HTTP&nbsp;call&nbsp;to&nbsp;the&nbsp;server,&nbsp;supports&nbsp;GET,&nbsp;POST,&nbsp;PUT,&nbsp;and<br>
+DELETE.<br>
+&nbsp;<br>
+Usage&nbsp;example,&nbsp;perform&nbsp;and&nbsp;HTTP&nbsp;GET&nbsp;on&nbsp;<a href="http://www.google.com/">http://www.google.com/</a>:<br>
+&nbsp;&nbsp;import&nbsp;atom.http<br>
+&nbsp;&nbsp;client&nbsp;=&nbsp;atom.http.HttpClient()<br>
+&nbsp;&nbsp;http_response&nbsp;=&nbsp;client.<a href="#AppEngineHttpClient-request">request</a>('GET',&nbsp;'<a href="http://www.google.com/">http://www.google.com/</a>')<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;operation:&nbsp;str&nbsp;The&nbsp;HTTP&nbsp;operation&nbsp;to&nbsp;be&nbsp;performed.&nbsp;This&nbsp;is&nbsp;usually&nbsp;one<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;'GET',&nbsp;'POST',&nbsp;'PUT',&nbsp;or&nbsp;'DELETE'<br>
+&nbsp;&nbsp;data:&nbsp;filestream,&nbsp;list&nbsp;of&nbsp;parts,&nbsp;or&nbsp;other&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;converted<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;a&nbsp;string.&nbsp;Should&nbsp;be&nbsp;set&nbsp;to&nbsp;None&nbsp;when&nbsp;performing&nbsp;a&nbsp;GET&nbsp;or&nbsp;DELETE.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;data&nbsp;is&nbsp;a&nbsp;file-like&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;read,&nbsp;this&nbsp;method&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;read&nbsp;a&nbsp;chunk&nbsp;of&nbsp;100K&nbsp;bytes&nbsp;at&nbsp;a&nbsp;time&nbsp;and&nbsp;send&nbsp;them.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;data&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;parts&nbsp;to&nbsp;be&nbsp;sent,&nbsp;each&nbsp;part&nbsp;will&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evaluated&nbsp;and&nbsp;sent.<br>
+&nbsp;&nbsp;url:&nbsp;The&nbsp;full&nbsp;URL&nbsp;to&nbsp;which&nbsp;the&nbsp;request&nbsp;should&nbsp;be&nbsp;sent.&nbsp;Can&nbsp;be&nbsp;a&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;atom.url.Url.<br>
+&nbsp;&nbsp;headers:&nbsp;dict&nbsp;of&nbsp;strings.&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;should&nbsp;be&nbsp;sent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;request.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><a name="AppEngineHttpClient-delete"><strong>delete</strong></a>(self, url, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="AppEngineHttpClient-get"><strong>get</strong></a>(self, url, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="AppEngineHttpClient-post"><strong>post</strong></a>(self, url, data, headers<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="AppEngineHttpClient-put"><strong>put</strong></a>(self, url, data, headers<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="atom.http_interface.html#GenericHttpClient">atom.http_interface.GenericHttpClient</a>:<br>
+<dl><dt><strong>debug</strong> = False</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HttpResponse">class <strong>HttpResponse</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Translates&nbsp;a&nbsp;urlfetch&nbsp;resoinse&nbsp;to&nbsp;look&nbsp;like&nbsp;an&nbsp;hhtplib&nbsp;resoinse.<br>
+&nbsp;<br>
+Used&nbsp;to&nbsp;allow&nbsp;the&nbsp;resoinse&nbsp;from&nbsp;HttpRequest&nbsp;to&nbsp;be&nbsp;usable&nbsp;by&nbsp;gdata.service<br>
+methods.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="HttpResponse-__init__"><strong>__init__</strong></a>(self, urlfetch_response)</dt></dl>
+
+<dl><dt><a name="HttpResponse-getheader"><strong>getheader</strong></a>(self, name)</dt></dl>
+
+<dl><dt><a name="HttpResponse-read"><strong>read</strong></a>(self, length<font color="#909090">=None</font>)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-HttpRequest"><strong>HttpRequest</strong></a>(service, operation, data, uri, extra_headers<font color="#909090">=None</font>, url_params<font color="#909090">=None</font>, escape_params<font color="#909090">=True</font>, content_type<font color="#909090">='application/atom+xml'</font>)</dt><dd><tt>Performs&nbsp;an&nbsp;HTTP&nbsp;call&nbsp;to&nbsp;the&nbsp;server,&nbsp;supports&nbsp;GET,&nbsp;POST,&nbsp;PUT,&nbsp;and&nbsp;DELETE.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;deprecated,&nbsp;use&nbsp;<a href="#AppEngineHttpClient">AppEngineHttpClient</a>.request&nbsp;instead.<br>
+&nbsp;<br>
+To&nbsp;use&nbsp;this&nbsp;module&nbsp;with&nbsp;gdata.service,&nbsp;you&nbsp;can&nbsp;set&nbsp;this&nbsp;module&nbsp;to&nbsp;be&nbsp;the<br>
+http_request_handler&nbsp;so&nbsp;that&nbsp;HTTP&nbsp;requests&nbsp;use&nbsp;Google&nbsp;App&nbsp;Engine's&nbsp;urlfetch.<br>
+import&nbsp;gdata.service<br>
+import&nbsp;gdata.urlfetch<br>
+gdata.service.http_request_handler&nbsp;=&nbsp;gdata.urlfetch<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;service:&nbsp;atom.AtomService&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;contains&nbsp;some&nbsp;of&nbsp;the&nbsp;parameters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;needed&nbsp;to&nbsp;make&nbsp;the&nbsp;request.&nbsp;The&nbsp;following&nbsp;members&nbsp;are&nbsp;used&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;construct&nbsp;the&nbsp;HTTP&nbsp;call:&nbsp;server&nbsp;(str),&nbsp;additional_headers&nbsp;(dict),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port&nbsp;(int),&nbsp;and&nbsp;ssl&nbsp;(bool).<br>
+&nbsp;&nbsp;operation:&nbsp;str&nbsp;The&nbsp;HTTP&nbsp;operation&nbsp;to&nbsp;be&nbsp;performed.&nbsp;This&nbsp;is&nbsp;usually&nbsp;one&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'GET',&nbsp;'POST',&nbsp;'PUT',&nbsp;or&nbsp;'DELETE'<br>
+&nbsp;&nbsp;data:&nbsp;filestream,&nbsp;list&nbsp;of&nbsp;parts,&nbsp;or&nbsp;other&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;converted&nbsp;to&nbsp;a&nbsp;string.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Should&nbsp;be&nbsp;set&nbsp;to&nbsp;None&nbsp;when&nbsp;performing&nbsp;a&nbsp;GET&nbsp;or&nbsp;PUT.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;data&nbsp;is&nbsp;a&nbsp;file-like&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;can&nbsp;be&nbsp;read,&nbsp;this&nbsp;method&nbsp;will&nbsp;read<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;chunk&nbsp;of&nbsp;100K&nbsp;bytes&nbsp;at&nbsp;a&nbsp;time&nbsp;and&nbsp;send&nbsp;them.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;data&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;parts&nbsp;to&nbsp;be&nbsp;sent,&nbsp;each&nbsp;part&nbsp;will&nbsp;be&nbsp;evaluated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;sent.<br>
+&nbsp;&nbsp;uri:&nbsp;The&nbsp;beginning&nbsp;of&nbsp;the&nbsp;URL&nbsp;to&nbsp;which&nbsp;the&nbsp;request&nbsp;should&nbsp;be&nbsp;sent.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Examples:&nbsp;'/',&nbsp;'/base/feeds/snippets',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'/m8/feeds/contacts/default/base'<br>
+&nbsp;&nbsp;extra_headers:&nbsp;dict&nbsp;of&nbsp;strings.&nbsp;HTTP&nbsp;headers&nbsp;which&nbsp;should&nbsp;be&nbsp;sent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;request.&nbsp;These&nbsp;headers&nbsp;are&nbsp;in&nbsp;addition&nbsp;to&nbsp;those&nbsp;stored&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service.additional_headers.<br>
+&nbsp;&nbsp;url_params:&nbsp;dict&nbsp;of&nbsp;strings.&nbsp;Key&nbsp;value&nbsp;pairs&nbsp;to&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;URL&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL&nbsp;parameters.&nbsp;For&nbsp;example&nbsp;{'foo':'bar',&nbsp;'test':'param'}&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;become&nbsp;?foo=bar&amp;test=param.<br>
+&nbsp;&nbsp;escape_params:&nbsp;bool&nbsp;default&nbsp;True.&nbsp;If&nbsp;true,&nbsp;the&nbsp;keys&nbsp;and&nbsp;values&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url_params&nbsp;will&nbsp;be&nbsp;URL&nbsp;escaped&nbsp;when&nbsp;the&nbsp;form&nbsp;is&nbsp;constructed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Special&nbsp;characters&nbsp;converted&nbsp;to&nbsp;%XX&nbsp;form.)<br>
+&nbsp;&nbsp;content_type:&nbsp;str&nbsp;The&nbsp;MIME&nbsp;type&nbsp;for&nbsp;the&nbsp;data&nbsp;being&nbsp;sent.&nbsp;Defaults&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'application/atom+xml',&nbsp;this&nbsp;is&nbsp;only&nbsp;used&nbsp;if&nbsp;data&nbsp;is&nbsp;set.</tt></dd></dl>
+ <dl><dt><a name="-run_on_appengine"><strong>run_on_appengine</strong></a>(gdata_service)</dt><dd><tt>Modifies&nbsp;a&nbsp;GDataService&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;allow&nbsp;it&nbsp;to&nbsp;run&nbsp;on&nbsp;App&nbsp;Engine.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;gdata_service:&nbsp;An&nbsp;instance&nbsp;of&nbsp;AtomService,&nbsp;GDataService,&nbsp;or&nbsp;any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;their&nbsp;subclasses&nbsp;which&nbsp;has&nbsp;an&nbsp;http_client&nbsp;member.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__author__</strong> = 'api.jscudder (Jeff Scudder)'</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">api.jscudder&nbsp;(Jeff&nbsp;Scudder)</td></tr></table>
+</body></html>

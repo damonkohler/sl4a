@@ -1,0 +1,10 @@
+The build process is quite simple, get Android NDK from [1] (only Linux build
+host has been tested so far, may be the only compatible) then make sure
+ndk-build is accessible from your path. Tested against NDK R5
+
+Once that's ready just run bash build.sh from the same folder where this README
+is stored.
+
+Authors: Naranjo Manuel Francisco <naranjo.manuel@gmail.com> (c) 2010, 2011
+
+[1] http://developer.android.com/sdk/ndk/index.html

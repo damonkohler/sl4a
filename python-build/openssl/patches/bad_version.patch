@@ -1,0 +1,18 @@
+diff --git openssl-0.9.8m/ssl/s3_pkt.c openssl-0.9.8m/ssl/s3_pkt.c
+index b4abc11..5964c1d 100644
+--- openssl-0.9.8m/ssl/s3_pkt.c
++++ openssl-0.9.8m/ssl/s3_pkt.c
+@@ -292,9 +292,10 @@ again:
+ 			if (version != s->version)
+ 				{
+ 				SSLerr(SSL_F_SSL3_GET_RECORD,SSL_R_WRONG_VERSION_NUMBER);
+-				/* Send back error using their
+-				 * version number :-) */
+-				s->version=version;
++				/* If the major versions match then we'll send
++				 * the error back using the peer's version. */
++				if ((s->version & 0xFF00) == (version & 0xFF00))
++					s->version = version;
+ 				al=SSL_AD_PROTOCOL_VERSION;
+ 				goto f_err;
+ 				}

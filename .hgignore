@@ -17,7 +17,7 @@ lua/build/*
 lua/log
 android/PythonForAndroid/obj/*
 android/PythonForAndroid/libs/armeabi/*
-
+android/DocumentationGenerator/doc/*
 syntax: regexp
 (python|lua)/.*\.o
 python/.*\.pyc
