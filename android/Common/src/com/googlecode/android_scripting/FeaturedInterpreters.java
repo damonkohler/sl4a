@@ -24,8 +24,8 @@ public class FeaturedInterpreters {
           {
             new FeaturedInterpreter("BeanShell 2.0b4", ".bsh",
                 "http://android-scripting.googlecode.com/files/beanshell_for_android_r1.apk"),
-            new FeaturedInterpreter("JRuby-1.4", ".rb",
-                "http://android-scripting.googlecode.com/files/jruby_for_android_r1.apk"),
+            new FeaturedInterpreter("JRuby", ".rb",
+                "https://github.com/downloads/ruboto/sl4a_jruby_interpreter/JRubyForAndroid_r2dev.apk"),
             new FeaturedInterpreter("Lua 5.1.4", ".lua",
                 "http://android-scripting.googlecode.com/files/lua_for_android_r1.apk"),
             new FeaturedInterpreter("Perl 5.10.1", ".pl",

@@ -32,9 +32,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>QuickAction</name>
+			<name>QuickAction_src</name>
 			<type>2</type>
-			<locationURI>_android_QuickAction/src</locationURI>
+			<locationURI>_android_QuickAction_4ee25263/src</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
