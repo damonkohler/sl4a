@@ -8,6 +8,7 @@
 		      <fileset dir="../TextToSpeechFacade/bin" includes="**/*.class"/>
 		      <fileset dir="../SignalStrengthFacade/bin" includes="**/*.class"/>
 		      <fileset dir="../BluetoothFacade/bin" includes="**/*.class"/>
+		      <fileset dir="../WebCamFacade/bin" includes="**/*.class"/>
 		</jar>
 		<copy file="../ScriptingLayerForAndroid/libs/armeabi/libcom_googlecode_android_scripting_Exec.so" tofile="libs/armeabi/libcom_googlecode_android_scripting_Exec.so" overwrite="true" />
 		<copy file="../ScriptingLayerForAndroid/assets/android.js" tofile="assets/android.js" overwrite="true" />
