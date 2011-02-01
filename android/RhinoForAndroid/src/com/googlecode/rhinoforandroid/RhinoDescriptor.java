@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class RhinoDescriptor extends Sl4aHostedInterpreter {
 
@@ -75,7 +76,8 @@ public class RhinoDescriptor extends Sl4aHostedInterpreter {
     String absolutePathToJar = new File(getExtrasPath(context), RHINO_JAR).getAbsolutePath();
     return Arrays.asList("-Xss128k", "-classpath", absolutePathToJar,
         "com.android.internal.util.WithFramework", "org.mozilla.javascript.tools.shell.Main", "-O",
-        "-1");
+        "-1", "-e", "java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone('"
+            + TimeZone.getDefault().getID() + "'));");
   }
 
   @Override
