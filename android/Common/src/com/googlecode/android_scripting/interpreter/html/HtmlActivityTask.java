@@ -30,6 +30,7 @@ import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.Log;
@@ -74,18 +75,21 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   private final RpcReceiverManager mReceiverManager;
   private final String mJsonSource;
   private final String mAndroidJsSource;
+  private final String mAPIWrapperSource;
   private final String mUrl;
   private final JavaScriptWrapper mWrapper;
   private final HtmlEventObserver mObserver;
   private final UiFacade mUiFacade;
   private ChromeClient mChromeClient;
   private WebView mView;
+  private MyWebViewClient mWebViewClient;
 
   public HtmlActivityTask(RpcReceiverManager manager, String androidJsSource, String jsonSource,
       String url) {
     mReceiverManager = manager;
     mJsonSource = jsonSource;
     mAndroidJsSource = androidJsSource;
+    mAPIWrapperSource = generateAPIWrapper();
     mWrapper = new JavaScriptWrapper();
     mObserver = new HtmlEventObserver();
     mReceiverManager.getReceiver(EventFacade.class).addGlobalEventObserver(mObserver);
@@ -95,6 +99,36 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
 
   public RpcReceiverManager getRpcReceiverManager() {
     return mReceiverManager;
+  }
+
+  /*
+   * New WebviewClient
+   */
+  private class MyWebViewClient extends WebViewClient {
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+      /*
+       * if (Uri.parse(url).getHost().equals("www.example.com")) { // This is my web site, so do not
+       * override; let my WebView load the page return false; } // Otherwise, the link is not for a
+       * page on my site, so launch another Activity that handles URLs Intent intent = new
+       * Intent(Intent.ACTION_VIEW, Uri.parse(url)); startActivity(intent);
+       */
+      if (!HTTP.equals(Uri.parse(url).getScheme())) {
+        String source = null;
+        try {
+          source = FileUtils.readToString(new File(Uri.parse(url).getPath()));
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+        source =
+            "<script>" + mJsonSource + "</script>" + "<script>" + mAndroidJsSource + "</script>"
+                + "<script>" + mAPIWrapperSource + "</script>" + source;
+        mView.loadDataWithBaseURL(BASE_URL, source, "text/html", "utf-8", null);
+      } else {
+        mView.loadUrl(url);
+      }
+      return true;
+    }
   }
 
   @Override
@@ -112,10 +146,12 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     getActivity().setContentView(mView);
     mView.setOnCreateContextMenuListener(getActivity());
     mChromeClient = new ChromeClient(getActivity());
+    mWebViewClient = new MyWebViewClient();
     mView.setWebChromeClient(mChromeClient);
+    mView.setWebViewClient(mWebViewClient);
     mView.loadUrl("javascript:" + mJsonSource);
     mView.loadUrl("javascript:" + mAndroidJsSource);
-    mView.loadUrl("javascript:" + generateAPIWrapper());
+    mView.loadUrl("javascript:" + mAPIWrapperSource);
     load();
   }
 
@@ -163,7 +199,6 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   }
 
   private class JavaScriptWrapper {
-
     public String call(String data) throws JSONException {
       Log.v("Received: " + data);
       JSONObject request = new JSONObject(data);

@@ -371,7 +371,7 @@ public class UiFacade extends RpcReceiver {
       }
       return true;
     }
-    return false;
+    return true;
   }
 
   @Override
