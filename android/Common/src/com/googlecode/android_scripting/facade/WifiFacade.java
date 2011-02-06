@@ -50,6 +50,7 @@ public class WifiFacade extends RpcReceiver {
   public void wifiLockRelease() {
     if (mLock != null) {
       mLock.release();
+      mLock = null;
     }
   }
 
