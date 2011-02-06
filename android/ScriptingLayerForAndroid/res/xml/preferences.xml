@@ -81,7 +81,7 @@
       android:summary="@string/pref_camera_summary"
       android:entries="@array/list_camera"
       android:entryValues="@array/list_camera_values"
-      android:defaultValue="Ctrl+A then Space" />
+      android:defaultValue="Ctrl+A then Space" ></ListPreference>
     <CheckBoxPreference
       android:key="keepalive"
       android:title="@string/pref_keepalive_title"
@@ -92,6 +92,11 @@
       android:title="@string/pref_bumpyarrows_title"
       android:summary="@string/pref_bumpyarrows_summary"
       android:defaultValue="true" />
+    <CheckBoxPreference
+      android:key="hidekeyboard"
+      android:title="@string/pref_hidekeyboard_title"
+      android:summary="@string/pref_hidekeyboard_summary"
+      android:defaultValue="false" />
   </PreferenceCategory>
   <PreferenceCategory
     android:title="Terminal bell">

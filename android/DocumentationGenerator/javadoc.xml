@@ -8,8 +8,9 @@
         	sourcepath="../Common/src;../BluetoothFacade/src;../SignalStrengthFacade/src;../TextToSpeechFacade/src;../WebCamFacade/src">
             <doclet name="com.googlecode.android_scripting.RpcDoclet" path="bin"/>
         </javadoc>
-		<zip destfile="../ScriptingLayertForAndroid/assets/sl4adoc.zip" basedir="./" includes="**/*">
-			<fileset dir="./.tmp" includes="*"/>
+    	<delete file="../ScriptingLayerForAndroid/assets/sl4adoc.zip"/>
+		<zip destfile="../ScriptingLayerForAndroid/assets/sl4adoc.zip"
+			basedir="./doc" includes="**/*">
 		</zip>
-</target>
+  </target>
 </project>

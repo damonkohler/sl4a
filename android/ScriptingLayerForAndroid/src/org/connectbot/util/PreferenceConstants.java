@@ -54,6 +54,7 @@ public class PreferenceConstants {
   public static final String KEEP_ALIVE = "keepalive";
 
   public static final String BUMPY_ARROWS = "bumpyarrows";
+  public static final String HIDE_KEYBOARD = "hidekeyboard";
 
   public static final String SORT_BY_COLOR = "sortByColor";
 

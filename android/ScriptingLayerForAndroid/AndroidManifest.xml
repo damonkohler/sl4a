@@ -2,12 +2,12 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.googlecode.android_scripting"
-  android:versionName="4"
-  android:versionCode="4">
+  android:versionName="4x"
+  android:versionCode="4" android:installLocation="auto">
   <application
     android:icon="@drawable/sl4a_logo_48"
     android:label="@string/application_title"
-    android:name=".Sl4aApplication" android:debuggable="false">
+    android:name=".Sl4aApplication" android:debuggable="true">
     <activity
       android:name=".activity.ScriptManager"
       android:configChanges="keyboardHidden|orientation"

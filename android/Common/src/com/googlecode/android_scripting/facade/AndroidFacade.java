@@ -416,6 +416,7 @@ public class AndroidFacade extends RpcReceiver {
     result.put("TZ", zone);
     result.put("SDK", android.os.Build.VERSION.SDK);
     result.put("download", FileUtils.getExternalDownload().getAbsolutePath());
+    result.put("appcache", mService.getCacheDir().getAbsolutePath());
     return result;
   }
 }

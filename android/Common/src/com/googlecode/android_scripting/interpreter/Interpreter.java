@@ -99,8 +99,8 @@ public class Interpreter implements InterpreterPropertyNames {
     return mEnvironment;
   }
 
-  protected void setScriptCommand(String exeucteParameters) {
-    mScriptExecutionCommand = exeucteParameters;
+  protected void setScriptCommand(String executeParameters) {
+    mScriptExecutionCommand = executeParameters;
   }
 
   public String getScriptCommand() {

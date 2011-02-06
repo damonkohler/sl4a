@@ -284,7 +284,6 @@ public class ConsoleActivity extends Activity {
     inflater = LayoutInflater.from(this);
 
     flip = (ViewFlipper) findViewById(R.id.console_flip);
-
     booleanPromptGroup = (RelativeLayout) findViewById(R.id.console_boolean_group);
     booleanPrompt = (TextView) findViewById(R.id.console_prompt);
 
@@ -338,7 +337,12 @@ public class ConsoleActivity extends Activity {
         keyboardButton.setVisibility(View.GONE);
       }
     });
-
+    if (prefs.getBoolean(PreferenceConstants.HIDE_KEYBOARD, false)) {
+      // Force hidden keyboard.
+      getWindow().setSoftInputMode(
+          WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+              | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    }
     final ViewConfiguration configuration = ViewConfiguration.get(this);
     int touchSlop = configuration.getScaledTouchSlop();
     mTouchSlopSquare = touchSlop * touchSlop;
@@ -734,7 +738,6 @@ public class ConsoleActivity extends Activity {
     // connect with manager service to find all bridges
     // when connected it will insert all views
     bindService(new Intent(this, ScriptingLayerService.class), mConnection, 0);
-
   }
 
   @Override
