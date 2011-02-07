@@ -43,6 +43,10 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.codec.binary.Base64Codec;
 
+/**
+ * Bluetooth functions.
+ * 
+ */
 public class BluetoothFacade extends RpcReceiver {
 
   // UUID for SL4A.
