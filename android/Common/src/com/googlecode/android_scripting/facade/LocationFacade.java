@@ -40,7 +40,42 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * This facade exposes the LocationManager related functionality.
+ * This facade exposes the LocationManager related functionality.<br>
+ * <br>
+ * <b>Overview</b><br>
+ * Once activated by 'startLocating' the LocationFacade attempts to return location data collected
+ * via GPS or the cell network. If neither are available the last known location may be retrieved.
+ * If both are available the format of the returned data is:<br>
+ * {u'network': {u'altitude': 0, u'provider': u'network', u'longitude': -0.38509020000000002,
+ * u'time': 1297079691231L, u'latitude': 52.410557300000001, u'speed': 0, u'accuracy': 75}, u'gps':
+ * {u'altitude': 51, u'provider': u'gps', u'longitude': -0.38537094593048096, u'time':
+ * 1297079709000L, u'latitude': 52.41076922416687, u'speed': 0, u'accuracy': 24}}<br>
+ * If neither are available {} is returned. <br>
+ * Example (python):<br>
+ * 
+ * <pre>
+ * import android, time
+ * droid = android.Android()
+ * droid.startLocating()
+ * time.sleep(15)
+ * loc = droid.readLocation().result
+ * if loc = {}:
+ *   loc = getLastKnownLocation().result
+ * if loc != {}:
+ *   try:
+ *     n = loc['gps']
+ *   except KeyError:
+ *     n = loc['network'] 
+ *   la = n['latitude'] 
+ *   lo = n['longitude']
+ *   address = droid.geocode(la, lo).result
+ * droid.stopLocating()
+ * </pre>
+ * 
+ * The address format is:<br>
+ * [{u'thoroughfare': u'Some Street', u'locality': u'Some Town', u'sub_admin_area': u'Some Borough',
+ * u'admin_area': u'Some City', u'feature_name': u'House Numbers', u'country_code': u'GB',
+ * u'country_name': u'United Kingdom', u'postal_code': u'ST1 1'}]
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Felix Arends (felix.arends@gmail.com)

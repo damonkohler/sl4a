@@ -47,6 +47,10 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * Access Camera functions.
+ * 
+ */
 public class CameraFacade extends RpcReceiver {
 
   private final Service mService;

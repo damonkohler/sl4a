@@ -58,6 +58,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Some general purpose Android routines.
+ * 
+ */
 public class AndroidFacade extends RpcReceiver {
   /**
    * An instance of this interface is passed to the facade. From this object, the resource IDs can

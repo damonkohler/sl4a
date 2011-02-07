@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Facade for managing Applications.
+ * 
+ */
 public class ApplicationManagerFacade extends RpcReceiver {
 
   private final AndroidFacade mAndroidFacade;

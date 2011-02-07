@@ -8,6 +8,10 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+/**
+ * Generate DTMF tones.
+ * 
+ */
 public class ToneGeneratorFacade extends RpcReceiver {
 
   private final ToneGenerator mToneGenerator;

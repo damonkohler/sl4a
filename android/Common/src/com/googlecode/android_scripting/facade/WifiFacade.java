@@ -14,6 +14,10 @@ import com.googlecode.android_scripting.rpc.RpcParameter;
 
 import java.util.List;
 
+/**
+ * Wifi functions.
+ * 
+ */
 public class WifiFacade extends RpcReceiver {
 
   private final Service mService;
