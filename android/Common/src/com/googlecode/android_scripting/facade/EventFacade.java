@@ -36,13 +36,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Manage the event queue.
- * 
+ * Manage the event queue. <br>
+ * <br>
+ * <b>Usage Notes:</b><br>
  * EventFacade APIs interact with the Event Queue (a data buffer containing up to 1024 event
- * entries). Events are automatically entered into the Event Queue following API calls such as
- * startSensing() and startLocating(). The Event Facade provides control over how events are entered
- * into (and removed from) the Event Queue. The Event Queue provides a useful means of recording
- * background events (such as sensor data) when the phone is busy with foreground activities.
+ * entries).<br>
+ * Events are automatically entered into the Event Queue following API calls such as startSensing()
+ * and startLocating().<br>
+ * The Event Facade provides control over how events are entered into (and removed from) the Event
+ * Queue.<br>
+ * The Event Queue provides a useful means of recording background events (such as sensor data) when
+ * the phone is busy with foreground activities.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
  * 
