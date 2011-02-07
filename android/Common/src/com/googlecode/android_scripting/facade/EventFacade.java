@@ -36,8 +36,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This facade exposes the functionality to read from the event queue as an RPC, and the
- * functionality to write to the event queue as a pure java function.
+ * Manage the event queue.
+ * 
+ * EventFacade APIs interact with the Event Queue (a data buffer containing up to 1024 event
+ * entries). Events are automatically entered into the Event Queue following API calls such as
+ * startSensing() and startLocating(). The Event Facade provides control over how events are entered
+ * into (and removed from) the Event Queue. The Event Queue provides a useful means of recording
+ * background events (such as sensor data) when the phone is busy with foreground activities.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
  * 
@@ -58,10 +63,38 @@ public class EventFacade extends RpcReceiver {
     super(manager);
   }
 
+  /**
+   * Example (python): droid.eventClearBuffer()
+   */
   @Rpc(description = "Clears all events from the event buffer.")
   public void eventClearBuffer() {
     mEventQueue.clear();
   }
+
+  /**
+   * Actual data returned in the map will depend on the type of event.
+   * 
+   * <pre>
+   * Example (python):
+   *     import android, time
+   *     droid = android.Android()
+   *     droid.startSensing()
+   *     time.sleep(1)
+   *     droid.eventClearBuffer()
+   *     time.sleep(1)
+   *     e = eventPoll(1).result
+   *     event_entry_number = 0
+   *     x = e[event_entry_ number]['data']['xforce']
+   * </pre>
+   * 
+   * e has the format:<br>
+   * [{u'data': {u'accuracy': 0, u'pitch': -0.48766891956329345, u'xmag': -5.6875, u'azimuth':
+   * 0.3312483489513397, u'zforce': 8.3492730000000002, u'yforce': 4.5628165999999997, u'time':
+   * 1297072704.813, u'ymag': -11.125, u'zmag': -42.375, u'roll': -0.059393649548292161, u'xforce':
+   * 0.42223078000000003}, u'name': u'sensors', u'time': 1297072704813000L}]<br>
+   * x has the string value of the x force data (0.42223078000000003) at the time of the event
+   * entry. </pre>
+   */
 
   @Rpc(description = "Returns and removes the oldest n events (i.e. location or sensor update, etc.) from the event buffer.", returns = "A List of Maps of event properties.")
   public List<Event> eventPoll(
@@ -132,6 +165,16 @@ public class EventFacade extends RpcReceiver {
     }
   }
 
+  /**
+   * <pre>
+   * Example:
+   *   import android
+   *   from datetime import datetime
+   *   droid = android.Android()
+   *   t = datetime.now()
+   *   droid.eventPost('Some Event', t)
+   * </pre>
+   */
   @Rpc(description = "Post an event to the event queue.")
   public void eventPost(@RpcParameter(name = "name") String name,
       @RpcParameter(name = "data") String data) {

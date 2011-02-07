@@ -40,13 +40,13 @@ public class Exec {
   /**
    * @param cmd
    *          The command to execute
-   * @param arg0
-   *          The first argument to the command, may be null
-   * @param arg1
-   *          the second argument to the command, may be null
+   * @param arguments
+   *          Array of arguments, may be null
+   * @param environmentVariables
+   *          Array of environment variables, may be null
    * @param processId
    *          A one-element array to which the process ID of the started process will be written.
-   * @return the file descriptor of the started process.
+   * @return the file descriptor of the opened process's psuedo-terminal.
    * 
    */
   public static native FileDescriptor createSubprocess(String command, String[] arguments,

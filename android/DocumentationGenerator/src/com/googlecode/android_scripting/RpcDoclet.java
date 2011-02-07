@@ -169,6 +169,10 @@ public class RpcDoclet {
         outputln("<br><i>Min SDK level="
             + buildAnnotationDetails(amap.get("RpcMinSdk")).get("value") + "</i>");
       }
+      if (amap.containsKey("RpcDeprecated")) {
+        outputln("<br><i>Deprecated. Use "
+            + buildAnnotationDetails(amap.get("RpcDeprecated")).get("value") + " instead.</i>");
+      }
       outputln("</td></tr>");
     }
     outputln("</table>");
