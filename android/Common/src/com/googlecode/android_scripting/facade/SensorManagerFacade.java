@@ -34,7 +34,47 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Exposes the SensorManager related functionality.
+ * Exposes the SensorManager related functionality. <br>
+ * <br>
+ * <b>Guidance notes</b> <br>
+ * For reasons of economy the sensors on smart phones are usually low cost and, therefore, low
+ * accuracy. The floating point data values obtained from sensor readings have up to 16 decimal
+ * places, the majority of which are sensor noise. The startSensing API allows for an averaging of
+ * sensor readings in an attempt to reduce the level of noise. On many phones the accelerometer is
+ * often limited (by the phone manufacturer) to a maximum reading of 2g. The magnetometer (which
+ * also provides orientation readings) is strongly affected by the presence of ferrous metals and
+ * can give large errors in vehicles, on board ship etc. Following a 'startSensing' call sensor
+ * events are entered into the Event Queue (see EventFacade) at a fairly fast rate (20/30Hz). It is
+ * not possible with SL4A (at present) to control this rate.<br>
+ * 
+ * <br>
+ * <b>Example (python)</b>
+ * 
+ * <pre>
+ * import android, time
+ * droid = android.Android()
+ * droid.startSensing()
+ * time.sleep(1)
+ * s1 = droid.readSensors().result
+ * s2 = droid.sensorsGetAccuracy().result
+ * s3 = droid.sensorsGetLight().result
+ * s4 = droid.sensorsReadAccelerometer().result
+ * s5 = droid.sensorsReadMagnetometer().result
+ * s6 = droid.sensorsReadOrientation().result
+ * droid.stopSensing()
+ * </pre>
+ * 
+ * Returns:<br>
+ * s1 = {u'accuracy': 3, u'pitch': -0.47323511242866517, u'xmag': 1.75, u'azimuth':
+ * -0.26701245009899138, u'zforce': 8.4718560000000007, u'yforce': 4.2495484000000001, u'time':
+ * 1297160391.2820001, u'ymag': -8.9375, u'zmag': -41.0625, u'roll': -0.031366908922791481,
+ * u'xforce': 0.23154590999999999}<br>
+ * s2 = 3<br>
+ * s3 = None ---(not on my phone)<br>
+ * s4 = [0.23154590999999999, 4.2495484000000001, 8.4718560000000007] ----(x, y, z)<br>
+ * s5 = [1.75, -8.9375, -41.0625] -----(x, y, z)<br>
+ * s6 = [-0.26701245009899138, -0.47323511242866517, -0.031366908922791481] ---(azimuth, pitch,
+ * roll)<br>
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Felix Arends (felix.arends@gmail.com)

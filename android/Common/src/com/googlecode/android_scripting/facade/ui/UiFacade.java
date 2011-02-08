@@ -49,7 +49,65 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 /**
- * UiFacade
+ * User Interface Facade. <br>
+ * <br>
+ * <b>Usage Notes</b><br>
+ *<br>
+ * The UI facade provides access to a selection of dialog boxes for general user interaction, and
+ * also hosts the {@link #webViewShow} call which allows interactive use of html pages.<br>
+ * The general use of the dialog functions is as follows:<br>
+ * <ol>
+ * <li>Create a dialog using one of the following calls:
+ * <ul>
+ * <li>{@link #dialogCreateInput}
+ * <li>{@link #dialogCreateAlert}
+ * <li>{@link #dialogCreateDatePicker}
+ * <li>{@link #dialogCreateHorizontalProgress}
+ * <li>{@link #dialogCreatePassword}
+ * <li>{@link #dialogCreateSeekBar}
+ * <li>{@link #dialogCreateSpinnerProgress}
+ * </ul>
+ * <li>Set additional features to your dialog
+ * <ul>
+ * <li>{@link #dialogSetItems} Set a list of items.}
+ * <li>{@link #dialogSetMultiChoiceItems} Set a multichoice list of items.
+ * <li>{@link #dialogSetSingleChoiceItems} Set a single choice list of items.
+ * <li>{@link #dialogSetPositiveButtonText}
+ * <li>{@link #dialogSetNeutralButtonText}
+ * <li>{@link #dialogSetNegativeButtonText}
+ * <li>{@link #dialogSetMaxProgress} Set max progress for your progress bar.
+ * </ul>
+ * <li>Display the dialog using {@link #dialogShow}
+ * <li>Update dialog information if needed
+ * <ul>
+ * <li>{@link #dialogSetCurrentProgress}
+ * </ul>
+ * <li>Get the results
+ * <ul>
+ * <li>Using {@link #dialogGetResponse}, which will wait until the user performs an action to close
+ * the dialog box, or
+ * <li>Use eventPoll to wait for a "dialog" event.
+ * <li>You can find out which list items were selected using {@link #dialogGetSelectedItems}, which
+ * returns an array of numeric indices to your list. For a single choice list, there will only ever
+ * be one of these.
+ * </ul>
+ * <li>Once done, use {@link #dialogDismiss} to remove the dialog.
+ * </ol>
+ * <br>
+ * You can also manipulate menu options.
+ * <ul>
+ * <li>{@link #clearOptionsMenu}
+ * <li>{@link #addOptionsMenuItem}
+ * </ul>
+ * <br>
+ * <b>Some notes:</b><br>
+ * Not every dialogSet function is relevant to every dialog type, ie, dialogSetMaxProgress obviously
+ * only applies to dialogs created with a progress bar. Also, an Alert Dialog may have a message or
+ * items, not both. If you set both, items will take priority.<br>
+ * In addition to the above functions, {@link #dialogGetInput} and {@link #dialogGetPassword} are
+ * convenience functions that create, display and return the relevant dialogs in one call.<br>
+ * There is only ever one instance of a dialog. Any dialogCreate call will cause the existing dialog
+ * to be destroyed.
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com)
  */
@@ -97,6 +155,18 @@ public class UiFacade extends RpcReceiver {
     ((AlertDialogTask) mDialogTask).setPasswordInput();
   }
 
+  /**
+   * The result is the user's input, or None (null) if cancel was hit. <br>
+   * Example (python)
+   * 
+   * <pre>
+   * import android
+   * droid=android.Android()
+   * 
+   * print droid.dialogGetInput("Title","Message","Default").result
+   * </pre>
+   * 
+   */
   @SuppressWarnings("unchecked")
   @Rpc(description = "Queries the user for a text input.")
   public String dialogGetInput(
@@ -152,6 +222,32 @@ public class UiFacade extends RpcReceiver {
         new ProgressDialogTask(ProgressDialog.STYLE_HORIZONTAL, max, title, message, true);
   }
 
+  /**
+   * <b>Example (python)</b>
+   * 
+   * <pre>
+   *   import android
+   *   droid=android.Android()
+   *   droid.dialogCreateAlert("I like swords.","Do you like swords?")
+   *   droid.dialogSetPositiveButtonText("Yes")
+   *   droid.dialogSetNegativeButtonText("No")
+   *   droid.dialogShow()
+   *   response=droid.dialogGetResponse().result
+   *   droid.dialogDismiss()
+   *   if response.has_key("which"):
+   *     result=response["which"]
+   *     if result=="positive":
+   *       print "Yay! I like swords too!"
+   *     elif result=="negative":
+   *       print "Oh. How sad."
+   *   elif response.has_key("canceled"): # Yes, I know it's mispelled.
+   *     print "You can't even make up your mind?"
+   *   else:
+   *     print "Unknown response=",response
+   * 
+   *   print "Done"
+   * </pre>
+   */
   @Rpc(description = "Create alert dialog.")
   public void dialogCreateAlert(@RpcParameter(name = "title") @RpcOptional String title,
       @RpcParameter(name = "message") @RpcOptional String message) {
@@ -304,6 +400,10 @@ public class UiFacade extends RpcReceiver {
     }
   }
 
+  /**
+   * See <a href=http://code.google.com/p/android-scripting/wiki/UsingWebView>wiki page</a> for more
+   * detail.
+   */
   @Rpc(description = "Display a WebView with the given URL.")
   public void webViewShow(
       @RpcParameter(name = "url") String url,
@@ -322,6 +422,9 @@ public class UiFacade extends RpcReceiver {
     }
   }
 
+  /**
+   * Context menus are used primarily with {@link #webViewShow}
+   */
   @Rpc(description = "Adds a new item to context menu.")
   public void addContextMenuItem(
       @RpcParameter(name = "label", description = "label for this menu item") String label,
@@ -330,6 +433,31 @@ public class UiFacade extends RpcReceiver {
     mContextMenuItems.add(new UiMenuItem(label, event, data, null));
   }
 
+  /**
+   * <b>Example (python)</b>
+   * 
+   * <pre>
+   * import android
+   * droid=android.Android()
+   * 
+   * droid.addOptionsMenuItem("Silly","silly",None,"star_on")
+   * droid.addOptionsMenuItem("Sensible","sensible","I bet.","star_off")
+   * droid.addOptionsMenuItem("Off","off",None,"ic_menu_revert")
+   * 
+   * print "Hit menu to see extra options."
+   * print "Will timeout in 10 seconds if you hit nothing."
+   * 
+   * while True: # Wait for events from the menu.
+   *   response=droid.eventWait(10000).result
+   *   if response==None:
+   *     break
+   *   print response
+   *   if response["name"]=="off":
+   *     break
+   * print "And done."
+   * 
+   * </pre>
+   */
   @Rpc(description = "Adds a new item to options menu.")
   public void addOptionsMenuItem(
       @RpcParameter(name = "label", description = "label for this menu item") String label,

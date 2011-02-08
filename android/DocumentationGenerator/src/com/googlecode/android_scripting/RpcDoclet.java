@@ -98,6 +98,9 @@ public class RpcDoclet {
   }
 
   private String link(String href, String text) {
+    if (text.startsWith("#")) {
+      text = text.substring(1);
+    }
     return "<a href=\"" + href + "\">" + text + "</a>";
   }
 
@@ -163,7 +166,7 @@ public class RpcDoclet {
             + mlist.get("returns"));
       }
       if (method.commentText() != null && !method.commentText().isEmpty()) {
-        outputln("<br>" + method.commentText());
+        outputln("<br>" + expandTags(method));
       }
       if (amap.containsKey("RpcMinSdk")) {
         outputln("<br><i>Min SDK level="
