@@ -52,53 +52,83 @@ public class FutureActivity extends Activity {
     }
     FutureActivityTaskExecutor taskQueue = ((BaseApplication) getApplication()).getTaskExecutor();
     mTask = taskQueue.getTask(id);
-    mTask.setActivity(this);
-    mTask.onCreate();
+    if (mTask == null) { // TODO: (Robbie) This is a bit of a kludge. Not sure why this is happening
+      // at all.
+      Log.w("FutureActivity has no task!");
+      try {
+        Class<?> clazz = Class.forName("com.googlecode.android_scripting.activity.ScriptManager");
+        Intent intent = new Intent(this, clazz);
+        startActivity(intent);
+      } catch (Exception e) {
+        Log.e("Can't find scripting activity.");
+      }
+    } else {
+      mTask.setActivity(this);
+      mTask.onCreate();
+    }
   }
 
   @Override
   protected void onStart() {
     super.onStart();
-    mTask.onStart();
+    if (mTask != null) {
+      mTask.onStart();
+    }
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    mTask.onResume();
+    if (mTask != null) {
+      mTask.onResume();
+    }
   }
 
   @Override
   protected void onPause() {
     super.onPause();
-    mTask.onPause();
+    if (mTask != null) {
+      mTask.onPause();
+    }
   }
 
   @Override
   protected void onStop() {
     super.onStop();
-    mTask.onStop();
+    if (mTask != null) {
+      mTask.onStop();
+    }
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    mTask.onDestroy();
+    if (mTask != null) {
+      mTask.onDestroy();
+    }
   }
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-    mTask.onCreateContextMenu(menu, v, menuInfo);
+    if (mTask != null) {
+      mTask.onCreateContextMenu(menu, v, menuInfo);
+    }
   }
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
-    return mTask.onPrepareOptionsMenu(menu);
+    if (mTask != null) {
+      return false;
+    } else {
+      return mTask.onPrepareOptionsMenu(menu);
+    }
   }
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    mTask.onActivityResult(requestCode, resultCode, data);
+    if (mTask != null) {
+      mTask.onActivityResult(requestCode, resultCode, data);
+    }
   }
 }
