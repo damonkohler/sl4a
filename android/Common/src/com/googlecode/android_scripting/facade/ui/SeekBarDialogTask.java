@@ -24,6 +24,7 @@ import android.util.AndroidRuntimeException;
 import android.widget.SeekBar;
 
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.facade.EventFacade;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,6 +66,33 @@ public class SeekBarDialogTask extends DialogTask {
     mSeekBar.setMax(mMax);
     mSeekBar.setProgress(mProgress);
     mSeekBar.setPadding(10, 0, 10, 3);
+    mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+      @Override
+      public void onStopTrackingTouch(SeekBar arg0) {
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar arg0) {
+      }
+
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        EventFacade eventFacade = getEventFacade();
+        if (eventFacade != null) {
+          JSONObject result = new JSONObject();
+          try {
+            result.put("which", "seekbar");
+            result.put("progress", mSeekBar.getProgress());
+            result.put("fromuser", fromUser);
+            eventFacade.postEvent("dialog", result);
+          } catch (JSONException e) {
+            Log.e(e);
+          }
+        }
+      }
+    });
+
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     if (mTitle != null) {
       builder.setTitle(mTitle);

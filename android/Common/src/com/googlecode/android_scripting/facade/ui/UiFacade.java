@@ -69,7 +69,7 @@ import org.json.JSONException;
  * </ul>
  * <li>Set additional features to your dialog
  * <ul>
- * <li>{@link #dialogSetItems} Set a list of items.}
+ * <li>{@link #dialogSetItems} Set a list of items. Used like a menu.
  * <li>{@link #dialogSetMultiChoiceItems} Set a multichoice list of items.
  * <li>{@link #dialogSetSingleChoiceItems} Set a single choice list of items.
  * <li>{@link #dialogSetPositiveButtonText}
@@ -255,6 +255,15 @@ public class UiFacade extends RpcReceiver {
     mDialogTask = new AlertDialogTask(title, message);
   }
 
+  /**
+   * Will produce "dialog" events on change, containing:
+   * <ul>
+   * <li>"progress" - Position chosen, between 0 and max
+   * <li>"which" = "seekbar"
+   * <li>"fromuser" = true/false change is from user input
+   * </ul>
+   * Response will contain a "progress" element.
+   */
   @Rpc(description = "Create seek bar dialog.")
   public void dialogCreateSeekBar(
       @RpcParameter(name = "starting value") @RpcDefault("50") Integer progress,
