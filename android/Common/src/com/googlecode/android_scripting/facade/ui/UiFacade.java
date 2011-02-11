@@ -359,6 +359,10 @@ public class UiFacade extends RpcReceiver {
   }
 
   // TODO(damonkohler): Make RPC layer translate between JSONArray and List<Object>.
+  /**
+   * This effectively creates list of options. Clicking on an item will immediately return an "item"
+   * element, which is the index of the selected item.
+   */
   @Rpc(description = "Set alert dialog list items.")
   public void dialogSetItems(@RpcParameter(name = "items") JSONArray items) {
     if (mDialogTask != null && mDialogTask instanceof AlertDialogTask) {
@@ -368,6 +372,12 @@ public class UiFacade extends RpcReceiver {
     }
   }
 
+  /**
+   * This creates a list of radio buttons. You can select one item out of the list. A response will
+   * not be returned until the dialog is closed, either with the Cancel key or a button
+   * (positive/negative/neutral). Use {@link #dialogGetSelectedItems()} to find out what was
+   * selected.
+   */
   @Rpc(description = "Set dialog single choice items and selected item.")
   public void dialogSetSingleChoiceItems(
       @RpcParameter(name = "items") JSONArray items,
@@ -378,6 +388,13 @@ public class UiFacade extends RpcReceiver {
       throw new AndroidRuntimeException("No dialog to add list to.");
     }
   }
+
+  /**
+   * This creates a list of check boxes. You can select multiple items out of the list. A response
+   * will not be returned until the dialog is closed, either with the Cancel key or a button
+   * (positive/negative/neutral). Use {@link #dialogGetSelectedItems()} to find out what was
+   * selected.
+   */
 
   @Rpc(description = "Set dialog multiple choice items and selection.")
   public void dialogSetMultiChoiceItems(
