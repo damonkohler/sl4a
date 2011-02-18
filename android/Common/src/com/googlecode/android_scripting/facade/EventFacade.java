@@ -182,7 +182,7 @@ public class EventFacade extends RpcReceiver {
   @Rpc(description = "Post an event to the event queue.")
   public void eventPost(@RpcParameter(name = "name", description = "Name of event") String name,
       @RpcParameter(name = "data", description = "Data contained in event.") String data) {
-    postEvent(name, data);
+    postEvent(name, (Object) data);
   }
 
   /**
