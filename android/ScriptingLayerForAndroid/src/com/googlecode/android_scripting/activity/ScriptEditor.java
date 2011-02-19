@@ -74,7 +74,7 @@ public class ScriptEditor extends Activity {
   private boolean mIsUndoOrRedo = false;
 
   private static enum MenuId {
-    SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP;
+    SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP, SHARE;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -160,6 +160,7 @@ public class ScriptEditor extends Activity {
     menu.add(0, MenuId.API_BROWSER.getId(), 0, "API Browser").setIcon(
         android.R.drawable.ic_menu_info_details);
     menu.add(0, MenuId.HELP.getId(), 0, "Help").setIcon(android.R.drawable.ic_menu_help);
+    menu.add(0, MenuId.SHARE.getId(), 0, "Share").setIcon(android.R.drawable.ic_menu_share);
     return true;
   }
 
@@ -193,6 +194,12 @@ public class ScriptEditor extends Activity {
       startActivityForResult(intent, RequestCode.RPC_HELP.ordinal());
     } else if (item.getItemId() == MenuId.HELP.getId()) {
       Help.show(this);
+    } else if (item.getItemId() == MenuId.SHARE.getId()) {
+      Intent intent = new Intent(Intent.ACTION_SEND);
+      intent.putExtra(Intent.EXTRA_TEXT, mContentText.getText().toString());
+      intent.putExtra(Intent.EXTRA_SUBJECT, "Share " + mNameText.getText().toString());
+      intent.setType("text/plain");
+      startActivity(Intent.createChooser(intent, "Send Script to:"));
     }
     return super.onOptionsItemSelected(item);
   }

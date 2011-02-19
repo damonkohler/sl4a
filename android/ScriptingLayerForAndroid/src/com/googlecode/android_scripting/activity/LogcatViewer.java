@@ -117,7 +117,7 @@ public class LogcatViewer extends ListActivity {
     menu.add(Menu.NONE, MenuId.HELP.getId(), Menu.NONE, "Help").setIcon(
         android.R.drawable.ic_menu_help);
     menu.add(Menu.NONE, MenuId.SHARE.getId(), Menu.NONE, "Share").setIcon(
-        android.R.drawable.ic_dialog_email);
+        android.R.drawable.ic_menu_share);
     menu.add(Menu.NONE, MenuId.COPY.getId(), Menu.NONE, "Copy").setIcon(
         android.R.drawable.ic_menu_edit);
     return super.onCreateOptionsMenu(menu);
