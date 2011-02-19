@@ -31,7 +31,7 @@ public class FeaturedInterpreters {
             new FeaturedInterpreter("Perl 5.10.1", ".pl",
                 "http://android-scripting.googlecode.com/files/perl_for_android_r1.apk"),
             new FeaturedInterpreter("Python 2.6.2", ".py",
-                "http://android-scripting.googlecode.com/files/python_for_android_r1.apk"),
+                "http://python-for-android.googlecode.com/files/PythonForAndroid_r3.apk"),
             new FeaturedInterpreter("Rhino 1.7R2", ".js",
                 "http://android-scripting.googlecode.com/files/rhino_for_android_r1.apk"),
             new FeaturedInterpreter("PHP 5.3.3", ".php",
