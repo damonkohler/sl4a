@@ -118,7 +118,10 @@ public class Process {
     int[] pid = new int[1];
     String[] argumentsArray = mArguments.toArray(new String[mArguments.size()]);
     mLog = new File(String.format("%s/%s.log", InterpreterConstants.SDCARD_SL4A_ROOT, getName()));
-    mFd = Exec.createSubprocess(binaryPath, argumentsArray, getEnvironmentArray(), pid);
+
+    mFd =
+        Exec.createSubprocess(binaryPath, argumentsArray, getEnvironmentArray(),
+            getWorkingDirectory(), pid);
     mPid.set(pid[0]);
     mOut = new FileOutputStream(mFd);
     mIn = new StreamGobbler(new FileInputStream(mFd), mLog, DEFAULT_BUFFER_SIZE);
@@ -194,5 +197,9 @@ public class Process {
 
   public void setName(String name) {
     mName = name;
+  }
+
+  public String getWorkingDirectory() {
+    return null;
   }
 }

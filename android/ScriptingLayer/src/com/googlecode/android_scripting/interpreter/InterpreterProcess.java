@@ -96,4 +96,9 @@ public class InterpreterProcess extends Process {
     super.kill();
     mProxy.shutdown();
   }
+
+  @Override
+  public String getWorkingDirectory() {
+    return InterpreterConstants.SDCARD_SL4A_ROOT;
+  }
 }

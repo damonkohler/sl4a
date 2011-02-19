@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;[Ljava/lang/String;[Ljava/lang/String;[I)Ljava/io/FileDescriptor;
  */
 JNIEXPORT jobject JNICALL Java_com_googlecode_android_1scripting_Exec_createSubprocess
-  (JNIEnv *, jclass, jstring, jobjectArray, jobjectArray, jintArray);
+  (JNIEnv *, jclass, jstring, jobjectArray, jobjectArray, jstring, jintArray);
 
 /*
  * Class:     com_googlecode_android_scripting_Exec

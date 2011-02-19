@@ -33,8 +33,8 @@ public class Exec {
    * 
    */
   public static FileDescriptor createSubprocess(String command, String[] arguments,
-      String[] environmentVariables) {
-    return createSubprocess(command, arguments, environmentVariables, null);
+      String[] environmentVariables, String workingDirectory) {
+    return createSubprocess(command, arguments, environmentVariables, workingDirectory, null);
   }
 
   /**
@@ -50,7 +50,7 @@ public class Exec {
    * 
    */
   public static native FileDescriptor createSubprocess(String command, String[] arguments,
-      String[] environmentVariables, int[] processId);
+      String[] environmentVariables, String workingDirectory, int[] processId);
 
   public static native void setPtyWindowSize(FileDescriptor fd, int row, int col, int xpixel,
       int ypixel);

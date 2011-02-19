@@ -32,7 +32,7 @@
 #define LOG_TAG "Exec"
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-int CreateSubprocess(const char* cmd, char* args[], char* vars[], pid_t* pid) {
+int CreateSubprocess(const char* cmd, char* args[], char* vars[], char *wkdir, pid_t* pid) {
   char* devname;
   int ptm = open("/dev/ptmx", O_RDWR);
   if(ptm < 0){
@@ -64,6 +64,7 @@ int CreateSubprocess(const char* cmd, char* args[], char* vars[], pid_t* pid) {
     dup2(pts, 1);
     dup2(pts, 2);
     close(ptm);
+    if (wkdir) chdir(wkdir);
     execve(cmd, args, vars);
     exit(-1);
   } else {
@@ -119,8 +120,10 @@ int JNU_GetFdFromFileDescriptor(JNIEnv* env, jobject fileDescriptor) {
 
 JNIEXPORT jobject JNICALL Java_com_googlecode_android_1scripting_Exec_createSubprocess(
     JNIEnv* env, jclass clazz, jstring cmd, jobjectArray argArray, jobjectArray varArray,
+    jstring workingDirectory,
     jintArray processIdArray) {
   char* cmd_native = JNU_GetStringNativeChars(env, cmd);
+  char* wkdir_native = JNU_GetStringNativeChars(env, workingDirectory);
   pid_t pid;
   jsize len = 0;
   if (argArray) {
@@ -147,7 +150,7 @@ JNIEXPORT jobject JNICALL Java_com_googlecode_android_1scripting_Exec_createSubp
   }
   vars[len] = NULL;
 
-  int ptm = CreateSubprocess(cmd_native, args, vars, &pid);
+  int ptm = CreateSubprocess(cmd_native, args, vars, wkdir_native, &pid);
   if (processIdArray) {
     if (env->GetArrayLength(processIdArray) > 0) {
       jboolean isCopy;
