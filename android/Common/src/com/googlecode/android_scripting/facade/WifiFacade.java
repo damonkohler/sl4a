@@ -31,6 +31,13 @@ public class WifiFacade extends RpcReceiver {
     mLock = null;
   }
 
+  private void makeLock(int wifiMode) {
+    if (mLock == null) {
+      mLock = mWifi.createWifiLock(wifiMode, "sl4a");
+      mLock.acquire();
+    }
+  }
+
   @Rpc(description = "Returns the list of access points found during the most recent Wifi scan.")
   public List<ScanResult> wifiGetScanResults() {
     return mWifi.getScanResults();
@@ -38,16 +45,12 @@ public class WifiFacade extends RpcReceiver {
 
   @Rpc(description = "Acquires a full Wifi lock.")
   public void wifiLockAcquireFull() {
-    if (mLock == null) {
-      mLock = mWifi.createWifiLock(WifiManager.WIFI_MODE_FULL, "sl4a");
-    }
+    makeLock(WifiManager.WIFI_MODE_FULL);
   }
 
   @Rpc(description = "Acquires a scan only Wifi lock.")
   public void wifiLockAcquireScanOnly() {
-    if (mLock == null) {
-      mLock = mWifi.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY, "sl4a");
-    }
+    makeLock(WifiManager.WIFI_MODE_SCAN_ONLY);
   }
 
   @Rpc(description = "Releases a previously acquired Wifi lock.")
