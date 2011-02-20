@@ -54,6 +54,7 @@ import com.googlecode.android_scripting.ScriptListAdapter;
 import com.googlecode.android_scripting.ScriptStorageAdapter;
 import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.dialog.UsageTrackingConfirmation;
+import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
@@ -91,6 +92,7 @@ public class ScriptManager extends ListActivity {
   private File mCurrentDir;
   private final File mBaseDir = new File(InterpreterConstants.SCRIPTS_ROOT);
   private final Handler mHandler = new Handler();
+  private File mCurrent;
 
   private static enum RequestCode {
     INSTALL_INTERPETER, QRCODE_ADD
@@ -358,11 +360,17 @@ public class ScriptManager extends ListActivity {
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
     final File file = (File) list.getItemAtPosition(position);
+    mCurrent = file;
     if (file.isDirectory()) {
       mCurrentDir = file;
       mAdapter.notifyDataSetInvalidated();
       return;
     }
+    if (FacadeConfiguration.getSdkLevel() <= 3) {
+      doDialogMenu();
+      return;
+    }
+
     final QuickAction actionMenu = new QuickAction(view);
 
     ActionItem terminal = new ActionItem();
@@ -424,6 +432,46 @@ public class ScriptManager extends ListActivity {
     actionMenu.addActionItems(terminal, background, edit, rename, delete);
     actionMenu.setAnimStyle(QuickAction.ANIM_GROW_FROM_CENTER);
     actionMenu.show();
+  }
+
+  // Quickedit chokes on sdk 3 or below. Provider alternative menu.
+  private void doDialogMenu() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    final CharSequence[] menuList =
+        { "Run Foreground", "Run Background", "Edit", "Delete", "Rename" };
+    builder.setTitle(mCurrent.getName());
+    builder.setItems(menuList, new DialogInterface.OnClickListener() {
+
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        Intent intent;
+        switch (which) {
+        case 0:
+          intent = new Intent(ScriptManager.this, ScriptingLayerService.class);
+          intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
+          intent.putExtra(Constants.EXTRA_SCRIPT_PATH, mCurrent.getPath());
+          startService(intent);
+          break;
+        case 1:
+          intent = new Intent(ScriptManager.this, ScriptingLayerService.class);
+          intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
+          intent.putExtra(Constants.EXTRA_SCRIPT_PATH, mCurrent.getPath());
+          startService(intent);
+          break;
+        case 2:
+          editScript(mCurrent);
+          break;
+        case 3:
+          delete(mCurrent);
+          break;
+        case 4:
+          rename(mCurrent);
+          break;
+
+        }
+      }
+    });
+    builder.show();
   }
 
   private void dismissQuickActions(final QuickAction action) {

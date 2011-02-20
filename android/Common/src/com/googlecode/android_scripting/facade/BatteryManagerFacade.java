@@ -94,15 +94,17 @@ public class BatteryManagerFacade extends RpcReceiver {
       data.putInt("status", mBatteryStatus);
       data.putInt("health", mBatteryHealth);
       data.putInt("plugged", mPlugType);
-      data.putBoolean("battery_present", mBatteryPresent);
-      if (mBatteryMaxLevel == null || mBatteryMaxLevel == 100 || mBatteryMaxLevel == 0) {
-        data.putInt("level", mBatteryLevel);
-      } else {
-        data.putInt("level", (int) (mBatteryLevel * 100.0 / mBatteryMaxLevel));
+      if (mSdkVersion >= 5) {
+        data.putBoolean("battery_present", mBatteryPresent);
+        if (mBatteryMaxLevel == null || mBatteryMaxLevel == 100 || mBatteryMaxLevel == 0) {
+          data.putInt("level", mBatteryLevel);
+        } else {
+          data.putInt("level", (int) (mBatteryLevel * 100.0 / mBatteryMaxLevel));
+        }
+        data.putInt("voltage", mBatteryVoltage);
+        data.putInt("temperature", mBatteryTemperature);
+        data.putString("technology", mBatteryTechnology);
       }
-      data.putInt("voltage", mBatteryVoltage);
-      data.putInt("temperature", mBatteryTemperature);
-      data.putString("technology", mBatteryTechnology);
       mBatteryData = data;
       mmEventFacade.postEvent("battery", mBatteryData.clone());
     }
