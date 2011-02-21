@@ -173,8 +173,10 @@ public class RpcDoclet {
             + buildAnnotationDetails(amap.get("RpcMinSdk")).get("value") + "</i>");
       }
       if (amap.containsKey("RpcDeprecated")) {
-        outputln("<br><i>Deprecated. Use "
-            + buildAnnotationDetails(amap.get("RpcDeprecated")).get("value") + " instead.</i>");
+        Map<String, String> dmap = buildAnnotationDetails(amap.get("RpcDeprecated"));
+
+        outputln("<br><i>Deprecated in " + dmap.get("release") + ". Use " + dmap.get("value")
+            + " instead.</i>");
       }
       outputln("</td></tr>");
     }

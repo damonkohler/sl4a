@@ -31,4 +31,7 @@ import java.lang.annotation.Target;
 public @interface RpcDeprecated {
   /** The method that replaced this one. */
   public String value();
+
+  /** Release of SL4A when deprecation occurred. */
+  public String release() default "r4";
 }

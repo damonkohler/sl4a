@@ -206,20 +206,20 @@ public class EventFacade extends RpcReceiver {
     }
   }
 
-  @RpcDeprecated("eventPost")
+  @RpcDeprecated(value = "eventPost", release = "r4")
   @Rpc(description = "Post an event to the event queue.")
   public void postEvent(@RpcParameter(name = "name") String name,
       @RpcParameter(name = "data") String data) {
     postEvent(name, data);
   }
 
-  @RpcDeprecated(value = "eventPoll")
+  @RpcDeprecated(value = "eventPoll", release = "r4")
   @Rpc(description = "Returns and removes the oldest event (i.e. location or sensor update, etc.) from the event buffer.", returns = "Map of event properties.")
   public Event receiveEvent() {
     return mEventQueue.poll();
   }
 
-  @RpcDeprecated("eventWaitFor")
+  @RpcDeprecated(value = "eventWaitFor", release = "r4")
   @Rpc(description = "Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.", returns = "Map of event properties.")
   public Event waitForEvent(
       @RpcParameter(name = "eventName") final String eventName,

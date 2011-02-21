@@ -204,7 +204,9 @@ public final class MethodDescriptor {
 
     if (mMethod.isAnnotationPresent(RpcDeprecated.class)) {
       String replacedBy = mMethod.getAnnotation(RpcDeprecated.class).value();
-      helpBuilder.append(String.format("\n\nDeprecated! Please use %s instead.", replacedBy));
+      String release = mMethod.getAnnotation(RpcDeprecated.class).release();
+      helpBuilder.append(String.format("\n\nDeprecated in %s! Please use %s instead.", release,
+          replacedBy));
     }
 
     return helpBuilder.toString();
