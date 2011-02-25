@@ -118,7 +118,7 @@ public class FutureActivity extends Activity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
-    if (mTask != null) {
+    if (mTask == null) {
       return false;
     } else {
       return mTask.onPrepareOptionsMenu(menu);

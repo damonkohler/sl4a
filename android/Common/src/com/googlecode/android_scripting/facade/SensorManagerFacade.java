@@ -205,6 +205,7 @@ public class SensorManagerFacade extends RpcReceiver {
         return;
       }
       synchronized (mSensorReadings) {
+        mSensorReadings.putInt("sensor", sensor.getType());
         mSensorReadings.putInt("accuracy", accuracy);
         mAccuracy = accuracy;
         postEvent();
@@ -217,6 +218,8 @@ public class SensorManagerFacade extends RpcReceiver {
         return;
       }
       synchronized (mSensorReadings) {
+        int sensorType = event.sensor.getType();
+        mSensorReadings.putInt("sensor", sensorType);
         switch (event.sensor.getType()) {
         case Sensor.TYPE_ACCELEROMETER:
           mXForce = event.values[0];
