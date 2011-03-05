@@ -2,7 +2,6 @@ package com.googlecode.perlforandroid;
 
 import android.content.Context;
 
-
 import com.googlecode.android_scripting.AsyncTaskListener;
 import com.googlecode.android_scripting.InterpreterUninstaller;
 import com.googlecode.android_scripting.exception.Sl4aException;

@@ -19,11 +19,12 @@ package com.googlecode.android_scripting.activity;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
@@ -52,15 +53,22 @@ public class FutureActivity extends Activity {
     }
     FutureActivityTaskExecutor taskQueue = ((BaseApplication) getApplication()).getTaskExecutor();
     mTask = taskQueue.getTask(id);
-    if (mTask == null) { // TODO: (Robbie) This is a bit of a kludge. Not sure why this is happening
-      // at all.
+    if (mTask == null) { // TODO: (Robbie) This is now less of a kludge. Would still like to know
+                         // what is happening.
       Log.w("FutureActivity has no task!");
       try {
-        Class<?> clazz = Class.forName("com.googlecode.android_scripting.activity.ScriptManager");
-        Intent intent = new Intent(this, clazz);
+        Intent intent = new Intent(Intent.ACTION_MAIN); // Should default to main of current app.
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        String packageName = getPackageName();
+        for (ResolveInfo resolve : getPackageManager().queryIntentActivities(intent, 0)) {
+          if (resolve.activityInfo.packageName.equals(packageName)) {
+            intent.setClassName(packageName, resolve.activityInfo.name);
+            break;
+          }
+        }
         startActivity(intent);
       } catch (Exception e) {
-        Log.e("Can't find scripting activity.");
+        Log.e("Can't find main activity.");
       }
     } else {
       mTask.setActivity(this);
