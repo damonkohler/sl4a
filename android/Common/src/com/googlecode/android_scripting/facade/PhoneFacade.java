@@ -140,7 +140,7 @@ public class PhoneFacade extends RpcReceiver {
       c.close();
       phoneCallNumber(number);
     } else {
-      mAndroidFacade.startActivity(Intent.ACTION_CALL, uriString, null, null, null);
+      mAndroidFacade.startActivity(Intent.ACTION_CALL, uriString, null, null, null, null, null);
     }
   }
 
@@ -152,7 +152,7 @@ public class PhoneFacade extends RpcReceiver {
 
   @Rpc(description = "Dials a contact/phone number by URI.")
   public void phoneDial(@RpcParameter(name = "uri") final String uri) throws JSONException {
-    mAndroidFacade.startActivity(Intent.ACTION_DIAL, uri, null, null, null);
+    mAndroidFacade.startActivity(Intent.ACTION_DIAL, uri, null, null, null, null, null);
   }
 
   @Rpc(description = "Dials a phone number.")

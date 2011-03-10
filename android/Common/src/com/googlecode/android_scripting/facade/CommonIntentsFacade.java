@@ -36,13 +36,13 @@ public class CommonIntentsFacade extends RpcReceiver {
 
   @Rpc(description = "Display content to be picked by URI (e.g. contacts)", returns = "A map of result values.")
   public Intent pick(@RpcParameter(name = "uri") String uri) throws JSONException {
-    return mAndroidFacade.startActivityForResult(Intent.ACTION_PICK, uri, null, null);
+    return mAndroidFacade.startActivityForResult(Intent.ACTION_PICK, uri, null, null, null, null);
   }
 
   @Rpc(description = "Starts the barcode scanner.", returns = "A Map representation of the result Intent.")
   public Intent scanBarcode() throws JSONException {
     return mAndroidFacade.startActivityForResult("com.google.zxing.client.android.SCAN", null,
-        null, null);
+        null, null, null, null);
   }
 
   private void view(Uri uri, String type) {
@@ -57,7 +57,7 @@ public class CommonIntentsFacade extends RpcReceiver {
       @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
       @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras)
       throws JSONException {
-    mAndroidFacade.startActivity(Intent.ACTION_VIEW, uri, type, extras, true);
+    mAndroidFacade.startActivity(Intent.ACTION_VIEW, uri, type, extras, true, null, null);
   }
 
   @Rpc(description = "Opens a map search for query (e.g. pizza, 123 My Street).")

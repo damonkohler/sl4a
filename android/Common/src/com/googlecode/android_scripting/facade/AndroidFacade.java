@@ -21,6 +21,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -143,25 +144,6 @@ public class AndroidFacade extends RpcReceiver {
     }
   }
 
-  // TODO(damonkohler): It's unnecessary to add the complication of choosing between startActivity
-  // and startActivityForResult. It's probably better to just always use the ForResult version.
-  // However, this makes the call always blocking. We'd need to add an extra boolean parameter to
-  // indicate if we should wait for a result.
-  @Rpc(description = "Starts an activity and returns the result.", returns = "A Map representation of the result Intent.")
-  public Intent startActivityForResult(
-      @RpcParameter(name = "action") String action,
-      @RpcParameter(name = "uri") @RpcOptional String uri,
-      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
-      @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras)
-      throws JSONException {
-    Intent intent = new Intent(action);
-    intent.setDataAndType(uri != null ? Uri.parse(uri) : null, type);
-    if (extras != null) {
-      putExtrasFromJsonObject(extras, intent);
-    }
-    return startActivityForResult(intent);
-  }
-
   // TODO(damonkohler): Pull this out into proper argument deserialization and support
   // complex/nested types being passed in.
   private void putExtrasFromJsonObject(JSONObject extras, Intent intent) throws JSONException {
@@ -202,19 +184,50 @@ public class AndroidFacade extends RpcReceiver {
     }
   }
 
+  private Intent buildIntent(String action, String uri, String type, JSONObject extras,
+      String packagename, String classname) throws JSONException {
+    Intent intent = new Intent(action);
+    intent.setDataAndType(uri != null ? Uri.parse(uri) : null, type);
+    if (packagename != null && classname != null) {
+      intent.setComponent(new ComponentName(packagename, classname));
+    }
+    if (extras != null) {
+      putExtrasFromJsonObject(extras, intent);
+    }
+    return intent;
+  }
+
+  // TODO(damonkohler): It's unnecessary to add the complication of choosing between startActivity
+  // and startActivityForResult. It's probably better to just always use the ForResult version.
+  // However, this makes the call always blocking. We'd need to add an extra boolean parameter to
+  // indicate if we should wait for a result.
+  @Rpc(description = "Starts an activity and returns the result.", returns = "A Map representation of the result Intent.")
+  public Intent startActivityForResult(
+      @RpcParameter(name = "action") String action,
+      @RpcParameter(name = "uri") @RpcOptional String uri,
+      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
+      @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras,
+      @RpcParameter(name = "packagename", description = "name of package. If used, requires classname to be useful") @RpcOptional String packagename,
+      @RpcParameter(name = "classname", description = "name of class. If used, requires packagename to be useful") @RpcOptional String classname)
+      throws JSONException {
+    final Intent intent = buildIntent(action, uri, type, extras, packagename, classname);
+    return startActivityForResult(intent);
+  }
+
+  /**
+   * packagename and classname, if provided, are used in a 'setComponent' call.
+   */
   @Rpc(description = "Starts an activity.")
   public void startActivity(
       @RpcParameter(name = "action") String action,
       @RpcParameter(name = "uri") @RpcOptional String uri,
       @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
       @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras,
-      @RpcParameter(name = "wait", description = "block until the user exits the started activity") @RpcOptional Boolean wait)
+      @RpcParameter(name = "wait", description = "block until the user exits the started activity") @RpcOptional Boolean wait,
+      @RpcParameter(name = "packagename", description = "name of package. If used, requires classname to be useful") @RpcOptional String packagename,
+      @RpcParameter(name = "classname", description = "name of class. If used, requires packagename to be useful") @RpcOptional String classname)
       throws JSONException {
-    final Intent intent = new Intent(action);
-    intent.setDataAndType(uri != null ? Uri.parse(uri) : null, type);
-    if (extras != null) {
-      putExtrasFromJsonObject(extras, intent);
-    }
+    final Intent intent = buildIntent(action, uri, type, extras, packagename, classname);
     if (wait == null || wait == false) {
       startActivity(intent);
     } else {
@@ -248,6 +261,23 @@ public class AndroidFacade extends RpcReceiver {
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
+    }
+  }
+
+  @Rpc(description = "Send a broadcast.")
+  public void sendBroadcast(
+      @RpcParameter(name = "action") String action,
+      @RpcParameter(name = "uri") @RpcOptional String uri,
+      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
+      @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras,
+      @RpcParameter(name = "packagename", description = "name of package. If used, requires classname to be useful") @RpcOptional String packagename,
+      @RpcParameter(name = "classname", description = "name of class. If used, requires packagename to be useful") @RpcOptional String classname)
+      throws JSONException {
+    final Intent intent = buildIntent(action, uri, type, extras, packagename, classname);
+    try {
+      mService.sendBroadcast(intent);
+    } catch (Exception e) {
+      Log.e("Failed to broadcast intent.", e);
     }
   }
 
