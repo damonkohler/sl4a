@@ -22,10 +22,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -139,6 +139,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mView.addJavascriptInterface(mWrapper, "_rpc_wrapper");
     mView.addJavascriptInterface(new Object() {
 
+      @SuppressWarnings("unused")
       public void register(String event, int id) {
         mObserver.register(event, id);
       }
@@ -199,6 +200,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   }
 
   private class JavaScriptWrapper {
+    @SuppressWarnings("unused")
     public String call(String data) throws JSONException {
       Log.v("Received: " + data);
       JSONObject request = new JSONObject(data);

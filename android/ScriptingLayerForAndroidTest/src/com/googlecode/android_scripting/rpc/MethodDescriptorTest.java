@@ -36,6 +36,7 @@ import org.json.JSONException;
  */
 public class MethodDescriptorTest extends TestCase {
 
+  @SuppressWarnings("unused")
   public void testCollectFromClass() {
     class A extends RpcReceiver {
       public A() {
@@ -60,6 +61,7 @@ public class MethodDescriptorTest extends TestCase {
     assertEquals("rpc", methods.toArray(new MethodDescriptor[0])[0].getName());
   }
 
+  @SuppressWarnings("unused")
   public void testGetDefaultValue() throws Exception {
     class A {
       @Rpc(description = "rpc", returns = "nothing")
@@ -109,8 +111,8 @@ public class MethodDescriptorTest extends TestCase {
   }
 
   private void assertDefault(Object expected, Method m, int param) {
-    assertEquals(expected, MethodDescriptor.getDefaultValue(m.getParameterTypes()[param], m
-        .getParameterAnnotations()[param]));
+    assertEquals(expected, MethodDescriptor.getDefaultValue(m.getParameterTypes()[param],
+        m.getParameterAnnotations()[param]));
   }
 
   private void assertDefaultThrows(Method m, int param) {

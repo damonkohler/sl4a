@@ -379,9 +379,8 @@ public final class MethodDescriptor {
     throw new IllegalStateException("No default value for " + parameterType);
   }
 
-  @SuppressWarnings("unchecked")
   private static Converter<?> converterFor(Type parameterType,
-      Class<? extends Converter> converterClass) {
+      @SuppressWarnings("rawtypes") Class<? extends Converter> converterClass) {
     if (converterClass == Converter.class) {
       Converter<?> converter = sConverters.get(parameterType);
       if (converter == null) {

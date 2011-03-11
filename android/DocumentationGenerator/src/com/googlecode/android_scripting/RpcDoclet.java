@@ -1,6 +1,7 @@
 package com.googlecode.android_scripting;
 
 import com.sun.javadoc.AnnotationDesc;
+import com.sun.javadoc.AnnotationDesc.ElementValuePair;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.Doc;
 import com.sun.javadoc.MethodDoc;
@@ -8,7 +9,6 @@ import com.sun.javadoc.Parameter;
 import com.sun.javadoc.ProgramElementDoc;
 import com.sun.javadoc.RootDoc;
 import com.sun.javadoc.Tag;
-import com.sun.javadoc.AnnotationDesc.ElementValuePair;
 
 import java.io.File;
 import java.io.IOException;
@@ -108,11 +108,11 @@ public class RpcDoclet {
     return "<a name=\"" + name + "\"/>";
   }
 
-  private String tr(String contents) {
+  protected String tr(String contents) {
     return "<tr>" + contents + "</tr>";
   }
 
-  private String td(String contents) {
+  protected String td(String contents) {
     return "<td>" + contents + "</td>";
   }
 
@@ -258,10 +258,6 @@ public class RpcDoclet {
       result.put(e.element().name(), trimQuotes(e.value().toString()));
     }
     return result;
-  }
-
-  private void dumpClass(ClassDoc clazz) {
-    addln(clazz.name() + " - " + trimComment(clazz.commentText()));
   }
 
   private String trimComment(String commentText) {

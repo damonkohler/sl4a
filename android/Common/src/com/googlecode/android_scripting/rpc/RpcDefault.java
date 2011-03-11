@@ -34,6 +34,6 @@ public @interface RpcDefault {
   /** The default value of the RPC parameter. */
   public String value();
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   public Class<? extends Converter> converter() default Converter.class;
 }

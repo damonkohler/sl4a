@@ -35,6 +35,7 @@ import java.util.Properties;
  * @version $Id: vt320.java 507 2005-10-25 10:14:52Z marcus $
  * @author Matthias L. Jugel, Marcus Meißner
  */
+@SuppressWarnings("unused")
 public abstract class vt320 extends VDUBuffer implements VDUInput {
 
   /**
@@ -159,8 +160,8 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
         debugStr = new StringBuilder();
       }
 
-      debugStr.append("setscreensize (").append(c).append(',').append(r).append(',').append(
-          broadcast).append(')');
+      debugStr.append("setscreensize (").append(c).append(',').append(r).append(',')
+          .append(broadcast).append(')');
       debug(debugStr.toString());
       debugStr.setLength(0);
     }
@@ -1300,7 +1301,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
   }
 
   private final static char unimap[] = {
-  // #
+    // #
     // # Name: cp437_DOSLatinUS to Unicode table
     // # Unicode version: 1.1
     // # Table version: 1.1
@@ -1652,8 +1653,8 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
           break;
         case IND:
           if (debug > 2) {
-            debugStr.append("IND at ").append(R).append(", tm is ").append(getTopMargin()).append(
-                ", bm is ").append(getBottomMargin());
+            debugStr.append("IND at ").append(R).append(", tm is ").append(getTopMargin())
+                .append(", bm is ").append(getBottomMargin());
             debug(debugStr.toString());
             debugStr.setLength(0);
           }
