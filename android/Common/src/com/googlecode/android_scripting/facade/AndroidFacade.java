@@ -60,7 +60,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Some general purpose Android routines.
+ * Some general purpose Android routines.<br>
+ * <h2>Intents</h2> Intents are returned as a map, in the following form:<br>
+ * <ul>
+ * <li><b>action</b> - action.
+ * <li><b>data</b> - url
+ * <li><b>type</b> - mime type
+ * <li><b>packagename</b> - name of package. If used, requires classname to be useful (optional)
+ * <li><b>classname</b> - name of class. If used, requires packagename to be useful (optional)
+ * <li><b>categories</b> - list of categories
+ * <li><b>extras</b> - map of extras
+ * <li><b>flags</b> - integer flags.
+ * </ul>
+ * <br>
+ * An intent can be built using the {@see #makeIntent} call, but can also be constructed exterally.
  * 
  */
 public class AndroidFacade extends RpcReceiver {
@@ -146,7 +159,7 @@ public class AndroidFacade extends RpcReceiver {
 
   // TODO(damonkohler): Pull this out into proper argument deserialization and support
   // complex/nested types being passed in.
-  private void putExtrasFromJsonObject(JSONObject extras, Intent intent) throws JSONException {
+  public static void putExtrasFromJsonObject(JSONObject extras, Intent intent) throws JSONException {
     JSONArray names = extras.names();
     for (int i = 0; i < names.length(); i++) {
       String name = names.getString(i);
@@ -185,7 +198,7 @@ public class AndroidFacade extends RpcReceiver {
   }
 
   private Intent buildIntent(String action, String uri, String type, JSONObject extras,
-      String packagename, String classname) throws JSONException {
+      String packagename, String classname, JSONArray categories) throws JSONException {
     Intent intent = new Intent(action);
     intent.setDataAndType(uri != null ? Uri.parse(uri) : null, type);
     if (packagename != null && classname != null) {
@@ -193,6 +206,11 @@ public class AndroidFacade extends RpcReceiver {
     }
     if (extras != null) {
       putExtrasFromJsonObject(extras, intent);
+    }
+    if (categories != null) {
+      for (int i = 0; i < categories.length(); i++) {
+        intent.addCategory(categories.getString(i));
+      }
     }
     return intent;
   }
@@ -210,24 +228,11 @@ public class AndroidFacade extends RpcReceiver {
       @RpcParameter(name = "packagename", description = "name of package. If used, requires classname to be useful") @RpcOptional String packagename,
       @RpcParameter(name = "classname", description = "name of class. If used, requires packagename to be useful") @RpcOptional String classname)
       throws JSONException {
-    final Intent intent = buildIntent(action, uri, type, extras, packagename, classname);
+    final Intent intent = buildIntent(action, uri, type, extras, packagename, classname, null);
     return startActivityForResult(intent);
   }
 
-  /**
-   * packagename and classname, if provided, are used in a 'setComponent' call.
-   */
-  @Rpc(description = "Starts an activity.")
-  public void startActivity(
-      @RpcParameter(name = "action") String action,
-      @RpcParameter(name = "uri") @RpcOptional String uri,
-      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
-      @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras,
-      @RpcParameter(name = "wait", description = "block until the user exits the started activity") @RpcOptional Boolean wait,
-      @RpcParameter(name = "packagename", description = "name of package. If used, requires classname to be useful") @RpcOptional String packagename,
-      @RpcParameter(name = "classname", description = "name of class. If used, requires packagename to be useful") @RpcOptional String classname)
-      throws JSONException {
-    final Intent intent = buildIntent(action, uri, type, extras, packagename, classname);
+  private void doStartActivity(final Intent intent, Boolean wait) throws Exception {
     if (wait == null || wait == false) {
       startActivity(intent);
     } else {
@@ -264,6 +269,23 @@ public class AndroidFacade extends RpcReceiver {
     }
   }
 
+  /**
+   * packagename and classname, if provided, are used in a 'setComponent' call.
+   */
+  @Rpc(description = "Starts an activity.")
+  public void startActivity(
+      @RpcParameter(name = "action") String action,
+      @RpcParameter(name = "uri") @RpcOptional String uri,
+      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
+      @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras,
+      @RpcParameter(name = "wait", description = "block until the user exits the started activity") @RpcOptional Boolean wait,
+      @RpcParameter(name = "packagename", description = "name of package. If used, requires classname to be useful") @RpcOptional String packagename,
+      @RpcParameter(name = "classname", description = "name of class. If used, requires packagename to be useful") @RpcOptional String classname)
+      throws Exception {
+    final Intent intent = buildIntent(action, uri, type, extras, packagename, classname, null);
+    doStartActivity(intent, wait);
+  }
+
   @Rpc(description = "Send a broadcast.")
   public void sendBroadcast(
       @RpcParameter(name = "action") String action,
@@ -273,12 +295,46 @@ public class AndroidFacade extends RpcReceiver {
       @RpcParameter(name = "packagename", description = "name of package. If used, requires classname to be useful") @RpcOptional String packagename,
       @RpcParameter(name = "classname", description = "name of class. If used, requires packagename to be useful") @RpcOptional String classname)
       throws JSONException {
-    final Intent intent = buildIntent(action, uri, type, extras, packagename, classname);
+    final Intent intent = buildIntent(action, uri, type, extras, packagename, classname, null);
     try {
       mService.sendBroadcast(intent);
     } catch (Exception e) {
       Log.e("Failed to broadcast intent.", e);
     }
+  }
+
+  @Rpc(description = "Create an Intent.", returns = "An object representing an Intent")
+  public Intent makeIntent(
+      @RpcParameter(name = "action") String action,
+      @RpcParameter(name = "uri") @RpcOptional String uri,
+      @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
+      @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras,
+      @RpcParameter(name = "categories", description = "a List of categories to add to the Intent") @RpcOptional JSONArray categories,
+      @RpcParameter(name = "packagename", description = "name of package. If used, requires classname to be useful") @RpcOptional String packagename,
+      @RpcParameter(name = "classname", description = "name of class. If used, requires packagename to be useful") @RpcOptional String classname,
+      @RpcParameter(name = "flags", description = "Intent flags") @RpcOptional Integer flags)
+      throws JSONException {
+    Intent intent = buildIntent(action, uri, type, extras, packagename, classname, categories);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    if (flags != null) {
+      intent.setFlags(flags);
+    }
+    return intent;
+  }
+
+  @Rpc(description = "Start Activity using Intent")
+  public void startActivityIntent(
+      @RpcParameter(name = "intent", description = "Intent in the format as returned from makeIntent") Intent intent,
+      @RpcParameter(name = "wait", description = "block until the user exits the started activity") @RpcOptional Boolean wait)
+      throws Exception {
+    doStartActivity(intent, wait);
+  }
+
+  @Rpc(description = "Send Broadcast Intent")
+  public void sendBroadcastIntent(
+      @RpcParameter(name = "intent", description = "Intent in the format as returned from makeIntent") Intent intent)
+      throws Exception {
+    mService.sendBroadcast(intent);
   }
 
   @Rpc(description = "Vibrates the phone or a specified duration in milliseconds.")

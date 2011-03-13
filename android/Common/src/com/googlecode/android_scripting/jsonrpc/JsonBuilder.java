@@ -16,6 +16,7 @@
 
 package com.googlecode.android_scripting.jsonrpc;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
@@ -32,8 +33,8 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -171,7 +172,16 @@ public class JsonBuilder {
   private static JSONObject buildJsonIntent(Intent data) throws JSONException {
     JSONObject result = new JSONObject();
     result.put("data", data.getDataString());
+    result.put("type", data.getType());
     result.put("extras", build(data.getExtras()));
+    result.put("categories", build(data.getCategories()));
+    result.put("action", data.getAction());
+    ComponentName component = data.getComponent();
+    if (component != null) {
+      result.put("packagename", component.getPackageName());
+      result.put("classname", component.getClassName());
+    }
+    result.put("flags", data.getFlags());
     return result;
   }
 

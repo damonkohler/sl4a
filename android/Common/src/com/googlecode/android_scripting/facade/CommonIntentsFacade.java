@@ -56,13 +56,13 @@ public class CommonIntentsFacade extends RpcReceiver {
       @RpcParameter(name = "uri") String uri,
       @RpcParameter(name = "type", description = "MIME type/subtype of the URI") @RpcOptional String type,
       @RpcParameter(name = "extras", description = "a Map of extras to add to the Intent") @RpcOptional JSONObject extras)
-      throws JSONException {
+      throws Exception {
     mAndroidFacade.startActivity(Intent.ACTION_VIEW, uri, type, extras, true, null, null);
   }
 
   @Rpc(description = "Opens a map search for query (e.g. pizza, 123 My Street).")
   public void viewMap(@RpcParameter(name = "query, e.g. pizza, 123 My Street") String query)
-      throws JSONException {
+      throws Exception {
     view("geo:0,0?q=" + query, null, null);
   }
 

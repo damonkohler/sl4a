@@ -42,8 +42,6 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import org.json.JSONException;
-
 /**
  * Exposes TelephonyManager functionality.
  * 
@@ -151,13 +149,13 @@ public class PhoneFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Dials a contact/phone number by URI.")
-  public void phoneDial(@RpcParameter(name = "uri") final String uri) throws JSONException {
+  public void phoneDial(@RpcParameter(name = "uri") final String uri) throws Exception {
     mAndroidFacade.startActivity(Intent.ACTION_DIAL, uri, null, null, null, null, null);
   }
 
   @Rpc(description = "Dials a phone number.")
   public void phoneDialNumber(@RpcParameter(name = "phone number") final String number)
-      throws JSONException, UnsupportedEncodingException {
+      throws Exception, UnsupportedEncodingException {
     phoneDial("tel:" + URLEncoder.encode(number, "ASCII"));
   }
 
