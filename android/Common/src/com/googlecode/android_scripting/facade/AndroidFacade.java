@@ -232,6 +232,12 @@ public class AndroidFacade extends RpcReceiver {
     return startActivityForResult(intent);
   }
 
+  @Rpc(description = "Starts an activity and returns the result.", returns = "A Map representation of the result Intent.")
+  public Intent startActivityForResultIntent(
+      @RpcParameter(name = "intent", description = "Intent in the format as returned from makeIntent") Intent intent) {
+    return startActivityForResult(intent);
+  }
+
   private void doStartActivity(final Intent intent, Boolean wait) throws Exception {
     if (wait == null || wait == false) {
       startActivity(intent);

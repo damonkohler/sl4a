@@ -47,12 +47,27 @@ public class ContactsFacade extends RpcReceiver {
   private final ContentResolver mContentResolver;
   private final Service mService;
   private final CommonIntentsFacade mCommonIntentsFacade;
+  private Uri mPhoneContent = null;
+  private String mContactId;
+  private String mPrimary;
+  private String mPhoneNumber;
+  private String mHasPhoneNumber;
 
   public ContactsFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
     mContentResolver = mService.getContentResolver();
     mCommonIntentsFacade = manager.getReceiver(CommonIntentsFacade.class);
+    try {
+      // Backward compatibility... get contract stuff using reflection
+      Class<?> phone = Class.forName("android.provider.ContactsContract$CommonDataKinds$Phone");
+      mPhoneContent = (Uri) phone.getField("CONTENT_URI").get(null);
+      mContactId = (String) phone.getField("CONTACT_ID").get(null);
+      mPrimary = (String) phone.getField("IS_PRIMARY").get(null);
+      mPhoneNumber = (String) phone.getField("NUMBER").get(null);
+      mHasPhoneNumber = (String) phone.getField("HAS_PHONE_NUMBER").get(null);
+    } catch (Exception e) {
+    }
   }
 
   private Uri buildUri(Integer id) {
@@ -126,16 +141,59 @@ public class ContactsFacade extends RpcReceiver {
         columns[i] = attributes.getString(i);
       }
     }
-    Cursor cursor = mContentResolver.query(CONTACTS_URI, columns, null, null, null);
+    List<String> queryList = new ArrayList<String>();
+    for (String s : columns) {
+      queryList.add(s);
+    }
+    if (!queryList.contains("_id")) {
+      queryList.add("_id");
+    }
+
+    String[] query = queryList.toArray(new String[queryList.size()]);
+    Cursor cursor = mContentResolver.query(CONTACTS_URI, query, null, null, null);
     if (cursor != null) {
+      int idIndex = cursor.getColumnIndex("_id");
       while (cursor.moveToNext()) {
+        String id = cursor.getString(idIndex);
         JSONObject message = new JSONObject();
         for (int i = 0; i < columns.length; i++) {
-          message.put(columns[i], cursor.getString(i));
+          String key = columns[i];
+          String value = cursor.getString(cursor.getColumnIndex(key));
+          if (mPhoneNumber != null) {
+            if (key.equals("primary_phone")) {
+              value = findPhone(id);
+            }
+          }
+          message.put(key, value);
         }
         result.add(message);
       }
       cursor.close();
+    }
+    return result;
+  }
+
+  private String findPhone(String id) {
+    String result = null;
+    if (id == null || id.equals("")) {
+      return result;
+    }
+    try {
+      if (Integer.parseInt(id) > 0) {
+        Cursor pCur =
+            mContentResolver.query(mPhoneContent, new String[] { mPhoneNumber }, mContactId
+                + " = ? and " + mPrimary + "=1", new String[] { id }, null);
+        if (pCur != null) {
+          pCur.getColumnNames();
+          while (pCur.moveToNext()) {
+            result = pCur.getString(0);
+            break;
+          }
+        }
+        pCur.close();
+      }
+    } catch (Exception e) {
+      return null;
     }
     return result;
   }
@@ -175,6 +233,68 @@ public class ContactsFacade extends RpcReceiver {
     Cursor cursor = mContentResolver.query(CONTACTS_URI, null, null, null, null);
     if (cursor != null) {
       result = cursor.getCount();
+      cursor.close();
+    }
+    return result;
+  }
+
+  private String[] jsonToArray(JSONArray array) throws JSONException {
+    String[] result = null;
+    if (array != null && array.length() > 0) {
+      result = new String[array.length()];
+      for (int i = 0; i < array.length(); i++) {
+        result[i] = array.getString(i);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Exactly as per {@link http
+   * ://www.taranfx.com/android/reference/android/content/ContentResolver.html
+   * #query%28android.net.Uri
+   * ,%20java.lang.String[],%20java.lang.String,%20java.lang.String[],%20java.lang.String%29
+   * ContentResolver.query}
+   */
+  @Rpc(description = "Content Resolver Query", returns = "result of query as Maps")
+  public List<JSONObject> queryContent(
+      @RpcParameter(name = "uri", description = "The URI, using the content:// scheme, for the content to retrieve.") String uri,
+      @RpcParameter(name = "attributes", description = "A list of which columns to return. Passing null will return all columns") @RpcOptional JSONArray attributes,
+      @RpcParameter(name = "selection", description = "A filter declaring which rows to return") @RpcOptional String selection,
+      @RpcParameter(name = "selectionArgs", description = "You may include ?s in selection, which will be replaced by the values from selectionArgs") @RpcOptional JSONArray selectionArgs,
+      @RpcParameter(name = "order", description = "How to order the rows") @RpcOptional String order)
+      throws JSONException {
+    List<JSONObject> result = new ArrayList<JSONObject>();
+    String[] columns = jsonToArray(attributes);
+    String[] args = jsonToArray(selectionArgs);
+    Cursor cursor = mContentResolver.query(Uri.parse(uri), columns, selection, args, order);
+    if (cursor != null) {
+      String[] names = cursor.getColumnNames();
+      while (cursor.moveToNext()) {
+        JSONObject message = new JSONObject();
+        for (int i = 0; i < cursor.getColumnCount(); i++) {
+          String key = names[i];
+          String value = cursor.getString(i);
+          message.put(key, value);
+        }
+        result.add(message);
+      }
+      cursor.close();
+    }
+    return result;
+  }
+
+  @Rpc(description = "Content Resolver Query Attributes", returns = "a list of available columns for a given content uri")
+  public JSONArray queryAttributes(
+      @RpcParameter(name = "uri", description = "The URI, using the content:// scheme, for the content to retrieve.") String uri)
+      throws JSONException {
+    JSONArray result = new JSONArray();
+    Cursor cursor = mContentResolver.query(Uri.parse(uri), null, "1=0", null, null);
+    if (cursor != null) {
+      String[] names = cursor.getColumnNames();
+      for (String name : names) {
+        result.put(name);
+      }
       cursor.close();
     }
     return result;
