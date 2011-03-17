@@ -250,11 +250,9 @@ public class ContactsFacade extends RpcReceiver {
   }
 
   /**
-   * Exactly as per {@link http
-   * ://www.taranfx.com/android/reference/android/content/ContentResolver.html
-   * #query%28android.net.Uri
-   * ,%20java.lang.String[],%20java.lang.String,%20java.lang.String[],%20java.lang.String%29
-   * ContentResolver.query}
+   * Exactly as per <a href=
+   * "http://developer.android.com/reference/android/content/ContentResolver.html#query%28android.net.Uri,%20java.lang.String[],%20java.lang.String,%20java.lang.String[],%20java.lang.String%29"
+   * >ContentResolver.query</a>
    */
   @Rpc(description = "Content Resolver Query", returns = "result of query as Maps")
   public List<JSONObject> queryContent(
