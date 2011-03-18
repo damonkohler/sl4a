@@ -29,6 +29,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.text.ClipboardManager;
@@ -50,6 +51,8 @@ import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -513,6 +516,33 @@ public class AndroidFacade extends RpcReceiver {
     result.put("SDK", android.os.Build.VERSION.SDK);
     result.put("download", FileUtils.getExternalDownload().getAbsolutePath());
     result.put("appcache", mService.getCacheDir().getAbsolutePath());
+    return result;
+  }
+
+  @Rpc(description = "Get list of constants (static final fields) for a class")
+  public Bundle getConstants(
+      @RpcParameter(name = "classname", description = "Class to get constants from") String classname)
+      throws Exception {
+    Bundle result = new Bundle();
+    int flags = Modifier.FINAL | Modifier.PUBLIC | Modifier.STATIC;
+    Class<?> clazz = Class.forName(classname);
+    for (Field field : clazz.getFields()) {
+      if ((field.getModifiers() & flags) == flags) {
+        Class<?> type = field.getType();
+        String name = field.getName();
+        if (type == int.class) {
+          result.putInt(name, field.getInt(null));
+        } else if (type == long.class) {
+          result.putLong(name, field.getLong(null));
+        } else if (type == double.class) {
+          result.putDouble(name, field.getDouble(null));
+        } else if (type == char.class) {
+          result.putChar(name, field.getChar(null));
+        } else if (type instanceof Object) {
+          result.putString(name, field.get(null).toString());
+        }
+      }
+    }
     return result;
   }
 }
