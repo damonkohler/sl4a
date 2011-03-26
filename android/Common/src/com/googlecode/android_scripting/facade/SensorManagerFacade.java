@@ -190,8 +190,10 @@ public class SensorManagerFacade extends RpcReceiver {
     if (mSensorNumber == 1) {
       mThreshing = 0;
       mThreshOrientation = 1;
+      mThreshold = ((float) threshold) / ((float) 1000);
+    } else {
+      mThreshold = (float) threshold;
     }
-    mThreshold = ((float) threshold) / ((float) 1000);
     startSensingTimed(mSensorNumber, 20);
   }
 
