@@ -16,13 +16,13 @@
 
 package com.googlecode.android_scripting.facade;
 
-import junit.framework.TestCase;
-
 import com.googlecode.android_scripting.facade.SensorManagerFacade.RollingAverage;
+
+import junit.framework.TestCase;
 
 public class SensorManagerFacadeTest extends TestCase {
   public void testAverage() {
-    RollingAverage average = new RollingAverage(5);
+    RollingAverage average = new RollingAverage();
     try {
       average.get();
       fail();

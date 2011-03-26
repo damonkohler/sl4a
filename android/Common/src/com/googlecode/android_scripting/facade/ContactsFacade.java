@@ -47,11 +47,11 @@ public class ContactsFacade extends RpcReceiver {
   private final ContentResolver mContentResolver;
   private final Service mService;
   private final CommonIntentsFacade mCommonIntentsFacade;
-  private Uri mPhoneContent = null;
-  private String mContactId;
-  private String mPrimary;
-  private String mPhoneNumber;
-  private String mHasPhoneNumber;
+  public Uri mPhoneContent = null;
+  public String mContactId;
+  public String mPrimary;
+  public String mPhoneNumber;
+  public String mHasPhoneNumber;
 
   public ContactsFacade(FacadeManager manager) {
     super(manager);
