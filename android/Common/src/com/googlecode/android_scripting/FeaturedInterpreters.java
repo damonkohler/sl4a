@@ -23,7 +23,7 @@ public class FeaturedInterpreters {
       FeaturedInterpreter interpreters[] =
           {
             new FeaturedInterpreter("BeanShell 2.0b4", ".bsh",
-                "http://android-scripting.googlecode.com/files/beanshell_for_android_r1.apk"),
+                "http://android-scripting.googlecode.com/files/beanshell_for_android_r2.apk"),
             new FeaturedInterpreter("JRuby", ".rb",
                 "https://github.com/downloads/ruboto/sl4a_jruby_interpreter/JRubyForAndroid_r2dev.apk"),
             new FeaturedInterpreter("Lua 5.1.4", ".lua",
@@ -33,7 +33,7 @@ public class FeaturedInterpreters {
             new FeaturedInterpreter("Python 2.6.2", ".py",
                 "http://python-for-android.googlecode.com/files/PythonForAndroid_r5.apk"),
             new FeaturedInterpreter("Rhino 1.7R2", ".js",
-                "http://android-scripting.googlecode.com/files/rhino_for_android_r1.apk"),
+                "http://android-scripting.googlecode.com/files/rhino_for_android_r2.apk"),
             new FeaturedInterpreter("PHP 5.3.3", ".php",
                 "http://php-for-android.googlecode.com/files/phpforandroid_r1.apk") };
       for (FeaturedInterpreter interpreter : interpreters) {
