@@ -54,10 +54,11 @@ import java.util.List;
  * 
  * Following a startSensingThreshold(A,B,C) api call sensor events greater than a given threshold
  * are entered into the Event Queue. For the A parameter: 1 = Orientation, 2 = Accelerometer, 3 =
- * Magnetometer and 4 = Light. The B parameter is the integer value of the required threshold level
- * (for orientation sensing the integer threshold value is in milliradians). The C parameter is the
- * required axis (XYZ) of the sensor: 0 = No axis, 1 = X, 2 = Y, 3 = X+Y, 4 = Z, 5= X+Z, 6 = Y+Z, 7
- * = X+Y+Z <br>
+ * Magnetometer and 4 = Light. The B parameter is the integer value of the required threshold level.
+ * For orientation sensing the integer threshold value is in milliradians. Since orientation events
+ * can exceed the threshold value for long periods only crossing and return events are recorded. The
+ * C parameter is the required axis (XYZ) of the sensor: 0 = No axis, 1 = X, 2 = Y, 3 = X+Y, 4 = Z,
+ * 5= X+Z, 6 = Y+Z, 7 = X+Y+Z. For orientation X = azimuth, Y = pitch and Z = roll. <br>
  * 
  * <br>
  * <b>Example (python)</b>
@@ -91,8 +92,8 @@ import java.util.List;
  * @author Damon Kohler (damonkohler@gmail.com)
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
+ * @author Robbie Mathews (rjmatthews62@gmail.com)
  * @author John Karwatzki (jokar49@gmail.com)
- * @author Robbie Matthews (rjmatthews62@gmail.com)
  */
 public class SensorManagerFacade extends RpcReceiver {
   private final EventFacade mEventFacade;
@@ -107,11 +108,15 @@ public class SensorManagerFacade extends RpcReceiver {
   private volatile Integer mZAxis = 0;
   private volatile Integer mThreshing = 0;
   private volatile Integer mThreshOrientation = 0;
+  private volatile Integer mXCrossed = 0;
+  private volatile Integer mYCrossed = 0;
+  private volatile Integer mZCrossed = 0;
 
   private volatile Float mThreshold;
   private volatile Float mXForce;
   private volatile Float mYForce;
   private volatile Float mZForce;
+
   private volatile Float mXMag;
   private volatile Float mYMag;
   private volatile Float mZMag;
@@ -160,13 +165,13 @@ public class SensorManagerFacade extends RpcReceiver {
               SensorManager.SENSOR_DELAY_FASTEST);
         }
         break;
-      case (3):
+      case 3:
         for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD)) {
           mSensorManager.registerListener(mSensorListener, sensor,
               SensorManager.SENSOR_DELAY_FASTEST);
         }
         break;
-      case (4):
+      case 4:
         for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_LIGHT)) {
           mSensorManager.registerListener(mSensorListener, sensor,
               SensorManager.SENSOR_DELAY_FASTEST);
@@ -186,12 +191,12 @@ public class SensorManagerFacade extends RpcReceiver {
     mXAxis = axis & 1;
     mYAxis = axis & 2;
     mZAxis = axis & 4;
-    mThreshing = 1;
     if (mSensorNumber == 1) {
       mThreshing = 0;
       mThreshOrientation = 1;
       mThreshold = ((float) threshold) / ((float) 1000);
     } else {
+      mThreshing = 1;
       mThreshold = (float) threshold;
     }
     startSensingTimed(mSensorNumber, 20);
@@ -253,7 +258,7 @@ public class SensorManagerFacade extends RpcReceiver {
   public void startSensing(
       @RpcParameter(name = "sampleSize", description = "number of samples for calculating average readings") @RpcDefault("5") Integer sampleSize) {
     if (mSensorListener == null) {
-      startSensingTimed(1, 20);
+      startSensingTimed(1, 220);
     }
   }
 
@@ -410,19 +415,47 @@ public class SensorManagerFacade extends RpcReceiver {
                 }
               }
               if ((mThreshOrientation == 1) && (mSensorNumber == 1)) {
-                if ((Math.abs(mAzimuth) > ((double) mThreshold)) && (mXAxis == 1)) {
-                  mSensorReadings.putDouble("azimuth", mAzimuth);
-                  postEvent();
+                if ((mXAxis == 1) && (mXCrossed == 0)) {
+                  if (Math.abs(mAzimuth) > ((double) mThreshold)) {
+                    mSensorReadings.putDouble("azimuth", mAzimuth);
+                    postEvent();
+                    mXCrossed = 1;
+                  }
                 }
-
-                if ((Math.abs(mPitch) > ((double) mThreshold)) && (mYAxis == 2)) {
-                  mSensorReadings.putDouble("pitch", mPitch);
-                  postEvent();
+                if ((mXAxis == 1) && (mXCrossed == 1)) {
+                  if (Math.abs(mAzimuth) < ((double) mThreshold)) {
+                    mSensorReadings.putDouble("azimuth", mAzimuth);
+                    postEvent();
+                    mXCrossed = 0;
+                  }
                 }
-
-                if ((Math.abs(mRoll) > ((double) mThreshold)) && (mZAxis == 4)) {
-                  mSensorReadings.putDouble("roll", mRoll);
-                  postEvent();
+                if ((mYAxis == 2) && (mYCrossed == 0)) {
+                  if (Math.abs(mPitch) > ((double) mThreshold)) {
+                    mSensorReadings.putDouble("pitch", mPitch);
+                    postEvent();
+                    mYCrossed = 1;
+                  }
+                }
+                if ((mYAxis == 2) && (mYCrossed == 1)) {
+                  if (Math.abs(mPitch) < ((double) mThreshold)) {
+                    mSensorReadings.putDouble("pitch", mPitch);
+                    postEvent();
+                    mYCrossed = 0;
+                  }
+                }
+                if ((mZAxis == 4) && (mZCrossed == 0)) {
+                  if (Math.abs(mRoll) > ((double) mThreshold)) {
+                    mSensorReadings.putDouble("roll", mRoll);
+                    postEvent();
+                    mZCrossed = 1;
+                  }
+                }
+                if ((mZAxis == 4) && (mZCrossed == 1)) {
+                  if (Math.abs(mRoll) < ((double) mThreshold)) {
+                    mSensorReadings.putDouble("roll", mRoll);
+                    postEvent();
+                    mZCrossed = 0;
+                  }
                 }
               }
             }

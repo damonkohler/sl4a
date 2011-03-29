@@ -2,7 +2,7 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.googlecode.android_scripting"
-  android:installLocation="auto" android:versionCode="400" android:versionName="4">
+  android:installLocation="auto" android:versionCode="401" android:versionName="5x">
   <application
     android:icon="@drawable/sl4a_logo_48"
     android:label="@string/application_title"

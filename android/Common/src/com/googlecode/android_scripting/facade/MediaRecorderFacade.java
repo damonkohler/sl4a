@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2009 Google Inc.
+
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,12 +23,11 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.view.SurfaceHolder.Callback;
 
 import com.googlecode.android_scripting.BaseApplication;
-import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.FutureActivityTaskExecutor;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.future.FutureActivityTask;
@@ -46,8 +46,16 @@ import java.util.concurrent.TimeUnit;
 /**
  * A facade for recording media.
  * 
+ * Guidance notes: Use e.g. '/sdcard/file.ext' for your media destination file. A file extension of
+ * mpg will use the default settings for format and codec (often h263 which won't work with common
+ * PC media players). A file extension of mp4 or 3gp will use the appropriate format with the (more
+ * common) h264 codec. A video player such as QQPlayer (from the android market) plays both codecs
+ * and uses the composition matrix (embedded in the video file) to correct for image rotation. Many
+ * PC based media players ignore this matrix.
+ * 
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Damon Kohler (damonkohler@gmail.com)
+ * @author John Karwatzki (jokar49@gmail.com)
  */
 public class MediaRecorderFacade extends RpcReceiver {
 
@@ -79,36 +87,45 @@ public class MediaRecorderFacade extends RpcReceiver {
 
   private void startVideoRecording(File file, int milliseconds, boolean withAudio) throws Exception {
     mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-    if (withAudio) {
-      int audioSource = MediaRecorder.AudioSource.MIC;
-      try {
-        Field source =
-            Class.forName("android.media.MediaRecorder$AudioSource").getField("CAMCORDER");
-        audioSource = source.getInt(null);
-      } catch (Exception e) {
-        Log.e(e);
-      }
-      mMediaRecorder.setAudioSource(audioSource);
+
+    int audioSource = MediaRecorder.AudioSource.MIC;
+    try {
+      Field source = Class.forName("android.media.MediaRecorder$AudioSource").getField("CAMCORDER");
+      audioSource = source.getInt(null);
+    } catch (Exception e) {
+      Log.e(e);
+    }
+    mMediaRecorder.setAudioSource(audioSource);
+
+    if (file.toString().split("\\.")[1].equals("mp4")) {
+      mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+      mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+      mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+
+    }
+    if (file.toString().split("\\.")[1].equals("3gp")) {
+      mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+      mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+      mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+    }
+    if (file.toString().split("\\.")[1].equals("mpg")) {
       mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
       mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-    } else {
-      mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+      mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
     }
-    mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
-    if (!FileUtils.makeDirectories(file.getParentFile(), 0755)) {
-      throw new RuntimeException(String
-          .format("Cannot create directories for %s.", file.toString()));
-    }
+
     mMediaRecorder.setOutputFile(file.getAbsolutePath());
     if (milliseconds > 0) {
       mMediaRecorder.setMaxDuration(milliseconds);
     }
+
     FutureActivityTask<Exception> prepTask = prepare();
     mMediaRecorder.start();
     if (milliseconds > 0) {
       new CountDownLatch(1).await(milliseconds, TimeUnit.MILLISECONDS);
     }
     prepTask.finish();
+
   }
 
   private void startAudioRecording(String targetPath, int source) throws IOException {
