@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference android:numeric="integer" android:enabled="true" android:key="heapsize" android:defaultValue="0" android:title="Heap Size" android:summary="Maximum heap size for Beanshell, in Mb. 0 = use default."></EditTextPreference>
+</PreferenceScreen>
