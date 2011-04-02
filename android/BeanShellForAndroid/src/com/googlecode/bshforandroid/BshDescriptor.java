@@ -17,11 +17,15 @@
 package com.googlecode.bshforandroid;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.Sl4aHostedInterpreter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -68,8 +72,22 @@ public class BshDescriptor extends Sl4aHostedInterpreter {
   @Override
   public List<String> getArguments(Context context) {
     String absolutePathToJar = new File(getExtrasPath(context), BSH_JAR).getAbsolutePath();
-    return Arrays.asList("-classpath", absolutePathToJar,
-        "com.android.internal.util.WithFramework", "bsh.Interpreter");
+
+    List<String> result =
+        new ArrayList<String>(Arrays.asList("-classpath", absolutePathToJar,
+            "com.android.internal.util.WithFramework", "bsh.Interpreter"));
+    try {
+      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+      if (preferences != null) {
+        int heapsize = Integer.parseInt(preferences.getString("heapsize", "0"), 10);
+        if (heapsize > 0) {
+          result.add(0, "-Xmx" + heapsize + "m");
+        }
+      }
+    } catch (Exception e) {
+      Log.e(e);
+    }
+    return result;
   }
 
   @Override
