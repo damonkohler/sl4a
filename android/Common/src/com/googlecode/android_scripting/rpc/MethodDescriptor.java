@@ -158,9 +158,13 @@ public final class MethodDescriptor {
     if (jsonObject.has("action")) {
       intent.setAction(jsonObject.getString("action"));
     }
-    if (jsonObject.has("data") || jsonObject.has("type")) {
+    if (jsonObject.has("data") && jsonObject.has("type")) {
       intent.setDataAndType(Uri.parse(jsonObject.optString("data", null)),
           jsonObject.optString("type", null));
+    } else if (jsonObject.has("data")) {
+      intent.setData(Uri.parse(jsonObject.optString("data", null)));
+    } else if (jsonObject.has("type")) {
+      intent.setType(jsonObject.optString("type", null));
     }
     if (jsonObject.has("flags")) {
       intent.setFlags(jsonObject.getInt("flags"));

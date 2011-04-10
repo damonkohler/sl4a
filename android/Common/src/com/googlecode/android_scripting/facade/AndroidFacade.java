@@ -141,7 +141,12 @@ public class AndroidFacade extends RpcReceiver {
       @Override
       public void onCreate() {
         super.onCreate();
-        startActivityForResult(intent, 0);
+        try {
+          startActivityForResult(intent, 0);
+        } catch (Exception e) {
+          intent.putExtra("EXCEPTION", e.getMessage());
+          setResult(intent);
+        }
       }
 
       @Override

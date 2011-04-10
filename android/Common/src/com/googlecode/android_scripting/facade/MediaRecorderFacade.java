@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2009 Google Inc.
-
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -51,7 +50,7 @@ import java.util.concurrent.TimeUnit;
  * PC media players). A file extension of mp4 or 3gp will use the appropriate format with the (more
  * common) h264 codec. A video player such as QQPlayer (from the android market) plays both codecs
  * and uses the composition matrix (embedded in the video file) to correct for image rotation. Many
- * PC based media players ignore this matrix.
+ * PC based media players ignore this matrix. Standard video sizes may be specified.
  * 
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Damon Kohler (damonkohler@gmail.com)
@@ -73,44 +72,75 @@ public class MediaRecorderFacade extends RpcReceiver {
     startAudioRecording(targetPath, MediaRecorder.AudioSource.MIC);
   }
 
-  @Rpc(description = "Records video (and optionally audio) from the camera and saves it to the given location. "
+  @Rpc(description = "Records video from the camera and saves it to the given location. "
       + "\nDuration specifies the maximum duration of the recording session. "
-      + "\nIf duration is not provided this method will return immediately and the recording will only be stopped "
+      + "\nIf duration is 0 this method will return and the recording will only be stopped "
       + "\nwhen recorderStop is called or when a scripts exits. "
-      + "\nOtherwise it will block for the time period equal to the duration argument.")
-  public void recorderCaptureVideo(@RpcParameter(name = "targetPath") String targetPath,
-      @RpcParameter(name = "duration") @RpcOptional Double duration,
-      @RpcParameter(name = "recordAudio") @RpcDefault("true") Boolean recordAudio) throws Exception {
+      + "\nOtherwise it will block for the time period equal to the duration argument."
+      + "\nvideoSize: 0=160x120, 1=320x240, 2=352x288, 3=640x480, 4=800x480.")
+  public void recorderStartVideo(@RpcParameter(name = "targetPath") String targetPath,
+      @RpcParameter(name = "duration") @RpcDefault("0") Integer duration,
+      @RpcParameter(name = "videoSize") @RpcDefault("1") Integer videoSize) throws Exception {
     int ms = convertSecondsToMilliseconds(duration);
-    startVideoRecording(new File(targetPath), ms, recordAudio);
+    startVideoRecording(new File(targetPath), ms, videoSize);
   }
 
-  private void startVideoRecording(File file, int milliseconds, boolean withAudio) throws Exception {
+  private void startVideoRecording(File file, int milliseconds, int videoSize) throws Exception {
     mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
     int audioSource = MediaRecorder.AudioSource.MIC;
     try {
       Field source = Class.forName("android.media.MediaRecorder$AudioSource").getField("CAMCORDER");
-      audioSource = source.getInt(null);
+      source.getInt(null);
     } catch (Exception e) {
       Log.e(e);
     }
-    mMediaRecorder.setAudioSource(audioSource);
+    int xSize;
+    int ySize;
+    switch (videoSize) {
+    case 0:
+      xSize = 160;
+      ySize = 120;
+      break;
+    case 1:
+      xSize = 320;
+      ySize = 240;
+      break;
+    case 2:
+      xSize = 352;
+      ySize = 288;
+      break;
+    case 3:
+      xSize = 640;
+      ySize = 480;
+      break;
+    case 4:
+      xSize = 800;
+      ySize = 480;
+      break;
+    default:
+      xSize = 320;
+      ySize = 240;
+      break;
+    }
 
-    if (file.toString().split("\\.")[1].equals("mp4")) {
+    mMediaRecorder.setAudioSource(audioSource);
+    String extension = file.toString().split("\\.")[1];
+    if (extension.equals("mp4")) {
       mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
       mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+      mMediaRecorder.setVideoSize(xSize, ySize);
       mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-
-    }
-    if (file.toString().split("\\.")[1].equals("3gp")) {
+    } else if (extension.equals("3gp")) {
       mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
       mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+      mMediaRecorder.setVideoSize(xSize, ySize);
       mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-    }
-    if (file.toString().split("\\.")[1].equals("mpg")) {
+    } else {
+
       mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
       mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+      mMediaRecorder.setVideoSize(xSize, ySize);
       mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
     }
 
@@ -118,14 +148,54 @@ public class MediaRecorderFacade extends RpcReceiver {
     if (milliseconds > 0) {
       mMediaRecorder.setMaxDuration(milliseconds);
     }
-
     FutureActivityTask<Exception> prepTask = prepare();
     mMediaRecorder.start();
     if (milliseconds > 0) {
       new CountDownLatch(1).await(milliseconds, TimeUnit.MILLISECONDS);
     }
     prepTask.finish();
+  }
 
+  @Rpc(description = "Records video (and optionally audio) from the camera and saves it to the given location. "
+      + "\nDuration specifies the maximum duration of the recording session. "
+      + "\nIf duration is not provided this method will return immediately and the recording will only be stopped "
+      + "\nwhen recorderStop is called or when a scripts exits. "
+      + "\nOtherwise it will block for the time period equal to the duration argument.")
+  public void recorderCaptureVideo(@RpcParameter(name = "targetPath") String targetPath,
+      @RpcParameter(name = "duration") @RpcOptional Integer duration,
+      @RpcParameter(name = "recordAudio") @RpcDefault("true") Boolean recordAudio) throws Exception {
+    int ms = convertSecondsToMilliseconds(duration);
+    startVideoRecording(new File(targetPath), ms, recordAudio);
+  }
+
+  private void startVideoRecording(File file, int milliseconds, boolean withAudio) throws Exception {
+    mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+    if (withAudio) {
+      int audioSource = MediaRecorder.AudioSource.MIC;
+      try {
+        Field source =
+            Class.forName("android.media.MediaRecorder$AudioSource").getField("CAMCORDER");
+        audioSource = source.getInt(null);
+      } catch (Exception e) {
+        Log.e(e);
+      }
+      mMediaRecorder.setAudioSource(audioSource);
+      mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+      mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+    } else {
+      mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+    }
+    mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
+    mMediaRecorder.setOutputFile(file.getAbsolutePath());
+    if (milliseconds > 0) {
+      mMediaRecorder.setMaxDuration(milliseconds);
+    }
+    FutureActivityTask<Exception> prepTask = prepare();
+    mMediaRecorder.start();
+    if (milliseconds > 0) {
+      new CountDownLatch(1).await(milliseconds, TimeUnit.MILLISECONDS);
+    }
+    prepTask.finish();
   }
 
   private void startAudioRecording(String targetPath, int source) throws IOException {
@@ -203,7 +273,7 @@ public class MediaRecorderFacade extends RpcReceiver {
     return task;
   }
 
-  private int convertSecondsToMilliseconds(Double seconds) {
+  private int convertSecondsToMilliseconds(Integer seconds) {
     if (seconds == null) {
       return 0;
     }
