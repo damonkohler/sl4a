@@ -166,6 +166,9 @@ public final class MethodDescriptor {
     } else if (jsonObject.has("type")) {
       intent.setType(jsonObject.optString("type", null));
     }
+    if (jsonObject.has("packagename") && jsonObject.has("classname")) {
+      intent.setClassName(jsonObject.getString("packagename"), jsonObject.getString("classname"));
+    }
     if (jsonObject.has("flags")) {
       intent.setFlags(jsonObject.getInt("flags"));
     }
