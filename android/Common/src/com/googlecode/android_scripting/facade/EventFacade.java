@@ -60,8 +60,8 @@ public class EventFacade extends RpcReceiver {
   private final Queue<Event> mEventQueue = new ConcurrentLinkedQueue<Event>();
   private final CopyOnWriteArrayList<EventObserver> mGlobalEventObservers =
       new CopyOnWriteArrayList<EventObserver>();
-  private final Multimap<String, EventObserver> mNamedEventObservers =
-      Multimaps.synchronizedListMultimap(ArrayListMultimap.<String, EventObserver> create());
+  private final Multimap<String, EventObserver> mNamedEventObservers = Multimaps
+      .synchronizedListMultimap(ArrayListMultimap.<String, EventObserver> create());
 
   public EventFacade(FacadeManager manager) {
     super(manager);
@@ -119,6 +119,13 @@ public class EventFacade extends RpcReceiver {
       @RpcParameter(name = "eventName") final String eventName,
       @RpcParameter(name = "timeout", description = "the maximum time to wait (in ms)") @RpcOptional Integer timeout)
       throws InterruptedException {
+    synchronized (mEventQueue) { // First check to make sure it isn't already there
+      for (Event event : mEventQueue) {
+        if (event.getName().equals(eventName)) {
+          return event;
+        }
+      }
+    }
     final FutureResult<Event> futureEvent = new FutureResult<Event>();
     addNamedEventObserver(eventName, new EventObserver() {
       @Override

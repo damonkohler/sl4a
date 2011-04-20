@@ -34,9 +34,12 @@ import com.googlecode.android_scripting.rpc.RpcStopEvent;
 import java.lang.reflect.Field;
 
 /**
- * Exposes Batterymanager API.
+ * Exposes Batterymanager API. Note that in order to use any of the batteryGet* functions, you need
+ * to batteryStartMonitoring, and then wait for a "battery" event. Sleeping for a second will
+ * usually work just as well.
  * 
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
+ * @author Robbie Matthews (rjmatthews62@gmail.com)
  */
 public class BatteryManagerFacade extends RpcReceiver {
 
@@ -125,6 +128,9 @@ public class BatteryManagerFacade extends RpcReceiver {
     return mBatteryData;
   }
 
+  /**
+   * throws "battery" events
+   */
   @Rpc(description = "Starts tracking battery state.")
   @RpcStartEvent("battery")
   public void batteryStartMonitoring() {
