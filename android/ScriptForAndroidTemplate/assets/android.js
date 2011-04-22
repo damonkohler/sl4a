@@ -16,5 +16,9 @@ var Android = function() {
   this._callback = function(id, data) {
     var receiver = this._callbacks[id];
     receiver(data);
+  },
+  
+  this.dismiss = function() {
+    _rpc_wrapper.dismiss();
   }
 };
