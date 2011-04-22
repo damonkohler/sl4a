@@ -157,11 +157,14 @@ public class BluetoothFacade extends RpcReceiver {
   }
 
   @Rpc(description = "Listens for and accepts a Bluetooth connection. Blocks until the connection is established or fails.")
-  public String bluetoothAccept(@RpcParameter(name = "uuid") @RpcDefault(DEFAULT_UUID) String uuid)
+  public String bluetoothAccept(
+      @RpcParameter(name = "uuid") @RpcDefault(DEFAULT_UUID) String uuid,
+      @RpcParameter(name = "timeout", description = "How long to wait for a new connection, 0 is wait for ever") @RpcDefault("0") Integer timeout)
       throws IOException {
-    BluetoothServerSocket mServerSocket =
+    BluetoothServerSocket mServerSocket;
+    mServerSocket =
         mBluetoothAdapter.listenUsingRfcommWithServiceRecord(SDP_NAME, UUID.fromString(uuid));
-    BluetoothSocket mSocket = mServerSocket.accept();
+    BluetoothSocket mSocket = mServerSocket.accept(timeout.intValue());
     BluetoothConnection conn = new BluetoothConnection(mSocket, mServerSocket);
     return addConnection(conn);
   }
@@ -227,6 +230,50 @@ public class BluetoothFacade extends RpcReceiver {
     } catch (IOException e) {
       connections.remove(conn.getUUID());
       throw e;
+    }
+  }
+
+  @Rpc(description = "Queries a remote device for it's name or null if it can't be resolved")
+  public String bluetoothGetRemoteDeviceName(
+      @RpcParameter(name = "address", description = "Bluetooth Address For Target Device") String address) {
+    try {
+      BluetoothDevice mDevice;
+      mDevice = mBluetoothAdapter.getRemoteDevice(address);
+      return mDevice.getName();
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  @Rpc(description = "Gets the Bluetooth Visible device name")
+  public String bluetoothGetLocalName() {
+    return mBluetoothAdapter.getName();
+  }
+
+  @Rpc(description = "Sets the Bluetooth Visible device name, returns True on success")
+  public boolean bluetoothSetLocalName(
+      @RpcParameter(name = "name", description = "New local name") String name) {
+    return mBluetoothAdapter.setName(name);
+  }
+
+  @Rpc(description = "Gets the scan mode for the local dongle.\r\n" + "Return values:\r\n"
+      + "\t-1 when Bluetooth is disabled.\r\n" + "\t0 if non discoverable and non connectable.\r\n"
+      + "\r1 connectable non discoverable." + "\r3 connectable and discoverable.")
+  public int bluetoothGetScanMode() {
+    if (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF
+        || mBluetoothAdapter.getState() == BluetoothAdapter.STATE_TURNING_OFF) {
+      return -1;
+    }
+
+    switch (mBluetoothAdapter.getScanMode()) {
+    case BluetoothAdapter.SCAN_MODE_NONE:
+      return 0;
+    case BluetoothAdapter.SCAN_MODE_CONNECTABLE:
+      return 1;
+    case BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE:
+      return 3;
+    default:
+      return mBluetoothAdapter.getScanMode() - 20;
     }
   }
 
