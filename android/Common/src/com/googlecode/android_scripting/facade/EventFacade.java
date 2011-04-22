@@ -235,8 +235,35 @@ public class EventFacade extends RpcReceiver {
     return eventWaitFor(eventName, timeout);
   }
 
+  @Rpc(description = "Opens up a socket where you can read for events posted")
+  public int startEventDispatcher(
+      @RpcParameter(name = "port", description = "Port to use") @RpcDefault("0") @RpcOptional() Integer port) {
+    if (mEventServer == null) {
+      mEventServer = new EventServer(port);
+      addGlobalEventObserver(mEventServer);
+    }
+    return mEventServer.getAddress().getPort();
+  }
+
+  @Rpc(description = "Stops the event server, you can't read in the port anymore")
+  public void stopEventDispatcher() throws RuntimeException {
+    if (mEventServer == null) {
+      throw new RuntimeException("Not running");
+    }
+    mEventServer.shutdown();
+    removeEventObserver(mEventServer);
+    mEventServer = null;
+    return;
+  }
+
   @Override
   public void shutdown() {
+    try {
+      stopEventDispatcher();
+    } catch (Exception err) {
+    }
+    // let others (like webviews) know we're going down
+    eventPost("EventFacade", "shutdown");
   }
 
   public void addNamedEventObserver(String eventName, EventObserver observer) {
