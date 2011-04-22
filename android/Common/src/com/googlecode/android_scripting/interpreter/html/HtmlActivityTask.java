@@ -218,6 +218,12 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
         return JsonRpcResult.error(id, t).toString();
       }
     }
+
+    @SuppressWarnings("unused")
+    public void dismiss() {
+      Activity parent = getActivity();
+      parent.finish();
+    }
   }
 
   private class HtmlEventObserver implements EventFacade.EventObserver {
