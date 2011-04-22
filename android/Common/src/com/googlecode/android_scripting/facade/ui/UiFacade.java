@@ -20,10 +20,10 @@ import android.app.ProgressDialog;
 import android.app.Service;
 import android.util.AndroidRuntimeException;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.FileUtils;
@@ -52,7 +52,7 @@ import org.json.JSONException;
  * User Interface Facade. <br>
  * <br>
  * <b>Usage Notes</b><br>
- *<br>
+ * <br>
  * The UI facade provides access to a selection of dialog boxes for general user interaction, and
  * also hosts the {@link #webViewShow} call which allows interactive use of html pages.<br>
  * The general use of the dialog functions is as follows:<br>
@@ -530,6 +530,7 @@ public class UiFacade extends RpcReceiver {
 
   @Override
   public void shutdown() {
+    HtmlActivityTask.shutdown();
   }
 
   private class UiMenuItem {

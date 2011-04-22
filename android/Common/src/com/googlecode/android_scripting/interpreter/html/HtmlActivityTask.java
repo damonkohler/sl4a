@@ -83,9 +83,11 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   private ChromeClient mChromeClient;
   private WebView mView;
   private MyWebViewClient mWebViewClient;
+  private static HtmlActivityTask reference;
 
   public HtmlActivityTask(RpcReceiverManager manager, String androidJsSource, String jsonSource,
       String url) {
+    reference = this;
     mReceiverManager = manager;
     mJsonSource = jsonSource;
     mAndroidJsSource = androidJsSource;
@@ -144,6 +146,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
         mObserver.register(event, id);
       }
     }, "_callback_wrapper");
+
     getActivity().setContentView(mView);
     mView.setOnCreateContextMenuListener(getActivity());
     mChromeClient = new ChromeClient(getActivity());
@@ -176,7 +179,14 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mReceiverManager.shutdown();
     mView.destroy();
     mView = null;
+    reference = null;
     setResult(null);
+  }
+
+  public static void shutdown() {
+    if (HtmlActivityTask.reference != null) {
+      HtmlActivityTask.reference.finish();
+    }
   }
 
   @Override
@@ -252,6 +262,12 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
           mView.loadUrl(String.format("javascript:droid._callback(%d, %s);", id, json));
         }
       }
+    }
+
+    @SuppressWarnings("unused")
+    public void dismiss() {
+      Activity parent = getActivity();
+      parent.finish();
     }
   }
 
