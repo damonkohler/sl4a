@@ -16,7 +16,9 @@
 
 package com.dummy.fooforandroid;
 
+import android.app.Dialog;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Binder;
@@ -47,7 +49,7 @@ import java.util.concurrent.CountDownLatch;
  * A service that allows scripts and the RPC server to run in the background.
  * 
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
- * @author Manuel Narango
+ * @author Manuel Naranjo (manuel@aircable.net)
  */
 public class ScriptService extends ForegroundService {
 	private final static int NOTIFICATION_ID = NotificationIdFactory.create();
@@ -63,7 +65,7 @@ public class ScriptService extends ForegroundService {
 			return ScriptService.this;
 		}
 	}
-
+	
 	public ScriptService() {
 		super(NOTIFICATION_ID);
 		mBinder = new LocalBinder();
@@ -147,7 +149,13 @@ public class ScriptService extends ForegroundService {
 
 	@Override
 	protected Notification createNotification() {
-		return null;
+	    Notification notification =
+	        new Notification(R.drawable.script_logo_48, this.getString(R.string.loading), System.currentTimeMillis());
+	    // This contentIntent is a noop.
+	    PendingIntent contentIntent = PendingIntent.getService(this, 0, new Intent(), 0);
+	    notification.setLatestEventInfo(this, this.getString(R.string.app_name), this.getString(R.string.loading), contentIntent);
+	    notification.flags = Notification.FLAG_AUTO_CANCEL;
+		return notification;
 	}
 
 	private boolean needsToBeUpdated(String filename, InputStream content) {
@@ -201,11 +209,11 @@ public class ScriptService extends ForegroundService {
 					content.reset();
 					FileUtils.copyFromStream(sFileName, content);
 				}
+				FileUtils.chmod(new File(sFileName), 0755);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-
 }
