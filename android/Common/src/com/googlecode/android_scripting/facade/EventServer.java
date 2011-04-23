@@ -45,7 +45,7 @@ public class EventServer extends SimpleServer implements EventFacade.EventObserv
   }
 
   public EventServer(int port) {
-    address = startPublic(port);
+    address = startAllInterfaces(port);
   }
 
   public InetSocketAddress getAddress() {

@@ -146,8 +146,9 @@ public abstract class SimpleServer {
       Log.e("Failed to start server.", e);
       return null;
     }
-    int boundPort = start(address);
-    return InetSocketAddress.createUnresolved(address.getHostAddress(), boundPort);
+    int boundPort = start();
+    return InetSocketAddress.createUnresolved(
+      mServer.getInetAddress().getHostAddress(), boundPort);
   }
 
   /**
@@ -167,11 +168,32 @@ public abstract class SimpleServer {
       Log.e("Failed to start server.", e);
       return null;
     }
-    int boundPort = start(address);
-    return InetSocketAddress.createUnresolved(address.getHostAddress(), boundPort);
+    int boundPort = start();
+    return InetSocketAddress.createUnresolved(
+      mServer.getInetAddress().getHostAddress(), boundPort);
+  }
+  
+  /**
+   * data Starts the RPC server bound to all interfaces
+   * 
+   * @param port
+   *          the port to bind to or 0 to pick any unused port
+   * 
+   * @return the port that the server is bound to
+   */
+  public InetSocketAddress startAllInterfaces(int port) {
+    try {
+      mServer = new ServerSocket(port, 5 /* backlog */);
+    } catch (Exception e) {
+      Log.e("Failed to start server.", e);
+      return null;
+    }
+    int boundPort = start();
+    return InetSocketAddress.createUnresolved(mServer.getInetAddress().getHostAddress(), boundPort);
   }
 
-  private int start(InetAddress address) {
+
+  private int start() {
     mServerThread = new Thread() {
       @Override
       public void run() {
@@ -192,7 +214,7 @@ public abstract class SimpleServer {
       }
     };
     mServerThread.start();
-    Log.v("Bound to " + address.getHostAddress() + ":" + mServer.getLocalPort());
+    Log.v("Bound to " + address.getHostAddress());
     return mServer.getLocalPort();
   }
 
