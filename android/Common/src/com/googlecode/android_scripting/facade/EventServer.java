@@ -54,7 +54,7 @@ public class EventServer extends SimpleServer implements EventFacade.EventObserv
 
   @Override
   public void shutdown() {
-    onEventReceived(new Event("ServerGoingDown", null));
+    onEventReceived(new Event("sl4a", "{\"shutdown\": \"event-server\"}"));
     for (Listener listener : mListeners) {
       mListeners.remove(listener);
       listener.lock.countDown();
