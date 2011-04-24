@@ -147,8 +147,7 @@ public abstract class SimpleServer {
       return null;
     }
     int boundPort = start();
-    return InetSocketAddress.createUnresolved(
-      mServer.getInetAddress().getHostAddress(), boundPort);
+    return InetSocketAddress.createUnresolved(mServer.getInetAddress().getHostAddress(), boundPort);
   }
 
   /**
@@ -169,10 +168,9 @@ public abstract class SimpleServer {
       return null;
     }
     int boundPort = start();
-    return InetSocketAddress.createUnresolved(
-      mServer.getInetAddress().getHostAddress(), boundPort);
+    return InetSocketAddress.createUnresolved(mServer.getInetAddress().getHostAddress(), boundPort);
   }
-  
+
   /**
    * data Starts the RPC server bound to all interfaces
    * 
@@ -191,7 +189,6 @@ public abstract class SimpleServer {
     int boundPort = start();
     return InetSocketAddress.createUnresolved(mServer.getInetAddress().getHostAddress(), boundPort);
   }
-
 
   private int start() {
     mServerThread = new Thread() {
@@ -214,7 +211,7 @@ public abstract class SimpleServer {
       }
     };
     mServerThread.start();
-    Log.v("Bound to " + address.getHostAddress());
+    Log.v("Bound to " + mServer.getInetAddress());
     return mServer.getLocalPort();
   }
 
