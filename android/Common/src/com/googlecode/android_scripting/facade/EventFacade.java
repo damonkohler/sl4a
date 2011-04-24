@@ -16,12 +16,18 @@
 
 package com.googlecode.android_scripting.facade;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.googlecode.android_scripting.event.Event;
 import com.googlecode.android_scripting.future.FutureResult;
+import com.googlecode.android_scripting.jsonrpc.JsonBuilder;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
@@ -30,11 +36,15 @@ import com.googlecode.android_scripting.rpc.RpcName;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+
+import org.json.JSONException;
 
 /**
  * Manage the event queue. <br>
@@ -64,9 +74,13 @@ public class EventFacade extends RpcReceiver {
   private final Multimap<String, EventObserver> mNamedEventObservers = Multimaps
       .synchronizedListMultimap(ArrayListMultimap.<String, EventObserver> create());
   private EventServer mEventServer = null;
+  private final HashMap<String, BroadcastListener> mBroadcastListeners =
+      new HashMap<String, BroadcastListener>();
+  private final Context mContext;
 
   public EventFacade(FacadeManager manager) {
     super(manager);
+    mContext = manager.getService().getApplicationContext();
   }
 
   /**
@@ -75,6 +89,40 @@ public class EventFacade extends RpcReceiver {
   @Rpc(description = "Clears all events from the event buffer.")
   public void eventClearBuffer() {
     mEventQueue.clear();
+  }
+
+  /**
+   * Registers a listener for a new broadcast signal
+   */
+  @Rpc(description = "Registers a listener for a new broadcast signal")
+  public boolean eventRegisterForBroadcast(
+      @RpcParameter(name = "category") String category,
+      @RpcParameter(name = "enqueue", description = "Should this events be added to the event queue or only dispatched") @RpcDefault(value = "true") Boolean enqueue) {
+    if (mBroadcastListeners.containsKey(category)) {
+      return false;
+    }
+
+    BroadcastListener b = new BroadcastListener(this, enqueue.booleanValue());
+    IntentFilter c = new IntentFilter(category);
+    mContext.registerReceiver(b, c);
+    mBroadcastListeners.put(category, b);
+
+    return true;
+  }
+
+  @Rpc(description = "Stop listening for a broadcast signal")
+  public void eventUnregisterForBroadcast(@RpcParameter(name = "category") String category) {
+    if (!mBroadcastListeners.containsKey(category)) {
+      return;
+    }
+
+    mContext.unregisterReceiver(mBroadcastListeners.get(category));
+    mBroadcastListeners.remove(category);
+  }
+
+  @Rpc(description = "Lists all the broadcast signals we are listening for")
+  public Set<String> eventGetBrodcastCategories() {
+    return mBroadcastListeners.keySet();
   }
 
   /**
@@ -295,5 +343,28 @@ public class EventFacade extends RpcReceiver {
 
   public interface EventObserver {
     public void onEventReceived(Event event);
+  }
+
+  public class BroadcastListener extends android.content.BroadcastReceiver {
+    private EventFacade mParent;
+    private boolean mEnQueue;
+
+    public BroadcastListener(EventFacade parent, boolean enqueue) {
+      mParent = parent;
+      mEnQueue = enqueue;
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      Bundle data = (Bundle) intent.getExtras().clone();
+      data.putString("action", intent.getAction());
+      try {
+        mParent.eventPost("sl4a", JsonBuilder.build(data).toString(), mEnQueue);
+      } catch (JSONException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+
   }
 }
