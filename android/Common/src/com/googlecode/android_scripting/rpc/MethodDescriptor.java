@@ -193,6 +193,9 @@ public final class MethodDescriptor {
   }
 
   public String getName() {
+    if (mMethod.isAnnotationPresent(RpcName.class)) {
+      return mMethod.getAnnotation(RpcName.class).name();
+    }
     return mMethod.getName();
   }
 
