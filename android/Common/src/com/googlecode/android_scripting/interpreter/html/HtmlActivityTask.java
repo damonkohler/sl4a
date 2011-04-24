@@ -84,9 +84,10 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   private WebView mView;
   private MyWebViewClient mWebViewClient;
   private static HtmlActivityTask reference;
+  private boolean mDestroyManager;
 
   public HtmlActivityTask(RpcReceiverManager manager, String androidJsSource, String jsonSource,
-      String url) {
+      String url, boolean destroyManager) {
     reference = this;
     mReceiverManager = manager;
     mJsonSource = jsonSource;
@@ -97,6 +98,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     mReceiverManager.getReceiver(EventFacade.class).addGlobalEventObserver(mObserver);
     mUiFacade = mReceiverManager.getReceiver(UiFacade.class);
     mUrl = url;
+    mDestroyManager = destroyManager;
   }
 
   public RpcReceiverManager getRpcReceiverManager() {
@@ -176,7 +178,9 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   @Override
   public void onDestroy() {
     mReceiverManager.getReceiver(EventFacade.class).removeEventObserver(mObserver);
-    mReceiverManager.shutdown();
+    if (mDestroyManager) {
+      mReceiverManager.shutdown();
+    }
     mView.destroy();
     mView = null;
     reference = null;

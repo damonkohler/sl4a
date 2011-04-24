@@ -46,13 +46,13 @@ public class ScriptLauncher {
       throw new RuntimeException("HtmlInterpreter is not available.");
     }
     final FacadeManager manager =
-        new FacadeManager(FacadeConfiguration.getSdkLevel(), service, intent, FacadeConfiguration
-            .getFacadeClasses());
+        new FacadeManager(FacadeConfiguration.getSdkLevel(), service, intent,
+            FacadeConfiguration.getFacadeClasses());
     FutureActivityTaskExecutor executor =
         ((BaseApplication) service.getApplication()).getTaskExecutor();
     final HtmlActivityTask task =
         new HtmlActivityTask(manager, interpreter.getAndroidJsSource(),
-            interpreter.getJsonSource(), script.getAbsolutePath());
+            interpreter.getJsonSource(), script.getAbsolutePath(), true);
     executor.execute(task);
     return task;
   }

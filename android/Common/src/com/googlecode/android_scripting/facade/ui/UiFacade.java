@@ -437,7 +437,7 @@ public class UiFacade extends RpcReceiver {
       throws IOException {
     String jsonSrc = FileUtils.readFromAssetsFile(mService, HtmlInterpreter.JSON_FILE);
     String AndroidJsSrc = FileUtils.readFromAssetsFile(mService, HtmlInterpreter.ANDROID_JS_FILE);
-    HtmlActivityTask task = new HtmlActivityTask(mManager, AndroidJsSrc, jsonSrc, url);
+    HtmlActivityTask task = new HtmlActivityTask(mManager, AndroidJsSrc, jsonSrc, url, false);
     mTaskQueue.execute(task);
     if (wait != null && wait) {
       try {
