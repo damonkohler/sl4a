@@ -26,6 +26,7 @@ import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcDeprecated;
+import com.googlecode.android_scripting.rpc.RpcName;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
@@ -62,6 +63,7 @@ public class EventFacade extends RpcReceiver {
       new CopyOnWriteArrayList<EventObserver>();
   private final Multimap<String, EventObserver> mNamedEventObservers = Multimaps
       .synchronizedListMultimap(ArrayListMultimap.<String, EventObserver> create());
+  private EventServer mEventServer = null;
 
   public EventFacade(FacadeManager manager) {
     super(manager);
@@ -187,19 +189,30 @@ public class EventFacade extends RpcReceiver {
    * </pre>
    */
   @Rpc(description = "Post an event to the event queue.")
-  public void eventPost(@RpcParameter(name = "name", description = "Name of event") String name,
-      @RpcParameter(name = "data", description = "Data contained in event.") String data) {
-    postEvent(name, (Object) data);
+  public void eventPost(
+      @RpcParameter(name = "name", description = "Name of event") String name,
+      @RpcParameter(name = "data", description = "Data contained in event.") String data,
+      @RpcParameter(name = "enqueue", description = "Set to False if you don't want your events to be added to the event queue, just dispatched.") @RpcOptional @RpcDefault("false") Boolean enqueue) {
+    postEvent(name, data, enqueue.booleanValue());
+  }
+
+  /**
+   * Post an event and queue it
+   */
+  public void postEvent(String name, Object data) {
+    postEvent(name, data, true);
   }
 
   /**
    * Posts an event with to the event queue.
    */
-  public void postEvent(String name, Object data) {
+  public void postEvent(String name, Object data, boolean enqueue) {
     Event event = new Event(name, data);
-    mEventQueue.add(event);
-    if (mEventQueue.size() > MAX_QUEUE_SIZE) {
-      mEventQueue.remove();
+    if (enqueue == false) {
+      mEventQueue.add(event);
+      if (mEventQueue.size() > MAX_QUEUE_SIZE) {
+        mEventQueue.remove();
+      }
     }
     synchronized (mNamedEventObservers) {
       for (EventObserver observer : mNamedEventObservers.get(name)) {
@@ -215,7 +228,8 @@ public class EventFacade extends RpcReceiver {
 
   @RpcDeprecated(value = "eventPost", release = "r4")
   @Rpc(description = "Post an event to the event queue.")
-  public void postEvent(@RpcParameter(name = "name") String name,
+  @RpcName(name = "postEvent")
+  public void rpcPostEvent(@RpcParameter(name = "name") String name,
       @RpcParameter(name = "data") String data) {
     postEvent(name, data);
   }
@@ -263,7 +277,7 @@ public class EventFacade extends RpcReceiver {
     } catch (Exception err) {
     }
     // let others (like webviews) know we're going down
-    eventPost("EventFacade", "shutdown");
+    postEvent("sl4a", "{\"shutdown\": \"event-facade\"}");
   }
 
   public void addNamedEventObserver(String eventName, EventObserver observer) {
