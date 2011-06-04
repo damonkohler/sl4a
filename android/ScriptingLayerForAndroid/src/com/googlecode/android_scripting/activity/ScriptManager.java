@@ -28,11 +28,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -57,8 +57,8 @@ import com.googlecode.android_scripting.dialog.UsageTrackingConfirmation;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
-import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
+import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 
 import java.io.File;
 import java.util.Collections;
@@ -119,9 +119,9 @@ public class ScriptManager extends ListActivity {
             .setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Ok", null).show();
       }
     } else {
-      new AlertDialog.Builder(this).setTitle("External Storage Unavilable").setMessage(
-          "Scripts will be unavailable as long as external storage is unavailable.").setIcon(
-          android.R.drawable.ic_dialog_alert).setPositiveButton("Ok", null).show();
+      new AlertDialog.Builder(this).setTitle("External Storage Unavilable")
+          .setMessage("Scripts will be unavailable as long as external storage is unavailable.")
+          .setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Ok", null).show();
     }
 
     mCurrentDir = mBaseDir;
@@ -329,8 +329,8 @@ public class ScriptManager extends ListActivity {
       // Add a new script.
       Intent intent = new Intent(Constants.ACTION_EDIT_SCRIPT);
       Interpreter interpreter = mAddMenuIds.get(itemId);
-      intent.putExtra(Constants.EXTRA_SCRIPT_PATH, new File(mCurrentDir.getPath(), interpreter
-          .getExtension()).getPath());
+      intent.putExtra(Constants.EXTRA_SCRIPT_PATH,
+          new File(mCurrentDir.getPath(), interpreter.getExtension()).getPath());
       intent.putExtra(Constants.EXTRA_SCRIPT_CONTENT, interpreter.getContentTemplate());
       intent.putExtra(Constants.EXTRA_IS_NEW_SCRIPT, true);
       startActivity(intent);
@@ -366,7 +366,7 @@ public class ScriptManager extends ListActivity {
       mAdapter.notifyDataSetInvalidated();
       return;
     }
-    if (FacadeConfiguration.getSdkLevel() <= 3) {
+    if (FacadeConfiguration.getSdkLevel() <= 3 || !mPreferences.getBoolean("use_quick_menu", true)) {
       doDialogMenu();
       return;
     }

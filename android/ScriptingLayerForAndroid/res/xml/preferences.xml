@@ -15,6 +15,7 @@
       android:key="show_all_files"
       android:title="Show all files"
       android:defaultValue="false" />
+    <CheckBoxPreference android:defaultValue="true" android:key="use_quick_menu" android:title="Use QuickActions Menu"></CheckBoxPreference>
   </PreferenceCategory>
   <PreferenceCategory
     android:title="Script Editor">
