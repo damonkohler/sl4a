@@ -2,4 +2,4 @@ To rebuild the zip file and scripts jar:
 
 Use build.xml as an ant script.
 
-NOTE: Project settings (classpath etc) are stored in ".tmp/" and need to be modified if changes are made to the build path.
+NOTE: Project settings (classpath etc) are stored in ".tmp/" and needs to be modified if changes are made to the build path.

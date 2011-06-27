@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="libs/locale_platform.jar"/>
 	<classpathentry kind="lib" path="libs/libGoogleAnalytics.jar"/>
 	<classpathentry kind="lib" path="libs/script.jar"/>
+	<classpathentry kind="lib" path="libs/guava-r06.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
