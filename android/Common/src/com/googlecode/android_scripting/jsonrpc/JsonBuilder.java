@@ -120,7 +120,19 @@ public class JsonBuilder {
     if (data instanceof byte[]) {
       return Base64Codec.encodeBase64((byte[]) data);
     }
-    throw new JSONException("Failed to build JSON result.");
+    if (data instanceof Object[]) {
+      return buildJSONArray((Object[]) data);
+    }
+    return data.toString();
+    // throw new JSONException("Failed to build JSON result. " + data.getClass().getName());
+  }
+
+  private static JSONArray buildJSONArray(Object[] data) throws JSONException {
+    JSONArray result = new JSONArray();
+    for (Object o : data) {
+      result.put(build(o));
+    }
+    return result;
   }
 
   private static Object buildInetSocketAddress(InetSocketAddress data) {
