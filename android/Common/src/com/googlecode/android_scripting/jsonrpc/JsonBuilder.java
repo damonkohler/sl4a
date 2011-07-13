@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.codec.binary.Base64Codec;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -115,6 +116,9 @@ public class JsonBuilder {
     }
     if (data instanceof InetSocketAddress) {
       return buildInetSocketAddress((InetSocketAddress) data);
+    }
+    if (data instanceof byte[]) {
+      return Base64Codec.encodeBase64((byte[]) data);
     }
     throw new JSONException("Failed to build JSON result.");
   }
