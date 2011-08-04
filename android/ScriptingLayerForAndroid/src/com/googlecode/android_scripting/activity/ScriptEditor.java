@@ -18,7 +18,9 @@ package com.googlecode.android_scripting.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -26,6 +28,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.Selection;
 import android.text.Spanned;
 import android.text.TextWatcher;
@@ -70,11 +73,13 @@ public class ScriptEditor extends Activity {
   private ContentTextWatcher mWatcher;
   private EditHistory mHistory;
   private File mScript;
+  private EditText mLineNo;
 
   private boolean mIsUndoOrRedo = false;
+  private boolean mEnableAutoClose;
 
   private static enum MenuId {
-    SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP, SHARE;
+    SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP, SHARE, GOTO;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -83,6 +88,8 @@ public class ScriptEditor extends Activity {
   private static enum RequestCode {
     RPC_HELP
   }
+
+  private static final int DIALOG_LINE = 1;
 
   private int readIntPref(String key, int defaultValue, int maxValue) {
     int val;
@@ -136,6 +143,8 @@ public class ScriptEditor extends Activity {
     mConfiguration = ((BaseApplication) getApplication()).getInterpreterConfiguration();
     // Disables volume key beep.
     setVolumeControlStream(AudioManager.STREAM_MUSIC);
+    mLineNo = new EditText(this);
+    mLineNo.setInputType(InputType.TYPE_CLASS_NUMBER);
     Analytics.trackActivity(this);
   }
 
@@ -147,6 +156,7 @@ public class ScriptEditor extends Activity {
 
   private void updatePreferences() {
     mContentText.setTextSize(readIntPref("editor_fontsize", 10, 30));
+    mEnableAutoClose = mPreferences.getBoolean("enableAutoClose", true);
   }
 
   @Override
@@ -161,6 +171,7 @@ public class ScriptEditor extends Activity {
         android.R.drawable.ic_menu_info_details);
     menu.add(0, MenuId.HELP.getId(), 0, "Help").setIcon(android.R.drawable.ic_menu_help);
     menu.add(0, MenuId.SHARE.getId(), 0, "Share").setIcon(android.R.drawable.ic_menu_share);
+    menu.add(0, MenuId.GOTO.getId(), 0, "GoTo").setIcon(android.R.drawable.ic_menu_directions);
     return true;
   }
 
@@ -188,8 +199,8 @@ public class ScriptEditor extends Activity {
     } else if (item.getItemId() == MenuId.API_BROWSER.getId()) {
       Intent intent = new Intent(this, ApiBrowser.class);
       intent.putExtra(Constants.EXTRA_SCRIPT_PATH, mNameText.getText().toString());
-      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, mConfiguration.getInterpreterForScript(
-          mNameText.getText().toString()).getName());
+      intent.putExtra(Constants.EXTRA_INTERPRETER_NAME,
+          mConfiguration.getInterpreterForScript(mNameText.getText().toString()).getName());
       intent.putExtra(Constants.EXTRA_SCRIPT_TEXT, mContentText.getText().toString());
       startActivityForResult(intent, RequestCode.RPC_HELP.ordinal());
     } else if (item.getItemId() == MenuId.HELP.getId()) {
@@ -200,6 +211,8 @@ public class ScriptEditor extends Activity {
       intent.putExtra(Intent.EXTRA_SUBJECT, "Share " + mNameText.getText().toString());
       intent.setType("text/plain");
       startActivity(Intent.createChooser(intent, "Send Script to:"));
+    } else if (item.getItemId() == MenuId.GOTO.getId()) {
+      showDialog(DIALOG_LINE);
     }
     return super.onOptionsItemSelected(item);
   }
@@ -278,6 +291,69 @@ public class ScriptEditor extends Activity {
   }
 
   @Override
+  protected Dialog onCreateDialog(int id, Bundle args) {
+    AlertDialog.Builder b = new AlertDialog.Builder(this);
+    if (id == DIALOG_LINE) {
+      b.setTitle("Goto Line");
+      b.setView(mLineNo);
+      b.setPositiveButton("Ok", new OnClickListener() {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          gotoLine(Integer.parseInt(mLineNo.getText().toString()));
+        }
+      });
+      b.setNegativeButton("Cancel", null);
+      return b.create();
+    }
+    return super.onCreateDialog(id, args);
+  }
+
+  @Override
+  protected void onPrepareDialog(int id, Dialog dialog, Bundle args) {
+    if (id == DIALOG_LINE) {
+      mLineNo.setText(String.valueOf(getLineNo()));
+    }
+    super.onPrepareDialog(id, dialog, args);
+  }
+
+  protected int getLineNo() {
+    int pos = mContentText.getSelectionStart();
+    String text = mContentText.getText().toString();
+    int i = 0;
+    int n = 1;
+    while (i < pos) {
+      int j = text.indexOf("\n", i);
+      if (j < 0) {
+        break;
+      }
+      i = j + 1;
+      if (i < pos) {
+        n += 1;
+      }
+    }
+    return n;
+  }
+
+  protected void gotoLine(int line) {
+    String text = mContentText.getText().toString();
+    if (text.length() < 1) {
+      return;
+    }
+    int i = 0;
+    int n = 1;
+    while (i < text.length() && n < line) {
+      int j = text.indexOf("\n", i);
+      if (j < 0) {
+        break;
+      }
+      i = j + 1;
+      n += 1;
+    }
+    mContentText.setSelection(Math.min(text.length() - 1, i));
+  }
+
+  @Override
   protected void onUserLeaveHint() {
     if (hasContentChanged()) {
       save();
@@ -294,7 +370,10 @@ public class ScriptEditor extends Activity {
         int dend) {
       if (end - start == 1) {
         Interpreter ip = mConfiguration.getInterpreterForScript(mNameText.getText().toString());
-        String auto = ip == null ? null : ip.getLanguage().autoClose(source.charAt(start));
+        String auto = null;
+        if (ip != null && mEnableAutoClose) {
+          auto = ip.getLanguage().autoClose(source.charAt(start));
+        }
         if (auto != null) {
           mScheduleMoveLeft = true;
           return auto;

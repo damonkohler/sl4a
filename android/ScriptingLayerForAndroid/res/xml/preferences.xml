@@ -28,6 +28,7 @@
       android:entryValues="@array/entryvalues_fontsize_preference"
       android:dialogTitle="@string/dialog_title_fontsize_preference" />
   <CheckBoxPreference android:title="@string/help_force_browser" android:key="helpForceBrowser" android:defaultValue="true" android:summary="Force API Help to use default Android Browser"></CheckBoxPreference>
+  <CheckBoxPreference android:summary="When enabled, quotes and brackets are automatically completed." android:key="enableAutoClose" android:title="@string/enable_auto_close" android:defaultValue="true"></CheckBoxPreference>
 </PreferenceCategory>
   <PreferenceCategory
     android:title="Terminal">

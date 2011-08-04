@@ -184,5 +184,6 @@
   
   <string name="help_acks">SL4A uses <a href="http://code.google.com/p/connectbot/">ConnectBot</a> terminal.</string>
   <string name="help_intro">Please select a topic below for more information on a particular subject.</string>
+  <string name="enable_auto_close">Enable Auto Close</string>
   
 </resources>
