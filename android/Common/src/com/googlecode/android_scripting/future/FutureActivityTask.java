@@ -19,10 +19,11 @@ package com.googlecode.android_scripting.future;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
-import android.view.ContextMenu.ContextMenuInfo;
 
 /**
  * Encapsulates an {@link Activity} and a {@link FutureObject}.
@@ -89,5 +90,10 @@ public abstract class FutureActivityTask<T> {
 
   public void startActivityForResult(Intent intent, int requestCode) {
     mActivity.startActivityForResult(intent, requestCode);
+  }
+
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    // Placeholder.
+    return false;
   }
 }

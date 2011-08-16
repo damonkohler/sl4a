@@ -118,6 +118,7 @@ public class UiFacade extends RpcReceiver {
   private final Service mService;
   private final FutureActivityTaskExecutor mTaskQueue;
   private DialogTask mDialogTask;
+  private FullScreenTask mFullScreenTask;
 
   private final List<UiMenuItem> mContextMenuItems;
   private final List<UiMenuItem> mOptionsMenuItems;
@@ -528,8 +529,59 @@ public class UiFacade extends RpcReceiver {
     return true;
   }
 
+  @Rpc(description = "Show Full Screen.")
+  public List<String> fullShow(
+      @RpcParameter(name = "layout", description = "String containing View layout") String layout)
+      throws InterruptedException {
+    if (mFullScreenTask != null) {
+      fullDismiss();
+    }
+    mFullScreenTask = new FullScreenTask(layout);
+    mFullScreenTask.setEventFacade(mEventFacade);
+    mTaskQueue.execute(mFullScreenTask);
+    mFullScreenTask.getShowLatch().await();
+    return mFullScreenTask.mInflater.getErrors();
+  }
+
+  @Rpc(description = "Dismiss Full Screen.")
+  public void fullDismiss() {
+    if (mFullScreenTask != null) {
+      mFullScreenTask.finish();
+      mFullScreenTask = null;
+    }
+  }
+
+  @Rpc(description = "Get Fullscreen Properties")
+  public Map<String, Map<String, String>> fullQuery() {
+    if (mFullScreenTask == null) {
+      throw new RuntimeException("No screen displayed.");
+    }
+    return mFullScreenTask.getViewAsMap();
+  }
+
+  @Rpc(description = "Get fullscreen properties for a specific widget")
+  public Map<String, String> fullQueryDetail(
+      @RpcParameter(name = "id", description = "id of layout widget") String id) {
+    if (mFullScreenTask == null) {
+      throw new RuntimeException("No screen displayed.");
+    }
+    return mFullScreenTask.getViewDetail(id);
+  }
+
+  @Rpc(description = "Set fullscreen widget property")
+  public String fullSetProperty(
+      @RpcParameter(name = "id", description = "id of layout widget") String id,
+      @RpcParameter(name = "property", description = "name of property to set") String property,
+      @RpcParameter(name = "value", description = "value to set property to") String value) {
+    if (mFullScreenTask == null) {
+      throw new RuntimeException("No screen displayed.");
+    }
+    return mFullScreenTask.setViewProperty(id, property, value);
+  }
+
   @Override
   public void shutdown() {
+    fullDismiss();
     HtmlActivityTask.shutdown();
   }
 

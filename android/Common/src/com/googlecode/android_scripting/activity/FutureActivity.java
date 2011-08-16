@@ -23,6 +23,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 
@@ -138,5 +139,13 @@ public class FutureActivity extends Activity {
     if (mTask != null) {
       mTask.onActivityResult(requestCode, resultCode, data);
     }
+  }
+
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (mTask != null) {
+      return mTask.onKeyDown(keyCode, event);
+    }
+    return false;
   }
 }
