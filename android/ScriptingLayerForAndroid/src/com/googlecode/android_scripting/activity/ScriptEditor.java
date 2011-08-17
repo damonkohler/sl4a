@@ -157,6 +157,7 @@ public class ScriptEditor extends Activity {
   private void updatePreferences() {
     mContentText.setTextSize(readIntPref("editor_fontsize", 10, 30));
     mEnableAutoClose = mPreferences.getBoolean("enableAutoClose", true);
+    mContentText.setHorizontallyScrolling(mPreferences.getBoolean("editor_no_wrap", false));
   }
 
   @Override

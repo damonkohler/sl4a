@@ -18,5 +18,5 @@
     android:hint="Script Content"
     android:typeface="monospace"
     android:gravity="top"
-    android:inputType="textMultiLine" />
+    android:inputType="textMultiLine" android:scrollHorizontally="true" android:scrollbars="horizontal|vertical"/>
 </LinearLayout>
