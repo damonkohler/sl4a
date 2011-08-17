@@ -56,6 +56,8 @@ public interface Constants {
 
   public static final String EXTRA_USE_EXTERNAL_IP =
       "com.googlecode.android_scripting.extra.USE_PUBLIC_IP";
+  public static final String EXTRA_USE_SERVICE_PORT =
+      "com.googlecode.android_scripting.extra.USE_SERVICE_PORT";
   public static final String EXTRA_SCRIPT_TEXT =
       "com.googlecode.android_scripting.extra.SCRIPT_TEXT";
   public static final String EXTRA_RPC_HELP_TEXT =
@@ -79,18 +81,18 @@ public interface Constants {
   public static final String EXTRA_DEVICE_ADDRESS =
       "com.googlecode.android_scripting.extra.device_address";
 
-  public static final ComponentName SL4A_SERVICE_COMPONENT_NAME =
-      new ComponentName("com.googlecode.android_scripting",
-          "com.googlecode.android_scripting.activity.ScriptingLayerService");
-  public static final ComponentName SL4A_SERVICE_LAUNCHER_COMPONENT_NAME =
-      new ComponentName("com.googlecode.android_scripting",
-          "com.googlecode.android_scripting.activity.ScriptingLayerServiceLauncher");
-  public static final ComponentName BLUETOOTH_DEVICE_LIST_COMPONENT_NAME =
-      new ComponentName("com.googlecode.android_scripting",
-          "com.googlecode.android_scripting.activity.BluetoothDeviceList");
-  public static final ComponentName TRIGGER_SERVICE_COMPONENT_NAME =
-      new ComponentName("com.googlecode.android_scripting",
-          "com.googlecode.android_scripting.activity.TriggerService");
+  public static final ComponentName SL4A_SERVICE_COMPONENT_NAME = new ComponentName(
+      "com.googlecode.android_scripting",
+      "com.googlecode.android_scripting.activity.ScriptingLayerService");
+  public static final ComponentName SL4A_SERVICE_LAUNCHER_COMPONENT_NAME = new ComponentName(
+      "com.googlecode.android_scripting",
+      "com.googlecode.android_scripting.activity.ScriptingLayerServiceLauncher");
+  public static final ComponentName BLUETOOTH_DEVICE_LIST_COMPONENT_NAME = new ComponentName(
+      "com.googlecode.android_scripting",
+      "com.googlecode.android_scripting.activity.BluetoothDeviceList");
+  public static final ComponentName TRIGGER_SERVICE_COMPONENT_NAME = new ComponentName(
+      "com.googlecode.android_scripting",
+      "com.googlecode.android_scripting.activity.TriggerService");
 
   // Preference Keys
 

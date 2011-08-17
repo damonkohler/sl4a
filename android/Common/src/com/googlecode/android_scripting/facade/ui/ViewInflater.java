@@ -2,6 +2,9 @@ package com.googlecode.android_scripting.facade.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -241,6 +244,8 @@ public class ViewInflater {
       getLayoutParams(view, root).width = getLayoutValue(value);
     } else if (attr.equals("layout_height")) {
       getLayoutParams(view, root).height = getLayoutValue(value);
+    } else if (attr.equals("layout_gravity")) {
+      setIntegerField(getLayoutParams(view, root), "gravity", getInteger(Gravity.class, value));
     } else if (attr.equals("id")) {
       view.setId(calcId(value));
     } else if (attr.equals("gravity")) {
@@ -249,8 +254,38 @@ public class ViewInflater {
       setInteger(view, attr, getInteger(InputType.class, value));
     } else if (attr.equals("background")) {
       view.setBackgroundColor(getColor(value));
+    } else if (attr.equals("src")) {
+      setImage(view, value);
     } else {
       setDynamicProperty(view, attr, value);
+    }
+  }
+
+  private void setImage(View view, String value) {
+    if (value.startsWith("@")) {
+      setInteger(view, "imageResource", getInteger(view, value));
+    } else {
+      try {
+        Uri uri = Uri.parse(value);
+        if ("file".equals(uri.getScheme())) {
+          Bitmap bm = BitmapFactory.decodeFile(uri.getPath());
+          Method method = view.getClass().getMethod("setImageBitmap", Bitmap.class);
+          method.invoke(view, bm);
+        } else {
+          mErrors.add("Only 'file' currently supported for images");
+        }
+      } catch (Exception e) {
+        mErrors.add("failed to set image " + value);
+      }
+    }
+  }
+
+  private void setIntegerField(Object target, String fieldName, int value) {
+    try {
+      Field f = target.getClass().getField(fieldName);
+      f.setInt(target, value);
+    } catch (Exception e) {
+      mErrors.add("set field)" + fieldName + " failed. " + e.toString());
     }
   }
 
@@ -358,6 +393,8 @@ public class ViewInflater {
     } else {
       if (value.startsWith("?")) {
         result = parseTheme(value);
+      } else if (value.startsWith("@")) {
+        result = parseTheme(value);
       } else if (value.startsWith("0x")) {
         try {
           result = (int) Long.parseLong(value.substring(2), 16);
@@ -375,6 +412,7 @@ public class ViewInflater {
             Field f = clazz.getField(value.toUpperCase());
             result = f.getInt(null);
           } catch (Exception ex) {
+            mErrors.add("Unknown value: " + value);
             result = 0;
           }
         }

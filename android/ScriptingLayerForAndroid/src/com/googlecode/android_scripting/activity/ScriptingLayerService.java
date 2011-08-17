@@ -200,13 +200,23 @@ public class ScriptingLayerService extends ForegroundService {
     }
   }
 
+  private boolean tryPort(AndroidProxy androidProxy, boolean usePublicIp, int usePort) {
+    if (usePublicIp) {
+      return (androidProxy.startPublic(usePort) != null);
+    } else {
+      return (androidProxy.startLocal(usePort) != null);
+    }
+  }
+
   private AndroidProxy launchServer(Intent intent, boolean requiresHandshake) {
     AndroidProxy androidProxy = new AndroidProxy(this, intent, requiresHandshake);
     boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
-    if (usePublicIp) {
-      androidProxy.startPublic();
-    } else {
-      androidProxy.startLocal();
+    int usePort = intent.getIntExtra(Constants.EXTRA_USE_SERVICE_PORT, 0);
+    // If port is in use, fall back to defaut behaviour
+    if (!tryPort(androidProxy, usePublicIp, usePort)) {
+      if (usePort != 0) {
+        tryPort(androidProxy, usePublicIp, 0);
+      }
     }
     return androidProxy;
   }

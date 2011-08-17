@@ -8,6 +8,7 @@
       android:title="Usage tracking"
       android:summary="Allow anonymous usage tracking."
       android:defaultValue="false" />
+    <EditTextPreference android:summary="Port to use for running server. Leave at 0 for random selection." android:key="use_service_port" android:title="Server Port" android:defaultValue="0" android:numeric="integer"></EditTextPreference>
   </PreferenceCategory>
   <PreferenceCategory
     android:title="Script Manager">

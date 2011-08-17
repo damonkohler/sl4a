@@ -20,11 +20,13 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,6 +62,7 @@ public class InterpreterManager extends ListActivity {
   private List<Interpreter> mInterpreters;
   private List<String> mFeaturedInterpreters;
   private InterpreterConfiguration mConfiguration;
+  private SharedPreferences mPreferences;
 
   private static enum MenuId {
     HELP, ADD, NETWORK, PREFERENCES;
@@ -81,6 +84,7 @@ public class InterpreterManager extends ListActivity {
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     mFeaturedInterpreters = FeaturedInterpreters.getList();
+    mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.trackActivity(this);
   }
 
@@ -152,10 +156,24 @@ public class InterpreterManager extends ListActivity {
     return true;
   }
 
+  private int getPrefInt(String key, int defaultValue) {
+    int result = defaultValue;
+    String value = mPreferences.getString(key, null);
+    if (value != null) {
+      try {
+        result = Integer.parseInt(value);
+      } catch (NumberFormatException e) {
+        result = defaultValue;
+      }
+    }
+    return result;
+  }
+
   private void launchService(boolean usePublicIp) {
     Intent intent = new Intent(this, ScriptingLayerService.class);
     intent.setAction(Constants.ACTION_LAUNCH_SERVER);
     intent.putExtra(Constants.EXTRA_USE_EXTERNAL_IP, usePublicIp);
+    intent.putExtra(Constants.EXTRA_USE_SERVICE_PORT, getPrefInt("use_service_port", 0));
     startService(intent);
   }
 
@@ -236,8 +254,8 @@ public class InterpreterManager extends ListActivity {
       ImageView img = (ImageView) container.findViewById(R.id.list_item_icon);
 
       int imgId =
-          FeaturedInterpreters.getInterpreterIcon(InterpreterManager.this, interpreter
-              .getExtension());
+          FeaturedInterpreters.getInterpreterIcon(InterpreterManager.this,
+              interpreter.getExtension());
       if (imgId == 0) {
         imgId = R.drawable.sl4a_logo_32;
       }
