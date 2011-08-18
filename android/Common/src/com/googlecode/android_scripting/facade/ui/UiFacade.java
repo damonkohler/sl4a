@@ -538,6 +538,7 @@ public class UiFacade extends RpcReceiver {
     }
     mFullScreenTask = new FullScreenTask(layout);
     mFullScreenTask.setEventFacade(mEventFacade);
+    mFullScreenTask.setUiFacade(this);
     mTaskQueue.execute(mFullScreenTask);
     mFullScreenTask.getShowLatch().await();
     return mFullScreenTask.mInflater.getErrors();

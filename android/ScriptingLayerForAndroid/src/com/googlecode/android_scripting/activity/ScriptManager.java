@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -38,6 +39,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -100,7 +102,7 @@ public class ScriptManager extends ListActivity {
 
   private static enum MenuId {
     DELETE, HELP, FOLDER_ADD, QRCODE_ADD, INTERPRETER_MANAGER, PREFERENCES, LOGCAT_VIEWER,
-    TRIGGER_MANAGER, REFRESH, SEARCH, RENAME;
+    TRIGGER_MANAGER, REFRESH, SEARCH, RENAME, EXTERNAL;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -429,16 +431,26 @@ public class ScriptManager extends ListActivity {
       }
     });
 
-    actionMenu.addActionItems(terminal, background, edit, rename, delete);
+    final ActionItem external = new ActionItem();
+    external.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_directions));
+    external.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        externalEditor(file);
+        dismissQuickActions(actionMenu);
+      }
+    });
+
+    actionMenu.addActionItems(terminal, background, edit, rename, delete, external);
     actionMenu.setAnimStyle(QuickAction.ANIM_GROW_FROM_CENTER);
     actionMenu.show();
   }
 
-  // Quickedit chokes on sdk 3 or below. Provider alternative menu.
+  // Quickedit chokes on sdk 3 or below, and some Android builds. Provides alternative menu.
   private void doDialogMenu() {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     final CharSequence[] menuList =
-        { "Run Foreground", "Run Background", "Edit", "Delete", "Rename" };
+        { "Run Foreground", "Run Background", "Edit", "Delete", "Rename", "External Editor" };
     builder.setTitle(mCurrent.getName());
     builder.setItems(menuList, new DialogInterface.OnClickListener() {
 
@@ -467,11 +479,24 @@ public class ScriptManager extends ListActivity {
         case 4:
           rename(mCurrent);
           break;
-
+        case 5:
+          externalEditor(mCurrent);
+          break;
         }
       }
     });
     builder.show();
+  }
+
+  protected void externalEditor(File file) {
+    Intent intent = new Intent(Intent.ACTION_EDIT);
+    intent.setDataAndType(Uri.fromFile(file), "text/plain");
+    try {
+      startActivity(intent);
+    } catch (Exception e) {
+      Toast.makeText(this, "Unable to open external editor\n" + e.toString(), Toast.LENGTH_SHORT)
+          .show();
+    }
   }
 
   private void dismissQuickActions(final QuickAction action) {

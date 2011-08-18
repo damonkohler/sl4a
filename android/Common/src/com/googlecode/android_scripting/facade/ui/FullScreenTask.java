@@ -3,6 +3,7 @@ package com.googlecode.android_scripting.facade.ui;
 import android.R;
 import android.os.Handler;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -22,6 +23,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 public class FullScreenTask extends FutureActivityTask<Object> implements OnClickListener {
   private EventFacade mEventFacade;
+  private UiFacade mUiFacade;
   public View mView = null;
   protected ViewInflater mInflater = new ViewInflater();
   protected String mLayout;
@@ -80,8 +82,12 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     return mEventFacade;
   }
 
-  public void setEventFacade(EventFacade mEventFacade) {
-    this.mEventFacade = mEventFacade;
+  public void setEventFacade(EventFacade eventFacade) {
+    mEventFacade = eventFacade;
+  }
+
+  public void setUiFacade(UiFacade uiFacade) {
+    mUiFacade = uiFacade;
   }
 
   public CountDownLatch getShowLatch() {
@@ -167,6 +173,11 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
       return true;
     }
     return false;
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    return mUiFacade.onPrepareOptionsMenu(menu);
   }
 
 }
