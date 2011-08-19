@@ -47,6 +47,7 @@ class AlertDialogTask extends DialogTask {
   private final Set<Integer> mSelectedItems;
   private final Map<String, Object> mResultMap;
   private InputType mInputType;
+  private int mEditInputType = 0;
 
   private String mPositiveButtonText;
   private String mNegativeButtonText;
@@ -142,6 +143,22 @@ class AlertDialogTask extends DialogTask {
   public void setTextInput(String defaultText) {
     mDefaultText = defaultText;
     mInputType = InputType.PLAIN_TEXT;
+    setEditInputType("text");
+  }
+
+  public void setEditInputType(String editInputType) {
+    String[] list = editInputType.split("\\|");
+    Map<String, Integer> types = ViewInflater.getInputTypes();
+    mEditInputType = 0;
+    for (String flag : list) {
+      Integer v = types.get(flag.trim());
+      if (v != null) {
+        mEditInputType |= v;
+      }
+    }
+    if (mEditInputType == 0) {
+      mEditInputType = android.text.InputType.TYPE_CLASS_TEXT;
+    }
   }
 
   public void setPasswordInput() {
@@ -205,6 +222,7 @@ class AlertDialogTask extends DialogTask {
       if (mDefaultText != null) {
         mEditText.setText(mDefaultText);
       }
+      mEditText.setInputType(mEditInputType);
       builder.setView(mEditText);
       break;
     case PASSWORD:

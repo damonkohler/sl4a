@@ -40,7 +40,7 @@ public class ViewInflater {
   private final List<String> mErrors = new ArrayList<String>();
   private Context mContext;
   private DisplayMetrics mMetrics;
-  private final Map<String, Integer> mInputTypes = new HashMap<String, Integer>();
+  private static final Map<String, Integer> mInputTypes = new HashMap<String, Integer>();
 
   public static XmlPullParserFactory getFactory() throws XmlPullParserException {
     if (mFactory == null) {
@@ -549,7 +549,7 @@ public class ViewInflater {
     return result;
   }
 
-  public Map<String, Integer> getInputTypes() {
+  public static Map<String, Integer> getInputTypes() {
     if (mInputTypes.size() == 0) {
       mInputTypes.put("none", 0x00000000);
       mInputTypes.put("text", 0x00000001);

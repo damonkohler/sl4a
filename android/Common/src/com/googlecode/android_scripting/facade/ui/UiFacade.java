@@ -94,7 +94,8 @@ import org.json.JSONException;
  * <li>Once done, use {@link #dialogDismiss} to remove the dialog.
  * </ol>
  * <br>
- * You can also manipulate menu options.
+ * You can also manipulate menu options. The menu options are available for both {@link #dialogShow}
+ * and {@link #fullShow}.
  * <ul>
  * <li>{@link #clearOptionsMenu}
  * <li>{@link #addOptionsMenuItem}
@@ -136,15 +137,25 @@ public class UiFacade extends RpcReceiver {
     mMenuUpdated = new AtomicBoolean(false);
   }
 
+  /**
+   * For inputType, see <a
+   * href="http://developer.android.com/reference/android/R.styleable.html#TextView_inputType"
+   * >InputTypes</a>. Some useful ones are text, number, and textUri. Multiple flags can be
+   * supplied, seperated by "|", ie: "textUri|textAutoComplete"
+   */
   @Rpc(description = "Create a text input dialog.")
   public void dialogCreateInput(
       @RpcParameter(name = "title", description = "title of the input box") @RpcDefault("Value") final String title,
       @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message,
-      @RpcParameter(name = "defaultText", description = "text to insert into the input box") @RpcOptional final String text)
+      @RpcParameter(name = "defaultText", description = "text to insert into the input box") @RpcOptional final String text,
+      @RpcParameter(name = "inputType", description = "type of input data, ie number or text") @RpcOptional final String inputType)
       throws InterruptedException {
     dialogDismiss();
     mDialogTask = new AlertDialogTask(title, message);
     ((AlertDialogTask) mDialogTask).setTextInput(text);
+    if (inputType != null) {
+      ((AlertDialogTask) mDialogTask).setEditInputType(inputType);
+    }
   }
 
   @Rpc(description = "Create a password input dialog.")
@@ -175,7 +186,7 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "message", description = "message to display above the input box") @RpcDefault("Please enter value:") final String message,
       @RpcParameter(name = "defaultText", description = "text to insert into the input box") @RpcOptional final String text)
       throws InterruptedException {
-    dialogCreateInput(title, message, text);
+    dialogCreateInput(title, message, text, "text");
     dialogSetNegativeButtonText("Cancel");
     dialogSetPositiveButtonText("Ok");
     dialogShow();
@@ -529,6 +540,10 @@ public class UiFacade extends RpcReceiver {
     return true;
   }
 
+  /**
+   * See <a href=http://code.google.com/p/android-scripting/wiki/FullScreenUI>wiki page</a> for more
+   * detail.
+   */
   @Rpc(description = "Show Full Screen.")
   public List<String> fullShow(
       @RpcParameter(name = "layout", description = "String containing View layout") String layout)
