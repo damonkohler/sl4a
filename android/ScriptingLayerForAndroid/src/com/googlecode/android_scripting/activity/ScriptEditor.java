@@ -77,6 +77,7 @@ public class ScriptEditor extends Activity {
 
   private boolean mIsUndoOrRedo = false;
   private boolean mEnableAutoClose;
+  private boolean mAutoIndent;
 
   private static enum MenuId {
     SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP, SHARE, GOTO;
@@ -157,6 +158,7 @@ public class ScriptEditor extends Activity {
   private void updatePreferences() {
     mContentText.setTextSize(readIntPref("editor_fontsize", 10, 30));
     mEnableAutoClose = mPreferences.getBoolean("enableAutoClose", true);
+    mAutoIndent = mPreferences.getBoolean("editor_auto_indent", false);
     mContentText.setHorizontallyScrolling(mPreferences.getBoolean("editor_no_wrap", false));
   }
 
@@ -374,6 +376,21 @@ public class ScriptEditor extends Activity {
         String auto = null;
         if (ip != null && mEnableAutoClose) {
           auto = ip.getLanguage().autoClose(source.charAt(start));
+        }
+        // Auto indent code?
+        if (auto == null && source.charAt(start) == '\n' && mAutoIndent) {
+          int i = dstart - 1;
+          int spaces = 0;
+          while ((i >= 0) && dest.charAt(i) != '\n') {
+            i -= 1; // Find start of line.
+          }
+          i += 1;
+          while (i < dest.length() && dest.charAt(i++) == ' ') {
+            spaces += 1;
+          }
+          if (spaces > 0) {
+            return String.format("\n%" + spaces + "s", " ");
+          }
         }
         if (auto != null) {
           mScheduleMoveLeft = true;
