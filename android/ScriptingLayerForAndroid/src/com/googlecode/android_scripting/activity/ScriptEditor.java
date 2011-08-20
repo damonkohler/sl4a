@@ -36,6 +36,8 @@ import android.text.style.UnderlineSpan;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -56,14 +58,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A text editor for scripts.
  * 
  * @author Damon Kohler (damonkohler@gmail.com)
  */
-public class ScriptEditor extends Activity {
-
+public class ScriptEditor extends Activity implements OnClickListener {
+  private static final int DIALOG_FIND_REPLACE = 2;
+  private static final int DIALOG_LINE = 1;
   private EditText mNameText;
   private EditText mContentText;
   private boolean mScheduleMoveLeft;
@@ -79,6 +84,13 @@ public class ScriptEditor extends Activity {
   private boolean mEnableAutoClose;
   private boolean mAutoIndent;
 
+  private EditText mSearchFind;
+  private EditText mSearchReplace;
+  private CheckBox mSearchCase;
+  private CheckBox mSearchWord;
+  private CheckBox mSearchAll;
+  private CheckBox mSearchStart;
+
   private static enum MenuId {
     SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP, SHARE, GOTO;
     public int getId() {
@@ -89,8 +101,6 @@ public class ScriptEditor extends Activity {
   private static enum RequestCode {
     RPC_HELP
   }
-
-  private static final int DIALOG_LINE = 1;
 
   private int readIntPref(String key, int defaultValue, int maxValue) {
     int val;
@@ -288,6 +298,9 @@ public class ScriptEditor extends Activity {
     } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
       undo();
       return true;
+    } else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+      showDialog(DIALOG_FIND_REPLACE);
+      return true;
     } else {
       return super.onKeyDown(keyCode, event);
     }
@@ -308,7 +321,22 @@ public class ScriptEditor extends Activity {
       });
       b.setNegativeButton("Cancel", null);
       return b.create();
+    } else if (id == DIALOG_FIND_REPLACE) {
+      View v = getLayoutInflater().inflate(R.layout.findreplace, null);
+      mSearchFind = (EditText) v.findViewById(R.id.searchFind);
+      mSearchReplace = (EditText) v.findViewById(R.id.searchReplace);
+      mSearchAll = (CheckBox) v.findViewById(R.id.searchAll);
+      mSearchCase = (CheckBox) v.findViewById(R.id.searchCase);
+      mSearchStart = (CheckBox) v.findViewById(R.id.searchStart);
+      mSearchWord = (CheckBox) v.findViewById(R.id.searchWord);
+      b.setTitle("Search and Replace");
+      b.setView(v);
+      b.setPositiveButton("Find", this);
+      b.setNeutralButton("Next", this);
+      b.setNegativeButton("Replace", this);
+      return b.create();
     }
+
     return super.onCreateDialog(id, args);
   }
 
@@ -316,6 +344,8 @@ public class ScriptEditor extends Activity {
   protected void onPrepareDialog(int id, Dialog dialog, Bundle args) {
     if (id == DIALOG_LINE) {
       mLineNo.setText(String.valueOf(getLineNo()));
+    } else if (id == DIALOG_FIND_REPLACE) {
+      mSearchStart.setChecked(false);
     }
     super.onPrepareDialog(id, dialog, args);
   }
@@ -531,4 +561,55 @@ public class ScriptEditor extends Activity {
     Selection.setSelection(text, edit.mmAfter == null ? start : (start + edit.mmAfter.length()));
   }
 
+  @Override
+  public void onClick(DialogInterface dialog, int which) {
+    int start = mContentText.getSelectionStart();
+    int end = mContentText.getSelectionEnd();
+    String original = mContentText.getText().toString();
+    if (start == end || which != AlertDialog.BUTTON_NEGATIVE) {
+      end = original.length();
+    }
+    if (which == AlertDialog.BUTTON_NEUTRAL) {
+      start += 1;
+    }
+    if (mSearchStart.isChecked()) {
+      start = 0;
+      end = original.length();
+    }
+    String findText = mSearchFind.getText().toString();
+    String replaceText = mSearchReplace.getText().toString();
+    String search = Pattern.quote(findText);
+    int flags = 0;
+    if (!mSearchCase.isChecked()) {
+      flags |= Pattern.CASE_INSENSITIVE;
+    }
+    if (mSearchWord.isChecked()) {
+      search = "\\b" + search + "\\b";
+    }
+    Pattern p = Pattern.compile(search, flags);
+    Matcher m = p.matcher(original);
+    m.region(start, end);
+    if (!m.find()) {
+      Toast.makeText(this, "Search not found.", Toast.LENGTH_SHORT).show();
+      return;
+    }
+    int foundpos = m.start();
+    if (which != AlertDialog.BUTTON_NEGATIVE) { // Find
+      mContentText.setSelection(foundpos, foundpos + findText.length());
+    } else { // Replace
+      String s;
+      // Seems to be a bug in the android 2.2 implementation of replace... regions not returning
+      // whole string.
+      m = p.matcher(original.substring(start, end));
+      String replace = Matcher.quoteReplacement(replaceText);
+      if (mSearchAll.isChecked()) {
+        s = m.replaceAll(replace);
+      } else {
+        s = m.replaceFirst(replace);
+      }
+      mContentText.setText(original.substring(0, start) + s + original.substring(end));
+      mContentText.setSelection(foundpos, foundpos + replaceText.length());
+    }
+    mContentText.requestFocus();
+  }
 }
