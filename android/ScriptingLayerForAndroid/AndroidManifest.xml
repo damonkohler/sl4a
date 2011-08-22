@@ -4,6 +4,7 @@
   package="com.googlecode.android_scripting"
   android:installLocation="auto" android:versionCode="401" android:versionName="5x">
     <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
+    <uses-permission android:name="net.dinglisch.android.tasker.PERMISSION_RUN_TASKS"></uses-permission>
   <application
     android:icon="@drawable/sl4a_logo_48"
     android:label="@string/application_title"
