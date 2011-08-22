@@ -8,17 +8,20 @@ use Android;
 use Try::Tiny;
 
 local $|       = 1;
-our   $VERSION = '0.02';
+our   $VERSION = '0.03';
 my    $droid   = Android->new();
 
-sub event_loop {
-  for my $i ( 1 .. 10 ) {
-    my $e = $droid->receiveEvent();
-    exists $e->{'result'} and return 1;
-    sleep 2;
+sub event_loop
+{
+  my($eventName) = @_;
+  my $max = 5;   # wait at most 5 seconds
+  while($max)
+  {
+    my $e = $droid->eventWaitFor($eventName, 1000);
+    return 1 if (exists($e->{result}));
+    $max--;
   }
-
-  return;
+  return 0;
 }
 
 # tests should return TRUE for pass, FALSE for fail
@@ -39,14 +42,16 @@ my @tests = (
   [ gdata => sub {} ],
 
   [ gps => sub {
+    $droid->eventClearBuffer();
     $droid->startLocating();
-    try     { return event_loop()    }
+    try     { return event_loop('location')    }
     finally { $droid->stopLocating() };
   } ],
 
   [ sensors => sub {
-    $droid->startSensing();
-    try     { return event_loop()   }
+    $droid->eventClearBuffer();
+    $droid->startSensingTimed(2, 1000); # just Accelerometer, 1 second between readings
+    try     { return event_loop('sensors')   }
     finally { $droid->stopSensing() };
   } ],
 
@@ -56,8 +61,9 @@ my @tests = (
   } ],
 
   [ phone_state => sub {
+    $droid->eventClearBuffer();
     $droid->startTrackingPhoneState();
-    try     { return event_loop()              }
+    try     { return event_loop('phone')       }
     finally { $droid->stopTrackingPhoneState() };
   } ],
 
