@@ -1,5 +1,6 @@
 # Author: Sawyer X
 # Email:  xsawyerx@cpan.org or xsawyerx@gmail.com
+# Updates to testing script (to use newer event handling apis) by Andy Colson (jacodeguy@gmail.com)
 
 use strict;
 use warnings;
