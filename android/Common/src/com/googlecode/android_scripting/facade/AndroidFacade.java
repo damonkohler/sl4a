@@ -31,6 +31,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StatFs;
 import android.os.Vibrator;
 import android.text.ClipboardManager;
 import android.text.InputType;
@@ -509,10 +510,29 @@ public class AndroidFacade extends RpcReceiver {
     android.util.Log.v("SCRIPT", message);
   }
 
+  /**
+   * 
+   * Map returned:
+   * 
+   * <pre>
+   *   TZ = Timezone
+   *     id = Timezone ID
+   *     display = Timezone display name
+   *     offset = Offset from UTC (in ms)
+   *   SDK = SDK Version
+   *   download = default download path
+   *   appcache = Location of application cache 
+   *   sdcard = Space on sdcard
+   *     availblocks = Available blocks
+   *     blockcount = Total Blocks
+   *     blocksize = size of block.
+   * </pre>
+   */
   @Rpc(description = "A map of various useful environment details")
   public Map<String, Object> environment() {
     Map<String, Object> result = new HashMap<String, Object>();
     Map<String, Object> zone = new HashMap<String, Object>();
+    Map<String, Object> space = new HashMap<String, Object>();
     TimeZone tz = TimeZone.getDefault();
     zone.put("id", tz.getID());
     zone.put("display", tz.getDisplayName());
@@ -521,6 +541,15 @@ public class AndroidFacade extends RpcReceiver {
     result.put("SDK", android.os.Build.VERSION.SDK);
     result.put("download", FileUtils.getExternalDownload().getAbsolutePath());
     result.put("appcache", mService.getCacheDir().getAbsolutePath());
+    try {
+      StatFs fs = new StatFs("/sdcard");
+      space.put("availblocks", fs.getAvailableBlocks());
+      space.put("blocksize", fs.getBlockSize());
+      space.put("blockcount", fs.getBlockCount());
+    } catch (Exception e) {
+      space.put("exception", e.toString());
+    }
+    result.put("sdcard", space);
     return result;
   }
 
