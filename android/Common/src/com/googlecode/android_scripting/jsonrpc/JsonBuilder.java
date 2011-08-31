@@ -174,6 +174,7 @@ public class JsonBuilder {
     result.put("accuracy", location.getAccuracy());
     result.put("speed", location.getSpeed());
     result.put("provider", location.getProvider());
+    result.put("bearing", location.getBearing());
     return result;
   }
 
