@@ -203,7 +203,7 @@ public class AndroidFacade extends RpcReceiver {
     }
   }
 
-  // Contributed by Emmanuel
+  // Contributed by Emmanuel T
   private static void putNestedJSONObject(JSONObject jsonObject, Bundle bundle)
       throws JSONException {
     JSONArray names = jsonObject.names();

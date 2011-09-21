@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,9 +21,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import org.json.JSONArray;
 import org.xmlpull.v1.XmlPullParser;
 
-public class FullScreenTask extends FutureActivityTask<Object> implements OnClickListener {
+public class FullScreenTask extends FutureActivityTask<Object> implements OnClickListener,
+    OnItemClickListener {
   private EventFacade mEventFacade;
   private UiFacade mUiFacade;
   public View mView = null;
@@ -55,7 +59,7 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     }
     getActivity().setContentView(mView);
     getActivity().setTitle("SL4A Title");
-    mInflater.setClickListener(mView, this);
+    mInflater.setClickListener(mView, this, this);
     mShowLatch.countDown();
   }
 
@@ -137,6 +141,26 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     return mInflater.getErrors().get(0);
   }
 
+  public String setList(String id, JSONArray items) {
+    View v = getViewByName(id);
+    mInflater.getErrors().clear();
+    if (v != null) {
+      SetList p = new SetList(v, items);
+      mHandler.post(p);
+      try {
+        p.mLatch.await();
+      } catch (InterruptedException e) {
+        mInflater.getErrors().add(e.toString());
+      }
+    } else {
+      return "View " + id + " not found.";
+    }
+    if (mInflater.getErrors().size() == 0) {
+      return "OK";
+    }
+    return mInflater.getErrors().get(0);
+  }
+
   @Override
   public void onClick(View view) {
     mEventFacade.postEvent("click", mInflater.getViewInfo(view));
@@ -163,6 +187,24 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     }
   }
 
+  private class SetList implements Runnable {
+    View mView;
+    JSONArray mItems;
+    CountDownLatch mLatch = new CountDownLatch(1);
+
+    SetList(View view, JSONArray items) {
+      mView = view;
+      mItems = items;
+      mView.invalidate();
+      mLatch.countDown();
+    }
+
+    @Override
+    public void run() {
+      mInflater.setListAdapter(mView, mItems);
+    }
+  }
+
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     Map<String, String> data = new HashMap<String, String>();
@@ -178,6 +220,13 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     return mUiFacade.onPrepareOptionsMenu(menu);
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> aview, View aitem, int position, long id) {
+    Map<String, String> data = mInflater.getViewInfo(aview);
+    data.put("position", String.valueOf(position));
+    mEventFacade.postEvent("itemclick", data);
   }
 
 }

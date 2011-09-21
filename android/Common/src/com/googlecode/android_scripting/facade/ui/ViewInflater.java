@@ -13,6 +13,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import com.googlecode.android_scripting.Log;
 
@@ -29,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.json.JSONArray;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -89,14 +96,28 @@ public class ViewInflater {
     Log.d(msg.toString());
   }
 
-  public void setClickListener(View v, android.view.View.OnClickListener listener) {
+  @SuppressWarnings("rawtypes")
+  public void setClickListener(View v, android.view.View.OnClickListener listener,
+      OnItemClickListener itemListener) {
     if (v.isClickable()) {
-      v.setOnClickListener(listener);
+
+      if (v instanceof AdapterView) {
+        try {
+          ((AdapterView) v).setOnItemClickListener(itemListener);
+        } catch (RuntimeException e) {
+          // Ignore this, not all controls support OnItemClickListener
+        }
+      }
+      try {
+        v.setOnClickListener(listener);
+      } catch (RuntimeException e) {
+        // And not all controls support OnClickListener.
+      }
     }
     if (v instanceof ViewGroup) {
       ViewGroup vg = (ViewGroup) v;
       for (int i = 0; i < vg.getChildCount(); i++) {
-        setClickListener(vg.getChildAt(i), listener);
+        setClickListener(vg.getChildAt(i), listener, itemListener);
       }
     }
   }
@@ -544,6 +565,8 @@ public class ViewInflater {
     addProperty(v, "visibility", result);
     addProperty(v, "checked", result);
     addProperty(v, "tag", result);
+    addProperty(v, "selectedItemPosition", result);
+    addProperty(v, "progress", result);
     return result;
   }
 
@@ -623,6 +646,33 @@ public class ViewInflater {
       } catch (Exception e) {
         // Ignore
       }
+    }
+  }
+
+  public void setListAdapter(View view, JSONArray items) {
+    List<String> list = new ArrayList<String>();
+    try {
+      for (int i = 0; i < items.length(); i++) {
+        list.add(items.get(i).toString());
+      }
+      ArrayAdapter<String> adapter;
+      if (view instanceof Spinner) {
+        adapter =
+            new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item,
+                android.R.id.text1, list);
+      } else {
+        adapter =
+            new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1,
+                android.R.id.text1, list);
+      }
+      adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+      Method m = tryMethod(view, "setAdapter", SpinnerAdapter.class);
+      if (m == null) {
+        m = view.getClass().getMethod("setAdapter", ListAdapter.class);
+      }
+      m.invoke(view, adapter);
+    } catch (Exception e) {
+      mErrors.add("failed to load list " + e.getMessage());
     }
   }
 }
