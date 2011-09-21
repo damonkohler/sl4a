@@ -194,6 +194,49 @@ public class AndroidFacade extends RpcReceiver {
       if (data instanceof Boolean) {
         intent.putExtra(name, (Boolean) data);
       }
+      // Nested JSONObject
+      if (data instanceof JSONObject) {
+        Bundle nestedBundle = new Bundle();
+        intent.putExtra(name, nestedBundle);
+        putNestedJSONObject((JSONObject) data, nestedBundle);
+      }
+    }
+  }
+
+  // Contributed by Emmanuel
+  private static void putNestedJSONObject(JSONObject jsonObject, Bundle bundle)
+      throws JSONException {
+    JSONArray names = jsonObject.names();
+    for (int i = 0; i < names.length(); i++) {
+      String name = names.getString(i);
+      Object data = jsonObject.get(name);
+      if (data == null) {
+        continue;
+      }
+      if (data instanceof Integer) {
+        bundle.putInt(name, ((Integer) data).intValue());
+      }
+      if (data instanceof Float) {
+        bundle.putFloat(name, ((Float) data).floatValue());
+      }
+      if (data instanceof Double) {
+        bundle.putDouble(name, ((Double) data).doubleValue());
+      }
+      if (data instanceof Long) {
+        bundle.putLong(name, ((Long) data).longValue());
+      }
+      if (data instanceof String) {
+        bundle.putString(name, (String) data);
+      }
+      if (data instanceof Boolean) {
+        bundle.putBoolean(name, ((Boolean) data).booleanValue());
+      }
+      // Nested JSONObject
+      if (data instanceof JSONObject) {
+        Bundle nestedBundle = new Bundle();
+        bundle.putBundle(name, nestedBundle);
+        putNestedJSONObject((JSONObject) data, nestedBundle);
+      }
     }
   }
 

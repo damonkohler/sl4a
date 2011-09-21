@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.InputType;
 import android.util.DisplayMetrics;
@@ -253,12 +255,35 @@ public class ViewInflater {
     } else if (attr.equals("inputType")) {
       setInteger(view, attr, getInteger(InputType.class, value));
     } else if (attr.equals("background")) {
-      view.setBackgroundColor(getColor(value));
+      setBackground(view, value);
     } else if (attr.equals("src")) {
       setImage(view, value);
     } else {
       setDynamicProperty(view, attr, value);
     }
+  }
+
+  private void setBackground(View view, String value) {
+    if (value.startsWith("#")) {
+      view.setBackgroundColor(getColor(value));
+    } else if (value.startsWith("@")) {
+      setInteger(view, "backgroundResource", getInteger(view, value));
+    } else {
+      view.setBackgroundDrawable(getDrawable(value));
+    }
+  }
+
+  private Drawable getDrawable(String value) {
+    try {
+      Uri uri = Uri.parse(value);
+      if ("file".equals(uri.getScheme())) {
+        BitmapDrawable bd = new BitmapDrawable(uri.getPath());
+        return bd;
+      }
+    } catch (Exception e) {
+      mErrors.add("failed to load drawable " + value);
+    }
+    return null;
   }
 
   private void setImage(View view, String value) {
