@@ -16,10 +16,7 @@
 
 package com.googlecode.android_scripting;
 
-import com.googlecode.android_scripting.facade.BluetoothFacade;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
-import com.googlecode.android_scripting.facade.SignalStrengthFacade;
-import com.googlecode.android_scripting.facade.TextToSpeechFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
@@ -94,12 +91,8 @@ public class TextDocumentationGenerator {
   }
 
   private static int getMinSdk(Class<? extends RpcReceiver> clazz) {
-    if (clazz.isAssignableFrom(TextToSpeechFacade.class)) {
-      return 4;
-    } else if (clazz.isAssignableFrom(BluetoothFacade.class)) {
-      return 5;
-    } else if (clazz.isAssignableFrom(SignalStrengthFacade.class)) {
-      return 7;
+    if (clazz.isAnnotationPresent(RpcMinSdk.class)) {
+      return clazz.getAnnotation(RpcMinSdk.class).value();
     }
     return 3;
   }

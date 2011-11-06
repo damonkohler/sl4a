@@ -22,6 +22,7 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
+import com.googlecode.android_scripting.rpc.RpcMinSdk;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
 import java.util.concurrent.CountDownLatch;
@@ -30,6 +31,7 @@ import java.util.concurrent.CountDownLatch;
  * Provides Text To Speech services for API 4 or more.
  */
 
+@RpcMinSdk(4)
 public class TextToSpeechFacade extends RpcReceiver {
 
   private final TextToSpeech mTts;

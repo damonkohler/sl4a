@@ -52,7 +52,7 @@ public class FacadeConfiguration {
   static {
 
     if (android.os.Build.VERSION.SDK == null) {
-      sSdkLevel = 3;
+      sSdkLevel = 8; // For documentation purposes.
     } else {
       try {
         sSdkLevel = Integer.parseInt(android.os.Build.VERSION.SDK);
