@@ -141,6 +141,11 @@ public class RpcDoclet {
     outputln("<h1>SL4A API Help -" + clazz.name() + "</h1>");
     outputln(link("index.html", "index") + "<br>");
     outputln(expandTags(clazz));
+    Map<String, AnnotationDesc> cmap = buildAnnotations(clazz.annotations());
+    if (cmap.containsKey("RpcMinSdk")) {
+      outputln("<br><i>Min SDK level=" + buildAnnotationDetails(cmap.get("RpcMinSdk")).get("value")
+          + "</i>");
+    }
     for (Tag t : clazz.tags()) {
       outputln("<br>" + t.name() + " " + t.text());
     }
