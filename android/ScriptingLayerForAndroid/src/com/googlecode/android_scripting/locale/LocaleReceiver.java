@@ -30,7 +30,10 @@ public class LocaleReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    final File script = new File(intent.getStringExtra(Constants.EXTRA_SCRIPT_PATH));
+
+    final File script =
+        new File(intent.getBundleExtra(com.twofortyfouram.locale.platform.Intent.EXTRA_BUNDLE)
+            .getString(Constants.EXTRA_SCRIPT_PATH));
     Log.v("LocaleReceiver", "Locale initiated launch of " + script);
     Intent launchIntent;
     if (intent.getBooleanExtra(Constants.EXTRA_LAUNCH_IN_BACKGROUND, false)) {

@@ -131,23 +131,21 @@ public class ScriptPicker extends ListActivity {
           finish();
         }
       });
-    } else if (com.twofortyfouram.Intent.ACTION_EDIT_SETTING.equals(getIntent().getAction())) {
+    } else if (com.twofortyfouram.locale.platform.Intent.ACTION_EDIT_SETTING.equals(getIntent()
+        .getAction())) {
       final Intent intent = new Intent();
       final Bundle storeAndForwardExtras = new Bundle();
       storeAndForwardExtras.putString(Constants.EXTRA_SCRIPT_PATH, script.getPath());
 
-      if (script.getName().length() > com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH) {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName().substring(0,
-            com.twofortyfouram.Intent.MAXIMUM_BLURB_LENGTH));
-      } else {
-        intent.putExtra(com.twofortyfouram.Intent.EXTRA_STRING_BLURB, script.getName());
-      }
+      intent.putExtra(com.twofortyfouram.locale.platform.Intent.EXTRA_STRING_BLURB,
+          script.getName());
 
       terminal.setOnClickListener(new OnClickListener() {
         @Override
         public void onClick(View v) {
           storeAndForwardExtras.putBoolean(Constants.EXTRA_LAUNCH_IN_BACKGROUND, false);
-          intent.putExtra(com.twofortyfouram.Intent.EXTRA_BUNDLE, storeAndForwardExtras);
+          intent.putExtra(com.twofortyfouram.locale.platform.Intent.EXTRA_BUNDLE,
+              storeAndForwardExtras);
           setResult(RESULT_OK, intent);
           finish();
         }
@@ -157,7 +155,8 @@ public class ScriptPicker extends ListActivity {
         @Override
         public void onClick(View v) {
           storeAndForwardExtras.putBoolean(Constants.EXTRA_LAUNCH_IN_BACKGROUND, true);
-          intent.putExtra(com.twofortyfouram.Intent.EXTRA_BUNDLE, storeAndForwardExtras);
+          intent.putExtra(com.twofortyfouram.locale.platform.Intent.EXTRA_BUNDLE,
+              storeAndForwardExtras);
           setResult(RESULT_OK, intent);
           finish();
         }
