@@ -1,0 +1,23 @@
+In order to build ScriptingLayerForAndroid:
+
+You need to create a classpath variable ANDROID_SDK to point to the SDK folder.
+Window-->Preferences-->Java-->Build Path-->Classpath Variables
+
+(ie, Name: ANDROID_SDK Path: C:/Program Files (x86)/Android/android-sdk )
+(The location of your SDK will vary.)
+
+To rebuild the documentation, you should also set the classpath variable JDK to point to the Java development kit
+(ie: Name: JDK Path: C:/Program Files/Java/jdk1.6.0_24)
+
+Project-->Clean-->All (this may need to be run several times)
+
+Common Problems:
+QuickAction is a library. Sometimes different versions of the eclipse or the ADT will have difficulty finding it.
+A common symptom is a DalvikVM error when you attempt to build or deploy.
+
+To fix:
+Right click on ScriptingLayerForAndroid-->Build Path-->Configure Build Path-->Android
+Down the bottom of the screen is a reference list. Remove the reference to QuickAction (if it exists) then:
+Add-->QuickAction.
+
+Then Project Clean to make sure the change is picked up. 
