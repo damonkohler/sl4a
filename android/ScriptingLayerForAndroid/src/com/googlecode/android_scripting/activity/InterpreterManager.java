@@ -92,6 +92,7 @@ public class InterpreterManager extends ListActivity {
   public void onStart() {
     super.onStart();
     mConfiguration.registerObserver(mObserver);
+    mAdapter.notifyDataSetInvalidated();
   }
 
   @Override

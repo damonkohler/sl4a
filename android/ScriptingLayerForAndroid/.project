@@ -30,16 +30,4 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>_android_QuickAction_4ee25263</name>
-			<type>2</type>
-			<locationURI>_android_QuickAction_4ee25263</locationURI>
-		</link>
-		<link>
-			<name>quickaction_src</name>
-			<type>2</type>
-			<location>C:/Android/android-scripting/android/QuickAction/src</location>
-		</link>
-	</linkedResources>
 </projectDescription>
