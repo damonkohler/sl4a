@@ -31,6 +31,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.StatFs;
 import android.os.Vibrator;
 import android.text.ClipboardManager;
@@ -98,6 +99,7 @@ public class AndroidFacade extends RpcReceiver {
   private final NotificationManager mNotificationManager;
 
   private final Resources mResources;
+  private ClipboardManager mClipboard = null;
 
   @Override
   public void shutdown() {
@@ -114,6 +116,24 @@ public class AndroidFacade extends RpcReceiver {
     mNotificationManager =
         (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
     mResources = manager.getAndroidFacadeResources();
+
+  }
+
+  ClipboardManager getClipboardManager() {
+    Object clipboard = null;
+    if (mClipboard == null) {
+      try {
+        clipboard = mService.getSystemService(Context.CLIPBOARD_SERVICE);
+      } catch (Exception e) {
+        Looper.prepare(); // Clipboard manager won't work without this on higher SDK levels...
+        clipboard = mService.getSystemService(Context.CLIPBOARD_SERVICE);
+      }
+      mClipboard = (ClipboardManager) clipboard;
+      if (mClipboard == null) {
+        Log.w("Clipboard managed not accessible.");
+      }
+    }
+    return mClipboard;
   }
 
   /**
@@ -125,16 +145,13 @@ public class AndroidFacade extends RpcReceiver {
 
   @Rpc(description = "Put text in the clipboard.")
   public void setClipboard(@RpcParameter(name = "text") String text) {
-    ClipboardManager clipboard =
-        (ClipboardManager) mService.getSystemService(Context.CLIPBOARD_SERVICE);
-    clipboard.setText(text);
+    getClipboardManager().setText(text);
   }
 
   @Rpc(description = "Read text from the clipboard.", returns = "The text in the clipboard.")
   public String getClipboard() {
-    ClipboardManager clipboard =
-        (ClipboardManager) mService.getSystemService(Context.CLIPBOARD_SERVICE);
-    return clipboard.getText().toString();
+    CharSequence text = getClipboardManager().getText();
+    return text == null ? null : text.toString();
   }
 
   Intent startActivityForResult(final Intent intent) {
@@ -200,10 +217,59 @@ public class AndroidFacade extends RpcReceiver {
         intent.putExtra(name, nestedBundle);
         putNestedJSONObject((JSONObject) data, nestedBundle);
       }
+      // Nested JSONArray. Doesn't support mixed types in single array
+      if (data instanceof JSONArray) {
+        // Empty array. No way to tell what type of data to pass on, so skipping
+        if (((JSONArray) data).length() == 0) {
+          Log.e("Empty array not supported in JSONObject, skipping");
+          continue;
+        }
+        // Integer
+        if (((JSONArray) data).get(0) instanceof Integer) {
+          Integer[] integerArrayData = new Integer[((JSONArray) data).length()];
+          for (int j = 0; j < ((JSONArray) data).length(); ++j) {
+            integerArrayData[j] = ((JSONArray) data).getInt(j);
+          }
+          intent.putExtra(name, integerArrayData);
+        }
+        // Double
+        if (((JSONArray) data).get(0) instanceof Double) {
+          Double[] doubleArrayData = new Double[((JSONArray) data).length()];
+          for (int j = 0; j < ((JSONArray) data).length(); ++j) {
+            doubleArrayData[j] = ((JSONArray) data).getDouble(j);
+          }
+          intent.putExtra(name, doubleArrayData);
+        }
+        // Long
+        if (((JSONArray) data).get(0) instanceof Long) {
+          Long[] longArrayData = new Long[((JSONArray) data).length()];
+          for (int j = 0; j < ((JSONArray) data).length(); ++j) {
+            longArrayData[j] = ((JSONArray) data).getLong(j);
+          }
+          intent.putExtra(name, longArrayData);
+        }
+        // String
+        if (((JSONArray) data).get(0) instanceof String) {
+          String[] stringArrayData = new String[((JSONArray) data).length()];
+          for (int j = 0; j < ((JSONArray) data).length(); ++j) {
+            stringArrayData[j] = ((JSONArray) data).getString(j);
+          }
+          intent.putExtra(name, stringArrayData);
+        }
+        // Boolean
+        if (((JSONArray) data).get(0) instanceof Boolean) {
+          Boolean[] booleanArrayData = new Boolean[((JSONArray) data).length()];
+          for (int j = 0; j < ((JSONArray) data).length(); ++j) {
+            booleanArrayData[j] = ((JSONArray) data).getBoolean(j);
+          }
+          intent.putExtra(name, booleanArrayData);
+        }
+      }
     }
   }
 
   // Contributed by Emmanuel T
+  // Nested Array handling contributed by Sergey Zelenev
   private static void putNestedJSONObject(JSONObject jsonObject, Bundle bundle)
       throws JSONException {
     JSONArray names = jsonObject.names();
@@ -236,6 +302,54 @@ public class AndroidFacade extends RpcReceiver {
         Bundle nestedBundle = new Bundle();
         bundle.putBundle(name, nestedBundle);
         putNestedJSONObject((JSONObject) data, nestedBundle);
+      }
+      // Nested JSONArray. Doesn't support mixed types in single array
+      if (data instanceof JSONArray) {
+        // Empty array. No way to tell what type of data to pass on, so skipping
+        if (((JSONArray) data).length() == 0) {
+          Log.e("Empty array not supported in nested JSONObject, skipping");
+          continue;
+        }
+        // Integer
+        if (((JSONArray) data).get(0) instanceof Integer) {
+          int[] integerArrayData = new int[((JSONArray) data).length()];
+          for (int j = 0; j < ((JSONArray) data).length(); ++j) {
+            integerArrayData[j] = ((JSONArray) data).getInt(j);
+          }
+          bundle.putIntArray(name, integerArrayData);
+        }
+        // Double
+        if (((JSONArray) data).get(0) instanceof Double) {
+          double[] doubleArrayData = new double[((JSONArray) data).length()];
+          for (int j = 0; j < ((JSONArray) data).length(); ++j) {
+            doubleArrayData[j] = ((JSONArray) data).getDouble(j);
+          }
+          bundle.putDoubleArray(name, doubleArrayData);
+        }
+        // Long
+        if (((JSONArray) data).get(0) instanceof Long) {
+          long[] longArrayData = new long[((JSONArray) data).length()];
+          for (int j = 0; j < ((JSONArray) data).length(); ++j) {
+            longArrayData[j] = ((JSONArray) data).getLong(j);
+          }
+          bundle.putLongArray(name, longArrayData);
+        }
+        // String
+        if (((JSONArray) data).get(0) instanceof String) {
+          String[] stringArrayData = new String[((JSONArray) data).length()];
+          for (int j = 0; j < ((JSONArray) data).length(); ++j) {
+            stringArrayData[j] = ((JSONArray) data).getString(j);
+          }
+          bundle.putStringArray(name, stringArrayData);
+        }
+        // Boolean
+        if (((JSONArray) data).get(0) instanceof Boolean) {
+          boolean[] booleanArrayData = new boolean[((JSONArray) data).length()];
+          for (int j = 0; j < ((JSONArray) data).length(); ++j) {
+            booleanArrayData[j] = ((JSONArray) data).getBoolean(j);
+          }
+          bundle.putBooleanArray(name, booleanArrayData);
+        }
       }
     }
   }
