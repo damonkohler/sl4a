@@ -92,7 +92,7 @@ public class ScriptEditor extends Activity implements OnClickListener {
   private CheckBox mSearchStart;
 
   private static enum MenuId {
-    SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP, SHARE, GOTO;
+    SAVE, SAVE_AND_RUN, PREFERENCES, API_BROWSER, HELP, SHARE, GOTO, SEARCH;
     public int getId() {
       return ordinal() + Menu.FIRST;
     }
@@ -185,6 +185,7 @@ public class ScriptEditor extends Activity implements OnClickListener {
     menu.add(0, MenuId.HELP.getId(), 0, "Help").setIcon(android.R.drawable.ic_menu_help);
     menu.add(0, MenuId.SHARE.getId(), 0, "Share").setIcon(android.R.drawable.ic_menu_share);
     menu.add(0, MenuId.GOTO.getId(), 0, "GoTo").setIcon(android.R.drawable.ic_menu_directions);
+    menu.add(0, MenuId.SEARCH.getId(), 0, "Find").setIcon(android.R.drawable.ic_menu_search);
     return true;
   }
 
@@ -226,6 +227,8 @@ public class ScriptEditor extends Activity implements OnClickListener {
       startActivity(Intent.createChooser(intent, "Send Script to:"));
     } else if (item.getItemId() == MenuId.GOTO.getId()) {
       showDialog(DIALOG_LINE);
+    } else if (item.getItemId() == MenuId.SEARCH.getId()) {
+      showDialog(DIALOG_FIND_REPLACE);
     }
     return super.onOptionsItemSelected(item);
   }
