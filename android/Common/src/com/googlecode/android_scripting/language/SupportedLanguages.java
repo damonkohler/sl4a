@@ -48,6 +48,9 @@ public class SupportedLanguages {
     Language lang = null;
 
     Class<? extends Language> clazz = sSupportedLanguages.get(extension);
+    if (clazz == null) {
+      clazz = Language.class; // revert to default language.
+    }
     if (clazz != null) {
       try {
         lang = clazz.newInstance();
