@@ -27,10 +27,10 @@ import java.util.Map;
  * 
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
-public abstract class Language {
+public class Language {
 
-  private final static Map<Character, String> AUTO_CLOSE_MAP =
-      buildAutoCloseMap('[', "[]", '{', "{}", '(', "()", '\'', "''", '"', "\"\"");
+  private final static Map<Character, String> AUTO_CLOSE_MAP = buildAutoCloseMap('[', "[]", '{',
+      "{}", '(', "()", '\'', "''", '"', "\"\"");
 
   /** Returns the initial template for newly created script. */
   public String getContentTemplate() {
@@ -67,8 +67,8 @@ public abstract class Language {
 
   /** Returns the RPC call text with given parameter values. */
   public final String getRpcText(String content, MethodDescriptor rpc, String[] values) {
-    return getMethodCallText(getRpcReceiverName(content), rpc.getName(), rpc
-        .getParameterValues(values));
+    return getMethodCallText(getRpcReceiverName(content), rpc.getName(),
+        rpc.getParameterValues(values));
   }
 
   /** Returns the RPC receiver found in the given script. */
