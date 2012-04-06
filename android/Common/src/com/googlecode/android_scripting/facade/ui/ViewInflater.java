@@ -188,12 +188,43 @@ public class ViewInflater {
     if (value.equals("fill_parent")) {
       return LayoutParams.FILL_PARENT;
     }
-    if (value.endsWith("dp")) {
-      int result =
-          (int) (Integer.parseInt(value.substring(0, value.length() - 2)) * (mMetrics.density));
-      return result;
+    return (int) getFontSize(value);
+  }
+
+  private float getFontSize(String value) {
+    int i;
+    float size;
+    String unit = "px";
+    for (i = 0; i < value.length(); i++) {
+      char c = value.charAt(i);
+      if (!(Character.isDigit(c) || c == '.')) {
+        break;
+      }
     }
-    return Integer.parseInt(value);
+    size = Float.parseFloat(value.substring(0, i));
+    if (i < value.length()) {
+      unit = value.substring(i).trim();
+    }
+    if (unit.equals("px")) {
+      return size;
+    }
+    if (unit.equals("sp")) {
+      return mMetrics.scaledDensity * size;
+    }
+    if (unit.equals("dp")) {
+      return mMetrics.density * size;
+    }
+    float inches = mMetrics.ydpi * size;
+    if (unit.equals("in")) {
+      return inches;
+    }
+    if (unit.equals("pt")) {
+      return inches / 72;
+    }
+    if (unit.equals("mm")) {
+      return (float) (inches / 2.54);
+    }
+    return 0;
   }
 
   private int calcId(String value) {
@@ -277,6 +308,10 @@ public class ViewInflater {
       setInteger(view, attr, getInteger(InputType.class, value));
     } else if (attr.equals("background")) {
       setBackground(view, value);
+    } else if (attr.equals("textSize")) {
+      setFloat(view, attr, getFontSize(value));
+    } else if (attr.equals("textColor")) {
+      setInteger(view, attr, getColor(value));
     } else if (attr.equals("src")) {
       setImage(view, value);
     } else {
@@ -335,10 +370,37 @@ public class ViewInflater {
     }
   }
 
+  /** Expand single digit color to 2 digits. */
+  private int expandColor(String colorValue) {
+    return Integer.parseInt(colorValue + colorValue, 16);
+  }
+
   private int getColor(String value) {
+    int a = 0xff, r = 0, g = 0, b = 0;
     if (value.startsWith("#")) {
       try {
-        return (int) Long.parseLong(value.substring(1), 16);
+        value = value.substring(1);
+        if (value.length() == 4) {
+          a = expandColor(value.substring(0, 1));
+          value = value.substring(1);
+        }
+        if (value.length() == 3) {
+          r = expandColor(value.substring(0, 1));
+          g = expandColor(value.substring(1, 2));
+          b = expandColor(value.substring(2, 3));
+        } else {
+          if (value.length() == 8) {
+            a = Integer.parseInt(value.substring(0, 2), 16);
+            value = value.substring(2);
+          }
+          if (value.length() == 6) {
+            r = Integer.parseInt(value.substring(0, 2), 16);
+            g = Integer.parseInt(value.substring(2, 4), 16);
+            b = Integer.parseInt(value.substring(4, 6), 16);
+          }
+        }
+        long result = (a << 24) | (r << 16) | (g << 8) | b;
+        return (int) result;
       } catch (Exception e) {
       }
     }
@@ -364,6 +426,21 @@ public class ViewInflater {
       if ((m = tryMethod(view, name, Context.class, int.class)) != null) {
         m.invoke(view, mContext, value);
       } else if ((m = tryMethod(view, name, int.class)) != null) {
+        m.invoke(view, value);
+      }
+    } catch (Exception e) {
+      addln(name + ":" + value + ":" + e.toString());
+    }
+
+  }
+
+  private void setFloat(View view, String attr, float value) {
+    String name = "set" + PCase(attr);
+    Method m;
+    try {
+      if ((m = tryMethod(view, name, Context.class, float.class)) != null) {
+        m.invoke(view, mContext, value);
+      } else if ((m = tryMethod(view, name, float.class)) != null) {
         m.invoke(view, value);
       }
     } catch (Exception e) {

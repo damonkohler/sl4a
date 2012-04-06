@@ -2,7 +2,7 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.googlecode.android_scripting"
-  android:installLocation="auto" android:versionCode="500" android:versionName="5">
+  android:installLocation="auto" android:versionCode="508" android:versionName="5x08">
     <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
     <uses-permission android:name="net.dinglisch.android.tasker.PERMISSION_RUN_TASKS"></uses-permission>
   <application
