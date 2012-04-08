@@ -48,6 +48,8 @@ import org.apache.commons.codec.binary.Base64Codec;
  * Bluetooth functions.
  * 
  */
+// Discovery functions added by Eden Sayag
+
 @RpcMinSdk(5)
 public class BluetoothFacade extends RpcReceiver {
 
@@ -335,6 +337,26 @@ public class BluetoothFacade extends RpcReceiver {
 
     conn.stop();
     connections.remove(conn.getUUID());
+  }
+
+  @Rpc(description = "Returns the hardware address of the local Bluetooth adapter. ")
+  public String bluetoothGetLocalAddress() {
+    return mBluetoothAdapter.getAddress();
+  }
+
+  @Rpc(description = "Start the remote device discovery process. ", returns = "true on success, false on error")
+  public Boolean bluetoothDiscoveryStart() {
+    return mBluetoothAdapter.startDiscovery();
+  }
+
+  @Rpc(description = "Cancel the current device discovery process.", returns = "true on success, false on error")
+  public Boolean bluetoothDiscoveryCancel() {
+    return mBluetoothAdapter.cancelDiscovery();
+  }
+
+  @Rpc(description = "Return true if the local Bluetooth adapter is currently in the device discovery process. ")
+  public Boolean bluetoothIsDiscovering() {
+    return mBluetoothAdapter.isDiscovering();
   }
 
   @Override

@@ -447,12 +447,8 @@ public class ViewInflater {
   private void setProperty(View view, ViewGroup root, String attr, String value)
       throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     addln(attr + ":" + value);
-    if (attr.equals("layout_width")) {
-      getLayoutParams(view, root).width = getLayoutValue(value);
-    } else if (attr.equals("layout_height")) {
-      getLayoutParams(view, root).height = getLayoutValue(value);
-    } else if (attr.equals("layout_gravity")) {
-      setIntegerField(getLayoutParams(view, root), "gravity", getInteger(Gravity.class, value));
+    if (attr.startsWith("_layout")) {
+      setLayoutProperty(view, root, attr, value);
     } else if (attr.equals("id")) {
       view.setId(calcId(value));
     } else if (attr.equals("gravity")) {
@@ -479,6 +475,20 @@ public class ViewInflater {
       setImage(view, value);
     } else {
       setDynamicProperty(view, attr, value);
+    }
+  }
+
+  private void setLayoutProperty(View view, ViewGroup root, String attr, String value) {
+    LayoutParams layout = getLayoutParams(view, root);
+    String layoutAttr = attr.substring(7);
+    if (layoutAttr.equals("width")) {
+      layout.width = getLayoutValue(value);
+    } else if (layoutAttr.equals("height")) {
+      layout.height = getLayoutValue(value);
+    } else if (layoutAttr.equals("gravity")) {
+      setIntegerField(layout, "gravity", getInteger(Gravity.class, value));
+    } else {
+      setIntegerField(layout, layoutAttr, getInteger(layout.getClass(), value));
     }
   }
 
