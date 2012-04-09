@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -457,6 +458,8 @@ public class ViewInflater {
       setInteger(view, attr, getInteger(InputType.class, value));
     } else if (attr.equals("background")) {
       setBackground(view, value);
+    } else if (attr.equals("digits") && view instanceof TextView) {
+      ((TextView) view).setKeyListener(DigitsKeyListener.getInstance(value));
     } else if (attr.startsWith("nextFocus")) {
       setInteger(view, attr + "Id", calcId(value));
     } else if (attr.equals("textSize")) {

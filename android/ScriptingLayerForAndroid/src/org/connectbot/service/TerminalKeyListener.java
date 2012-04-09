@@ -30,12 +30,12 @@ import com.googlecode.android_scripting.Log;
 import de.mud.terminal.VDUBuffer;
 import de.mud.terminal.vt320;
 
+import java.io.IOException;
+
 import org.connectbot.TerminalView;
 import org.connectbot.transport.AbsTransport;
 import org.connectbot.util.PreferenceConstants;
 import org.connectbot.util.SelectionArea;
-
-import java.io.IOException;
 
 /**
  * @author kenny
@@ -60,6 +60,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
   // All the transient key codes
   public final static int META_TRANSIENT = META_CTRL_ON | META_ALT_ON | META_SHIFT_ON;
 
+  public final static int KEYBOARD_META_CTRL_ON = 0x1000; // Ctrl key mask for API 11+
   private final TerminalManager manager;
   private final TerminalBridge bridge;
   private final VDUBuffer buffer;
@@ -184,6 +185,10 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
         }
 
         int key = keymap.get(keyCode, curMetaState);
+        if ((curMetaState & KEYBOARD_META_CTRL_ON) != 0) {
+          metaState |= META_CTRL_ON;
+          key = keymap.get(keyCode, 0);
+        }
 
         if ((metaState & META_CTRL_MASK) != 0) {
           metaState &= ~META_CTRL_ON;
@@ -206,10 +211,11 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
         }
 
         // handle pressing f-keys
-        if ((hardKeyboard && !hardKeyboardHidden) && (curMetaState & KeyEvent.META_SHIFT_ON) != 0
-            && sendFunctionKey(keyCode)) {
-          return true;
-        }
+        // Doesn't work properly with asus keyboards... may never have worked. RM 09-Apr-2012
+        /*
+         * if ((hardKeyboard && !hardKeyboardHidden) && (curMetaState & KeyEvent.META_SHIFT_ON) != 0
+         * && sendFunctionKey(keyCode)) { return true; }
+         */
 
         if (key < 0x80) {
           transport.write(key);
