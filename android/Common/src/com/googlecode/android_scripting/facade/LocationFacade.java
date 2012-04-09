@@ -125,6 +125,17 @@ public class LocationFacade extends RpcReceiver {
     stopLocating();
   }
 
+  @Rpc(description = "Returns availables providers on the phone")
+  public List<String> locationProviders() {
+    return mLocationManager.getAllProviders();
+  }
+
+  @Rpc(description = "Ask if provider is enabled")
+  public boolean locationProviderEnabled(
+      @RpcParameter(name = "provider", description = "Name of location provider") String provider) {
+    return mLocationManager.isProviderEnabled(provider);
+  }
+
   @Rpc(description = "Starts collecting location data.")
   @RpcStartEvent("location")
   public void startLocating(

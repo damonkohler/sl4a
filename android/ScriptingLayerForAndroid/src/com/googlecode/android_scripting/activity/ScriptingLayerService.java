@@ -25,7 +25,6 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.widget.RemoteViews;
 
 import com.googlecode.android_scripting.AndroidProxy;
 import com.googlecode.android_scripting.BaseApplication;
@@ -64,6 +63,7 @@ public class ScriptingLayerService extends ForegroundService {
   private volatile int mModCount = 0;
   private NotificationManager mNotificationManager;
   private Notification mNotification;
+  private PendingIntent mNotificationPendingIntent;
   private InterpreterConfiguration mInterpreterConfiguration;
 
   private volatile WeakReference<InterpreterProcess> mRecentlyKilledProcess;
@@ -105,21 +105,16 @@ public class ScriptingLayerService extends ForegroundService {
   protected Notification createNotification() {
     mNotification =
         new Notification(R.drawable.sl4a_notification_logo, null, System.currentTimeMillis());
-    mNotification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
-    mNotification.contentView.setTextViewText(R.id.notification_title, "SL4A Service");
-    mNotification.contentView.setTextViewText(R.id.notification_action,
-        "Tap to view running scripts.");
     mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
     Intent notificationIntent = new Intent(this, ScriptingLayerService.class);
     notificationIntent.setAction(Constants.ACTION_SHOW_RUNNING_SCRIPTS);
-    mNotification.contentIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    mNotificationPendingIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    mNotification.setLatestEventInfo(this, "SL4A Service", "Tap to view running scripts",
+        mNotificationPendingIntent);
     return mNotification;
   }
 
   private void updateNotification(String tickerText) {
-    StringBuilder message = new StringBuilder();
-    message.append(getText(R.string.script_number_message));
-    message.append(mProcessMap.size());
     mNotification.iconLevel = mProcessMap.size();
     if (tickerText.equals(mNotification.tickerText)) {
       // Consequent notifications with the same ticker-text are displayed without any ticker-text.
@@ -128,7 +123,13 @@ public class ScriptingLayerService extends ForegroundService {
     } else {
       mNotification.tickerText = tickerText;
     }
-    mNotification.contentView.setTextViewText(R.id.notification_message, message);
+    String msg;
+    if (mProcessMap.size() <= 1) {
+      msg = "Tap to view " + Integer.toString(mProcessMap.size()) + " running script";
+    } else {
+      msg = "Tap to view " + Integer.toString(mProcessMap.size()) + " running scripts";
+    }
+    mNotification.setLatestEventInfo(this, "SL4A Service", msg, mNotificationPendingIntent);
     mNotificationManager.notify(NOTIFICATION_ID, mNotification);
   }
 

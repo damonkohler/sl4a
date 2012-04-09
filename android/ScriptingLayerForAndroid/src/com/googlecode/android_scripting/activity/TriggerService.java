@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.widget.RemoteViews;
 
 import com.google.common.base.Preconditions;
 import com.googlecode.android_scripting.BaseApplication;
@@ -33,9 +32,9 @@ import com.googlecode.android_scripting.NotificationIdFactory;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.event.Event;
 import com.googlecode.android_scripting.facade.EventFacade;
+import com.googlecode.android_scripting.facade.EventFacade.EventObserver;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
 import com.googlecode.android_scripting.facade.FacadeManager;
-import com.googlecode.android_scripting.facade.EventFacade.EventObserver;
 import com.googlecode.android_scripting.trigger.EventGenerationControllingObserver;
 import com.googlecode.android_scripting.trigger.Trigger;
 import com.googlecode.android_scripting.trigger.TriggerRepository;
@@ -85,8 +84,8 @@ public class TriggerService extends ForegroundService {
     super.onCreate();
 
     mFacadeManager =
-        new FacadeManager(FacadeConfiguration.getSdkLevel(), this, null, FacadeConfiguration
-            .getFacadeClasses());
+        new FacadeManager(FacadeConfiguration.getSdkLevel(), this, null,
+            FacadeConfiguration.getFacadeClasses());
     mEventFacade = mFacadeManager.getReceiver(EventFacade.class);
 
     mTriggerRepository = ((BaseApplication) getApplication()).getTriggerRepository();
@@ -107,13 +106,11 @@ public class TriggerService extends ForegroundService {
   @Override
   protected Notification createNotification() {
     Notification notification =
-        new Notification(R.drawable.sl4a_logo_48, "SL4A Trigger Service started.", System
-            .currentTimeMillis());
-    notification.contentView = new RemoteViews(getPackageName(), R.layout.notification);
-    notification.contentView.setTextViewText(R.id.notification_title, "SL4A Trigger Service");
-    notification.contentView.setTextViewText(R.id.notification_action, "Tap to view triggers.");
+        new Notification(R.drawable.sl4a_logo_48, "SL4A Trigger Service started.",
+            System.currentTimeMillis());
     Intent notificationIntent = new Intent(this, TriggerManager.class);
-    notification.contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+    notification.setLatestEventInfo(this, "SL4A Trigger Service", "Tap to view triggers",
+        PendingIntent.getActivity(this, 0, notificationIntent, 0));
     notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
     return notification;
   }

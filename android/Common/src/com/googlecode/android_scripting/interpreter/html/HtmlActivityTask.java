@@ -255,15 +255,20 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
 
     @Override
     public void onEventReceived(Event event) {
-      JSONObject json = new JSONObject();
+      final JSONObject json = new JSONObject();
       try {
         json.put("data", JsonBuilder.build(event.getData()));
       } catch (JSONException e) {
         Log.e(e);
       }
       if (mEventMap.containsKey(event.getName())) {
-        for (Integer id : mEventMap.get(event.getName())) {
-          mView.loadUrl(String.format("javascript:droid._callback(%d, %s);", id, json));
+        for (final Integer id : mEventMap.get(event.getName())) {
+          getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              mView.loadUrl(String.format("javascript:droid._callback(%d, %s);", id, json));
+            }
+          });
         }
       }
     }

@@ -72,7 +72,7 @@ public class BluetoothFacade extends RpcReceiver {
     });
   }
 
-  @Rpc(description = "Returns true when there's an active Bluetooth connection.")
+  @Rpc(description = "Returns active Bluetooth connections.")
   public Map<String, String> bluetoothActiveConnections() {
     Map<String, String> out = new HashMap<String, String>();
     for (Map.Entry<String, BluetoothConnection> entry : connections.entrySet()) {
