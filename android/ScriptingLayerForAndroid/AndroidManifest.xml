@@ -1,247 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.googlecode.android_scripting"
-  android:installLocation="auto" android:versionCode="511" android:versionName="5x11">
-    <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
-    <uses-permission android:name="net.dinglisch.android.tasker.PERMISSION_RUN_TASKS"></uses-permission>
-  <application
-    android:icon="@drawable/sl4a_logo_48"
-    android:label="@string/application_title"
-    android:name=".Sl4aApplication">
-    <activity
-      android:name=".activity.ScriptManager"
-      android:configChanges="keyboardHidden|orientation"
-      android:windowSoftInputMode="adjustResize"
-      android:launchMode="singleTop">
-      <intent-filter>
-        <action
-          android:name="android.intent.action.MAIN" />
-        <category
-          android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-      <intent-filter>
-        <action
-          android:name="android.intent.action.SEARCH" />
-      </intent-filter>
-      <meta-data
-        android:name="android.app.searchable"
-        android:resource="@xml/searchable_scripts" />
-    </activity>
-    <activity
-      android:name=".activity.ScriptPicker"
-      android:configChanges="keyboardHidden|orientation"
-      android:label="Scripts">
-      <intent-filter>
-        <action
-          android:name="android.intent.action.CREATE_SHORTCUT" />
-        <category
-          android:name="android.intent.category.DEFAULT" />
-      </intent-filter>
-      <intent-filter>
-        <action
-          android:name="android.intent.action.PICK" />
-        <data
-          android:scheme="content"
-          android:path="sl4a/scripts" />
-        <category
-          android:name="android.intent.category.DEFAULT" />
-      </intent-filter>
-    </activity>
-    <activity
-      android:name=".activity.InterpreterPicker"
-      android:configChanges="keyboardHidden|orientation"
-      android:label="Interpreters">
-      <intent-filter>
-        <action
-          android:name="android.intent.action.CREATE_SHORTCUT" />
-        <category
-          android:name="android.intent.category.DEFAULT" />
-      </intent-filter>
-    </activity>
-    <activity-alias
-      android:name="LocalePlugin"
-      android:targetActivity=".activity.ScriptPicker"
-      android:label="@string/application_title"
-      android:icon="@drawable/sl4a_logo_32">
-      <intent-filter>
-        <action
-          android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
-      </intent-filter>
-    </activity-alias>
-    <receiver
-      android:name=".locale.LocaleReceiver">
-      <intent-filter>
-        <action
-          android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
-      </intent-filter>
-    </receiver>
-    <activity
-      android:name=".activity.Preferences"
-      android:theme="@android:style/Theme.NoTitleBar" />
-    <activity
-      android:name="org.connectbot.ConsoleActivity"
-      android:theme="@android:style/Theme.NoTitleBar"
-      android:configChanges="keyboardHidden|orientation"
-      android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
-      android:finishOnTaskLaunch="true"
-      android:launchMode="singleTask">
-    </activity>
-    <activity
-      android:name=".activity.ScriptEditor"
-      android:theme="@android:style/Theme.NoTitleBar"
-      android:configChanges="keyboardHidden|orientation"
-      android:windowSoftInputMode="stateAlwaysVisible|adjustResize">
-      <intent-filter>
-        <action
-          android:name="com.googlecode.android_scripting.action.EDIT_SCRIPT" />
-        <category
-          android:name="android.intent.category.DEFAULT" />
-      </intent-filter>
-    </activity>
-    <activity
-      android:name=".activity.ApiBrowser"
-      android:configChanges="keyboardHidden|orientation"
-      android:launchMode="singleTop"
-      android:windowSoftInputMode="adjustResize">
-      <intent-filter>
-        <action
-          android:name="android.intent.action.SEARCH" />
-      </intent-filter>
-      <meta-data
-        android:name="android.app.searchable"
-        android:resource="@xml/searchable_apis" />
-    </activity>
-    <activity
-      android:name=".activity.ApiPrompt"
-      android:theme="@android:style/Theme.NoTitleBar"
-      android:configChanges="keyboardHidden|orientation" />
-    <activity
-      android:name=".activity.TriggerManager"
-      android:launchMode="singleTask"
-      android:configChanges="keyboardHidden|orientation" />
-    <activity
-      android:name=".activity.BluetoothDeviceList"
-      android:configChanges="keyboardHidden|orientation" />
-    <activity
-      android:name=".activity.ScriptingLayerServiceLauncher"
-      android:taskAffinity=""
-      android:theme="@android:style/Theme.Translucent.NoTitleBar">
-      <intent-filter>
-        <action
-          android:name="android.intent.action.VIEW" />
-        <category
-          android:name="android.intent.category.DEFAULT" />
-      </intent-filter>
-    </activity>
-    <activity
-      android:name=".activity.FutureActivity"
-      android:configChanges="keyboardHidden|orientation"
-      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-    <activity
-      android:name="org.connectbot.HelpActivity"
-      android:configChanges="keyboardHidden|orientation" />
-    <activity
-      android:name="org.connectbot.HelpTopicActivity"
-      android:configChanges="keyboardHidden|orientation" />
-    <service
-      android:name=".activity.ScriptingLayerService" />
-    <service
-      android:name=".activity.TriggerService" />
-    <activity
-      android:name=".activity.InterpreterManager"
-      android:launchMode="singleTask"
-      android:configChanges="keyboardHidden|orientation" />
-    <activity
-      android:name=".activity.LogcatViewer"
-      android:launchMode="singleTask"
-      android:configChanges="keyboardHidden|orientation" />
-    <activity
-      android:name=".activity.ScriptsLiveFolder"
-      android:label="Scripts"
-      android:icon="@drawable/live_folder"
-      android:configChanges="keyboardHidden|orientation">
-      <intent-filter>
-        <action
-          android:name="android.intent.action.CREATE_LIVE_FOLDER" />
-        <category
-          android:name="android.intent.category.DEFAULT" />
-      </intent-filter>
-    </activity>
-    <provider
-      android:name=".provider.ScriptProvider"
-      android:authorities="com.googlecode.android_scripting.provider.scriptprovider" />
-    <provider
-      android:name=".provider.ApiProvider"
-      android:authorities="com.googlecode.android_scripting.provider.apiprovider" />
-    <uses-library
-      android:name="android.test.runner" />
-    <activity
-      android:name=".activity.ScriptProcessMonitor"
-      android:launchMode="singleTask"
-      android:finishOnTaskLaunch="true" />
-    <activity
-      android:configChanges="keyboardHidden|orientation"
-      android:name="org.connectbot.util.ColorsActivity"
-      android:theme="@android:style/Theme.Dialog">
-      <intent-filter>
-        <action
-          android:name="com.googlecode.android_scripting.PICK_TERMINAL_COLORS" />
-        <category
-          android:name="android.intent.category.DEFAULT" />
-      </intent-filter>
-    </activity>
-</application>
-  <uses-permission
-    android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-  <uses-permission
-    android:name="android.permission.INTERNET" />
-  <uses-permission
-    android:name="android.permission.ACCESS_FINE_LOCATION" />
-  <uses-permission
-    android:name="android.permission.ACCESS_COARSE_LOCATION" />
-  <uses-permission
-    android:name="android.permission.CALL_PHONE" />
-  <uses-permission
-    android:name="android.permission.SEND_SMS" />
-  <uses-permission
-    android:name="android.permission.READ_SMS" />
-  <uses-permission
-    android:name="android.permission.WRITE_SMS" />
-  <uses-permission
-    android:name="android.permission.VIBRATE" />
-  <uses-permission
-    android:name="android.permission.ACCESS_WIFI_STATE" />
-  <uses-permission
-    android:name="android.permission.CHANGE_WIFI_STATE" />
-  <uses-permission
-    android:name="android.permission.READ_PHONE_STATE" />
-  <uses-permission
-    android:name="android.permission.PERSISTENT_ACTIVITY" />
-  <uses-permission
-    android:name="android.permission.RESTART_PACKAGES" />
-  <uses-permission
-    android:name="android.permission.GET_TASKS" />
-  <uses-permission
-    android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <uses-permission
-    android:name="android.permission.ACCESS_NETWORK_STATE" />
-  <uses-permission
-    android:name="android.permission.RECORD_AUDIO" />
-  <uses-permission
-    android:name="android.permission.READ_LOGS" />
-  <uses-permission
-    android:name="android.permission.WRITE_SETTINGS" />
-  <uses-permission
-    android:name="android.permission.BLUETOOTH" />
-  <uses-permission
-    android:name="android.permission.BLUETOOTH_ADMIN" />
-  <uses-permission
-    android:name="android.permission.CAMERA" />
-  <uses-permission
-    android:name="android.permission.WAKE_LOCK" />
-  <uses-permission
-    android:name="android.permission.READ_CONTACTS" />
-  <uses-sdk
-    android:targetSdkVersion="4" android:minSdkVersion="3"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.googlecode.android_scripting" android:installLocation="auto"
+	android:versionCode="512" android:versionName="5x12">
+	<uses-permission android:name="android.permission.RECEIVE_SMS" />
+	<uses-permission android:name="net.dinglisch.android.tasker.PERMISSION_RUN_TASKS" />
+	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.CALL_PHONE" />
+	<uses-permission android:name="android.permission.SEND_SMS" />
+	<uses-permission android:name="android.permission.READ_SMS" />
+	<uses-permission android:name="android.permission.WRITE_SMS" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.PERSISTENT_ACTIVITY" />
+	<uses-permission android:name="android.permission.RESTART_PACKAGES" />
+	<uses-permission android:name="android.permission.GET_TASKS" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-permission android:name="android.permission.READ_LOGS" />
+	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+	<uses-permission android:name="android.permission.BLUETOOTH" />
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-sdk android:targetSdkVersion="4" android:minSdkVersion="3" />
+	<application android:icon="@drawable/sl4a_logo_48"
+		android:label="@string/application_title" android:name=".Sl4aApplication">
+		<activity android:name=".activity.ScriptManager"
+			android:configChanges="keyboardHidden|orientation"
+			android:windowSoftInputMode="adjustResize" android:launchMode="singleTop">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+			</intent-filter>
+			<meta-data android:name="android.app.searchable"
+				android:resource="@xml/searchable_scripts" />
+		</activity>
+		<activity android:name=".activity.ScriptPicker"
+			android:configChanges="keyboardHidden|orientation" android:label="Scripts">
+			<intent-filter>
+				<action android:name="android.intent.action.CREATE_SHORTCUT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.PICK" />
+				<data android:scheme="content" android:path="sl4a/scripts" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".activity.InterpreterPicker"
+			android:configChanges="keyboardHidden|orientation" android:label="Interpreters">
+			<intent-filter>
+				<action android:name="android.intent.action.CREATE_SHORTCUT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity-alias android:name="LocalePlugin"
+			android:targetActivity=".activity.ScriptPicker" android:label="@string/application_title"
+			android:icon="@drawable/sl4a_logo_32">
+			<intent-filter>
+				<action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+			</intent-filter>
+		</activity-alias>
+		<receiver android:name=".locale.LocaleReceiver">
+			<intent-filter>
+				<action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
+			</intent-filter>
+		</receiver>
+		<activity android:name=".activity.Preferences" android:theme="@android:style/Theme.NoTitleBar" />
+		<activity android:name="org.connectbot.ConsoleActivity"
+			android:theme="@android:style/Theme.NoTitleBar"
+			android:configChanges="keyboardHidden|orientation"
+			android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+			android:finishOnTaskLaunch="true" android:launchMode="singleTask" />
+
+		<activity android:name=".activity.ScriptEditor"
+			android:theme="@android:style/Theme.NoTitleBar"
+			android:configChanges="keyboardHidden|orientation"
+			android:windowSoftInputMode="stateAlwaysVisible|adjustResize">
+			<intent-filter>
+				<action android:name="com.googlecode.android_scripting.action.EDIT_SCRIPT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".activity.ApiBrowser"
+			android:configChanges="keyboardHidden|orientation"
+			android:launchMode="singleTop" android:windowSoftInputMode="adjustResize">
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+			</intent-filter>
+			<meta-data android:name="android.app.searchable"
+				android:resource="@xml/searchable_apis" />
+		</activity>
+		<activity android:name=".activity.ApiPrompt" android:theme="@android:style/Theme.NoTitleBar"
+			android:configChanges="keyboardHidden|orientation" />
+		<activity android:name=".activity.TriggerManager"
+			android:launchMode="singleTask" android:configChanges="keyboardHidden|orientation" />
+		<activity android:name=".activity.BluetoothDeviceList"
+			android:configChanges="keyboardHidden|orientation" />
+		<activity android:name=".activity.ScriptingLayerServiceLauncher"
+			android:taskAffinity="" android:theme="@android:style/Theme.Translucent.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".activity.FutureActivity"
+			android:configChanges="keyboardHidden|orientation" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+		<activity android:name="org.connectbot.HelpActivity"
+			android:configChanges="keyboardHidden|orientation" />
+		<activity android:name="org.connectbot.HelpTopicActivity"
+			android:configChanges="keyboardHidden|orientation" />
+		<service android:name=".activity.ScriptingLayerService" />
+		<service android:name=".activity.TriggerService" />
+		<activity android:name=".activity.InterpreterManager"
+			android:launchMode="singleTask" android:configChanges="keyboardHidden|orientation" />
+		<activity android:name=".activity.LogcatViewer"
+			android:launchMode="singleTask" android:configChanges="keyboardHidden|orientation" />
+		<activity android:name=".activity.ScriptsLiveFolder"
+			android:label="Scripts" android:icon="@drawable/live_folder"
+			android:configChanges="keyboardHidden|orientation">
+			<intent-filter>
+				<action android:name="android.intent.action.CREATE_LIVE_FOLDER" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<provider android:name=".provider.ScriptProvider"
+			android:authorities="com.googlecode.android_scripting.provider.scriptprovider" />
+		<provider android:name=".provider.ApiProvider"
+			android:authorities="com.googlecode.android_scripting.provider.apiprovider" />
+		<uses-library android:name="android.test.runner" />
+		<activity android:name=".activity.ScriptProcessMonitor"
+			android:launchMode="singleTask" android:finishOnTaskLaunch="true" />
+		<activity android:configChanges="keyboardHidden|orientation"
+			android:name="org.connectbot.util.ColorsActivity" android:theme="@android:style/Theme.Dialog">
+			<intent-filter>
+				<action android:name="com.googlecode.android_scripting.PICK_TERMINAL_COLORS" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+	</application>
+
 </manifest>

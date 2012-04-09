@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -144,7 +145,6 @@ public class ScriptEditor extends Activity implements OnClickListener {
     }
 
     mContentText.setText(mLastSavedContent);
-
     InputFilter[] oldFilters = mContentText.getFilters();
     List<InputFilter> filters = new ArrayList<InputFilter>(oldFilters.length + 1);
     filters.addAll(Arrays.asList(oldFilters));
@@ -156,6 +156,11 @@ public class ScriptEditor extends Activity implements OnClickListener {
     setVolumeControlStream(AudioManager.STREAM_MUSIC);
     mLineNo = new EditText(this);
     mLineNo.setInputType(InputType.TYPE_CLASS_NUMBER);
+    int lastLocation = mPreferences.getInt("lasteditpos." + mScript, -1);
+    if (lastLocation >= 0) {
+      mContentText.requestFocus();
+      mContentText.setSelection(lastLocation);
+    }
     Analytics.trackActivity(this);
   }
 
@@ -258,10 +263,14 @@ public class ScriptEditor extends Activity implements OnClickListener {
   }
 
   private void save() {
+    int start = mContentText.getSelectionStart();
     mLastSavedContent = mContentText.getText().toString();
     mScript = new File(mScript.getParent(), mNameText.getText().toString());
     ScriptStorageAdapter.writeScript(mScript, mLastSavedContent);
     Toast.makeText(this, "Saved " + mNameText.getText().toString(), Toast.LENGTH_SHORT).show();
+    Editor e = mPreferences.edit();
+    e.putInt("lasteditpos." + mScript, start);
+    e.commit();
   }
 
   private void insertContent(String text) {
