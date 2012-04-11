@@ -448,12 +448,14 @@ public class ViewInflater {
   private void setProperty(View view, ViewGroup root, String attr, String value)
       throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     addln(attr + ":" + value);
-    if (attr.startsWith("_layout")) {
+    if (attr.startsWith("layout_")) {
       setLayoutProperty(view, root, attr, value);
     } else if (attr.equals("id")) {
       view.setId(calcId(value));
     } else if (attr.equals("gravity")) {
       setInteger(view, attr, getInteger(Gravity.class, value));
+    } else if (attr.equals("width") || attr.equals("height")) {
+      setInteger(view, attr, (int) getFontSize(value));
     } else if (attr.equals("inputType")) {
       setInteger(view, attr, getInteger(InputType.class, value));
     } else if (attr.equals("background")) {
@@ -466,6 +468,10 @@ public class ViewInflater {
       setFloat(view, attr, getFontSize(value));
     } else if (attr.equals("textColor")) {
       setInteger(view, attr, getColor(value));
+    } else if (attr.equals("textHighlightColor")) {
+      setInteger(view, "HighlightColor", getColor(value));
+    } else if (attr.equals("textColorHint")) {
+      setInteger(view, "LinkTextColor", getColor(value));
     } else if (attr.equals("textStyle")) {
       TextView textview = (TextView) view;
       int style = getInteger(Typeface.class, value);
@@ -474,6 +480,10 @@ public class ViewInflater {
       } else {
         textview.setTypeface(textview.getTypeface(), style);
       }
+    } else if (attr.equals("typeface")) {
+      TextView textview = (TextView) view;
+      int style = textview.getTypeface().getStyle();
+      textview.setTypeface(Typeface.create(value, style));
     } else if (attr.equals("src")) {
       setImage(view, value);
     } else {
