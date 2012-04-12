@@ -15,12 +15,15 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.googlecode.android_scripting.Log;
@@ -54,7 +57,7 @@ public class ViewInflater {
   private DisplayMetrics mMetrics;
   private static final Map<String, Integer> mInputTypes = new HashMap<String, Integer>();
   public static final Map<String, String> mColorNames = new HashMap<String, String>();
-
+  public static final Map<String, Integer> mRelative = new HashMap<String, Integer>();
   static {
     mColorNames.put("aliceblue", "#f0f8ff");
     mColorNames.put("antiquewhite", "#faebd7");
@@ -203,6 +206,25 @@ public class ViewInflater {
     mColorNames.put("whitesmoke", "#f5f5f5");
     mColorNames.put("yellow", "#ffff00");
     mColorNames.put("yellowgreen", "#9acd32");
+
+    mRelative.put("above", RelativeLayout.ABOVE);
+    mRelative.put("alignBaseline", RelativeLayout.ALIGN_BASELINE);
+    mRelative.put("alignBottom", RelativeLayout.ALIGN_BOTTOM);
+    mRelative.put("alignLeft", RelativeLayout.ALIGN_LEFT);
+    mRelative.put("alignParentBottom", RelativeLayout.ALIGN_PARENT_BOTTOM);
+    mRelative.put("alignParentLeft", RelativeLayout.ALIGN_PARENT_LEFT);
+    mRelative.put("alignParentRight", RelativeLayout.ALIGN_PARENT_RIGHT);
+    mRelative.put("alignParentTop", RelativeLayout.ALIGN_PARENT_TOP);
+    mRelative.put("alignRight", RelativeLayout.ALIGN_PARENT_RIGHT);
+    mRelative.put("alignTop", RelativeLayout.ALIGN_TOP);
+    // mRelative.put("alignWithParentIfMissing",RelativeLayout.); // No idea what this translates
+    // to.
+    mRelative.put("below", RelativeLayout.BELOW);
+    mRelative.put("centerHorizontal", RelativeLayout.CENTER_HORIZONTAL);
+    mRelative.put("centerInParent", RelativeLayout.CENTER_IN_PARENT);
+    mRelative.put("centerVertical", RelativeLayout.CENTER_VERTICAL);
+    mRelative.put("toLeftOf", RelativeLayout.LEFT_OF);
+    mRelative.put("toRightOf", RelativeLayout.RIGHT_OF);
   }
 
   public static XmlPullParserFactory getFactory() throws XmlPullParserException {
@@ -314,6 +336,7 @@ public class ViewInflater {
       throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     View view = viewClass(context, xml.getName());
     if (view != null) {
+      getLayoutParams(view, root); // Make quite sure every view has a layout param.
       for (int i = 0; i < xml.getAttributeCount(); i++) {
         String ns = xml.getAttributeNamespace(i);
         String attr = xml.getAttributeName(i);
@@ -365,7 +388,7 @@ public class ViewInflater {
     if (unit.equals("sp")) {
       return mMetrics.scaledDensity * size;
     }
-    if (unit.equals("dp")) {
+    if (unit.equals("dp") || unit.equals("dip")) {
       return mMetrics.density * size;
     }
     float inches = mMetrics.ydpi * size;
@@ -425,14 +448,14 @@ public class ViewInflater {
         Class<? extends LayoutParams> clazz = Class.forName(lookfor).asSubclass(LayoutParams.class);
         if (clazz != null) {
           Constructor<? extends LayoutParams> ct = clazz.getConstructor(int.class, int.class);
-          result = ct.newInstance(-1, -1);
+          result = ct.newInstance(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         }
       } catch (Exception e) {
         result = null;
       }
     }
     if (result == null) {
-      result = new LayoutParams(-1, -1);
+      result = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
     return result;
   }
@@ -464,6 +487,11 @@ public class ViewInflater {
       ((TextView) view).setKeyListener(DigitsKeyListener.getInstance(value));
     } else if (attr.startsWith("nextFocus")) {
       setInteger(view, attr + "Id", calcId(value));
+    } else if (attr.equals("padding")) {
+      int size = (int) getFontSize(value);
+      view.setPadding(size, size, size, size);
+    } else if (attr.equals("stretchColumns")) {
+      setStretchColumns(view, value);
     } else if (attr.equals("textSize")) {
       setFloat(view, attr, getFontSize(value));
     } else if (attr.equals("textColor")) {
@@ -491,6 +519,14 @@ public class ViewInflater {
     }
   }
 
+  private void setStretchColumns(View view, String value) {
+    TableLayout table = (TableLayout) view;
+    String[] values = value.split(",");
+    for (String column : values) {
+      table.setColumnStretchable(Integer.parseInt(column), true);
+    }
+  }
+
   private void setLayoutProperty(View view, ViewGroup root, String attr, String value) {
     LayoutParams layout = getLayoutParams(view, root);
     String layoutAttr = attr.substring(7);
@@ -501,7 +537,28 @@ public class ViewInflater {
     } else if (layoutAttr.equals("gravity")) {
       setIntegerField(layout, "gravity", getInteger(Gravity.class, value));
     } else {
-      setIntegerField(layout, layoutAttr, getInteger(layout.getClass(), value));
+      if (layoutAttr.startsWith("margin") && layout instanceof MarginLayoutParams) {
+        int size = (int) getFontSize(value);
+        MarginLayoutParams margins = (MarginLayoutParams) layout;
+        if (layoutAttr.equals("marginBottom")) {
+          margins.bottomMargin = size;
+        } else if (layoutAttr.equals("marginTop")) {
+          margins.topMargin = size;
+        } else if (layoutAttr.equals("marginLeft")) {
+          margins.leftMargin = size;
+        } else if (layoutAttr.equals("marginRight")) {
+          margins.rightMargin = size;
+        }
+      } else if (layout instanceof RelativeLayout.LayoutParams) {
+        int anchor = calcId(value);
+        if (anchor == 0) {
+          anchor = getInteger(RelativeLayout.class, value);
+        }
+        int rule = mRelative.get(layoutAttr);
+        ((RelativeLayout.LayoutParams) layout).addRule(rule, anchor);
+      } else {
+        setIntegerField(layout, layoutAttr, getInteger(layout.getClass(), value));
+      }
     }
   }
 

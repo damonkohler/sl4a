@@ -13,7 +13,7 @@ public class SupportedLanguages {
         ".js", JavaScriptLanguage.class), LUA(".lua", LuaLanguage.class), PERL(".pl",
         PerlLanguage.class), PYTHON(".py", PythonLanguage.class), RUBY(".rb", RubyLanguage.class),
     TCL(".tcl", TclLanguage.class), PHP(".php", PhpLanguage.class), SLEEP(".sl",
-        SleepLanguage.class);
+        SleepLanguage.class), SQUIRREL(".nut", SquirrelLanguage.class);
 
     private final String mmExtension;
     private final Class<? extends Language> mmClass;
