@@ -19,6 +19,7 @@ package com.googlecode.android_scripting;
 import com.google.common.collect.Lists;
 
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -121,7 +122,7 @@ public abstract class SimpleServer {
     for (NetworkInterface netint : Collections.list(nets)) {
       Enumeration<InetAddress> addresses = netint.getInetAddresses();
       for (InetAddress address : Collections.list(addresses)) {
-        if (!address.getHostAddress().equals("127.0.0.1")) {
+        if (!address.getHostAddress().equals("127.0.0.1") && address instanceof Inet4Address) {
           return address;
         }
       }
