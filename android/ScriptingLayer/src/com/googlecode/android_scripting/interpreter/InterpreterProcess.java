@@ -18,8 +18,14 @@ package com.googlecode.android_scripting.interpreter;
 
 import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.AndroidProxy;
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.Process;
+import com.googlecode.android_scripting.SimpleServer;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManagerFactory;
+
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 /**
  * This is a skeletal implementation of an interpreter process.
@@ -66,11 +72,26 @@ public class InterpreterProcess extends Process {
   }
 
   public String getHost() {
-    return mProxy.getAddress().getHostName();
+    String result = mProxy.getAddress().getHostName();
+    if (result.equals("0.0.0.0")) { // Wildcard.
+      try {
+        return SimpleServer.getPublicInetAddress().getHostName();
+      } catch (UnknownHostException e) {
+        Log.i("public address", e);
+        e.printStackTrace();
+      } catch (SocketException e) {
+        Log.i("public address", e);
+      }
+    }
+    return result;
   }
 
   public int getPort() {
     return mProxy.getAddress().getPort();
+  }
+
+  public InetSocketAddress getAddress() {
+    return mProxy.getAddress();
   }
 
   public String getSecret() {

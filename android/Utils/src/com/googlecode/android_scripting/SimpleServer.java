@@ -117,17 +117,26 @@ public abstract class SimpleServer {
     return mConnectionThreads.size();
   }
 
-  private InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {
+  public static InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {
+
+    InetAddress candidate = null;
     Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
     for (NetworkInterface netint : Collections.list(nets)) {
+      if (netint.isLoopback() || !netint.isUp()) { // Ignore if localhost or not active
+        continue;
+      }
       Enumeration<InetAddress> addresses = netint.getInetAddresses();
       for (InetAddress address : Collections.list(addresses)) {
-        if (!address.getHostAddress().equals("127.0.0.1") && address instanceof Inet4Address) {
-          return address;
+        if (address instanceof Inet4Address) {
+          return address; // Prefer ipv4
         }
+        candidate = address; // Probably an ipv6
       }
     }
-    return InetAddress.getLocalHost();
+    if (candidate != null) {
+      return candidate; // return ipv6 address if no suitable ipv6
+    }
+    return InetAddress.getLocalHost(); // No damn matches. Give up, return local host.
   }
 
   /**
@@ -162,7 +171,8 @@ public abstract class SimpleServer {
   public InetSocketAddress startPublic(int port) {
     InetAddress address;
     try {
-      address = getPublicInetAddress();
+      // address = getPublicInetAddress();
+      address = null;
       mServer = new ServerSocket(port, 5 /* backlog */, address);
     } catch (Exception e) {
       Log.e("Failed to start server.", e);
