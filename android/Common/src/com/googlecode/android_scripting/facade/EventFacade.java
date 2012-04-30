@@ -201,13 +201,14 @@ public class EventFacade extends RpcReceiver {
   public Event eventWait(
       @RpcParameter(name = "timeout", description = "the maximum time to wait") @RpcOptional Integer timeout)
       throws InterruptedException {
+    Event result = null;
     final FutureResult<Event> futureEvent = new FutureResult<Event>();
     synchronized (mEventQueue) { // Anything in queue?
       if (mEventQueue.size() > 0) {
         return mEventQueue.poll(); // return it.
       }
     }
-    addGlobalEventObserver(new EventObserver() {
+    EventObserver observer = new EventObserver() {
       @Override
       public void onEventReceived(Event event) { // set up observer for any events.
         synchronized (futureEvent) {
@@ -218,12 +219,15 @@ public class EventFacade extends RpcReceiver {
           mEventQueue.remove(event);
         }
       }
-    });
+    };
+    addGlobalEventObserver(observer);
     if (timeout != null) {
-      return futureEvent.get(timeout, TimeUnit.MILLISECONDS);
+      result = futureEvent.get(timeout, TimeUnit.MILLISECONDS);
     } else {
-      return futureEvent.get();
+      result = futureEvent.get();
     }
+    removeEventObserver(observer); // Make quite sure this goes away.
+    return result;
   }
 
   /**
@@ -256,7 +260,7 @@ public class EventFacade extends RpcReceiver {
    */
   public void postEvent(String name, Object data, boolean enqueue) {
     Event event = new Event(name, data);
-    if (enqueue == false) {
+    if (enqueue != false) {
       mEventQueue.add(event);
       if (mEventQueue.size() > MAX_QUEUE_SIZE) {
         mEventQueue.remove();

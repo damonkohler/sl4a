@@ -39,6 +39,8 @@ import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -126,6 +128,7 @@ public class UiFacade extends RpcReceiver {
   private final AtomicBoolean mMenuUpdated;
 
   private final EventFacade mEventFacade;
+  private List<Integer> mOverrideKeys = Collections.synchronizedList(new ArrayList<Integer>());
 
   public UiFacade(FacadeManager manager) {
     super(manager);
@@ -554,6 +557,7 @@ public class UiFacade extends RpcReceiver {
     mFullScreenTask = new FullScreenTask(layout);
     mFullScreenTask.setEventFacade(mEventFacade);
     mFullScreenTask.setUiFacade(this);
+    mFullScreenTask.setOverrideKeys(mOverrideKeys);
     mTaskQueue.execute(mFullScreenTask);
     mFullScreenTask.getShowLatch().await();
     return mFullScreenTask.mInflater.getErrors();
@@ -603,6 +607,32 @@ public class UiFacade extends RpcReceiver {
       throw new RuntimeException("No screen displayed.");
     }
     return mFullScreenTask.setList(id, items);
+  }
+
+  @Rpc(description = "Override default key actions")
+  public JSONArray fullKeyOverride(
+      @RpcParameter(name = "keycodes", description = "List of keycodes to override") JSONArray keycodes,
+      @RpcParameter(name = "enable", description = "Turn overriding or off") @RpcDefault(value = "true") Boolean enable)
+      throws JSONException {
+    for (int i = 0; i < keycodes.length(); i++) {
+      int value = (int) keycodes.getLong(i);
+      if (value > 0) {
+        if (enable) {
+          if (!mOverrideKeys.contains(value)) {
+            mOverrideKeys.add(value);
+          }
+        } else {
+          int index = mOverrideKeys.indexOf(value);
+          if (index >= 0) {
+            mOverrideKeys.remove(index);
+          }
+        }
+      }
+    }
+    if (mFullScreenTask != null) {
+      mFullScreenTask.setOverrideKeys(mOverrideKeys);
+    }
+    return new JSONArray(mOverrideKeys);
   }
 
   @Override

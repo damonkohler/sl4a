@@ -18,6 +18,7 @@ import com.googlecode.android_scripting.future.FutureActivityTask;
 
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -33,6 +34,7 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
   protected String mLayout;
   protected final CountDownLatch mShowLatch = new CountDownLatch(1);
   protected Handler mHandler = null;
+  private List<Integer> mOverrideKeys;
 
   public FullScreenTask(String layout) {
     super();
@@ -211,10 +213,10 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     data.put("key", String.valueOf(keyCode));
     data.put("action", String.valueOf(event.getAction()));
     mEventFacade.postEvent("key", data);
-    if (keyCode == KeyEvent.KEYCODE_BACK) {
-      return true;
-    }
-    return false;
+    boolean overrideKey =
+        (keyCode == KeyEvent.KEYCODE_BACK)
+            || (mOverrideKeys == null ? false : mOverrideKeys.contains(keyCode));
+    return overrideKey;
   }
 
   @Override
@@ -227,6 +229,10 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     Map<String, String> data = mInflater.getViewInfo(aview);
     data.put("position", String.valueOf(position));
     mEventFacade.postEvent("itemclick", data);
+  }
+
+  public void setOverrideKeys(List<Integer> overrideKeys) {
+    mOverrideKeys = overrideKeys;
   }
 
 }
