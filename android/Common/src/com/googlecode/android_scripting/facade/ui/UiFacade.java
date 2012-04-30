@@ -609,6 +609,17 @@ public class UiFacade extends RpcReceiver {
     return mFullScreenTask.setList(id, items);
   }
 
+  /**
+   * This will override the default behaviour of keys while in the fullscreen mode. ie:
+   * 
+   * <pre>
+   *   droid.fullKeyOverride([24,25],True)
+   * </pre>
+   * 
+   * This will override the default behaviour of the volume keys (codes 24 and 25) so that they do
+   * not actually adjust the volume. <br>
+   * Returns a list of currently overridden keycodes.
+   */
   @Rpc(description = "Override default key actions")
   public JSONArray fullKeyOverride(
       @RpcParameter(name = "keycodes", description = "List of keycodes to override") JSONArray keycodes,
