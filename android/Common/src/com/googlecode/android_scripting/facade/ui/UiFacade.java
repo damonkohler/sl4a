@@ -552,14 +552,16 @@ public class UiFacade extends RpcReceiver {
       @RpcParameter(name = "layout", description = "String containing View layout") String layout)
       throws InterruptedException {
     if (mFullScreenTask != null) {
-      fullDismiss();
+      // fullDismiss();
+      mFullScreenTask.setLayout(layout);
+    } else {
+      mFullScreenTask = new FullScreenTask(layout);
+      mFullScreenTask.setEventFacade(mEventFacade);
+      mFullScreenTask.setUiFacade(this);
+      mFullScreenTask.setOverrideKeys(mOverrideKeys);
+      mTaskQueue.execute(mFullScreenTask);
+      mFullScreenTask.getShowLatch().await();
     }
-    mFullScreenTask = new FullScreenTask(layout);
-    mFullScreenTask.setEventFacade(mEventFacade);
-    mFullScreenTask.setUiFacade(this);
-    mFullScreenTask.setOverrideKeys(mOverrideKeys);
-    mTaskQueue.execute(mFullScreenTask);
-    mFullScreenTask.getShowLatch().await();
     return mFullScreenTask.mInflater.getErrors();
   }
 

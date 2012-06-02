@@ -168,6 +168,24 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     mEventFacade.postEvent("click", mInflater.getViewInfo(view));
   }
 
+  public void loadLayout(String layout) {
+    ViewInflater inflater = new ViewInflater();
+    View view;
+    StringReader sr = new StringReader(layout);
+    try {
+      XmlPullParser xml = ViewInflater.getXml(sr);
+      view = inflater.inflate(getActivity(), xml);
+      mView = view;
+      mInflater = inflater;
+      getActivity().setContentView(mView);
+      mInflater.setClickListener(mView, this, this);
+      mLayout = layout;
+      mView.invalidate();
+    } catch (Exception e) {
+      mInflater.getErrors().add(e.toString());
+    }
+  }
+
   private class SetProperty implements Runnable {
     View mView;
     String mProperty;
@@ -207,6 +225,21 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     }
   }
 
+  private class SetLayout implements Runnable {
+    String mLayout;
+    CountDownLatch mLatch = new CountDownLatch(1);
+
+    SetLayout(String layout) {
+      mLayout = layout;
+    }
+
+    @Override
+    public void run() {
+      loadLayout(mLayout);
+      mLatch.countDown();
+    }
+  }
+
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     Map<String, String> data = new HashMap<String, String>();
@@ -233,6 +266,17 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
 
   public void setOverrideKeys(List<Integer> overrideKeys) {
     mOverrideKeys = overrideKeys;
+  }
+
+  // Used to hot-switch screens.
+  public void setLayout(String layout) {
+    SetLayout p = new SetLayout(layout);
+    mHandler.post(p);
+    try {
+      p.mLatch.await();
+    } catch (InterruptedException e) {
+      mInflater.getErrors().add(e.toString());
+    }
   }
 
 }

@@ -997,4 +997,10 @@ public class ViewInflater {
       mErrors.add("failed to load list " + e.getMessage());
     }
   }
+
+  public void clearAll() {
+    getErrors().clear();
+    mIdList.clear();
+    mNextSeq = BASESEQ;
+  }
 }
