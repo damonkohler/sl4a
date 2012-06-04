@@ -215,13 +215,13 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     SetList(View view, JSONArray items) {
       mView = view;
       mItems = items;
-      mView.invalidate();
       mLatch.countDown();
     }
 
     @Override
     public void run() {
       mInflater.setListAdapter(mView, mItems);
+      mView.invalidate();
     }
   }
 
