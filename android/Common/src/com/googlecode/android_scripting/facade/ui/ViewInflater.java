@@ -510,7 +510,8 @@ public class ViewInflater {
       }
     } else if (attr.equals("typeface")) {
       TextView textview = (TextView) view;
-      int style = textview.getTypeface().getStyle();
+      Typeface typeface = textview.getTypeface();
+      int style = typeface == null ? 0 : typeface.getStyle();
       textview.setTypeface(Typeface.create(value, style));
     } else if (attr.equals("src")) {
       setImage(view, value);
