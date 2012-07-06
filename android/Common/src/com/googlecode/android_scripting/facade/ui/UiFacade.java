@@ -549,13 +549,17 @@ public class UiFacade extends RpcReceiver {
    */
   @Rpc(description = "Show Full Screen.")
   public List<String> fullShow(
-      @RpcParameter(name = "layout", description = "String containing View layout") String layout)
+      @RpcParameter(name = "layout", description = "String containing View layout") String layout,
+      @RpcParameter(name = "title", description = "Activity Title") @RpcOptional String title)
       throws InterruptedException {
     if (mFullScreenTask != null) {
       // fullDismiss();
       mFullScreenTask.setLayout(layout);
+      if (title != null) {
+        mFullScreenTask.setTitle(title);
+      }
     } else {
-      mFullScreenTask = new FullScreenTask(layout);
+      mFullScreenTask = new FullScreenTask(layout, title);
       mFullScreenTask.setEventFacade(mEventFacade);
       mFullScreenTask.setUiFacade(this);
       mFullScreenTask.setOverrideKeys(mOverrideKeys);
@@ -609,6 +613,15 @@ public class UiFacade extends RpcReceiver {
       throw new RuntimeException("No screen displayed.");
     }
     return mFullScreenTask.setList(id, items);
+  }
+
+  @Rpc(description = "Set the Full Screen Activity Title")
+  public void fullSetTitle(
+      @RpcParameter(name = "title", description = "Activity Title") String title) {
+    if (mFullScreenTask == null) {
+      throw new RuntimeException("No screen displayed.");
+    }
+    mFullScreenTask.setTitle(title);
   }
 
   /**

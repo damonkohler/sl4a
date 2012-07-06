@@ -360,12 +360,16 @@ public class EventFacade extends RpcReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-      Bundle data = (Bundle) intent.getExtras().clone();
+      Bundle data;
+      if (intent.getExtras() != null) {
+        data = (Bundle) intent.getExtras().clone();
+      } else {
+        data = new Bundle();
+      }
       data.putString("action", intent.getAction());
       try {
         mParent.eventPost("sl4a", JsonBuilder.build(data).toString(), mEnQueue);
       } catch (JSONException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }

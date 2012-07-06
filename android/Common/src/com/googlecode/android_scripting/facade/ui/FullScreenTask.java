@@ -35,10 +35,16 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
   protected final CountDownLatch mShowLatch = new CountDownLatch(1);
   protected Handler mHandler = null;
   private List<Integer> mOverrideKeys;
+  protected String mTitle;
 
-  public FullScreenTask(String layout) {
+  public FullScreenTask(String layout, String title) {
     super();
     mLayout = layout;
+    if (title != null) {
+      mTitle = title;
+    } else {
+      mTitle = "SL4a";
+    }
   }
 
   @Override
@@ -60,7 +66,7 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
       mInflater.setIdList(R.id.class);
     }
     getActivity().setContentView(mView);
-    getActivity().setTitle("SL4A Title");
+    getActivity().setTitle(mTitle);
     mInflater.setClickListener(mView, this, this);
     mShowLatch.countDown();
   }
@@ -240,6 +246,22 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     }
   }
 
+  private class SetTitle implements Runnable {
+    String mSetTitle;
+    CountDownLatch mLatch = new CountDownLatch(1);
+
+    SetTitle(String title) {
+      mSetTitle = title;
+    }
+
+    @Override
+    public void run() {
+      mTitle = mSetTitle;
+      getActivity().setTitle(mSetTitle);
+      mLatch.countDown();
+    }
+  }
+
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
     Map<String, String> data = new HashMap<String, String>();
@@ -271,6 +293,16 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
   // Used to hot-switch screens.
   public void setLayout(String layout) {
     SetLayout p = new SetLayout(layout);
+    mHandler.post(p);
+    try {
+      p.mLatch.await();
+    } catch (InterruptedException e) {
+      mInflater.getErrors().add(e.toString());
+    }
+  }
+
+  public void setTitle(String title) {
+    SetTitle p = new SetTitle(title);
     mHandler.post(p);
     try {
       p.mLatch.await();
