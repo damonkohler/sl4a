@@ -305,6 +305,9 @@ public class EventFacade extends RpcReceiver {
   public int startEventDispatcher(
       @RpcParameter(name = "port", description = "Port to use") @RpcDefault("0") @RpcOptional() Integer port) {
     if (mEventServer == null) {
+      if (port == null) {
+        port = 0;
+      }
       mEventServer = new EventServer(port);
       addGlobalEventObserver(mEventServer);
     }
