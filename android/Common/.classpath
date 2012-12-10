@@ -3,7 +3,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="libs/guava-r06.jar"/>
 	<classpathentry kind="lib" path="libs/libGoogleAnalytics.jar"/>
-	<classpathentry kind="var" path="ANDROID_SDK/platforms/android-3/android.jar" sourcepath="/ANDROID_SDK/platforms/android-3/sources/"/>
+	<classpathentry kind="var" path="ANDROID_SDK/platforms/android-3/android.jar" sourcepath="/ANDROID_SDK/platforms/android-3/sources/">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Program Files (x86)/Android/android-sdk/docs/reference/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/Utils"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

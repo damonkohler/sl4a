@@ -26,9 +26,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.view.SurfaceHolder.Callback;
 
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.FileUtils;
@@ -60,10 +60,22 @@ public class CameraFacade extends RpcReceiver {
     boolean mmResult = false;
   }
 
-  public CameraFacade(FacadeManager manager) {
+  public Camera openCamera(int cameraId) throws Exception {
+    int sSdkLevel = Integer.parseInt(android.os.Build.VERSION.SDK);
+    Camera result;
+    if (sSdkLevel < 9) {
+      result = Camera.open();
+    } else {
+      Method openCamera = Camera.class.getMethod("open", int.class);
+      result = (Camera) openCamera.invoke(null, cameraId);
+    }
+    return result;
+  }
+
+  public CameraFacade(FacadeManager manager) throws Exception {
     super(manager);
     mService = manager.getService();
-    Camera camera = Camera.open();
+    Camera camera = openCamera(0);
     try {
       mParameters = camera.getParameters();
     } finally {
@@ -71,14 +83,15 @@ public class CameraFacade extends RpcReceiver {
     }
   }
 
-  @Rpc(description = "Take a picture and save it to the specified path.", returns = "A map of Booleans autoFocus and takePicture where True indicates success.")
-  public Bundle cameraCapturePicture(@RpcParameter(name = "targetPath") final String targetPath,
-      @RpcParameter(name = "useAutoFocus") @RpcDefault("true") Boolean useAutoFocus)
-      throws InterruptedException {
+  @Rpc(description = "Take a picture and save it to the specified path.", returns = "A map of Booleans autoFocus and takePicture where True indicates success. cameraId also included.")
+  public Bundle cameraCapturePicture(
+      @RpcParameter(name = "targetPath") final String targetPath,
+      @RpcParameter(name = "useAutoFocus") @RpcDefault("true") Boolean useAutoFocus,
+      @RpcParameter(name = "cameraId", description = "Id of camera to use. SDK 9") @RpcDefault("0") Integer cameraId)
+      throws Exception {
     final BooleanResult autoFocusResult = new BooleanResult();
     final BooleanResult takePictureResult = new BooleanResult();
-
-    Camera camera = Camera.open();
+    Camera camera = openCamera(cameraId);
     camera.setParameters(mParameters);
 
     try {
@@ -105,6 +118,7 @@ public class CameraFacade extends RpcReceiver {
     Bundle result = new Bundle();
     result.putBoolean("autoFocus", autoFocusResult.mmResult);
     result.putBoolean("takePicture", takePictureResult.mmResult);
+    result.putInt("cameraId", cameraId);
     return result;
   }
 
