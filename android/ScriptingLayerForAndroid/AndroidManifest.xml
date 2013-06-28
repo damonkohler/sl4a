@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.googlecode.android_scripting" android:installLocation="auto"
-	android:versionCode="602" android:versionName="6x02">
+	android:versionCode="603" android:versionName="6x03">
 	<uses-permission android:name="android.permission.RECEIVE_SMS" />
 	<uses-permission android:name="net.dinglisch.android.tasker.PERMISSION_RUN_TASKS" />
 	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />

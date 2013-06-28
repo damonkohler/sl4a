@@ -113,6 +113,15 @@ public class ScriptManager extends ListActivity {
     super.onCreate(savedInstanceState);
     CustomizeWindow.requestCustomTitle(this, "Scripts", R.layout.script_manager);
     if (FileUtils.externalStorageMounted()) {
+      File sl4a = mBaseDir.getParentFile();
+      if (!sl4a.exists()) {
+        sl4a.mkdir();
+        try {
+          FileUtils.chmod(sl4a, 0755); // Handle the sl4a parent folder first.
+        } catch (Exception e) {
+          // Not much we can do here if it doesn't work.
+        }
+      }
       if (!FileUtils.makeDirectories(mBaseDir, 0755)) {
         new AlertDialog.Builder(this)
             .setTitle("Error")
