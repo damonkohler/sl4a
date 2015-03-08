@@ -68,12 +68,12 @@ public class ServiceUtils {
       }
 
     } catch (NoSuchMethodException e) {
-      // Fall back on old API.
-      service.setForeground(true);
-
-      NotificationManager manager =
-          (NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE);
-      manager.notify(notificationId, notification);
+//      // Fall back on old API.
+//      service.setForeground(true);
+//
+//      NotificationManager manager =
+//          (NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE);
+//      manager.notify(notificationId, notification);
     }
   }
 }

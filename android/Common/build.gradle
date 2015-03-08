@@ -1,0 +1,43 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.1.0'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+dependencies {
+    compile project(':Utils')
+    compile files('libs/guava-r06.jar')
+    compile files('libs/libGoogleAnalytics.jar')
+    compile('com.android.support:support-v4:21.0.3'){
+        force = true
+    }
+}
+
+android {
+    buildToolsVersion "21.1.2"
+    compileSdkVersion 21
+
+    defaultConfig {
+        minSdkVersion 3
+        targetSdkVersion 21
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+        instrumentTest.setRoot('tests')
+    }
+}

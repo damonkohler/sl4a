@@ -18,6 +18,10 @@ lua/log
 android/PythonForAndroid/obj/*
 android/PythonForAndroid/libs/armeabi/*
 android/DocumentationGenerator/doc/*
+.gradle
+.idea
+build
+local.properties
 syntax: regexp
 (python|lua)/.*\.o
 python/.*\.pyc

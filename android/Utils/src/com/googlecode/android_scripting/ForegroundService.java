@@ -42,11 +42,11 @@ public abstract class ForegroundService extends Service {
       return;
     }
 
-    // Fall back on the old API.
-    setForeground(true);
-    if (notification != null) {
-      mNotificationManager.notify(mNotificationId, notification);
-    }
+//    // Fall back on the old API.
+//    setForeground(true);
+//    if (notification != null) {
+//      mNotificationManager.notify(mNotificationId, notification);
+//    }
   }
 
   /**
@@ -65,10 +65,10 @@ public abstract class ForegroundService extends Service {
       return;
     }
 
-    // Fall back on the old API. Note to cancel BEFORE changing the
-    // foreground state, since we could be killed at that point.
-    mNotificationManager.cancel(mNotificationId);
-    setForeground(false);
+//    // Fall back on the old API. Note to cancel BEFORE changing the
+//    // foreground state, since we could be killed at that point.
+//    mNotificationManager.cancel(mNotificationId);
+//    setForeground(false);
   }
 
   @Override

@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.1.0'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+dependencies {
+    compile project(':Common')
+    compile project(':Utils')
+    compile project(':QuickAction')
+    compile project(':BluetoothFacade')
+    compile project(':SignalStrengthFacade')
+    compile project(':TextToSpeechFacade')
+    compile project(':WebCamFacade')
+    compile project(':ScriptingLayer')
+    compile project(':InterpreterForAndroid')
+    compile('com.android.support:support-v4:21.0.3') {
+        force = true
+    }
+    compile files('libs/locale_platform.jar')
+}
+
+android {
+    buildToolsVersion "21.1.2"
+    compileSdkVersion 21
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        instrumentTest.setRoot('tests')
+    }
+    defaultConfig {
+        minSdkVersion 4
+        targetSdkVersion 4
+    }
+    productFlavors {
+    }
+    dexOptions {
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
+    }
+}
+

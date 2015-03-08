@@ -1,0 +1,10 @@
+includeFlat 'Common', 'Utils', 'QuickAction'
+includeFlat 'BluetoothFacade'
+includeFlat 'SignalStrengthFacade'
+includeFlat 'TextToSpeechFacade'
+includeFlat 'WebCamFacade'
+includeFlat 'ScriptingLayer'
+includeFlat 'InterpreterForAndroid'
+
+// includeFlat 'BeanShellForAndroid'
+// includeFlat ':'
