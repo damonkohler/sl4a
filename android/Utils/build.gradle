@@ -22,7 +22,7 @@ android {
     compileSdkVersion 21
 
     defaultConfig {
-        minSdkVersion 3
+        minSdkVersion 4
         targetSdkVersion 21
     }
 

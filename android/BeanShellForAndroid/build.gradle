@@ -8,9 +8,10 @@ buildscript {
     }
 }
 
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 dependencies {
+    compile project(':InterpreterForAndroid')
     compile('com.android.support:support-v4:21.0.3'){
         force = true
     }
@@ -32,6 +33,20 @@ android {
         }
 
         instrumentTest.setRoot('tests')
+
+    }
+
+    defaultConfig {
+        minSdkVersion 4
+        targetSdkVersion 4
+    }
+    productFlavors {
+    }
+    dexOptions {
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
     }
 }
 
