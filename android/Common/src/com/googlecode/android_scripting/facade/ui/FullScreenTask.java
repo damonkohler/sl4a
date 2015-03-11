@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.googlecode.android_scripting.facade.EventFacade;
@@ -26,7 +28,7 @@ import org.json.JSONArray;
 import org.xmlpull.v1.XmlPullParser;
 
 public class FullScreenTask extends FutureActivityTask<Object> implements OnClickListener,
-    OnItemClickListener {
+    OnItemClickListener, OnSeekBarChangeListener {
   private EventFacade mEventFacade;
   private UiFacade mUiFacade;
   public View mView = null;
@@ -67,7 +69,7 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     }
     getActivity().setContentView(mView);
     getActivity().setTitle(mTitle);
-    mInflater.setClickListener(mView, this, this);
+    mInflater.setClickListener(mView, this, this, this);
     mShowLatch.countDown();
   }
 
@@ -184,7 +186,7 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
       mView = view;
       mInflater = inflater;
       getActivity().setContentView(mView);
-      mInflater.setClickListener(mView, this, this);
+      mInflater.setClickListener(mView, this, this, this);
       mLayout = layout;
       mView.invalidate();
     } catch (Exception e) {
@@ -309,6 +311,26 @@ public class FullScreenTask extends FutureActivityTask<Object> implements OnClic
     } catch (InterruptedException e) {
       mInflater.getErrors().add(e.toString());
     }
+  }
+
+  @Override
+  public void onProgressChanged(SeekBar aview, int progress, boolean fromUser) {
+    Map<String, String> data = mInflater.getViewInfo(aview);
+    data.put("position", String.valueOf(progress));
+    data.put("progress", String.valueOf(progress));
+    mEventFacade.postEvent("itemclick", data);
+  }
+
+  @Override
+  public void onStartTrackingTouch(SeekBar arg0) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void onStopTrackingTouch(SeekBar arg0) {
+    // TODO Auto-generated method stub
+
   }
 
 }

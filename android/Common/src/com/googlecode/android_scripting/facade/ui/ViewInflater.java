@@ -21,6 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TableLayout;
@@ -274,7 +275,7 @@ public class ViewInflater {
 
   @SuppressWarnings("rawtypes")
   public void setClickListener(View v, android.view.View.OnClickListener listener,
-      OnItemClickListener itemListener) {
+      OnItemClickListener itemListener, SeekBar.OnSeekBarChangeListener seekbarListener) {
     if (v.isClickable()) {
 
       if (v instanceof AdapterView) {
@@ -293,8 +294,11 @@ public class ViewInflater {
     if (v instanceof ViewGroup) {
       ViewGroup vg = (ViewGroup) v;
       for (int i = 0; i < vg.getChildCount(); i++) {
-        setClickListener(vg.getChildAt(i), listener, itemListener);
+        setClickListener(vg.getChildAt(i), listener, itemListener, seekbarListener);
       }
+    }
+    if (v instanceof SeekBar) {
+      ((SeekBar) v).setOnSeekBarChangeListener(seekbarListener);
     }
   }
 
