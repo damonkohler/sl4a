@@ -22,6 +22,8 @@ android/DocumentationGenerator/doc/*
 .idea
 build
 local.properties
+gradle{w,w.bat,.properties}
+gradle
 syntax: regexp
 (python|lua)/.*\.o
 python/.*\.pyc

@@ -38,7 +38,7 @@ public class ServiceUtils {
   /**
    * Marks the service as a foreground service. This uses reflection to figure out whether the new
    * APIs for marking a service as a foreground service are available. If not, it falls back to the
-   * old {@link #setForeground(boolean)} call.
+   * old setForeground(boolean) call.
    * 
    * @param service
    *          the service to put in foreground mode
@@ -48,7 +48,8 @@ public class ServiceUtils {
    *          the notification to show
    */
   public static void setForeground(Service service, Integer notificationId,
-      Notification notification) {
+      Notification notification) throws NoSuchMethodException {
+    final Class<?>[] setForegroundSignature = new Class[] {boolean.class};
     final Class<?>[] startForegroundSignature = new Class[] { int.class, Notification.class };
     Method startForeground = null;
     try {
@@ -66,14 +67,17 @@ public class ServiceUtils {
         // Should not happen!
         Log.e("Could not set TriggerService to foreground mode.", e);
       }
-
+      return;
     } catch (NoSuchMethodException e) {
-//      // Fall back on old API.
-//      service.setForeground(true);
-//
-//      NotificationManager manager =
-//          (NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE);
-//      manager.notify(notificationId, notification);
+    }
+
+    Method setForeground = null;
+    try {
+      // Fall back on old API.
+      setForeground = service.getClass().getMethod("setForeground", setForegroundSignature);
+      setForeground.invoke(service, new Object[] {Boolean.TRUE});
+    } catch (Exception e) {
+      Log.e(e);
     }
   }
 }
