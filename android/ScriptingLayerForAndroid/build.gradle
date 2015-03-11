@@ -39,6 +39,8 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
+            jni.srcDirs = []   // Please build NDK modules outside gradle.
+            jniLibs.srcDirs = ['libs']
         }
 
         instrumentTest.setRoot('tests')
@@ -48,12 +50,29 @@ android {
         targetSdkVersion 4
     }
     productFlavors {
+        x86 {
+            ndk {
+                abiFilter "x86"
+            }
+        }
+        armv7 {
+            ndk {
+                abiFilter "armeabi-v7a"
+            }
+        }
+        arm {
+            ndk {
+                abiFilters "armeabi"
+            }
+        }
+    }
+    productFlavors {
     }
     dexOptions {
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
