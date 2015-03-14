@@ -74,3 +74,8 @@ folder.
 
 * If there are still issues, look at this to find tidbits you could possibly do:
 http://jokar-johnk.blogspot.co.nz/2011/02/how-to-make-android-app-with-sl4a.html
+
+Facade
+===
+* [USBHostSerialFacade](/USBHostSerialFacade.md): for USB Serial devices
+

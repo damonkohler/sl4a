@@ -3,6 +3,7 @@ includeFlat 'BluetoothFacade'
 includeFlat 'SignalStrengthFacade'
 includeFlat 'TextToSpeechFacade'
 includeFlat 'WebCamFacade'
+includeFlat 'USBHostSerialFacade'
 includeFlat 'ScriptingLayer'
 includeFlat 'InterpreterForAndroid'
 
