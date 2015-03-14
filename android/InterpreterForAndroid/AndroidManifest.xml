@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.googlecode.android_scripting.interpreter" android:installLocation="auto"
-	android:versionCode="603" android:versionName="6x03">
+    >
 </manifest>
 
