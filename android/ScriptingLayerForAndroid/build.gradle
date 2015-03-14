@@ -18,6 +18,7 @@ dependencies {
     compile project(':SignalStrengthFacade')
     compile project(':TextToSpeechFacade')
     compile project(':WebCamFacade')
+    // compile project(':USBHostSerialFacade')
     compile project(':ScriptingLayer')
     compile project(':InterpreterForAndroid')
     compile('com.android.support:support-v4:21.0.3') {
@@ -53,6 +54,11 @@ android {
         x86 {
             ndk {
                 abiFilter "x86"
+            }
+        }
+        mips {
+            ndk {
+                abiFilter "mips"
             }
         }
         armv7 {

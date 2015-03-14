@@ -25,6 +25,7 @@ local.properties
 gradle{w,w.bat,.properties}
 gradle
 *.iml
+obj
 syntax: regexp
 (python|lua)/.*\.o
 python/.*\.pyc
