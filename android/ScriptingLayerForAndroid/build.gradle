@@ -49,6 +49,8 @@ android {
     defaultConfig {
         minSdkVersion 4
         targetSdkVersion 4
+        versionCode 603
+        versionName '6x03'
     }
     productFlavors {
         x86 {
@@ -79,6 +81,18 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_6
         targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def file = output.outputFile
+            if (file != null && file.name.endsWith('.apk')) {
+                def newName = file.name.replace(
+                    "ScriptingLayerForAndroid",
+                    "sl4a-r" + defaultConfig.versionName)
+                output.outputFile = new File(file.parent, newName)
+            }
+        }
     }
 }
 
