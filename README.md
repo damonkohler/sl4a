@@ -18,6 +18,47 @@ SL4A is designed for developers and is _alpha_ quality software.
 Instructions
 ===
 
+Gradle
+---
+* Clone this project, and type below in your terminal:
+
+```shell
+$ cd android/ScriptingLayerForAndroid
+$ echo sdk.dir=/path/to/android-sdk > local.properties
+$ sh /path/to/android-stdudio/gradle/gradle-2.2.1/bin/gradle assembleDebug
+Building ??% ...
+$ ls build/outputs/apk/
+ScriptingLayerForAndroid-arm-debug.apk
+```
+
+  Please replace /path/to strings to your environment or installed place.
+
+* Connect you phone or launch a virtual machine, then send the apk to them:
+
+```shell
+$ /path/to/android-sdk/platform-tools/adb install build/outputs/apk/ScriptingLayerForAndroid-arm-debug.apk
+```
+
+* Install the interpreters apk in Android. (each interpreters is not build yet.)
+* Enjoy scripting!
+
+Android Studio
+---
+* Clone this project, and import it into Android stdudio.
+* Select "Import project"
+* Select the folder: cloned/project/android/Scriptinglayerforandroid
+* Configure the gradle path: /path/to/android-stdudio/gradle/gradle-2.2.1
+* Configure the android sdk path.
+
+After Android Studio launch,
+
+* Select the menu: "Build" >> "Build Module"
+* Select the menu: "Run" >> "Run"
+* Connect your phone or launch a virtual machine, compiled apk will be installed.
+
+
+Eclipse
+---
 * Clone this project, and import it into Eclipse. Make sure that the Java compliance
 level is at 1.6 (right-click any project, go to Properties > Java Compiler > Configure Workspace Settings
 and select 1.6.
