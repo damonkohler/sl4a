@@ -22,12 +22,16 @@ import com.googlecode.android_scripting.interpreter.InterpreterProcess;
 
 import java.io.File;
 
+/**
+ *
+ */
 public class ScriptProcess extends InterpreterProcess {
 
   private final File mScript;
 
-  public ScriptProcess(File script, InterpreterConfiguration configuration, AndroidProxy proxy) {
-    super(configuration.getInterpreterForScript(script.getName()), proxy);
+  public ScriptProcess(File script, InterpreterConfiguration configuration, AndroidProxy proxy,
+                       String pathDataFile) {
+    super(configuration.getInterpreterForScript(script.getName()), proxy, pathDataFile);
     mScript = script;
     String scriptName = script.getName();
     setName(scriptName);

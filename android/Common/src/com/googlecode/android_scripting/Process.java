@@ -16,6 +16,9 @@
 
 package com.googlecode.android_scripting;
 
+import android.content.Context;
+import android.os.Build;
+
 import com.googlecode.android_scripting.interpreter.InterpreterConstants;
 import com.trilead.ssh2.StreamGobbler;
 
@@ -42,6 +45,7 @@ public class Process {
 
   private static final int PID_INIT_VALUE = -1;
 
+  private File mAppFiles;
   private File mBinary;
   private String mName;
   private long mStartTime;
@@ -57,6 +61,10 @@ public class Process {
     mArguments = new ArrayList<String>();
     mEnvironment = new HashMap<String, String>();
     mPid = new AtomicInteger(PID_INIT_VALUE);
+  }
+
+  public void addAppFiles(String path) {
+    mAppFiles = new File(path);
   }
 
   public void addArgument(String argument) {
@@ -114,6 +122,11 @@ public class Process {
     String binaryPath = mBinary.getAbsolutePath();
     Log.v("Executing " + binaryPath + " with arguments " + mArguments + " and with environment "
         + mEnvironment.toString());
+
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      mArguments.add(0, binaryPath);
+      binaryPath = new File(mAppFiles, "run_pie").getPath();
+    }
 
     int[] pid = new int[1];
     String[] argumentsArray = mArguments.toArray(new String[mArguments.size()]);

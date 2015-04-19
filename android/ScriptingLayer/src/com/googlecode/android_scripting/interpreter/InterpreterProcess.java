@@ -46,10 +46,11 @@ public class InterpreterProcess extends Process {
    * @param port
    *          the port that the AndroidProxy is listening on
    */
-  public InterpreterProcess(Interpreter interpreter, AndroidProxy proxy) {
+  public InterpreterProcess(Interpreter interpreter, AndroidProxy proxy, String appFiles) {
     mProxy = proxy;
     mInterpreter = interpreter;
 
+    addAppFiles(appFiles);
     setBinary(interpreter.getBinary());
     setName(interpreter.getNiceName());
     setCommand(interpreter.getInteractiveCommand());

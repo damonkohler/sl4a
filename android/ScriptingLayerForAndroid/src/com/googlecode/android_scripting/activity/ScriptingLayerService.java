@@ -171,7 +171,8 @@ public class ScriptingLayerService extends ForegroundService {
       proxy = launchServer(intent, false);
       // TODO(damonkohler): This is just to make things easier. Really, we shouldn't need to start
       // an interpreter when all we want is a server.
-      interpreterProcess = new InterpreterProcess(new ShellInterpreter(), proxy);
+      interpreterProcess = new InterpreterProcess(new ShellInterpreter(), proxy,
+                                                  getFilesDir().getPath());
       interpreterProcess.setName("Server");
     } else {
       proxy = launchServer(intent, true);
@@ -240,7 +241,7 @@ public class ScriptingLayerService extends ForegroundService {
         intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
         startService(intent);
       }
-    });
+    }, getFilesDir().getPath());
   }
 
   private InterpreterProcess launchInterpreter(Intent intent, AndroidProxy proxy) {
@@ -257,7 +258,7 @@ public class ScriptingLayerService extends ForegroundService {
         intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
         startService(intent);
       }
-    });
+    }, getFilesDir().getPath());
   }
 
   private void launchTerminal(InetSocketAddress address) {
