@@ -17,6 +17,7 @@ dependencies {
     compile project(':SignalStrengthFacade')
     compile project(':TextToSpeechFacade')
     compile project(':WebCamFacade')
+    compile project(':USBHostSerialFacade')
     compile project(':InterpreterForAndroid')
     compile('com.android.support:support-v4:21.0.3'){
         force = true

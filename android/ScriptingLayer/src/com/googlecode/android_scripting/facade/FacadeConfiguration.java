@@ -102,6 +102,10 @@ public class FacadeConfiguration {
       sFacadeClassList.add(WebCamFacade.class);
     }
 
+    if (sSdkLevel >= 12) {
+      sFacadeClassList.add(USBHostSerialFacade.class);
+    }
+
     for (Class<? extends RpcReceiver> recieverClass : sFacadeClassList) {
       for (MethodDescriptor rpcMethod : MethodDescriptor.collectFrom(recieverClass)) {
         sRpcs.put(rpcMethod.getName(), rpcMethod);
