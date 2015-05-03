@@ -1,0 +1,1 @@
+Barcode scanning is made possible by the [ZXing](http://code.google.com/p/zxing) project. To install, click [here](http://bit.ly/leOro).
