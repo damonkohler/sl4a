@@ -1,10 +1,21 @@
 ## Background ##
-This page maintains an active list of Layout Properties that are having issues when used with FullScreenUI facade in Scripting Layer for Android [R5](https://code.google.com/p/android-scripting/source/detail?r=5) to simplify debugging by the SL4A developers.
+This page maintains an active list of Layout Properties that are having issues
+when used with FullScreenUI facade in Scripting Layer for Android
+[R5](https://code.google.com/p/android-scripting/source/detail?r=5)
+to simplify debugging by the SL4A developers.
 
-Issue fixes are currently being incorporated in the development branch releases **[r5x](http://android-scripting.googlecode.com/files/sl4a_r5.apk)** till the next major release. You may wish to consider upgrading to r5x if you are using FullScreenUI extensively. For release notes, see [Unofficial](Unofficial.md).
+Issue fixes are currently being incorporated in the development branch releases
+**[r6x](../../releases)** till the
+next major release. You may wish to consider upgrading to r5x if you are using
+FullScreenUI extensively. For release notes, see [Unofficial](Unofficial.md).
 
 ## How to Report ##
-To report an issue, pls. use the [New Issue button](http://code.google.com/p/android-scripting/issues/list) in the SL4A issues tracker. These issues will be collated & added to this list. To help simplify tracing the issue - request you to pls follow the following guidelines -
+To report an issue, pls. use the
+[New Issue link](../README.md#issue).
+
+These issues will be collated & added to this list.
+To help simplify tracing the issue - request you to pls follow the following
+guidelines -
 
   * In the Summary, pls write : **FullScreenUI Layout Property Issue: <android property - eg.  android:textSize >**
   * Pls. include full code from the View in the layout where you are having an issue with a property - eg. for the issue with android:textSize property in TextView -
@@ -20,8 +31,12 @@ android:textSize="18sp" />
   * Pls. capture & "print" the results of **droid.fullShow(layout)** to the terminal window & attach a screenshot of the terminal after your script ends - or at least type out any error message visible. You can do this by -
     1. (For Python Users) In the section where you're calling droid.follShow(layout) write the code as: **print droid.fullShow(layout)**
     1. Run you script from within SL4A with the **terminal** option ie - the 1st icon with a black rectangle when you select a script
-    1. When your program exits, take a **screenshot** of the terminal window and include as attachment in the issue OR note down any error message - in this example below _"TextView:textStyle Property not found"_
-<img src='http://android-scripting.googlecode.com/files/FullScreenUI-issue.png' width='360' height='600'></img>
+    1. When your program exits, take a **screenshot** of the terminal window
+       and include as attachment in the issue OR note down any error message -
+       in this example below _"TextView:textStyle Property not found"_
+       ![FullScreenUI issue][FullScreenUI-issue1]
+
+[FullScreenUI-issue1]: http://github.com/kuri65536/sl4a/wiki/images/FullScreenUI-issue.png =360x600
 
 ## Understanding Error Messages & Finding Work-Arounds ##
 <font color='#ff0000'><b>Update:</b> While this example below serves as an explanation, this issue on textColor is fixed as of development release r5x08 - see <a href='Unofficial.md'>Unofficial</a></font>
@@ -31,6 +46,8 @@ The reason these issues currently arise is because internally, a custom parser i
 Many of the issues observed till now seem to arise because either the android:property doesn't have a exactly corresponding setProperty() function or because the parameters expected by setProperty() is in a different format vs. what the layout XML would accept.
 
 This understanding can be used to identify work-arounds for the time being while SL4A developers work on the issues. For example -
+
+```xml
 <pre>
 android:textColor="#ffffffff"<br>
 </pre>
@@ -38,16 +55,23 @@ doesn't work & instead shows the error
 <pre>
 Unknown value #ffffffff<br>
 </pre>
+```
+
 This probably means that the setTextColor() function which would have been called by SL4A to implement the property was expecting the color parameter in a different format.
 
-Looking up the function reference for [setTextColor()](http://developer.android.com/reference/android/widget/TextView.html#setTextColor(int)), we see that it is expecting a standard Java int as a parameter. In Java (and many other programming languages) you can write a hex number with the prefix 0x, so by replacing # with 0x as follows, we find a fairly good work-around :-)
+Looking up the function reference for
+[setTextColor()](http://developer.android.com/reference/android/widget/TextView.html#setTextColor(int)), we see that it is expecting a standard Java int as a parameter. In Java (and many other programming languages) you can write a hex number with the prefix 0x, so by replacing # with 0x as follows, we find a fairly good work-around :-)
+
+```xml
 <pre>
 android:textColor="0xffffffff"<br>
 </pre>
+```
 
 ## Current List of Layout Property Issues ##
 
 ## Generic View Properties ##
+```
 <table cellpadding='5' width='700' cellspacing='0' border='1'><tr><td width='100'>Property</td><td><h3><del>android:textSize</del></h3><font color='#ff0000'>Fixed as of development release r5x08 - see <a href='Unofficial.md'>Unofficial</a></font></td></tr><tr><td>Issue</td><td>Partially works - specifying a size in integers works (pixels?), specifying the size in "sp" or "dp" doesn't work. </td></tr><tr><td>Error Example</td><td><pre><code>&lt;TextView android:layout_width="fill_parent"<br>
 android:layout_height="wrap_content"<br>
 android:text="This is the textview"<br>
@@ -120,3 +144,8 @@ android:layout_height="wrap_content"<br>
 android:digits="0123456789"<br>
 android:ems="10"<br>
 android:inputType="phone" /&gt;</code></pre></td></tr><tr><td>Error Message</td><td>EditText:digits Property not found</td></tr><tr><td>Work-arounds</td><td>none currently</td></tr></table><br>
+```
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

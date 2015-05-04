@@ -1,6 +1,8 @@
 ## Introduction ##
 
-SL4A [r1](https://code.google.com/p/android-scripting/source/detail?r=1) introduces a built-in HTML interpreter and APIs for controlling a [WebView](http://developer.android.com/reference/android/webkit/WebView.html).
+SL4A [r1](https://code.google.com/p/android-scripting/source/detail?r=1)
+introduces a built-in HTML interpreter and APIs for controlling a
+[WebView](http://developer.android.com/reference/android/webkit/WebView.html).
 
 _UiFacade also offers a range of features for directly manipulating dialog boxes and menus. See [Ui Help](http://www.mithril.com.au/android/doc/UiFacade.html) for more detail._
 

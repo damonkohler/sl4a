@@ -10,7 +10,7 @@ Updated Help: [API Help](http://www.mithril.com.au/android/doc).
 [Updated API Ref](unofficial_apiref.md)
 
 ## Development releases ##
-Latest development release is here: http://www.mithril.com.au/android/sl4a_r6x.apk
+Latest development release is [here](../../releases)
 
 r6x03 - fixed 'file not found' bug on first install (28-Jun-2013)
 
@@ -20,7 +20,7 @@ r6x01 - added cameraId to cameraCapturePicture to handle devices with no backwar
 
 # Latest Python #
 The development of Python for Android has moved to here:
-http://code.google.com/p/python-for-android/
+http://github.com/kuri65536/python-for-android/
 
 Older versions of Python would not cope properly with hashlib and other modules with shared library dependencies on Gingerbread (2.3) and above. Also, new versions of Python have much better support for external modules.
 
@@ -28,4 +28,9 @@ Older versions of Python would not cope properly with hashlib and other modules 
 Beanshell and Rhino can both directly access the android api. However, many Android api calls required a context, which, due to the way they are run, these interpreters don't have. A solution is being sought... suggestions appreciated.
 
 # Honeycomb remix #
-Liam Green-Hughes has produced a version of [SL4A for Honeycomb](http://www.greenhughes.com/content/sl4a-tablet-remix-release-announcement)
+Liam Green-Hughes has produced a version of
+[SL4A for Honeycomb](http://www.greenhughes.com/content/sl4a-tablet-remix-release-announcement)
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

@@ -22,7 +22,7 @@ A QR code can encode 4,296 characters of content. So, this is only effective for
 There are several ways to publish your script as an APK.
 The following steps describe how to do that using Eclipse IDE.
 
-  1. Download script [template project archive](http://android-scripting.googlecode.com/hg/android/script_for_android_template.zip).
+  1. Download script [template project archive](../android/script_for_android_template.zip).
   1. Import the template project into Eclipse: `File > Import > Existing Projects into Workspace`, click on `Select archive file` and fill in the path to your copy of script\_for\_android\_template.zip.
   1. Set the ANDROID\_SDK variable, as described in the [compilation instructions](CompilingASE.md).
   1. Build the project. If Eclipse complains that gen folder is missing and/or there are build path errors, Clean/Build/Refresh should solve the problem.
@@ -35,7 +35,7 @@ The following steps describe how to do that using Eclipse IDE.
 
 The following steps describe how to build an APK using Ant.
 
-  1. Download script [template project archive](http://android-scripting.googlecode.com/hg/android/script_for_android_template.zip).
+  1. Download script [template project archive](../android/script_for_android_template.zip).
   1. Open a command-line and extract the archive: `unzip -d <path/project_directory> script_for_android_template.zip`.
   1. Set the ANDROID\_SDK variable to point to the root of your Android SDK directory: `export ANDROID_SDK=<SDK_root>`.
   1. Navigate to the root directory of your project and configure your package name: `sh configure_package.sh <your_fully_qualified_package_name>` (`sh configure_package.sh com.dummy.fooforandroid` by default).
@@ -50,7 +50,9 @@ For a really detailed walk through, see [John K's Blog](http://jokar-johnk.blogs
 ## Updating your Template to the latest libraries ##
 Sl4a is being continually updated, whereas your standalone script will be using a static snapshot of whenever you created your copy from the template.
 
-To get the latest version of the template, open [script\_for\_android\_template.zip](http://android-scripting.googlecode.com/hg/android/script_for_android_template.zip) and extract:
+To get the latest version of the template, open
+[script\_for\_android\_template.zip](../android/script_for_android_template.zip)
+and extract:
 ```
 libs/script.jar
 libs/armeabi/libcom_googlecode_android_scripting_Exec.so
@@ -74,3 +76,7 @@ This was also forked to a project for embedding the Perl Interpreter and Perl sc
 http://code.google.com/p/perl-android-apk/
 
 We hope to add more interpreters, and welcome contributors who have experience with them.
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

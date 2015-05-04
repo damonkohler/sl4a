@@ -5,7 +5,9 @@
 Part of the SL4A project is to define an API for others to develop new interpreters that SL4A (or any other compatible project) can support. Currently, this standard is for interpreters that can be run as a binary in a separate process. This standard will be extended in the future to also support running JVM based interpreters in process.
 
   * [The Easy Way](#The_Easy_Way.md) is a step-by-step description of how to build an interpreter APK that is compatible with SL4A.
-  * [The Way of Samurai](#The_Way_of_Samurai.md) describes how to use the [interpreter.jar](http://android-scripting.googlecode.com/hg/android/InterpreterForAndroidTemplate/libs/interpreter.jar) in your own project to interface with SL4A.
+  * [The Way of Samurai](#The_Way_of_Samurai.md) describes how to use the
+    [interpreter.jar](../android/InterpreterForAndroidTemplate/libs/interpreter.jar)
+    in your own project to interface with SL4A.
   * [The Way of Zen](#The_Way_of_Zen.md) describes the API in detail.
 
 ## The Easy Way ##
@@ -16,7 +18,7 @@ Everything that is required for creating a simple interpreter APK is provided in
   * a zip file downloader and extractor,
   * and a content provider that describes how to use the interpreter.
 
-  1. Download interpreter [template project archive](http://android-scripting.googlecode.com/hg/android/interpreter_for_android_template.zip).
+  1. Download interpreter [template project archive](../android/interpreter_for_android_template.zip).
   1. Import the template project into Eclipse: `File > Import > Existing Projects into Workspace`, click on `Select archive file` and fill in the path to your copy of interpreter\_for\_android\_template.zip.
   1. Set the ANDROID\_SDK variable, as described in the [compilation instructions](CompilingASE.md).
   1. Build the project. If Eclipse complains that gen folder is missing and/or there are build path errors, Clean/Build/Refresh should solve the problem.
@@ -29,8 +31,10 @@ Everything that is required for creating a simple interpreter APK is provided in
   1. Update `android:name` and `android:authorities` provider properties in the AndroidManifest.xml `<provider android:name=".Your_Provider_Name"`, `android:authorities="your_package_name.your_provider_name">`.
   1. Rename the application `res > values > strings.xml > app_name`.
   1. Update the [interpreter description](#Implementing_the_Interpreter_Descriptor.md).
-  1. Update the [interpreter provider](http://code.google.com/p/android-scripting/source/browse/android/InterpreterForAndroid/src/com/googlecode/android_scripting/interpreter/InterpreterProvider.java).
-  1. If your interpreter requires any additional setup up as part of the installation (e.g., creating temp/cache folders), you can do that in the installer's [setup method](http://code.google.com/p/android-scripting/source/browse/android/PythonForAndroid/src/com/googlecode/pythonforandroid/PythonInstaller.java).
+  1. Update the [interpreter provider](../android/InterpreterForAndroid/src/com/googlecode/android_scripting/interpreter/InterpreterProvider.java).
+  1. If your interpreter requires any additional setup up as part of the
+     installation (e.g., creating temp/cache folders), you can do that in the
+     installer's [setup method](../android/PythonForAndroid/src/com/googlecode/pythonforandroid/PythonInstaller.java).
   1. Well behaved interpreters should clean up after themselves in the uninstaller cleanup method.
   1. Export your project as an APK, install it, and check that SL4A discovers your new interpreter.
 
@@ -46,7 +50,10 @@ When creating an interpreter archive (xxxx\_rxx.zip and xxxx\_extras\_rxx.zip), 
 
 ## The Way of Samurai ##
 
-If your project doesn't require the functionality provided by the interpreter template project, or you want to write you own installer, uninstaller, etc. from scratch, you can use the [interpreter.jar](http://android-scripting.googlecode.com/hg/android/InterpreterForAndroidTemplate/libs/interpreter.jar).
+If your project doesn't require the functionality provided by the interpreter
+template project, or you want to write you own installer, uninstaller, etc. from
+scratch, you can use the
+[interpreter.jar](../android/InterpreterForAndroidTemplate/libs/interpreter.jar).
   1. Add a `libs` folder to your project and copy interpreter.jar into it.
   1. Right-click on the project `> Properties > Java Build Path` and go to `Libraries` tab.
   1. Click on `Add JARs...`, select `your_project/libs/interpreter.jar` and click `OK`.
@@ -109,3 +116,7 @@ SL4A enforces per-script security sandboxing by requiring all scrits to be authe
   1. and then calling the RPC method `_authenticate` with the value of `AP_HANDSHAKE` as an argument.
 
 The `_authenticate` method must be the _first_ RPC call and should take place during the initialization of the Android library (for example, see [Rhino's](http://code.google.com/p/android-scripting/source/browse/rhino/ase/android.js) or [Python's](http://code.google.com/p/android-scripting/source/browse/python/ase/android.py) Android module).
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

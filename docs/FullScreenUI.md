@@ -2,7 +2,13 @@
 
 The full screen interface is a new, experimental feature that allows you to define and display a Layout, and respond to button clicks and other key events. This feature is available with the [r5](https://code.google.com/p/android-scripting/source/detail?r=5) release.
 
-<font color='#ff0000'><b>Update:</b> </font>If you are using FullScreenUI extensively, you may wish to upgrade to the latest development branch release  **[r5x](http://www.mithril.com.au/android/sl4a_r5x.apk)** which will incorporate a series of issue fixes on layout properties till the next stable release. For the latest list of fixes, issues & work-arounds - see [FullScreenUI\_Layout\_Property\_Issues](FullScreenUI_Layout_Property_Issues.md). For info on **r5x**, see [Unofficial](Unofficial.md).
+**Update:** If you are using FullScreenUI extensively, you may
+wish to upgrade to the latest development branch release
+**[r5x](http://www.mithril.com.au/android/sl4a_r5x.apk)** which will incorporate a series of issue
+fixes on layout properties till the next stable release. For the latest list of fixes, issues &
+work-arounds - see
+[FullScreenUI\_Layout\_Property\_Issues](FullScreenUI_Layout_Property_Issues.md). For info on
+**r5x**, see [Unofficial](Unofficial.md).
 
 # Details #
 
@@ -195,3 +201,7 @@ android:background="#ff000000"
   * A function to query ALL properties, not just the basic ones.
   * ~~Including an options menu~~ (and perhaps context menus?)
   * ~~Ability to override standard actions on keypress.~~
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

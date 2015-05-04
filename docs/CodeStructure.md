@@ -25,7 +25,8 @@ These are not, scrictly speaking, part of sl4a. They act as descriptors for each
   * !JRubyForAndroid
   * LuaForAndroid
   * PerlForAndroid
-  * PythonForAndroid - This is already getting out of date, as the latest PythonForAndroid has its own project now: [Py4a](http://code.google.com/p/python-for-android/)
+  * ~~PythonForAndroid~~: Removed
+    own project now: [Py4A](http://github.com/kuri65536/python-for-android/)
   * RhinoForAndroid
   * TclForAndroid
 

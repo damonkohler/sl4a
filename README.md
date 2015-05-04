@@ -15,15 +15,15 @@ playlist on
 YouTube for various demonstrations of SL4A's features.
 
 SL4A is designed for developers and is _alpha_ quality software.
-Please report bugs and feature requests on the [issues list](issues).
+Please report bugs and feature requests on the [issues list](../../issues).
 
 You can download the current APK by scanning or clicking the following barcode:
 
-[![QR code for binary(apk)][qrcode]](http://android-scripting.googlecode.com/files/sl4a_r6.apk)
+[![QR code for binary(apk)][qrcode]](../../releases/download/6x04/sl4a-r6x04-arm-debug.apk)
 
 <wiki:gadget url="http://www.ohloh.net/p/346315/widgets/project_users_logo.xml" height="43" border="0" />
 
-[qrcode]: http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=http://android-scripting.googlecode.com/files/sl4a_r6.apk&nonsense=something_that_ends_with.png
+[qrcode]: http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=http://github.com/kuri65536/sl4a/releases/download/6x04/sl4a-r6x04-arm-debug.apk&nonsense=something_that_ends_with.png
 
 
 To install SL4A, you will need to enable the "Unknown sources" option in
@@ -36,8 +36,12 @@ or join #sl4a on freenode.
 
 ## Want to learn more? ##
 
-Start by reading ["Introducing SL4A: The Scripting Layer for Android"](http://android-scripting.googlecode.com/files/Practical_Android_Projects_Ch05_Introducing_SL4A.pdf) by Pieter Greyling and ["Packaging and Distributing"](http://android-scripting.googlecode.com/files/Pro_Android_Python_with_SL4A_Ch10_Packaging_and_Distributing.pdf)
+Start by reading ["Introducing SL4A: The Scripting Layer for Android"][book1]
+by Pieter Greyling and ["Packaging and Distributing"][book2]
 by Paul Ferrill.
+
+[book1]: http://github.com/kuri65536/sl4a/wiki/books/Practical_Android_Projects_Ch05_Introducing_SL4A.pdf
+[book2]: http://github.com/kuri65536/sl4a/wiki/books/Pro_Android_Python_with_SL4A_Ch10_Packaging_and_Distributing.pdf
 
 These are the intellectual property of Apress and are excerpt from the books
 "Practical Android Projects" and "Pro Android Python with SL4A."
@@ -72,8 +76,8 @@ SL4A was used by the Nexus One payload for sensor logging.
 See the [article in Make](http://blog.makezine.com/archive/2010/07/nexus_onearduino_smallsat_satellite.html)
 for more information about the project.
 
-[![][]](http://www.youtube.com/watch?feature=player_embedded&v=hQ7pUroGvFc)
-[![][]](http://www.youtube.com/watch?feature=player_embedded&v=nSyWDqgNRmo)
+[![movie rockets 1][rockets1]](http://www.youtube.com/watch?feature=player_embedded&v=hQ7pUroGvFc)
+[![movie rockets 2][rockets2]](http://www.youtube.com/watch?feature=player_embedded&v=nSyWDqgNRmo)
 [rockets1]:http://img.youtube.com/vi/hQ7pUroGvFc/0.jpg
 [rockets2]:http://img.youtube.com/vi/nSyWDqgNRmo/0.jpg
 
@@ -148,6 +152,11 @@ Have a project you'd like to see listed here? Tell us about it on the
 [mailing list](http://groups.google.com/group/android-scripting).
 
 
+<a name="issue"></a>Please tell me issues
+===
+* [Create issue(github)](../../issues/new?title=&body=%2a%20What%20device(s)%20are%20you%20experiencing%20the%20problem%20on%3F%0A%20%20%2a%20ex:%20Nexus%20%3F%3F%3F%0A%2a%20What%20OS%20version%20are%20you%20running%20on%20the%20device%3F%0A%20%20%2a%20ex:%20Andriod%20%3F%3F%3F%0A%2a%20What%20version%20of%20the%20product%20are%20you%20using%3F%0A%20%20%2a%20SL4A%20r%3F%3F%3F%3F%0A%20%20%2a%20PythonForAndroid%20r%3F%3F%0A%2a%20What%20steps%20will%20reproduce%20the%20problem%3F%0A%20%201.%20%0A%20%202.%20%0A%20%203.%20%0A%2a%20What%20is%20the%20expected%20output%3F%20What%20do%20you%20see%20instead%3F%0A%20%20%2a%20expected:%20launch%20%3F%3F%3F%0A%20%20%2a%20see:%20stop%20running%0A%2a%20Please%20provide%20any%20additional%20information%20below.%0A)
+
+
 Build Instructions
 ===
 
@@ -212,3 +221,6 @@ Facade
 ===
 * [USBHostSerialFacade](/USBHostSerialFacade.md): for USB Serial devices
 
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

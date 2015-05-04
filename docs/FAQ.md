@@ -1,8 +1,15 @@
-Still having trouble? Still got questions? Try the [SL4A discussion group](http://groups.google.com/group/android-scripting).
+Still having trouble?
+Still got questions?
+Try the [SL4A discussion group](http://groups.google.com/group/android-scripting).
 
 ### What is Scripting Layer for Android (SL4A) for? ###
 
-SL4A makes it possible to quickly prototype applications for Android on the device itself using high-level scripting languages. These scripts have access to many of the APIs available to full-fledged Android applications, but with a greatly simplified interface. Have a look at some of the example [scripts](http://code.google.com/p/android-scripting/source/browse/#hg/lua/ase/scripts) to see for yourself.
+SL4A makes it possible to quickly prototype applications for Android on the
+device itself using high-level scripting languages. These scripts have access to
+many of the APIs available to full-fledged Android applications, but with a
+greatly simplified interface. Have a look at some of the example
+[scripts](../lua/ase/scripts)
+to see for yourself.
 
 ### Why SL4A? Android programs are easy enough to write. ###
 
@@ -10,7 +17,9 @@ That's very true. Android's development environment does make life pretty easy. 
 
 ### How does SL4A work? ###
 
-SL4A provides [Android facades](http://code.google.com/p/android-scripting/source/browse/#hg/android/AndroidScriptingEnvironment/src/com/google/ase/facade) which make APIs available via JSON RPC calls. Only the parts of Android's APIs which has been wrapped by facades are available to interpreters.
+SL4A provides [Android facades](../android/Common/src/com/google/ase/facade)
+which make APIs available via JSON RPC calls. Only the parts of Android's APIs
+which has been wrapped by facades are available to interpreters.
 
 ### Does SL4A compile the supported languages to Dex bytecode or is there an additional layer of interpretation? ###
 
@@ -28,7 +37,8 @@ If you have performance concerns for your application, it's probably better to u
 
 Yes, mostly. You can invoke arbitrary intents and there are also plans to support broadcast receiver scripts. That is, you could write an app that consumes photos and shows up in the list of apps when the user presses Share in the Camera app.
 
-It is not currently possible to write a script that will exit with a result (e.g. another Android activity starts your activity for result). See [issue 239](https://code.google.com/p/android-scripting/issues/detail?id=239).
+It is not currently possible to write a script that will exit with a result
+(e.g. another Android activity starts your activity for result).
 
 ### Is this a complete API bridge, or are there restrictions? ###
 
@@ -54,22 +64,27 @@ All SL4A languages share the same common set of APIs. These are [documented onli
 
 ### Can I run scripts as root? ###
 
-If you have a rooted phone, you may be interested in doing so. At the moment, SL4A does not support this directly. However, [issue 184](https://code.google.com/p/android-scripting/issues/detail?id=184) is tracking this feature request.
+If you have a rooted phone, you may be interested in doing so. At the moment,
+SL4A does not support this directly. However,
+[issue 184](https://github.com/kuri65536/sl4a/wiki/issue-184) is
+tracking this feature request.
 
 ### How do I install SL4A? ###
 
   1. Enable "Unknown Sources" under Application settings.
   1. Install [Barcode Scanner](InstallingBarcodeScanner.md).
-  1. Scan the barcode on the [home page](http://code.google.com/p/android-scripting/) to download the APK.
+  1. Scan the barcode on the [home page](../) to download the APK.
   1. Tap on the downloaded APK to install SL4A.
 
 ### Can I use SL4A to write a real Android application or embed SL4A scripts in my application? ###
 
-Yes! You can [embed your script](http://code.google.com/p/android-scripting/wiki/SharingScripts#Scripts_as_APKs) in a (mostly) stand alone APK.
+Yes! You can [embed your script](SharingScripts.md#Scripts_as_APKs)
+in a (mostly) stand alone APK.
 
 ### Can I run scripts periodically or at specific times? ###
 
-Not yet. We're working on it. See [issue 271](https://code.google.com/p/android-scripting/issues/detail?id=271).
+Not yet. We're working on it.
+See [issue 271](https://github.com/kuri65536/sl4a/wiki/issue-271).
 
 ### Will SL4A work on an Android emulator? ###
 
@@ -81,13 +96,26 @@ Yes and no. All cross compiled interpreters are compiled for ARM. Java based int
 
 ### Can I run an SL4A script from my application? ###
 
-Yes. See [IntentBuilders.java](http://code.google.com/p/android-scripting/source/browse/android/Common/src/com/googlecode/android_scripting/IntentBuilders.java).
+Yes. See [IntentBuilders.java](../android/Common/src/com/googlecode/android_scripting/IntentBuilders.java).
 
 ### Can I install other Python modules? ###
 
-Yes. Many pure Python modules will work if you simply add them to `/sdcard/com.googlecode.pythonforandroid/extras/python` as long as they don't depend on any C Python modules that aren't included with SL4A. You can, of course, cross compile your own C Python modules. It's not for the faint of heart, but see [here](http://code.google.com/p/python-for-android/wiki/BuildingModules) for more detail,
+Yes. Many pure Python modules will work if you simply add them to
+`/sdcard/com.googlecode.pythonforandroid/extras/python` as long as they don't
+depend on any C Python modules that aren't included with SL4A. You can, of
+course, cross compile your own C Python modules. It's not for the faint of
+heart, but see
+[here](../../../../python-for-android/blob/master/docs/building_modules.md) for
+more detail,
 
-Python eggs are supported, to a degree. The egg will have to have been compiled using [these instructions](http://code.google.com/p/python-for-android/wiki/BuildingModules). Then, download the egg into your downloads folder (this will typically be `/sdcard/Download`, and is the default used by your browser) then use the _Install Module_ button on the Python Installer. This will only work on release 4 or above. See [python-for-android](http://code.google.com/p/python-for-android) for ymore detail.
+Python eggs are supported, to a degree. The egg will have to have been
+compiled using [these instructions](BuildingModules.md).
+Then, download the egg into your downloads folder (this will typically be
+`/sdcard/Download`, and is the default used by your browser) then use
+the _Install Module_ button on the Python Installer.
+
+This will only work on release 4 or above.
+See [python-for-android](../../../../python-for-android) for more detail.
 
 ### My script stops working when the screen turns off! WTF? ###
 
@@ -113,7 +141,8 @@ If you enable "Usage Tracking", the application will collect anonymous usage inf
 JavaScript is implemented using the Mozilla Rhino project and V8. Look for "Rhino" in the interpreter downloads. Or, write an HTML script to use V8.
 
 ### Where's PHP? ###
-There is a PHP interpreter, which is a [separate project](http://code.google.com/p/php-for-android/). The PHP installer and interpreter can be found there.
+There is a PHP interpreter, which is a [separate project](http://code.google.com/p/php-for-android/).
+The PHP installer and interpreter can be found there.
 
 ### What's logcat? ###
 Logcat is a rotating log of messages that Android produces. It's a very useful tool for programmers to work out what exactly is going on if someone reports and error. It's a requirement in our [Issues](http://code.google.com/p/android-scripting/wiki/Issues) reporting to attach a logcat wherever possible. See [LogcatDump](LogcatDump.md) for several different ways to produce.
@@ -126,4 +155,8 @@ See this page: RunPythonAsScript
 
 ### I found a bug and I have a great idea! ###
 
-Please file an [issue](http://code.google.com/p/android-scripting/wiki/Issues?tm=3).
+Please file an [issue](../README.md#issue).
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

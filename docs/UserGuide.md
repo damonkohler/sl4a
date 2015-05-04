@@ -1,4 +1,5 @@
-Having trouble? Got questions? Check the [FAQ](FAQ.md) or try the [SL4A discussion group](http://groups.google.com/group/android-scripting).
+Having trouble? Got questions? Check the [FAQ](FAQ.md) or try the
+[SL4A discussion group](http://groups.google.com/group/android-scripting).
 
 ## Introduction ##
 
@@ -24,7 +25,7 @@ To add a new script, press the menu button, choose "Add" and then choose the typ
 
 ### Menu Options ###
 If "QuickActions Menu" is set in preferences, the menu that comes up when you tap a script item is:
-![http://android-scripting.googlecode.com/files/sl4a_quickaction.png](http://android-scripting.googlecode.com/files/sl4a_quickaction.png)
+![SL4A QuickAction Icon](http://github.com/kuri65536/wiki/images/sl4a_quickaction.png)
 
 In order:
   * Run (with Terminal)
@@ -32,7 +33,7 @@ In order:
   * Edit
   * Rename
   * Delete
-  * Edit in External Editor. Check out [External Editors](UsefulLinks#External_Editors.md)
+  * Edit in External Editor. Check out [External Editors](UsefulLinks.md#External_Editors)
 
 If QuickActions is not set, a text selection box will appear instead.
 
@@ -83,7 +84,7 @@ Available preference options:
   * **Server Port** - when starting a remote server, setting this to a non zero value will cause the server to attempt to listen on this port. It is not recommended to set this to a common port number. We recommend something like 45001
 ### Script Manager ###
   * **Show All Files** - allow editing of any files in the scripts folder, nut just known types. This does not work on binary files.
-  * **Use QuickActions Menu** - by default, sl4a will use a [QuickAction](#Menu_Options.md) menu. Not all builds of Android can cope with this. If you have problems with this menu, or just prefer the text version, set this option to Off.
+  * **Use QuickActions Menu** - by default, sl4a will use a [QuickAction](#Menu_Options) menu. Not all builds of Android can cope with this. If you have problems with this menu, or just prefer the text version, set this option to Off.
 ### Script Editor ###
   * **Font Size** - Choose font size
   * **Force API Browser** - If the extended help won't zoom, try setting this to use the default Android browser instead of WebView.
@@ -109,3 +110,7 @@ Available preference options:
   * **Vibate on Bell** - vibrate on bell.
 ### Trigger Behaviour ###
   * **Hide Notifications** - the default behaviour on responding to triggers includes showing a notification. If the trigger event is happening too quickly, this can cause problem. Hiding notifications helps this.
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

@@ -2,7 +2,19 @@ If you are interested in understanding the internals of Android Scripting Enviro
 
 # The Scripting Layer for Android Community #
 
-The SL4A community exists primarily through the [discussion group](http://groups.google.com/group/android-scripting), the issue tracker and, to a lesser extent, the source control repository. You are definitely encouraged to contribute to the discussion and you can also help us to keep the effectiveness of the group high by following and promoting the guidelines listed here. If you're looking for a place to start, the issue tracker has a [low-hanging fruit](http://code.google.com/p/android-scripting/issues/list?q=label:LowHangingFruit) label.
+The SL4A community exists primarily through the
+[discussion group](http://groups.google.com/group/android-scripting),
+the issue tracker and,
+to a lesser extent, the source control repository. You are definitely encouraged
+to contribute to the discussion and you can also help us to keep the
+effectiveness of the group high by following and promoting the guidelines listed
+here.
+
+If you're looking for a place to start, the issue tracker has
+[low-hanging fruit](../../../label/LowHangingFruit)
+and
+[helpwanted](../../../labels/help%20wanted)
+label.
 
 ## Please Be Friendly ##
 
@@ -36,22 +48,34 @@ We are excited that SL4A is open source, and hope to get great patches from the 
 
 ## Contributor License Agreements ##
 
-You must sign a Contributor License Agreement (CLA) before we can accept any code. The CLA protects you and us.
+You must sign a Contributor License Agreement (CLA) before we can accept any
+code. The CLA protects you and us.
 
-  * If you are an individual writing original source code and you're sure you own the intellectual property, then you'll need to sign an [individual CLA](http://code.google.com/legal/individual-cla-v1.0.html).
-  * If you work for a company that wants to allow you to contribute your work to SL4A, then you'll need to sign a [corporate CLA](http://code.google.com/legal/corporate-cla-v1.0.html).
+  * If you are an individual writing original source code and you're sure you
+    own the intellectual property, then you'll need to sign an
+    [individual CLA](http://code.google.com/legal/individual-cla-v1.0.html).
+  * If you work for a company that wants to allow you to contribute your work to
+    SL4A, then you'll need to sign a
+    [corporate CLA](http://code.google.com/legal/corporate-cla-v1.0.html).
 
 Follow either of the two links above to access the appropriate CLA and instructions for how to sign and return it.
 
 ## Coding Style ##
 
-To keep the source consistent, readable, diffable and easy to merge, we use a fairly rigid coding style, as defined by the [Android project style guide](http://source.android.com/source/code-style.html) (with a few modifications and additions listed below). All patches will be expected to conform to the style outlined here.
+To keep the source consistent, readable, diffable and easy to merge, we use a
+fairly rigid coding style, as defined by the
+[Android project style guide](http://source.android.com/source/code-style.html)
+(with a few
+modifications and additions listed below). All patches will be expected to
+conform to the style outlined here.
 
   * Use 2-space indents, not 4.
   * Avoid unnecessary vertical whitespace.
   * Todos should be formatted as ` // TODO(username): Write some code! `
 
-SL4A combines code written in several languages. Code written for SL4A should conform to the style guidelines defined by the [google-styleguide](http://code.google.com/p/google-styleguide/) project.
+SL4A combines code written in several languages. Code written for SL4A should
+conform to the style guidelines defined by the
+[google-styleguide](http://code.google.com/p/google-styleguide/) project.
 
 ## Submitting Patches ##
 
@@ -69,7 +93,8 @@ The current members of the SL4A engineering team are the only committers at pres
 
 # Release Process #
 
-SL4A is currently released weekly on Thursday unless something is blocking the release. Release notes are published to [damonkohler.com](http://www.damonkohler.com/search/labels/ase). The source tree is tagged with rXX, where XX is the release number, at each release.
+The project silently goes on.
+If you have any ideas or buf-fixes, please send me Pull Request in github.
 
 ## Release Checklist ##
 
@@ -93,3 +118,7 @@ SL4A is currently released weekly on Thursday unless something is blocking the r
   1. Update online API documentation.
   1. Post release notes.
   1. Email user group.
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

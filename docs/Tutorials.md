@@ -68,7 +68,13 @@ If you have a tutorial or example to add, please let us know on the [SL4A discus
   * http://www.students.ncl.ac.uk/tom.holderness/PostGISDroid.php Saving the Android Location to a PostGIS database.
   * [A Voice Activated Servo](http://shazsterblog.blogspot.com/2011/11/arduino-google-voice-activated-servo.html). See also [here.](http://hackaday.com/2011/11/20/an-exercise-in-servo-voice-control-with-android/)
   * Bernd Battes has made it possible to use a subset of AChartEngine  with SL4a. https://github.com/BerndBattes/achart
-  * Hariharan Srinath has produced a [Full Screen Event Wrapper](http://code.google.com/p/python-for-android/wiki/FullScreenWrapper) to make use of the fullScreenUI
+  * Hariharan Srinath has produced a
+    [Full Screen Event Wrapper](http://github.com/kuri65536/python-for-android/docs/fullScreenWrapper2.md)
+    to make use of the fullScreenUI
   * electrocoder has written some python tutorials for android, in Turkish: http://pythontr.org/android/
   * sjb contiributes this: http://ottaky.com/sl4a/bus_ui_sl4a.py. It's a Python script to interact with transport for London's "countdown" service. Shows you the nearest bus stops to your location and "live" departure times for buses at that stop.
   * Cataloging CD/DVD collection into an database using phone [here.](https://groups.google.com/forum/?fromgroups#!topic/python-for-android/55aIEV_SKnM)
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

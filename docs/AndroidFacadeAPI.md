@@ -1,4 +1,5 @@
-Having trouble? Got questions? Check the [FAQ](FAQ.md) or try the [SL4A discussion group](http://groups.google.com/group/android-scripting).
+Having trouble? Got questions? Check the [FAQ](FAQ.md) or try the
+[SL4A discussion group](http://groups.google.com/group/android-scripting).
 
 # Introduction #
 
@@ -16,7 +17,14 @@ All SL4A API calls return an object with three fields:
   * result: the return value of the API call, or null if there is no return value.
   * error: a description of any error that occurred or null if no error occurred.
 
-For more details, see the android module for each language ([Python](http://code.google.com/p/android-scripting/source/browse/python/ase/android.py), [Lua](http://code.google.com/p/android-scripting/source/browse/lua/ase/android/init.lua), [Perl](http://code.google.com/p/android-scripting/source/browse/perl/src/Cross/Android.pm), [JavaScript](http://code.google.com/p/android-scripting/source/browse/rhino/ase/android.js), [JRuby](http://code.google.com/p/android-scripting/source/browse/jruby/android.rb), and [BeanShell](http://code.google.com/p/android-scripting/source/browse/beanshell/ase/android.bsh)).
+For more details, see the android module for each language (
+[Python](http://github.com/kuri65536/python-for-android/blob/master/python-biuld/python-libs/ase/android.py)
+, [Lua](../lua/ase/android/init.lua)
+, [Perl](../perl/src/Cross/Android.pm)
+, [JavaScript](../rhino/ase/android.js)
+, [JRuby](../jruby/android.rb)
+, and [BeanShell](../beanshell/ase/android.bsh)
+).
 
 # Examples #
 
@@ -87,3 +95,7 @@ set android [android new]
 set name [$android getInput "Hello!" "What is your name?"]
 $android makeToast "Hello, $name"
 ```
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->
