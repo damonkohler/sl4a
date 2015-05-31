@@ -20,3 +20,8 @@ SL4A is designed for developers and is _alpha_ quality software.
     official Google product.
   * SL4A is no longer under active development. However, some forks of this
     project may be.
+
+##Support
+
+Support for SL4A is provided by the community on the [project mailing
+list](https://groups.google.com/forum/#!forum/android-scripting).
