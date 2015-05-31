@@ -16,5 +16,7 @@ SL4A is designed for developers and is _alpha_ quality software.
 
 ##Disclaimer
 
-  * Even though a lot of contributors are working for Google this is not an official Google product.
-  * SL4A is no longer under active development. However, some forks of this project may be.
+  * Even though a lot of contributors are working for Google, this is not an
+    official Google product.
+  * SL4A is no longer under active development. However, some forks of this
+    project may be.
