@@ -1,14 +1,10 @@
-Introduction
-===
-
 Scripting Layer for Android (SL4A) brings scripting languages to Android by
 allowing you to edit and execute scripts and interactive interpreters directly
 on the Android device. These scripts have access to many of the APIs available
 to full-fledged Android applications, but with a greatly simplified interface
 that makes it easy to get things done.
 
-Scripts can be run interactively in a terminal, in the background,
-or via [Locale](http://www.androidlocale.com/). Python,
+Scripts can be run interactively in a terminal, in the background. Python,
 Perl, JRuby, Lua, BeanShell, JavaScript, Tcl, and shell are currently supported,
 and we're planning to add more. See the [SL4A Video Help](http://www.youtube.com/playlist?list=PL07A81E6CE96F158B)
 playlist on
@@ -18,6 +14,15 @@ SL4A is designed for developers and is _alpha_ quality software.
 Please report bugs and feature requests on the [issues list](../../issues).
 
 You can download the current APK by scanning or clicking the following barcode:
+
+##Disclaimer
+
+  * Even though a lot of contributors are working for Google, this is not an
+    official Google product.
+  * SL4A is no longer under active development. However, some forks of this
+    project may be.
+
+##Install
 
 [![QR code for binary(apk)][qrcode]](../../releases/download/6x04/sl4a-r6x04-arm-debug.apk)
 
@@ -29,10 +34,12 @@ You can download the current APK by scanning or clicking the following barcode:
 To install SL4A, you will need to enable the "Unknown sources" option in
 your device's "Application" settings.
 
-Still have questions? Check out the [FAQ](docs/FAQ.md),
-[discussion list](http://groups.google.com/group/android-scripting),
-or join #sl4a on freenode.
+##Support
 
+Still have questions? Check out the [FAQ](docs/FAQ.md).
+
+Support for SL4A is provided by the community on the [project mailing
+list](https://groups.google.com/forum/#!forum/android-scripting).
 
 ## Want to learn more? ##
 
