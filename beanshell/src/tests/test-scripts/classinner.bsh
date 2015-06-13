@@ -1,6 +1,0 @@
-source("TestHarness.bsh");
-
-new Thread() { public void run() { } };
-new java.io.FilterOutputStream(this.interpreter.out) { };
-
-complete();

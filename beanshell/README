@@ -1,7 +1,0 @@
-This directory contains resources related to BeanShell.
-
-bsh-2.0b4.jar is the original BeanShell JAR.
-bsh_extras.zip contains the dexed BeanShell JAR.
-bsh_scripts.zip contains example BeanShell scripts for use with ASE.
-ase/ contains BeanShell code written for ASE.
-src/ contains the BeanShell source. It is also available here: http://www.beanshell.org/developer.html

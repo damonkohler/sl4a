@@ -1,9 +1,0 @@
-#!/bin/java bsh.Interpreter
-
-source("TestHarness.bsh");
-
-a=1;
-assert( a++ == 1);
-assert( a==2 );
-
-complete();

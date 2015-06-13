@@ -1,9 +1,0 @@
-#!/bin/java bsh.Interpreter
-
-source("TestHarness.bsh");
-
-// shoule be a nice error about out not existing in console 
-assert( isEvalError("bsh.console.foobar.println(\"foo\")") );
-
-complete();
-

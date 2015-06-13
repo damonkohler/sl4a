@@ -1,6 +1,0 @@
-#!/bin/java bsh.Interpreter
-
-import mypackage.*;
-
-myClassVisible = ( this.namespace.getClass("MyClass") != null );
-

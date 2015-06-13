@@ -1,5 +1,0 @@
-#!/bin/java bsh.Interpreter
-
-addClassPath("Data/addclass.jar");
-c=new AddClass().getFive();
-
