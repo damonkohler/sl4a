@@ -23,12 +23,16 @@ SL4A is designed for developers and is _alpha_ quality software.
 
 ##Documentation
 
-The original wiki has been converted to Markdown and is available in the wiki
+The original Google Code wiki has been converted to Markdown and is available in the wiki
 branch. A few of the most important pages are:
 
   * [FAQ](https://github.com/damonkohler/sl4a/blob/wiki/FAQ.md)
   * [User Guide](https://github.com/damonkohler/sl4a/blob/wiki/UserGuide.md)
   * [API Reference](https://github.com/damonkohler/sl4a/blob/wiki/ApiReference.md)
+
+##Issues
+
+Issues have been migrated from Google Code. However, this probject is no longer under active development. Consider responding to and filing new issues against an active fork.
 
 ##Support
 
