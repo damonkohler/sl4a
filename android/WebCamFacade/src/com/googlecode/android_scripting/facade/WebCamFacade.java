@@ -199,6 +199,7 @@ public class WebCamFacade extends RpcReceiver {
       public byte[] getJpeg() {
         try {
           mJpegDataReady.await();
+          mJpegDataReady = new CountDownLatch(1);
         } catch (InterruptedException e) {
           Log.e(e);
         }
@@ -249,7 +250,7 @@ public class WebCamFacade extends RpcReceiver {
     mCamera = Camera.open();
     mParameters = mCamera.getParameters();
     mParameters.setPictureFormat(ImageFormat.JPEG);
-    mParameters.setPreviewFormat(ImageFormat.JPEG);
+    mParameters.setPreviewFormat(ImageFormat.NV21);
     List<Size> supportedPreviewSizes = mParameters.getSupportedPreviewSizes();
     Collections.sort(supportedPreviewSizes, new Comparator<Size>() {
       @Override
