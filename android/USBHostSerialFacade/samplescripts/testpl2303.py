@@ -2,8 +2,8 @@
 # -= encoding=utf-8 =-
 ##############################################################################
 #
-# testusbserial.py $Rev$
-# $Id$
+# testusbserial.py $Rev: 1259:a3e5cb9bcb0a $
+# $Id: testpl2303.py 1259:a3e5cb9bcb0a 2015/03/14 07:44:55 shimoda $
 # $URL: https://android-jp-kobe.googlecode.com/svn/trunk/pyAndyUI/uibt2.py $
 #
 # Copyright (c) 2011, shimoda as kuri65536 _dot_ hot mail _dot_ com

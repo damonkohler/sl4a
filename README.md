@@ -22,6 +22,23 @@ You can download the current APK by scanning or clicking the following barcode:
   * SL4A is no longer under active development. However, some forks of this
     project may be.
 
+##Documentation
+
+The original Google Code wiki has been converted to Markdown and
+is available in the [docs folder](docs/).
+A few of the most important pages are:
+
+  * [FAQ](docs/FAQ.md)
+  * [User Guide](docs/UserGuide.md)
+  * [API Reference](docs/ApiReference.md)
+
+<a name="create_issue"></a>Issues
+===
+I ignored the issues in google-code, because it's not controllable.
+New issues will be accepted from [issue page](../../issues).
+
+* [Create issue(github)](../../issues/new?title=&body=%2a%20What%20device(s)%20are%20you%20experiencing%20the%20problem%20on%3F%0A%20%20%2a%20ex:%20Nexus%20%3F%3F%3F%0A%2a%20What%20OS%20version%20are%20you%20running%20on%20the%20device%3F%0A%20%20%2a%20ex:%20Andriod%20%3F%3F%3F%0A%2a%20What%20version%20of%20the%20product%20are%20you%20using%3F%0A%20%20%2a%20SL4A%20r%3F%3F%3F%3F%0A%20%20%2a%20PythonForAndroid%20r%3F%3F%0A%2a%20What%20steps%20will%20reproduce%20the%20problem%3F%0A%20%201.%20%0A%20%202.%20%0A%20%203.%20%0A%2a%20What%20is%20the%20expected%20output%3F%20What%20do%20you%20see%20instead%3F%0A%20%20%2a%20expected:%20launch%20%3F%3F%3F%0A%20%20%2a%20see:%20stop%20running%0A%2a%20Please%20provide%20any%20additional%20information%20below.%0A)
+
 ##Install
 
 [![QR code for binary(apk)][qrcode]](../../releases/download/6x04/sl4a-r6x04-arm-debug.apk)
