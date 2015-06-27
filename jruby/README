@@ -1,4 +1,0 @@
-This directory contains resources related to JRuby.
-
-json/ contains the JSON implementation for Ruby http://json.rubyforge.org/
-jruby-complete-1.4.0.tar.gz is the original JRuby source used to build JRuby for ASE.
