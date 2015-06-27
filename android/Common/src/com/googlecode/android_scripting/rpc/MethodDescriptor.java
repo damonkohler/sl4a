@@ -108,7 +108,12 @@ public final class MethodDescriptor {
     try {
       result = manager.invoke(mClass, mMethod, args);
     } catch (Throwable t) {
-      throw t.getCause();
+      if (t.getCause() == null) {
+        throw new UnknownError(t.getMessage());
+      }
+      else {
+        throw t.getCause();
+      }
     }
     return result;
   }

@@ -21,7 +21,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.SparseArray;
 
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
@@ -98,6 +100,7 @@ import java.util.List;
 public class SensorManagerFacade extends RpcReceiver {
   private final EventFacade mEventFacade;
   private final SensorManager mSensorManager;
+    private final int nMaxSensorType;
 
   private volatile Bundle mSensorReadings;
 
@@ -130,18 +133,113 @@ public class SensorManagerFacade extends RpcReceiver {
   private volatile Long mLastTime;
   private volatile Long mDelayTime;
 
-  private SensorEventListener mSensorListener;
+  private SensorValuesCollector mSensorListener;
+    private SparseArray<SensorInfo> sensors;
 
   public SensorManagerFacade(FacadeManager manager) {
     super(manager);
     mEventFacade = manager.getReceiver(EventFacade.class);
     mSensorManager = (SensorManager) manager.getService().getSystemService(Context.SENSOR_SERVICE);
+
+        // List
+        final int ever = Integer.MAX_VALUE;
+        sensors = new SparseArray<SensorInfo>() {
+            // 1-4 is in below SL4A 6x04: -1, 1, 2, 5
+            {put(1, new SensorInfo(Sensor.TYPE_ALL, ever, ""));}
+            {put(2, new SensorInfo(Sensor.TYPE_ACCELEROMETER, ever,
+                                   "accelerometer"));}
+            {put(3, new SensorInfo(Sensor.TYPE_MAGNETIC_FIELD, ever,
+                                   "magnetic_field"));}
+            {put(4, new SensorInfo(Sensor.TYPE_LIGHT, ever, "light"));}
+            // 5- is at SL4A 6.1.0: 4, 6, 7, 8
+            {put(5, new SensorInfo(Sensor.TYPE_GYROSCOPE, ever, "gyroscope"));}
+            {put(6, new SensorInfo(Sensor.TYPE_PRESSURE, ever, "pressure"));}
+            {put(7, new SensorInfo(Sensor.TYPE_TEMPERATURE,
+                    Build.VERSION_CODES.ICE_CREAM_SANDWICH,
+                    "temperature"));}
+            {put(8, new SensorInfo(Sensor.TYPE_PROXIMITY, ever, "proximity"));}
+
+            /* 3: {put(?, new SensorInfo(Sensor.TYPE_ORIENTATION,
+                    Build.VERSION_CODES.FROYO,
+                    "orientation"));} */
+        };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            // API9: 9(combo?), 10(combo), 11(combo)
+            sensors.put(9, new SensorInfo(Sensor.TYPE_GRAVITY, ever,
+                                          "gravity"));
+            sensors.put(10, new SensorInfo(Sensor.TYPE_LINEAR_ACCELERATION,
+                                           ever, "linear_acceleration"));
+            sensors.put(11, new SensorInfo(Sensor.TYPE_ROTATION_VECTOR, ever,
+                                           "rotation_vector"));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            // API14: 12, 13
+            sensors.put(12, new SensorInfo(Sensor.TYPE_RELATIVE_HUMIDITY, ever,
+                                           "relative_humidity"));
+            sensors.put(13, new SensorInfo(Sensor.TYPE_AMBIENT_TEMPERATURE,
+                                           ever, "ambient_temperature"));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            // API18: 14, 15(combo), 16, 17(combo)
+            sensors.put(14, new SensorInfo(
+                Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED, ever,
+                "magnetic_field_uncalibrated"));
+            sensors.put(15, new SensorInfo(Sensor.TYPE_GAME_ROTATION_VECTOR,
+                                           ever, "game_rotation_vector"));
+            sensors.put(16, new SensorInfo(Sensor.TYPE_GYROSCOPE_UNCALIBRATED,
+                                           ever, "gyroscope_uncalibrated"));
+            sensors.put(17, new SensorInfo(Sensor.TYPE_SIGNIFICANT_MOTION,
+                                           ever, "significant_motion"));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // API19: 18(combo), 19(combo), 20(combo)
+            sensors.put(18, new SensorInfo(Sensor.TYPE_STEP_DETECTOR, ever,
+                                           "step_detector"));
+            sensors.put(19, new SensorInfo(Sensor.TYPE_STEP_COUNTER, ever,
+                                           "step_counter"));
+            sensors.put(20, new SensorInfo(
+                Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR, ever,
+                "geomagnetic_rotation_vector"));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            // API20: 21
+            sensors.put(21, new SensorInfo(Sensor.TYPE_HEART_RATE, ever,
+                                           "heart_rate"));
+        }
+        int max = 0;
+        for (int i = 0; i < sensors.size(); i++) {
+            int n = sensors.keyAt(i);
+            SensorInfo info = this.sensors.valueAt(i);
+            info.nSL4A = n;
+            max = (n > max) ? n: max;
+        }
+        this.nMaxSensorType = max;
   }
+
+        public SensorInfo getInfo(int nAndroid) {
+            for (int i = 0; i < this.sensors.size(); i++) {
+                SensorInfo info = this.sensors.valueAt(i);
+                if (info.nSL4A == nAndroid) { return info; }
+            }
+            return null;
+        }
 
   @Rpc(description = "Starts recording sensor data to be available for polling.")
   @RpcStartEvent("sensors")
   public void startSensingTimed(
-      @RpcParameter(name = "sensorNumber", description = "1 = All, 2 = Accelerometer, 3 = Magnetometer and 4 = Light") Integer sensorNumber,
+      @RpcParameter(name="sensorNumber",
+                    description="1 = All, 2 = Accelerometer, " +
+                                "3 = Magnetometer, 4 = Light," +
+                                "5 = Temperature, 6 = GYRO, 7 = PRESSURE, " +
+                                "8 = Proximity, 9 = Gravity, " +
+                                "10 = Linear Accelero, 11 = Rotation, " +
+                                "12 = Humidity, 13 = Temperature(Ambient), " +
+                                "14 = Magnetometer(uncalibrated, " +
+                                "15 = Game Rotation, 16 = GYRO(uncalib), " +
+                                "17 = Sig. Motion, 18 = Step detect, " +
+                                "19 = Step count, 20 = GeoMag rotate, " +
+                                "21 = Hart rate"
+                    ) Integer sensorNumber,
       @RpcParameter(name = "delayTime", description = "Minimum time between readings in milliseconds") Integer delayTime) {
     mSensorNumber = sensorNumber;
     if (delayTime < 20) {
@@ -149,36 +247,40 @@ public class SensorManagerFacade extends RpcReceiver {
     }
     mDelayTime = (long) (delayTime);
     mLastTime = System.currentTimeMillis();
-    if (mSensorListener == null) {
+        if (mSensorListener != null) {
+            throw new RuntimeException("SensorListener was already launched," +
+                                       "close it first.");
+        }
       mSensorListener = new SensorValuesCollector();
       mSensorReadings = new Bundle();
-      switch (mSensorNumber) {
-      case 1:
-        for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_ALL)) {
-          mSensorManager.registerListener(mSensorListener, sensor,
-              SensorManager.SENSOR_DELAY_FASTEST);
+
+        if (sensorNumber > this.nMaxSensorType) {
+            throw new RuntimeException("requested sensors is not supported " +
+                                       "in your OS version...");
         }
-        break;
-      case 2:
-        for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER)) {
-          mSensorManager.registerListener(mSensorListener, sensor,
-              SensorManager.SENSOR_DELAY_FASTEST);
+
+        boolean fExist = false;
+        for (int i = 0; i < this.sensors.size(); i++) {
+            SensorInfo info = this.sensors.valueAt(i);
+            if (sensorNumber != info.nSL4A) { continue; }
+            if (Build.VERSION.SDK_INT >= info.verDepricated) {
+                String msg;
+                msg = String.format("%d>=%d", Build.VERSION.SDK_INT,
+                        info.verDepricated);
+                throw new RuntimeException("requested sensors is no longer " +
+                                           "supported your OS version " + msg);
+            }
+            for (Sensor sensor: mSensorManager.getSensorList(info.nAndroid)) {
+                mSensorManager.registerListener(mSensorListener, sensor,
+                        SensorManager.SENSOR_DELAY_FASTEST);
+                fExist = true;
+            }
         }
-        break;
-      case 3:
-        for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_MAGNETIC_FIELD)) {
-          mSensorManager.registerListener(mSensorListener, sensor,
-              SensorManager.SENSOR_DELAY_FASTEST);
+        if (!fExist) {
+            throw new RuntimeException("requested sensor is not " +
+                                       "support in your device...");
         }
-        break;
-      case 4:
-        for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_LIGHT)) {
-          mSensorManager.registerListener(mSensorListener, sensor,
-              SensorManager.SENSOR_DELAY_FASTEST);
-        }
-      }
     }
-  }
 
   @Rpc(description = "Records to the Event Queue sensor data exceeding a chosen threshold.")
   @RpcStartEvent("threshold")
@@ -216,6 +318,12 @@ public class SensorManagerFacade extends RpcReceiver {
   @RpcStopEvent("sensors")
   public void stopSensing() {
     mSensorManager.unregisterListener(mSensorListener);
+        if (mSensorListener != null) {
+            // mSensorReading = null
+            // cause NullPointerException in 2nd invoke.
+            mSensorListener.waitUpdating();
+            mSensorListener.fUpdating = true;
+        }
     mSensorListener = null;
     mSensorReadings = null;
     mThreshing = 0;
@@ -253,6 +361,11 @@ public class SensorManagerFacade extends RpcReceiver {
     }
   }
 
+  /** not work with Android 5.1 <!-- {{{1 -->
+   * with missing Intent.prepareToLeaveProcess, do not use it. \
+   *
+   * @param sampleSize
+   */
   @Rpc(description = "Starts recording sensor data to be available for polling.")
   @RpcDeprecated(value = "startSensingTimed or startSensingThreshhold", release = "4")
   public void startSensing(
@@ -269,6 +382,8 @@ public class SensorManagerFacade extends RpcReceiver {
 
   private class SensorValuesCollector implements SensorEventListener {
     private final static int MATRIX_SIZE = 9;
+          private volatile boolean fUpdating = false;
+          private final int N_TIMEOUT_UPDATE = 100;
 
     private final RollingAverage mmAzimuth;
     private final RollingAverage mmPitch;
@@ -307,6 +422,12 @@ public class SensorManagerFacade extends RpcReceiver {
       if (mSensorReadings == null) {
         return;
       }
+
+        if (this.waitUpdating()) {
+            return;
+        }
+        this.fUpdating = true;
+
       synchronized (mSensorReadings) {
         switch (event.sensor.getType()) {
         case Sensor.TYPE_ACCELEROMETER:
@@ -386,9 +507,20 @@ public class SensorManagerFacade extends RpcReceiver {
             }
           }
           break;
-
+        case Sensor.TYPE_ALL:
+          break;
+        default:
+                // normal sensors (not detailed approach in SL4A 6.1>)
+                if (this.updateOneSensor(event)) {
+                    this.fUpdating = false;
+                    return;
+                }
         }
+
         if (mSensorNumber == 1) {
+                if (this.dumpSensors()) {
+                    postEvent();
+                }
           if (mmGeomagneticValues != null && mmGravityValues != null) {
             if (mmR == null) {
               mmR = new float[MATRIX_SIZE];
@@ -462,7 +594,59 @@ public class SensorManagerFacade extends RpcReceiver {
           }
         }
       }
+            this.fUpdating = false;
     }
+
+        private boolean waitUpdating() {
+            int n = 0;
+            while (this.fUpdating) {
+                try {
+                    Thread.sleep(1, 0);
+                } catch (InterruptedException e) {
+
+                }
+                if (n++ > N_TIMEOUT_UPDATE) {
+                    return true;
+                }
+            }
+            return this.fUpdating;
+        }
+
+        /** <!-- {{{1 -->
+         */
+        private boolean updateOneSensor(SensorEvent ev) {
+            // synchronized (mSensorReadings) {
+                // TODO: only 1 sensor in 1 system. make it to N in 1 system.
+                SensorInfo info = getInfo(ev.sensor.getType());
+                if (info == null) {
+                    throw new RuntimeException("sensor" + ev.sensor.getName() +
+                                               "was not registered anymore.");
+                }
+                if (mSensorNumber == 1) {
+                    info.putValues(null, ev.values);    // update values only.
+                    return false;
+                }
+                info.putValues(mSensorReadings, ev.values); // set return value.
+
+                Sensor s = ev.sensor;
+                info.nameAndroid = s.getName();
+                info.strAndroid = s.toString();
+                mSensorReadings.putString("name", info.nameAndroid);
+                mSensorReadings.putString("toString", info.strAndroid);
+                postEvent();
+                return true;
+        }
+
+        /** <!-- {{{1 -->
+         */
+        private boolean dumpSensors() {
+            boolean f = false;
+            for (int i = 0; i < sensors.size(); i++) {
+                SensorInfo info = sensors.valueAt(i);
+                f = f | info.putValues(mSensorReadings, null);
+            }
+            return f;
+        }
   }
 
   static class RollingAverage {
@@ -493,4 +677,44 @@ public class SensorManagerFacade extends RpcReceiver {
       return (mmFilled) ? (mmSum / mmSampleSize) : (mmSum / mmIndex);
     }
   }
+
+    /** Sensor Info <!-- {{{1 -->
+     */
+    public static class SensorInfo {
+        String name;
+        int nSL4A;
+        int nAndroid;
+        int verDepricated;
+        float[] value_cached;
+        String nameAndroid, strAndroid;
+
+        public SensorInfo(int n, int ver, String name) {
+            this.nAndroid = n;
+            this.verDepricated = ver;
+            this.name = name;
+            this.value_cached = null;
+        }
+
+        public boolean putValues(Bundle store, float[] values) {
+            boolean f = values != null;
+            if (f) {
+                this.value_cached = new float[values.length];
+            } else if (this.value_cached == null) {
+                return false;
+            } else {
+                values = this.value_cached;
+            }
+            for (int i = 0; i < values.length; i++) {
+                String key = this.name + String.format("-%d", i);
+                float v = values[i];
+                if (store != null) {
+                    store.putDouble(key, v);
+                }
+                if (f) {
+                    this.value_cached[i] = v;
+                }
+            }
+            return f;
+        }
+    }
 }
