@@ -245,11 +245,11 @@ Launguages
 ===
 Languages are shipped with Android application.
 
-* (Python)[https://github.com/kuri65536/python-for-android]
-* (Javascript - Rhino)[../../tree/lang-rhino]
-* (Ruby - JRuby)[../../tree/lang-jruby]
-* (Tcl)[../../tree/lang-tcl]
-* Perl - not make branched yet.
+* [Perl](../../tree/lang-perl]
+* [Python](https://github.com/kuri65536/python-for-android)
+* [Rhino - Javascript](../../tree/lang-rhino)
+* [Ruby - JRuby](../../tree/lang-jruby)
+* [Tcl)(../../tree/lang-tcl)
 
 Facade
 ===
