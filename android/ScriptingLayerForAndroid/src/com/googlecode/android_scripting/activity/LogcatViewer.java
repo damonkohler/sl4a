@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.googlecode.android_scripting.ActivityFlinger;
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.Process;
 import com.googlecode.android_scripting.R;
@@ -105,7 +104,7 @@ public class LogcatViewer extends ListActivity {
     setListAdapter(mAdapter);
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
   }
 
   @Override

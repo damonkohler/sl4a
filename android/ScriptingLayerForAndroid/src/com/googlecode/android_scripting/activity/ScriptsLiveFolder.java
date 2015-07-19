@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.LiveFolders;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.provider.ScriptProvider;
 
@@ -27,7 +26,7 @@ public class ScriptsLiveFolder extends Activity {
     } else {
       setResult(RESULT_CANCELED);
     }
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
     finish();
   }
 

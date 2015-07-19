@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FeaturedInterpreters;
@@ -66,7 +65,7 @@ public class ScriptPicker extends ListActivity {
     mAdapter = new ScriptPickerAdapter(this);
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
   }
 
   @Override

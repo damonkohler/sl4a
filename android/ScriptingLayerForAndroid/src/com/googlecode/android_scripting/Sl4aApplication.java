@@ -30,8 +30,7 @@ public class Sl4aApplication extends BaseApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    // TODO: remove Analytics, it can't be watched for everyone.
-    Analytics.start(this, "UA-158835-13");
+    // Analytics.start(this, "UA-158835-13");
 
     // extract run_pie from asset folder.
     File path = new File(this.getFilesDir(), "run_pie");
@@ -71,6 +70,6 @@ public class Sl4aApplication extends BaseApplication {
 
   @Override
   public void onTerminate() {
-    Analytics.stop();
+    // Analytics.stop();
   }
 }

@@ -45,7 +45,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.googlecode.android_scripting.ActivityFlinger;
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FileUtils;
@@ -152,7 +151,7 @@ public class ScriptManager extends ListActivity {
     startService(IntentBuilders.buildTriggerServiceIntent());
     handleIntent(getIntent());
     UsageTrackingConfirmation.show(this);
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
   }
 
   @Override

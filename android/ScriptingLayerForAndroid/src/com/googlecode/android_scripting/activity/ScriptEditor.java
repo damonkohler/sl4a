@@ -42,7 +42,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FileUtils;
@@ -161,7 +160,7 @@ public class ScriptEditor extends Activity implements OnClickListener {
       mContentText.requestFocus();
       mContentText.setSelection(lastLocation);
     }
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
   }
 
   @Override

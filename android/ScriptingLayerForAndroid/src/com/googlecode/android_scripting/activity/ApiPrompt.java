@@ -32,7 +32,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
@@ -74,7 +73,7 @@ public class ApiPrompt extends Activity {
         finish();
       }
     });
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
     setResult(RESULT_CANCELED);
   }
 

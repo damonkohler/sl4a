@@ -40,7 +40,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.googlecode.android_scripting.ActivityFlinger;
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FeaturedInterpreters;
@@ -85,7 +84,7 @@ public class InterpreterManager extends ListActivity {
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
     mFeaturedInterpreters = FeaturedInterpreters.getList();
     mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
   }
 
   @Override

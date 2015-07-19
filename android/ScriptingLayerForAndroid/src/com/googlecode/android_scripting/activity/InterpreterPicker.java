@@ -31,7 +31,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.IntentBuilders;
@@ -65,7 +64,7 @@ public class InterpreterPicker extends ListActivity {
     mAdapter = new InterpreterPickerAdapter();
     mAdapter.registerDataSetObserver(mObserver);
     setListAdapter(mAdapter);
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
   }
 
   @Override

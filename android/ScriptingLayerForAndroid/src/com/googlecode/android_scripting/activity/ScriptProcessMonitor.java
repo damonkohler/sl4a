@@ -35,7 +35,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
@@ -91,7 +90,7 @@ public class ScriptProcessMonitor extends ListActivity {
     mAdapter = new ScriptMonitorAdapter();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
   }
 
   @Override

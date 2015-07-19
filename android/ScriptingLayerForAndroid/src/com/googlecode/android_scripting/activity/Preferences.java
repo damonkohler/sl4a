@@ -19,7 +19,6 @@ package com.googlecode.android_scripting.activity;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.R;
 
 public class Preferences extends PreferenceActivity {
@@ -28,6 +27,6 @@ public class Preferences extends PreferenceActivity {
     super.onCreate(savedInstanceState);
     // Load the preferences from an XML resource
     addPreferencesFromResource(R.xml.preferences);
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
   }
 }

@@ -19,7 +19,6 @@ package com.googlecode.android_scripting.rpc;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.facade.AndroidFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiverManager;
@@ -83,7 +82,7 @@ public final class MethodDescriptor {
    */
   public Object invoke(RpcReceiverManager manager, final JSONArray parameters) throws Throwable {
     // Issue track call first in case of failure.
-    Analytics.track("api", getName());
+    // Analytics.track("api", getName());
 
     final Type[] parameterTypes = getGenericParameterTypes();
     final Object[] args = new Object[parameterTypes.length];

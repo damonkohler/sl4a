@@ -35,7 +35,6 @@ import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.googlecode.android_scripting.ActivityFlinger;
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
@@ -85,7 +84,7 @@ public class TriggerManager extends ListActivity {
     mTriggerRepository.bootstrapObserver(observer);
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
   }
 
   @Override
