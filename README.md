@@ -41,11 +41,11 @@ New issues will be accepted from [issue page](../../issues).
 
 ##Install
 
-[![QR code for binary(apk)][qrcode]](../../releases/download/6x04/sl4a-r6x04-arm-debug.apk)
+[![QR code for binary(apk)][qrcode]](../../releases/download/6.1.1/sl4a-r6.1.1-arm-debug.apk)
 
 <wiki:gadget url="http://www.ohloh.net/p/346315/widgets/project_users_logo.xml" height="43" border="0" />
 
-[qrcode]: http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=http://github.com/kuri65536/sl4a/releases/download/6x04/sl4a-r6x04-arm-debug.apk&nonsense=something_that_ends_with.png
+[qrcode]: http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=http://github.com/kuri65536/sl4a/releases/download/6.1.1/sl4a-r6.1.1-arm-debug.apk&nonsense=something_that_ends_with.png
 
 
 To install SL4A, you will need to enable the "Unknown sources" option in
