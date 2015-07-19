@@ -49,8 +49,8 @@ android {
     defaultConfig {
         minSdkVersion 4
         targetSdkVersion 4
-        versionCode 610
-        versionName '6.1.0'
+        versionCode 611
+        versionName '6.1.1'
     }
     productFlavors {
         x86 {
