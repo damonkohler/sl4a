@@ -32,6 +32,8 @@ A few of the most important pages are:
   * [User Guide](docs/UserGuide.md)
   * [API Reference](docs/ApiReference.md)
   * [Tutorials](docs/Tutorials.md) ... it is a little old but useful for start.
+  * [damonkholer documents archive from googlecode](https://github.com/damonkohler/sl4a/tree/wiki)
+    ... please report if you find the document that is not here.
 
 <a name="create_issue"></a>Issues
 ===
