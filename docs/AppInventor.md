@@ -1,3 +1,6 @@
+Having trouble? Got questions? Check the [FAQ](FAQ.md) or try the
+[SL4A discussion group](http://groups.google.com/group/android-scripting).
+
 # Question #
 Is there a way to start "Sl4a" using "activitystarter" in [app inventor](http://appinventor.googlelabs.com)?
 
@@ -20,3 +23,7 @@ To run in background, change the action to:
 ```
 Action: com.googlecode.android_scripting.action.LAUNCH_BACKGROUND_SCRIPT
 ```
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

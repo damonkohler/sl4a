@@ -1,14 +1,20 @@
+Having trouble? Got questions? Check the [FAQ](FAQ.md) or try the
+[SL4A discussion group](http://groups.google.com/group/android-scripting).
+
 # Introduction #
 
-Bug reports are significantly more useful when logcat output is attached. Logcat is just a list of debugging messages that Android produces.
+Bug reports are significantly more useful when logcat output is attached. Logcat
+is just a list of debugging messages that Android produces.
 
 First, reproduce the bug. Then use one of these methods to send the logca dump.
 
 ## From your computer ##
 
-To get started, follow the instructions on the Android developer site for [setting up the SDK](http://developer.android.com/sdk/index.html). After that:
+To get started, follow the instructions on the Android developer site for
+[setting up the SDK](http://developer.android.com/sdk/index.html). After that:
 
-  1. Make sure USB debugging is enabled under Settings > Applications > Development.
+  1. Make sure USB debugging is enabled under Settings > Applications >
+     Development.
   1. Reproduce the bug.
   1. Plug in your phone over USB.
   1. Run `adb logcat -d > logcat.txt` from a terminal.
@@ -23,17 +29,22 @@ From there, you have your choice of Sharing:
 ```
   MENU-->Share
 ```
-... which will pop up a list of applications willing to do something with a text file,
+... which will pop up a list of applications willing to do something with a text
+file,
 
 or
 
 ```
   MENU-->Copy
 ```
-... which will copy the entire contents into clipboard, from whence you can paste it anywhere that takes your fancy.
+... which will copy the entire contents into clipboard, from whence you can
+paste it anywhere that takes your fancy.
 
 ## That's a lot of stuff! ##
-Yes, there's a lot of text included in a logcat dump. It contains all the messages from everything that has been happening recently on your phone, not just for sl4a. For brevity and security reasons, we are looking for two sorts of messages.
+Yes, there's a lot of text included in a logcat dump. It contains all the
+messages from everything that has been happening recently on your phone, not
+just for sl4a. For brevity and security reasons, we are looking for two sorts of
+messages.
 
 Messages tagged with **sl4a**:
 ```
@@ -71,9 +82,25 @@ E/AndroidRuntime( 8451): 	at android.app.ActivityThread.handleServiceArgs(Activi
 E/AndroidRuntime( 8451): 	... 10 more
 ```
 
-Trimming your log to just these is probably a good idea.  A note with the stack trace, though: the actual error message we're interested in here starts at the "Caused by:" line, about 13 lines down. This is typical. If you are sending a stack trace, make sure you get all of it.
+Trimming your log to just these is probably a good idea.  A note with the stack
+trace, though: the actual error message we're interested in here starts at the
+"Caused by:" line, about 13 lines down. This is typical. If you are sending a
+stack trace, make sure you get all of it.
 
 ## Could this be a security issue? ##
-Well, yes. Quite apart the sl4a messages, there could be anything in that log, possibly including user ids and password. Probably not, because most programmers know better, but a quick check is a good idea.
+Well, yes. Quite apart the sl4a messages, there could be anything in that log,
+possibly including user ids and password. Probably not, because most programmers
+know better, but a quick check is a good idea.
 
-A specific issue is that some sl4a messages may contain more information than you are comfortable with sharing. All rpc messages and replies are logged, and this could theoretically contain sensitive information. An example above is _wifiGetConnectionInfo_, which returns details about the current connection. In theory, a determined hacker could use the details on the MAC address and ssid to stage an attack on your phone. I personally feel the risk is low, but opinions vary. If in doubt, anonymize your data. It's probably a good habit to get into in any case.
+A specific issue is that some sl4a messages may contain more information than
+you are comfortable with sharing. All rpc messages and replies are logged, and
+this could theoretically contain sensitive information. An example above is
+_wifiGetConnectionInfo_, which returns details about the current connection. In
+theory, a determined hacker could use the details on the MAC address and ssid to
+stage an attack on your phone. I personally feel the risk is low, but opinions
+vary. If in doubt, anonymize your data. It's probably a good habit to get into
+in any case.
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

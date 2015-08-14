@@ -31,6 +31,7 @@ A few of the most important pages are:
   * [FAQ](docs/FAQ.md)
   * [User Guide](docs/UserGuide.md)
   * [API Reference](docs/ApiReference.md)
+  * [Tutorials](docs/Tutorials.md) ... it is a little old but useful for start.
 
 <a name="create_issue"></a>Issues
 ===
@@ -243,13 +244,13 @@ http://jokar-johnk.blogspot.co.nz/2011/02/how-to-make-android-app-with-sl4a.html
 
 Launguages
 ===
-Languages are shipped with Android application.
+Languages are shipped with Android application. (but not maintainanced well except of python.)
 
-* [Perl](../../tree/lang-perl]
+* [Perl](../../tree/lang-perl)
 * [Python](https://github.com/kuri65536/python-for-android)
 * [Rhino - Javascript](../../tree/lang-rhino)
 * [Ruby - JRuby](../../tree/lang-jruby)
-* [Tcl)(../../tree/lang-tcl)
+* [Tcl](../../tree/lang-tcl)
 
 Facade
 ===

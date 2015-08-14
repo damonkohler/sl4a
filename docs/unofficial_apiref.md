@@ -1,3 +1,6 @@
+Having trouble? Got questions? Check the [FAQ](FAQ.md) or try the
+[SL4A discussion group](http://groups.google.com/group/android-scripting).
+
 More detailed API Help [here](http://www.mithril.com.au/android/doc)
 
 **ActivityResultFacade**
@@ -2801,3 +2804,7 @@ Starts a scan for Wifi access points.
 Returns:
   True if the scan was initiated successfully.
 ```
+
+<!---
+ vi: ft=markdown:et:fdm=marker
+ -->

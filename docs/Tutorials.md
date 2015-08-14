@@ -1,12 +1,18 @@
-If you have a tutorial or example to add, please let us know on the [SL4A discussion group](http://groups.google.com/group/android-scripting).
+Having trouble? Got questions? Check the [FAQ](FAQ.md) or try the
+[SL4A discussion group](http://groups.google.com/group/android-scripting).
+
+If you have a tutorial or example to add, please let us know
+on the [SL4A discussion group](http://groups.google.com/group/android-scripting).
 
   * [Writing an Android Twitter Client with Python](http://www.linux-mag.com/id/7370/)
   * [Android barcode scanner in 6 lines of Python code](http://www.mattcutts.com/blog/android-barcode-scanner/)
-  * [Android scripting for fun and profit](http://blog.tannerburson.com/2009/06/android-scripting-for-fun-and-profit.html) (books and barcode scanner)
+  * [Android scripting for fun and profit](http://blog.tannerburson.com/2009/06/android-scripting-for-fun-and-profit.html)
+    (books and barcode scanner)
   * [Using ASE from Debian](http://forum.xda-developers.com/showpost.php?s=a6dd9291991d8fcd9a512764d0bf00bb&p=3957997&postcount=8)
   * [RIAA Barcode Checker on Android](http://blog.chrisgrice.com/post/riaa-barcode-checker-on-android)
   * [Hello, World!](http://niche-canada.org/digital-infrastructure/mobile)
-  * [Track where you go!](http://www.beresourceful.net/~rusty/blog/2009/08/droidtrack-a-tracks-collector-for-android-phones/) Lua sample and python scripts to track your location.
+  * [Track where you go!](http://www.beresourceful.net/~rusty/blog/2009/08/droidtrack-a-tracks-collector-for-android-phones/)
+    Lua sample and python scripts to track your location.
   * [Track 100 pushups/situps/squats](http://isnomore.net/2009/10/07/pushing-python-android/)
   * [Web form to TTS](http://pastebin.com/f3f741b5a)
   * [Installing ASE on the Android emulator](http://www.akeric.com/blog/?p=879)
@@ -54,26 +60,42 @@ If you have a tutorial or example to add, please let us know on the [SL4A discus
   * [How to Launch SL4A scripts from App Inventor](AppInventor.md)
   * [How to build external python modules](PythonModuleBuild.md)
   * [Some Ui examples](UiExamples.md): Dialogs, Lists and Menus.
-  * [Building an apk](http://jokar-johnk.blogspot.com/2011/02/how-to-make-android-app-with-sl4a.html) with windows vista and eclipse.
-  * [Creating an android app](http://ubuntumongol.blogspot.com/2011/02/developing-android-app-using-ubuntu-and.html) on an Ubuntu Platform with android SDK and Google's Python Android scripting.
+  * [Building an apk](http://jokar-johnk.blogspot.com/2011/02/how-to-make-android-app-with-sl4a.html)
+    with windows vista and eclipse.
+  * [Creating an android app](http://ubuntumongol.blogspot.com/2011/02/developing-android-app-using-ubuntu-and.html)
+    on an Ubuntu Platform with android SDK and Google's Python Android scripting.
   * CodeStructure - a rough guide to the structure of SL4A.
-  * [Beanshell demo](http://www.t-arn.com/software/SL4A/taHash_1-1.zip) - calculates MD5 and SHA1 hashes.
-  * [Send Chuck Norris jokes](http://www.h3manth.com/content/sms-android-using-python) to your friends.
-  * [Logging the accelerometer](http://www.brokenairplane.com/2011/08/im-not-texting-im-programming.html) to GoogleDocs: an example of how teachers and students could use sl4a in schools
-  * [Turn your phone into a spycam.](http://kbcarte.wordpress.com/2011/08/31/android-twisted-spycam/) Uses the Twisted library.
+  * [Beanshell demo](http://www.t-arn.com/software/SL4A/taHash_1-1.zip)
+    - calculates MD5 and SHA1 hashes.
+  * [Send Chuck Norris jokes](http://www.h3manth.com/content/sms-android-using-python)
+    to your friends.
+  * [Logging the accelerometer](http://www.brokenairplane.com/2011/08/im-not-texting-im-programming.html)
+    to GoogleDocs: an example of how teachers and students could use sl4a in schools
+  * [Turn your phone into a spycam.](http://kbcarte.wordpress.com/2011/08/31/android-twisted-spycam/)
+    Uses the Twisted library.
   * [Instantly upload images to imgur](http://h3manth.com/content/instant-upload-images-imgur-android)
-  * [Android on irc](http://kbcarte.wordpress.com/2010/10/29/android-on-irc/) Implement an irc bot on Android
+  * [Android on irc](http://kbcarte.wordpress.com/2010/10/29/android-on-irc/)
+    Implement an irc bot on Android
   * [Sqlite, couchdb and sparql tutorial.](http://www.greenhughes.com/content/sqlite-couchdb-sparql-with-sl4a)
-  * http://sourceforge.net/p/androwget A simple resource downloader written in Python.
-  * http://www.students.ncl.ac.uk/tom.holderness/PostGISDroid.php Saving the Android Location to a PostGIS database.
-  * [A Voice Activated Servo](http://shazsterblog.blogspot.com/2011/11/arduino-google-voice-activated-servo.html). See also [here.](http://hackaday.com/2011/11/20/an-exercise-in-servo-voice-control-with-android/)
-  * Bernd Battes has made it possible to use a subset of AChartEngine  with SL4a. https://github.com/BerndBattes/achart
+  * http://sourceforge.net/p/androwget
+    A simple resource downloader written in Python.
+  * http://www.students.ncl.ac.uk/tom.holderness/PostGISDroid.php
+    Saving the Android Location to a PostGIS database.
+  * [A Voice Activated Servo](http://shazsterblog.blogspot.com/2011/11/arduino-google-voice-activated-servo.html)
+    See also [here.](http://hackaday.com/2011/11/20/an-exercise-in-servo-voice-control-with-android/)
+  * Bernd Battes has made it possible to use a subset of AChartEngine with SL4a.
+    https://github.com/BerndBattes/achart
   * Hariharan Srinath has produced a
     [Full Screen Event Wrapper](http://github.com/kuri65536/python-for-android/docs/fullScreenWrapper2.md)
     to make use of the fullScreenUI
-  * electrocoder has written some python tutorials for android, in Turkish: http://pythontr.org/android/
-  * sjb contiributes this: http://ottaky.com/sl4a/bus_ui_sl4a.py. It's a Python script to interact with transport for London's "countdown" service. Shows you the nearest bus stops to your location and "live" departure times for buses at that stop.
-  * Cataloging CD/DVD collection into an database using phone [here.](https://groups.google.com/forum/?fromgroups#!topic/python-for-android/55aIEV_SKnM)
+  * electrocoder has written some python tutorials for android,
+    in Turkish: http://pythontr.org/android/
+  * sjb contiributes this: http://ottaky.com/sl4a/bus_ui_sl4a.py.
+    It's a Python script to interact with transport for London's "countdown"
+    service. Shows you the nearest bus stops to your location and
+    "live" departure times for buses at that stop.
+  * Cataloging CD/DVD collection into an database using phone
+    [here.](https://groups.google.com/forum/?fromgroups#!topic/python-for-android/55aIEV_SKnM)
 
 <!---
  vi: ft=markdown:et:fdm=marker

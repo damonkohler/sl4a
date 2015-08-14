@@ -1,4 +1,9 @@
-If you are interested in understanding the internals of Android Scripting Environment, building from source, or contributing ideas or modifications to the project, then this document is for you.
+Having trouble? Got questions? Check the [FAQ](FAQ.md) or try the
+[SL4A discussion group](http://groups.google.com/group/android-scripting).
+
+If you are interested in understanding the internals of Android Scripting
+Environment, building from source, or contributing ideas or modifications to the
+project, then this document is for you.
 
 # The Scripting Layer for Android Community #
 
@@ -18,21 +23,35 @@ label.
 
 ## Please Be Friendly ##
 
-Showing courtesy and respect to others is a vital part of the Google culture, and we strongly encourage everyone participating in SL4A development to join us in accepting nothing less. Of course, being courteous is not the same as failing to constructively disagree with each other, but it does mean that we should be respectful of each other when enumerating the 42 technical reasons that a particular proposal may not be the best choice. There's never a reason to be antagonistic or dismissive toward anyone who is sincerely trying to contribute to a discussion.
+Showing courtesy and respect to others is a vital part of the Google culture,
+and we strongly encourage everyone participating in SL4A development to join us
+in accepting nothing less. Of course, being courteous is not the same as failing
+to constructively disagree with each other, but it does mean that we should be
+respectful of each other when enumerating the 42 technical reasons that a
+particular proposal may not be the best choice. There's never a reason to be
+antagonistic or dismissive toward anyone who is sincerely trying to contribute
+to a discussion.
 
-Writing scripts on Android is a lot of fun. Let's keep it that way. Let's strive to be one of the friendliest communities in all of open source.
+Writing scripts on Android is a lot of fun. Let's keep it that way. Let's strive
+to be one of the friendliest communities in all of open source.
 
 ## Where to Discuss SL4A ##
 
-As always, discuss SL4A in the official SL4A discussion group. You don't have to actually submit code in order to sign up. Your participation itself is a valuable contribution.
+As always, discuss SL4A in the official SL4A discussion group. You don't have to
+actually submit code in order to sign up. Your participation itself is a
+valuable contribution.
 
 # Working with the Code #
 
-If you want to get your hands dirty with the code inside SL4A, this is the section for you.
+If you want to get your hands dirty with the code inside SL4A, this is the
+section for you.
 
 ## Checking Out the Source from Mercurial ##
 
-Checking out the SL4A source is most useful if you plan to tweak it yourself. You can check out the source for SL4A using a Mercurial client as you would for any other project hosted on Google Code. Please see the instruction on the source code access page for how to do it.
+Checking out the SL4A source is most useful if you plan to tweak it yourself.
+You can check out the source for SL4A using a Mercurial client as you would for
+any other project hosted on Google Code. Please see the instruction on the
+source code access page for how to do it.
 
 ## Compiling from Source ##
 
@@ -40,11 +59,18 @@ See [Compiling SL4A](CompilingASE.md).
 
 ## Testing ##
 
-Tests should be written for any new code, and changes should be verified to not break existing tests before they are submitted for review. To perform the tests, install SL4A to your phone or emulator, install Python, run the supplied test script, and verify that there are no failures.
+Tests should be written for any new code, and changes should be verified to not
+break existing tests before they are submitted for review. To perform the tests,
+install SL4A to your phone or emulator, install Python, run the supplied test
+script, and verify that there are no failures.
 
 # Contributing Code #
 
-We are excited that SL4A is open source, and hope to get great patches from the community. Before you fire up your favorite IDE and begin hammering away at that new feature, though, please take the time to read this section and understand the process. While it seems rigorous, we want to keep a high standard of quality in the code base.
+We are excited that SL4A is open source, and hope to get great patches from the
+community. Before you fire up your favorite IDE and begin hammering away at that
+new feature, though, please take the time to read this section and understand
+the process. While it seems rigorous, we want to keep a high standard of quality
+in the code base.
 
 ## Contributor License Agreements ##
 
@@ -58,7 +84,8 @@ code. The CLA protects you and us.
     SL4A, then you'll need to sign a
     [corporate CLA](http://code.google.com/legal/corporate-cla-v1.0.html).
 
-Follow either of the two links above to access the appropriate CLA and instructions for how to sign and return it.
+Follow either of the two links above to access the appropriate CLA and
+instructions for how to sign and return it.
 
 ## Coding Style ##
 
@@ -81,15 +108,27 @@ conform to the style guidelines defined by the
 
 Please do submit code. Here's what you need to do:
 
-Normally you should make your change against a server-side clone of trunk. Decide which code you want to submit. A submission should be a set of changes that addresses one issue in the ASE issue tracker. Please don't mix more than one logical change per submittal, because it makes the history hard to follow. If you want to make a change that doesn't have a corresponding issue in the issue tracker, please create one.
+Normally you should make your change against a server-side clone of trunk.
+Decide which code you want to submit. A submission should be a set of changes
+that addresses one issue in the ASE issue tracker. Please don't mix more than
+one logical change per submittal, because it makes the history hard to follow.
+If you want to make a change that doesn't have a corresponding issue in the
+issue tracker, please create one.
 
-Also, coordinate with team members that are listed on the issue in question. This ensures that work isn't being duplicated and communicating your plan early also generally leads to better patches.
+Also, coordinate with team members that are listed on the issue in question.
+This ensures that work isn't being duplicated and communicating your plan early
+also generally leads to better patches.
 
 Ensure that your code adheres to the SL4A source code style.
 
 Ensure that there are tests for your code.
 
-The current members of the SL4A engineering team are the only committers at present. In the great tradition of eating one's own dogfood, we will be requiring each new SL4A engineering team member to earn the right to become a committer by following the procedures in this document, writing consistently great code, and demonstrating repeatedly that he or she truly gets the zen of SL4A.
+The current members of the SL4A engineering team are the only committers at
+present. In the great tradition of eating one's own dogfood, we will be
+requiring each new SL4A engineering team member to earn the right to become a
+committer by following the procedures in this document, writing consistently
+great code, and demonstrating repeatedly that he or she truly gets the zen of
+SL4A.
 
 # Release Process #
 
