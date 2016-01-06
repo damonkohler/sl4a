@@ -244,7 +244,7 @@ folder.
 * If there are still issues, look at this to find tidbits you could possibly do:
 http://jokar-johnk.blogspot.co.nz/2011/02/how-to-make-android-app-with-sl4a.html
 
-Launguages
+Languages
 ===
 Languages are shipped with Android application. (but not maintainanced well except of python.)
 
