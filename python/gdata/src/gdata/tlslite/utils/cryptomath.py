@@ -6,7 +6,10 @@ import os
 import math
 import base64
 import binascii
-import sha
+from functools import partial
+from hashlib import new
+
+sha = partial(new,'sha')
 
 from compat import *
 
