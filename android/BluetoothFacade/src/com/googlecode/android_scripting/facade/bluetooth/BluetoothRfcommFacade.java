@@ -403,6 +403,7 @@ class BluetoothConnection {
       Field field = BluetoothSocket.class.getDeclaredField("mPfd");
       field.setAccessible(true);
       ParcelFileDescriptor mPfd = (ParcelFileDescriptor) field.get(mSocket);
+      Log.d("Closing mPfd: " + mPfd);
       if (mPfd == null)
         return;
       mPfd.close();
@@ -419,8 +420,8 @@ class BluetoothConnection {
   public void stop() {
     if (mSocket != null) {
       try {
-        clearFileDescriptor();
         mSocket.close();
+        clearFileDescriptor();
       } catch (IOException e) {
         Log.e(e);
       }
