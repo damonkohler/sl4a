@@ -129,6 +129,22 @@ public class GattServerFacade extends RpcReceiver {
   }
 
   /**
+   * Add a service to a bluetooth gatt server
+   *
+   * @param index the bluetooth gatt server to add a service to
+   * @param serviceIndex the service to add to the bluetooth gatt server
+   * @throws Exception
+   */
+  @Rpc(description = "Clear services from bluetooth gatt server")
+  public void gattServerClearServices(@RpcParameter(name = "index") Integer index) throws Exception {
+    if (mBluetoothGattServerList.get(index) != null) {
+        mBluetoothGattServerList.get(index).clearServices();
+    } else {
+      throw new Exception("Invalid index input:" + Integer.toString(index));
+    }
+  }
+
+  /**
    * Get connected devices of the gatt server
    *
    * @param gattServerIndex the gatt server index
