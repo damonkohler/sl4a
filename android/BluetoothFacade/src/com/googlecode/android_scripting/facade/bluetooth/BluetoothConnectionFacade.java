@@ -27,6 +27,7 @@ import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothA2dpSink;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothHeadsetClient;
 import android.bluetooth.BluetoothInputDevice;
@@ -48,7 +49,9 @@ import com.googlecode.android_scripting.rpc.RpcParameter;
 public class BluetoothConnectionFacade extends RpcReceiver {
 
     private final Service mService;
+    private final Context mContext;
     private final BluetoothAdapter mBluetoothAdapter;
+    private final BluetoothManager mBluetoothManager;
     private final BluetoothPairingHelper mPairingHelper;
     private final Map<String, BroadcastReceiver> listeningDevices;
     private final EventFacade mEventFacade;
@@ -74,7 +77,10 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     public BluetoothConnectionFacade(FacadeManager manager) {
         super(manager);
         mService = manager.getService();
+        mContext = mService.getApplicationContext();
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothManager = (BluetoothManager) mContext.getSystemService(
+                Service.BLUETOOTH_SERVICE);
         mPairingHelper = new BluetoothPairingHelper();
         // Use a synchronized map to avoid racing problems
         listeningDevices = Collections.synchronizedMap(new HashMap<String, BroadcastReceiver>());
@@ -372,6 +378,11 @@ public class BluetoothConnectionFacade extends RpcReceiver {
             }
         }
         return results;
+    }
+
+    @Rpc(description = "Return a list of devices connected through bluetooth LE")
+    public List<BluetoothDevice> bluetoothGetConnectedLeDevices(Integer profile) {
+        return mBluetoothManager.getConnectedDevices(profile);
     }
 
     @Rpc(description = "Return true if a bluetooth device is connected.")
