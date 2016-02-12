@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.lang.reflect.Field;
+import java.lang.Thread;
 
 import org.apache.commons.codec.binary.Base64Codec;
 
@@ -60,6 +61,7 @@ public class BluetoothRfcommFacade extends RpcReceiver {
   private final BluetoothAdapter mBluetoothAdapter;
   private Map<String, BluetoothConnection>
           connections = new HashMap<String, BluetoothConnection>();
+  private BluetoothSocket mCurrentSocket;
 
   public BluetoothRfcommFacade(FacadeManager manager) {
     super(manager);
@@ -113,9 +115,19 @@ public class BluetoothRfcommFacade extends RpcReceiver {
     mBluetoothAdapter.cancelDiscovery();
     mSocket.connect();
     conn = new BluetoothConnection(mSocket);
+    mCurrentSocket = mSocket;
 
     mService.unregisterReceiver(mPairingReceiver);
     return addConnection(conn);
+  }
+
+  /**
+   * Closes an active Rfcomm socket
+   */
+  @Rpc(description = "Close an active Rfcomm socket")
+  public void bluetoothRfcommCloseSocket()
+    throws IOException {
+    mCurrentSocket.close();
   }
 
   @Rpc(description = "Returns active Bluetooth connections.")

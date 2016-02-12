@@ -233,7 +233,25 @@ public class GattClientFacade extends RpcReceiver {
         if (mBluetoothGattList.get(index) != null) {
             mBluetoothGattList.get(index).disconnect();
         } else {
-            throw new Exception("Invalid index input:" + index);
+            throw new Exception("Invalid index input: " + index);
+        }
+    }
+
+    /**
+     * Close a bluetooth gatt object
+     *
+     * @param index the bluetooth gatt index
+     * @throws Exception
+     */
+    @Rpc(description = "Close a Bluetooth GATT object")
+    public void gattClientClose(
+            @RpcParameter(name = "index")
+            Integer index
+            ) throws Exception {
+        if (mBluetoothGattList.get(index) != null) {
+            mBluetoothGattList.get(index).close();
+        } else {
+            throw new Exception("Invalid index input: " + index);
         }
     }
 
