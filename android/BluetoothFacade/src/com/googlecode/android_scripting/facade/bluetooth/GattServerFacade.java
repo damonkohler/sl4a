@@ -196,6 +196,42 @@ public class GattServerFacade extends RpcReceiver {
   }
 
   /**
+   * Notify that characteristic was changed
+   *
+   * @param gattServerIndex the gatt server index
+   * @param bluetoothDeviceIndex the remotely connected bluetooth device
+   * @param characteristicIndex characteristic index
+   * @param confirm shall we expect confirmation
+   * @throws Exception
+   */
+  @Rpc(description = "Notify that characteristic was changed.")
+  public void gattServerNotifyCharacteristicChanged(
+      @RpcParameter(name = "gattServerIndex") Integer gattServerIndex,
+      @RpcParameter(name = "bluetoothDeviceIndex") Integer bluetoothDeviceIndex,
+      @RpcParameter(name = "characteristicIndex") Integer characteristicIndex,
+      @RpcParameter(name = "confirm") Boolean confirm) throws Exception {
+
+    BluetoothGattServer gattServer = mBluetoothGattServerList.get(gattServerIndex);
+    if (gattServer == null)
+      throw new Exception("Invalid gattServerIndex: " + Integer.toString(gattServerIndex));
+    List<BluetoothDevice> connectedDevices = mGattServerDiscoveredDevicesList.get(gattServerIndex);
+    if (connectedDevices == null)
+      throw new Exception(
+          "Connected device list empty for gattServerIndex:" + Integer.toString(gattServerIndex));
+    BluetoothDevice bluetoothDevice = connectedDevices.get(bluetoothDeviceIndex);
+    if (bluetoothDevice == null)
+      throw new Exception(
+          "Invalid bluetoothDeviceIndex: " + Integer.toString(bluetoothDeviceIndex));
+
+    BluetoothGattCharacteristic bluetoothCharacteristic = mCharacteristicList.get(characteristicIndex);
+    if (bluetoothCharacteristic == null)
+      throw new Exception(
+          "Invalid characteristicIndex: " + Integer.toString(characteristicIndex));
+
+    gattServer.notifyCharacteristicChanged(bluetoothDevice, bluetoothCharacteristic, confirm);
+  }
+
+  /**
    * Create a new bluetooth gatt service
    *
    * @param uuid the UUID that characterises the service
@@ -373,6 +409,23 @@ public class GattServerFacade extends RpcReceiver {
         new BluetoothGattCharacteristic(UUID.fromString(characteristicUuid), property, permission);
     mCharacteristicList.put(index, characteristic);
     return index;
+  }
+
+  /**
+   * Set value to a bluetooth gatt characteristic
+   *
+   * @param index the bluetooth gatt characteristic
+   * @param value value
+   * @throws Exception
+   */
+  @Rpc(description = "add descriptor to blutooth gatt characteristic")
+  public void gattServerCharacteristicSetValue(@RpcParameter(name = "index") Integer index,
+      @RpcParameter(name = "value") byte[] value) throws Exception {
+    if (mCharacteristicList.get(index) != null) {
+      mCharacteristicList.get(index).setValue(value);
+    } else {
+      throw new Exception("Invalid index input:" + index);
+    }
   }
 
   /**

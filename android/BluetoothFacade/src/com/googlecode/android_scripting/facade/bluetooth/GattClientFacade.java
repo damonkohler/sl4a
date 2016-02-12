@@ -940,6 +940,7 @@ public class GattClientFacade extends RpcReceiver {
             Log.d("gatt_connect change onCharacteristicChanged " + mEventType + " " + index);
             mResults.putInt("ID", index);
             mResults.putString("CharacteristicUuid", characteristic.getUuid().toString());
+            mResults.putByteArray("CharacteristicValue", characteristic.getValue());
             mEventFacade
                     .postEvent(mEventType + index + "onCharacteristicChanged", mResults.clone());
             mResults.clear();
