@@ -27,6 +27,8 @@ import com.googlecode.android_scripting.rpc.RpcMinSdk;
 import com.googlecode.android_scripting.rpc.RpcStartEvent;
 import com.googlecode.android_scripting.rpc.RpcStopEvent;
 
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothHfpClientFacade;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -108,6 +110,11 @@ public class FacadeConfiguration {
     if (sSdkLevel >= 12) {
       sFacadeClassList.add(USBHostSerialFacade.class);
     }
+
+        /* Compatibility reset to >= Marshmallow */
+        if (sSdkLevel >= 23) {
+            sFacadeClassList.add(BluetoothHfpClientFacade.class);
+        }
 
     for (Class<? extends RpcReceiver> recieverClass : sFacadeClassList) {
       for (MethodDescriptor rpcMethod : MethodDescriptor.collectFrom(recieverClass)) {

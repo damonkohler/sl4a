@@ -74,6 +74,7 @@ public class BluetoothA2dpFacade extends RpcReceiver {
   }
 
   public Boolean a2dpDisconnect(BluetoothDevice device) {
+    if (sA2dpProfile == null) return false;
     if (sA2dpProfile.getPriority(device) > BluetoothProfile.PRIORITY_ON) {
       sA2dpProfile.setPriority(device, BluetoothProfile.PRIORITY_ON);
     }
