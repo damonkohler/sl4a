@@ -485,7 +485,7 @@ public class GattServerFacade extends RpcReceiver {
       mResults.putParcelable("BluetoothDevice", device);
       mResults.putBoolean("preparedWrite", preparedWrite);
       mResults.putBoolean("responseNeeded", responseNeeded);
-      mResults.putString("value", ConvertUtils.convertByteArrayToString(value));
+      mResults.putByteArray("value", value);
       mResults.putInt("instanceId", descriptor.getInstanceId());
       mResults.putInt("permissions", descriptor.getPermissions());
       mResults.putString("uuid", descriptor.getUuid().toString());
