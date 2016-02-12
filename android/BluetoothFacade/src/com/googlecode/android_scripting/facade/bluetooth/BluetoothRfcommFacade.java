@@ -62,6 +62,7 @@ public class BluetoothRfcommFacade extends RpcReceiver {
   private Map<String, BluetoothConnection>
           connections = new HashMap<String, BluetoothConnection>();
   private BluetoothSocket mCurrentSocket;
+  private ConnectThread mCurrThread;
 
   public BluetoothRfcommFacade(FacadeManager manager) {
     super(manager);
@@ -105,20 +106,26 @@ public class BluetoothRfcommFacade extends RpcReceiver {
     BluetoothSocket mSocket;
     BluetoothConnection conn;
     mDevice = mBluetoothAdapter.getRemoteDevice(address);
-    mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
-
     // Register a broadcast receiver to bypass manual confirmation
     IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
     mService.registerReceiver(mPairingReceiver, filter);
-
-    // Always cancel discovery because it will slow down a connection.
-    mBluetoothAdapter.cancelDiscovery();
-    mSocket.connect();
-    conn = new BluetoothConnection(mSocket);
-    mCurrentSocket = mSocket;
-
+    ConnectThread t = new ConnectThread(mDevice, uuid);
+    t.run();
+    mCurrThread = t;
+    conn = new BluetoothConnection(mCurrThread.getSocket());
+    Log.d("Connection Successful");
     mService.unregisterReceiver(mPairingReceiver);
     return addConnection(conn);
+  }
+
+  @Rpc(description = "Kill thread")
+  public void bluetoothRfcommKillConnThread() {
+    try {
+        mCurrThread.cancel();
+        mCurrThread.join(5000);
+    } catch (InterruptedException e) {
+        Log.e("Interrupted Exception: " + e.toString());
+    }
   }
 
   /**
@@ -170,6 +177,7 @@ public class BluetoothRfcommFacade extends RpcReceiver {
     BluetoothSocket mSocket = mServerSocket.accept(timeout.intValue());
     BluetoothConnection conn = new BluetoothConnection(mSocket, mServerSocket);
     mService.unregisterReceiver(mPairingReceiver);
+    mCurrentSocket = mSocket;
     return addConnection(conn);
   }
 
@@ -291,7 +299,49 @@ public class BluetoothRfcommFacade extends RpcReceiver {
     }
     connections.clear();
   }
+  private class ConnectThread extends Thread {
+    private final BluetoothSocket mmSocket;
+
+    public ConnectThread(BluetoothDevice device, String uuid) {
+      BluetoothSocket tmp = null;
+      try {
+        tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
+      } catch (IOException createSocketException) {
+        Log.e("Failed to create socket: " + createSocketException.toString());
+      }
+      mmSocket = tmp;
+    }
+
+    public void run() {
+      mBluetoothAdapter.cancelDiscovery();
+      try {
+        mmSocket.connect();
+      } catch(IOException connectException) {
+        Log.e("Failed to connect socket: " + connectException.toString());
+        try {
+          mmSocket.close();
+        } catch(IOException closeException){
+          Log.e("Failed to close socket: " + closeException.toString());
+        }
+        return;
+      }
+    }
+
+    public void cancel() {
+      try {
+        mmSocket.close();
+      } catch (IOException e){
+
+      }
+    }
+
+    public BluetoothSocket getSocket() {
+      return mmSocket;
+    }
+  }
+
 }
+
 
 class BluetoothConnection {
   private BluetoothSocket mSocket;
