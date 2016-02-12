@@ -25,6 +25,8 @@ import android.content.IntentFilter;
 import android.os.ParcelFileDescriptor;
 
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.facade.EventFacade;
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothPairingHelper;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
@@ -63,11 +65,13 @@ public class BluetoothRfcommFacade extends RpcReceiver {
           connections = new HashMap<String, BluetoothConnection>();
   private BluetoothSocket mCurrentSocket;
   private ConnectThread mCurrThread;
+  private final EventFacade mEventFacade;
 
   public BluetoothRfcommFacade(FacadeManager manager) {
     super(manager);
+    mEventFacade = manager.getReceiver(EventFacade.class);
     mService = manager.getService();
-    mPairingReceiver = new BluetoothPairingHelper();
+    mPairingReceiver = new BluetoothPairingHelper(mEventFacade);
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
   }
 
