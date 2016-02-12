@@ -96,6 +96,8 @@ public class GattClientFacade extends RpcReceiver {
      * @param macAddress the mac address of the ble device
      * @param autoConnect Whether to directly connect to the remote device (false) or to
      *            automatically connect as soon as the remote device becomes available (true)
+     * @param transport  preferred transport for GATT connections to remote dual-mode devices
+     *            TRANSPORT_AUTO or TRANSPORT_BREDR or TRANSPORT_LE
      * @return the index of the BluetoothGatt object
      * @throws Exception
      */
@@ -106,13 +108,16 @@ public class GattClientFacade extends RpcReceiver {
             @RpcParameter(name = "macAddress")
             String macAddress,
             @RpcParameter(name = "autoConnect")
-            Boolean autoConnect
+            Boolean autoConnect,
+            @RpcParameter(name = "transport")
+            Integer transport
             ) throws Exception {
         if (mGattCallbackList.get(index) != null) {
             BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(macAddress);
             BluetoothGatt mBluetoothGatt = device.connectGatt(mService.getApplicationContext(),
                     autoConnect,
-                    mGattCallbackList.get(index));
+                    mGattCallbackList.get(index),
+                    transport);
             BluetoothGattCount += 1;
             mBluetoothGattList.put(BluetoothGattCount, mBluetoothGatt);
             return BluetoothGattCount;
