@@ -462,9 +462,17 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     @Override
     public void shutdown() {
         for(BroadcastReceiver receiver : listeningDevices.values()) {
-            mService.unregisterReceiver(receiver);
+            try {
+                mService.unregisterReceiver(receiver);
+            } catch (IllegalArgumentException ex) {
+                Log.e("Failed to unregister " + ex);
+            }
         }
         listeningDevices.clear();
-        mService.unregisterReceiver(mPairingHelper);
+        try {
+            mService.unregisterReceiver(mPairingHelper);
+        } catch (IllegalArgumentException ex) {
+            Log.e("Failed to unregister pairing helper." + ex);
+        }
     }
 }
