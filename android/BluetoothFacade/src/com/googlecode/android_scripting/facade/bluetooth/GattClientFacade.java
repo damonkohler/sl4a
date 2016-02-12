@@ -495,7 +495,7 @@ public class GattClientFacade extends RpcReceiver {
         @RpcParameter(name = "serviceIndex") Integer serviceIndex,
         @RpcParameter(name = "characteristicUuid") String characteristicUuid,
         @RpcParameter(name = "descriptorUuid") String descriptorUuid,
-        @RpcParameter(name = "value") String value) throws Exception {
+        @RpcParameter(name = "value") byte[] value) throws Exception {
       if (mBluetoothGattList.get(gattIndex) == null) {
         throw new Exception("Invalid gattIndex " + gattIndex);
       }
@@ -518,8 +518,7 @@ public class GattClientFacade extends RpcReceiver {
       if (gattDescriptor == null) {
         throw new Exception("Invalid descriptor uuid: " + descriptorUuid);
       }
-        byte[] byteArray = ConvertUtils.convertStringToByteArray(value);
-        return gattDescriptor.setValue(byteArray);
+      return gattDescriptor.setValue(value);
     }
 
     /**
@@ -572,7 +571,7 @@ public class GattClientFacade extends RpcReceiver {
         @RpcParameter(name = "discoveredServiceListIndex") Integer discoveredServiceListIndex,
         @RpcParameter(name = "serviceIndex") Integer serviceIndex,
         @RpcParameter(name = "characteristicUuid") String characteristicUuid,
-        @RpcParameter(name = "value") String value) throws Exception {
+        @RpcParameter(name = "value") byte[] value) throws Exception {
       if (mBluetoothGattList.get(gattIndex) == null) {
         throw new Exception("Invalid gattIndex " + gattIndex);
       }
@@ -590,9 +589,47 @@ public class GattClientFacade extends RpcReceiver {
       if (gattCharacteristic == null) {
         throw new Exception("Invalid characteristic uuid: " + characteristicUuid);
       }
-      byte[] byteArray = ConvertUtils.convertStringToByteArray(value);
-      return gattCharacteristic.setValue(byteArray);
+      return gattCharacteristic.setValue(value);
     }
+
+    /**
+     * Set write type to a discovered characteristic.
+     * @param gattIndex - the gatt index to use
+     * @param discoveredServiceListIndex - the discovered service list index
+     * @param serviceIndex - the service index of the discoveredServiceListIndex
+     * @param characteristicUuid - the characteristic uuid in which the descriptor is
+     * @param writeType - the write type for characteristic
+     * @return true, if the value was set to the characteristic
+     * @throws Exception
+     */
+    @Rpc(description = "Set write type of a given characteristic to the associated remote device")
+    public boolean gattClientCharacteristicSetWriteType(
+        @RpcParameter(name = "gattIndex") Integer gattIndex,
+        @RpcParameter(name = "discoveredServiceListIndex") Integer discoveredServiceListIndex,
+        @RpcParameter(name = "serviceIndex") Integer serviceIndex,
+        @RpcParameter(name = "characteristicUuid") String characteristicUuid,
+        @RpcParameter(name = "writeType") Integer writeType) throws Exception {
+      if (mBluetoothGattList.get(gattIndex) == null) {
+        throw new Exception("Invalid gattIndex " + gattIndex);
+      }
+      List<BluetoothGattService> discoveredServiceList =
+          mBluetoothGattDiscoveredServicesList.get(discoveredServiceListIndex);
+      if (discoveredServiceList == null) {
+        throw new Exception("Invalid discoveredServiceListIndex " + discoveredServiceListIndex);
+      }
+      BluetoothGattService gattService = discoveredServiceList.get(serviceIndex);
+      if (gattService == null) {
+        throw new Exception("Invalid serviceIndex " + serviceIndex);
+      }
+      UUID cUuid = UUID.fromString(characteristicUuid);
+      BluetoothGattCharacteristic gattCharacteristic = gattService.getCharacteristic(cUuid);
+      if (gattCharacteristic == null) {
+        throw new Exception("Invalid characteristic uuid: " + characteristicUuid);
+      }
+      gattCharacteristic.setWriteType(writeType);
+      return true;
+    }
+
     /**
      * Read the RSSI for a connected remote device
      *
@@ -879,6 +916,7 @@ public class GattClientFacade extends RpcReceiver {
             Log.d("gatt_connect change onCharacteristicRead " + mEventType + " " + index);
             mResults.putInt("Status", status);
             mResults.putString("CharacteristicUuid", characteristic.getUuid().toString());
+            mResults.putByteArray("CharacteristicValue", characteristic.getValue());
             mEventFacade
                     .postEvent(mEventType + index + "onCharacteristicRead", mResults.clone());
             mResults.clear();
@@ -890,6 +928,7 @@ public class GattClientFacade extends RpcReceiver {
             Log.d("gatt_connect change onCharacteristicWrite " + mEventType + " " + index);
             mResults.putInt("Status", status);
             mResults.putString("CharacteristicUuid", characteristic.getUuid().toString());
+            mResults.putByteArray("CharacteristicValue", characteristic.getValue());
             mEventFacade
                     .postEvent(mEventType + index + "onCharacteristicWrite", mResults.clone());
             mResults.clear();

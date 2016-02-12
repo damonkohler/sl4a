@@ -179,7 +179,7 @@ public class GattServerFacade extends RpcReceiver {
       @RpcParameter(name = "bluetoothDeviceIndex") Integer bluetoothDeviceIndex,
       @RpcParameter(name = "requestId") Integer requestId,
       @RpcParameter(name = "status") Integer status, @RpcParameter(name = "offset") Integer offset,
-      @RpcParameter(name = "value") String value) throws Exception {
+      @RpcParameter(name = "value") byte[] value) throws Exception {
 
     BluetoothGattServer gattServer = mBluetoothGattServerList.get(gattServerIndex);
     if (gattServer == null)
@@ -192,8 +192,7 @@ public class GattServerFacade extends RpcReceiver {
     if (bluetoothDevice == null)
       throw new Exception(
           "Invalid bluetoothDeviceIndex: " + Integer.toString(bluetoothDeviceIndex));
-    gattServer.sendResponse(bluetoothDevice, requestId, status, offset,
-        ConvertUtils.convertStringToByteArray(value));
+    gattServer.sendResponse(bluetoothDevice, requestId, status, offset, value);
   }
 
   /**
@@ -452,7 +451,7 @@ public class GattServerFacade extends RpcReceiver {
       mResults.putParcelable("BluetoothDevice", device);
       mResults.putBoolean("preparedWrite", preparedWrite);
       mResults.putBoolean("responseNeeded", responseNeeded);
-      mResults.putString("value", ConvertUtils.convertByteArrayToString(value));
+      mResults.putByteArray("value", value);
       mResults.putInt("instanceId", characteristic.getInstanceId());
       mResults.putInt("properties", characteristic.getProperties());
       mResults.putString("uuid", characteristic.getUuid().toString());
