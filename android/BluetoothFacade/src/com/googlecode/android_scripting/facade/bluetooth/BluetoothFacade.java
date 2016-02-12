@@ -267,6 +267,11 @@ public class BluetoothFacade extends RpcReceiver {
         return mBluetoothAdapter.isEnabled();
     }
 
+    @Rpc(description = "Factory reset bluetooth settings.", returns = "True if successful.")
+    public boolean bluetoothFactoryReset() {
+        return mBluetoothAdapter.factoryReset();
+    }
+
     @Rpc(description = "Toggle Bluetooth on and off.", returns = "True if Bluetooth is enabled.")
     public Boolean bluetoothToggleState(@RpcParameter(name = "enabled")
     @RpcOptional
