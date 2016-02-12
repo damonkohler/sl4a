@@ -31,8 +31,10 @@ public class ConvertUtils {
         byte[] byteArray = new byte[parseString.length];
         if (byteArray.length > 0) {
             for (int i = 0; i < parseString.length; i++) {
-                byte byteValue = Byte.valueOf(parseString[i].trim());
-                byteArray[i] = byteValue;
+                int val = Integer.valueOf(parseString[i].trim());
+                if (val < 0 || val > 255)
+                    throw new java.lang.NumberFormatException("Val must be between 0 and 255");
+                byteArray[i] = (byte)val;
             }
         }
         return byteArray;
@@ -49,10 +51,10 @@ public class ConvertUtils {
         if (byteArray != null) {
             for (int i = 0; i < byteArray.length; i++) {
                 if ((i + 1) != byteArray.length) {
-                    ret = ret + Byte.valueOf(byteArray[i]) + ",";
+                    ret = ret + Integer.valueOf((byteArray[i]&0xFF)) + ",";
                 }
                 else {
-                    ret = ret + Byte.valueOf(byteArray[i]);
+                    ret = ret + Integer.valueOf((byteArray[i]&0xFF));
                 }
             }
         }
