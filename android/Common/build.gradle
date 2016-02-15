@@ -13,7 +13,6 @@ apply plugin: 'com.android.library'
 dependencies {
     compile project(':Utils')
     compile files('libs/guava-r06.jar')
-    compile files('libs/libGoogleAnalytics.jar')
     compile('com.android.support:support-v4:21.0.3'){
         force = true
     }
