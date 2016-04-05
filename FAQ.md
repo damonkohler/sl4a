@@ -122,7 +122,7 @@ Logcat is a rotating log of messages that Android produces. It's a very useful t
 In fact, SL4A works fine on emulators, having been to a large degree developed on them. But these interpreters require a bit of room, and the default AVD size for a sdcard is on 16Mb. This is inadequate. I would allocate a minimum of 128Mb, and in fact commonly set mine to 512Mb. Bear in mind that it's unusual to get an Android device with less than 2Gb these days.
 
 ### How do I run python from the Command Line? ###
-See this page: RunPythonAsScript
+See this page: [RunPythonAsScript](https://github.com/damonkohler/sl4a/blob/wiki/RunPythonAsScript.md)
 
 ### I found a bug and I have a great idea! ###
 
