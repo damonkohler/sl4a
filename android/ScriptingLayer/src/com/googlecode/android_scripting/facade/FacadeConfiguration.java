@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2017 The Android Open Source Project
  * Copyright (C) 2010 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,9 +39,6 @@ import java.util.TreeMap;
 
 /**
  * Encapsulates the list of supported facades and their construction.
- * 
- * @author Damon Kohler (damonkohler@gmail.com)
- * @author Igor Karp (igor.v.karp@gmail.com)
  */
 public class FacadeConfiguration {
   private final static Set<Class<? extends RpcReceiver>> sFacadeClassList;
@@ -101,6 +99,11 @@ public class FacadeConfiguration {
     if (sSdkLevel >= 8) {
       sFacadeClassList.add(WebCamFacade.class);
     }
+
+        if (sSdkLevel >= 9) {
+            // API 9 suuport only discover and NDEF, anotehr feature in 10.
+            sFacadeClassList.add(NfcManagerFacade.class);
+        }
 
     if (sSdkLevel >= 12) {
       sFacadeClassList.add(USBHostSerialFacade.class);
