@@ -69,16 +69,6 @@ public class NfcManagerFacade extends RpcReceiver {
         return mNfc.isEnabled();
     }
 
-    @Rpc(description = "Asynchronous call to enable NFC hardware.")
-    public Boolean nfcEnable() {
-        return mNfc.enable();
-    }
-
-    @Rpc(description = "Asynchronous call to disable NFC hardware.")
-    public Boolean nfcDisable() {
-        return mNfc.disable();
-    }
-
     @Rpc(description = "Start tracking NFC hardware state changes.")
     public void nfcStartTrackingStateChange() {
         mService.registerReceiver(mNfcStateReceiver, mStateChangeFilter);
