@@ -64,7 +64,7 @@ import org.json.JSONObject;
  */
 public class HtmlActivityTask extends FutureActivityTask<Void> {
 
-  private static final String HTTP = "http";
+  private static final String HTTP = "http".toLowerCase();
   private static final String ANDROID_PROTOTYPE_JS =
       "Android.prototype.%1$s = function(var_args) { "
           + "return this._call(\"%1$s\", Array.prototype.slice.call(arguments)); };";
@@ -117,7 +117,8 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
        * page on my site, so launch another Activity that handles URLs Intent intent = new
        * Intent(Intent.ACTION_VIEW, Uri.parse(url)); startActivity(intent);
        */
-      if (!HTTP.equals(Uri.parse(url).getScheme())) {
+      String sch = Uri.parse(url).getScheme().toLowerCase();
+      if (!sch.startsWith(HTTP)) {
         String source = null;
         try {
           source = FileUtils.readToString(new File(Uri.parse(url).getPath()));
