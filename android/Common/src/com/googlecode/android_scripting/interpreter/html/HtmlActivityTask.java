@@ -117,8 +117,8 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
        * page on my site, so launch another Activity that handles URLs Intent intent = new
        * Intent(Intent.ACTION_VIEW, Uri.parse(url)); startActivity(intent);
        */
-      String sch = Uri.parse(url).getScheme().toLowerCase();
-      if (!sch.startsWith(HTTP)) {
+            String sch = Uri.parse(url).getScheme().toLowerCase();
+            if (!sch.startsWith(HTTP)) {
         String source = null;
         try {
           source = FileUtils.readToString(new File(Uri.parse(url).getPath()));
@@ -163,7 +163,8 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
   }
 
   private void load() {
-    if (!HTTP.equals(Uri.parse(mUrl).getScheme())) {
+        String sch = Uri.parse(mUrl).getScheme().toLowerCase();
+        if (!sch.startsWith(HTTP)) {
       String source = null;
       try {
         source = FileUtils.readToString(new File(Uri.parse(mUrl).getPath()));
