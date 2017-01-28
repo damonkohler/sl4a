@@ -31,6 +31,7 @@ import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.JavascriptInterface;
 
 import com.googlecode.android_scripting.FileUtils;
 import com.googlecode.android_scripting.Log;
@@ -217,6 +218,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
 
   private class JavaScriptWrapper {
     @SuppressWarnings("unused")
+        @JavascriptInterface
     public String call(String data) throws JSONException {
       Log.v("Received: " + data);
       JSONObject request = new JSONObject(data);
@@ -236,6 +238,7 @@ public class HtmlActivityTask extends FutureActivityTask<Void> {
     }
 
     @SuppressWarnings("unused")
+        @JavascriptInterface
     public void dismiss() {
       Activity parent = getActivity();
       parent.finish();

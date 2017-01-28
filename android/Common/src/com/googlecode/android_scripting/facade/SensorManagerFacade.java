@@ -100,7 +100,7 @@ import java.util.List;
 public class SensorManagerFacade extends RpcReceiver {
   private final EventFacade mEventFacade;
   private final SensorManager mSensorManager;
-    private final int nMaxSensorType;
+    private volatile int nMaxSensorType;
 
   private volatile Bundle mSensorReadings;
 
@@ -622,7 +622,8 @@ public class SensorManagerFacade extends RpcReceiver {
                     // it is unknown sensor, register to array.
                     final int ever = Integer.MAX_VALUE;
                     info = new SensorInfo(ev.sensor.getType(), ever, "");
-                    this.nMaxSensorType = info.nSL4A = sensors.size() + 1;
+                    SensorManagerFacade.this.nMaxSensorType =
+                        info.nSL4A = sensors.size() + 1;
                     sensors.append(info.nSL4A, info);
                 }
                 if (mSensorNumber == 1) {
