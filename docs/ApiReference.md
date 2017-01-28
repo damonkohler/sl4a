@@ -1,2808 +1,2674 @@
-Having trouble? Got questions? Check the [FAQ](FAQ.md) or try the
-[SL4A discussion group](http://groups.google.com/group/android-scripting).
-
-More detailed API Help [here](http://www.mithril.com.au/android/doc)
+Generated at commit `changeset:   1307:36da773df6bb`
 
 **ActivityResultFacade**
-  * [setResultBoolean](#setResultBoolean)
-  * [setResultBooleanArray](#setResultBooleanArray)
-  * [setResultByte](#setResultByte)
-  * [setResultByteArray](#setResultByteArray)
-  * [setResultChar](#setResultChar)
-  * [setResultCharArray](#setResultCharArray)
-  * [setResultDouble](#setResultDouble)
-  * [setResultDoubleArray](#setResultDoubleArray)
-  * [setResultFloat](#setResultFloat)
-  * [setResultFloatArray](#setResultFloatArray)
-  * [setResultInteger](#setResultInteger)
-  * [setResultIntegerArray](#setResultIntegerArray)
-  * [setResultLong](#setResultLong)
-  * [setResultLongArray](#setResultLongArray)
-  * [setResultSerializable](#setResultSerializable)
-  * [setResultShort](#setResultShort)
-  * [setResultShortArray](#setResultShortArray)
-  * [setResultString](#setResultString)
-  * [setResultStringArray](#setResultStringArray)
+
+  * [setResultBoolean](#setresultboolean)
+  * [setResultByte](#setresultbyte)
+  * [setResultShort](#setresultshort)
+  * [setResultChar](#setresultchar)
+  * [setResultInteger](#setresultinteger)
+  * [setResultLong](#setresultlong)
+  * [setResultFloat](#setresultfloat)
+  * [setResultDouble](#setresultdouble)
+  * [setResultString](#setresultstring)
+  * [setResultBooleanArray](#setresultbooleanarray)
+  * [setResultByteArray](#setresultbytearray)
+  * [setResultShortArray](#setresultshortarray)
+  * [setResultCharArray](#setresultchararray)
+  * [setResultIntegerArray](#setresultintegerarray)
+  * [setResultLongArray](#setresultlongarray)
+  * [setResultFloatArray](#setresultfloatarray)
+  * [setResultDoubleArray](#setresultdoublearray)
+  * [setResultStringArray](#setresultstringarray)
+  * [setResultSerializable](#setresultserializable)
+
 **AndroidFacade**
-  * [environment](#environment)
-  * [getClipboard](#getClipboard)
-  * [getConstants](#getConstants)
-  * [getInput](#getInput)
-  * [getIntent](#getIntent)
-  * [getPackageVersion](#getPackageVersion)
-  * [getPackageVersionCode](#getPackageVersionCode)
-  * [getPassword](#getPassword)
-  * [log](#log)
-  * [makeIntent](#makeIntent)
-  * [makeToast](#makeToast)
-  * [notify](#notify)
-  * [requiredVersion](#requiredVersion)
-  * [sendBroadcast](#sendBroadcast)
-  * [sendBroadcastIntent](#sendBroadcastIntent)
-  * [sendEmail](#sendEmail)
-  * [setClipboard](#setClipboard)
-  * [startActivity](#startActivity)
-  * [startActivityForResult](#startActivityForResult)
-  * [startActivityForResultIntent](#startActivityForResultIntent)
-  * [startActivityIntent](#startActivityIntent)
+
+  * [setClipboard](#setclipboard)
+  * [getClipboard](#getclipboard)
+  * [startActivityForResult](#startactivityforresult)
+  * [startActivityForResultIntent](#startactivityforresultintent)
+  * [startActivity](#startactivity)
+  * [sendBroadcast](#sendbroadcast)
+  * [makeIntent](#makeintent)
+  * [startActivityIntent](#startactivityintent)
+  * [sendBroadcastIntent](#sendbroadcastintent)
   * [vibrate](#vibrate)
+  * [makeToast](#maketoast)
+  * [getInput](#getinput)
+  * [getPassword](#getpassword)
+  * [notify](#notify)
+  * [getIntent](#getintent)
+  * [sendEmail](#sendemail)
+  * [getPackageVersionCode](#getpackageversioncode)
+  * [getPackageVersion](#getpackageversion)
+  * [requiredVersion](#requiredversion)
+  * [log](#log)
+  * [environment](#environment)
+  * [getConstants](#getconstants)
+
 **ApplicationManagerFacade**
-  * [forceStopPackage](#forceStopPackage)
-  * [getLaunchableApplications](#getLaunchableApplications)
-  * [getRunningPackages](#getRunningPackages)
+
+  * [getLaunchableApplications](#getlaunchableapplications)
   * [launch](#launch)
+  * [getRunningPackages](#getrunningpackages)
+  * [forceStopPackage](#forcestoppackage)
+
 **BatteryManagerFacade**
-  * [batteryCheckPresent](#batteryCheckPresent)
-  * [batteryGetHealth](#batteryGetHealth)
-  * [batteryGetLevel](#batteryGetLevel)
-  * [batteryGetPlugType](#batteryGetPlugType)
-  * [batteryGetStatus](#batteryGetStatus)
-  * [batteryGetTechnology](#batteryGetTechnology)
-  * [batteryGetTemperature](#batteryGetTemperature)
-  * [batteryGetVoltage](#batteryGetVoltage)
-  * [batteryStartMonitoring](#batteryStartMonitoring)
-  * [batteryStopMonitoring](#batteryStopMonitoring)
-  * [readBatteryData](#readBatteryData)
-**BluetoothFacade** Requires API Level 5.
-  * [bluetoothAccept](#bluetoothAccept)
-  * [bluetoothActiveConnections](#bluetoothActiveConnections)
-  * [bluetoothConnect](#bluetoothConnect)
-  * [bluetoothDiscoveryCancel](#bluetoothDiscoveryCancel)
-  * [bluetoothDiscoveryStart](#bluetoothDiscoveryStart)
-  * [bluetoothGetConnectedDeviceName](#bluetoothGetConnectedDeviceName)
-  * [bluetoothGetLocalAddress](#bluetoothGetLocalAddress)
-  * [bluetoothGetLocalName](#bluetoothGetLocalName)
-  * [bluetoothGetRemoteDeviceName](#bluetoothGetRemoteDeviceName)
-  * [bluetoothGetScanMode](#bluetoothGetScanMode)
-  * [bluetoothIsDiscovering](#bluetoothIsDiscovering)
-  * [bluetoothMakeDiscoverable](#bluetoothMakeDiscoverable)
-  * [bluetoothRead](#bluetoothRead)
-  * [bluetoothReadBinary](#bluetoothReadBinary)
-  * [bluetoothReadLine](#bluetoothReadLine)
-  * [bluetoothReadReady](#bluetoothReadReady)
-  * [bluetoothSetLocalName](#bluetoothSetLocalName)
-  * [bluetoothStop](#bluetoothStop)
-  * [bluetoothWrite](#bluetoothWrite)
-  * [bluetoothWriteBinary](#bluetoothWriteBinary)
-  * [checkBluetoothState](#checkBluetoothState)
-  * [toggleBluetoothState](#toggleBluetoothState)
+
+  * [readBatteryData](#readbatterydata)
+  * [batteryStartMonitoring](#batterystartmonitoring)
+  * [batteryStopMonitoring](#batterystopmonitoring)
+  * [batteryGetStatus](#batterygetstatus)
+  * [batteryGetHealth](#batterygethealth)
+  * [batteryCheckPresent](#batterycheckpresent)
+  * [batteryGetLevel](#batterygetlevel)
+  * [batteryGetVoltage](#batterygetvoltage)
+  * [batteryGetTemperature](#batterygettemperature)
+  * [batteryGetTechnology](#batterygettechnology)
+
+**BluetoothFacade**
+
+  * [bluetoothActiveConnections](#bluetoothactiveconnections)
+  * [bluetoothWriteBinary](#bluetoothwritebinary)
+  * [bluetoothReadBinary](#bluetoothreadbinary)
+  * [bluetoothConnect](#bluetoothconnect)
+  * [bluetoothAccept](#bluetoothaccept)
+  * [bluetoothMakeDiscoverable](#bluetoothmakediscoverable)
+  * [bluetoothWrite](#bluetoothwrite)
+  * [bluetoothReadReady](#bluetoothreadready)
+  * [bluetoothRead](#bluetoothread)
+  * [bluetoothReadLine](#bluetoothreadline)
+  * [bluetoothGetRemoteDeviceName](#bluetoothgetremotedevicename)
+  * [bluetoothGetLocalName](#bluetoothgetlocalname)
+  * [bluetoothSetLocalName](#bluetoothsetlocalname)
+  * [bluetoothGetScanMode](#bluetoothgetscanmode)
+  * [bluetoothGetConnectedDeviceName](#bluetoothgetconnecteddevicename)
+  * [checkBluetoothState](#checkbluetoothstate)
+  * [toggleBluetoothState](#togglebluetoothstate)
+  * [bluetoothStop](#bluetoothstop)
+  * [bluetoothGetLocalAddress](#bluetoothgetlocaladdress)
+  * [bluetoothDiscoveryStart](#bluetoothdiscoverystart)
+  * [bluetoothDiscoveryCancel](#bluetoothdiscoverycancel)
+  * [bluetoothIsDiscovering](#bluetoothisdiscovering)
+
 **CameraFacade**
-  * [cameraCapturePicture](#cameraCapturePicture)
-  * [cameraInteractiveCapturePicture](#cameraInteractiveCapturePicture)
+
+  * [cameraCapturePicture](#cameracapturepicture)
+  * [cameraInteractiveCapturePicture](#camerainteractivecapturepicture)
+  * [camerasList](#cameraslist)
+
 **CommonIntentsFacade**
+
   * [pick](#pick)
-  * [scanBarcode](#scanBarcode)
-  * [search](#search)
+  * [scanBarcode](#scanbarcode)
   * [view](#view)
-  * [viewContacts](#viewContacts)
-  * [viewHtml](#viewHtml)
-  * [viewMap](#viewMap)
+  * [viewMap](#viewmap)
+  * [viewContacts](#viewcontacts)
+  * [viewHtml](#viewhtml)
+  * [search](#search)
+
 **ContactsFacade**
-  * [contactsGet](#contactsGet)
-  * [contactsGetAttributes](#contactsGetAttributes)
-  * [contactsGetById](#contactsGetById)
-  * [contactsGetCount](#contactsGetCount)
-  * [contactsGetIds](#contactsGetIds)
-  * [pickContact](#pickContact)
-  * [pickPhone](#pickPhone)
-  * [queryAttributes](#queryAttributes)
-  * [queryContent](#queryContent)
+
+  * [pickContact](#pickcontact)
+  * [pickPhone](#pickphone)
+  * [contactsGetAttributes](#contactsgetattributes)
+  * [contactsGetIds](#contactsgetids)
+  * [contactsGet](#contactsget)
+  * [contactsGetById](#contactsgetbyid)
+  * [contactsGetCount](#contactsgetcount)
+  * [queryContent](#querycontent)
+  * [queryAttributes](#queryattributes)
+
 **EventFacade**
-  * [eventClearBuffer](#eventClearBuffer)
-  * [eventGetBrodcastCategories](#eventGetBrodcastCategories)
-  * [eventPoll](#eventPoll)
-  * [eventPost](#eventPost)
-  * [eventRegisterForBroadcast](#eventRegisterForBroadcast)
-  * [eventUnregisterForBroadcast](#eventUnregisterForBroadcast)
-  * [eventWait](#eventWait)
-  * [eventWaitFor](#eventWaitFor)
-  * [postEvent](#postEvent)
-  * [receiveEvent](#receiveEvent)
-  * [startEventDispatcher](#startEventDispatcher)
-  * [stopEventDispatcher](#stopEventDispatcher)
-  * [waitForEvent](#waitForEvent)
+
+  * [eventClearBuffer](#eventclearbuffer)
+  * [eventRegisterForBroadcast](#eventregisterforbroadcast)
+  * [eventUnregisterForBroadcast](#eventunregisterforbroadcast)
+  * [eventGetBrodcastCategories](#eventgetbrodcastcategories)
+  * [eventPoll](#eventpoll)
+  * [eventWaitFor](#eventwaitfor)
+  * [eventWait](#eventwait)
+  * [eventPost](#eventpost)
+  * [rpcPostEvent](#rpcpostevent)
+  * [receiveEvent](#receiveevent)
+  * [waitForEvent](#waitforevent)
+  * [startEventDispatcher](#starteventdispatcher)
+  * [stopEventDispatcher](#stopeventdispatcher)
+
+**EyesFreeFacade**
+
+  * [ttsSpeak](#ttsspeak)
+
 **LocationFacade**
+
+  * [locationProviders](#locationproviders)
+  * [locationProviderEnabled](#locationproviderenabled)
+  * [startLocating](#startlocating)
+  * [readLocation](#readlocation)
+  * [stopLocating](#stoplocating)
+  * [getLastKnownLocation](#getlastknownlocation)
   * [geocode](#geocode)
-  * [getLastKnownLocation](#getLastKnownLocation)
-  * [locationProviderEnabled](#locationProviderEnabled)
-  * [locationProviders](#locationProviders)
-  * [readLocation](#readLocation)
-  * [startLocating](#startLocating)
-  * [stopLocating](#stopLocating)
+
 **MediaPlayerFacade**
-  * [mediaIsPlaying](#mediaIsPlaying)
-  * [mediaPlay](#mediaPlay)
-  * [mediaPlayClose](#mediaPlayClose)
-  * [mediaPlayInfo](#mediaPlayInfo)
-  * [mediaPlayList](#mediaPlayList)
-  * [mediaPlayPause](#mediaPlayPause)
-  * [mediaPlaySeek](#mediaPlaySeek)
-  * [mediaPlaySetLooping](#mediaPlaySetLooping)
-  * [mediaPlayStart](#mediaPlayStart)
+
+  * [mediaPlay](#mediaplay)
+  * [mediaPlayPause](#mediaplaypause)
+  * [mediaPlayStart](#mediaplaystart)
+  * [mediaPlayClose](#mediaplayclose)
+  * [mediaIsPlaying](#mediaisplaying)
+  * [mediaPlayInfo](#mediaplayinfo)
+  * [mediaPlayList](#mediaplaylist)
+  * [mediaPlaySetLooping](#mediaplaysetlooping)
+  * [mediaPlaySeek](#mediaplayseek)
+
 **MediaRecorderFacade**
-  * [recorderCaptureVideo](#recorderCaptureVideo)
-  * [recorderStartMicrophone](#recorderStartMicrophone)
-  * [recorderStartVideo](#recorderStartVideo)
-  * [recorderStop](#recorderStop)
-  * [startInteractiveVideoRecording](#startInteractiveVideoRecording)
+
+  * [recorderStartMicrophone](#recorderstartmicrophone)
+  * [recorderStartVideo](#recorderstartvideo)
+  * [recorderCaptureVideo](#recordercapturevideo)
+  * [recorderStop](#recorderstop)
+  * [startInteractiveVideoRecording](#startinteractivevideorecording)
+
+**NfcManagerFacade**
+
+  * [nfcIsEnabled](#nfcisenabled)
+  * [nfcStartTrackingStateChange](#nfcstarttrackingstatechange)
+  * [nfcStopTrackingStateChange](#nfcstoptrackingstatechange)
+
 **PhoneFacade**
-  * [checkNetworkRoaming](#checkNetworkRoaming)
-  * [getCellLocation](#getCellLocation)
-  * [getDeviceId](#getDeviceId)
-  * [getDeviceSoftwareVersion](#getDeviceSoftwareVersion)
-  * [getLine1Number](#getLine1Number)
-  * [getNeighboringCellInfo](#getNeighboringCellInfo)
-  * [getNetworkOperator](#getNetworkOperator)
-  * [getNetworkOperatorName](#getNetworkOperatorName)
-  * [getNetworkType](#getNetworkType)
-  * [getPhoneType](#getPhoneType)
-  * [getSimCountryIso](#getSimCountryIso)
-  * [getSimOperator](#getSimOperator)
-  * [getSimOperatorName](#getSimOperatorName)
-  * [getSimSerialNumber](#getSimSerialNumber)
-  * [getSimState](#getSimState)
-  * [getSubscriberId](#getSubscriberId)
-  * [getVoiceMailAlphaTag](#getVoiceMailAlphaTag)
-  * [getVoiceMailNumber](#getVoiceMailNumber)
-  * [phoneCall](#phoneCall)
-  * [phoneCallNumber](#phoneCallNumber)
-  * [phoneDial](#phoneDial)
-  * [phoneDialNumber](#phoneDialNumber)
-  * [readPhoneState](#readPhoneState)
-  * [startTrackingPhoneState](#startTrackingPhoneState)
-  * [stopTrackingPhoneState](#stopTrackingPhoneState)
+
+  * [startTrackingPhoneState](#starttrackingphonestate)
+  * [readPhoneState](#readphonestate)
+  * [stopTrackingPhoneState](#stoptrackingphonestate)
+  * [phoneCall](#phonecall)
+  * [phoneCallNumber](#phonecallnumber)
+  * [phoneDial](#phonedial)
+  * [phoneDialNumber](#phonedialnumber)
+  * [getCellLocation](#getcelllocation)
+  * [getNetworkOperator](#getnetworkoperator)
+  * [getNetworkOperatorName](#getnetworkoperatorname)
+  * [getNetworkType](#getnetworktype)
+  * [getPhoneType](#getphonetype)
+  * [getSimCountryIso](#getsimcountryiso)
+  * [getSimOperator](#getsimoperator)
+  * [getSimOperatorName](#getsimoperatorname)
+  * [getSimSerialNumber](#getsimserialnumber)
+  * [getSimState](#getsimstate)
+  * [getSubscriberId](#getsubscriberid)
+  * [getVoiceMailAlphaTag](#getvoicemailalphatag)
+  * [getVoiceMailNumber](#getvoicemailnumber)
+  * [checkNetworkRoaming](#checknetworkroaming)
+  * [getDeviceId](#getdeviceid)
+  * [getDeviceSoftwareVersion](#getdevicesoftwareversion)
+  * [getLine1Number](#getline1number)
+  * [getNeighboringCellInfo](#getneighboringcellinfo)
+
 **PreferencesFacade**
-  * [prefGetAll](#prefGetAll)
-  * [prefGetValue](#prefGetValue)
-  * [prefPutValue](#prefPutValue)
+
+  * [prefGetValue](#prefgetvalue)
+  * [prefPutValue](#prefputvalue)
+  * [prefGetAll](#prefgetall)
+
 **SensorManagerFacade**
-  * [readSensors](#readSensors)
-  * [sensorsGetAccuracy](#sensorsGetAccuracy)
-  * [sensorsGetLight](#sensorsGetLight)
-  * [sensorsReadAccelerometer](#sensorsReadAccelerometer)
-  * [sensorsReadMagnetometer](#sensorsReadMagnetometer)
-  * [sensorsReadOrientation](#sensorsReadOrientation)
-  * [startSensing](#startSensing)
-  * [startSensingThreshold](#startSensingThreshold)
-  * [startSensingTimed](#startSensingTimed)
-  * [stopSensing](#stopSensing)
+
+  * [startSensingTimed](#startsensingtimed)
+  * [startSensingThreshold](#startsensingthreshold)
+  * [readSensors](#readsensors)
+  * [stopSensing](#stopsensing)
+  * [sensorsGetAccuracy](#sensorsgetaccuracy)
+  * [sensorsGetLight](#sensorsgetlight)
+  * [sensorsReadAccelerometer](#sensorsreadaccelerometer)
+  * [sensorsReadMagnetometer](#sensorsreadmagnetometer)
+  * [sensorsReadOrientation](#sensorsreadorientation)
+  * [startSensing](#startsensing)
+
 **SettingsFacade**
-  * [checkAirplaneMode](#checkAirplaneMode)
-  * [checkRingerSilentMode](#checkRingerSilentMode)
-  * [checkScreenOn](#checkScreenOn)
-  * [getMaxMediaVolume](#getMaxMediaVolume)
-  * [getMaxRingerVolume](#getMaxRingerVolume)
-  * [getMediaVolume](#getMediaVolume)
-  * [getRingerVolume](#getRingerVolume)
-  * [getScreenBrightness](#getScreenBrightness)
-  * [getScreenTimeout](#getScreenTimeout)
-  * [getVibrateMode](#getVibrateMode)
-  * [setMediaVolume](#setMediaVolume)
-  * [setRingerVolume](#setRingerVolume)
-  * [setScreenBrightness](#setScreenBrightness)
-  * [setScreenTimeout](#setScreenTimeout)
-  * [toggleAirplaneMode](#toggleAirplaneMode)
-  * [toggleRingerSilentMode](#toggleRingerSilentMode)
-  * [toggleVibrateMode](#toggleVibrateMode)
-**SignalStrengthFacade** Requires API Level 7.
-  * [readSignalStrengths](#readSignalStrengths)
-  * [startTrackingSignalStrengths](#startTrackingSignalStrengths)
-  * [stopTrackingSignalStrengths](#stopTrackingSignalStrengths)
+
+  * [setScreenTimeout](#setscreentimeout)
+  * [getScreenTimeout](#getscreentimeout)
+  * [checkAirplaneMode](#checkairplanemode)
+  * [toggleAirplaneMode](#toggleairplanemode)
+  * [checkRingerSilentMode](#checkringersilentmode)
+  * [toggleRingerSilentMode](#toggleringersilentmode)
+  * [toggleVibrateMode](#togglevibratemode)
+  * [getVibrateMode](#getvibratemode)
+  * [getMaxRingerVolume](#getmaxringervolume)
+  * [getRingerVolume](#getringervolume)
+  * [setRingerVolume](#setringervolume)
+  * [getMaxMediaVolume](#getmaxmediavolume)
+  * [getMediaVolume](#getmediavolume)
+  * [setMediaVolume](#setmediavolume)
+  * [getScreenBrightness](#getscreenbrightness)
+  * [setScreenBrightness](#setscreenbrightness)
+  * [checkScreenOn](#checkscreenon)
+
+**SignalStrengthFacade**
+
+  * [startTrackingSignalStrengths](#starttrackingsignalstrengths)
+  * [readSignalStrengths](#readsignalstrengths)
+  * [stopTrackingSignalStrengths](#stoptrackingsignalstrengths)
+
 **SmsFacade**
-  * [smsDeleteMessage](#smsDeleteMessage)
-  * [smsGetAttributes](#smsGetAttributes)
-  * [smsGetMessageById](#smsGetMessageById)
-  * [smsGetMessageCount](#smsGetMessageCount)
-  * [smsGetMessageIds](#smsGetMessageIds)
-  * [smsGetMessages](#smsGetMessages)
-  * [smsMarkMessageRead](#smsMarkMessageRead)
-  * [smsSend](#smsSend)
+
+  * [smsSend](#smssend)
+  * [smsGetMessageCount](#smsgetmessagecount)
+  * [smsGetMessageIds](#smsgetmessageids)
+  * [smsGetMessages](#smsgetmessages)
+  * [smsGetMessageById](#smsgetmessagebyid)
+  * [smsGetAttributes](#smsgetattributes)
+  * [smsDeleteMessage](#smsdeletemessage)
+  * [smsMarkMessageRead](#smsmarkmessageread)
+
 **SpeechRecognitionFacade**
-  * [recognizeSpeech](#recognizeSpeech)
-**TextToSpeechFacade** Requires API Level 4.
-  * [ttsIsSpeaking](#ttsIsSpeaking)
-  * [ttsSpeak](#ttsSpeak)
+
+  * [recognizeSpeech](#recognizespeech)
+
+**TextToSpeechFacade**
+
+  * [ttsSpeak](#ttsspeak)
+  * [ttsIsSpeaking](#ttsisspeaking)
+  * [setTtsPitch](#setttspitch)
+
 **ToneGeneratorFacade**
-  * [generateDtmfTones](#generateDtmfTones)
+
+  * [generateDtmfTones](#generatedtmftones)
+
+**USBHostSerialFacade**
+
+  * [usbserialGetDeviceList](#usbserialgetdevicelist)
+  * [usbserialDisconnect](#usbserialdisconnect)
+  * [usbserialActiveConnections](#usbserialactiveconnections)
+  * [usbserialWriteBinary](#usbserialwritebinary)
+  * [usbserialReadBinary](#usbserialreadbinary)
+  * [usbserialConnect](#usbserialconnect)
+  * [usbserialHostEnable](#usbserialhostenable)
+  * [usbserialWrite](#usbserialwrite)
+  * [usbserialReadReady](#usbserialreadready)
+  * [usbserialRead](#usbserialread)
+  * [usbserialGetDeviceName](#usbserialgetdevicename)
+
 **UiFacade**
-  * [addContextMenuItem](#addContextMenuItem)
-  * [addOptionsMenuItem](#addOptionsMenuItem)
-  * [clearContextMenu](#clearContextMenu)
-  * [clearOptionsMenu](#clearOptionsMenu)
-  * [dialogCreateAlert](#dialogCreateAlert)
-  * [dialogCreateDatePicker](#dialogCreateDatePicker)
-  * [dialogCreateHorizontalProgress](#dialogCreateHorizontalProgress)
-  * [dialogCreateInput](#dialogCreateInput)
-  * [dialogCreatePassword](#dialogCreatePassword)
-  * [dialogCreateSeekBar](#dialogCreateSeekBar)
-  * [dialogCreateSpinnerProgress](#dialogCreateSpinnerProgress)
-  * [dialogCreateTimePicker](#dialogCreateTimePicker)
-  * [dialogDismiss](#dialogDismiss)
-  * [dialogGetInput](#dialogGetInput)
-  * [dialogGetPassword](#dialogGetPassword)
-  * [dialogGetResponse](#dialogGetResponse)
-  * [dialogGetSelectedItems](#dialogGetSelectedItems)
-  * [dialogSetCurrentProgress](#dialogSetCurrentProgress)
-  * [dialogSetItems](#dialogSetItems)
-  * [dialogSetMaxProgress](#dialogSetMaxProgress)
-  * [dialogSetMultiChoiceItems](#dialogSetMultiChoiceItems)
-  * [dialogSetNegativeButtonText](#dialogSetNegativeButtonText)
-  * [dialogSetNeutralButtonText](#dialogSetNeutralButtonText)
-  * [dialogSetPositiveButtonText](#dialogSetPositiveButtonText)
-  * [dialogSetSingleChoiceItems](#dialogSetSingleChoiceItems)
-  * [dialogShow](#dialogShow)
-  * [fullDismiss](#fullDismiss)
-  * [fullKeyOverride](#fullKeyOverride)
-  * [fullQuery](#fullQuery)
-  * [fullQueryDetail](#fullQueryDetail)
-  * [fullSetList](#fullSetList)
-  * [fullSetProperty](#fullSetProperty)
-  * [fullSetTitle](#fullSetTitle)
-  * [fullShow](#fullShow)
-  * [webViewShow](#webViewShow)
+
+  * [dialogCreateInput](#dialogcreateinput)
+  * [dialogCreatePassword](#dialogcreatepassword)
+  * [dialogGetInput](#dialoggetinput)
+  * [dialogGetPassword](#dialoggetpassword)
+  * [dialogCreateSpinnerProgress](#dialogcreatespinnerprogress)
+  * [dialogCreateHorizontalProgress](#dialogcreatehorizontalprogress)
+  * [dialogCreateAlert](#dialogcreatealert)
+  * [dialogCreateSeekBar](#dialogcreateseekbar)
+  * [dialogCreateTimePicker](#dialogcreatetimepicker)
+  * [dialogCreateDatePicker](#dialogcreatedatepicker)
+  * [dialogDismiss](#dialogdismiss)
+  * [dialogShow](#dialogshow)
+  * [dialogSetCurrentProgress](#dialogsetcurrentprogress)
+  * [dialogSetMaxProgress](#dialogsetmaxprogress)
+  * [dialogSetPositiveButtonText](#dialogsetpositivebuttontext)
+  * [dialogSetNegativeButtonText](#dialogsetnegativebuttontext)
+  * [dialogSetNeutralButtonText](#dialogsetneutralbuttontext)
+  * [dialogSetItems](#dialogsetitems)
+  * [dialogSetSingleChoiceItems](#dialogsetsinglechoiceitems)
+  * [dialogSetMultiChoiceItems](#dialogsetmultichoiceitems)
+  * [dialogGetResponse](#dialoggetresponse)
+  * [dialogGetSelectedItems](#dialoggetselecteditems)
+  * [webViewShow](#webviewshow)
+  * [addContextMenuItem](#addcontextmenuitem)
+  * [addOptionsMenuItem](#addoptionsmenuitem)
+  * [clearContextMenu](#clearcontextmenu)
+  * [clearOptionsMenu](#clearoptionsmenu)
+  * [fullShow](#fullshow)
+  * [fullDismiss](#fulldismiss)
+  * [fullQuery](#fullquery)
+  * [fullQueryDetail](#fullquerydetail)
+  * [fullSetProperty](#fullsetproperty)
+  * [fullSetList](#fullsetlist)
+  * [fullSetTitle](#fullsettitle)
+  * [fullKeyOverride](#fullkeyoverride)
+
 **WakeLockFacade**
-  * [wakeLockAcquireBright](#wakeLockAcquireBright)
-  * [wakeLockAcquireDim](#wakeLockAcquireDim)
-  * [wakeLockAcquireFull](#wakeLockAcquireFull)
-  * [wakeLockAcquirePartial](#wakeLockAcquirePartial)
-  * [wakeLockRelease](#wakeLockRelease)
-**WebCamFacade** Requires API Level 8.
-  * [cameraStartPreview](#cameraStartPreview)
-  * [cameraStopPreview](#cameraStopPreview)
-  * [webcamAdjustQuality](#webcamAdjustQuality)
-  * [webcamStart](#webcamStart)
-  * [webcamStop](#webcamStop)
+
+  * [wakeLockAcquireFull](#wakelockacquirefull)
+  * [wakeLockAcquirePartial](#wakelockacquirepartial)
+  * [wakeLockAcquireBright](#wakelockacquirebright)
+  * [wakeLockAcquireDim](#wakelockacquiredim)
+  * [wakeLockRelease](#wakelockrelease)
+
+**WebCamFacade**
+
+  * [webcamStart](#webcamstart)
+  * [webcamAdjustQuality](#webcamadjustquality)
+  * [webcamStop](#webcamstop)
+  * [cameraStartPreview](#camerastartpreview)
+  * [cameraStopPreview](#camerastoppreview)
+
 **WifiFacade**
-  * [checkWifiState](#checkWifiState)
-  * [toggleWifiState](#toggleWifiState)
-  * [wifiDisconnect](#wifiDisconnect)
-  * [wifiGetConnectionInfo](#wifiGetConnectionInfo)
-  * [wifiGetScanResults](#wifiGetScanResults)
-  * [wifiLockAcquireFull](#wifiLockAcquireFull)
-  * [wifiLockAcquireScanOnly](#wifiLockAcquireScanOnly)
-  * [wifiLockRelease](#wifiLockRelease)
-  * [wifiReassociate](#wifiReassociate)
-  * [wifiReconnect](#wifiReconnect)
-  * [wifiStartScan](#wifiStartScan)
 
+  * [wifiGetScanResults](#wifigetscanresults)
+  * [wifiLockAcquireFull](#wifilockacquirefull)
+  * [wifiLockAcquireScanOnly](#wifilockacquirescanonly)
+  * [wifiLockRelease](#wifilockrelease)
+  * [wifiStartScan](#wifistartscan)
+  * [checkWifiState](#checkwifistate)
+  * [toggleWifiState](#togglewifistate)
+  * [wifiDisconnect](#wifidisconnect)
+  * [wifiGetConnectionInfo](#wifigetconnectioninfo)
+  * [wifiReassociate](#wifireassociate)
+  * [wifiReconnect](#wifireconnect)
 
-### <sub>addContextMenuItem</sub> ###
-```
-addContextMenuItem(
- String label: label for this menu item,
- String event: event that will be generated on menu item click,
- Object eventData[optional])
-
-Adds a new item to context menu.
-```
-
-### <sub>addOptionsMenuItem</sub> ###
-```
-addOptionsMenuItem(
- String label: label for this menu item,
- String event: event that will be generated on menu item click,
- Object eventData[optional],
- String iconName[optional]: Android system menu icon, see                       
-http://developer.android.com/reference/android/R.drawable.html)
-
-Adds a new item to options menu.
-```
-
-### <sub>batteryCheckPresent</sub> ###
-```
-batteryCheckPresent()
-
-Returns the most recently received battery presence data.
-
-Requires API Level 5.
-```
-
-### <sub>batteryGetHealth</sub> ###
-```
-batteryGetHealth()
-
-Returns the most recently received battery health data:
-1 - unknown;
-2 - good;
-3 - overheat;
-4 - dead;
-5 - over voltage;
-6 - unspecified failure;
-```
-
-### <sub>batteryGetLevel</sub> ###
-```
-batteryGetLevel()
-
-Returns the most recently received battery level (percentage).
-
-Requires API Level 5.
-```
-
-### <sub>batteryGetPlugType</sub> ###
-```
-batteryGetPlugType()
-
-Returns the most recently received plug type data:
--1 - unknown
-0 - unplugged;
-1 - power source is an AC charger
-2 - power source is a USB port
-```
-
-### <sub>batteryGetStatus</sub> ###
-```
-batteryGetStatus()
-
-Returns  the most recently received battery status data:
-1 - unknown;
-2 - charging;
-3 - discharging;
-4 - not charging;
-5 - full;
-```
-
-### <sub>batteryGetTechnology</sub> ###
-```
-batteryGetTechnology()
-
-Returns the most recently received battery technology data.
-
-Requires API Level 5.
-```
-
-### <sub>batteryGetTemperature</sub> ###
-```
-batteryGetTemperature()
-
-Returns the most recently received battery temperature.
-
-Requires API Level 5.
-```
-
-### <sub>batteryGetVoltage</sub> ###
-```
-batteryGetVoltage()
-
-Returns the most recently received battery voltage.
-
-Requires API Level 5.
-```
-
-### <sub>batteryStartMonitoring</sub> ###
-```
-batteryStartMonitoring()
-
-Starts tracking battery state.
-
-Generates "battery" events.
-```
-
-### <sub>batteryStopMonitoring</sub> ###
-```
-batteryStopMonitoring()
-
-Stops tracking battery state.
-```
-
-### <sub>bluetoothAccept</sub> ###
-```
-bluetoothAccept(
- String uuid[optional, default 457807c0-4897-11df-9879-0800200c9a66],
- Integer timeout[optional, default 0]: How long to wait for a new connection, 0 
-is wait for ever)
-
-Listens for and accepts a Bluetooth connection. Blocks until the connection is  
-established or fails.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothActiveConnections</sub> ###
-```
-bluetoothActiveConnections()
-
-Returns active Bluetooth connections.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothConnect</sub> ###
-```
-bluetoothConnect(
- String uuid[optional, default 457807c0-4897-11df-9879-0800200c9a66]: The UUID  
-passed here must match the UUID used by the server device.,
- String address[optional]: The user will be presented with a list of discovered 
-devices to choose from if an address is not provided.)
-
-Connect to a device over Bluetooth. Blocks until the connection is established  
-or fails.
-
-Returns:
-  True if the connection was established successfully.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothDiscoveryCancel</sub> ###
-```
-bluetoothDiscoveryCancel()
-
-Cancel the current device discovery process.
-
-Returns:
-  true on success, false on error
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothDiscoveryStart</sub> ###
-```
-bluetoothDiscoveryStart()
-
-Start the remote device discovery process. 
-
-Returns:
-  true on success, false on error
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothGetConnectedDeviceName</sub> ###
-```
-bluetoothGetConnectedDeviceName(
- String connID[optional, default null]: Connection id)
-
-Returns the name of the connected device.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothGetLocalAddress</sub> ###
-```
-bluetoothGetLocalAddress()
-
-Returns the hardware address of the local Bluetooth adapter. 
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothGetLocalName</sub> ###
-```
-bluetoothGetLocalName()
-
-Gets the Bluetooth Visible device name
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothGetRemoteDeviceName</sub> ###
-```
-bluetoothGetRemoteDeviceName(
- String address: Bluetooth Address For Target Device)
-
-Queries a remote device for it's name or null if it can't be resolved
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothGetScanMode</sub> ###
-```
-bluetoothGetScanMode()
-
-Gets the scan mode for the local dongle.
-Return values:
--1 when Bluetooth is disabled.
-0 if non discoverable and non connectable.
-1 connectable non discoverable.
-3 connectable and discoverable.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothIsDiscovering</sub> ###
-```
-bluetoothIsDiscovering()
-
-Return true if the local Bluetooth adapter is currently in the device discovery 
-process. 
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothMakeDiscoverable</sub> ###
-```
-bluetoothMakeDiscoverable(
- Integer duration[optional, default 300]: period of time, in seconds, during    
-which the device should be discoverable)
-
-Requests that the device be discoverable for Bluetooth connections.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothRead</sub> ###
-```
-bluetoothRead(
- Integer bufferSize[optional, default 4096],
- String connID[optional, default null]: Connection id)
-
-Read up to bufferSize ASCII characters.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothReadBinary</sub> ###
-```
-bluetoothReadBinary(
- Integer bufferSize[optional, default 4096],
- String connID[optional, default ]: Connection id)
-
-Read up to bufferSize bytes and return a chunked, base64 encoded string.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothReadLine</sub> ###
-```
-bluetoothReadLine(
- String connID[optional, default null]: Connection id)
-
-Read the next line.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothReadReady</sub> ###
-```
-bluetoothReadReady(
- String connID[optional, default ]: Connection id)
-
-Returns True if the next read is guaranteed not to block.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothSetLocalName</sub> ###
-```
-bluetoothSetLocalName(
- String name: New local name)
-
-Sets the Bluetooth Visible device name, returns True on success
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothStop</sub> ###
-```
-bluetoothStop(
- String connID[optional, default null]: Connection id)
-
-Stops Bluetooth connection.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothWrite</sub> ###
-```
-bluetoothWrite(
- String ascii,
- String connID[optional, default ]: Connection id)
-
-Sends ASCII characters over the currently open Bluetooth connection.
-
-Requires API Level 5.
-```
-
-### <sub>bluetoothWriteBinary</sub> ###
-```
-bluetoothWriteBinary(
- String base64: A base64 encoded String of the bytes to be sent.,
- String connID[optional, default ]: Connection id)
-
-Send bytes over the currently open Bluetooth connection.
-
-Requires API Level 5.
-```
-
-### <sub>cameraCapturePicture</sub> ###
-```
-cameraCapturePicture(
- String targetPath,
- Boolean useAutoFocus[optional, default true])
-
-Take a picture and save it to the specified path.
-
-Returns:
- A map of Booleans autoFocus and takePicture where True indicates success.
-```
-
-### <sub>cameraInteractiveCapturePicture</sub> ###
-```
-cameraInteractiveCapturePicture(
- String targetPath)
-
-Starts the image capture application to take a picture and saves it to the      
-specified path.
-```
-
-### <sub>cameraStartPreview</sub> ###
-```
-cameraStartPreview(
- Integer resolutionLevel[optional, default 0]: increasing this number provides  
-higher resolution,
- Integer jpegQuality[optional, default 20]: a number from 0-100,
- String filepath[optional]: Path to store jpeg files.)
-
-Start Preview Mode. Throws 'preview' events.
-
-Returns:
-  True if successful
-
-Requires API Level 8.
-```
-
-### <sub>cameraStopPreview</sub> ###
-```
-cameraStopPreview()
-
-Stop the preview mode.
-
-Requires API Level 8.
-```
-
-### <sub>checkAirplaneMode</sub> ###
-```
-checkAirplaneMode()
-
-Checks the airplane mode setting.
-
-Returns:
-  True if airplane mode is enabled.
-```
-
-### <sub>checkBluetoothState</sub> ###
-```
-checkBluetoothState()
-
-Checks Bluetooth state.
-
-Returns:
-  True if Bluetooth is enabled.
-
-Requires API Level 5.
-```
-
-### <sub>checkNetworkRoaming</sub> ###
-```
-checkNetworkRoaming()
-
-Returns true if the device is considered roaming on the current network, for    
-GSM purposes.
-```
-
-### <sub>checkRingerSilentMode</sub> ###
-```
-checkRingerSilentMode()
-
-Checks the ringer silent mode setting.
-
-Returns:
-  True if ringer silent mode is enabled.
-```
-
-### <sub>checkScreenOn</sub> ###
-```
-checkScreenOn()
-
-Checks if the screen is on or off (requires API level 7).
+# Method descriptions
 
-Returns:
-  True if the screen is currently on.
-```
-
-### <sub>checkWifiState</sub> ###
-```
-checkWifiState()
-
-Checks Wifi state.
-
-Returns:
-  True if Wifi is enabled.
-```
-
-### <sub>clearContextMenu</sub> ###
-```
-clearContextMenu()
-
-Removes all items previously added to context menu.
-```
-
-### <sub>clearOptionsMenu</sub> ###
-```
-clearOptionsMenu()
-
-Removes all items previously added to options menu.
-```
-
-### <sub>contactsGet</sub> ###
-```
-contactsGet(
- JSONArray attributes[optional])
-
-Returns a List of all contacts.
-
-Returns:
-  a List of contacts as Maps
-```
-
-### <sub>contactsGetAttributes</sub> ###
-```
-contactsGetAttributes()
-
-Returns a List of all possible attributes for contacts.
-```
-
-### <sub>contactsGetById</sub> ###
-```
-contactsGetById(
- Integer id,
-  JSONArray attributes[optional])
-
-Returns contacts by ID.
-```
-
-### <sub>contactsGetCount</sub> ###
-```
-contactsGetCount()
-
-Returns the number of contacts.
-```
-
-### <sub>contactsGetIds</sub> ###
-```
-contactsGetIds()
-
-Returns a List of all contact IDs.
-```
-
-### <sub>dialogCreateAlert</sub> ###
-```
-dialogCreateAlert(
- String title[optional],
-  String message[optional])
-
-Create alert dialog.
-```
-
-### <sub>dialogCreateDatePicker</sub> ###
-```
-dialogCreateDatePicker(
- Integer year[optional, default 1970],
- Integer month[optional, default 1],
- Integer day[optional, default 1])
-
-Create date picker dialog.
-```
-
-### <sub>dialogCreateHorizontalProgress</sub> ###
-```
-dialogCreateHorizontalProgress(
- String title[optional],
- String message[optional],
- Integer maximum progress[optional, default 100])
-
-Create a horizontal progress dialog.
-```
-
-### <sub>dialogCreateInput</sub> ###
-```
-dialogCreateInput(
- String title[optional, default Value]: title of the input box,
- String message[optional, default Please enter value:]: message to display      
-above the input box,
- String defaultText[optional]: text to insert into the input box,
- String inputType[optional]: type of input data, ie number or text)
-
-Create a text input dialog.
-```
-
-### <sub>dialogCreatePassword</sub> ###
-```
-dialogCreatePassword(
- String title[optional, default Password]: title of the input box,
- String message[optional, default Please enter password:]: message to display   
-above the input box)
-
-Create a password input dialog.
-```
-
-### <sub>dialogCreateSeekBar</sub> ###
-```
-dialogCreateSeekBar(
- Integer starting value[optional, default 50],
- Integer maximum value[optional, default 100],
- String title,
-  String message)
-
-Create seek bar dialog.
-```
-
-### <sub>dialogCreateSpinnerProgress</sub> ###
-```
-dialogCreateSpinnerProgress(
- String title[optional],
- String message[optional],
- Integer maximum progress[optional, default 100])
-
-Create a spinner progress dialog.
-```
-
-### <sub>dialogCreateTimePicker</sub> ###
-```
-dialogCreateTimePicker(
- Integer hour[optional, default 0],
- Integer minute[optional, default 0],
- Boolean is24hour[optional, default false]: Use 24 hour clock)
-
-Create time picker dialog.
-```
-
-### <sub>dialogDismiss</sub> ###
-```
-dialogDismiss()
-
-Dismiss dialog.
-```
-
-### <sub>dialogGetInput</sub> ###
-```
-dialogGetInput(
- String title[optional, default Value]: title of the input box,
- String message[optional, default Please enter value:]: message to display      
-above the input box,
- String defaultText[optional]: text to insert into the input box)
-
-Queries the user for a text input.
-```
-
-### <sub>dialogGetPassword</sub> ###
-```
-dialogGetPassword(
- String title[optional, default Password]: title of the password box,
- String message[optional, default Please enter password:]: message to display   
-above the input box)
-
-Queries the user for a password.
-```
-
-### <sub>dialogGetResponse</sub> ###
-```
-dialogGetResponse()
-
-Returns dialog response.
-```
-
-### <sub>dialogGetSelectedItems</sub> ###
-```
-dialogGetSelectedItems()
-
-This method provides list of items user selected.
-
-Returns:
-  Selected items
-```
-
-### <sub>dialogSetCurrentProgress</sub> ###
-```
-dialogSetCurrentProgress(
- Integer current)
-
-Set progress dialog current value.
-```
-
-### <sub>dialogSetItems</sub> ###
-```
-dialogSetItems(
-  JSONArray items)
-
-Set alert dialog list items.
-```
-
-### <sub>dialogSetMaxProgress</sub> ###
-```
-dialogSetMaxProgress(
-  Integer max)
-
-Set progress dialog maximum value.
-```
-
-### <sub>dialogSetMultiChoiceItems</sub> ###
-```
-dialogSetMultiChoiceItems(
- JSONArray items,
- JSONArray selected[optional]: list of selected items)
-
-Set dialog multiple choice items and selection.
-```
-
-### <sub>dialogSetNegativeButtonText</sub> ###
-```
-dialogSetNegativeButtonText(
-  String text)
-
-Set alert dialog button text.
-```
-
-### <sub>dialogSetNeutralButtonText</sub> ###
-```
-dialogSetNeutralButtonText(
-  String text)
-
-Set alert dialog button text.
-```
-
-### <sub>dialogSetPositiveButtonText</sub> ###
-```
-dialogSetPositiveButtonText(
- String text)
-
-Set alert dialog positive button text.
-```
-
-### <sub>dialogSetSingleChoiceItems</sub> ###
-```
-dialogSetSingleChoiceItems(
- JSONArray items,
- Integer selected[optional, default 0]: selected item index)
-
-Set dialog single choice items and selected item.
-```
-
-### <sub>dialogShow</sub> ###
-```
-dialogShow()
-
-Show dialog.
-```
-
-### <sub>environment</sub> ###
-```
-environment()
-
-A map of various useful environment details
-```
-
-### <sub>eventClearBuffer</sub> ###
-```
-eventClearBuffer()
-
-Clears all events from the event buffer.
-```
-
-### <sub>eventGetBrodcastCategories</sub> ###
-```
-eventGetBrodcastCategories()
-
-Lists all the broadcast signals we are listening for
-```
-
-### <sub>eventPoll</sub> ###
-```
-eventPoll(
- Integer number_of_events[optional, default 1])
-
-Returns and removes the oldest n events (i.e. location or sensor update, etc.)  
-from the event buffer.
-
-Returns:
-  A List of Maps of event properties.
-```
-
-### <sub>eventPost</sub> ###
-```
-eventPost(
- String name: Name of event,
- String data: Data contained in event.,
- Boolean enqueue[optional, default null]: Set to False if you don't want your   
-events to be added to the event queue, just dispatched.)
-
-Post an event to the event queue.
-```
-
-### <sub>eventRegisterForBroadcast</sub> ###
-```
-eventRegisterForBroadcast(
- String category,
- Boolean enqueue[optional, default true]: Should this events be added to the    
-event queue or only dispatched)
-
-Registers a listener for a new broadcast signal
-```
-
-### <sub>eventUnregisterForBroadcast</sub> ###
-```
-eventUnregisterForBroadcast(
- String category)
-
-Stop listening for a broadcast signal
-```
-
-### <sub>eventWait</sub> ###
-```
-eventWait(
- Integer timeout[optional]: the maximum time to wait)
-
-Blocks until an event occurs. The returned event is removed from the buffer.
-
-Returns:
-  Map of event properties.
-```
-
-### <sub>eventWaitFor</sub> ###
-```
-eventWaitFor(
- String eventName,
- Integer timeout[optional]: the maximum time to wait (in ms))
-
-Blocks until an event with the supplied name occurs. The returned event is not  
-removed from the buffer.
-
-Returns:
-  Map of event properties.
-```
-
-### <sub>forceStopPackage</sub> ###
-```
-forceStopPackage(
- String packageName: name of package)
-
-Force stops a package.
-```
-
-### <sub>fullDismiss</sub> ###
-```
-fullDismiss()
-
-Dismiss Full Screen.
-```
-
-### <sub>fullKeyOverride</sub> ###
-```
-fullKeyOverride(
- JSONArray keycodes: List of keycodes to override,
- Boolean enable[optional, default true]: Turn overriding or off)
-
-Override default key actions
-```
-
-### <sub>fullQuery</sub> ###
-```
-fullQuery()
-
-Get Fullscreen Properties
-```
-
-### <sub>fullQueryDetail</sub> ###
-```
-fullQueryDetail(
- String id: id of layout widget)
-
-Get fullscreen properties for a specific widget
-```
-
-### <sub>fullSetList</sub> ###
-```
-fullSetList(
- String id: id of layout widget,
- JSONArray list: List to set)
-
-Attach a list to a fullscreen widget
-```
-
-### <sub>fullSetProperty</sub> ###
-```
-fullSetProperty(
- String id: id of layout widget,
- String property: name of property to set,
- String value: value to set property to)
-
-Set fullscreen widget property
-```
-
-### <sub>fullSetTitle</sub> ###
-```
-fullSetTitle(
- String title: Activity Title)
-
-Set the Full Screen Activity Title
-```
-
-### <sub>fullShow</sub> ###
-```
-fullShow(
- String layout: String containing View layout,
- String title[optional]: Activity Title)
-
-Show Full Screen.
-```
+## generateDtmfTones
 
-### <sub>generateDtmfTones</sub> ###
 ```
-generateDtmfTones(
- String phoneNumber,
- Integer toneDuration[optional, default 100]: duration of each tone in          
-milliseconds)
+void generateDtmfTones( String phoneNumber, Integer toneDuration)
 
 Generate DTMF tones for the given phone number.
 ```
 
-### <sub>geocode</sub> ###
-```
-geocode(
- Double latitude,
- Double longitude,
- Integer maxResults[optional, default 1]: maximum number of results)
-
-Returns a list of addresses for the given latitude and longitude.
-
-Returns:
-  A list of addresses.
-```
-
-### <sub>getCellLocation</sub> ###
-```
-getCellLocation()
-
-Returns the current cell location.
-```
-
-### <sub>getClipboard</sub> ###
-```
-getClipboard()
-
-Read text from the clipboard.
-
-Returns:
-  The text in the clipboard.
-```
-
-### <sub>getConstants</sub> ###
-```
-getConstants(
- String classname: Class to get constants from)
-
-Get list of constants (static final fields) for a class
-```
-
-### <sub>getDeviceId</sub> ###
-```
-getDeviceId()
-
-Returns the unique device ID, for example, the IMEI for GSM and the MEID for    
-CDMA phones. Return null if device ID is not available.
-```
-
-### <sub>getDeviceSoftwareVersion</sub> ###
-```
-getDeviceSoftwareVersion()
-
-Returns the software version number for the device, for example, the IMEI/SV    
-for GSM phones. Return null if the software version is not available.
-```
-
-### <sub>getInput</sub> ###
-```
-getInput(
- String title[optional, default SL4A Input]: title of the input box,
- String message[optional, default Please enter value:]: message to display      
-above the input box)
-
-Queries the user for a text input.
-
-Deprecated in r3! Please use dialogGetInput instead.
-```
-
-### <sub>getIntent</sub> ###
-```
-getIntent()
-
-Returns the intent that launched the script.
-```
-
-### <sub>getLastKnownLocation</sub> ###
-```
-getLastKnownLocation()
-
-Returns the last known location of the device.
-
-Returns:
-  A map of location information by provider.
-```
-
-### <sub>getLaunchableApplications</sub> ###
-```
-getLaunchableApplications()
-
-Returns a list of all launchable application class names.
-```
-
-### <sub>getLine1Number</sub> ###
-```
-getLine1Number()
-
-Returns the phone number string for line 1, for example, the MSISDN for a GSM   
-phone. Return null if it is unavailable.
-```
-
-### <sub>getMaxMediaVolume</sub> ###
-```
-getMaxMediaVolume()
-
-Returns the maximum media volume.
-```
-
-### <sub>getMaxRingerVolume</sub> ###
-```
-getMaxRingerVolume()
-
-Returns the maximum ringer volume.
-```
-
-### <sub>getMediaVolume</sub> ###
-```
-getMediaVolume()
-
-Returns the current media volume.
-```
-
-### <sub>getNeighboringCellInfo</sub> ###
-```
-getNeighboringCellInfo()
-
-Returns the neighboring cell information of the device.
-```
-
-### <sub>getNetworkOperator</sub> ###
-```
-getNetworkOperator()
-
-Returns the numeric name (MCC+MNC) of current registered operator.
-```
-
-### <sub>getNetworkOperatorName</sub> ###
-```
-getNetworkOperatorName()
-
-Returns the alphabetic name of current registered operator.
-```
-
-### <sub>getNetworkType</sub> ###
-```
-getNetworkType()
-
-Returns a the radio technology (network type) currently in use on the device.
-```
-
-### <sub>getPackageVersion</sub> ###
-```
-getPackageVersion(
-  String packageName)
-
-Returns package version name.
-```
-
-### <sub>getPackageVersionCode</sub> ###
-```
-getPackageVersionCode(
-  String packageName)
-
-Returns package version code.
-```
-
-### <sub>getPassword</sub> ###
-```
-getPassword(
- String title[optional, default SL4A Password Input]: title of the input box,
- String message[optional, default Please enter password:]: message to display   
-above the input box)
-
-Queries the user for a password.
-
-Deprecated in r3! Please use dialogGetPassword instead.
-```
-
-### <sub>getPhoneType</sub> ###
-```
-getPhoneType()
-
-Returns the device phone type.
-```
-
-### <sub>getRingerVolume</sub> ###
-```
-getRingerVolume()
-
-Returns the current ringer volume.
-```
-
-### <sub>getRunningPackages</sub> ###
-```
-getRunningPackages()
-
-Returns a list of packages running activities or services.
-
-Returns:
-  List of packages running activities.
-```
-
-### <sub>getScreenBrightness</sub> ###
-```
-getScreenBrightness()
-
-Returns the screen backlight brightness.
-
-Returns:
-  the current screen brightness between 0 and 255
-```
-
-### <sub>getScreenTimeout</sub> ###
-```
-getScreenTimeout()
-
-Returns the current screen timeout in seconds.
-
-Returns:
-  the current screen timeout in seconds.
-```
-
-### <sub>getSimCountryIso</sub> ###
-```
-getSimCountryIso()
-
-Returns the ISO country code equivalent for the SIM provider's country code.
-```
-
-### <sub>getSimOperator</sub> ###
-```
-getSimOperator()
-
-Returns the MCC+MNC (mobile country code + mobile network code) of the provider 
-of the SIM. 5 or 6 decimal digits.
-```
-
-### <sub>getSimOperatorName</sub> ###
-```
-getSimOperatorName()
-
-Returns the Service Provider Name (SPN).
-```
-
-### <sub>getSimSerialNumber</sub> ###
-```
-getSimSerialNumber()
-
-Returns the serial number of the SIM, if applicable. Return null if it is       
-unavailable.
-```
-
-### <sub>getSimState</sub> ###
-```
-getSimState()
-
-Returns the state of the device SIM card.
-```
-
-### <sub>getSubscriberId</sub> ###
-```
-getSubscriberId()
-
-Returns the unique subscriber ID, for example, the IMSI for a GSM phone. Return 
-null if it is unavailable.
-```
-
-### <sub>getVibrateMode</sub> ###
-```
-getVibrateMode(
- Boolean ringer[optional])
-
-Checks Vibration setting. If ringer=true then query Ringer setting, else query  
-Notification setting
-
-Returns:
-  True if vibrate mode is enabled.
-```
-
-### <sub>getVoiceMailAlphaTag</sub> ###
-```
-getVoiceMailAlphaTag()
-
-Retrieves the alphabetic identifier associated with the voice mail number.
-```
-
-### <sub>getVoiceMailNumber</sub> ###
-```
-getVoiceMailNumber()
-
-Returns the voice mail number. Return null if it is unavailable.
-```
-
-### <sub>launch</sub> ###
-```
-launch(
-  String className)
-
-Start activity with the given class name.
-```
-
-### <sub>locationProviderEnabled</sub> ###
-```
-locationProviderEnabled(
- String provider: Name of location provider)
-
-Ask if provider is enabled
-```
-
-### <sub>locationProviders</sub> ###
-```
-locationProviders()
-
-Returns availables providers on the phone
-```
-
-### <sub>log</sub> ###
-```
-log(
-  String message)
-
-Writes message to logcat.
-```
-
-### <sub>makeIntent</sub> ###
-```
-makeIntent(
- String action,
- String uri[optional],
- String type[optional]: MIME type/subtype of the URI,
- JSONObject extras[optional]: a Map of extras to add to the Intent,
- JSONArray categories[optional]: a List of categories to add to the Intent,
- String packagename[optional]: name of package. If used, requires classname to  
-be useful,
- String classname[optional]: name of class. If used, requires packagename to be 
-useful,
- Integer flags[optional]: Intent flags)
-
-Create an Intent.
-
-Returns:
-  An object representing an Intent
-```
-
-### <sub>makeToast</sub> ###
-```
-makeToast(
-  String message)
-
-Displays a short-duration Toast notification.
-```
-
-### <sub>mediaIsPlaying</sub> ###
-```
-mediaIsPlaying(
- String tag[optional, default default]: string identifying resource)
-
-Checks if media file is playing.
-
-Returns:
-  true if playing
-```
-
-### <sub>mediaPlay</sub> ###
-```
-mediaPlay(
- String url: url of media resource,
- String tag[optional, default default]: string identifying resource,
- Boolean play[optional, default true]: start playing immediately)
-
-Open a media file
-
-Returns:
-  true if play successful
-```
-
-### <sub>mediaPlayClose</sub> ###
-```
-mediaPlayClose(
- String tag[optional, default default]: string identifying resource)
-
-Close media file
-
-Returns:
-  true if successful
-```
-
-### <sub>mediaPlayInfo</sub> ###
-```
-mediaPlayInfo(
- String tag[optional, default default]: string identifying resource)
-
-Information on current media
-
-Returns:
-  Media Information
-```
-
-### <sub>mediaPlayList</sub> ###
-```
-mediaPlayList()
-
-Lists currently loaded media
-
-Returns:
-  List of Media Tags
-```
-
-### <sub>mediaPlayPause</sub> ###
-```
-mediaPlayPause(
- String tag[optional, default default]: string identifying resource)
-
-pause playing media file
-
-Returns:
-  true if successful
-```
-
-### <sub>mediaPlaySeek</sub> ###
-```
-mediaPlaySeek(
- Integer msec: Position in millseconds,
- String tag[optional, default default]: string identifying resource)
-
-Seek To Position
-
-Returns:
-  New Position (in ms)
-```
-
-### <sub>mediaPlaySetLooping</sub> ###
-```
-mediaPlaySetLooping(
- Boolean enabled[optional, default true],
- String tag[optional, default default]: string identifying resource)
-
-Set Looping
-
-Returns:
-  True if successful
-```
-
-### <sub>mediaPlayStart</sub> ###
-```
-mediaPlayStart(
- String tag[optional, default default]: string identifying resource)
-
-start playing media file
-
-Returns:
-  true if successful
-```
-
-### <sub>notify</sub> ###
-```
-notify(
- String title: title,
- String message)
+## startTrackingSignalStrengths
 
-Displays a notification that will be canceled when the user clicks on it.
 ```
+void startTrackingSignalStrengths()
 
-### <sub>phoneCall</sub> ###
+Starts tracking signal strengths.
 ```
-phoneCall(
-  String uri)
 
-Calls a contact/phone number by URI.
-```
-
-### <sub>phoneCallNumber</sub> ###
-```
-phoneCallNumber(
-  String phone number)
-
-Calls a phone number.
-```
-
-### <sub>phoneDial</sub> ###
-```
-phoneDial(
-  String uri)
-
-Dials a contact/phone number by URI.
-```
-
-### <sub>phoneDialNumber</sub> ###
-```
-phoneDialNumber(
-  String phone number)
-
-Dials a phone number.
-```
-
-### <sub>pick</sub> ###
-```
-pick(
- String uri)
-
-Display content to be picked by URI (e.g. contacts)
-
-Returns:
-  A map of result values.
-```
-
-### <sub>pickContact</sub> ###
-```
-pickContact()
-
-Displays a list of contacts to pick from.
-
-Returns:
-  A map of result values.
-```
-
-### <sub>pickPhone</sub> ###
-```
-pickPhone()
-
-Displays a list of phone numbers to pick from.
-
-Returns:
-  The selected phone number.
-```
-
-### <sub>postEvent</sub> ###
-```
-rpcPostEvent(
- String name,
- String data)
-
-Post an event to the event queue.
-
-Deprecated in r4! Please use eventPost instead.
-```
-
-### <sub>prefGetAll</sub> ###
-```
-prefGetAll(
- String filename[optional]: Desired preferences file. If not defined, uses the  
-default Shared Preferences.)
-
-Get list of Shared Preference Values
-
-Returns:
-  Map of key,value
-```
-
-### <sub>prefGetValue</sub> ###
-```
-prefGetValue(
- String key,
- String filename[optional]: Desired preferences file. If not defined, uses the  
-default Shared Preferences.)
-
-Read a value from shared preferences
-```
-
-### <sub>prefPutValue</sub> ###
-```
-prefPutValue(
- String key,
- Object value,
- String filename[optional]: Desired preferences file. If not defined, uses the  
-default Shared Preferences.)
-
-Write a value to shared preferences
-```
-
-### <sub>queryAttributes</sub> ###
-```
-queryAttributes(
- String uri: The URI, using the content:// scheme, for the content to           
-retrieve.)
-
-Content Resolver Query Attributes
-
-Returns:
-  a list of available columns for a given content uri
-```
-
-### <sub>queryContent</sub> ###
-```
-queryContent(
- String uri: The URI, using the content:// scheme, for the content to           
-retrieve.,
- JSONArray attributes[optional]: A list of which columns to return. Passing     
-null will return all columns,
- String selection[optional]: A filter declaring which rows to return,
- JSONArray selectionArgs[optional]: You may include ?s in selection, which will 
-be replaced by the values from selectionArgs,
- String order[optional]: How to order the rows)
-
-Content Resolver Query
-
-Returns:
-  result of query as Maps
-```
-
-### <sub>readBatteryData</sub> ###
-```
-readBatteryData()
-
-Returns the most recently recorded battery data.
-```
-
-### <sub>readLocation</sub> ###
-```
-readLocation()
-
-Returns the current location as indicated by all available providers.
-
-Returns:
-  A map of location information by provider.
-```
-
-### <sub>readPhoneState</sub> ###
-```
-readPhoneState()
-
-Returns the current phone state and incoming number.
-
-Returns:
-  A Map of "state" and "incomingNumber"
-```
-
-### <sub>readSensors</sub> ###
-```
-readSensors()
-
-Returns the most recently recorded sensor data.
-```
+## readSignalStrengths
 
-### <sub>readSignalStrengths</sub> ###
 ```
-readSignalStrengths()
+Bundle readSignalStrengths()
 
 Returns the current signal strengths.
 
-Returns:
-  A map of "gsm_signal_strength"
-
-Requires API Level 7.
+Returns A map of \"gsm_signal_strength\"
 ```
 
-### <sub>receiveEvent</sub> ###
+## stopTrackingSignalStrengths
+
 ```
-receiveEvent()
+void stopTrackingSignalStrengths()
 
-Returns and removes the oldest event (i.e. location or sensor update, etc.)     
-from the event buffer.
-
-Returns:
- Map of event properties.
-
-Deprecated in r4! Please use eventPoll instead.
+Stops tracking signal strength.
 ```
 
-### <sub>recognizeSpeech</sub> ###
+## pick
+
 ```
-recognizeSpeech(
- String prompt[optional]: text prompt to show to the user when asking them to   
-speak,
- String language[optional]: language override to inform the recognizer that it  
-should expect speech in a language different than the one set in the            
-java.util.Locale.getDefault(),
- String languageModel[optional]: informs the recognizer which speech model to   
-prefer (see android.speech.RecognizeIntent))
+Intent pick(String uri)
 
-Recognizes user's speech and returns the most likely result.
+Display content to be picked by URI (e.g. contacts)
 
-Returns:
-  An empty string in case the speech cannot be recongnized.
+Returns A map of result values.
 ```
 
-### <sub>recorderCaptureVideo</sub> ###
-```
-recorderCaptureVideo(
- String targetPath,
- Integer duration[optional],
- Boolean recordAudio[optional, default true])
+## scanBarcode
 
-Records video (and optionally audio) from the camera and saves it to the given  
-location. 
-Duration specifies the maximum duration of the recording session. 
-If duration is not provided this method will return immediately and the         
-recording will only be stopped 
-when recorderStop is called or when a scripts exits. 
-Otherwise it will block for the time period equal to the duration argument.
 ```
-
-### <sub>recorderStartMicrophone</sub> ###
-```
-recorderStartMicrophone(
- String targetPath)
-
-Records audio from the microphone and saves it to the given location.
-```
-
-### <sub>recorderStartVideo</sub> ###
-```
-recorderStartVideo(
- String targetPath,
- Integer duration[optional, default 0],
- Integer videoSize[optional, default 1])
-
-Records video from the camera and saves it to the given location. 
-Duration specifies the maximum duration of the recording session. 
-If duration is 0 this method will return and the recording will only be stopped 
-
-when recorderStop is called or when a scripts exits. 
-Otherwise it will block for the time period equal to the duration argument.
-videoSize: 0=160x120, 1=320x240, 2=352x288, 3=640x480, 4=800x480.
-```
-
-### <sub>recorderStop</sub> ###
-```
-recorderStop()
-
-Stops a previously started recording.
-```
-
-### <sub>requiredVersion</sub> ###
-```
-requiredVersion(
- Integer requiredVersion)
-
-Checks if version of SL4A is greater than or equal to the specified version.
-```
-
-### <sub>scanBarcode</sub> ###
-```
-scanBarcode()
+Intent scanBarcode()
 
 Starts the barcode scanner.
 
-Returns:
-  A Map representation of the result Intent.
+Returns A Map representation of the result Intent.
 ```
 
-### <sub>search</sub> ###
-```
-search(
-  String query)
-
-Starts a search for the given query.
-```
-
-### <sub>sendBroadcast</sub> ###
-```
-sendBroadcast(
- String action,
- String uri[optional],
- String type[optional]: MIME type/subtype of the URI,
- JSONObject extras[optional]: a Map of extras to add to the Intent,
- String packagename[optional]: name of package. If used, requires classname to  
-be useful,
- String classname[optional]: name of class. If used, requires packagename to be 
-useful)
-
-Send a broadcast.
-```
-
-### <sub>sendBroadcastIntent</sub> ###
-```
-sendBroadcastIntent(
- Intent intent: Intent in the format as returned from makeIntent)
-
-Send Broadcast Intent
-```
-
-### <sub>sendEmail</sub> ###
-```
-sendEmail(
- String to: A comma separated list of recipients.,
- String subject,
- String body,
- String attachmentUri[optional])
-
-Launches an activity that sends an e-mail message to a given recipient.
-```
-
-### <sub>sensorsGetAccuracy</sub> ###
-```
-sensorsGetAccuracy()
-
-Returns the most recently received accuracy value.
-```
-
-### <sub>sensorsGetLight</sub> ###
-```
-sensorsGetLight()
-
-Returns the most recently received light value.
-```
-
-### <sub>sensorsReadAccelerometer</sub> ###
-```
-sensorsReadAccelerometer()
-
-Returns the most recently received accelerometer values.
-
-Returns:
-  a List of Floats [(acceleration on the) X axis, Y axis, Z axis].
-```
-
-### <sub>sensorsReadMagnetometer</sub> ###
-```
-sensorsReadMagnetometer()
-
-Returns the most recently received magnetic field values.
-
-Returns:
- a List of Floats [(magnetic field value for) X axis, Y axis, Z axis].
-```
-
-### <sub>sensorsReadOrientation</sub> ###
-```
-sensorsReadOrientation()
-
-Returns the most recently received orientation values.
-
-Returns:
-  a List of Doubles [azimuth, pitch, roll].
-```
-
-### <sub>setClipboard</sub> ###
-```
-setClipboard(
-  String text)
-
-Put text in the clipboard.
-```
-
-### <sub>setMediaVolume</sub> ###
-```
-setMediaVolume(
-  Integer volume)
-
-Sets the media volume.
-```
-
-### <sub>setResultBoolean</sub> ###
-```
-setResultBoolean(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Boolean resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultBooleanArray</sub> ###
-```
-setResultBooleanArray(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Boolean[] resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultByte</sub> ###
-```
-setResultByte(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Byte resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultByteArray</sub> ###
-```
-setResultByteArray(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Byte[] resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultChar</sub> ###
-```
-setResultChar(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Character resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultCharArray</sub> ###
-```
-setResultCharArray(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Character[] resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultDouble</sub> ###
-```
-setResultDouble(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Double resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultDoubleArray</sub> ###
-```
-setResultDoubleArray(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Double[] resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultFloat</sub> ###
-```
-setResultFloat(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Float resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultFloatArray</sub> ###
-```
-setResultFloatArray(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Float[] resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultInteger</sub> ###
-```
-setResultInteger(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Integer resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultIntegerArray</sub> ###
-```
-setResultIntegerArray(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Integer[] resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultLong</sub> ###
-```
-setResultLong(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Long resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultLongArray</sub> ###
-```
-setResultLongArray(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Long[] resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultSerializable</sub> ###
-```
-setResultSerializable(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Serializable resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultShort</sub> ###
-```
-setResultShort(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Short resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultShortArray</sub> ###
-```
-setResultShortArray(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- Short[] resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultString</sub> ###
-```
-setResultString(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- String resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setResultStringArray</sub> ###
-```
-setResultStringArray(
- Integer resultCode: The result code to propagate back to the originating       
-activity, often RESULT_CANCELED (0) or RESULT_OK (-1),
- String[] resultValue)
-
-Sets the result of a script execution. Whenever the script APK is called via    
-startActivityForResult(), the resulting intent will contain SCRIPT_RESULT extra 
-with the given value.
-```
-
-### <sub>setRingerVolume</sub> ###
-```
-setRingerVolume(
-  Integer volume)
-
-Sets the ringer volume.
-```
-
-### <sub>setScreenBrightness</sub> ###
-```
-setScreenBrightness(
- Integer value: brightness value between 0 and 255)
-
-Sets the the screen backlight brightness.
-
-Returns:
-  the original screen brightness.
-```
-
-### <sub>setScreenTimeout</sub> ###
-```
-setScreenTimeout(
- Integer value)
-
-Sets the screen timeout to this number of seconds.
-
-Returns:
-  The original screen timeout.
-```
-
-### <sub>smsDeleteMessage</sub> ###
-```
-smsDeleteMessage(
- Integer id)
-
-Deletes a message.
-
-Returns:
-  True if the message was deleted
-```
-
-### <sub>smsGetAttributes</sub> ###
-```
-smsGetAttributes()
-
-Returns a List of all possible message attributes.
-```
-
-### <sub>smsGetMessageById</sub> ###
-```
-smsGetMessageById(
- Integer id: message ID,
- JSONArray attributes[optional])
-
-Returns message attributes.
-```
-
-### <sub>smsGetMessageCount</sub> ###
-```
-smsGetMessageCount(
- Boolean unreadOnly,
- String folder[optional, default inbox])
-
-Returns the number of messages.
-```
-
-### <sub>smsGetMessageIds</sub> ###
-```
-smsGetMessageIds(
- Boolean unreadOnly,
- String folder[optional, default inbox])
-
-Returns a List of all message IDs.
-```
-
-### <sub>smsGetMessages</sub> ###
-```
-smsGetMessages(
- Boolean unreadOnly,
- String folder[optional, default inbox],
- JSONArray attributes[optional])
-
-Returns a List of all messages.
-
-Returns:
-  a List of messages as Maps
-```
-
-### <sub>smsMarkMessageRead</sub> ###
-```
-smsMarkMessageRead(
- JSONArray ids: List of message IDs to mark as read.,
- Boolean read)
-
-Marks messages as read.
-
-Returns:
-  number of messages marked read
-```
-
-### <sub>smsSend</sub> ###
-```
-smsSend(
- String destinationAddress: typically a phone number,
- String text)
-
-Sends an SMS.
-```
-
-### <sub>startActivity</sub> ###
-```
-startActivity(
- String action,
- String uri[optional],
- String type[optional]: MIME type/subtype of the URI,
- JSONObject extras[optional]: a Map of extras to add to the Intent,
- Boolean wait[optional]: block until the user exits the started activity,
- String packagename[optional]: name of package. If used, requires classname to  
-be useful,
- String classname[optional]: name of class. If used, requires packagename to be 
-useful)
-
-Starts an activity.
-```
-
-### <sub>startActivityForResult</sub> ###
-```
-startActivityForResult(
- String action,
- String uri[optional],
- String type[optional]: MIME type/subtype of the URI,
- JSONObject extras[optional]: a Map of extras to add to the Intent,
- String packagename[optional]: name of package. If used, requires classname to  
-be useful,
- String classname[optional]: name of class. If used, requires packagename to be 
-useful)
-
-Starts an activity and returns the result.
-
-Returns:
-  A Map representation of the result Intent.
-```
-
-### <sub>startActivityForResultIntent</sub> ###
-```
-startActivityForResultIntent(
- Intent intent: Intent in the format as returned from makeIntent)
-
-Starts an activity and returns the result.
-
-Returns:
-  A Map representation of the result Intent.
-```
-
-### <sub>startActivityIntent</sub> ###
-```
-startActivityIntent(
- Intent intent: Intent in the format as returned from makeIntent,
- Boolean wait[optional]: block until the user exits the started activity)
-
-Start Activity using Intent
-```
-
-### <sub>startEventDispatcher</sub> ###
-```
-startEventDispatcher(
- Integer port[optional, default 0]: Port to use)
-
-Opens up a socket where you can read for events posted
-```
-
-### <sub>startInteractiveVideoRecording</sub> ###
-```
-startInteractiveVideoRecording(
- String path)
-
-Starts the video capture application to record a video and saves it to the      
-specified path.
-```
-
-### <sub>startLocating</sub> ###
-```
-startLocating(
- Integer minDistance[optional, default 60000]: minimum time between updates in  
-milliseconds,
- Integer minUpdateDistance[optional, default 30]: minimum distance between      
-updates in meters)
-
-Starts collecting location data.
-
-Generates "location" events.
-```
-
-### <sub>startSensing</sub> ###
-```
-startSensing(
- Integer sampleSize[optional, default 5]: number of samples for calculating     
-average readings)
-
-Starts recording sensor data to be available for polling.
-
-Deprecated in 4! Please use startSensingTimed or startSensingThreshhold         
-instead.
-```
-
-### <sub>startSensingThreshold</sub> ###
-```
-startSensingThreshold(
- Integer sensorNumber: 1 = Orientation, 2 = Accelerometer, 3 = Magnetometer and 
-4 = Light,
- Integer threshold: Threshold level for chosen sensor (integer),
- Integer axis: 0 = No axis, 1 = X, 2 = Y, 3 = X+Y, 4 = Z, 5= X+Z, 6 = Y+Z, 7 =  
-X+Y+Z)
-
-Records to the Event Queue sensor data exceeding a chosen threshold.
-
-Generates "threshold" events.
-```
-
-### <sub>startSensingTimed</sub> ###
-```
-startSensingTimed(
- Integer sensorNumber: 1 = All, 2 = Accelerometer, 3 = Magnetometer and 4 =     
-Light,
- Integer delayTime: Minimum time between readings in milliseconds)
-
-Starts recording sensor data to be available for polling.
-
-Generates "sensors" events.
-```
-
-### <sub>startTrackingPhoneState</sub> ###
-```
-startTrackingPhoneState()
-
-Starts tracking phone state.
-
-Generates "phone" events.
-```
-
-### <sub>startTrackingSignalStrengths</sub> ###
-```
-startTrackingSignalStrengths()
-
-Starts tracking signal strengths.
-
-Generates "signal_strengths" events.
-
-Requires API Level 7.
-```
-
-### <sub>stopEventDispatcher</sub> ###
-```
-stopEventDispatcher()
-
-Stops the event server, you can't read in the port anymore
-```
-
-### <sub>stopLocating</sub> ###
-```
-stopLocating()
-
-Stops collecting location data.
-```
-
-### <sub>stopSensing</sub> ###
-```
-stopSensing()
-
-Stops collecting sensor data.
-```
-
-### <sub>stopTrackingPhoneState</sub> ###
-```
-stopTrackingPhoneState()
-
-Stops tracking phone state.
-```
-
-### <sub>stopTrackingSignalStrengths</sub> ###
-```
-stopTrackingSignalStrengths()
-
-Stops tracking signal strength.
-
-Requires API Level 7.
-```
-
-### <sub>toggleAirplaneMode</sub> ###
-```
-toggleAirplaneMode(
- Boolean enabled[optional])
-
-Toggles airplane mode on and off.
-
-Returns:
-  True if airplane mode is enabled.
-```
-
-### <sub>toggleBluetoothState</sub> ###
-```
-toggleBluetoothState(
- Boolean enabled[optional],
- Boolean prompt[optional, default true]: Prompt the user to confirm changing    
-the Bluetooth state.)
-
-Toggle Bluetooth on and off.
-
-Returns:
-  True if Bluetooth is enabled.
-
-Requires API Level 5.
-```
-
-### <sub>toggleRingerSilentMode</sub> ###
-```
-toggleRingerSilentMode(
- Boolean enabled[optional])
-
-Toggles ringer silent mode on and off.
-
-Returns:
-  True if ringer silent mode is enabled.
-```
-
-### <sub>toggleVibrateMode</sub> ###
-```
-toggleVibrateMode(
- Boolean enabled[optional],
- Boolean ringer[optional])
-
-Toggles vibrate mode on and off. If ringer=true then set Ringer setting, else   
-set Notification setting
-
-Returns:
-  True if vibrate mode is enabled.
-```
-
-### <sub>toggleWifiState</sub> ###
-```
-toggleWifiState(
- Boolean enabled[optional])
-
-Toggle Wifi on and off.
-
-Returns:
-  True if Wifi is enabled.
-```
-
-### <sub>ttsIsSpeaking</sub> ###
-```
-ttsIsSpeaking()
-
-Returns True if speech is currently in progress.
-
-Requires API Level 4.
-```
-
-### <sub>ttsSpeak</sub> ###
-```
-ttsSpeak(
-  String message)
-
-Speaks the provided message via TTS.
-
-Requires API Level 4.
-```
-
-### <sub>vibrate</sub> ###
-```
-vibrate(
- Integer duration[optional, default 300]: duration in milliseconds)
-
-Vibrates the phone or a specified duration in milliseconds.
-```
+## view
 
-### <sub>view</sub> ###
 ```
-view(
- String uri,
- String type[optional]: MIME type/subtype of the URI,
- JSONObject extras[optional]: a Map of extras to add to the Intent)
+void view( String uri, String type, JSONObject extras)
 
 Start activity with view action by URI (i.e. browser, contacts, etc.).
 ```
 
-### <sub>viewContacts</sub> ###
-```
-viewContacts()
+## viewMap
 
-Opens the list of contacts.
 ```
-
-### <sub>viewHtml</sub> ###
-```
-viewHtml(
- String path: the path to the HTML file)
-
-Opens the browser to display a local HTML file.
-```
-
-### <sub>viewMap</sub> ###
-```
-viewMap(
- String query, e.g. pizza, 123 My Street)
+void viewMap(String query)
 
 Opens a map search for query (e.g. pizza, 123 My Street).
 ```
 
-### <sub>waitForEvent</sub> ###
+## viewContacts
+
 ```
-waitForEvent(
- String eventName,
- Integer timeout[optional]: the maximum time to wait)
+void viewContacts()
 
-Blocks until an event with the supplied name occurs. The returned event is not  
-removed from the buffer.
-
-Returns:
- Map of event properties.
-
-Deprecated in r4! Please use eventWaitFor instead.
+Opens the list of contacts.
 ```
 
-### <sub>wakeLockAcquireBright</sub> ###
-```
-wakeLockAcquireBright()
+## viewHtml
 
-Acquires a bright wake lock (CPU on, screen bright).
 ```
+void viewHtml( String path)
 
-### <sub>wakeLockAcquireDim</sub> ###
-```
-wakeLockAcquireDim()
-
-Acquires a dim wake lock (CPU on, screen dim).
+Opens the browser to display a local HTML file.
 ```
 
-### <sub>wakeLockAcquireFull</sub> ###
-```
-wakeLockAcquireFull()
+## search
 
-Acquires a full wake lock (CPU on, screen bright, keyboard bright).
 ```
+void search(String query)
 
-### <sub>wakeLockAcquirePartial</sub> ###
-```
-wakeLockAcquirePartial()
-
-Acquires a partial wake lock (CPU on).
+Starts a search for the given query.
 ```
 
-### <sub>wakeLockRelease</sub> ###
-```
-wakeLockRelease()
+## dialogCreateInput
 
-Releases the wake lock.
+```
+void dialogCreateInput( final String title, final String message, final String text, final String inputType)
+
+Create a text input dialog.
 ```
 
-### <sub>webViewShow</sub> ###
+## dialogCreatePassword
+
 ```
-webViewShow(
- String url,
- Boolean wait[optional]: block until the user exits the WebView)
+void dialogCreatePassword( final String title, final String message)
+
+Create a password input dialog.
+```
+
+## dialogGetInput
+
+```
+String dialogGetInput( final String title, final String message, final String text)
+
+Queries the user for a text input.
+```
+
+## dialogGetPassword
+
+```
+String dialogGetPassword( final String title, final String message)
+
+Queries the user for a password.
+```
+
+## dialogCreateSpinnerProgress
+
+```
+void dialogCreateSpinnerProgress(String title, String message, Integer max)
+
+Create a spinner progress dialog.
+```
+
+## dialogCreateHorizontalProgress
+
+```
+void dialogCreateHorizontalProgress( String title, String message, Integer max)
+
+Create a horizontal progress dialog.
+```
+
+## dialogCreateAlert
+
+```
+void dialogCreateAlert(String title, String message)
+
+Create alert dialog.
+```
+
+## dialogCreateSeekBar
+
+```
+void dialogCreateSeekBar( Integer progress, Integer max, String title, String message)
+
+Create seek bar dialog.
+```
+
+## dialogCreateTimePicker
+
+```
+void dialogCreateTimePicker( Integer hour, Integer minute, Boolean is24hour)
+
+Create time picker dialog.
+```
+
+## dialogCreateDatePicker
+
+```
+void dialogCreateDatePicker(Integer year, Integer month, Integer day)
+
+Create date picker dialog.
+```
+
+## dialogDismiss
+
+```
+void dialogDismiss()
+
+Dismiss dialog.
+```
+
+## dialogShow
+
+```
+void dialogShow()
+
+Show dialog.
+```
+
+## dialogSetCurrentProgress
+
+```
+void dialogSetCurrentProgress(Integer current)
+
+Set progress dialog current value.
+```
+
+## dialogSetMaxProgress
+
+```
+void dialogSetMaxProgress(Integer max)
+
+Set progress dialog maximum value.
+```
+
+## dialogSetPositiveButtonText
+
+```
+void dialogSetPositiveButtonText(String text)
+
+Set alert dialog positive button text.
+```
+
+## dialogSetNegativeButtonText
+
+```
+void dialogSetNegativeButtonText(String text)
+
+Set alert dialog button text.
+```
+
+## dialogSetNeutralButtonText
+
+```
+void dialogSetNeutralButtonText(String text)
+
+Set alert dialog button text.
+```
+
+## dialogSetItems
+
+```
+void dialogSetItems(JSONArray items)
+
+Set alert dialog list items.
+```
+
+## dialogSetSingleChoiceItems
+
+```
+void dialogSetSingleChoiceItems( JSONArray items, Integer selected)
+
+Set dialog single choice items and selected item.
+```
+
+## dialogSetMultiChoiceItems
+
+```
+void dialogSetMultiChoiceItems( JSONArray items, JSONArray selected)
+
+Set dialog multiple choice items and selection.
+```
+
+## dialogGetResponse
+
+```
+Object dialogGetResponse()
+
+Returns dialog response.
+```
+
+## dialogGetSelectedItems
+
+```
+Set<Integer> dialogGetSelectedItems()
+
+This method provides list of items user selected.
+
+Returns Selected items
+```
+
+## webViewShow
+
+```
+void webViewShow( String url, Boolean wait)
 
 Display a WebView with the given URL.
 ```
 
-### <sub>webcamAdjustQuality</sub> ###
+## addContextMenuItem
+
 ```
-webcamAdjustQuality(
- Integer resolutionLevel[optional, default 0]: increasing this number provides  
-higher resolution,
- Integer jpegQuality[optional, default 20]: a number from 0-100)
+void addContextMenuItem( String label, String event, Object data)
 
-Adjusts the quality of the webcam stream while it is running.
-
-Requires API Level 8.
+Adds a new item to context menu.
 ```
 
-### <sub>webcamStart</sub> ###
+## addOptionsMenuItem
+
 ```
-webcamStart(
- Integer resolutionLevel[optional, default 0]: increasing this number provides  
-higher resolution,
- Integer jpegQuality[optional, default 20]: a number from 0-100,
- Integer port[optional, default 0]: If port is specified, the webcam service    
-will bind to port, otherwise it will pick any available port.)
+void addOptionsMenuItem( String label, String event, Object data, String iconName)
+
+Adds a new item to options menu.
+```
+
+## clearContextMenu
+
+```
+void clearContextMenu()
+
+Removes all items previously added to context menu.
+```
+
+## clearOptionsMenu
+
+```
+void clearOptionsMenu()
+
+Removes all items previously added to options menu.
+```
+
+## fullShow
+
+```
+List<String> fullShow( String layout, String title)
+
+Show Full Screen.
+```
+
+## fullDismiss
+
+```
+void fullDismiss()
+
+Dismiss Full Screen.
+```
+
+## fullQuery
+
+```
+Map<String, Map<String, String>> fullQuery()
+
+Get Fullscreen Properties
+```
+
+## fullQueryDetail
+
+```
+Map<String, String> fullQueryDetail( String id)
+
+Get fullscreen properties for a specific widget
+```
+
+## fullSetProperty
+
+```
+String fullSetProperty( String id, String property, String value)
+
+Set fullscreen widget property
+```
+
+## fullSetList
+
+```
+String fullSetList( String id, JSONArray items)
+
+Attach a list to a fullscreen widget
+```
+
+## fullSetTitle
+
+```
+void fullSetTitle( String title)
+
+Set the Full Screen Activity Title
+```
+
+## fullKeyOverride
+
+```
+JSONArray fullKeyOverride( JSONArray keycodes, Boolean enable)
+
+Override default key actions
+```
+
+## readBatteryData
+
+```
+Bundle readBatteryData()
+
+Returns the most recently recorded battery data.
+```
+
+## batteryStartMonitoring
+
+```
+void batteryStartMonitoring()
+
+Starts tracking battery state.
+```
+
+## batteryStopMonitoring
+
+```
+void batteryStopMonitoring()
+
+Stops tracking battery state.
+```
+
+## batteryGetStatus
+
+```
+Integer batteryGetStatus()
+
+Returns  the most recently received battery status data:\n1 - unknown;\n2 - charging;\n3 - discharging;\n4 - not charging;\n5 - full;
+```
+
+## batteryGetHealth
+
+```
+Integer batteryGetHealth()
+
+Returns the most recently received battery health data:\n1 - unknown;\n2 - good;\n3 - overheat;\n4 - dead;\n5 - over voltage;\n6 - unspecified failure;
+```
+
+## batteryCheckPresent
+
+```
+Boolean batteryCheckPresent()
+
+Returns the most recently received battery presence data.
+```
+
+## batteryGetLevel
+
+```
+Integer batteryGetLevel()
+
+Returns the most recently received battery level (percentage).
+```
+
+## batteryGetVoltage
+
+```
+Integer batteryGetVoltage()
+
+Returns the most recently received battery voltage.
+```
+
+## batteryGetTemperature
+
+```
+Integer batteryGetTemperature()
+
+Returns the most recently received battery temperature.
+```
+
+## batteryGetTechnology
+
+```
+String batteryGetTechnology()
+
+Returns the most recently received battery technology data.
+```
+
+## setResultBoolean
+
+```
+void setResultBoolean( Integer resultCode, Boolean resultValue)
+
+sRpcDescription
+```
+
+## setResultByte
+
+```
+void setResultByte( Integer resultCode, Byte resultValue)
+
+sRpcDescription
+```
+
+## setResultShort
+
+```
+void setResultShort( Integer resultCode, Short resultValue)
+
+sRpcDescription
+```
+
+## setResultChar
+
+```
+void setResultChar( Integer resultCode, Character resultValue)
+
+sRpcDescription
+```
+
+## setResultInteger
+
+```
+void setResultInteger( Integer resultCode, Integer resultValue)
+
+sRpcDescription
+```
+
+## setResultLong
+
+```
+void setResultLong( Integer resultCode, Long resultValue)
+
+sRpcDescription
+```
+
+## setResultFloat
+
+```
+void setResultFloat( Integer resultCode, Float resultValue)
+
+sRpcDescription
+```
+
+## setResultDouble
+
+```
+void setResultDouble( Integer resultCode, Double resultValue)
+
+sRpcDescription
+```
+
+## setResultString
+
+```
+void setResultString( Integer resultCode, String resultValue)
+
+sRpcDescription
+```
+
+## setResultBooleanArray
+
+```
+void setResultBooleanArray( Integer resultCode, Boolean[] resultValue)
+
+sRpcDescription
+```
+
+## setResultByteArray
+
+```
+void setResultByteArray( Integer resultCode, Byte[] resultValue)
+
+sRpcDescription
+```
+
+## setResultShortArray
+
+```
+void setResultShortArray( Integer resultCode, Short[] resultValue)
+
+sRpcDescription
+```
+
+## setResultCharArray
+
+```
+void setResultCharArray( Integer resultCode, Character[] resultValue)
+
+sRpcDescription
+```
+
+## setResultIntegerArray
+
+```
+void setResultIntegerArray( Integer resultCode, Integer[] resultValue)
+
+sRpcDescription
+```
+
+## setResultLongArray
+
+```
+void setResultLongArray( Integer resultCode, Long[] resultValue)
+
+sRpcDescription
+```
+
+## setResultFloatArray
+
+```
+void setResultFloatArray( Integer resultCode, Float[] resultValue)
+
+sRpcDescription
+```
+
+## setResultDoubleArray
+
+```
+void setResultDoubleArray( Integer resultCode, Double[] resultValue)
+
+sRpcDescription
+```
+
+## setResultStringArray
+
+```
+void setResultStringArray( Integer resultCode, String[] resultValue)
+
+sRpcDescription
+```
+
+## setResultSerializable
+
+```
+void setResultSerializable( Integer resultCode, Serializable resultValue)
+
+sRpcDescription
+```
+
+## bluetoothActiveConnections
+
+```
+Map<String, String> bluetoothActiveConnections()
+
+Returns active Bluetooth connections.
+```
+
+## bluetoothWriteBinary
+
+```
+void bluetoothWriteBinary( String base64, String connID)
+
+Send bytes over the currently open Bluetooth connection.
+```
+
+## bluetoothReadBinary
+
+```
+String bluetoothReadBinary( Integer bufferSize, String connID)
+
+Read up to bufferSize bytes and return a chunked, base64 encoded string.
+```
+
+## bluetoothConnect
+
+```
+String bluetoothConnect( String uuid, String address)
+
+Connect to a device over Bluetooth. Blocks until the connection is established or fails.
+
+Returns True if the connection was established successfully.
+```
+
+## bluetoothAccept
+
+```
+String bluetoothAccept( String uuid, Integer timeout)
+
+Listens for and accepts a Bluetooth connection. Blocks until the connection is established or fails.
+```
+
+## bluetoothMakeDiscoverable
+
+```
+void bluetoothMakeDiscoverable( Integer duration)
+
+Requests that the device be discoverable for Bluetooth connections.
+```
+
+## bluetoothWrite
+
+```
+void bluetoothWrite(String ascii, String connID)
+
+Sends ASCII characters over the currently open Bluetooth connection.
+```
+
+## bluetoothReadReady
+
+```
+Boolean bluetoothReadReady( String connID)
+
+Returns True if the next read is guaranteed not to block.
+```
+
+## bluetoothRead
+
+```
+String bluetoothRead( Integer bufferSize, String connID)
+
+Read up to bufferSize ASCII characters.
+```
+
+## bluetoothReadLine
+
+```
+String bluetoothReadLine( String connID)
+
+Read the next line.
+```
+
+## bluetoothGetRemoteDeviceName
+
+```
+String bluetoothGetRemoteDeviceName( String address)
+
+Queries a remote device for it's name or null if it can't be resolved
+```
+
+## bluetoothGetLocalName
+
+```
+String bluetoothGetLocalName()
+
+Gets the Bluetooth Visible device name
+```
+
+## bluetoothSetLocalName
+
+```
+boolean bluetoothSetLocalName( String name)
+
+Sets the Bluetooth Visible device name, returns True on success
+```
+
+## bluetoothGetScanMode
+
+```
+int bluetoothGetScanMode()
+
+Gets the scan mode for the local dongle.\r\nReturn values:\r\n\t-1 when Bluetooth is disabled.\r\n\t0 if non discoverable and non connectable.\r\n\r1 connectable non discoverable.\r3 connectable and discoverable.
+```
+
+## bluetoothGetConnectedDeviceName
+
+```
+String bluetoothGetConnectedDeviceName( String connID)
+
+Returns the name of the connected device.
+```
+
+## checkBluetoothState
+
+```
+Boolean checkBluetoothState()
+
+Checks Bluetooth state.
+
+Returns True if Bluetooth is enabled.
+```
+
+## toggleBluetoothState
+
+```
+Boolean toggleBluetoothState( Boolean enabled, Boolean prompt)
+
+Toggle Bluetooth on and off.
+
+Returns True if Bluetooth is enabled.
+```
+
+## bluetoothStop
+
+```
+void bluetoothStop( String connID)
+
+Stops Bluetooth connection.
+```
+
+## bluetoothGetLocalAddress
+
+```
+String bluetoothGetLocalAddress()
+
+Returns the hardware address of the local Bluetooth adapter. 
+```
+
+## bluetoothDiscoveryStart
+
+```
+Boolean bluetoothDiscoveryStart()
+
+Start the remote device discovery process. 
+
+Returns true on success, false on error
+```
+
+## bluetoothDiscoveryCancel
+
+```
+Boolean bluetoothDiscoveryCancel()
+
+Cancel the current device discovery process.
+
+Returns true on success, false on error
+```
+
+## bluetoothIsDiscovering
+
+```
+Boolean bluetoothIsDiscovering()
+
+Return true if the local Bluetooth adapter is currently in the device discovery process. 
+```
+
+## prefGetValue
+
+```
+Object prefGetValue( String key, String filename)
+
+Read a value from shared preferences
+```
+
+## prefPutValue
+
+```
+void prefPutValue( String key, Object value, String filename)
+
+Write a value to shared preferences
+```
+
+## prefGetAll
+
+```
+Map<String, ?> prefGetAll( String filename)
+
+Get list of Shared Preference Values
+
+Returns Map of key,value
+```
+
+## smsSend
+
+```
+void smsSend( String destinationAddress, String text)
+
+Sends an SMS.
+```
+
+## smsGetMessageCount
+
+```
+Integer smsGetMessageCount(Boolean unreadOnly, String folder)
+
+Returns the number of messages.
+```
+
+## smsGetMessageIds
+
+```
+List<Integer> smsGetMessageIds(Boolean unreadOnly, String folder)
+
+Returns a List of all message IDs.
+```
+
+## smsGetMessages
+
+```
+List<JSONObject> smsGetMessages(Boolean unreadOnly, String folder, JSONArray attributes)
+
+Returns a List of all messages.
+
+Returns a List of messages as Maps
+```
+
+## smsGetMessageById
+
+```
+JSONObject smsGetMessageById( Integer id, JSONArray attributes)
+
+Returns message attributes.
+```
+
+## smsGetAttributes
+
+```
+List<String> smsGetAttributes()
+
+Returns a List of all possible message attributes.
+```
+
+## smsDeleteMessage
+
+```
+Boolean smsDeleteMessage(Integer id)
+
+Deletes a message.
+
+Returns True if the message was deleted
+```
+
+## smsMarkMessageRead
+
+```
+Integer smsMarkMessageRead( JSONArray ids, Boolean read)
+
+Marks messages as read.
+
+Returns number of messages marked read
+```
+
+## mediaPlay
+
+```
+boolean mediaPlay( String url, String tag, Boolean play)
+
+Open a media file
+
+Returns true if play successful
+```
+
+## mediaPlayPause
+
+```
+boolean mediaPlayPause( String tag)
+
+pause playing media file
+
+Returns true if successful
+```
+
+## mediaPlayStart
+
+```
+boolean mediaPlayStart( String tag)
+
+start playing media file
+
+Returns true if successful
+```
+
+## mediaPlayClose
+
+```
+boolean mediaPlayClose( String tag)
+
+Close media file
+
+Returns true if successful
+```
+
+## mediaIsPlaying
+
+```
+boolean mediaIsPlaying( String tag)
+
+Checks if media file is playing.
+
+Returns true if playing
+```
+
+## mediaPlayInfo
+
+```
+Map<String, Object> mediaPlayInfo( String tag)
+
+Information on current media
+
+Returns Media Information
+```
+
+## mediaPlayList
+
+```
+Set<String> mediaPlayList()
+
+Lists currently loaded media
+
+Returns List of Media Tags
+```
+
+## mediaPlaySetLooping
+
+```
+boolean mediaPlaySetLooping( Boolean enabled, String tag)
+
+Set Looping
+
+Returns True if successful
+```
+
+## mediaPlaySeek
+
+```
+int mediaPlaySeek( Integer msec, String tag)
+
+Seek To Position
+
+Returns New Position (in ms)
+```
+
+## pickContact
+
+```
+Intent pickContact()
+
+Displays a list of contacts to pick from.
+
+Returns A map of result values.
+```
+
+## pickPhone
+
+```
+String pickPhone()
+
+Displays a list of phone numbers to pick from.
+
+Returns The selected phone number.
+```
+
+## contactsGetAttributes
+
+```
+List<String> contactsGetAttributes()
+
+Returns a List of all possible attributes for contacts.
+```
+
+## contactsGetIds
+
+```
+List<Integer> contactsGetIds()
+
+Returns a List of all contact IDs.
+```
+
+## contactsGet
+
+```
+List<JSONObject> contactsGet( JSONArray attributes)
+
+Returns a List of all contacts.
+
+Returns a List of contacts as Maps
+```
+
+## contactsGetById
+
+```
+JSONObject contactsGetById(Integer id, JSONArray attributes)
+
+Returns contacts by ID.
+```
+
+## contactsGetCount
+
+```
+Integer contactsGetCount()
+
+Returns the number of contacts.
+```
+
+## queryContent
+
+```
+List<JSONObject> queryContent( String uri, JSONArray attributes, String selection, JSONArray selectionArgs, String order)
+
+Content Resolver Query
+
+Returns result of query as Maps
+```
+
+## queryAttributes
+
+```
+JSONArray queryAttributes( String uri)
+
+Content Resolver Query Attributes
+
+Returns a list of available columns for a given content uri
+```
+
+## startTrackingPhoneState
+
+```
+void startTrackingPhoneState()
+
+Starts tracking phone state.
+```
+
+## readPhoneState
+
+```
+Bundle readPhoneState()
+
+Returns the current phone state and incoming number.
+
+Returns A Map of \"state\" and \"incomingNumber\"
+```
+
+## stopTrackingPhoneState
+
+```
+void stopTrackingPhoneState()
+
+Stops tracking phone state.
+```
+
+## phoneCall
+
+```
+void phoneCall(final String uriString)
+
+Calls a contact/phone number by URI.
+```
+
+## phoneCallNumber
+
+```
+void phoneCallNumber(final String number)
+
+Calls a phone number.
+```
+
+## phoneDial
+
+```
+void phoneDial(final String uri)
+
+Dials a contact/phone number by URI.
+```
+
+## phoneDialNumber
+
+```
+void phoneDialNumber(final String number)
+
+Dials a phone number.
+```
+
+## getCellLocation
+
+```
+CellLocation getCellLocation()
+
+Returns the current cell location.
+```
+
+## getNetworkOperator
+
+```
+String getNetworkOperator()
+
+Returns the numeric name (MCC+MNC) of current registered operator.
+```
+
+## getNetworkOperatorName
+
+```
+String getNetworkOperatorName()
+
+Returns the alphabetic name of current registered operator.
+```
+
+## getNetworkType
+
+```
+String getNetworkType()
+
+Returns a the radio technology (network type) currently in use on the device.
+```
+
+## getPhoneType
+
+```
+String getPhoneType()
+
+Returns the device phone type.
+```
+
+## getSimCountryIso
+
+```
+String getSimCountryIso()
+
+Returns the ISO country code equivalent for the SIM provider's country code.
+```
+
+## getSimOperator
+
+```
+String getSimOperator()
+
+Returns the MCC+MNC (mobile country code + mobile network code) of the provider of the SIM. 5 or 6 decimal digits.
+```
+
+## getSimOperatorName
+
+```
+String getSimOperatorName()
+
+Returns the Service Provider Name (SPN).
+```
+
+## getSimSerialNumber
+
+```
+String getSimSerialNumber()
+
+Returns the serial number of the SIM, if applicable. Return null if it is unavailable.
+```
+
+## getSimState
+
+```
+String getSimState()
+
+Returns the state of the device SIM card.
+```
+
+## getSubscriberId
+
+```
+String getSubscriberId()
+
+Returns the unique subscriber ID, for example, the IMSI for a GSM phone. Return null if it is unavailable.
+```
+
+## getVoiceMailAlphaTag
+
+```
+String getVoiceMailAlphaTag()
+
+Retrieves the alphabetic identifier associated with the voice mail number.
+```
+
+## getVoiceMailNumber
+
+```
+String getVoiceMailNumber()
+
+Returns the voice mail number. Return null if it is unavailable.
+```
+
+## checkNetworkRoaming
+
+```
+Boolean checkNetworkRoaming()
+
+Returns true if the device is considered roaming on the current network, for GSM purposes.
+```
+
+## getDeviceId
+
+```
+String getDeviceId()
+
+Returns the unique device ID, for example, the IMEI for GSM and the MEID for CDMA phones. Return null if device ID is not available.
+```
+
+## getDeviceSoftwareVersion
+
+```
+String getDeviceSoftwareVersion()
+
+Returns the software version number for the device, for example, the IMEI/SV for GSM phones. Return null if the software version is not available.
+```
+
+## getLine1Number
+
+```
+String getLine1Number()
+
+Returns the phone number string for line 1, for example, the MSISDN for a GSM phone. Return null if it is unavailable.
+```
+
+## getNeighboringCellInfo
+
+```
+List<NeighboringCellInfo> getNeighboringCellInfo()
+
+Returns the neighboring cell information of the device.
+```
+
+## webcamStart
+
+```
+InetSocketAddress webcamStart( Integer resolutionLevel, Integer jpegQuality, Integer port)
 
 Starts an MJPEG stream and returns a Tuple of address and port for the stream.
-
-Requires API Level 8.
 ```
 
-### <sub>webcamStop</sub> ###
+## webcamAdjustQuality
+
 ```
-webcamStop()
+void webcamAdjustQuality( Integer resolutionLevel, Integer jpegQuality)
+
+Adjusts the quality of the webcam stream while it is running.
+```
+
+## webcamStop
+
+```
+void webcamStop()
 
 Stops the webcam stream.
-
-Requires API Level 8.
 ```
 
-### <sub>wifiDisconnect</sub> ###
+## cameraStartPreview
+
 ```
-wifiDisconnect()
+boolean cameraStartPreview( Integer resolutionLevel, Integer jpegQuality, String filepath)
 
-Disconnects from the currently active access point.
+Start Preview Mode. Throws 'preview' events.
 
-Returns:
-  True if the operation succeeded.
-```
-
-### <sub>wifiGetConnectionInfo</sub> ###
-```
-wifiGetConnectionInfo()
-
-Returns information about the currently active access point.
+Returns True if successful
 ```
 
-### <sub>wifiGetScanResults</sub> ###
+## cameraStopPreview
+
 ```
-wifiGetScanResults()
+void cameraStopPreview()
+
+Stop the preview mode.
+```
+
+## nfcIsEnabled
+
+```
+Boolean nfcIsEnabled()
+
+Check if NFC hardware is enabled.
+```
+
+## nfcStartTrackingStateChange
+
+```
+void nfcStartTrackingStateChange()
+
+Start tracking NFC hardware state changes.
+```
+
+## nfcStopTrackingStateChange
+
+```
+void nfcStopTrackingStateChange()
+
+Stop tracking NFC hardware state changes.
+```
+
+## locationProviders
+
+```
+List<String> locationProviders()
+
+Returns availables providers on the phone
+```
+
+## locationProviderEnabled
+
+```
+boolean locationProviderEnabled( String provider)
+
+Ask if provider is enabled
+```
+
+## startLocating
+
+```
+void startLocating( Integer minUpdateTime, Integer minUpdateDistance)
+
+Starts collecting location data.
+```
+
+## readLocation
+
+```
+Map<String, Location> readLocation()
+
+Returns the current location as indicated by all available providers.
+
+Returns A map of location information by provider.
+```
+
+## stopLocating
+
+```
+void stopLocating()
+
+Stops collecting location data.
+```
+
+## getLastKnownLocation
+
+```
+Map<String, Location> getLastKnownLocation()
+
+Returns the last known location of the device.
+
+Returns A map of location information by provider.
+```
+
+## geocode
+
+```
+List<Address> geocode( Double latitude, Double longitude, Integer maxResults)
+
+Returns a list of addresses for the given latitude and longitude.
+
+Returns A list of addresses.
+```
+
+## setClipboard
+
+```
+void setClipboard(String text)
+
+Put text in the clipboard.
+```
+
+## getClipboard
+
+```
+String getClipboard()
+
+Read text from the clipboard.
+
+Returns The text in the clipboard.
+```
+
+## startActivityForResult
+
+```
+Intent startActivityForResult( String action, String uri, String type, JSONObject extras, String packagename, String classname)
+
+Starts an activity and returns the result.
+
+Returns A Map representation of the result Intent.
+```
+
+## startActivityForResultIntent
+
+```
+Intent startActivityForResultIntent( Intent intent)
+
+Starts an activity and returns the result.
+
+Returns A Map representation of the result Intent.
+```
+
+## startActivity
+
+```
+void startActivity( String action, String uri, String type, JSONObject extras, Boolean wait, String packagename, String classname)
+
+Starts an activity.
+```
+
+## sendBroadcast
+
+```
+void sendBroadcast( String action, String uri, String type, JSONObject extras, String packagename, String classname)
+
+Send a broadcast.
+```
+
+## makeIntent
+
+```
+Intent makeIntent( String action, String uri, String type, JSONObject extras, JSONArray categories, String packagename, String classname, Integer flags)
+
+Create an Intent.
+
+Returns An object representing an Intent
+```
+
+## startActivityIntent
+
+```
+void startActivityIntent( Intent intent, Boolean wait)
+
+Start Activity using Intent
+```
+
+## sendBroadcastIntent
+
+```
+void sendBroadcastIntent( Intent intent)
+
+Send Broadcast Intent
+```
+
+## vibrate
+
+```
+void vibrate( Integer duration)
+
+Vibrates the phone or a specified duration in milliseconds.
+```
+
+## makeToast
+
+```
+void makeToast(final String message)
+
+Displays a short-duration Toast notification.
+```
+
+## getInput
+
+```
+String getInput( final String title, final String message)
+
+Queries the user for a text input.
+```
+
+## getPassword
+
+```
+String getPassword( final String title, final String message)
+
+Queries the user for a password.
+```
+
+## notify
+
+```
+void notify(String title, String message)
+
+Displays a notification that will be canceled when the user clicks on it.
+```
+
+## getIntent
+
+```
+Object getIntent()
+
+Returns the intent that launched the script.
+```
+
+## sendEmail
+
+```
+void sendEmail( final String to, final String subject, final String body, final String attachmentUri)
+
+Launches an activity that sends an e-mail message to a given recipient.
+```
+
+## getPackageVersionCode
+
+```
+int getPackageVersionCode(final String packageName)
+
+Returns package version code.
+```
+
+## getPackageVersion
+
+```
+String getPackageVersion(final String packageName)
+
+Returns package version name.
+```
+
+## requiredVersion
+
+```
+boolean requiredVersion(final Integer version)
+
+Checks if version of SL4A is greater than or equal to the specified version.
+```
+
+## log
+
+```
+void log(String message)
+
+Writes message to logcat.
+```
+
+## environment
+
+```
+Map<String, Object> environment()
+
+A map of various useful environment details
+```
+
+## getConstants
+
+```
+Bundle getConstants( String classname)
+
+Get list of constants (static final fields) for a class
+```
+
+## recorderStartMicrophone
+
+```
+void recorderStartMicrophone(String targetPath)
+
+Records audio from the microphone and saves it to the given location.
+```
+
+## recorderStartVideo
+
+```
+void recorderStartVideo(String targetPath, Integer duration, Integer videoSize)
+
+Records video from the camera and saves it to the given location. \nDuration specifies the maximum duration of the recording session. \nIf duration is 0 this method will return and the recording will only be stopped \nwhen recorderStop is called or when a scripts exits. \nOtherwise it will block for the time period equal to the duration argument.\nvideoSize: 0=160x120, 1=320x240, 2=352x288, 3=640x480, 4=800x480.
+```
+
+## recorderCaptureVideo
+
+```
+void recorderCaptureVideo(String targetPath, Integer duration, Boolean recordAudio)
+
+Records video (and optionally audio) from the camera and saves it to the given location. \nDuration specifies the maximum duration of the recording session. \nIf duration is not provided this method will return immediately and the recording will only be stopped \nwhen recorderStop is called or when a scripts exits. \nOtherwise it will block for the time period equal to the duration argument.
+```
+
+## recorderStop
+
+```
+void recorderStop()
+
+Stops a previously started recording.
+```
+
+## startInteractiveVideoRecording
+
+```
+void startInteractiveVideoRecording(final String path)
+
+Starts the video capture application to record a video and saves it to the specified path.
+```
+
+## getLaunchableApplications
+
+```
+Map<String, String> getLaunchableApplications()
+
+Returns a list of all launchable application class names.
+```
+
+## launch
+
+```
+void launch(String className)
+
+Start activity with the given class name.
+```
+
+## getRunningPackages
+
+```
+List<String> getRunningPackages()
+
+Returns a list of packages running activities or services.
+
+Returns List of packages running activities.
+```
+
+## forceStopPackage
+
+```
+void forceStopPackage( String packageName)
+
+Force stops a package.
+```
+
+## cameraCapturePicture
+
+```
+Bundle cameraCapturePicture( final String targetPath, Boolean useAutoFocus, Integer cameraId)
+
+Take a picture and save it to the specified path.
+
+Returns A map of Booleans autoFocus and takePicture where True indicates success. cameraId also included.
+```
+
+## cameraInteractiveCapturePicture
+
+```
+void cameraInteractiveCapturePicture( final String targetPath)
+
+Starts the image capture application to take a picture and saves it to the specified path.
+```
+
+## camerasList
+
+```
+Map<String, String> camerasList()
+
+Get Camera List, Id and parameters.
+
+Returns Map of (cameraId, information).information is comma separated and order is:canDisableShtterSound,facing,orientation.facing: 0=BACK, 1=FACE.orientation: 0,90,180,270=camera image.
+```
+
+## usbserialGetDeviceList
+
+```
+Map<String, String> usbserialGetDeviceList()
+
+Returns USB devices reported by USB Host API.
+
+Returns "Map of id and string information '
+```
+
+## usbserialDisconnect
+
+```
+void usbserialDisconnect( String connID )
+
+Disconnect all USB-device.
+```
+
+## usbserialActiveConnections
+
+```
+Map<String, String> usbserialActiveConnections()
+
+Returns active USB-device connections.
+
+Returns "Active USB-device connections by Map UUID vs device-name." 
+```
+
+## usbserialWriteBinary
+
+```
+void usbserialWriteBinary( String base64, String connID)
+
+Send bytes over the currently open USB Serial connection.
+```
+
+## usbserialReadBinary
+
+```
+String usbserialReadBinary( Integer bufferSize, String connID)
+
+Read up to bufferSize bytes and return a chunked, base64 encoded string.
+```
+
+## usbserialConnect
+
+```
+String usbserialConnect( String hash, String options)
+
+Connect to a device with USB-Host. request the connection and exit.
+
+Returns messages the request status.
+```
+
+## usbserialHostEnable
+
+```
+Boolean usbserialHostEnable()
+
+Requests that the host be enable for USB Serial connections.
+
+Returns "True if the USB Device is accesible
+```
+
+## usbserialWrite
+
+```
+void usbserialWrite(String ascii, String connID)
+
+Sends ASCII characters over the currently open USB Serial connection.
+```
+
+## usbserialReadReady
+
+```
+Boolean usbserialReadReady( String connID)
+
+Returns True if the next read is guaranteed not to block.
+```
+
+## usbserialRead
+
+```
+String usbserialRead( String connID, Integer bufferSize)
+
+Read up to bufferSize ASCII characters.
+```
+
+## usbserialGetDeviceName
+
+```
+String usbserialGetDeviceName( String connID)
+
+Queries a remote device for it's name or null if it can't be resolved
+```
+
+## recognizeSpeech
+
+```
+String recognizeSpeech( final String prompt, final String language, final String languageModel)
+
+Recognizes user's speech and returns the most likely result.
+
+Returns An empty string in case the speech cannot be recongnized.
+```
+
+## wakeLockAcquireFull
+
+```
+void wakeLockAcquireFull()
+
+Acquires a full wake lock (CPU on, screen bright, keyboard bright).
+```
+
+## wakeLockAcquirePartial
+
+```
+void wakeLockAcquirePartial()
+
+Acquires a partial wake lock (CPU on).
+```
+
+## wakeLockAcquireBright
+
+```
+void wakeLockAcquireBright()
+
+Acquires a bright wake lock (CPU on, screen bright).
+```
+
+## wakeLockAcquireDim
+
+```
+void wakeLockAcquireDim()
+
+Acquires a dim wake lock (CPU on, screen dim).
+```
+
+## wakeLockRelease
+
+```
+void wakeLockRelease()
+
+Releases the wake lock.
+```
+
+## ttsSpeak
+
+```
+void ttsSpeak(String message)
+
+Speaks the provided message via TTS.
+```
+
+## startSensingTimed
+
+```
+void startSensingTimed( Integer sensorNumber, Integer delayTime)
+
+Starts recording sensor data to be available for polling.
+```
+
+## startSensingThreshold
+
+```
+void startSensingThreshold(  Integer sensorNumber, Integer threshold, Integer axis)
+
+Records to the Event Queue sensor data exceeding a chosen threshold.
+```
+
+## readSensors
+
+```
+Bundle readSensors()
+
+Returns the most recently recorded sensor data.
+```
+
+## stopSensing
+
+```
+void stopSensing()
+
+Stops collecting sensor data.
+```
+
+## sensorsGetAccuracy
+
+```
+Integer sensorsGetAccuracy()
+
+Returns the most recently received accuracy value.
+```
+
+## sensorsGetLight
+
+```
+Float sensorsGetLight()
+
+Returns the most recently received light value.
+```
+
+## sensorsReadAccelerometer
+
+```
+List<Float> sensorsReadAccelerometer()
+
+Returns the most recently received accelerometer values.
+
+Returns a List of Floats [(acceleration on the) X axis, Y axis, Z axis].
+```
+
+## sensorsReadMagnetometer
+
+```
+List<Float> sensorsReadMagnetometer()
+
+Returns the most recently received magnetic field values.
+
+Returns a List of Floats [(magnetic field value for) X axis, Y axis, Z axis].
+```
+
+## sensorsReadOrientation
+
+```
+List<Double> sensorsReadOrientation()
+
+Returns the most recently received orientation values.
+
+Returns a List of Doubles [azimuth, pitch, roll].
+```
+
+## startSensing
+
+```
+void startSensing( Integer sampleSize)
+
+Starts recording sensor data to be available for polling.
+```
+
+## ttsSpeak
+
+```
+void ttsSpeak(String message)
+
+Speaks the provided message via TTS.
+```
+
+## ttsIsSpeaking
+
+```
+Boolean ttsIsSpeaking()
+
+Returns True if speech is currently in progress.
+```
+
+## setTtsPitch
+
+```
+void setTtsPitch(String pitch)
+
+Changes the pitch of TTS speech.
+```
+
+## wifiGetScanResults
+
+```
+List<ScanResult> wifiGetScanResults()
 
 Returns the list of access points found during the most recent Wifi scan.
 ```
 
-### <sub>wifiLockAcquireFull</sub> ###
+## wifiLockAcquireFull
+
 ```
-wifiLockAcquireFull()
+void wifiLockAcquireFull()
 
 Acquires a full Wifi lock.
 ```
 
-### <sub>wifiLockAcquireScanOnly</sub> ###
+## wifiLockAcquireScanOnly
+
 ```
-wifiLockAcquireScanOnly()
+void wifiLockAcquireScanOnly()
 
 Acquires a scan only Wifi lock.
 ```
 
-### <sub>wifiLockRelease</sub> ###
+## wifiLockRelease
+
 ```
-wifiLockRelease()
+void wifiLockRelease()
 
 Releases a previously acquired Wifi lock.
 ```
 
-### <sub>wifiReassociate</sub> ###
+## wifiStartScan
+
 ```
-wifiReassociate()
-
-Reassociates with the currently active access point.
-
-Returns:
-  True if the operation succeeded.
-```
-
-### <sub>wifiReconnect</sub> ###
-```
-wifiReconnect()
-
-Reconnects to the currently active access point.
-
-Returns:
-  True if the operation succeeded.
-```
-
-### <sub>wifiStartScan</sub> ###
-```
-wifiStartScan()
+Boolean wifiStartScan()
 
 Starts a scan for Wifi access points.
 
-Returns:
-  True if the scan was initiated successfully.
+Returns True if the scan was initiated successfully.
 ```
 
-<!---
- vi: ft=markdown:et:fdm=marker
- -->
+## checkWifiState
+
+```
+Boolean checkWifiState()
+
+Checks Wifi state.
+
+Returns True if Wifi is enabled.
+```
+
+## toggleWifiState
+
+```
+Boolean toggleWifiState(Boolean enabled)
+
+Toggle Wifi on and off.
+
+Returns True if Wifi is enabled.
+```
+
+## wifiDisconnect
+
+```
+Boolean wifiDisconnect()
+
+Disconnects from the currently active access point.
+
+Returns True if the operation succeeded.
+```
+
+## wifiGetConnectionInfo
+
+```
+WifiInfo wifiGetConnectionInfo()
+
+Returns information about the currently active access point.
+```
+
+## wifiReassociate
+
+```
+Boolean wifiReassociate()
+
+Reassociates with the currently active access point.
+
+Returns True if the operation succeeded.
+```
+
+## wifiReconnect
+
+```
+Boolean wifiReconnect()
+
+Reconnects to the currently active access point.
+
+Returns True if the operation succeeded.
+```
+
+## eventClearBuffer
+
+```
+void eventClearBuffer()
+
+Clears all events from the event buffer.
+```
+
+## eventRegisterForBroadcast
+
+```
+boolean eventRegisterForBroadcast( String category, Boolean enqueue)
+
+Registers a listener for a new broadcast signal
+```
+
+## eventUnregisterForBroadcast
+
+```
+void eventUnregisterForBroadcast(String category)
+
+Stop listening for a broadcast signal
+```
+
+## eventGetBrodcastCategories
+
+```
+Set<String> eventGetBrodcastCategories()
+
+Lists all the broadcast signals we are listening for
+```
+
+## eventPoll
+
+```
+List<Event> eventPoll( Integer number_of_events)
+
+Returns and removes the oldest n events (i.e. location or sensor update, etc.) from the event buffer.
+
+Returns A List of Maps of event properties.
+```
+
+## eventWaitFor
+
+```
+Event eventWaitFor( final String eventName, Integer timeout)
+
+Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.
+
+Returns Map of event properties.
+```
+
+## eventWait
+
+```
+Event eventWait( Integer timeout)
+
+Blocks until an event occurs. The returned event is removed from the buffer.
+
+Returns Map of event properties.
+```
+
+## eventPost
+
+```
+void eventPost( String name, String data, Boolean enqueue)
+
+Post an event to the event queue.
+```
+
+## rpcPostEvent
+
+```
+void rpcPostEvent(String name, String data)
+
+Post an event to the event queue.
+```
+
+## receiveEvent
+
+```
+Event receiveEvent()
+
+Returns and removes the oldest event (i.e. location or sensor update, etc.) from the event buffer.
+
+Returns Map of event properties.
+```
+
+## waitForEvent
+
+```
+Event waitForEvent( final String eventName, Integer timeout)
+
+Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.
+
+Returns Map of event properties.
+```
+
+## startEventDispatcher
+
+```
+int startEventDispatcher( Integer port)
+
+Opens up a socket where you can read for events posted
+```
+
+## stopEventDispatcher
+
+```
+void stopEventDispatcher()
+
+Stops the event server, you can't read in the port anymore
+```
+
+## setScreenTimeout
+
+```
+Integer setScreenTimeout(Integer value)
+
+Sets the screen timeout to this number of seconds.
+
+Returns The original screen timeout.
+```
+
+## getScreenTimeout
+
+```
+Integer getScreenTimeout()
+
+Returns the current screen timeout in seconds.
+
+Returns the current screen timeout in seconds.
+```
+
+## checkAirplaneMode
+
+```
+Boolean checkAirplaneMode()
+
+Checks the airplane mode setting.
+
+Returns True if airplane mode is enabled.
+```
+
+## toggleAirplaneMode
+
+```
+Boolean toggleAirplaneMode(Boolean enabled)
+
+Toggles airplane mode on and off.
+
+Returns True if airplane mode is enabled.
+```
+
+## checkRingerSilentMode
+
+```
+Boolean checkRingerSilentMode()
+
+Checks the ringer silent mode setting.
+
+Returns True if ringer silent mode is enabled.
+```
+
+## toggleRingerSilentMode
+
+```
+Boolean toggleRingerSilentMode(Boolean enabled)
+
+Toggles ringer silent mode on and off.
+
+Returns True if ringer silent mode is enabled.
+```
+
+## toggleVibrateMode
+
+```
+Boolean toggleVibrateMode(Boolean enabled, Boolean ringer)
+
+Toggles vibrate mode on and off. If ringer=true then set Ringer setting, else set Notification setting
+
+Returns True if vibrate mode is enabled.
+```
+
+## getVibrateMode
+
+```
+Boolean getVibrateMode(Boolean ringer)
+
+Checks Vibration setting. If ringer=true then query Ringer setting, else query Notification setting
+
+Returns True if vibrate mode is enabled.
+```
+
+## getMaxRingerVolume
+
+```
+int getMaxRingerVolume()
+
+Returns the maximum ringer volume.
+```
+
+## getRingerVolume
+
+```
+int getRingerVolume()
+
+Returns the current ringer volume.
+```
+
+## setRingerVolume
+
+```
+void setRingerVolume(Integer volume)
+
+Sets the ringer volume.
+```
+
+## getMaxMediaVolume
+
+```
+int getMaxMediaVolume()
+
+Returns the maximum media volume.
+```
+
+## getMediaVolume
+
+```
+int getMediaVolume()
+
+Returns the current media volume.
+```
+
+## setMediaVolume
+
+```
+void setMediaVolume(Integer volume)
+
+Sets the media volume.
+```
+
+## getScreenBrightness
+
+```
+Integer getScreenBrightness()
+
+Returns the screen backlight brightness.
+
+Returns the current screen brightness between 0 and 255
+```
+
+## setScreenBrightness
+
+```
+Integer setScreenBrightness( Integer value)
+
+Sets the the screen backlight brightness.
+
+Returns the original screen brightness.
+```
+
+## checkScreenOn
+
+```
+Boolean checkScreenOn()
+
+Checks if the screen is on or off (requires API level 7).
+
+Returns True if the screen is currently on.
+```
+
