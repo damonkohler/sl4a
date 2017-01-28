@@ -619,8 +619,11 @@ public class SensorManagerFacade extends RpcReceiver {
                 // TODO: only 1 sensor in 1 system. make it to N in 1 system.
                 SensorInfo info = getInfo(ev.sensor.getType());
                 if (info == null) {
-                    throw new RuntimeException("sensor" + ev.sensor.getName() +
-                                               "was not registered anymore.");
+                    // it is unknown sensor, register to array.
+                    final int ever = Integer.MAX_VALUE;
+                    info = new SensorInfo(ev.sensor.getType(), ever, "");
+                    this.nMaxSensorType = info.nSL4A = sensors.size() + 1;
+                    sensors.append(info.nSL4A, info);
                 }
                 if (mSensorNumber == 1) {
                     info.putValues(null, ev.values);    // update values only.
