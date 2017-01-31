@@ -53,6 +53,8 @@ public class BluetoothFacade extends RpcReceiver {
     private final IntentFilter discoveryFilter;
     private final EventFacade mEventFacade;
     private final BluetoothStateReceiver mStateReceiver;
+    private static final Object mReceiverLock = new Object();
+    private BluetoothStateReceiver mMultiStateReceiver;
     private final BleStateReceiver mBleStateReceiver;
     private Map<String, BluetoothConnection> connections =
             new HashMap<String, BluetoothConnection>();
@@ -76,6 +78,7 @@ public class BluetoothFacade extends RpcReceiver {
         discoveryFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         mDiscoveryReceiver = new DiscoveryCacheReceiver();
         mStateReceiver = new BluetoothStateReceiver();
+        mMultiStateReceiver = null;
         mBleStateReceiver = new BleStateReceiver();
     }
 
@@ -102,6 +105,16 @@ public class BluetoothFacade extends RpcReceiver {
 
     class BluetoothStateReceiver extends BroadcastReceiver {
 
+        private final boolean mIsMultiBroadcast;
+
+        public BluetoothStateReceiver() {
+            mIsMultiBroadcast = false;
+        }
+
+        public BluetoothStateReceiver(boolean isMultiBroadcast) {
+            mIsMultiBroadcast = isMultiBroadcast;
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -111,11 +124,11 @@ public class BluetoothFacade extends RpcReceiver {
                 if (state == BluetoothAdapter.STATE_ON) {
                     msg.putString("State", "ON");
                     mEventFacade.postEvent("BluetoothStateChangedOn", msg);
-                    mService.unregisterReceiver(mStateReceiver);
+                    if (!mIsMultiBroadcast) mService.unregisterReceiver(mStateReceiver);
                 } else if(state == BluetoothAdapter.STATE_OFF) {
                     msg.putString("State", "OFF");
                     mEventFacade.postEvent("BluetoothStateChangedOff", msg);
-                    mService.unregisterReceiver(mStateReceiver);
+                    if (!mIsMultiBroadcast) mService.unregisterReceiver(mStateReceiver);
                 }
                 msg.clear();
             }
@@ -373,11 +386,39 @@ public class BluetoothFacade extends RpcReceiver {
         return mBluetoothAdapter.disableBLE();
     }
 
+    @Rpc(description = "Listen for Bluetooth State Changes.")
+    public boolean bluetoothStartListeningForAdapterStateChange() {
+        synchronized (mReceiverLock) {
+            if (mMultiStateReceiver != null) {
+                Log.e("Persistent Bluetooth Receiver State Change Listener Already Active");
+                return false;
+            }
+            mMultiStateReceiver = new BluetoothStateReceiver(true);
+            mService.registerReceiver(mMultiStateReceiver,
+                    new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+        }
+        return true;
+    }
+
+    @Rpc(description = "Stop Listening for Bluetooth State Changes.")
+    public boolean bluetoothStopListeningForAdapterStateChange() {
+        synchronized (mReceiverLock) {
+            if (mMultiStateReceiver == null) {
+                Log.d("No Persistent Bluetooth Receiever State Change Listener Found to Stop");
+                return false;
+            }
+            mService.unregisterReceiver(mMultiStateReceiver);
+            mMultiStateReceiver = null;
+        }
+        return true;
+    }
+
     @Override
     public void shutdown() {
         for (Map.Entry<String, BluetoothConnection> entry : connections.entrySet()) {
             entry.getValue().stop();
         }
+        if (mMultiStateReceiver != null ) bluetoothStopListeningForAdapterStateChange();
         connections.clear();
     }
 }
