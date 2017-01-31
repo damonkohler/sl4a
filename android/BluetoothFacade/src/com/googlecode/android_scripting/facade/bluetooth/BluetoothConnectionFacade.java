@@ -51,6 +51,8 @@ import com.googlecode.android_scripting.facade.bluetooth.BluetoothPairingHelper;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcParameter;
+import com.googlecode.android_scripting.rpc.RpcDefault;
+import com.googlecode.android_scripting.rpc.RpcOptional;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -595,7 +597,13 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     }
 
     @Rpc(description = "Start intercepting all bluetooth connection pop-ups.")
-    public void bluetoothStartPairingHelper() {
+    public void bluetoothStartPairingHelper(
+        @RpcParameter(name = "autoConfirm",
+                    description = "Whether connection should be auto confirmed")
+        @RpcDefault("true") @RpcOptional
+        Boolean autoConfirm) {
+        Log.d("Staring pairing helper");
+        mPairingHelper.setAutoConfirm(autoConfirm);
         mService.registerReceiver(mPairingHelper, mPairingFilter);
     }
 
