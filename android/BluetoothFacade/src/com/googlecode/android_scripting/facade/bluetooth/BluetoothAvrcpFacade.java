@@ -92,24 +92,6 @@ public class BluetoothAvrcpFacade extends RpcReceiver {
       m.invoke(sAvrcpProfile);
   }
 
-  @Rpc(description = "Send AVRPC passthrough command.")
-  public void bluetoothAvrcpSendPassThroughCmd(
-          @RpcParameter(name = "deviceID",
-                        description = "Name or MAC address of a bluetooth device.")
-          String deviceID,
-          @RpcParameter(name = "keyCode")
-          Integer keyCode,
-          @RpcParameter(name = "keyState")
-          Integer keyState) throws Exception {
-      if (!sIsAvrcpReady) {
-          Log.d("AVRCP profile is not ready.");
-          return;
-      }
-      BluetoothDevice mDevice = BluetoothFacade.getDevice(sAvrcpProfile.getConnectedDevices(),
-                                                          deviceID);
-      sAvrcpProfile.sendPassThroughCmd(mDevice, keyCode, keyState);
-  }
-
   @Override
   public void shutdown() {
   }
