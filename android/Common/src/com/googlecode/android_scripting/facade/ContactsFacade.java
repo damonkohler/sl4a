@@ -17,19 +17,31 @@
 package com.googlecode.android_scripting.facade;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.Contacts.People;
 import android.provider.Contacts.PhonesColumns;
+import android.util.Log;
 
+import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,21 +55,29 @@ import org.json.JSONObject;
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com
  */
 public class ContactsFacade extends RpcReceiver {
+  private static final String TAG = "ContactsFacade";
   private static final Uri CONTACTS_URI = Uri.parse("content://contacts/people");
   private final ContentResolver mContentResolver;
   private final Service mService;
   private final CommonIntentsFacade mCommonIntentsFacade;
-  public Uri mPhoneContent = null;
-  public String mContactId;
-  public String mPrimary;
-  public String mPhoneNumber;
-  public String mHasPhoneNumber;
+  private final ContactsStatusReceiver mContactsStatusReceiver;
+  private final EventFacade mEventFacade;
+
+  private Uri mPhoneContent = null;
+  private String mContactId;
+  private String mPrimary;
+  private String mPhoneNumber;
+  private String mHasPhoneNumber;
 
   public ContactsFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
     mContentResolver = mService.getContentResolver();
     mCommonIntentsFacade = manager.getReceiver(CommonIntentsFacade.class);
+    mContactsStatusReceiver = new ContactsStatusReceiver();
+    mContentResolver.registerContentObserver(
+        ContactsContract.Contacts.CONTENT_URI, true, mContactsStatusReceiver);
+    mEventFacade = manager.getReceiver(EventFacade.class);
     try {
       // Backward compatibility... get contract stuff using reflection
       Class<?> phone = Class.forName("android.provider.ContactsContract$CommonDataKinds$Phone");
@@ -67,21 +87,29 @@ public class ContactsFacade extends RpcReceiver {
       mPhoneNumber = (String) phone.getField("NUMBER").get(null);
       mHasPhoneNumber = (String) phone.getField("HAS_PHONE_NUMBER").get(null);
     } catch (Exception e) {
+        Log.e(TAG, "Unable to get field from Contacts Database");
     }
   }
 
-  private Uri buildUri(Integer id) {
-    Uri uri = ContentUris.withAppendedId(People.CONTENT_URI, id);
+  private Uri getUri(Integer id) {
+      return ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id);
     return uri;
   }
 
-  @Rpc(description = "Displays a list of contacts to pick from.", returns = "A map of result values.")
-  public Intent pickContact() throws JSONException {
+  @Rpc(
+    description = "Displays a list of contacts to pick from.",
+    returns = "A map of result values."
+  )
+  public Intent contactsDisplayContactPickList() throws JSONException {
     return mCommonIntentsFacade.pick("content://contacts/people");
   }
 
-  @Rpc(description = "Displays a list of phone numbers to pick from.", returns = "The selected phone number.")
-  public String pickPhone() throws JSONException {
+  @Rpc(
+    description = "Displays a list of phone numbers to pick from.",
+    returns = "The selected phone number."
+  )
+  public String contactsDisplayPhonePickList() throws JSONException {
+    String phoneNumber = null;
     String result = null;
     Intent data = mCommonIntentsFacade.pick("content://contacts/phones");
     if (data != null) {
@@ -89,51 +117,51 @@ public class ContactsFacade extends RpcReceiver {
       Cursor cursor = mService.getContentResolver().query(phoneData, null, null, null, null);
       if (cursor != null) {
         if (cursor.moveToFirst()) {
-          result = cursor.getString(cursor.getColumnIndexOrThrow(PhonesColumns.NUMBER));
+          phoneNumber =
+              cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup.NUMBER));
         }
         cursor.close();
       }
     }
-    return result;
+    return phoneNumber;
   }
 
   @Rpc(description = "Returns a List of all possible attributes for contacts.")
   public List<String> contactsGetAttributes() {
-    List<String> result = new ArrayList<String>();
+    List<String> attributes = new ArrayList<String>();
     Cursor cursor = mContentResolver.query(CONTACTS_URI, null, null, null, null);
     if (cursor != null) {
       String[] columns = cursor.getColumnNames();
       for (int i = 0; i < columns.length; i++) {
-        result.add(columns[i]);
+        attributes.add(columns[i]);
       }
       cursor.close();
     }
-    return result;
+    return attributes;
   }
 
-  // TODO(MeanEYE.rcf): Add ability to narrow selection by providing named pairs of attributes.
   @Rpc(description = "Returns a List of all contact IDs.")
-  public List<Integer> contactsGetIds() {
-    List<Integer> result = new ArrayList<Integer>();
-    String[] columns = { "_id" };
+  public List<Integer> contactsGetContactIds() {
+    List<Integer> ids = new ArrayList<Integer>();
+    String[] columns = {"_id"};
     Cursor cursor = mContentResolver.query(CONTACTS_URI, columns, null, null, null);
     if (cursor != null) {
       while (cursor.moveToNext()) {
-        result.add(cursor.getInt(0));
+        ids.add(cursor.getInt(0));
       }
       cursor.close();
     }
-    return result;
+    return ids;
   }
 
   @Rpc(description = "Returns a List of all contacts.", returns = "a List of contacts as Maps")
-  public List<JSONObject> contactsGet(
+  public List<JSONObject> contactsGetAllContacts(
       @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) throws JSONException {
-    List<JSONObject> result = new ArrayList<JSONObject>();
+    List<JSONObject> contacts = new ArrayList<JSONObject>();
     String[] columns;
     if (attributes == null || attributes.length() == 0) {
       // In case no attributes are specified we set the default ones.
-      columns = new String[] { "_id", "name", "primary_phone", "primary_email", "type" };
+      columns = new String[] {"_id", "name", "primary_phone", "primary_email", "type"};
     } else {
       // Convert selected attributes list into usable string list.
       columns = new String[attributes.length()];
@@ -166,27 +194,31 @@ public class ContactsFacade extends RpcReceiver {
           }
           message.put(key, value);
         }
-        result.add(message);
+        contacts.add(message);
       }
       cursor.close();
     }
-    return result;
+    return contacts;
   }
 
   private String findPhone(String id) {
-    String result = null;
+    String phoneNumber = null;
     if (id == null || id.equals("")) {
-      return result;
+      return phoneNumber;
     }
     try {
       if (Integer.parseInt(id) > 0) {
         Cursor pCur =
-            mContentResolver.query(mPhoneContent, new String[] { mPhoneNumber }, mContactId
-                + " = ? and " + mPrimary + "=1", new String[] { id }, null);
+            mContentResolver.query(
+                mPhoneContent,
+                new String[] {mPhoneNumber},
+                mContactId + " = ? and " + mPrimary + "=1",
+                new String[] {id},
+                null);
         if (pCur != null) {
           pCur.getColumnNames();
           while (pCur.moveToNext()) {
-            result = pCur.getString(0);
+            phoneNumber = pCur.getString(0);
             break;
           }
         }
@@ -195,18 +227,20 @@ public class ContactsFacade extends RpcReceiver {
     } catch (Exception e) {
       return null;
     }
-    return result;
+    return phoneNumber;
   }
 
   @Rpc(description = "Returns contacts by ID.")
-  public JSONObject contactsGetById(@RpcParameter(name = "id") Integer id,
-      @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes) throws JSONException {
-    JSONObject result = null;
-    Uri uri = buildUri(id);
+  public JSONObject contactsGetContactById(
+      @RpcParameter(name = "id") Integer id,
+      @RpcParameter(name = "attributes") @RpcOptional JSONArray attributes)
+      throws JSONException {
+    JSONObject contact = null;
+    Uri uri = getUri(id);
     String[] columns;
     if (attributes == null || attributes.length() == 0) {
       // In case no attributes are specified we set the default ones.
-      columns = new String[] { "_id", "name", "primary_phone", "primary_email", "type" };
+      columns = new String[] {"_id", "name", "primary_phone", "primary_email", "type"};
     } else {
       // Convert selected attributes list into usable string list.
       columns = new String[attributes.length()];
@@ -216,37 +250,84 @@ public class ContactsFacade extends RpcReceiver {
     }
     Cursor cursor = mContentResolver.query(uri, columns, null, null, null);
     if (cursor != null) {
-      result = new JSONObject();
+      contact = new JSONObject();
       cursor.moveToFirst();
       for (int i = 0; i < columns.length; i++) {
-        result.put(columns[i], cursor.getString(i));
+        contact.put(columns[i], cursor.getString(i));
       }
       cursor.close();
     }
-    return result;
+    return contact;
   }
 
-  // TODO(MeanEYE.rcf): Add ability to narrow selection by providing named pairs of attributes.
   @Rpc(description = "Returns the number of contacts.")
   public Integer contactsGetCount() {
-    Integer result = 0;
+    Integer count = 0;
     Cursor cursor = mContentResolver.query(CONTACTS_URI, null, null, null, null);
     if (cursor != null) {
-      result = cursor.getCount();
+      count = cursor.getCount();
       cursor.close();
     }
-    return result;
+    return count;
   }
 
   private String[] jsonToArray(JSONArray array) throws JSONException {
-    String[] result = null;
+    String[] resultingArray = null;
     if (array != null && array.length() > 0) {
-      result = new String[array.length()];
+      resultingArray = new String[array.length()];
       for (int i = 0; i < array.length(); i++) {
-        result[i] = array.getString(i);
+          resultingArray[i] = array.getString(i);
       }
     }
-    return result;
+    return resultingArray;
+  }
+
+  private Uri getAllContactsVcardUri() {
+    Cursor cursor =
+        mContentResolver.query(
+            ContactsContract.Contacts.CONTENT_URI,
+            new String[] {ContactsContract.Contacts.LOOKUP_KEY},
+            null,
+            null,
+            null);
+    if (cursor == null) {
+      return null;
+    }
+    try {
+      StringBuilder uriListBuilder = new StringBuilder();
+      int index = 0;
+      while (cursor.moveToNext()) {
+        if (index != 0) {
+          uriListBuilder.append(':');
+        }
+        uriListBuilder.append(cursor.getString(0));
+        index++;
+      }
+      return Uri.withAppendedPath(
+          ContactsContract.Contacts.CONTENT_MULTI_VCARD_URI, Uri.encode(uriListBuilder.toString()));
+    } finally {
+      cursor.close();
+    }
+  }
+
+  @Rpc(description = "Erase all contacts in phone book.")
+  public void contactsEraseAll() {
+    Cursor cursor =
+        mContentResolver.query(
+            ContactsContract.Contacts.CONTENT_URI,
+            new String[] {ContactsContract.Contacts.LOOKUP_KEY},
+            null,
+            null,
+            null);
+    if (cursor == null) {
+      return;
+    }
+    while (cursor.moveToNext()) {
+      Uri uri =
+          Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, cursor.getString(0));
+      mContentResolver.delete(uri, null, null);
+    }
+    return;
   }
 
   /**
@@ -255,14 +336,32 @@ public class ContactsFacade extends RpcReceiver {
    * >ContentResolver.query</a>
    */
   @Rpc(description = "Content Resolver Query", returns = "result of query as Maps")
-  public List<JSONObject> queryContent(
-      @RpcParameter(name = "uri", description = "The URI, using the content:// scheme, for the content to retrieve.") String uri,
-      @RpcParameter(name = "attributes", description = "A list of which columns to return. Passing null will return all columns") @RpcOptional JSONArray attributes,
-      @RpcParameter(name = "selection", description = "A filter declaring which rows to return") @RpcOptional String selection,
-      @RpcParameter(name = "selectionArgs", description = "You may include ?s in selection, which will be replaced by the values from selectionArgs") @RpcOptional JSONArray selectionArgs,
-      @RpcParameter(name = "order", description = "How to order the rows") @RpcOptional String order)
+  public List<JSONObject> contactsQueryContent(
+      @RpcParameter(
+            name = "uri",
+            description = "The URI, using the content:// scheme, for the content to retrieve."
+          )
+          String uri,
+      @RpcParameter(
+            name = "attributes",
+            description = "A list of which columns to return. Passing null will return all columns"
+          )
+          @RpcOptional
+          JSONArray attributes,
+      @RpcParameter(name = "selection", description = "A filter declaring which rows to return")
+          @RpcOptional
+          String selection,
+      @RpcParameter(
+            name = "selectionArgs",
+            description =
+                "You may include ?s in selection, which will be replaced by the values from selectionArgs"
+          )
+          @RpcOptional
+          JSONArray selectionArgs,
+      @RpcParameter(name = "order", description = "How to order the rows") @RpcOptional
+          String order)
       throws JSONException {
-    List<JSONObject> result = new ArrayList<JSONObject>();
+    List<JSONObject> queryResults = new ArrayList<JSONObject>();
     String[] columns = jsonToArray(attributes);
     String[] args = jsonToArray(selectionArgs);
     Cursor cursor = mContentResolver.query(Uri.parse(uri), columns, selection, args, order);
@@ -275,30 +374,91 @@ public class ContactsFacade extends RpcReceiver {
           String value = cursor.getString(i);
           message.put(key, value);
         }
-        result.add(message);
+        queryResults.add(message);
       }
       cursor.close();
     }
-    return result;
+    return queryResults;
   }
 
-  @Rpc(description = "Content Resolver Query Attributes", returns = "a list of available columns for a given content uri")
+  @Rpc(
+    description = "Content Resolver Query Attributes",
+    returns = "a list of available columns for a given content uri"
+  )
   public JSONArray queryAttributes(
-      @RpcParameter(name = "uri", description = "The URI, using the content:// scheme, for the content to retrieve.") String uri)
+      @RpcParameter(
+            name = "uri",
+            description = "The URI, using the content:// scheme, for the content to retrieve."
+          )
+          String uri)
       throws JSONException {
-    JSONArray result = new JSONArray();
+    JSONArray columns = new JSONArray();
     Cursor cursor = mContentResolver.query(Uri.parse(uri), null, "1=0", null, null);
     if (cursor != null) {
       String[] names = cursor.getColumnNames();
       for (String name : names) {
-        result.put(name);
+        columns.put(name);
       }
       cursor.close();
     }
-    return result;
+    return columns;
+  }
+
+  @Rpc(description = "Launches VCF import.")
+  public void importVcf(
+      @RpcParameter(
+            name = "uri",
+            description = "The URI, using the file:/// scheme, for the content to retrieve."
+          )
+          String uri) {
+    Intent intent = new Intent();
+    intent.setComponent(
+        new ComponentName(
+            "com.google.android.contacts",
+            "com.android.contacts.common.vcard.ImportVCardActivity"));
+    intent.setData(Uri.parse(uri));
+    mService.startActivity(intent);
+  }
+
+  @Rpc(description = "Launches VCF export.")
+  public void exportVcf(
+      @RpcParameter(
+            name = "path",
+            description = "The file path, using the / scheme, for the content to save to."
+          )
+          String path) {
+    OutputStream out = null;
+    StringBuilder string = new StringBuilder();
+    try {
+      AssetFileDescriptor fd =
+          mContentResolver.openAssetFileDescriptor(getAllContactsVcardUri(), "r");
+      FileInputStream inputStream = fd.createInputStream();
+      PrintWriter writer = new PrintWriter(path, "UTF-8");
+      int character;
+      while ((character = inputStream.read()) != -1) {
+        if ((char) character != '\r') {
+          string.append((char) character);
+        }
+      }
+      writer.append(string);
+      writer.close();
+    } catch (IOException e) {
+      Log.w(TAG, "Failed to export VCF.");
+    }
+  }
+
+  private class ContactsStatusReceiver extends ContentObserver {
+    public ContactsStatusReceiver() {
+      super(null);
+    }
+
+    public void onChange(boolean updated) {
+      mEventFacade.postEvent("ContactsChanged", null);
+    }
   }
 
   @Override
   public void shutdown() {
+      mContentResolver.unregisterContentObserver(mContactsStatusReceiver);
   }
 }

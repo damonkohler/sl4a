@@ -536,6 +536,34 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         disconnectProfiles(mDevice, deviceID);
     }
 
+    @Rpc(description = "Change permissions for a profile.")
+    public void bluetoothChangeProfileAccessPermission(
+            @RpcParameter(name = "deviceID",
+                          description = "Name or MAC address of a bluetooth device.")
+            String deviceID,
+            @RpcParameter(name = "profileID",
+                          description = "Number of Profile to change access permission")
+            Integer profileID,
+            @RpcParameter(name = "access",
+                          description = "Access level 0 = Unknown, 1 = Allowed, 2 = Rejected")
+            Integer access
+            ) throws Exception {
+        if (access < 0 || access > 2) {
+            Log.w("Unsupported access level.");
+            return;
+        }
+        BluetoothDevice mDevice = BluetoothFacade.getDevice(mBluetoothAdapter.getBondedDevices(),
+                deviceID);
+        switch(profileID) {
+            case BluetoothProfile.PBAP:
+                mDevice.setPhonebookAccessPermission(access);
+                break;
+            default:
+                Log.w("Unsupported profile access change.");
+        }
+    }
+
+
     @Override
     public void shutdown() {
         for(BroadcastReceiver receiver : listeningDevices.values()) {
