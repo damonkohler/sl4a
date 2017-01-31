@@ -79,6 +79,20 @@ public class BluetoothHspFacade extends RpcReceiver {
     return sIsHspReady;
   }
 
+  @Rpc(description = "Set priority of the profile")
+  public void bluetoothHspSetPriority(
+      @RpcParameter(name = "device", description = "Mac address of a BT device.")
+      String deviceStr,
+      @RpcParameter(name = "priority", description = "Priority that needs to be set.")
+      Integer priority)
+      throws Exception {
+    if (sHspProfile == null) return;
+    BluetoothDevice device =
+        BluetoothFacade.getDevice(mBluetoothAdapter.getBondedDevices(), deviceStr);
+    Log.d("Changing priority of device " + device.getAliasName() + " p: " + priority);
+    sHspProfile.setPriority(device, priority);
+  }
+
   @Rpc(description = "Connect to an HSP device.")
   public Boolean bluetoothHspConnect(
       @RpcParameter(name = "device", description = "Name or MAC address of a bluetooth device.")

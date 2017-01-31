@@ -91,6 +91,21 @@ public class BluetoothA2dpFacade extends RpcReceiver {
     return sIsA2dpReady;
   }
 
+  @Rpc(description = "Set priority of the profile")
+  public void bluetoothA2dpSetPriority(
+      @RpcParameter(name = "device", description = "Mac address of a BT device.")
+      String deviceStr,
+      @RpcParameter(name = "priority", description = "Priority that needs to be set.")
+      Integer priority)
+      throws Exception {
+    if (sA2dpProfile == null) return;
+    BluetoothDevice device =
+        BluetoothFacade.getDevice(mBluetoothAdapter.getBondedDevices(), deviceStr);
+    Log.d("Changing priority of device " + device.getAliasName() + " p: " + priority);
+    sA2dpProfile.setPriority(device, priority);
+  }
+
+
   /**
    * Connect to remote device using the A2DP profile.
    *
