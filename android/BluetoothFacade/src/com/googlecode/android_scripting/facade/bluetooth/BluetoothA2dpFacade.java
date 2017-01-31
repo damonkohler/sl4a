@@ -16,8 +16,6 @@
 
 package com.googlecode.android_scripting.facade.bluetooth;
 
-import java.util.List;
-
 import android.app.Service;
 import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
@@ -32,136 +30,162 @@ import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import java.util.List;
+
 public class BluetoothA2dpFacade extends RpcReceiver {
-  static final ParcelUuid[] SINK_UUIDS = {
-    BluetoothUuid.AudioSink, BluetoothUuid.AdvAudioDist,
-  };
-  private final Service mService;
-  private final BluetoothAdapter mBluetoothAdapter;
+    static final ParcelUuid[] SINK_UUIDS = {
+        BluetoothUuid.AudioSink, BluetoothUuid.AdvAudioDist,
+    };
+    private final Service mService;
+    private final BluetoothAdapter mBluetoothAdapter;
 
-  private static boolean sIsA2dpReady = false;
-  private static BluetoothA2dp sA2dpProfile = null;
+    private static boolean sIsA2dpReady = false;
+    private static BluetoothA2dp sA2dpProfile = null;
 
-  public BluetoothA2dpFacade(FacadeManager manager) {
-    super(manager);
-    mService = manager.getService();
-    mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    mBluetoothAdapter.getProfileProxy(mService, new A2dpServiceListener(),
-        BluetoothProfile.A2DP);
-  }
+    public BluetoothA2dpFacade(FacadeManager manager) {
+        super(manager);
+        mService = manager.getService();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter.getProfileProxy(mService, new A2dpServiceListener(),
+                BluetoothProfile.A2DP);
+    }
 
-  class A2dpServiceListener implements BluetoothProfile.ServiceListener {
-    @Override
-    public void onServiceConnected(int profile, BluetoothProfile proxy) {
-      sA2dpProfile = (BluetoothA2dp) proxy;
-      sIsA2dpReady = true;
+    class A2dpServiceListener implements BluetoothProfile.ServiceListener {
+        @Override
+        public void onServiceConnected(int profile, BluetoothProfile proxy) {
+            sA2dpProfile = (BluetoothA2dp) proxy;
+            sIsA2dpReady = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(int profile) {
+            sIsA2dpReady = false;
+        }
+    }
+
+    /**
+     * Connect A2DP Profile to input BluetoothDevice
+     *
+     * @param device the BluetoothDevice object to connect to
+     * @return if the connection was successfull or not
+    */
+    public Boolean a2dpConnect(BluetoothDevice device) {
+        List<BluetoothDevice> sinks = sA2dpProfile.getConnectedDevices();
+        if (sinks != null) {
+            for (BluetoothDevice sink : sinks) {
+                sA2dpProfile.disconnect(sink);
+            }
+        }
+        return sA2dpProfile.connect(device);
+    }
+
+    /**
+     * Disconnect A2DP Profile from input BluetoothDevice
+     *
+     * @param device the BluetoothDevice object to disconnect from
+     * @return if the disconnection was successfull or not
+    */
+    public Boolean a2dpDisconnect(BluetoothDevice device) {
+        if (sA2dpProfile == null) return false;
+        if (sA2dpProfile.getPriority(device) > BluetoothProfile.PRIORITY_ON) {
+            sA2dpProfile.setPriority(device, BluetoothProfile.PRIORITY_ON);
+        }
+        return sA2dpProfile.disconnect(device);
+    }
+
+    /**
+     * Checks to see if the A2DP profile is ready for use.
+     *
+     * @return Returns true if the A2DP Profile is ready.
+     */
+    @Rpc(description = "Is A2dp profile ready.")
+    public Boolean bluetoothA2dpIsReady() {
+        return sIsA2dpReady;
+    }
+
+    /**
+     * Set Bluetooth A2DP connection priority
+     *
+     * @param deviceStr the Bluetooth device's mac address to set the connection priority of
+     * @param priority the integer priority to be set
+     */
+    @Rpc(description = "Set priority of the profile")
+    public void bluetoothA2dpSetPriority(
+            @RpcParameter(name = "device", description = "Mac address of a BT device.")
+            String deviceStr,
+            @RpcParameter(name = "priority", description = "Priority that needs to be set.")
+            Integer priority)
+            throws Exception {
+        if (sA2dpProfile == null) return;
+        BluetoothDevice device =
+                BluetoothFacade.getDevice(mBluetoothAdapter.getBondedDevices(), deviceStr);
+        Log.d("Changing priority of device " + device.getAliasName() + " p: " + priority);
+        sA2dpProfile.setPriority(device, priority);
+    }
+
+
+    /**
+     * Connect to remote device using the A2DP profile.
+     *
+     * @param deviceID the name or mac address of the remote Bluetooth device.
+     * @return True if connected successfully.
+     * @throws Exception
+     */
+    @Rpc(description = "Connect to an A2DP device.")
+    public Boolean bluetoothA2dpConnect(
+            @RpcParameter(name = "deviceID",
+                description = "Name or MAC address of a bluetooth device.")
+            String deviceID)
+            throws Exception {
+        if (sA2dpProfile == null) {
+            return false;
+        }
+        BluetoothDevice mDevice = BluetoothFacade.getDevice(
+                BluetoothFacade.DiscoveredDevices, deviceID);
+        Log.d("Connecting to device " + mDevice.getAliasName());
+        return a2dpConnect(mDevice);
+    }
+
+    /**
+     * Disconnect a remote device using the A2DP profile.
+     *
+     * @param deviceID the name or mac address of the remote Bluetooth device.
+     * @return True if connected successfully.
+     * @throws Exception
+     */
+    @Rpc(description = "Disconnect an A2DP device.")
+    public Boolean bluetoothA2dpDisconnect(
+            @RpcParameter(name = "deviceID", description = "Name or MAC address of a device.")
+            String deviceID)
+            throws Exception {
+        if (sA2dpProfile == null) {
+            return false;
+        }
+        List<BluetoothDevice> connectedA2dpDevices = sA2dpProfile.getConnectedDevices();
+        Log.d("Connected a2dp devices " + connectedA2dpDevices);
+        BluetoothDevice mDevice = BluetoothFacade.getDevice(connectedA2dpDevices, deviceID);
+        return a2dpDisconnect(mDevice);
+    }
+
+    /**
+     * Get the list of devices connected through the A2DP profile.
+     *
+     * @return List of bluetooth devices that are in one of the following states:
+     *   connected, connecting, and disconnecting.
+     */
+    @Rpc(description = "Get all the devices connected through A2DP.")
+    public List<BluetoothDevice> bluetoothA2dpGetConnectedDevices() {
+        while (!sIsA2dpReady) {
+            continue;
+        }
+        return sA2dpProfile.getDevicesMatchingConnectionStates(
+                    new int[] {
+                            BluetoothProfile.STATE_CONNECTED,
+                            BluetoothProfile.STATE_CONNECTING,
+                            BluetoothProfile.STATE_DISCONNECTING});
     }
 
     @Override
-    public void onServiceDisconnected(int profile) {
-      sIsA2dpReady = false;
+    public void shutdown() {
     }
-  }
-
-  public Boolean a2dpConnect(BluetoothDevice device) {
-    List<BluetoothDevice> sinks = sA2dpProfile.getConnectedDevices();
-    if (sinks != null) {
-      for (BluetoothDevice sink : sinks) {
-        sA2dpProfile.disconnect(sink);
-      }
-    }
-    return sA2dpProfile.connect(device);
-  }
-
-  public Boolean a2dpDisconnect(BluetoothDevice device) {
-    if (sA2dpProfile == null) return false;
-    if (sA2dpProfile.getPriority(device) > BluetoothProfile.PRIORITY_ON) {
-      sA2dpProfile.setPriority(device, BluetoothProfile.PRIORITY_ON);
-    }
-    return sA2dpProfile.disconnect(device);
-  }
-
-  /**
-   * Checks to see if the A2DP profile is ready for use.
-   *
-   * @return Returns true if the A2DP Profile is ready.
-   */
-  @Rpc(description = "Is A2dp profile ready.")
-  public Boolean bluetoothA2dpIsReady() {
-    return sIsA2dpReady;
-  }
-
-  @Rpc(description = "Set priority of the profile")
-  public void bluetoothA2dpSetPriority(
-      @RpcParameter(name = "device", description = "Mac address of a BT device.")
-      String deviceStr,
-      @RpcParameter(name = "priority", description = "Priority that needs to be set.")
-      Integer priority)
-      throws Exception {
-    if (sA2dpProfile == null) return;
-    BluetoothDevice device =
-        BluetoothFacade.getDevice(mBluetoothAdapter.getBondedDevices(), deviceStr);
-    Log.d("Changing priority of device " + device.getAliasName() + " p: " + priority);
-    sA2dpProfile.setPriority(device, priority);
-  }
-
-
-  /**
-   * Connect to remote device using the A2DP profile.
-   *
-   * @param deviceId the name or mac address of the remote Bluetooth device.
-   * @return True if connected successfully.
-   * @throws Exception
-   */
-  @Rpc(description = "Connect to an A2DP device.")
-  public Boolean bluetoothA2dpConnect(
-      @RpcParameter(name = "deviceID", description = "Name or MAC address of a bluetooth device.")
-      String deviceID)
-      throws Exception {
-    if (sA2dpProfile == null)
-      return false;
-    BluetoothDevice mDevice = BluetoothFacade.getDevice(
-        BluetoothFacade.DiscoveredDevices, deviceID);
-    Log.d("Connecting to device " + mDevice.getAliasName());
-    return a2dpConnect(mDevice);
-  }
-
-  /**
-   * Disconnect a remote device using the A2DP profile.
-   *
-   * @param deviceId the name or mac address of the remote Bluetooth device.
-   * @return True if connected successfully.
-   * @throws Exception
-   */
-  @Rpc(description = "Disconnect an A2DP device.")
-  public Boolean bluetoothA2dpDisconnect(
-      @RpcParameter(name = "deviceID", description = "Name or MAC address of a device.")
-      String deviceID)
-      throws Exception {
-    if (sA2dpProfile == null)
-      return false;
-    List<BluetoothDevice> connectedA2dpDevices = sA2dpProfile.getConnectedDevices();
-    Log.d("Connected a2dp devices " + connectedA2dpDevices);
-    BluetoothDevice mDevice = BluetoothFacade.getDevice(connectedA2dpDevices, deviceID);
-    return a2dpDisconnect(mDevice);
-  }
-
-  /**
-   * Get the list of devices connected through the A2DP profile.
-   *
-   * @return List of bluetooth devices that are in one of the following states:
-   *   connected, connecting, and disconnecting.
-   */
-  @Rpc(description = "Get all the devices connected through A2DP.")
-  public List<BluetoothDevice> bluetoothA2dpGetConnectedDevices() {
-    while (!sIsA2dpReady);
-    return sA2dpProfile.getDevicesMatchingConnectionStates(
-          new int[] {BluetoothProfile.STATE_CONNECTED,
-                     BluetoothProfile.STATE_CONNECTING,
-                     BluetoothProfile.STATE_DISCONNECTING});
-  }
-
-  @Override
-  public void shutdown() {
-  }
 }
