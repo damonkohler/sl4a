@@ -37,7 +37,6 @@ import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcParameter;
-import com.googlecode.android_scripting.ConvertUtils;
 
 /**
  * BluetoothLe Advertise functions.
@@ -318,7 +317,7 @@ public class BluetoothLeAdvertiseFacade extends RpcReceiver {
      * @throws Exception
      */
     @Rpc(description = "Get ble advertisement data manufacturer specific data")
-    public String bleGetAdvertiseDataManufacturerSpecificData(
+    public byte[] bleGetAdvertiseDataManufacturerSpecificData(
             @RpcParameter(name = "index")
             Integer index,
             @RpcParameter(name = "manufacturerId")
@@ -326,7 +325,7 @@ public class BluetoothLeAdvertiseFacade extends RpcReceiver {
         if (mAdvertiseDataList.get(index) != null) {
             AdvertiseData mData = mAdvertiseDataList.get(index);
             if (mData.getManufacturerSpecificData() != null) {
-                return ConvertUtils.convertByteArrayToString(mData.getManufacturerSpecificData().get(manufacturerId));
+                return mData.getManufacturerSpecificData().get(manufacturerId);
             } else {
                 throw new Exception("Invalid manufacturerId input:" + Integer.toString(manufacturerId));
             }
@@ -364,7 +363,7 @@ public class BluetoothLeAdvertiseFacade extends RpcReceiver {
      * @throws Exception
      */
     @Rpc(description = "Get ble advertisement Service Data")
-    public String bleGetAdvertiseDataServiceData(
+    public byte[] bleGetAdvertiseDataServiceData(
             @RpcParameter(name = "index")
             Integer index,
             @RpcParameter(name = "serviceUuid")
@@ -373,7 +372,7 @@ public class BluetoothLeAdvertiseFacade extends RpcReceiver {
         if (mAdvertiseDataList.get(index) != null) {
             AdvertiseData mData = mAdvertiseDataList.get(index);
             if (mData.getServiceData().containsKey(uuidKey)) {
-                return ConvertUtils.convertByteArrayToString(mData.getServiceData().get(uuidKey));
+                return mData.getServiceData().get(uuidKey);
             } else {
                 throw new Exception("Invalid serviceUuid input:" + serviceUuid);
             }
@@ -429,11 +428,11 @@ public class BluetoothLeAdvertiseFacade extends RpcReceiver {
             @RpcParameter(name = "serviceDataUuid")
             String serviceDataUuid,
             @RpcParameter(name = "serviceData")
-            String serviceData
+            byte[] serviceData
             ) {
         mAdvertiseDataBuilder.addServiceData(
                 ParcelUuid.fromString(serviceDataUuid),
-                ConvertUtils.convertStringToByteArray(serviceData));
+                serviceData);
     }
 
     /**
@@ -448,10 +447,10 @@ public class BluetoothLeAdvertiseFacade extends RpcReceiver {
             @RpcParameter(name = "manufacturerId")
             Integer manufacturerId,
             @RpcParameter(name = "manufacturerSpecificData")
-            String manufacturerSpecificData
+            byte[] manufacturerSpecificData
             ) {
         mAdvertiseDataBuilder.addManufacturerData(manufacturerId,
-                ConvertUtils.convertStringToByteArray(manufacturerSpecificData));
+                manufacturerSpecificData);
     }
 
     /**
