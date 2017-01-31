@@ -125,6 +125,11 @@
 			android:configChanges="keyboardHidden|orientation" />
 		<service android:name=".activity.ScriptingLayerService" />
 		<service android:name=".activity.TriggerService" />
+        <service android:name=".facade.bluetooth.BluetoothAvrcpMediaBrowserService">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService"/>
+            </intent-filter>
+        </service>
 		<activity android:name=".activity.InterpreterManager"
 			android:launchMode="singleTask" android:configChanges="keyboardHidden|orientation" />
 		<activity android:name=".activity.LogcatViewer"
