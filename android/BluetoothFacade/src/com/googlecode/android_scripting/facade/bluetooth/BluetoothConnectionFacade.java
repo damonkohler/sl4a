@@ -32,6 +32,7 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothHeadsetClient;
 import android.bluetooth.BluetoothInputDevice;
+import android.bluetooth.BluetoothMap;
 import android.bluetooth.BluetoothMapClient;
 import android.bluetooth.BluetoothPbapClient;
 import android.bluetooth.BluetoothProfile;
@@ -78,6 +79,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     private final IntentFilter mPbapClientStateChangeFilter;
     private final IntentFilter mPanStateChangeFilter;
     private final IntentFilter mMapClientStateChangeFilter;
+    private final IntentFilter mMapStateChangeFilter;
 
     private final Bundle mGoodNews;
     private final Bundle mBadNews;
@@ -90,6 +92,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     private BluetoothPbapClientFacade mPbapClientProfile;
     private BluetoothPanFacade mPanProfile;
     private BluetoothMapClientFacade mMapClientProfile;
+    private BluetoothMapFacade mMapProfile;
+    private ArrayList<String> mDeviceMonitorList;
 
     public BluetoothConnectionFacade(FacadeManager manager) {
         super(manager);
@@ -98,6 +102,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothManager = (BluetoothManager) mContext.getSystemService(
                 Service.BLUETOOTH_SERVICE);
+        mDeviceMonitorList = new ArrayList<String>();
         // Use a synchronized map to avoid racing problems
         listeningDevices = Collections.synchronizedMap(new HashMap<String, BroadcastReceiver>());
 
@@ -111,6 +116,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         mPbapClientProfile = manager.getReceiver(BluetoothPbapClientFacade.class);
         mPanProfile = manager.getReceiver(BluetoothPanFacade.class);
         mMapClientProfile = manager.getReceiver(BluetoothMapClientFacade.class);
+        mMapProfile = manager.getReceiver(BluetoothMapFacade.class);
 
         mDiscoverConnectFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         mDiscoverConnectFilter.addAction(BluetoothDevice.ACTION_UUID);
@@ -139,6 +145,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
             new IntentFilter(BluetoothPan.ACTION_CONNECTION_STATE_CHANGED);
         mMapClientStateChangeFilter =
             new IntentFilter(BluetoothMapClient.ACTION_CONNECTION_STATE_CHANGED);
+        mMapStateChangeFilter =
+            new IntentFilter(BluetoothMap.ACTION_CONNECTION_STATE_CHANGED);
 
         mGoodNews = new Bundle();
         mGoodNews.putBoolean("Status", true);
@@ -275,6 +283,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            // no matter what the action, just push it...
             String action = intent.getAction();
             Log.d("Action received: " + action);
 
@@ -291,66 +300,45 @@ public class BluetoothConnectionFacade extends RpcReceiver {
                 return;
             }
 
-            String connState = "";
-            if (state == BluetoothProfile.STATE_CONNECTED) {
-                connState = "Connecting";
-            } else if (state == BluetoothProfile.STATE_DISCONNECTED) {
-                connState = "Disconnecting";
-            }
-
             int profile = -1;
-            String listener = "";
             switch (action) {
                 case BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED:
                     profile = BluetoothProfile.A2DP;
-                    listener = "A2dp" + connState + mDeviceID;
                     break;
                 case BluetoothInputDevice.ACTION_CONNECTION_STATE_CHANGED:
                     profile = BluetoothProfile.INPUT_DEVICE;
-                    listener = "Hid" + connState + mDeviceID;
                     break;
                 case BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED:
                     profile = BluetoothProfile.HEADSET;
-                    listener = "Hsp" + connState + mDeviceID;
                     break;
                 case BluetoothPan.ACTION_CONNECTION_STATE_CHANGED:
                     profile = BluetoothProfile.PAN;
-                    listener = "Pan" + connState + mDeviceID;
                     break;
                 case BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED:
                     profile = BluetoothProfile.HEADSET_CLIENT;
-                    listener = "HfpClient" + connState + mDeviceID;
                     break;
                 case BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED:
                     profile = BluetoothProfile.A2DP_SINK;
-                    listener = "A2dpSink" + connState + mDeviceID;
                     break;
                 case BluetoothPbapClient.ACTION_CONNECTION_STATE_CHANGED:
                     profile = BluetoothProfile.PBAP_CLIENT;
-                    listener = "PbapClient" + connState + mDeviceID;
                     break;
                 case BluetoothMapClient.ACTION_CONNECTION_STATE_CHANGED:
                     profile = BluetoothProfile.MAP_CLIENT;
-                    listener = "MapClient" + connState + mDeviceID;
                     break;
             }
 
             if (profile == -1) {
                 Log.e("Action does not match any given profiles " + action);
-                return;
             }
-
 
             // Post an event to Facade.
-            if ((state == BluetoothProfile.STATE_CONNECTED) || (state
-                    == BluetoothProfile.STATE_DISCONNECTED)) {
-                Bundle news = new Bundle();
-                news.putInt("profile", profile);
-                news.putInt("state", state);
-                news.putString("addr", device.getAddress());
-                mEventFacade.postEvent("BluetoothProfileConnectionStateChanged", news);
-                unregisterCachedListener(listener);
-            }
+            Bundle news = new Bundle();
+            news.putInt("profile", profile);
+            news.putInt("state", state);
+            news.putString("addr", device.getAddress());
+            news.putString("action", action);
+            mEventFacade.postEvent("BluetoothProfileConnectionStateChanged", news);
         }
     }
 
@@ -372,40 +360,24 @@ public class BluetoothConnectionFacade extends RpcReceiver {
 
     }
 
-    /**
-     * Helper function used by{@link connectProfile} & {@link disconnectProfiles} to handle a
-     * successful return from a profile connect/disconnect call
-     *
-     * @param deviceID      The device id string
-     * @param profile       String representation of the profile - used to create keys in the
-     *                      <code>listeningDevices</code> hashMap.
-     * @param connState     String that denotes if this is called after a connect or disconnect
-     *                      call.  Helps to share code between connect & disconnect
-     * @param profileFilter The <code>IntentFilter</code> for this profile that we want to listen
-     *                      on.
-     */
-    private void handleConnectionStateChanged(String deviceID, String profile, String connState,
-            IntentFilter profileFilter) {
-        Log.d(connState + " " + profile);
-        ConnectStateChangeReceiver receiver = new ConnectStateChangeReceiver(deviceID);
-        mService.registerReceiver(receiver, profileFilter);
-        listeningDevices.put(profile + connState + deviceID, receiver);
-    }
-
-    /**
-     * Helper function used by{@link connectProfile} & {@link disconnectProfiles} to handle a
-     * unsuccessful return from a profile connect/disconnect call
-     *
-     * @param profile   String representation of the profile - used to post an Event on the
-     *                  <code>mEventFacade</code>
-     * @param connState String that denotes if this is called after a connect or disconnect call.
-     *                  Helps to share code between connect & disconnect
-     */
-    private void handleConnectionStateChangeFailed(String profile, String connState) {
-        Log.d("Failed Starting " + profile + " " + connState);
-        Bundle badNews = (Bundle) mBadNews.clone();
-        badNews.putString("Type", profile);
-        mEventFacade.postEvent(connState, badNews);
+    @Rpc(description = "Start monitoring state changes for input device.")
+    public void bluetoothStartConnectionStateChangeMonitor(
+        @RpcParameter(name = "deviceID",
+                    description = "Name or MAC address of a bluetooth device.")
+                    String deviceID) {
+        if (!mDeviceMonitorList.contains(deviceID)) {
+            ConnectStateChangeReceiver receiver = new ConnectStateChangeReceiver(deviceID);
+            mService.registerReceiver(receiver, mA2dpStateChangeFilter);
+            mService.registerReceiver(receiver, mA2dpSinkStateChangeFilter);
+            mService.registerReceiver(receiver, mHidStateChangeFilter);
+            mService.registerReceiver(receiver, mHspStateChangeFilter);
+            mService.registerReceiver(receiver, mHfpClientStateChangeFilter);
+            mService.registerReceiver(receiver, mPbapClientStateChangeFilter);
+            mService.registerReceiver(receiver, mPanStateChangeFilter);
+            mService.registerReceiver(receiver, mMapClientStateChangeFilter);
+            mService.registerReceiver(receiver, mMapStateChangeFilter);
+            listeningDevices.put("StateChangeListener:" + deviceID, receiver);
+        }
     }
 
     /**
@@ -423,73 +395,28 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         }
         Log.d("Connecting to " + device.getAliasName());
         if (BluetoothUuid.containsAnyUuid(BluetoothA2dpFacade.SINK_UUIDS, deviceUuids)) {
-            boolean status = mA2dpProfile.a2dpConnect(device);
-            if (status) {
-                handleConnectionStateChanged(deviceID, "A2dp", "Connecting", mA2dpStateChangeFilter);
-            } else {
-                handleConnectionStateChangeFailed("a2dp", "Connect");
-            }
+            mA2dpProfile.a2dpConnect(device);
         }
         if (BluetoothUuid.containsAnyUuid(BluetoothA2dpSinkFacade.SOURCE_UUIDS, deviceUuids)) {
-            boolean status = mA2dpSinkProfile.a2dpSinkConnect(device);
-            if (status) {
-                handleConnectionStateChanged(deviceID, "A2dpSink", "Connecting",
-                        mA2dpSinkStateChangeFilter);
-            } else {
-                handleConnectionStateChangeFailed("a2dpsink", "Connect");
-            }
+            mA2dpSinkProfile.a2dpSinkConnect(device);
         }
         if (BluetoothUuid.containsAnyUuid(BluetoothHidFacade.UUIDS, deviceUuids)) {
-            boolean status = mHidProfile.hidConnect(device);
-            if (status) {
-                handleConnectionStateChanged(deviceID, "Hid", "Connecting", mHidStateChangeFilter);
-            } else {
-                handleConnectionStateChangeFailed("Hid", "Connect");
-            }
+            mHidProfile.hidConnect(device);
         }
         if (BluetoothUuid.containsAnyUuid(BluetoothHspFacade.UUIDS, deviceUuids)) {
-            boolean status = mHspProfile.hspConnect(device);
-            if (status) {
-                handleConnectionStateChanged(deviceID, "Hsp", "Connecting", mHspStateChangeFilter);
-            } else {
-                handleConnectionStateChangeFailed("Hsp", "Connect");
-            }
+            mHspProfile.hspConnect(device);
         }
         if (BluetoothUuid.containsAnyUuid(BluetoothHfpClientFacade.UUIDS, deviceUuids)) {
-            boolean status = mHfpClientProfile.hfpClientConnect(device);
-            if (status) {
-                handleConnectionStateChanged(deviceID, "HfpClient", "Connecting",
-                        mHfpClientStateChangeFilter);
-            } else {
-                handleConnectionStateChangeFailed("HfpClient", "Connect");
-            }
-        }
-        if (BluetoothUuid.containsAnyUuid(BluetoothPanFacade.UUIDS, deviceUuids)) {
-            boolean status = mPanProfile.panConnect(device);
-            if (status) {
-                handleConnectionStateChanged(deviceID, "Pan", "Connecting",
-                        mPanStateChangeFilter);
-            } else {
-                handleConnectionStateChangeFailed("Pan", "Connect");
-            }
-        }
-        if (BluetoothUuid.containsAnyUuid(BluetoothPbapClientFacade.UUIDS, deviceUuids)) {
-            boolean status = mPbapClientProfile.pbapClientConnect(device);
-            if (status) {
-                handleConnectionStateChanged(deviceID, "PbapClient", "Connecting",
-                        mPbapClientStateChangeFilter);
-            } else {
-                handleConnectionStateChangeFailed("PbapClient", "Connect");
-            }
+            mHfpClientProfile.hfpClientConnect(device);
         }
         if (BluetoothUuid.containsAnyUuid(BluetoothMapClientFacade.MAP_UUIDS, deviceUuids)) {
-            boolean status = mMapClientProfile.mapClientConnect(device);
-            if (status) {
-                handleConnectionStateChanged(deviceID, "MapClient", "Connecting",
-                        mMapClientStateChangeFilter);
-            } else {
-                handleConnectionStateChangeFailed("MapClient", "Connect");
-            }
+            mMapClientProfile.mapClientConnect(device);
+        }
+        if (BluetoothUuid.containsAnyUuid(BluetoothPanFacade.UUIDS, deviceUuids)) {
+            mPanProfile.panConnect(device);
+        }
+        if (BluetoothUuid.containsAnyUuid(BluetoothPbapClientFacade.UUIDS, deviceUuids)) {
+            mPbapClientProfile.pbapClientConnect(device);
         }
         mService.unregisterReceiver(mPairingHelper);
     }
@@ -527,67 +454,28 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         for (int profileId : profileIds) {
             switch (profileId) {
                 case BluetoothProfile.A2DP_SINK:
-                    result = mA2dpSinkProfile.a2dpSinkDisconnect(device);
-                    if (result) {
-                        handleConnectionStateChanged(deviceID, "A2dpSink", "Disconnecting",
-                                mA2dpSinkStateChangeFilter);
-                    } else {
-                        handleConnectionStateChangeFailed("a2dpsink", "Disconnect");
-                    }
+                    mA2dpSinkProfile.a2dpSinkDisconnect(device);
                     break;
                 case BluetoothProfile.A2DP:
-                    result = mA2dpProfile.a2dpDisconnect(device);
-                    if (result) {
-                        handleConnectionStateChanged(deviceID, "A2dp", "Disconnecting",
-                                mA2dpStateChangeFilter);
-                    } else {
-                        handleConnectionStateChangeFailed("a2dp", "Disconnect");
-                    }
+                    mA2dpProfile.a2dpDisconnect(device);
                     break;
                 case BluetoothProfile.INPUT_DEVICE:
-                    result = mHidProfile.hidDisconnect(device);
-                    if (result) {
-                        handleConnectionStateChanged(deviceID, "Hid", "Disconnecting",
-                                mHidStateChangeFilter);
-                    } else {
-                        handleConnectionStateChangeFailed("Hid", "Disconnect");
-                    }
+                    mHidProfile.hidDisconnect(device);
                     break;
                 case BluetoothProfile.HEADSET:
-                    result = mHspProfile.hspDisconnect(device);
-                    if (result) {
-                        handleConnectionStateChanged(deviceID, "Hsp", "Disconnecting",
-                                mHspStateChangeFilter);
-                    } else {
-                        handleConnectionStateChangeFailed("Hsp", "Disconnect");
-                    }
+                    mHspProfile.hspDisconnect(device);
                     break;
                 case BluetoothProfile.HEADSET_CLIENT:
-                    result = mHfpClientProfile.hfpClientDisconnect(device);
-                    if (result) {
-                        handleConnectionStateChanged(deviceID, "HfpClient", "Disconnecting",
-                                mHfpClientStateChangeFilter);
-                    } else {
-                        handleConnectionStateChangeFailed("HfpClient", "Disconnect");
-                    }
+                    mHfpClientProfile.hfpClientDisconnect(device);
+                    break;
+                case BluetoothProfile.PAN:
+                    mPanProfile.panDisconnect(device);
                     break;
                 case BluetoothProfile.PBAP_CLIENT:
-                    result = mPbapClientProfile.pbapClientDisconnect(device);
-                    if (result) {
-                        handleConnectionStateChanged(deviceID, "PbapClient", "Disconnecting",
-                                mPbapClientStateChangeFilter);
-                    } else {
-                        handleConnectionStateChangeFailed("PbapClient", "Disconnect");
-                    }
+                    mPbapClientProfile.pbapClientDisconnect(device);
                     break;
                 case BluetoothProfile.MAP_CLIENT:
-                    result = mMapClientProfile.mapDisconnect(device);
-                    if (result) {
-                        handleConnectionStateChanged(deviceID, "MapClient", "Disconnecting",
-                                mMapClientStateChangeFilter);
-                    } else {
-                        handleConnectionStateChangeFailed("MapClient", "Disconnect");
-                    }
+                    mMapClientProfile.mapDisconnect(device);
                     break;
                 default:
                     Log.d("Unknown Profile Id to disconnect from. Quitting");
@@ -784,3 +672,4 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         mService.unregisterReceiver(mPairingHelper);
     }
 }
+
