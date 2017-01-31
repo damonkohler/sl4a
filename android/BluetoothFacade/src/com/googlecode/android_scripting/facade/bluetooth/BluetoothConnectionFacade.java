@@ -263,37 +263,68 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            Log.d("Action received: " + action);
+
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
             // Check if received the specified device
             if (!BluetoothFacade.deviceMatch(device, mDeviceID)) {
+                Log.e("Action devices does match act: " + device + " exp " + mDeviceID);
                 return;
             }
-            if (action.equals(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED)) {
-                int state = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE, -1);
-                if (state == BluetoothA2dp.STATE_CONNECTED) {
-                    Bundle a2dpGoodNews = (Bundle) mGoodNews.clone();
-                    a2dpGoodNews.putString("Type", "a2dp");
-                    mEventFacade.postEvent("A2dpConnect" + mDeviceID, a2dpGoodNews);
-                    unregisterCachedListener("A2dpConnecting" + mDeviceID);
-                }
-            } else if (action.equals(BluetoothInputDevice.ACTION_CONNECTION_STATE_CHANGED)) {
-                int state = intent.getIntExtra(BluetoothInputDevice.EXTRA_STATE, -1);
-                if (state == BluetoothInputDevice.STATE_CONNECTED) {
-                    mEventFacade.postEvent("HidConnect" + mDeviceID, mGoodNews);
-                    unregisterCachedListener("HidConnecting" + mDeviceID);
-                }
-            } else if (action.equals(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED)) {
-                int state = intent.getIntExtra(BluetoothHeadset.EXTRA_STATE, -1);
-                if (state == BluetoothHeadset.STATE_CONNECTED) {
-                    mEventFacade.postEvent("HspConnect" + mDeviceID, mGoodNews);
-                    unregisterCachedListener("HspConnecting" + mDeviceID);
-                }
-            } else if (action.equals(BluetoothPan.ACTION_CONNECTION_STATE_CHANGED)) {
-                int state = intent.getIntExtra(BluetoothPan.EXTRA_STATE, -1);
-                if (state == BluetoothPan.STATE_CONNECTED) {
-                    mEventFacade.postEvent("PanConnect" + mDeviceID, mGoodNews);
-                    unregisterCachedListener("PanConnecting" + mDeviceID);
-                }
+
+            int profile = -1;
+            String listener = "";
+            switch (action) {
+                case BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED:
+                    profile = BluetoothProfile.A2DP;
+                    listener = "A2dpConnecting" + mDeviceID;
+                    break;
+                case BluetoothInputDevice.ACTION_CONNECTION_STATE_CHANGED:
+                    profile = BluetoothProfile.INPUT_DEVICE;
+                    listener = "HidConnecting" + mDeviceID;
+                    break;
+                case BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED:
+                    profile = BluetoothProfile.HEADSET;
+                    listener = "HspConnecting" + mDeviceID;
+                    break;
+                case BluetoothPan.ACTION_CONNECTION_STATE_CHANGED:
+                    profile = BluetoothProfile.PAN;
+                    listener = "PanConnecting" + mDeviceID;
+                    break;
+                case BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED:
+                    profile = BluetoothProfile.HEADSET_CLIENT;
+                    listener = "HfpClientConnecting" + mDeviceID;
+                    break;
+                case BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED:
+                    profile = BluetoothProfile.A2DP_SINK;
+                    listener = "A2dpSinkConnecting" + mDeviceID;
+                    break;
+                case BluetoothPbapClient.ACTION_CONNECTION_STATE_CHANGED:
+                    profile = BluetoothProfile.PBAP_CLIENT;
+                    listener = "PbapClientConnecting" + mDeviceID;
+                    break;
+            }
+
+            if (profile == -1) {
+                Log.e("Action does not match any given profiles " + action);
+                return;
+            }
+
+            // Find the state.
+            int state = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1);
+            if (state == -1) {
+                Log.e("Action does not have a state.");
+                return;
+            }
+
+            // Post an event to Facade.
+            if (state == BluetoothProfile.STATE_CONNECTED) {
+                Bundle news = new Bundle();
+                news.putInt("profile", profile);
+                news.putInt("state", state);
+                news.putString("addr", device.getAddress());
+                mEventFacade.postEvent("BluetoothProfileConnectionStateChanged", news);
+                unregisterCachedListener(listener);
             }
         }
     }
