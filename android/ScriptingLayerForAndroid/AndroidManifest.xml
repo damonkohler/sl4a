@@ -125,7 +125,7 @@
 			android:configChanges="keyboardHidden|orientation" />
 		<service android:name=".activity.ScriptingLayerService" />
 		<service android:name=".activity.TriggerService" />
-        <service android:name=".facade.bluetooth.BluetoothAvrcpMediaBrowserService">
+        <service android:name=".facade.bluetooth.media.BluetoothSL4AAudioSrcMBS">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService"/>
             </intent-filter>

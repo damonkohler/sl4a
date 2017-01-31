@@ -465,7 +465,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
             boolean status = mPanProfile.panConnect(device);
             if (status) {
                 handleConnectionStateChanged(deviceID, "Pan", "Connecting",
-                        mHfpClientStateChangeFilter);
+                        mPanStateChangeFilter);
             } else {
                 handleConnectionStateChangeFailed("Pan", "Connect");
             }
