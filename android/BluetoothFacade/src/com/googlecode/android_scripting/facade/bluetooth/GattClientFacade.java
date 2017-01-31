@@ -906,9 +906,6 @@ public class GattClientFacade extends RpcReceiver {
             mBluetoothGattDiscoveredServicesList.put(idx, gatt.getServices());
             mResults.putInt("ServicesIndex", idx);
             mResults.putInt("Status", status);
-            for (BluetoothGattService se: gatt.getServices()) {
-                System.out.println("SWAG: " + se.getUuid().toString());
-            }
             mEventFacade
                     .postEvent(mEventType + index + "onServicesDiscovered", mResults.clone());
             mResults.clear();

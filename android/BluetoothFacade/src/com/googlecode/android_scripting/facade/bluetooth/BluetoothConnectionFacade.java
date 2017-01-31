@@ -116,6 +116,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
 
         mPairingFilter = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
         mPairingFilter.addAction(BluetoothDevice.ACTION_CONNECTION_ACCESS_REQUEST);
+        mPairingFilter.addAction(BluetoothDevice.ACTION_CONNECTION_ACCESS_REPLY);
         mPairingFilter.setPriority(999);
 
         mBondFilter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
