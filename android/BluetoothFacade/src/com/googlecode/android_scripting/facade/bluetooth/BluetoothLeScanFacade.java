@@ -278,12 +278,10 @@ public class BluetoothLeScanFacade extends RpcReceiver {
         if (mLeScanCallbackList.get(leCallbackIndex) != null) {
             result = mBluetoothAdapter.startLeScan(serviceUuids,
                     mLeScanCallbackList.get(leCallbackIndex));
-            System.out.println(result);
         } else {
             throw new Exception("Invalid leCallbackIndex input:"
                     + Integer.toString(leCallbackIndex));
         }
-        System.out.println(result);
         return result;
     }
 

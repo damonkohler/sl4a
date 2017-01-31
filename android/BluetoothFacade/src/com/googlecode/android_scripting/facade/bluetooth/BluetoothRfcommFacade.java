@@ -59,7 +59,6 @@ public class BluetoothRfcommFacade extends RpcReceiver {
   private static final String DEFAULT_UUID = "457807c0-4897-11df-9879-0800200c9a66";
   private static final String SDP_NAME = "SL4A";
   private final Service mService;
-  private final BluetoothPairingHelper mPairingReceiver;
   private final BluetoothAdapter mBluetoothAdapter;
   private Map<String, BluetoothConnection>
           connections = new HashMap<String, BluetoothConnection>();
@@ -71,7 +70,6 @@ public class BluetoothRfcommFacade extends RpcReceiver {
     super(manager);
     mEventFacade = manager.getReceiver(EventFacade.class);
     mService = manager.getService();
-    mPairingReceiver = new BluetoothPairingHelper(mEventFacade);
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
   }
 
@@ -105,11 +103,7 @@ public class BluetoothRfcommFacade extends RpcReceiver {
       String uuid)
       throws IOException {
     BluetoothDevice mDevice;
-    BluetoothSocket mSocket;
     mDevice = mBluetoothAdapter.getRemoteDevice(address);
-    // Register a broadcast receiver to bypass manual confirmation
-    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
-    mService.registerReceiver(mPairingReceiver, filter);
     ConnectThread connectThread = new ConnectThread(mDevice, uuid);
     connectThread.start();
     mConnectThread = connectThread;
@@ -118,10 +112,10 @@ public class BluetoothRfcommFacade extends RpcReceiver {
   @Rpc(description = "Kill thread")
   public void bluetoothRfcommKillConnThread() {
     try {
-        mConnectThread.cancel();
-        mConnectThread.join(5000);
+      mConnectThread.cancel();
+      mConnectThread.join(5000);
     } catch (InterruptedException e) {
-        Log.e("Interrupted Exception: " + e.toString());
+      Log.e("Interrupted Exception: " + e.toString());
     }
   }
 
@@ -173,9 +167,6 @@ public class BluetoothRfcommFacade extends RpcReceiver {
       throws IOException {
     Log.d("Accept bluetooth connection");
     BluetoothServerSocket mServerSocket;
-    // Register a broadcast receiver to bypass manual confirmation
-    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
-    mService.registerReceiver(mPairingReceiver, filter);
     AcceptThread acceptThread = new AcceptThread(uuid, timeout.intValue());
     acceptThread.start();
     mAcceptThread = acceptThread;
@@ -333,15 +324,9 @@ public class BluetoothRfcommFacade extends RpcReceiver {
         mmSocket.connect();
         conn = new BluetoothConnection(mmSocket);
         Log.d("Connection Successful");
-        mService.unregisterReceiver(mPairingReceiver);
         addConnection(conn);
       } catch(IOException connectException) {
-        Log.e("Failed to connect socket: " + connectException.toString());
-        try {
-          mmSocket.close();
-        } catch(IOException closeException){
-          Log.e("Failed to close socket: " + closeException.toString());
-        }
+        cancel();
         return;
       }
     }
@@ -383,16 +368,11 @@ public class BluetoothRfcommFacade extends RpcReceiver {
       try {
         mmSocket = mmServerSocket.accept(mTimeout);
         BluetoothConnection conn = new BluetoothConnection(mmSocket, mmServerSocket);
-        mService.unregisterReceiver(mPairingReceiver);
         addConnection(conn);
       } catch(IOException connectException) {
         Log.e("Failed to connect socket: " + connectException.toString());
         if (mmSocket != null) {
-        try {
-            mmSocket.close();
-          } catch(IOException closeException){
-            Log.e("Failed to close socket: " + closeException.toString());
-          }
+          cancel();
         }
         return;
       }
