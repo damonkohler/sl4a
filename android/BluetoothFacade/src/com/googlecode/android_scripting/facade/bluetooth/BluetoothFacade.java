@@ -386,6 +386,19 @@ public class BluetoothFacade extends RpcReceiver {
         return mBluetoothAdapter.disableBLE();
     }
 
+    @Rpc(description = "Listen for a Bluetooth LE State Change.")
+    public boolean bluetoothListenForBleStateChange() {
+        mService.registerReceiver(mBleStateReceiver,
+            new IntentFilter(BluetoothAdapter.ACTION_BLE_STATE_CHANGED));
+        return true;
+    }
+
+    @Rpc(description = "Stop Listening for a Bluetooth LE State Change.")
+    public boolean bluetoothStopListeningForBleStateChange() {
+        mService.unregisterReceiver(mBleStateReceiver);
+        return true;
+    }
+
     @Rpc(description = "Listen for Bluetooth State Changes.")
     public boolean bluetoothStartListeningForAdapterStateChange() {
         synchronized (mReceiverLock) {
