@@ -584,7 +584,7 @@ public class GattServerFacade extends RpcReceiver {
     public void onMtuChanged(BluetoothDevice device, int mtu) {
       Log.d("gatt_server change onMtuChanged " + mEventType + " " + index);
       mResults.putParcelable("BluetoothDevice", device);
-      mResults.putInt("mtu", mtu);
+      mResults.putInt("MTU", mtu);
       mEventFacade.postEvent(mEventType + index + "onMtuChanged", mResults.clone());
       mResults.clear();
     }
