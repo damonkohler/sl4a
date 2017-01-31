@@ -380,6 +380,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
             } else {
                 Log.d("Failed starting Pan connection.");
                 mEventFacade.postEvent("PanConnect" + deviceID, mBadNews);
+            }
+        }
         if (BluetoothUuid.containsAnyUuid(BluetoothPbapClientFacade.UUIDS, deviceUuids)) {
             boolean status = mPbapClientProfile.pbapClientConnect(device);
             if (status) {
