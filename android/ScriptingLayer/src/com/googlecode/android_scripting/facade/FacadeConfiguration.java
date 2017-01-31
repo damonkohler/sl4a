@@ -29,6 +29,7 @@ import com.googlecode.android_scripting.rpc.RpcStopEvent;
 
 import com.googlecode.android_scripting.facade.bluetooth.BluetoothHfpClientFacade;
 import com.googlecode.android_scripting.facade.bluetooth.BluetoothPanFacade;
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothPbapClientFacade;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -116,6 +117,8 @@ public class FacadeConfiguration {
         /* Compatibility reset to >= Marshmallow */
         if (sSdkLevel >= 23) {
             sFacadeClassList.add(BluetoothHfpClientFacade.class);
+            sFacadeClassList.add(BluetoothA2dpSinkFacade.class);
+            sFacadeClassList.add(BluetoothPbapClientFacade.class);
         }
 
     for (Class<? extends RpcReceiver> recieverClass : sFacadeClassList) {

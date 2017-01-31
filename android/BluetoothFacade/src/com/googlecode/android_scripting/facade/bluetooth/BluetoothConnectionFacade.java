@@ -32,6 +32,8 @@ import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothHeadsetClient;
 import android.bluetooth.BluetoothInputDevice;
 import android.bluetooth.BluetoothPan;
+import android.bluetooth.BluetoothPbapClient;
+import android.bluetooth.BluetoothProfile;
 import android.bluetooth.BluetoothUuid;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -67,6 +69,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     private final IntentFilter mHspStateChangeFilter;
     private final IntentFilter mHfpClientStateChangeFilter;
     private final IntentFilter mPanStateChangeFilter;
+    private final IntentFilter mPbapClientStateChangeFilter;
 
     private final Bundle mGoodNews;
     private final Bundle mBadNews;
@@ -77,6 +80,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     private BluetoothHspFacade mHspProfile;
     private BluetoothHfpClientFacade mHfpClientProfile;
     private BluetoothPanFacade mPanProfile;
+    private BluetoothPbapClientFacade mPbapClientProfile;
 
     public BluetoothConnectionFacade(FacadeManager manager) {
         super(manager);
@@ -96,6 +100,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         mHspProfile = manager.getReceiver(BluetoothHspFacade.class);
         mHfpClientProfile = manager.getReceiver(BluetoothHfpClientFacade.class);
         mPanProfile = manager.getReceiver(BluetoothPanFacade.class);
+        mPbapClientProfile = manager.getReceiver(BluetoothPbapClientFacade.class);
 
         mDiscoverConnectFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         mDiscoverConnectFilter.addAction(BluetoothDevice.ACTION_UUID);
@@ -119,6 +124,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
             new IntentFilter(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED);
         mPanStateChangeFilter =
             new IntentFilter(BluetoothPan.ACTION_CONNECTION_STATE_CHANGED);
+        mPbapClientStateChangeFilter =
+            new IntentFilter(BluetoothPbapClient.ACTION_CONNECTION_STATE_CHANGED);
 
         mGoodNews = new Bundle();
         mGoodNews.putBoolean("Status", true);
@@ -373,6 +380,16 @@ public class BluetoothConnectionFacade extends RpcReceiver {
             } else {
                 Log.d("Failed starting Pan connection.");
                 mEventFacade.postEvent("PanConnect" + deviceID, mBadNews);
+        if (BluetoothUuid.containsAnyUuid(BluetoothPbapClientFacade.UUIDS, deviceUuids)) {
+            boolean status = mPbapClientProfile.pbapClientConnect(device);
+            if (status) {
+                Log.d("Connecting PBAP Client ...");
+                ConnectStateChangeReceiver receiver = new ConnectStateChangeReceiver(deviceID);
+                mService.registerReceiver(receiver, mPbapClientStateChangeFilter);
+                listeningDevices.put("PbapClientConnecting" + deviceID, receiver);
+            } else {
+                Log.d("Failed starting Pbap Client connection.");
+                mEventFacade.postEvent("PbapClientConnect" + deviceID, mBadNews);
             }
         }
         mService.unregisterReceiver(mPairingHelper);
@@ -388,6 +405,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         mHspProfile.hspDisconnect(device);
         mHfpClientProfile.hfpClientDisconnect(device);
         mPanProfile.panDisconnect(device);
+        mPbapClientProfile.pbapClientDisconnect(device);
     }
 
     @Rpc(description = "Start intercepting all bluetooth connection pop-ups.")
@@ -419,6 +437,26 @@ public class BluetoothConnectionFacade extends RpcReceiver {
             }
         }
         return false;
+    }
+
+    @Rpc(description = "Return list of connected bluetooth devices over a profile",
+         returns = "List of devices connected over the profile")
+    public List<BluetoothDevice> bluetoothGetConnectedDevicesOnProfile(
+            @RpcParameter(name = "profileId",
+                          description = "profileId same as BluetoothProfile")
+            int profileId) {
+        BluetoothProfile profile = null;
+        switch (profileId) {
+            case BluetoothProfile.A2DP_SINK:
+                return mA2dpSinkProfile.bluetoothA2dpSinkGetConnectedDevices();
+            case BluetoothProfile.HEADSET_CLIENT:
+                return mHfpClientProfile.bluetoothHfpClientGetConnectedDevices();
+            case BluetoothProfile.PBAP_CLIENT:
+                return mPbapClientProfile.bluetoothPbapClientGetConnectedDevices();
+            default:
+                Log.w("Profile id " + profileId + " is not yet supported.");
+                return new ArrayList<BluetoothDevice>();
+        }
     }
 
     @Rpc(description = "Connect to a specified device once it's discovered.",

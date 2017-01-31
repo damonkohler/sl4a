@@ -299,12 +299,11 @@ public class BluetoothFacade extends RpcReceiver {
             enabled = !bluetoothCheckState();
         }
         if (enabled) {
-            mBluetoothAdapter.enable();
+            return mBluetoothAdapter.enable();
         } else {
             shutdown();
-            mBluetoothAdapter.disable();
+            return mBluetoothAdapter.disable();
         }
-        return enabled;
     }
 
 
