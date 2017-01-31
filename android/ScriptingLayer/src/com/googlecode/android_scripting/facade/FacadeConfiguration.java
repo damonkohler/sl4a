@@ -29,6 +29,7 @@ import com.googlecode.android_scripting.rpc.RpcStopEvent;
 
 import com.googlecode.android_scripting.facade.bluetooth.BluetoothHfpClientFacade;
 import com.googlecode.android_scripting.facade.bluetooth.BluetoothPanFacade;
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothMapClientFacade;
 import com.googlecode.android_scripting.facade.bluetooth.BluetoothMediaFacade;
 import com.googlecode.android_scripting.facade.bluetooth.BluetoothPbapClientFacade;
 
@@ -122,6 +123,7 @@ public class FacadeConfiguration {
             sFacadeClassList.add(BluetoothA2dpSinkFacade.class);
             sFacadeClassList.add(BluetoothPbapClientFacade.class);
             sFacadeClassList.add(NsdManagerFacade.class);
+            sFacadeClassList.add(BluetoothMapClientFacade.class);
         }
 
     for (Class<? extends RpcReceiver> recieverClass : sFacadeClassList) {
