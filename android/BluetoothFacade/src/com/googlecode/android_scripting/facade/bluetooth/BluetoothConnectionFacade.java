@@ -444,7 +444,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     public List<BluetoothDevice> bluetoothGetConnectedDevicesOnProfile(
             @RpcParameter(name = "profileId",
                           description = "profileId same as BluetoothProfile")
-            int profileId) {
+            Integer profileId) {
         BluetoothProfile profile = null;
         switch (profileId) {
             case BluetoothProfile.A2DP_SINK:
