@@ -119,6 +119,7 @@ public class FacadeConfiguration {
             sFacadeClassList.add(BluetoothHfpClientFacade.class);
             sFacadeClassList.add(BluetoothA2dpSinkFacade.class);
             sFacadeClassList.add(BluetoothPbapClientFacade.class);
+            sFacadeClassList.add(NsdManagerFacade.class);
         }
 
     for (Class<? extends RpcReceiver> recieverClass : sFacadeClassList) {

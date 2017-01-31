@@ -31,9 +31,9 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothHeadsetClient;
 import android.bluetooth.BluetoothInputDevice;
-import android.bluetooth.BluetoothPan;
 import android.bluetooth.BluetoothPbapClient;
 import android.bluetooth.BluetoothProfile;
+import android.bluetooth.BluetoothPan;
 import android.bluetooth.BluetoothUuid;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -68,8 +68,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     private final IntentFilter mHidStateChangeFilter;
     private final IntentFilter mHspStateChangeFilter;
     private final IntentFilter mHfpClientStateChangeFilter;
-    private final IntentFilter mPanStateChangeFilter;
     private final IntentFilter mPbapClientStateChangeFilter;
+    private final IntentFilter mPanStateChangeFilter;
 
     private final Bundle mGoodNews;
     private final Bundle mBadNews;
@@ -79,8 +79,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     private BluetoothHidFacade mHidProfile;
     private BluetoothHspFacade mHspProfile;
     private BluetoothHfpClientFacade mHfpClientProfile;
-    private BluetoothPanFacade mPanProfile;
     private BluetoothPbapClientFacade mPbapClientProfile;
+    private BluetoothPanFacade mPanProfile;
 
     public BluetoothConnectionFacade(FacadeManager manager) {
         super(manager);
@@ -99,8 +99,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         mHidProfile = manager.getReceiver(BluetoothHidFacade.class);
         mHspProfile = manager.getReceiver(BluetoothHspFacade.class);
         mHfpClientProfile = manager.getReceiver(BluetoothHfpClientFacade.class);
-        mPanProfile = manager.getReceiver(BluetoothPanFacade.class);
         mPbapClientProfile = manager.getReceiver(BluetoothPbapClientFacade.class);
+        mPanProfile = manager.getReceiver(BluetoothPanFacade.class);
 
         mDiscoverConnectFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         mDiscoverConnectFilter.addAction(BluetoothDevice.ACTION_UUID);
@@ -122,10 +122,10 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         mHspStateChangeFilter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
         mHfpClientStateChangeFilter =
             new IntentFilter(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED);
-        mPanStateChangeFilter =
-            new IntentFilter(BluetoothPan.ACTION_CONNECTION_STATE_CHANGED);
         mPbapClientStateChangeFilter =
             new IntentFilter(BluetoothPbapClient.ACTION_CONNECTION_STATE_CHANGED);
+        mPanStateChangeFilter =
+            new IntentFilter(BluetoothPan.ACTION_CONNECTION_STATE_CHANGED);
 
         mGoodNews = new Bundle();
         mGoodNews.putBoolean("Status", true);
@@ -437,8 +437,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         mHidProfile.hidDisconnect(device);
         mHspProfile.hspDisconnect(device);
         mHfpClientProfile.hfpClientDisconnect(device);
-        mPanProfile.panDisconnect(device);
         mPbapClientProfile.pbapClientDisconnect(device);
+        mPanProfile.panDisconnect(device);
     }
 
     @Rpc(description = "Start intercepting all bluetooth connection pop-ups.")
