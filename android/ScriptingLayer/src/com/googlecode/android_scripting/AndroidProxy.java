@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,7 @@ public class AndroidProxy {
   private final RpcReceiverManagerFactory mFacadeManagerFactory;
 
   /**
-   * 
+   *
    * @param service
    *          Android service (required to build facades).
    * @param intent
@@ -67,7 +67,7 @@ public class AndroidProxy {
     mAddress = mJsonRpcServer.startLocal(port);
     return mAddress;
   }
-  
+
   public InetSocketAddress startPublic() {
     return startPublic(0);
   }

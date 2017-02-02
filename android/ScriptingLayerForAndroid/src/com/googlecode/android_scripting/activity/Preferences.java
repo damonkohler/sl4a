@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 The Android Open Source Project
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,6 +27,5 @@ public class Preferences extends PreferenceActivity {
     super.onCreate(savedInstanceState);
     // Load the preferences from an XML resource
     addPreferencesFromResource(R.xml.preferences);
-    // Analytics.trackActivity(this);
   }
 }

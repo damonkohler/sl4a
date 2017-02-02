@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,8 +24,6 @@ import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
-import com.googlecode.android_scripting.interpreter.html.HtmlActivityTask;
-import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 
 import java.io.File;
 
