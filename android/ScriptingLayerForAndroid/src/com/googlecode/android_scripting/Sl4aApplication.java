@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,7 +30,6 @@ public class Sl4aApplication extends BaseApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    // Analytics.start(this, "UA-158835-13");
 
     // extract run_pie from asset folder.
     File path = new File(this.getFilesDir(), "run_pie");
@@ -70,6 +69,5 @@ public class Sl4aApplication extends BaseApplication {
 
   @Override
   public void onTerminate() {
-    // Analytics.stop();
   }
 }

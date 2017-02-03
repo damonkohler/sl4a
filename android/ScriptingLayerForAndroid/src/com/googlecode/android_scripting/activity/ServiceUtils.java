@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
 
 /**
  * A utility class supplying helper methods for {@link Service} objects.
- * 
+ *
  * @author Felix Arends (felix.arends@gmail.com)
  */
 public class ServiceUtils {
@@ -38,8 +38,8 @@ public class ServiceUtils {
   /**
    * Marks the service as a foreground service. This uses reflection to figure out whether the new
    * APIs for marking a service as a foreground service are available. If not, it falls back to the
-   * old setForeground(boolean) call.
-   * 
+   * old {@link #setForeground(boolean)} call.
+   *
    * @param service
    *          the service to put in foreground mode
    * @param notificationId

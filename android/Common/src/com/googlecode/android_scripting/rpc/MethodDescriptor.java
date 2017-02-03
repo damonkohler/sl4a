@@ -83,8 +83,6 @@ public final class MethodDescriptor {
    * @throws Throwable
    */
   public Object invoke(RpcReceiverManager manager, final JSONArray parameters) throws Throwable {
-    // Issue track call first in case of failure.
-    // Analytics.track("api", getName());
 
     final Type[] parameterTypes = getGenericParameterTypes();
     final Object[] args = new Object[parameterTypes.length];

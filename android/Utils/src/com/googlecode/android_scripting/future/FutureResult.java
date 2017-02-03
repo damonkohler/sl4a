@@ -27,39 +27,39 @@ import java.util.concurrent.TimeUnit;
  */
 public class FutureResult<T> implements Future<T> {
 
-  private final CountDownLatch mLatch = new CountDownLatch(1);
-  private volatile T mResult;
+    private final CountDownLatch mLatch = new CountDownLatch(1);
+    private volatile T mResult = null;
 
-  public void set(T result) {
-    mResult = result;
-    mLatch.countDown();
-  }
+    public void set(T result) {
+        mResult = result;
+        mLatch.countDown();
+    }
 
-  @Override
-  public boolean cancel(boolean mayInterruptIfRunning) {
-    return false;
-  }
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        return false;
+    }
 
-  @Override
-  public T get() throws InterruptedException {
-    mLatch.await();
-    return mResult;
-  }
+    @Override
+    public T get() throws InterruptedException {
+        mLatch.await();
+        return mResult;
+    }
 
-  @Override
-  public T get(long timeout, TimeUnit unit) throws InterruptedException {
-    mLatch.await(timeout, unit);
-    return mResult;
-  }
+    @Override
+    public T get(long timeout, TimeUnit unit) throws InterruptedException {
+        mLatch.await(timeout, unit);
+        return mResult;
+    }
 
-  @Override
-  public boolean isCancelled() {
-    return false;
-  }
+    @Override
+    public boolean isCancelled() {
+        return false;
+    }
 
-  @Override
-  public boolean isDone() {
-    return mResult != null;
-  }
+    @Override
+    public boolean isDone() {
+        return mResult != null;
+    }
 
 }
