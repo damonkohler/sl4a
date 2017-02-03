@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,9 +16,11 @@
 
 package com.googlecode.android_scripting.facade;
 
+import java.io.BufferedReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
-
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.SimpleServer;
 
 class MjpegServer extends SimpleServer {
@@ -31,6 +33,7 @@ class MjpegServer extends SimpleServer {
 
   @Override
   protected void handleConnection(Socket socket) throws Exception {
+    Log.d("handle Mjpeg connection");
     byte[] data = mProvider.getJpeg();
     if (data == null) {
       return;
@@ -42,8 +45,8 @@ class MjpegServer extends SimpleServer {
         "Connection: close\r\n" +
         "Max-Age: 0\r\n" +
         "Expires: 0\r\n" +
-        "Cache-Control: no-cache, private\r\n" + 
-        "Pragma: no-cache\r\n" + 
+        "Cache-Control: no-cache, private\r\n" +
+        "Pragma: no-cache\r\n" +
         "Content-Type: multipart/x-mixed-replace; boundary=--BoundaryString\r\n\r\n").getBytes());
     while (true) {
       data = mProvider.getJpeg();
@@ -57,5 +60,10 @@ class MjpegServer extends SimpleServer {
       outputStream.write("\r\n\r\n".getBytes());
       outputStream.flush();
     }
+  }
+
+  @Override
+  protected void handleRPCConnection(Socket sock, Integer UID, BufferedReader reader, PrintWriter writer)
+      throws Exception {
   }
 }
