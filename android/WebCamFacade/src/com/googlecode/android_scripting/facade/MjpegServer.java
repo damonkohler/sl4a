@@ -62,8 +62,10 @@ class MjpegServer extends SimpleServer {
     }
   }
 
+    /* AOSP SimpleSrever
   @Override
   protected void handleRPCConnection(Socket sock, Integer UID, BufferedReader reader, PrintWriter writer)
       throws Exception {
   }
+    */
 }

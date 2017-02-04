@@ -24,6 +24,8 @@ import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
+import com.googlecode.android_scripting.interpreter.html.HtmlActivityTask;
+import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 
 import java.io.File;
 
@@ -34,7 +36,7 @@ public class ScriptLauncher {
   }
 
   public static HtmlActivityTask launchHtmlScript(File script, Service service, Intent intent,
-      InterpreterConfiguration config) {
+                                                  InterpreterConfiguration config) {
     if (!script.exists()) {
       throw new RuntimeException("No such script to launch.");
     }

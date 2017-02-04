@@ -48,6 +48,7 @@ import com.googlecode.android_scripting.dialog.Help;
 import com.googlecode.android_scripting.interpreter.Interpreter;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration.ConfigurationObserver;
+import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
 
 import java.net.URL;
 import java.util.ArrayList;

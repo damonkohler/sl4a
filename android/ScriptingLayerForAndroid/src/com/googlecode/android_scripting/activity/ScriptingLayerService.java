@@ -36,6 +36,8 @@ import com.googlecode.android_scripting.ScriptLauncher;
 import com.googlecode.android_scripting.ScriptProcess;
 import com.googlecode.android_scripting.interpreter.InterpreterConfiguration;
 import com.googlecode.android_scripting.interpreter.InterpreterProcess;
+import com.googlecode.android_scripting.interpreter.html.HtmlInterpreter;
+import com.googlecode.android_scripting.interpreter.shell.ShellInterpreter;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
