@@ -25,20 +25,17 @@ import android.content.res.AssetFileDescriptor;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.Contacts.People;
-import android.provider.Contacts.PhonesColumns;
+import android.os.Build;
+import android.provider.ContactsContract;
 import android.util.Log;
 
-import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
+import com.googlecode.android_scripting.rpc.RpcMinSdk;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -54,9 +51,10 @@ import org.json.JSONObject;
  * 
  * @author MeanEYE.rcf (meaneye.rcf@gmail.com
  */
+@RpcMinSdk(4)
 public class ContactsFacade extends RpcReceiver {
   private static final String TAG = "ContactsFacade";
-  private static final Uri CONTACTS_URI = ContactsContract.Contacts.CONTENT_URI;
+  private final Uri CONTACTS_URI;
   private final ContentResolver mContentResolver;
   private final Service mService;
   private final CommonIntentsFacade mCommonIntentsFacade;
@@ -71,12 +69,19 @@ public class ContactsFacade extends RpcReceiver {
 
   public ContactsFacade(FacadeManager manager) {
     super(manager);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+            CONTACTS_URI = ContactsContract.Contacts.CONTENT_URI;
+        } else {
+            CONTACTS_URI = Uri.parse("content://contacts/people");
+        }
+
     mService = manager.getService();
     mContentResolver = mService.getContentResolver();
     mCommonIntentsFacade = manager.getReceiver(CommonIntentsFacade.class);
     mContactsStatusReceiver = new ContactsStatusReceiver();
     mContentResolver.registerContentObserver(
-        ContactsContract.Contacts.CONTENT_URI, true, mContactsStatusReceiver);
+            CONTACTS_URI, true, mContactsStatusReceiver);
     mEventFacade = manager.getReceiver(EventFacade.class);
     try {
       // Backward compatibility... get contract stuff using reflection
@@ -92,8 +97,7 @@ public class ContactsFacade extends RpcReceiver {
   }
 
   private Uri getUri(Integer id) {
-      return ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id);
-    return uri;
+        return ContentUris.withAppendedId(CONTACTS_URI, id);
   }
 
   @Rpc(
@@ -281,9 +285,18 @@ public class ContactsFacade extends RpcReceiver {
   }
 
   private Uri getAllContactsVcardUri() {
+      Uri multivcard;
+      String key;
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+          Log.e(TAG, "EraseAll: can't use ContactAPI by Android API5 and less");
+          multivcard = null;      // TODO(shimoda): just return in API21?
+          key = "lookup";
+      } else {
+          multivcard = ContactsContract.Contacts.CONTENT_MULTI_VCARD_URI;
+          key = ContactsContract.Contacts.LOOKUP_KEY;
+      }
     Cursor cursor =
-        mContentResolver.query(
-            ContactsContract.Contacts.CONTENT_URI,
+            mContentResolver.query(CONTACTS_URI,
             new String[] {ContactsContract.Contacts.LOOKUP_KEY},
             null,
             null,
@@ -302,7 +315,7 @@ public class ContactsFacade extends RpcReceiver {
         index++;
       }
       return Uri.withAppendedPath(
-          ContactsContract.Contacts.CONTENT_MULTI_VCARD_URI, Uri.encode(uriListBuilder.toString()));
+            multivcard, Uri.encode(uriListBuilder.toString()));
     } finally {
       cursor.close();
     }
@@ -310,10 +323,19 @@ public class ContactsFacade extends RpcReceiver {
 
   @Rpc(description = "Erase all contacts in phone book.")
   public void contactsEraseAll() {
+        Uri lookup;
+        String key;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ECLAIR) {
+            Log.e(TAG, "EraseAll: can't use ContactAPI by Android API5 and less");
+            lookup = null;      // TODO(shimoda): just return in API4?
+            key = "lookup";
+        } else {
+            lookup = ContactsContract.Contacts.CONTENT_LOOKUP_URI;
+            key = ContactsContract.Contacts.LOOKUP_KEY;
+        }
     Cursor cursor =
-        mContentResolver.query(
-            ContactsContract.Contacts.CONTENT_URI,
-            new String[] {ContactsContract.Contacts.LOOKUP_KEY},
+            mContentResolver.query(CONTACTS_URI,
+                new String[] {key},
             null,
             null,
             null);
@@ -321,8 +343,7 @@ public class ContactsFacade extends RpcReceiver {
       return;
     }
     while (cursor.moveToNext()) {
-      Uri uri =
-          Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, cursor.getString(0));
+            Uri uri = Uri.withAppendedPath(lookup, cursor.getString(0));
       mContentResolver.delete(uri, null, null);
     }
     return;
