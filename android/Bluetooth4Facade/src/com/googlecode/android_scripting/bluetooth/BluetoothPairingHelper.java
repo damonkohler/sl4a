@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.googlecode.android_scripting.facade.bluetooth;
+package com.googlecode.android_scripting.bluetooth;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -46,8 +46,10 @@ public class BluetoothPairingHelper extends BroadcastReceiver {
     Log.d("Bluetooth pairing intent received: " + action);
     BluetoothDevice mDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
     if(action.equals(BluetoothDevice.ACTION_PAIRING_REQUEST)) {
+            /* TODO: try to implement.
       mDevice.setMessageAccessPermission(BluetoothDevice.ACCESS_ALLOWED);
       mDevice.setPhonebookAccessPermission(BluetoothDevice.ACCESS_ALLOWED);
+             */
       int type = intent.getIntExtra(BluetoothDevice.EXTRA_PAIRING_VARIANT, BluetoothDevice.ERROR);
       Log.d("Processing Action Paring Request with type " + type);
       int pin = intent.getIntExtra(BluetoothDevice.EXTRA_PAIRING_KEY,0);
@@ -57,7 +59,7 @@ public class BluetoothPairingHelper extends BroadcastReceiver {
       result.putString("DeviceAddress", deviceAddress);
       mEventFacade.postEvent("BluetoothActionPairingRequest", result.clone());
       result.clear();
-      if(type == BluetoothDevice.PAIRING_VARIANT_CONSENT) {
+        if(type == BluetoothNonpublicApi.PAIRING_VARIANT_CONSENT) {
         mDevice.setPairingConfirmation(true);
         Log.d("Connection auto-confirmed by consent");
         abortBroadcast(); // Abort the broadcast so Settings app doesn't get it.
@@ -71,7 +73,8 @@ public class BluetoothPairingHelper extends BroadcastReceiver {
           try {
             userConfirmEvent = mEventFacade.eventWaitFor(
               "BluetoothActionPairingRequestUserConfirm",
-              true, DEFAULT_TIMEOUT_MS);
+                        DEFAULT_TIMEOUT_MS);
+              // true, DEFAULT_TIMEOUT_MS);
           } catch (InterruptedException e) {
             Log.d("Connection interrupted");
             userConfirmEvent = null;
@@ -93,7 +96,8 @@ public class BluetoothPairingHelper extends BroadcastReceiver {
         abortBroadcast(); // Abort the broadcast so Settings app doesn't get it.
       }
     }
-    else if(action.equals(BluetoothDevice.ACTION_CONNECTION_ACCESS_REQUEST)) {
+        else if(action.equals(BluetoothNonpublicApi.ACTION_CONNECTION_ACCESS_REQUEST)) {
+            /* TODO: try to implement.
       int type = intent.getIntExtra(BluetoothDevice.EXTRA_ACCESS_REQUEST_TYPE, BluetoothDevice.ERROR);
       Log.d("Processing Action Connection Access Request type " + type);
       if(type == BluetoothDevice.REQUEST_TYPE_MESSAGE_ACCESS ||
@@ -115,7 +119,8 @@ public class BluetoothPairingHelper extends BroadcastReceiver {
           Log.d("Sending connection access acceptance intent.");
           abortBroadcast();
           c.sendBroadcast(newIntent, android.Manifest.permission.BLUETOOTH_ADMIN);
-      }
+        }
+    	     */
     }
   }
 

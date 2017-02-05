@@ -68,11 +68,11 @@ public class BluetoothHspFacade extends RpcReceiver {
   }
 
   public Boolean hspConnect(BluetoothDevice device) {
-      BluetoothNonpublicApi.connectProfile(sHspProfile, device);
+      return BluetoothNonpublicApi.connectProfile(sHspProfile, device);
   }
 
   public Boolean hspDisconnect(BluetoothDevice device) {
-      BluetoothNonpublicApi.disconnectProfile(sHspProfile, device);
+        return BluetoothNonpublicApi.disconnectProfile(sHspProfile, device);
   }
 
   @Rpc(description = "Is Hsp profile ready.")

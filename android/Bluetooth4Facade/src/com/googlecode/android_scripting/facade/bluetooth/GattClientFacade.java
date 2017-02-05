@@ -644,7 +644,10 @@ public class GattClientFacade extends RpcReceiver {
             + "remote device")
     public boolean gattClientRefresh(@RpcParameter(name = "index") Integer index) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
-            return mBluetoothGattList.get(index).refresh();
+            Log.e("refresh won't work in no-system app.");
+            return false;
+            // TODO: try to implement.
+            // return mBluetoothGattList.get(index).refresh();
         } else {
             throw new Exception("Invalid index input:" + index);
         }

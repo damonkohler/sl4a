@@ -89,7 +89,7 @@ public class BluetoothHidFacade extends RpcReceiver {
     if (sHidProfile == null)
       return false;
     BluetoothDevice mDevice = Bluetooth4Facade.getDevice(Bluetooth4Facade.DiscoveredDevices, device);
-    Log.d("Connecting to device " + mDevice.getAliasName());
+        // Log.d("Connecting to device " + mDevice.getAliasName());
     return hidConnect(mDevice);
   }
 
@@ -143,7 +143,9 @@ public class BluetoothHidFacade extends RpcReceiver {
       BluetoothDevice device = Bluetooth4Facade.getDevice(sHidProfile.getConnectedDevices(),
               deviceID);
       Log.d("type " + type.getBytes()[0]);
-      return sHidProfile.setReport(device, type.getBytes()[0], report);
+        Log.e("setReport won't work in no-system app.");
+        return false;
+        // return sHidProfile.setReport(device, type.getBytes()[0], report);
   }
 
   @Rpc(description = "Send Get_Report command to the connected HID input device.")
@@ -161,7 +163,9 @@ public class BluetoothHidFacade extends RpcReceiver {
       BluetoothDevice device = Bluetooth4Facade.getDevice(sHidProfile.getConnectedDevices(),
               deviceID);
       Log.d("type " + type.getBytes()[0] + "reportId " + reportId.getBytes()[0]);
-      return sHidProfile.getReport(device, type.getBytes()[0], reportId.getBytes()[0], buffSize);
+        Log.e("getReport won't work in no-system app.");
+        return false;
+        // return sHidProfile.getReport(device, type.getBytes()[0], reportId.getBytes()[0], buffSize);
   }
 
   @Rpc(description = "Send data to a connected HID device.")
@@ -173,7 +177,10 @@ public class BluetoothHidFacade extends RpcReceiver {
           String report) throws Exception {
       BluetoothDevice device = Bluetooth4Facade.getDevice(sHidProfile.getConnectedDevices(),
               deviceID);
-      return sHidProfile.sendData(device, report);
+        Log.e("sendData won't work in no-system app.");
+        return false;
+        // TODO: try to implement.
+        // return sHidProfile.sendData(device, report);
   }
 
   @Rpc(description = "Send virtual unplug to a connected HID device.")
@@ -183,7 +190,9 @@ public class BluetoothHidFacade extends RpcReceiver {
           String deviceID) throws Exception {
       BluetoothDevice device = Bluetooth4Facade.getDevice(sHidProfile.getConnectedDevices(),
               deviceID);
-      return sHidProfile.virtualUnplug(device);
+        Log.e("virtualUnplug won't work in no-system app.");
+        return false;
+        // return sHidProfile.virtualUnplug(device);
   }
 
   @Rpc(description = "Test byte transfer.")

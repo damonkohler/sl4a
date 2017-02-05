@@ -90,8 +90,10 @@ public class BluetoothHfpClientFacade extends RpcReceiver {
       @RpcParameter(name = "priority", description = "Priority that needs to be set.")
       Integer priority)
       throws Exception {
-      BluetoothNonpublicApi.setPriorityProfile(
-              sHfpClientProfile, device, priority);
+        BluetoothDevice device =
+            Bluetooth4Facade.getDevice(mBluetoothAdapter.getBondedDevices(), deviceStr);
+        BluetoothNonpublicApi.setPriorityProfile(
+            sHfpClientProfile, device, priority);
   }
 
   @Rpc(description = "Get priority of the profile")
@@ -99,7 +101,7 @@ public class BluetoothHfpClientFacade extends RpcReceiver {
       @RpcParameter(name = "device", description = "Mac address of a BT device.")
       String deviceStr)
       throws Exception {
-    if (sHfpClientProfile == null) return BluetoothProfile.PRIORITY_UNDEFINED;
+    if (sHfpClientProfile == null) return BluetoothNonpublicApi.PRIORITY_UNDEFINED;
     BluetoothDevice device =
             Bluetooth4Facade.getDevice(mBluetoothAdapter.getBondedDevices(), deviceStr);
         return BluetoothNonpublicApi.getPriorityProfile(

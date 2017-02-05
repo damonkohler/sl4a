@@ -34,6 +34,7 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.os.Bundle;
 import android.os.ParcelUuid;
+import android.os.Parcelable;
 
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.MainThread;
@@ -355,7 +356,8 @@ public class BluetoothLeScanFacade extends RpcReceiver {
     public void bleSetScanSettingsResultType(
             @RpcParameter(name = "scanResultType")
             Integer scanResultType) {
-        mScanSettingsBuilder.setScanResultType(scanResultType);
+        Log.e("setScanResultType won't work in no-system app.");
+        // mScanSettingsBuilder.setScanResultType(scanResultType);
     }
     /**
      * Get ScanSetting's callback type
@@ -787,7 +789,9 @@ public class BluetoothLeScanFacade extends RpcReceiver {
     public int bleGetScanSettingsMatchMode(
             @RpcParameter(name = "scanSettingsIndex") Integer scanSettingsIndex
             ) {
-        return mScanSettingsList.get(scanSettingsIndex).getMatchMode();
+        Log.e("getMatchMode won't work in no-system app.");
+        return 0;
+        // return mScanSettingsList.get(scanSettingsIndex).getMatchMode();
     }
 
     @Rpc(description = "Set the scan setting's number of matches")
@@ -800,7 +804,9 @@ public class BluetoothLeScanFacade extends RpcReceiver {
     public int bleGetScanSettingsNumberOfMatches(
             @RpcParameter(name = "scanSettingsIndex")
             Integer scanSettingsIndex) {
-        return  mScanSettingsList.get(scanSettingsIndex).getNumOfMatches();
+        Log.e("getNumOfMatches won't work in no-system app.");
+        return 0;
+        // return  mScanSettingsList.get(scanSettingsIndex).getNumOfMatches();
     }
 
     private class myScanCallback extends ScanCallback {
@@ -854,7 +860,7 @@ public class BluetoothLeScanFacade extends RpcReceiver {
             mResults.putLong("Timestamp", System.currentTimeMillis() / 1000);
             mResults.putInt("ID", index);
             mResults.putString("Type", "onBatchScanResults");
-            mResults.putParcelableList("Results", results);
+            mResults.putParcelableArray("Results", results.toArray(new ScanResult[0]));
             mEventFacade.postEvent(mEventType + index + "onBatchScanResult", mResults.clone());
             mResults.clear();
         }

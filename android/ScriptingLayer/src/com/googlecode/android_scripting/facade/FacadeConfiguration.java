@@ -19,6 +19,7 @@ package com.googlecode.android_scripting.facade;
 
 import com.google.common.collect.Maps;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothA2dpSinkFacade;
 import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
@@ -122,7 +123,7 @@ public class FacadeConfiguration {
             sFacadeClassList.add(BluetoothHfpClientFacade.class);
             sFacadeClassList.add(BluetoothA2dpSinkFacade.class);
             sFacadeClassList.add(BluetoothPbapClientFacade.class);
-            sFacadeClassList.add(NsdManagerFacade.class);
+            // sFacadeClassList.add(NsdManagerFacade.class);
             sFacadeClassList.add(BluetoothMapClientFacade.class);
         }
 

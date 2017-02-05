@@ -96,7 +96,7 @@ public class BluetoothA2dpSinkFacade extends RpcReceiver {
       @RpcParameter(name = "device", description = "Mac address of a BT device.")
       String deviceStr)
       throws Exception {
-    if (sA2dpSinkProfile == null) return BluetoothProfile.PRIORITY_UNDEFINED;
+        if (sA2dpSinkProfile == null) return BluetoothNonpublicApi.PRIORITY_UNDEFINED;
     BluetoothDevice device =
             Bluetooth4Facade.getDevice(mBluetoothAdapter.getBondedDevices(), deviceStr);
         return BluetoothNonpublicApi.getPriorityProfile(sA2dpSinkProfile, device);

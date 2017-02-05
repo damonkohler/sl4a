@@ -73,7 +73,8 @@ public class BluetoothPanFacade extends RpcReceiver {
     @Rpc(description = "Set Bluetooth Tethering")
     public void bluetoothPanSetBluetoothTethering(
             @RpcParameter(name = "enable") Boolean enable) {
-        sPanProfile.setBluetoothTethering(enable);
+        Log.e("setBluetoothTegthering wont run in no-system app.");
+        // sPanProfile.setBluetoothTethering(enable);
     }
 
     public Boolean panConnect(BluetoothDevice device) {
@@ -99,7 +100,10 @@ public class BluetoothPanFacade extends RpcReceiver {
         if (!sIsPanReady || sPanProfile == null) {
             return false;
         }
-        return sPanProfile.isTetheringOn();
+        Log.e("isTetheringOn won't work in no-system app.");
+        return false;
+        // TODO: try to implement.
+        // return sPanProfile.isTetheringOn();
     }
 
     public void shutdown() {

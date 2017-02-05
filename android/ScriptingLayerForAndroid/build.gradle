@@ -15,6 +15,7 @@ dependencies {
     compile project(':Utils')
     compile project(':QuickAction')
     compile project(':BluetoothFacade')
+    compile project(':Bluetooth4Facade')
     compile project(':SignalStrengthFacade')
     compile project(':TextToSpeechFacade')
     compile project(':WebCamFacade')

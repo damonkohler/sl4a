@@ -93,12 +93,12 @@ public class BluetoothMapClientFacade extends RpcReceiver {
         mEventFacade = manager.getReceiver(EventFacade.class);
 
         mNotificationReceiver = new NotificationReceiver();
-        mSendIntent = new Intent(BluetoothMapClient.ACTION_MESSAGE_SENT_SUCCESSFULLY);
-        mDeliveryIntent = new Intent(BluetoothMapClient.ACTION_MESSAGE_DELIVERED_SUCCESSFULLY);
+        mSendIntent = new Intent(BluetoothNonpublicApi.ACTION_MESSAGE_SENT_SUCCESSFULLY);
+        mDeliveryIntent = new Intent(BluetoothNonpublicApi.ACTION_MESSAGE_DELIVERED_SUCCESSFULLY);
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothMapClient.ACTION_MESSAGE_RECEIVED);
-        intentFilter.addAction(BluetoothMapClient.ACTION_MESSAGE_SENT_SUCCESSFULLY);
-        intentFilter.addAction(BluetoothMapClient.ACTION_MESSAGE_DELIVERED_SUCCESSFULLY);
+        intentFilter.addAction(BluetoothNonpublicApi.ACTION_MESSAGE_RECEIVED);
+        intentFilter.addAction(BluetoothNonpublicApi.ACTION_MESSAGE_SENT_SUCCESSFULLY);
+        intentFilter.addAction(BluetoothNonpublicApi.ACTION_MESSAGE_DELIVERED_SUCCESSFULLY);
         mService.registerReceiver(mNotificationReceiver, intentFilter);
         Log.d("notification receiver registered");
     }
@@ -155,8 +155,10 @@ public class BluetoothMapClientFacade extends RpcReceiver {
                 Log.d("PhoneNumber count: " + phoneNumbers.length + " = " + phoneNumbers[i]);
                 contacts[i] = Uri.parse(phoneNumbers[i]);
             }
-            return sMapProfile.sendMessage(device, contacts, message, mSentIntent,
-                    mDeliveredIntent);
+            Log.e("sendMessage won't work in no-system app.");
+            return false;
+            // return sMapProfile.sendMessage(device, contacts, message, mSentIntent,
+            //        mDeliveredIntent);
         } catch (Exception e) {
             Log.d("Error sending message, no such device " + e.toString());
         }
@@ -213,13 +215,13 @@ public class BluetoothMapClientFacade extends RpcReceiver {
         public void onReceive(Context context, Intent intent) {
             Log.d("OnReceive" + intent);
             String action = intent.getAction();
-            if (action.equals(BluetoothMapClient.ACTION_MESSAGE_RECEIVED)) {
+            if (action.equals(BluetoothNonpublicApi.ACTION_MESSAGE_RECEIVED)) {
                 mEventFacade.postEvent(MAP_EVENT,
                         intent.getStringExtra(android.content.Intent.EXTRA_TEXT));
-            } else if (action.equals(BluetoothMapClient.ACTION_MESSAGE_SENT_SUCCESSFULLY)) {
+            } else if (action.equals(BluetoothNonpublicApi.ACTION_MESSAGE_SENT_SUCCESSFULLY)) {
                 mEventFacade.postEvent(MAP_SMS_SENT_SUCCESS,
                         intent.getStringExtra(android.content.Intent.EXTRA_TEXT));
-            } else if (action.equals(BluetoothMapClient.ACTION_MESSAGE_DELIVERED_SUCCESSFULLY)) {
+            } else if (action.equals(BluetoothNonpublicApi.ACTION_MESSAGE_DELIVERED_SUCCESSFULLY)) {
                 mEventFacade.postEvent(MAP_SMS_DELIVER_SUCCESS,
                         intent.getStringExtra(android.content.Intent.EXTRA_TEXT));
             }

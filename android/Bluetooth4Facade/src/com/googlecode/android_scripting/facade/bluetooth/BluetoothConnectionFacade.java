@@ -48,6 +48,7 @@ import android.os.ParcelUuid;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.bluetooth.BluetoothNonpublicApi;
 import com.googlecode.android_scripting.bluetooth.BluetoothUuid;
+import com.googlecode.android_scripting.bluetooth.BluetoothPairingHelper;
 import com.googlecode.android_scripting.facade.Bluetooth4Facade;
 import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.FacadeManager;
@@ -68,6 +69,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     private final BluetoothAdapter mBluetoothAdapter;
     private final BluetoothManager mBluetoothManager;
 //    private final BluetoothPairingHelper mPairingHelper;
+    private final BluetoothPairingHelper mPairingHelper;
     private final Map<String, BroadcastReceiver> listeningDevices;
     private final EventFacade mEventFacade;
 
@@ -110,7 +112,7 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         listeningDevices = Collections.synchronizedMap(new HashMap<String, BroadcastReceiver>());
 
         mEventFacade = manager.getReceiver(EventFacade.class);
-        // mPairingHelper = new BluetoothPairingHelper(mEventFacade);
+        mPairingHelper = new BluetoothPairingHelper(mEventFacade);
         mA2dpProfile = manager.getReceiver(BluetoothA2dpFacade.class);
         mA2dpSinkProfile = manager.getReceiver(BluetoothA2dpSinkFacade.class);
         mHidProfile = manager.getReceiver(BluetoothHidFacade.class);
@@ -126,8 +128,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         mDiscoverConnectFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
         mPairingFilter = new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST);
-        mPairingFilter.addAction(BluetoothDevice.ACTION_CONNECTION_ACCESS_REQUEST);
-        mPairingFilter.addAction(BluetoothDevice.ACTION_CONNECTION_ACCESS_REPLY);
+        mPairingFilter.addAction(BluetoothNonpublicApi.ACTION_CONNECTION_ACCESS_REQUEST);
+        mPairingFilter.addAction(BluetoothNonpublicApi.ACTION_CONNECTION_ACCESS_REPLY);
         mPairingFilter.setPriority(999);
 
         mBondFilter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
@@ -135,7 +137,15 @@ public class BluetoothConnectionFacade extends RpcReceiver {
         mBondFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
         mA2dpStateChangeFilter = new IntentFilter(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
-        /* NOTE: can't s
+        mA2dpSinkStateChangeFilter = null;
+        mHidStateChangeFilter = null;
+        mHspStateChangeFilter = null;
+        mHfpClientStateChangeFilter = null;
+        mPbapClientStateChangeFilter = null;
+        mPanStateChangeFilter = null;
+        mMapClientStateChangeFilter = null;
+        mMapStateChangeFilter = null;
+        /* NOTE: can't build with normal SDK.
         mA2dpSinkStateChangeFilter =
             new IntentFilter(BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED);
         mHidStateChangeFilter =
@@ -505,7 +515,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     public List<BluetoothDevice> bluetoothGetConnectedDevices() {
         ArrayList<BluetoothDevice> results = new ArrayList<BluetoothDevice>();
         for (BluetoothDevice bd : mBluetoothAdapter.getBondedDevices()) {
-            if (bd.isConnected()) {
+            if (true) {
+            // if (bd.isConnected()) {   // TODO: try to implement.
                 results.add(bd);
             }
         }
@@ -521,7 +532,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
     public Boolean bluetoothIsDeviceConnected(String deviceID) {
         for (BluetoothDevice bd : mBluetoothAdapter.getBondedDevices()) {
             if (Bluetooth4Facade.deviceMatch(bd, deviceID)) {
-                return bd.isConnected();
+                return true;
+                // return bd.isConnected();     // TODO: try to implement.
             }
         }
         return false;
@@ -600,7 +612,9 @@ public class BluetoothConnectionFacade extends RpcReceiver {
                     String deviceID) throws Exception {
         BluetoothDevice mDevice = Bluetooth4Facade.getDevice(mBluetoothAdapter.getBondedDevices(),
                 deviceID);
-        return mDevice.removeBond();
+        Log.e("removeBond won't work in no-system app.");
+        return false;
+        // return mDevice.removeBond();
     }
 
     @Rpc(description = "Connect to a device that is already bonded.")
@@ -657,7 +671,8 @@ public class BluetoothConnectionFacade extends RpcReceiver {
                 deviceID);
         switch (profileID) {
             case BluetoothNonpublicApi.PBAP:
-                mDevice.setPhonebookAccessPermission(access);
+                // mDevice.setPhonebookAccessPermission(access);
+                Log.e("setPhonebookAccessPermission won't work in no-system app.");
                 break;
             default:
                 Log.w("Unsupported profile access change.");

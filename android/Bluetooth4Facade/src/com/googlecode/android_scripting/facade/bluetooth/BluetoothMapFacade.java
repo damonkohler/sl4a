@@ -106,7 +106,9 @@ public class BluetoothMapFacade extends RpcReceiver {
   @Rpc(description = "Get the currently connected remote Bluetooth device (PCE).")
   public BluetoothDevice bluetoothMapGetClient() {
     if (sMapProfile == null) { return null; }
-    return sMapProfile.getClient();
+        return null;
+        // TODO: try to implement.
+        // return sMapProfile.getClient();
   }
 
   @Override

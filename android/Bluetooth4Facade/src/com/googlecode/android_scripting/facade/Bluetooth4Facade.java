@@ -32,6 +32,7 @@ import android.os.ParcelUuid;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.MainThread;
+import com.googlecode.android_scripting.bluetooth.BluetoothNonpublicApi;
 import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
@@ -162,9 +163,9 @@ public class Bluetooth4Facade extends RpcReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(BluetoothAdapter.ACTION_BLE_STATE_CHANGED)) {
-                int state = mBluetoothAdapter.getLeState();
-                if (state == BluetoothAdapter.STATE_BLE_ON) {
+            if (action.equals(BluetoothNonpublicApi.ACTION_BLE_STATE_CHANGED)) {
+                int state = BluetoothNonpublicApi.getLeState(mBluetoothAdapter);
+                if (state == BluetoothNonpublicApi.STATE_BLE_ON) {
                     mEventFacade.postEvent("BleStateChangedOn", new Bundle());
                     mService.unregisterReceiver(mBleStateReceiver);
                 } else if (state == BluetoothAdapter.STATE_OFF) {
@@ -177,7 +178,8 @@ public class Bluetooth4Facade extends RpcReceiver {
 
 
     public static boolean deviceMatch(BluetoothDevice device, String deviceID) {
-        return deviceID.equals(device.getAliasName()) || deviceID.equals(device.getAddress());
+        // if (deviceID.equals(device.getAliasName())) {return true;}
+        return deviceID.equals(device.getAddress());
     }
 
     public static <T> BluetoothDevice getDevice(ConcurrentHashMap<String, T> devices, String device)
@@ -214,8 +216,8 @@ public class Bluetooth4Facade extends RpcReceiver {
 
     @Rpc(description = "Requests that the device be made connectable.")
     public void bluetoothMakeConnectable() {
-        mBluetoothAdapter
-                .setScanMode(BluetoothAdapter.SCAN_MODE_CONNECTABLE);
+        BluetoothNonpublicApi.setScanMode(mBluetoothAdapter,
+                                          BluetoothAdapter.SCAN_MODE_CONNECTABLE);
     }
 
   @Rpc(description = "Returns active Bluetooth connections.")
@@ -327,8 +329,8 @@ public class Bluetooth4Facade extends RpcReceiver {
             @RpcDefault("300")
             Integer duration) {
         Log.d("Making discoverable for " + duration + " seconds.\n");
-        mBluetoothAdapter
-                .setScanMode(BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE, duration);
+        BluetoothNonpublicApi.setScanMode(mBluetoothAdapter,
+                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE, duration);
     if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
       Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
       discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, duration);
@@ -393,7 +395,7 @@ public class Bluetooth4Facade extends RpcReceiver {
     @Rpc(description = "Requests that the device be not discoverable.")
     public void bluetoothMakeUndiscoverable() {
         Log.d("Making undiscoverable\n");
-        mBluetoothAdapter.setScanMode(BluetoothAdapter.SCAN_MODE_NONE);
+        BluetoothNonpublicApi.setScanMode(mBluetoothAdapter, BluetoothAdapter.SCAN_MODE_NONE);
     }
 
   @Rpc(description = "Queries a remote device for it's name or null if it can't be resolved")
@@ -457,7 +459,9 @@ public class Bluetooth4Facade extends RpcReceiver {
 
     @Rpc(description = "Factory reset bluetooth settings.", returns = "True if successful.")
     public boolean bluetoothFactoryReset() {
-        return mBluetoothAdapter.factoryReset();
+        Log.e("factoryReset won't work in no-system app.");
+        return false;
+        // return mBluetoothAdapter.factoryReset();
     }
 
   @Rpc(description = "Toggle Bluetooth on and off.", returns = "True if Bluetooth is enabled.")
@@ -473,7 +477,6 @@ public class Bluetooth4Facade extends RpcReceiver {
       enabled = !checkBluetoothState();
     }
     if (enabled) {
-            return mBluetoothAdapter.enable();
       if (prompt) {
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         // TODO(damonkohler): Use the result to determine if this was successful. At any rate, keep
@@ -554,7 +557,10 @@ public class Bluetooth4Facade extends RpcReceiver {
             @RpcParameter(name = "value", description = "enable or disable log")
             Boolean value
             ) {
-        return mBluetoothAdapter.configHciSnoopLog(value);
+        Log.e("configHciSnoopLog won't work in no-system app.");
+        return false;
+        // TODO: try to implement.
+        // return mBluetoothAdapter.configHciSnoopLog(value);
     }
 
     @Rpc(description = "Get Bluetooth controller activity energy info.")
@@ -562,43 +568,53 @@ public class Bluetooth4Facade extends RpcReceiver {
         @RpcParameter(name = "value")
         Integer value
             ) {
+        return "Disabled in user app SL4A";
+        /* TODO: try to implement.
         BluetoothActivityEnergyInfo energyInfo = mBluetoothAdapter
             .getControllerActivityEnergyInfo(value);
         while (energyInfo == null) {
           energyInfo = mBluetoothAdapter.getControllerActivityEnergyInfo(value);
         }
         return energyInfo.toString();
+         */
     }
 
     @Rpc(description = "Return true if hardware has entries" +
             "available for matching beacons.")
     public boolean bluetoothIsHardwareTrackingFiltersAvailable() {
-        return mBluetoothAdapter.isHardwareTrackingFiltersAvailable();
+        Log.e("isHardwareTrackingFiltersAvailable won't in no-system app.");
+        return false;
+        // TODO: try to implement.
+        // return mBluetoothAdapter.isHardwareTrackingFiltersAvailable();
     }
 
     @Rpc(description = "Gets the current state of LE.")
     public int bluetoothGetLeState() {
-        return mBluetoothAdapter.getLeState();
+        return BluetoothNonpublicApi.getLeState(mBluetoothAdapter);
     }
 
     @Rpc(description = "Enables BLE functionalities.")
     public boolean bluetoothEnableBLE() {
         mService.registerReceiver(mBleStateReceiver,
-            new IntentFilter(BluetoothAdapter.ACTION_BLE_STATE_CHANGED));
-        return mBluetoothAdapter.enableBLE();
+            new IntentFilter(BluetoothNonpublicApi.ACTION_BLE_STATE_CHANGED));
+        Log.e("enableBLE won't work in no-system app.");
+        return false;
+        // return mBluetoothAdapter.enableBLE();
     }
 
     @Rpc(description = "Disables BLE functionalities.")
     public boolean bluetoothDisableBLE() {
         mService.registerReceiver(mBleStateReceiver,
-            new IntentFilter(BluetoothAdapter.ACTION_BLE_STATE_CHANGED));
-        return mBluetoothAdapter.disableBLE();
+            new IntentFilter(BluetoothNonpublicApi.ACTION_BLE_STATE_CHANGED));
+        Log.e("disableBLE won't work in no-system app.");
+        return false;
+        // return mBluetoothAdapter.disableBLE();
     }
 
     @Rpc(description = "Listen for a Bluetooth LE State Change.")
     public boolean bluetoothListenForBleStateChange() {
         mService.registerReceiver(mBleStateReceiver,
-            new IntentFilter(BluetoothAdapter.ACTION_BLE_STATE_CHANGED));
+            new IntentFilter(BluetoothNonpublicApi.ACTION_BLE_STATE_CHANGED));
         return true;
     }
 
