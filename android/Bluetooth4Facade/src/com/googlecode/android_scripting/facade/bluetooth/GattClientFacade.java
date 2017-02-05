@@ -16,15 +16,21 @@
 
 package com.googlecode.android_scripting.facade.bluetooth;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.os.Bundle;
@@ -38,12 +44,6 @@ import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 import com.googlecode.android_scripting.rpc.RpcStopEvent;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.Callable;
 
 public class GattClientFacade extends RpcReceiver {
     private final EventFacade mEventFacade;
@@ -71,9 +71,7 @@ public class GattClientFacade extends RpcReceiver {
         super(manager);
         mService = manager.getService();
         mContext = mService.getApplicationContext();
-        mBluetoothAdapter =
-                MainThread.run(
-                        mService,
+        mBluetoothAdapter = MainThread.run(mService,
                         new Callable<BluetoothAdapter>() {
                             @Override
                             public BluetoothAdapter call() throws Exception {
@@ -108,8 +106,8 @@ public class GattClientFacade extends RpcReceiver {
             @RpcParameter(name = "index") Integer index,
             @RpcParameter(name = "macAddress") String macAddress,
             @RpcParameter(name = "autoConnect") Boolean autoConnect,
-            @RpcParameter(name = "transport") Integer transport)
-            throws Exception {
+            @RpcParameter(name = "transport") Integer transport
+            ) throws Exception {
         if (mGattCallbackList.get(index) != null) {
             BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(macAddress);
             BluetoothGatt mBluetoothGatt =
@@ -134,8 +132,9 @@ public class GattClientFacade extends RpcReceiver {
      * @throws Exception
      */
     @Rpc(description = "Trigger discovering of services on the BluetoothGatt object")
-    public boolean gattClientDiscoverServices(@RpcParameter(name = "index") Integer index)
-            throws Exception {
+    public boolean gattClientDiscoverServices(
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             return mBluetoothGattList.get(index).discoverServices();
         } else {
@@ -152,7 +151,8 @@ public class GattClientFacade extends RpcReceiver {
      */
     @Rpc(description = "Get the services from the BluetoothGatt object")
     public List<BluetoothGattService> gattClientGetServices(
-            @RpcParameter(name = "index") Integer index) throws Exception {
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             return mBluetoothGattList.get(index).getServices();
         } else {
@@ -167,8 +167,9 @@ public class GattClientFacade extends RpcReceiver {
      * @throws Exception
      */
     @Rpc(description = "Abort reliable write of a bluetooth gatt")
-    public void gattClientAbortReliableWrite(@RpcParameter(name = "index") Integer index)
-            throws Exception {
+    public void gattClientAbortReliableWrite(
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             mBluetoothGattList.get(index).abortReliableWrite();
         } else {
@@ -184,8 +185,9 @@ public class GattClientFacade extends RpcReceiver {
      * @throws Exception
      */
     @Rpc(description = "Begin reliable write of a bluetooth gatt")
-    public boolean gattClientBeginReliableWrite(@RpcParameter(name = "index") Integer index)
-            throws Exception {
+    public boolean gattClientBeginReliableWrite(
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             return mBluetoothGattList.get(index).beginReliableWrite();
         } else {
@@ -203,8 +205,9 @@ public class GattClientFacade extends RpcReceiver {
      */
     @Rpc(description = "true, if the new MTU value has been requested successfully")
     public boolean gattClientRequestMtu(
-            @RpcParameter(name = "index") Integer index, @RpcParameter(name = "mtu") Integer mtu)
-            throws Exception {
+            @RpcParameter(name = "index") Integer index,
+            @RpcParameter(name = "mtu") Integer mtu
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             return mBluetoothGattList.get(index).requestMtu(mtu);
         } else {
@@ -220,7 +223,9 @@ public class GattClientFacade extends RpcReceiver {
      */
     @Rpc(description = "Disconnect a bluetooth gatt")
     @RpcStopEvent("GattConnect")
-    public void gattClientDisconnect(@RpcParameter(name = "index") Integer index) throws Exception {
+    public void gattClientDisconnect(
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             mBluetoothGattList.get(index).disconnect();
         } else {
@@ -235,7 +240,9 @@ public class GattClientFacade extends RpcReceiver {
      * @throws Exception
      */
     @Rpc(description = "Close a Bluetooth GATT object")
-    public void gattClientClose(@RpcParameter(name = "index") Integer index) throws Exception {
+    public void gattClientClose(
+             @RpcParameter(name = "index") Integer index)
+             throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             mBluetoothGattList.get(index).close();
         } else {
@@ -251,8 +258,9 @@ public class GattClientFacade extends RpcReceiver {
      * @throws Exception
      */
     @Rpc(description = "Execute reliable write on a bluetooth gatt")
-    public boolean gattExecuteReliableWrite(@RpcParameter(name = "index") Integer index)
-            throws Exception {
+    public boolean gattExecuteReliableWrite(
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             return mBluetoothGattList.get(index).executeReliableWrite();
         } else {
@@ -269,7 +277,8 @@ public class GattClientFacade extends RpcReceiver {
      */
     @Rpc(description = "Get a list of Bluetooth Devices connnected to the bluetooth gatt")
     public List<BluetoothDevice> gattClientGetConnectedDevices(
-            @RpcParameter(name = "index") Integer index) throws Exception {
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             return mBluetoothGattList.get(index).getConnectedDevices();
         } else {
@@ -285,8 +294,9 @@ public class GattClientFacade extends RpcReceiver {
      * @throws Exception
      */
     @Rpc(description = "Get the remote bluetooth device this GATT client targets to")
-    public BluetoothDevice gattGetDevice(@RpcParameter(name = "index") Integer index)
-            throws Exception {
+    public BluetoothDevice gattGetDevice(
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             return mBluetoothGattList.get(index).getDevice();
         } else {
@@ -304,9 +314,9 @@ public class GattClientFacade extends RpcReceiver {
      */
     @Rpc(description = "Get the bluetooth devices matching input connection states")
     public List<BluetoothDevice> gattClientGetDevicesMatchingConnectionStates(
-            @RpcParameter(name = "index") Integer index, @RpcParameter(
-                name = "states") int[] states)
-            throws Exception {
+            @RpcParameter(name = "index") Integer index,
+            @RpcParameter(name = "states") int[] states
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             return mBluetoothGattList.get(index).getDevicesMatchingConnectionStates(states);
         } else {
@@ -323,8 +333,8 @@ public class GattClientFacade extends RpcReceiver {
      */
     @Rpc(description = "Get the service from an input UUID")
     public ArrayList<String> gattClientGetServiceUuidList(
-            @RpcParameter(name = "index") Integer index)
-            throws Exception {
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             ArrayList<String> serviceUuidList = new ArrayList<String>();
             for (BluetoothGattService service : mBluetoothGattList.get(index).getServices()) {
@@ -338,9 +348,9 @@ public class GattClientFacade extends RpcReceiver {
 
     /**
      * Reads the requested characteristic from the associated remote device.
-     *
      * @param gattIndex the BluetoothGatt server accociated with the device
-     * @param discoveredServiceListIndex the index returned from the discovered services callback
+     * @param discoveredServiceListIndex the index returned from the discovered
+     * services callback
      * @param serviceIndex the service index of the discovered services
      * @param characteristicUuid the characteristic uuid to read
      * @return true, if the read operation was initiated successfully
@@ -356,12 +366,12 @@ public class GattClientFacade extends RpcReceiver {
         if (bluetoothGatt == null) {
             throw new Exception("Invalid gattIndex " + gattIndex);
         }
-        List<BluetoothGattService> gattServiceList =
+      List<BluetoothGattService> discoveredServiceList =
                 mBluetoothGattDiscoveredServicesList.get(discoveredServiceListIndex);
-        if (gattServiceList == null) {
+      if (discoveredServiceList == null) {
             throw new Exception("Invalid discoveredServiceListIndex " + discoveredServiceListIndex);
         }
-        BluetoothGattService gattService = gattServiceList.get(serviceIndex);
+      BluetoothGattService gattService = discoveredServiceList.get(serviceIndex);
         if (gattService == null) {
             throw new Exception("Invalid serviceIndex " + serviceIndex);
         }
@@ -374,8 +384,7 @@ public class GattClientFacade extends RpcReceiver {
     }
 
     /**
-     * /** Reads the value for a given descriptor from the associated remote device
-     *
+     * Reads the value for a given descriptor from the associated remote device
      * @param gattIndex - the gatt index to use
      * @param discoveredServiceListIndex - the discvered serivice list index
      * @param serviceIndex - the servce index of the discoveredServiceListIndex
@@ -420,10 +429,10 @@ public class GattClientFacade extends RpcReceiver {
         /**
      * Write the value of a given descriptor to the associated remote device
      *
-     * @param index the bluetooth gatt index
+     * @param gattIndex the bluetooth gatt index
      * @param serviceIndex the service index to write to
      * @param characteristicUuid the uuid where the descriptor lives
-     * @param descriptorIndex the descriptor index
+     * @param descriptorUuid the descriptor index
      * @return true, if the write operation was initiated successfully
      * @throws Exception
      */
@@ -478,7 +487,7 @@ public class GattClientFacade extends RpcReceiver {
             @RpcParameter(name = "serviceIndex") Integer serviceIndex,
             @RpcParameter(name = "characteristicUuid") String characteristicUuid,
             @RpcParameter(name = "descriptorUuid") String descriptorUuid,
-            @RpcParameter(name = "value") byte[] value) throws Exception {
+        @RpcParameter(name = "value") String value) throws Exception {
         if (mBluetoothGattList.get(gattIndex) == null) {
             throw new Exception("Invalid gattIndex " + gattIndex);
         }
@@ -501,13 +510,14 @@ public class GattClientFacade extends RpcReceiver {
         if (gattDescriptor == null) {
             throw new Exception("Invalid descriptor uuid: " + descriptorUuid);
         }
-        return gattDescriptor.setValue(value);
+        byte[] byteArray = ConvertUtils.convertStringToByteArray(value);
+        return gattDescriptor.setValue(byteArray);
     }
 
     /**
      * Write the value of a given characteristic to the associated remote device
      *
-     * @param index the bluetooth gatt index
+     * @param gattIndex the bluetooth gatt index
      * @param serviceIndex the service where the characteristic lives
      * @param characteristicUuid the characteristic uuid to write to
      * @return true, if the write operation was successful
@@ -556,7 +566,7 @@ public class GattClientFacade extends RpcReceiver {
             @RpcParameter(name = "discoveredServiceListIndex") Integer discoveredServiceListIndex,
             @RpcParameter(name = "serviceIndex") Integer serviceIndex,
             @RpcParameter(name = "characteristicUuid") String characteristicUuid,
-            @RpcParameter(name = "value") byte[] value) throws Exception {
+        @RpcParameter(name = "value") String value) throws Exception {
         if (mBluetoothGattList.get(gattIndex) == null) {
             throw new Exception("Invalid gattIndex " + gattIndex);
         }
@@ -574,7 +584,8 @@ public class GattClientFacade extends RpcReceiver {
         if (gattCharacteristic == null) {
             throw new Exception("Invalid characteristic uuid: " + characteristicUuid);
         }
-        return gattCharacteristic.setValue(value);
+        byte[] byteArray = ConvertUtils.convertStringToByteArray(value);
+        return gattCharacteristic.setValue(byteArray);
     }
 
     /**
@@ -624,7 +635,8 @@ public class GattClientFacade extends RpcReceiver {
      */
     @Rpc(description = "Read the RSSI for a connected remote device")
     public boolean gattClientReadRSSI(
-            @RpcParameter(name = "index") Integer index) throws Exception {
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             return mBluetoothGattList.get(index).readRemoteRssi();
         } else {
@@ -642,7 +654,9 @@ public class GattClientFacade extends RpcReceiver {
      */
     @Rpc(description = "Clears the internal cache and forces a refresh of the services from the "
             + "remote device")
-    public boolean gattClientRefresh(@RpcParameter(name = "index") Integer index) throws Exception {
+    public boolean gattClientRefresh(
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattList.get(index) != null) {
             Log.e("refresh won't work in no-system app.");
             return false;
@@ -655,7 +669,6 @@ public class GattClientFacade extends RpcReceiver {
 
     /**
      * Request a connection parameter update.
-     *
      * @param index the bluetooth gatt index
      * @param connectionPriority connection priority
      * @return boolean True if successful False otherwise.
@@ -664,11 +677,12 @@ public class GattClientFacade extends RpcReceiver {
     @Rpc(description = "Request a connection parameter update. from the Bluetooth Gatt")
     public boolean gattClientRequestConnectionPriority(
             @RpcParameter(name = "index") Integer index,
-            @RpcParameter(name = "connectionPriority") Integer connectionPriority)
-            throws Exception {
+            @RpcParameter(name = "connectionPriority") Integer connectionPriority
+            ) throws Exception {
         boolean result = false;
         if (mBluetoothGattList.get(index) != null) {
-            result = mBluetoothGattList.get(index).requestConnectionPriority(connectionPriority);
+            result = mBluetoothGattList.get(index).requestConnectionPriority(
+                    connectionPriority);
         } else {
             throw new Exception("Invalid index input:" + index);
         }
@@ -678,8 +692,8 @@ public class GattClientFacade extends RpcReceiver {
         /**
      * Sets the characteristic notification of a bluetooth gatt
      *
-     * @param index the bluetooth gatt index
-     * @param characteristicIndex the characteristic index
+     * @param gattIndex the bluetooth gatt index
+     * @param discoveredServiceListIndex the characteristic index
      * @param enable Enable or disable notifications/indications for a given characteristic
      * @return true, if the requested notification status was set successfully
      * @throws Exception
@@ -735,12 +749,12 @@ public class GattClientFacade extends RpcReceiver {
 
     /**
      * Returns the list of discovered Bluetooth Gatt Services.
-     *
      * @throws Exception
      */
     @Rpc(description = "Get Bluetooth Gatt Services")
-    public int gattClientGetDiscoveredServicesCount(@RpcParameter(name = "index") Integer index)
-            throws Exception {
+    public int gattClientGetDiscoveredServicesCount(
+            @RpcParameter(name = "index") Integer index
+            ) throws Exception {
         if (mBluetoothGattDiscoveredServicesList.get(index) != null) {
             return mBluetoothGattDiscoveredServicesList.get(index).size();
         } else {
@@ -750,14 +764,13 @@ public class GattClientFacade extends RpcReceiver {
 
     /**
      * Returns the discovered Bluetooth Gatt Service Uuid.
-     *
      * @throws Exception
      */
     @Rpc(description = "Get Bluetooth Gatt Service Uuid")
     public String gattClientGetDiscoveredServiceUuid(
             @RpcParameter(name = "index") Integer index,
-            @RpcParameter(name = "serviceIndex") Integer serviceIndex)
-            throws Exception {
+            @RpcParameter(name = "serviceIndex") Integer serviceIndex
+            ) throws Exception {
         List<BluetoothGattService> mBluetoothServiceList =
                 mBluetoothGattDiscoveredServicesList.get(index);
         if (mBluetoothServiceList != null) {
@@ -769,7 +782,6 @@ public class GattClientFacade extends RpcReceiver {
 
     /**
      * Get discovered characteristic uuids from the pheripheral device.
-     *
      * @param index the index of the bluetooth gatt discovered services list
      * @param serviceIndex the service to get
      * @return the list of characteristic uuids
@@ -778,14 +790,13 @@ public class GattClientFacade extends RpcReceiver {
     @Rpc(description = "Get Bluetooth Gatt Services")
     public ArrayList<String> gattClientGetDiscoveredCharacteristicUuids(
             @RpcParameter(name = "index") Integer index,
-            @RpcParameter(name = "serviceIndex") Integer serviceIndex)
-            throws Exception {
+            @RpcParameter(name = "serviceIndex") Integer serviceIndex
+            ) throws Exception {
         if (mBluetoothGattDiscoveredServicesList.get(index) != null) {
             if (mBluetoothGattDiscoveredServicesList.get(index).get(serviceIndex) != null) {
                 ArrayList<String> uuidList = new ArrayList<String>();
                 List<BluetoothGattCharacteristic> charList =
-                        mBluetoothGattDiscoveredServicesList.get(index).get(
-                            serviceIndex).getCharacteristics();
+                        mBluetoothGattDiscoveredServicesList.get(index).get( serviceIndex).getCharacteristics();
                 for (BluetoothGattCharacteristic mChar : charList) {
                     uuidList.add(mChar.getUuid().toString());
                 }
@@ -854,37 +865,26 @@ public class GattClientFacade extends RpcReceiver {
         }
 
         @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+        public void onConnectionStateChange(BluetoothGatt gatt, int status,
+                int newState) {
             Log.d("gatt_connect change onConnectionStateChange " + mEventType + " " + index);
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                Log.d(
-                        "State Connected to mac address "
-                                + gatt.getDevice().getAddress()
-                                + " status "
-                                + status);
+                Log.d("State Connected to mac address "
+                        + gatt.getDevice().getAddress() + " status " + status);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                Log.d(
-                        "State Disconnected from mac address "
-                                + gatt.getDevice().getAddress()
-                                + " status "
-                                + status);
+                Log.d("State Disconnected from mac address "
+                        + gatt.getDevice().getAddress() + " status " + status);
             } else if (newState == BluetoothProfile.STATE_CONNECTING) {
-                Log.d(
-                        "State Connecting to mac address "
-                                + gatt.getDevice().getAddress()
-                                + " status "
-                                + status);
+                Log.d("State Connecting to mac address "
+                        + gatt.getDevice().getAddress() + " status " + status);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTING) {
-                Log.d(
-                        "State Disconnecting from mac address "
-                                + gatt.getDevice().getAddress()
-                                + " status "
-                                + status);
+                Log.d("State Disconnecting from mac address "
+                        + gatt.getDevice().getAddress() + " status " + status);
             }
             mResults.putInt("Status", status);
             mResults.putInt("State", newState);
-            mEventFacade.postEvent(
-                    mEventType + index + "onConnectionStateChange", mResults.clone());
+            mEventFacade
+                    .postEvent(mEventType + index + "onConnectionStateChange", mResults.clone());
             mResults.clear();
         }
 
@@ -895,71 +895,81 @@ public class GattClientFacade extends RpcReceiver {
             mBluetoothGattDiscoveredServicesList.put(idx, gatt.getServices());
             mResults.putInt("ServicesIndex", idx);
             mResults.putInt("Status", status);
-            mEventFacade.postEvent(mEventType + index + "onServicesDiscovered", mResults.clone());
+            for (BluetoothGattService se: gatt.getServices()) {
+                System.out.println("SWAG: " + se.getUuid().toString());
+            }
+            mEventFacade
+                    .postEvent(mEventType + index + "onServicesDiscovered", mResults.clone());
             mResults.clear();
         }
 
         @Override
-        public void onCharacteristicRead(
-                BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+        public void onCharacteristicRead(BluetoothGatt gatt,
+                BluetoothGattCharacteristic characteristic,
+                int status) {
             Log.d("gatt_connect change onCharacteristicRead " + mEventType + " " + index);
             mResults.putInt("Status", status);
             mResults.putString("CharacteristicUuid", characteristic.getUuid().toString());
             mResults.putByteArray("CharacteristicValue", characteristic.getValue());
-            mEventFacade.postEvent(mEventType + index + "onCharacteristicRead", mResults.clone());
+            mEventFacade
+                    .postEvent(mEventType + index + "onCharacteristicRead", mResults.clone());
             mResults.clear();
         }
 
         @Override
-        public void onCharacteristicWrite(
-                BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+        public void onCharacteristicWrite(BluetoothGatt gatt,
+                BluetoothGattCharacteristic characteristic, int status) {
             Log.d("gatt_connect change onCharacteristicWrite " + mEventType + " " + index);
             mResults.putInt("Status", status);
             mResults.putString("CharacteristicUuid", characteristic.getUuid().toString());
             mResults.putByteArray("CharacteristicValue", characteristic.getValue());
-            mEventFacade.postEvent(mEventType + index + "onCharacteristicWrite", mResults.clone());
+            mEventFacade
+                    .postEvent(mEventType + index + "onCharacteristicWrite", mResults.clone());
             mResults.clear();
         }
 
         @Override
-        public void onCharacteristicChanged(
-                BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+        public void onCharacteristicChanged(BluetoothGatt gatt,
+                BluetoothGattCharacteristic characteristic) {
             Log.d("gatt_connect change onCharacteristicChanged " + mEventType + " " + index);
             mResults.putInt("ID", index);
             mResults.putString("CharacteristicUuid", characteristic.getUuid().toString());
             mResults.putByteArray("CharacteristicValue", characteristic.getValue());
-            mEventFacade.postEvent(
-                    mEventType + index + "onCharacteristicChanged", mResults.clone());
+            mEventFacade
+                    .postEvent(mEventType + index + "onCharacteristicChanged", mResults.clone());
             mResults.clear();
         }
 
         @Override
-        public void onDescriptorRead(
-                BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+        public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor,
+                int status) {
             Log.d("gatt_connect change onServicesDiscovered " + mEventType + " " + index);
             mResults.putInt("Status", status);
             mResults.putString("DescriptorUuid", descriptor.getUuid().toString());
-            mEventFacade.postEvent(mEventType + index + "onDescriptorRead", mResults.clone());
+            mEventFacade
+                    .postEvent(mEventType + index + "onDescriptorRead", mResults.clone());
             mResults.clear();
         }
 
         @Override
-        public void onDescriptorWrite(
-                BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor,
+                int status) {
             Log.d("gatt_connect change onDescriptorWrite " + mEventType + " " + index);
             mResults.putInt("ID", index);
             mResults.putInt("Status", status);
             mResults.putString("DescriptorUuid", descriptor.getUuid().toString());
-            mEventFacade.postEvent(mEventType + index + "onDescriptorWrite", mResults.clone());
+            mEventFacade
+                    .postEvent(mEventType + index + "onDescriptorWrite", mResults.clone());
             mResults.clear();
         }
 
         @Override
         public void onReliableWriteCompleted(BluetoothGatt gatt, int status) {
-            Log.d("gatt_connect change onReliableWriteCompleted " + mEventType + " " + index);
+            Log.d("gatt_connect change onReliableWriteCompleted " + mEventType + " "
+                    + index);
             mResults.putInt("Status", status);
-            mEventFacade.postEvent(
-                    mEventType + index + "onReliableWriteCompleted", mResults.clone());
+            mEventFacade
+                    .postEvent(mEventType + index + "onReliableWriteCompleted", mResults.clone());
             mResults.clear();
         }
 
@@ -968,7 +978,8 @@ public class GattClientFacade extends RpcReceiver {
             Log.d("gatt_connect change onReadRemoteRssi " + mEventType + " " + index);
             mResults.putInt("Status", status);
             mResults.putInt("Rssi", rssi);
-            mEventFacade.postEvent(mEventType + index + "onReadRemoteRssi", mResults.clone());
+            mEventFacade
+                    .postEvent(mEventType + index + "onReadRemoteRssi", mResults.clone());
             mResults.clear();
         }
 
@@ -977,7 +988,8 @@ public class GattClientFacade extends RpcReceiver {
             Log.d("gatt_connect change onMtuChanged " + mEventType + " " + index);
             mResults.putInt("Status", status);
             mResults.putInt("MTU", mtu);
-            mEventFacade.postEvent(mEventType + index + "onMtuChanged", mResults.clone());
+            mEventFacade
+                    .postEvent(mEventType + index + "onMtuChanged", mResults.clone());
             mResults.clear();
         }
     }
