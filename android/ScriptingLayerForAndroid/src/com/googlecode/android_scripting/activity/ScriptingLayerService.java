@@ -103,14 +103,27 @@ public class ScriptingLayerService extends ForegroundService {
 
   @Override
   protected Notification createNotification() {
-    mNotification =
-        new Notification(R.drawable.sl4a_notification_logo, null, System.currentTimeMillis());
-    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
     Intent notificationIntent = new Intent(this, ScriptingLayerService.class);
     notificationIntent.setAction(Constants.ACTION_SHOW_RUNNING_SCRIPTS);
     mNotificationPendingIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    // with older SDK < 23
+    mNotification =
+        new Notification(R.drawable.sl4a_notification_logo, null, System.currentTimeMillis());
+    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
     mNotification.setLatestEventInfo(this, "SL4A Service", "Tap to view running scripts",
         mNotificationPendingIntent);
+
+    /* with newer SDK >= 23 and API >= 11
+    Notification.Builder builder = new Notification.Builder(this);
+    builder.setSmallIcon(R.drawable.sl4a_notification_logo)
+           .setTicker(null)
+           .setWhen(System.currentTimeMillis())
+           .setContentTitle("SL4A Service")
+           .setContentText("Tap to view running scripts")
+           .setContentIntent(mNotificationPendingIntent);
+    mNotification = builder.build();
+    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
+     */
     return mNotification;
   }
 
@@ -129,7 +142,20 @@ public class ScriptingLayerService extends ForegroundService {
     } else {
       msg = "Tap to view " + Integer.toString(mProcessMap.size()) + " running scripts";
     }
+    // with older SDK < 23
     mNotification.setLatestEventInfo(this, "SL4A Service", msg, mNotificationPendingIntent);
+
+    /* with newer SDK >= 23 and API >= 11
+    Notification.Builder builder = new Notification.Builder(this);
+    builder.setContentTitle("SL4A Service")
+           .setContentText(msg)
+           .setContentIntent(mNotificationPendingIntent)
+           .setSmallIcon(mNotification.icon, mProcessMap.size())
+           .setWhen(mNotification.when)
+           .setTicker(tickerText);
+
+    mNotification = builder.build();
+     */
     mNotificationManager.notify(NOTIFICATION_ID, mNotification);
   }
 
