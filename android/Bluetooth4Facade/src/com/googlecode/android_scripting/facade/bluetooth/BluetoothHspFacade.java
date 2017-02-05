@@ -23,10 +23,13 @@ import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
-import android.bluetooth.BluetoothUuid;
+// import android.bluetooth.BluetoothUuid;
 import android.os.ParcelUuid;
 
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.bluetooth.BluetoothNonpublicApi;
+import com.googlecode.android_scripting.bluetooth.BluetoothUuid;
+import com.googlecode.android_scripting.facade.Bluetooth4Facade;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
@@ -65,13 +68,11 @@ public class BluetoothHspFacade extends RpcReceiver {
   }
 
   public Boolean hspConnect(BluetoothDevice device) {
-    if (sHspProfile == null) return false;
-    return sHspProfile.connect(device);
+      BluetoothNonpublicApi.connectProfile(sHspProfile, device);
   }
 
   public Boolean hspDisconnect(BluetoothDevice device) {
-    if (sHspProfile == null) return false;
-    return sHspProfile.disconnect(device);
+      BluetoothNonpublicApi.disconnectProfile(sHspProfile, device);
   }
 
   @Rpc(description = "Is Hsp profile ready.")
@@ -86,11 +87,11 @@ public class BluetoothHspFacade extends RpcReceiver {
       @RpcParameter(name = "priority", description = "Priority that needs to be set.")
       Integer priority)
       throws Exception {
-    if (sHspProfile == null) return;
-    BluetoothDevice device =
-        BluetoothFacade.getDevice(mBluetoothAdapter.getBondedDevices(), deviceStr);
-    Log.d("Changing priority of device " + device.getAliasName() + " p: " + priority);
-    sHspProfile.setPriority(device, priority);
+        BluetoothDevice device =
+            Bluetooth4Facade.getDevice(mBluetoothAdapter.getBondedDevices(), deviceStr);
+        // Log.d("Changing priority of device " + device.getAliasName() + " p: " + priority);
+        BluetoothNonpublicApi.setPriorityProfile(
+            sHspProfile, device, priority);
   }
 
   @Rpc(description = "Connect to an HSP device.")
@@ -100,8 +101,8 @@ public class BluetoothHspFacade extends RpcReceiver {
       throws Exception {
     if (sHspProfile == null)
       return false;
-    BluetoothDevice mDevice = BluetoothFacade.getDevice(BluetoothFacade.DiscoveredDevices, device);
-    Log.d("Connecting to device " + mDevice.getAliasName());
+    BluetoothDevice mDevice = Bluetooth4Facade.getDevice(Bluetooth4Facade.DiscoveredDevices, device);
+        // Log.d("Connecting to device " + mDevice.getAliasName());
     return hspConnect(mDevice);
   }
 
@@ -113,7 +114,7 @@ public class BluetoothHspFacade extends RpcReceiver {
     if (sHspProfile == null)
       return false;
     Log.d("Connected devices: " + sHspProfile.getConnectedDevices());
-    BluetoothDevice mDevice = BluetoothFacade.getDevice(sHspProfile.getConnectedDevices(),
+    BluetoothDevice mDevice = Bluetooth4Facade.getDevice(sHspProfile.getConnectedDevices(),
                                                         device);
     return hspDisconnect(mDevice);
   }
@@ -135,7 +136,7 @@ public class BluetoothHspFacade extends RpcReceiver {
       List<BluetoothDevice> deviceList = sHspProfile.getConnectedDevices();
       BluetoothDevice device;
       try {
-          device = BluetoothFacade.getDevice(deviceList, deviceID);
+          device = Bluetooth4Facade.getDevice(deviceList, deviceID);
       } catch (Exception e) {
           return BluetoothProfile.STATE_DISCONNECTED;
       }

@@ -26,7 +26,7 @@ import android.os.ParcelFileDescriptor;
 
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.facade.EventFacade;
-import com.googlecode.android_scripting.facade.bluetooth.BluetoothPairingHelper;
+// import com.googlecode.android_scripting.facade.bluetooth.BluetoothPairingHelper;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;

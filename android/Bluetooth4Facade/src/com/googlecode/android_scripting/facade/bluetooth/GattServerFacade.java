@@ -37,6 +37,7 @@ import com.googlecode.android_scripting.facade.EventFacade;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
+import com.googlecode.android_scripting.rpc.RpcMinSdk;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+@RpcMinSdk(11)
 public class GattServerFacade extends RpcReceiver {
     private final EventFacade mEventFacade;
     private BluetoothAdapter mBluetoothAdapter;
@@ -543,7 +545,7 @@ public class GattServerFacade extends RpcReceiver {
             mResults.putInt("requestId", requestId);
             mResults.putInt("offset", offset);
             mResults.putParcelable("BluetoothDevice", device);
-            mResults.putInt("instanceId", descriptor.getInstanceId());
+            // mResults.putInt("instanceId", descriptor.getInstanceId());
             mResults.putInt("permissions", descriptor.getPermissions());
             mResults.putString("uuid", descriptor.getUuid().toString());
             mEventFacade.postEvent(
@@ -562,7 +564,7 @@ public class GattServerFacade extends RpcReceiver {
             mResults.putBoolean("preparedWrite", preparedWrite);
             mResults.putBoolean("responseNeeded", responseNeeded);
             mResults.putByteArray("value", value);
-            mResults.putInt("instanceId", descriptor.getInstanceId());
+            // mResults.putInt("instanceId", descriptor.getInstanceId());
             mResults.putInt("permissions", descriptor.getPermissions());
             mResults.putString("uuid", descriptor.getUuid().toString());
             mEventFacade.postEvent(

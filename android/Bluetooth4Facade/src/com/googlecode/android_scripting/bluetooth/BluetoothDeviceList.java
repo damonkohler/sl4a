@@ -26,9 +26,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.googlecode.android_scripting.Constants;
-import com.googlecode.android_scripting.R;
-import com.googlecode.android_scripting.facade.bluetooth.BluetoothDiscoveryHelper;
-import com.googlecode.android_scripting.facade.bluetooth.BluetoothDiscoveryHelper.BluetoothDiscoveryListener;
+import com.googlecode.android_scripting.activity.CustomizeWindow;
+import com.googlecode.android_scripting.bluetooth.BluetoothDiscoveryHelper.BluetoothDiscoveryListener;
 
 import java.util.ArrayList;
 import java.util.List;

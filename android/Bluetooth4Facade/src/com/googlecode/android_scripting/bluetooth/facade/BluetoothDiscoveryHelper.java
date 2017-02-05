@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.googlecode.android_scripting.facade.bluetooth;
+package com.googlecode.android_scripting.bluetooth.facade;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -55,7 +55,7 @@ public class BluetoothDiscoveryHelper {
       if (BluetoothDevice.ACTION_FOUND.equals(action)) {
         // Get the BluetoothDevice object from the Intent.
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-        Log.d("Found device " + device.getAliasName());
+                // Log.d("Found device " + device.getAliasName());
         // If it's already paired, skip it, because it's been listed already.
         if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
           mListener.addDevice(device.getName(), device.getAddress());

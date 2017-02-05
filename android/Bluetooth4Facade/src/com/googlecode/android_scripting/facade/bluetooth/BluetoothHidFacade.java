@@ -19,14 +19,17 @@ package com.googlecode.android_scripting.facade.bluetooth;
 import java.util.List;
 
 import android.app.Service;
-import android.bluetooth.BluetoothInputDevice;
+// import android.bluetooth.BluetoothInputDevice;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
-import android.bluetooth.BluetoothUuid;
+// import android.bluetooth.BluetoothUuid;
 import android.os.ParcelUuid;
 
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.bluetooth.BluetoothNonpublicApi;
+import com.googlecode.android_scripting.bluetooth.BluetoothUuid;
+import com.googlecode.android_scripting.facade.Bluetooth4Facade;
 import com.googlecode.android_scripting.facade.FacadeManager;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
@@ -40,20 +43,22 @@ public class BluetoothHidFacade extends RpcReceiver {
   private final BluetoothAdapter mBluetoothAdapter;
 
   private static boolean sIsHidReady = false;
-  private static BluetoothInputDevice sHidProfile = null;
+    // private static BluetoothInputDevice sHidProfile = null;
+    private static BluetoothProfile sHidProfile = null;
 
   public BluetoothHidFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     mBluetoothAdapter.getProfileProxy(mService, new HidServiceListener(),
-        BluetoothProfile.INPUT_DEVICE);
+        BluetoothNonpublicApi.INPUT_DEVICE);
   }
 
   class HidServiceListener implements BluetoothProfile.ServiceListener {
     @Override
     public void onServiceConnected(int profile, BluetoothProfile proxy) {
-      sHidProfile = (BluetoothInputDevice) proxy;
+        // sHidProfile = (BluetoothInputDevice) proxy;
+        sHidProfile = proxy;
       sIsHidReady = true;
     }
 
@@ -64,13 +69,11 @@ public class BluetoothHidFacade extends RpcReceiver {
   }
 
   public Boolean hidConnect(BluetoothDevice device) {
-    if (sHidProfile == null) return false;
-    return sHidProfile.connect(device);
+      return BluetoothNonpublicApi.connectProfile(sHidProfile, device);
   }
 
   public Boolean hidDisconnect(BluetoothDevice device) {
-    if (sHidProfile == null) return false;
-    return sHidProfile.disconnect(device);
+      return BluetoothNonpublicApi.disconnectProfile(sHidProfile, device);
   }
 
   @Rpc(description = "Is Hid profile ready.")
@@ -85,7 +88,7 @@ public class BluetoothHidFacade extends RpcReceiver {
       throws Exception {
     if (sHidProfile == null)
       return false;
-    BluetoothDevice mDevice = BluetoothFacade.getDevice(BluetoothFacade.DiscoveredDevices, device);
+    BluetoothDevice mDevice = Bluetooth4Facade.getDevice(Bluetooth4Facade.DiscoveredDevices, device);
     Log.d("Connecting to device " + mDevice.getAliasName());
     return hidConnect(mDevice);
   }
@@ -98,7 +101,7 @@ public class BluetoothHidFacade extends RpcReceiver {
     if (sHidProfile == null)
       return false;
     Log.d("Connected devices: " + sHidProfile.getConnectedDevices());
-    BluetoothDevice mDevice = BluetoothFacade.getDevice(sHidProfile.getConnectedDevices(),
+    BluetoothDevice mDevice = Bluetooth4Facade.getDevice(sHidProfile.getConnectedDevices(),
                                                         device);
     return hidDisconnect(mDevice);
   }
@@ -120,7 +123,7 @@ public class BluetoothHidFacade extends RpcReceiver {
       List<BluetoothDevice> deviceList = sHidProfile.getConnectedDevices();
       BluetoothDevice device;
       try {
-          device = BluetoothFacade.getDevice(deviceList, deviceID);
+          device = Bluetooth4Facade.getDevice(deviceList, deviceID);
       } catch (Exception e) {
           return BluetoothProfile.STATE_DISCONNECTED;
       }
@@ -137,7 +140,7 @@ public class BluetoothHidFacade extends RpcReceiver {
           String type,
           @RpcParameter(name = "report")
           String report) throws Exception {
-      BluetoothDevice device = BluetoothFacade.getDevice(sHidProfile.getConnectedDevices(),
+      BluetoothDevice device = Bluetooth4Facade.getDevice(sHidProfile.getConnectedDevices(),
               deviceID);
       Log.d("type " + type.getBytes()[0]);
       return sHidProfile.setReport(device, type.getBytes()[0], report);
@@ -155,7 +158,7 @@ public class BluetoothHidFacade extends RpcReceiver {
           String reportId,
           @RpcParameter(name = "buffSize")
           Integer buffSize) throws Exception {
-      BluetoothDevice device = BluetoothFacade.getDevice(sHidProfile.getConnectedDevices(),
+      BluetoothDevice device = Bluetooth4Facade.getDevice(sHidProfile.getConnectedDevices(),
               deviceID);
       Log.d("type " + type.getBytes()[0] + "reportId " + reportId.getBytes()[0]);
       return sHidProfile.getReport(device, type.getBytes()[0], reportId.getBytes()[0], buffSize);
@@ -168,7 +171,7 @@ public class BluetoothHidFacade extends RpcReceiver {
           String deviceID,
           @RpcParameter(name = "report")
           String report) throws Exception {
-      BluetoothDevice device = BluetoothFacade.getDevice(sHidProfile.getConnectedDevices(),
+      BluetoothDevice device = Bluetooth4Facade.getDevice(sHidProfile.getConnectedDevices(),
               deviceID);
       return sHidProfile.sendData(device, report);
   }
@@ -178,7 +181,7 @@ public class BluetoothHidFacade extends RpcReceiver {
           @RpcParameter(name = "deviceID",
           description = "Name or MAC address of a bluetooth device.")
           String deviceID) throws Exception {
-      BluetoothDevice device = BluetoothFacade.getDevice(sHidProfile.getConnectedDevices(),
+      BluetoothDevice device = Bluetooth4Facade.getDevice(sHidProfile.getConnectedDevices(),
               deviceID);
       return sHidProfile.virtualUnplug(device);
   }

@@ -19,15 +19,16 @@ package com.googlecode.android_scripting.facade.bluetooth;
 import java.util.List;
 
 import android.app.Service;
-import android.bluetooth.BluetoothMap;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
-import android.bluetooth.BluetoothUuid;
 import android.os.ParcelUuid;
 
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.facade.Bluetooth4Facade;
 import com.googlecode.android_scripting.facade.FacadeManager;
+import com.googlecode.android_scripting.bluetooth.BluetoothNonpublicApi;
+import com.googlecode.android_scripting.bluetooth.BluetoothUuid;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcParameter;
@@ -42,20 +43,22 @@ public class BluetoothMapFacade extends RpcReceiver {
   private final BluetoothAdapter mBluetoothAdapter;
 
   private static boolean sIsMapReady = false;
-  private static BluetoothMap sMapProfile = null;
+  // private static BluetoothMap sMapProfile = null;
+    private static BluetoothProfile sMapProfile = null;
 
   public BluetoothMapFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     mBluetoothAdapter.getProfileProxy(mService, new MapServiceListener(),
-        BluetoothProfile.MAP);
+        BluetoothNonpublicApi.MAP);
   }
 
   class MapServiceListener implements BluetoothProfile.ServiceListener {
     @Override
     public void onServiceConnected(int profile, BluetoothProfile proxy) {
-      sMapProfile = (BluetoothMap) proxy;
+        // sMapProfile = (BluetoothMap) proxy;
+        sMapProfile = proxy;
       sIsMapReady = true;
     }
 
@@ -66,10 +69,7 @@ public class BluetoothMapFacade extends RpcReceiver {
   }
 
   public Boolean mapDisconnect(BluetoothDevice device) {
-    if (sMapProfile.getPriority(device) > BluetoothProfile.PRIORITY_ON) {
-      sMapProfile.setPriority(device, BluetoothProfile.PRIORITY_ON);
-    }
-    return sMapProfile.disconnect(device);
+      return BluetoothNonpublicApi.disconnectProfile(sMapProfile, device);
   }
 
   @Rpc(description = "Is Map profile ready.")
@@ -85,12 +85,10 @@ public class BluetoothMapFacade extends RpcReceiver {
     if (sMapProfile == null) return false;
     List<BluetoothDevice> connectedMapDevices = sMapProfile.getConnectedDevices();
     Log.d("Connected map devices: " + connectedMapDevices);
-    BluetoothDevice mDevice = BluetoothFacade.getDevice(connectedMapDevices, deviceID);
+    BluetoothDevice mDevice = Bluetooth4Facade.getDevice(connectedMapDevices, deviceID);
     if (!connectedMapDevices.isEmpty() && connectedMapDevices.get(0).equals(mDevice)) {
-        if (sMapProfile.getPriority(mDevice) > BluetoothProfile.PRIORITY_ON) {
-            sMapProfile.setPriority(mDevice, BluetoothProfile.PRIORITY_ON);
-        }
-        return sMapProfile.disconnect(mDevice);
+        BluetoothNonpublicApi.priorityOnProfile(sMapProfile, mDevice);
+        return BluetoothNonpublicApi.disconnectProfile(sMapProfile, mDevice);
     } else {
         return false;
     }
