@@ -1,4 +1,4 @@
-Generated at commit `changeset:   1307:36da773df6bb`
+Generated at commit `b'changeset:   1366:ce4a3f399607'`
 
 **ActivityResultFacade**
 
@@ -67,6 +67,85 @@ Generated at commit `changeset:   1307:36da773df6bb`
   * [batteryGetTemperature](#batterygettemperature)
   * [batteryGetTechnology](#batterygettechnology)
 
+**Bluetooth4Facade**
+
+  * [bluetoothMakeConnectable](#bluetoothmakeconnectable)
+  * [bluetoothActiveConnections](#bluetoothactiveconnections)
+  * [bluetoothWriteBinary](#bluetoothwritebinary)
+  * [bluetoothReadBinary](#bluetoothreadbinary)
+  * [bluetoothConnect](#bluetoothconnect)
+  * [bluetoothAccept](#bluetoothaccept)
+  * [bluetoothMakeDiscoverable](#bluetoothmakediscoverable)
+  * [bluetoothWrite](#bluetoothwrite)
+  * [bluetoothReadReady](#bluetoothreadready)
+  * [bluetoothRead](#bluetoothread)
+  * [bluetoothReadLine](#bluetoothreadline)
+  * [bluetoothMakeUndiscoverable](#bluetoothmakeundiscoverable)
+  * [bluetoothGetRemoteDeviceName](#bluetoothgetremotedevicename)
+  * [bluetoothGetLocalName](#bluetoothgetlocalname)
+  * [bluetoothSetLocalName](#bluetoothsetlocalname)
+  * [bluetoothGetScanMode](#bluetoothgetscanmode)
+  * [bluetoothGetConnectedDeviceName](#bluetoothgetconnecteddevicename)
+  * [checkBluetoothState](#checkbluetoothstate)
+  * [bluetoothFactoryReset](#bluetoothfactoryreset)
+  * [toggleBluetoothState](#togglebluetoothstate)
+  * [bluetoothStop](#bluetoothstop)
+  * [bluetoothGetLocalAddress](#bluetoothgetlocaladdress)
+  * [bluetoothDiscoveryStart](#bluetoothdiscoverystart)
+  * [bluetoothDiscoveryCancel](#bluetoothdiscoverycancel)
+  * [bluetoothIsDiscovering](#bluetoothisdiscovering)
+  * [bluetoothGetDiscoveredDevices](#bluetoothgetdiscovereddevices)
+  * [bluetoothConfigHciSnoopLog](#bluetoothconfighcisnooplog)
+  * [bluetoothGetControllerActivityEnergyInfo](#bluetoothgetcontrolleractivityenergyinfo)
+  * [bluetoothIsHardwareTrackingFiltersAvailable](#bluetoothishardwaretrackingfiltersavailable)
+  * [bluetoothGetLeState](#bluetoothgetlestate)
+  * [bluetoothEnableBLE](#bluetoothenableble)
+  * [bluetoothDisableBLE](#bluetoothdisableble)
+  * [bluetoothListenForBleStateChange](#bluetoothlistenforblestatechange)
+  * [bluetoothStopListeningForBleStateChange](#bluetoothstoplisteningforblestatechange)
+  * [bluetoothStartListeningForAdapterStateChange](#bluetoothstartlisteningforadapterstatechange)
+  * [bluetoothStopListeningForAdapterStateChange](#bluetoothstoplisteningforadapterstatechange)
+
+**BluetoothA2dpFacade**
+
+  * [bluetoothA2dpIsReady](#bluetootha2dpisready)
+  * [bluetoothA2dpSetPriority](#bluetootha2dpsetpriority)
+  * [bluetoothA2dpConnect](#bluetootha2dpconnect)
+  * [bluetoothA2dpDisconnect](#bluetootha2dpdisconnect)
+  * [bluetoothA2dpGetConnectedDevices](#bluetootha2dpgetconnecteddevices)
+
+**BluetoothA2dpSinkFacade**
+
+  * [bluetoothA2dpSinkSetPriority](#bluetootha2dpsinksetpriority)
+  * [bluetoothA2dpSinkGetPriority](#bluetootha2dpsinkgetpriority)
+  * [bluetoothA2dpSinkIsReady](#bluetootha2dpsinkisready)
+  * [bluetoothA2dpSinkConnect](#bluetootha2dpsinkconnect)
+  * [bluetoothA2dpSinkDisconnect](#bluetootha2dpsinkdisconnect)
+  * [bluetoothA2dpSinkGetConnectedDevices](#bluetootha2dpsinkgetconnecteddevices)
+  * [bluetoothA2dpSinkGetConnectionStatus](#bluetootha2dpsinkgetconnectionstatus)
+
+**BluetoothAvrcpFacade**
+
+  * [bluetoothAvrcpIsReady](#bluetoothavrcpisready)
+  * [bluetoothAvrcpGetConnectedDevices](#bluetoothavrcpgetconnecteddevices)
+  * [bluetoothAvrcpDisconnect](#bluetoothavrcpdisconnect)
+
+**BluetoothConnectionFacade**
+
+  * [bluetoothStartConnectionStateChangeMonitor](#bluetoothstartconnectionstatechangemonitor)
+  * [bluetoothStartPairingHelper](#bluetoothstartpairinghelper)
+  * [bluetoothGetConnectedDevices](#bluetoothgetconnecteddevices)
+  * [bluetoothGetConnectedLeDevices](#bluetoothgetconnectedledevices)
+  * [bluetoothIsDeviceConnected](#bluetoothisdeviceconnected)
+  * [bluetoothGetConnectedDevicesOnProfile](#bluetoothgetconnecteddevicesonprofile)
+  * [bluetoothDiscoverAndConnect](#bluetoothdiscoverandconnect)
+  * [bluetoothDiscoverAndBond](#bluetoothdiscoverandbond)
+  * [bluetoothUnbond](#bluetoothunbond)
+  * [bluetoothConnectBonded](#bluetoothconnectbonded)
+  * [bluetoothDisconnectConnected](#bluetoothdisconnectconnected)
+  * [bluetoothDisconnectConnectedProfile](#bluetoothdisconnectconnectedprofile)
+  * [bluetoothChangeProfileAccessPermission](#bluetoothchangeprofileaccesspermission)
+
 **BluetoothFacade**
 
   * [bluetoothActiveConnections](#bluetoothactiveconnections)
@@ -92,6 +171,163 @@ Generated at commit `changeset:   1307:36da773df6bb`
   * [bluetoothDiscoveryCancel](#bluetoothdiscoverycancel)
   * [bluetoothIsDiscovering](#bluetoothisdiscovering)
 
+**BluetoothHfpClientFacade**
+
+  * [bluetoothHfpClientIsReady](#bluetoothhfpclientisready)
+  * [bluetoothHfpClientSetPriority](#bluetoothhfpclientsetpriority)
+  * [bluetoothHfpClientGetPriority](#bluetoothhfpclientgetpriority)
+  * [bluetoothHfpClientConnect](#bluetoothhfpclientconnect)
+  * [bluetoothHfpClientDisconnect](#bluetoothhfpclientdisconnect)
+  * [bluetoothHfpClientGetConnectedDevices](#bluetoothhfpclientgetconnecteddevices)
+  * [bluetoothHfpClientGetConnectionStatus](#bluetoothhfpclientgetconnectionstatus)
+
+**BluetoothHidFacade**
+
+  * [bluetoothHidIsReady](#bluetoothhidisready)
+  * [bluetoothHidConnect](#bluetoothhidconnect)
+  * [bluetoothHidDisconnect](#bluetoothhiddisconnect)
+  * [bluetoothHidGetConnectedDevices](#bluetoothhidgetconnecteddevices)
+  * [bluetoothHidGetConnectionStatus](#bluetoothhidgetconnectionstatus)
+  * [bluetoothHidSetReport](#bluetoothhidsetreport)
+  * [bluetoothHidGetReport](#bluetoothhidgetreport)
+  * [bluetoothHidSendData](#bluetoothhidsenddata)
+  * [bluetoothHidVirtualUnplug](#bluetoothhidvirtualunplug)
+  * [testByte](#testbyte)
+
+**BluetoothHspFacade**
+
+  * [bluetoothHspIsReady](#bluetoothhspisready)
+  * [bluetoothHspSetPriority](#bluetoothhspsetpriority)
+  * [bluetoothHspConnect](#bluetoothhspconnect)
+  * [bluetoothHspDisconnect](#bluetoothhspdisconnect)
+  * [bluetoothHspGetConnectedDevices](#bluetoothhspgetconnecteddevices)
+  * [bluetoothHspGetConnectionStatus](#bluetoothhspgetconnectionstatus)
+
+**BluetoothLeAdvertiseFacade**
+
+  * [bleGenBleAdvertiseCallback](#blegenbleadvertisecallback)
+  * [bleBuildAdvertiseData](#blebuildadvertisedata)
+  * [bleBuildAdvertiseSettings](#blebuildadvertisesettings)
+  * [bleStopBleAdvertising](#blestopbleadvertising)
+  * [bleStartBleAdvertising](#blestartbleadvertising)
+  * [bleStartBleAdvertisingWithScanResponse](#blestartbleadvertisingwithscanresponse)
+  * [bleGetAdvertiseSettingsMode](#blegetadvertisesettingsmode)
+  * [bleGetAdvertiseSettingsTxPowerLevel](#blegetadvertisesettingstxpowerlevel)
+  * [bleGetAdvertiseSettingsIsConnectable](#blegetadvertisesettingsisconnectable)
+  * [bleGetAdvertiseDataIncludeTxPowerLevel](#blegetadvertisedataincludetxpowerlevel)
+  * [bleGetAdvertiseDataManufacturerSpecificData](#blegetadvertisedatamanufacturerspecificdata)
+  * [bleGetAdvertiseDataIncludeDeviceName](#blegetadvertisedataincludedevicename)
+  * [bleGetAdvertiseDataServiceData](#blegetadvertisedataservicedata)
+  * [bleGetAdvertiseDataServiceUuids](#blegetadvertisedataserviceuuids)
+  * [bleSetAdvertiseDataSetServiceUuids](#blesetadvertisedatasetserviceuuids)
+  * [bleAddAdvertiseDataServiceData](#bleaddadvertisedataservicedata)
+  * [bleAddAdvertiseDataManufacturerId](#bleaddadvertisedatamanufacturerid)
+  * [bleSetAdvertiseSettingsAdvertiseMode](#blesetadvertisesettingsadvertisemode)
+  * [bleSetAdvertiseSettingsTxPowerLevel](#blesetadvertisesettingstxpowerlevel)
+  * [bleSetAdvertiseSettingsIsConnectable](#blesetadvertisesettingsisconnectable)
+  * [bleSetAdvertiseDataIncludeTxPowerLevel](#blesetadvertisedataincludetxpowerlevel)
+  * [bleSetAdvertiseSettingsTimeout](#blesetadvertisesettingstimeout)
+  * [bleSetAdvertiseDataIncludeDeviceName](#blesetadvertisedataincludedevicename)
+
+**BluetoothLeScanFacade**
+
+  * [bleGenScanCallback](#blegenscancallback)
+  * [bleGenLeScanCallback](#blegenlescancallback)
+  * [bleGenFilterList](#blegenfilterlist)
+  * [bleBuildScanFilter](#blebuildscanfilter)
+  * [bleBuildScanSetting](#blebuildscansetting)
+  * [bleStopBleScan](#blestopblescan)
+  * [bleStopClassicBleScan](#blestopclassicblescan)
+  * [bleStartBleScan](#blestartblescan)
+  * [bleStartClassicBleScan](#blestartclassicblescan)
+  * [bleStartClassicBleScanWithServiceUuids](#blestartclassicblescanwithserviceuuids)
+  * [bleFlushPendingScanResults](#bleflushpendingscanresults)
+  * [bleSetScanSettingsCallbackType](#blesetscansettingscallbacktype)
+  * [bleSetScanSettingsReportDelayMillis](#blesetscansettingsreportdelaymillis)
+  * [bleSetScanSettingsScanMode](#blesetscansettingsscanmode)
+  * [bleSetScanSettingsResultType](#blesetscansettingsresulttype)
+  * [bleGetScanSettingsCallbackType](#blegetscansettingscallbacktype)
+  * [bleGetScanSettingsReportDelayMillis](#blegetscansettingsreportdelaymillis)
+  * [bleGetScanSettingsScanMode](#blegetscansettingsscanmode)
+  * [bleGetScanSettingsScanResultType](#blegetscansettingsscanresulttype)
+  * [bleGetScanFilterManufacturerId](#blegetscanfiltermanufacturerid)
+  * [bleGetScanFilterDeviceAddress](#blegetscanfilterdeviceaddress)
+  * [bleGetScanFilterDeviceName](#blegetscanfilterdevicename)
+  * [bleGetScanFilterManufacturerData](#blegetscanfiltermanufacturerdata)
+  * [bleGetScanFilterManufacturerDataMask](#blegetscanfiltermanufacturerdatamask)
+  * [bleGetScanFilterServiceData](#blegetscanfilterservicedata)
+  * [bleGetScanFilterServiceDataMask](#blegetscanfilterservicedatamask)
+  * [bleGetScanFilterServiceUuid](#blegetscanfilterserviceuuid)
+  * [bleGetScanFilterServiceUuidMask](#blegetscanfilterserviceuuidmask)
+  * [bleSetScanFilterDeviceAddress](#blesetscanfilterdeviceaddress)
+  * [bleSetScanFilterManufacturerData](#blesetscanfiltermanufacturerdata)
+  * [bleSetScanFilterServiceData](#blesetscanfilterservicedata)
+  * [bleSetScanFilterServiceUuid](#blesetscanfilterserviceuuid)
+  * [bleSetScanFilterDeviceName](#blesetscanfilterdevicename)
+  * [bleSetScanSettingsMatchMode](#blesetscansettingsmatchmode)
+  * [bleGetScanSettingsMatchMode](#blegetscansettingsmatchmode)
+  * [bleSetScanSettingsNumOfMatches](#blesetscansettingsnumofmatches)
+  * [bleGetScanSettingsNumberOfMatches](#blegetscansettingsnumberofmatches)
+
+**BluetoothMapClientFacade**
+
+  * [bluetoothMapClientConnect](#bluetoothmapclientconnect)
+  * [mapSendMessage](#mapsendmessage)
+  * [bluetoothMapClientIsReady](#bluetoothmapclientisready)
+  * [bluetoothMapClientDisconnect](#bluetoothmapclientdisconnect)
+  * [bluetoothMapClientGetConnectedDevices](#bluetoothmapclientgetconnecteddevices)
+
+**BluetoothMapFacade**
+
+  * [bluetoothMapIsReady](#bluetoothmapisready)
+  * [bluetoothMapDisconnect](#bluetoothmapdisconnect)
+  * [bluetoothMapGetConnectedDevices](#bluetoothmapgetconnecteddevices)
+  * [bluetoothMapGetClient](#bluetoothmapgetclient)
+
+**BluetoothMediaFacade**
+
+  * [bluetoothMediaPassthrough](#bluetoothmediapassthrough)
+  * [bluetoothMediaGetCurrentMediaMetaData](#bluetoothmediagetcurrentmediametadata)
+  * [bluetoothMediaGetActiveMediaSessions](#bluetoothmediagetactivemediasessions)
+  * [bluetoothMediaConnectToCarMBS](#bluetoothmediaconnecttocarmbs)
+  * [bluetoothMediaPhoneSL4AMBSStart](#bluetoothmediaphonesl4ambsstart)
+  * [bluetoothMediaPhoneSL4AMBSStop](#bluetoothmediaphonesl4ambsstop)
+  * [bluetoothMediaHandleMediaCommandOnPhone](#bluetoothmediahandlemediacommandonphone)
+
+**BluetoothPanFacade**
+
+  * [bluetoothPanSetBluetoothTethering](#bluetoothpansetbluetoothtethering)
+  * [bluetoothPanIsReady](#bluetoothpanisready)
+  * [bluetoothPanGetConnectedDevices](#bluetoothpangetconnecteddevices)
+  * [bluetoothPanIsTetheringOn](#bluetoothpanistetheringon)
+
+**BluetoothPbapClientFacade**
+
+  * [bluetoothPbapClientIsReady](#bluetoothpbapclientisready)
+  * [bluetoothPbapClientSetPriority](#bluetoothpbapclientsetpriority)
+  * [bluetoothPbapClientGetPriority](#bluetoothpbapclientgetpriority)
+  * [bluetoothPbapClientConnect](#bluetoothpbapclientconnect)
+  * [bluetoothPbapClientDisconnect](#bluetoothpbapclientdisconnect)
+  * [bluetoothPbapClientGetConnectedDevices](#bluetoothpbapclientgetconnecteddevices)
+  * [bluetoothPbapClientGetConnectionStatus](#bluetoothpbapclientgetconnectionstatus)
+
+**BluetoothRfcommFacade**
+
+  * [bluetoothRfcommBeginConnectThread](#bluetoothrfcommbeginconnectthread)
+  * [bluetoothRfcommKillConnThread](#bluetoothrfcommkillconnthread)
+  * [bluetoothRfcommEndConnectThread](#bluetoothrfcommendconnectthread)
+  * [bluetoothRfcommEndAcceptThread](#bluetoothrfcommendacceptthread)
+  * [bluetoothRfcommActiveConnections](#bluetoothrfcommactiveconnections)
+  * [bluetoothRfcommGetConnectedDeviceName](#bluetoothrfcommgetconnecteddevicename)
+  * [bluetoothRfcommBeginAcceptThread](#bluetoothrfcommbeginacceptthread)
+  * [bluetoothRfcommWrite](#bluetoothrfcommwrite)
+  * [bluetoothRfcommRead](#bluetoothrfcommread)
+  * [bluetoothRfcommWriteBinary](#bluetoothrfcommwritebinary)
+  * [bluetoothRfcommReadBinary](#bluetoothrfcommreadbinary)
+  * [bluetoothRfcommReadReady](#bluetoothrfcommreadready)
+  * [bluetoothRfcommReadLine](#bluetoothrfcommreadline)
+  * [bluetoothRfcommStop](#bluetoothrfcommstop)
+
 **CameraFacade**
 
   * [cameraCapturePicture](#cameracapturepicture)
@@ -110,15 +346,18 @@ Generated at commit `changeset:   1307:36da773df6bb`
 
 **ContactsFacade**
 
-  * [pickContact](#pickcontact)
-  * [pickPhone](#pickphone)
+  * [contactsDisplayContactPickList](#contactsdisplaycontactpicklist)
+  * [contactsDisplayPhonePickList](#contactsdisplayphonepicklist)
   * [contactsGetAttributes](#contactsgetattributes)
-  * [contactsGetIds](#contactsgetids)
-  * [contactsGet](#contactsget)
-  * [contactsGetById](#contactsgetbyid)
+  * [contactsGetContactIds](#contactsgetcontactids)
+  * [contactsGetAllContacts](#contactsgetallcontacts)
+  * [contactsGetContactById](#contactsgetcontactbyid)
   * [contactsGetCount](#contactsgetcount)
-  * [queryContent](#querycontent)
+  * [contactsEraseAll](#contactseraseall)
+  * [contactsQueryContent](#contactsquerycontent)
   * [queryAttributes](#queryattributes)
+  * [importVcf](#importvcf)
+  * [exportVcf](#exportvcf)
 
 **EventFacade**
 
@@ -139,6 +378,59 @@ Generated at commit `changeset:   1307:36da773df6bb`
 **EyesFreeFacade**
 
   * [ttsSpeak](#ttsspeak)
+
+**GattClientFacade**
+
+  * [gattClientConnectGatt](#gattclientconnectgatt)
+  * [gattClientDiscoverServices](#gattclientdiscoverservices)
+  * [gattClientGetServices](#gattclientgetservices)
+  * [gattClientAbortReliableWrite](#gattclientabortreliablewrite)
+  * [gattClientBeginReliableWrite](#gattclientbeginreliablewrite)
+  * [gattClientRequestMtu](#gattclientrequestmtu)
+  * [gattClientDisconnect](#gattclientdisconnect)
+  * [gattClientClose](#gattclientclose)
+  * [gattExecuteReliableWrite](#gattexecutereliablewrite)
+  * [gattClientGetConnectedDevices](#gattclientgetconnecteddevices)
+  * [gattGetDevice](#gattgetdevice)
+  * [gattClientGetDevicesMatchingConnectionStates](#gattclientgetdevicesmatchingconnectionstates)
+  * [gattClientGetServiceUuidList](#gattclientgetserviceuuidlist)
+  * [gattClientReadCharacteristic](#gattclientreadcharacteristic)
+  * [gattClientReadDescriptor](#gattclientreaddescriptor)
+  * [gattClientWriteDescriptor](#gattclientwritedescriptor)
+  * [gattClientDescriptorSetValue](#gattclientdescriptorsetvalue)
+  * [gattClientWriteCharacteristic](#gattclientwritecharacteristic)
+  * [gattClientCharacteristicSetValue](#gattclientcharacteristicsetvalue)
+  * [gattClientCharacteristicSetWriteType](#gattclientcharacteristicsetwritetype)
+  * [gattClientReadRSSI](#gattclientreadrssi)
+  * [gattClientRefresh](#gattclientrefresh)
+  * [gattClientRequestConnectionPriority](#gattclientrequestconnectionpriority)
+  * [gattClientSetCharacteristicNotification](#gattclientsetcharacteristicnotification)
+  * [gattCreateGattCallback](#gattcreategattcallback)
+  * [gattClientGetDiscoveredServicesCount](#gattclientgetdiscoveredservicescount)
+  * [gattClientGetDiscoveredServiceUuid](#gattclientgetdiscoveredserviceuuid)
+  * [gattClientGetDiscoveredCharacteristicUuids](#gattclientgetdiscoveredcharacteristicuuids)
+  * [gattClientGetDiscoveredDescriptorUuids](#gattclientgetdiscovereddescriptoruuids)
+
+**GattServerFacade**
+
+  * [gattServerOpenGattServer](#gattserveropengattserver)
+  * [gattServerAddService](#gattserveraddservice)
+  * [gattServerClearServices](#gattserverclearservices)
+  * [gattServerGetConnectedDevices](#gattservergetconnecteddevices)
+  * [gattServerSendResponse](#gattserversendresponse)
+  * [gattServerNotifyCharacteristicChanged](#gattservernotifycharacteristicchanged)
+  * [gattServerCreateService](#gattservercreateservice)
+  * [gattServiceAddCharacteristic](#gattserviceaddcharacteristic)
+  * [gattServerAddCharacteristicToService](#gattserveraddcharacteristictoservice)
+  * [gattServerClose](#gattserverclose)
+  * [gattGetConnectedDevices](#gattgetconnecteddevices)
+  * [gattGetServiceUuidList](#gattgetserviceuuidlist)
+  * [gattGetService](#gattgetservice)
+  * [gattServerCharacteristicAddDescriptor](#gattservercharacteristicadddescriptor)
+  * [gattServerCreateBluetoothGattCharacteristic](#gattservercreatebluetoothgattcharacteristic)
+  * [gattServerCharacteristicSetValue](#gattservercharacteristicsetvalue)
+  * [gattServerCreateGattServerCallback](#gattservercreategattservercallback)
+  * [gattServerCreateBluetoothGattDescriptor](#gattservercreatebluetoothgattdescriptor)
 
 **LocationFacade**
 
@@ -264,6 +556,10 @@ Generated at commit `changeset:   1307:36da773df6bb`
 
   * [recognizeSpeech](#recognizespeech)
 
+**TelecomCallFacade**
+
+  * [telecomCallGetCallById](#telecomcallgetcallbyid)
+
 **TextToSpeechFacade**
 
   * [ttsSpeak](#ttsspeak)
@@ -344,6 +640,10 @@ Generated at commit `changeset:   1307:36da773df6bb`
 
 **WifiFacade**
 
+  * [wifiAddNetwork](#wifiaddnetwork)
+  * [wifiConnect](#wificonnect)
+  * [wifiEnableNetwork](#wifienablenetwork)
+  * [wifiEnterpriseConnect](#wifienterpriseconnect)
   * [wifiGetScanResults](#wifigetscanresults)
   * [wifiLockAcquireFull](#wifilockacquirefull)
   * [wifiLockAcquireScanOnly](#wifilockacquirescanonly)
@@ -357,100 +657,6 @@ Generated at commit `changeset:   1307:36da773df6bb`
   * [wifiReconnect](#wifireconnect)
 
 # Method descriptions
-
-## generateDtmfTones
-
-```
-void generateDtmfTones( String phoneNumber, Integer toneDuration)
-
-Generate DTMF tones for the given phone number.
-```
-
-## startTrackingSignalStrengths
-
-```
-void startTrackingSignalStrengths()
-
-Starts tracking signal strengths.
-```
-
-## readSignalStrengths
-
-```
-Bundle readSignalStrengths()
-
-Returns the current signal strengths.
-
-Returns A map of \"gsm_signal_strength\"
-```
-
-## stopTrackingSignalStrengths
-
-```
-void stopTrackingSignalStrengths()
-
-Stops tracking signal strength.
-```
-
-## pick
-
-```
-Intent pick(String uri)
-
-Display content to be picked by URI (e.g. contacts)
-
-Returns A map of result values.
-```
-
-## scanBarcode
-
-```
-Intent scanBarcode()
-
-Starts the barcode scanner.
-
-Returns A Map representation of the result Intent.
-```
-
-## view
-
-```
-void view( String uri, String type, JSONObject extras)
-
-Start activity with view action by URI (i.e. browser, contacts, etc.).
-```
-
-## viewMap
-
-```
-void viewMap(String query)
-
-Opens a map search for query (e.g. pizza, 123 My Street).
-```
-
-## viewContacts
-
-```
-void viewContacts()
-
-Opens the list of contacts.
-```
-
-## viewHtml
-
-```
-void viewHtml( String path)
-
-Opens the browser to display a local HTML file.
-```
-
-## search
-
-```
-void search(String query)
-
-Starts a search for the given query.
-```
 
 ## dialogCreateInput
 
@@ -734,6 +940,76 @@ JSONArray fullKeyOverride( JSONArray keycodes, Boolean enable)
 Override default key actions
 ```
 
+## smsSend
+
+```
+void smsSend( String destinationAddress, String text)
+
+Sends an SMS.
+```
+
+## smsGetMessageCount
+
+```
+Integer smsGetMessageCount(Boolean unreadOnly, String folder)
+
+Returns the number of messages.
+```
+
+## smsGetMessageIds
+
+```
+List<Integer> smsGetMessageIds(Boolean unreadOnly, String folder)
+
+Returns a List of all message IDs.
+```
+
+## smsGetMessages
+
+```
+List<JSONObject> smsGetMessages(Boolean unreadOnly, String folder, JSONArray attributes)
+
+Returns a List of all messages.
+
+Returns a List of messages as Maps
+```
+
+## smsGetMessageById
+
+```
+JSONObject smsGetMessageById( Integer id, JSONArray attributes)
+
+Returns message attributes.
+```
+
+## smsGetAttributes
+
+```
+List<String> smsGetAttributes()
+
+Returns a List of all possible message attributes.
+```
+
+## smsDeleteMessage
+
+```
+Boolean smsDeleteMessage(Integer id)
+
+Deletes a message.
+
+Returns True if the message was deleted
+```
+
+## smsMarkMessageRead
+
+```
+Integer smsMarkMessageRead( JSONArray ids, Boolean read)
+
+Marks messages as read.
+
+Returns number of messages marked read
+```
+
 ## readBatteryData
 
 ```
@@ -814,610 +1090,820 @@ String batteryGetTechnology()
 Returns the most recently received battery technology data.
 ```
 
-## setResultBoolean
+## bluetoothMediaPassthrough
 
 ```
-void setResultBoolean( Integer resultCode, Boolean resultValue)
+void bluetoothMediaPassthrough( String passthruCmd)
 
-sRpcDescription
+Simulate a passthrough command
 ```
 
-## setResultByte
+## bluetoothMediaGetCurrentMediaMetaData
 
 ```
-void setResultByte( Integer resultCode, Byte resultValue)
+Map<String, String> bluetoothMediaGetCurrentMediaMetaData()
 
-sRpcDescription
+Gets the Metadata of currently playing Media
 ```
 
-## setResultShort
+## bluetoothMediaGetActiveMediaSessions
 
 ```
-void setResultShort( Integer resultCode, Short resultValue)
+List<String> bluetoothMediaGetActiveMediaSessions()
 
-sRpcDescription
+Get the current active Media Sessions
 ```
 
-## setResultChar
+## bluetoothMediaConnectToCarMBS
 
 ```
-void setResultChar( Integer resultCode, Character resultValue)
+void bluetoothMediaConnectToCarMBS()
 
-sRpcDescription
+Connect a MediaBrowser to the A2dpMediaBrowserservice in the Carkitt
 ```
 
-## setResultInteger
+## bluetoothMediaPhoneSL4AMBSStart
 
 ```
-void setResultInteger( Integer resultCode, Integer resultValue)
+void bluetoothMediaPhoneSL4AMBSStart()
 
-sRpcDescription
+Start the BluetoothSL4AAudioSrcMBS on Phone.
 ```
 
-## setResultLong
+## bluetoothMediaPhoneSL4AMBSStop
 
 ```
-void setResultLong( Integer resultCode, Long resultValue)
+void bluetoothMediaPhoneSL4AMBSStop()
 
-sRpcDescription
+Stop the BluetoothSL4AAudioSrcMBS running on Phone.
 ```
 
-## setResultFloat
+## bluetoothMediaHandleMediaCommandOnPhone
 
 ```
-void setResultFloat( Integer resultCode, Float resultValue)
+void bluetoothMediaHandleMediaCommandOnPhone(String command)
 
-sRpcDescription
+Media Commands on the Phone's BluetoothAvrcpMBS.
 ```
 
-## setResultDouble
+## cameraCapturePicture
 
 ```
-void setResultDouble( Integer resultCode, Double resultValue)
+Bundle cameraCapturePicture( final String targetPath, Boolean useAutoFocus, Integer cameraId)
 
-sRpcDescription
+Take a picture and save it to the specified path.
+
+Returns A map of Booleans autoFocus and takePicture where True indicates success. cameraId also included.
 ```
 
-## setResultString
+## cameraInteractiveCapturePicture
 
 ```
-void setResultString( Integer resultCode, String resultValue)
+void cameraInteractiveCapturePicture( final String targetPath)
 
-sRpcDescription
+Starts the image capture application to take a picture and saves it to the specified path.
 ```
 
-## setResultBooleanArray
+## camerasList
 
 ```
-void setResultBooleanArray( Integer resultCode, Boolean[] resultValue)
+Map<String, String> camerasList()
+
+Get Camera List, Id and parameters.
 
-sRpcDescription
+Returns Map of (cameraId, information).information is comma separated and order is:canDisableShtterSound,facing,orientation.facing: 0=BACK, 1=FACE.orientation: 0,90,180,270=camera image.
 ```
 
-## setResultByteArray
+## nfcIsEnabled
 
 ```
-void setResultByteArray( Integer resultCode, Byte[] resultValue)
+Boolean nfcIsEnabled()
 
-sRpcDescription
+Check if NFC hardware is enabled.
 ```
 
-## setResultShortArray
+## nfcStartTrackingStateChange
 
 ```
-void setResultShortArray( Integer resultCode, Short[] resultValue)
+void nfcStartTrackingStateChange()
 
-sRpcDescription
+Start tracking NFC hardware state changes.
 ```
 
-## setResultCharArray
+## nfcStopTrackingStateChange
 
 ```
-void setResultCharArray( Integer resultCode, Character[] resultValue)
+void nfcStopTrackingStateChange()
 
-sRpcDescription
+Stop tracking NFC hardware state changes.
 ```
 
-## setResultIntegerArray
+## bluetoothPbapClientIsReady
 
 ```
-void setResultIntegerArray( Integer resultCode, Integer[] resultValue)
+Boolean bluetoothPbapClientIsReady()
 
-sRpcDescription
+Is PbapClient profile ready.
 ```
 
-## setResultLongArray
+## bluetoothPbapClientSetPriority
 
 ```
-void setResultLongArray( Integer resultCode, Long[] resultValue)
+void bluetoothPbapClientSetPriority( String deviceStr, Integer priority)
 
-sRpcDescription
+Set priority of the profile
 ```
 
-## setResultFloatArray
+## bluetoothPbapClientGetPriority
 
 ```
-void setResultFloatArray( Integer resultCode, Float[] resultValue)
+Integer bluetoothPbapClientGetPriority( String deviceStr)
 
-sRpcDescription
+Get priority of the profile
 ```
 
-## setResultDoubleArray
+## bluetoothPbapClientConnect
 
 ```
-void setResultDoubleArray( Integer resultCode, Double[] resultValue)
+Boolean bluetoothPbapClientConnect( String deviceStr)
 
-sRpcDescription
+Connect to an PBAP Client device.
 ```
 
-## setResultStringArray
+## bluetoothPbapClientDisconnect
 
 ```
-void setResultStringArray( Integer resultCode, String[] resultValue)
+Boolean bluetoothPbapClientDisconnect( String deviceStr)
 
-sRpcDescription
+Disconnect an PBAP Client device.
 ```
 
-## setResultSerializable
+## bluetoothPbapClientGetConnectedDevices
 
 ```
-void setResultSerializable( Integer resultCode, Serializable resultValue)
+List<BluetoothDevice> bluetoothPbapClientGetConnectedDevices()
 
-sRpcDescription
+Get all the devices connected through PBAP Client.
 ```
 
-## bluetoothActiveConnections
+## bluetoothPbapClientGetConnectionStatus
 
 ```
-Map<String, String> bluetoothActiveConnections()
+Integer bluetoothPbapClientGetConnectionStatus( String deviceID)
 
-Returns active Bluetooth connections.
+Get the connection status of a device.
 ```
 
-## bluetoothWriteBinary
+## bluetoothStartConnectionStateChangeMonitor
 
 ```
-void bluetoothWriteBinary( String base64, String connID)
+void bluetoothStartConnectionStateChangeMonitor( String deviceID)
 
-Send bytes over the currently open Bluetooth connection.
+Start monitoring state changes for input device.
 ```
 
-## bluetoothReadBinary
+## bluetoothStartPairingHelper
 
 ```
-String bluetoothReadBinary( Integer bufferSize, String connID)
+void bluetoothStartPairingHelper( Boolean autoConfirm)
 
-Read up to bufferSize bytes and return a chunked, base64 encoded string.
+Start intercepting all bluetooth connection pop-ups.
 ```
 
-## bluetoothConnect
+## bluetoothGetConnectedDevices
 
 ```
-String bluetoothConnect( String uuid, String address)
+List<BluetoothDevice> bluetoothGetConnectedDevices()
 
-Connect to a device over Bluetooth. Blocks until the connection is established or fails.
-
-Returns True if the connection was established successfully.
+Return a list of devices connected through bluetooth
 ```
 
-## bluetoothAccept
+## bluetoothGetConnectedLeDevices
 
 ```
-String bluetoothAccept( String uuid, Integer timeout)
+List<BluetoothDevice> bluetoothGetConnectedLeDevices(Integer profile)
 
-Listens for and accepts a Bluetooth connection. Blocks until the connection is established or fails.
+Return a list of devices connected through bluetooth LE
 ```
 
-## bluetoothMakeDiscoverable
+## bluetoothIsDeviceConnected
 
 ```
-void bluetoothMakeDiscoverable( Integer duration)
+Boolean bluetoothIsDeviceConnected(String deviceID)
 
-Requests that the device be discoverable for Bluetooth connections.
+Return true if a bluetooth device is connected.
 ```
 
-## bluetoothWrite
+## bluetoothGetConnectedDevicesOnProfile
 
 ```
-void bluetoothWrite(String ascii, String connID)
+List<BluetoothDevice> bluetoothGetConnectedDevicesOnProfile( Integer profileId)
+
+Return list of connected bluetooth devices over a profile
 
-Sends ASCII characters over the currently open Bluetooth connection.
+Returns List of devices connected over the profile
 ```
 
-## bluetoothReadReady
+## bluetoothDiscoverAndConnect
 
 ```
-Boolean bluetoothReadReady( String connID)
+Boolean bluetoothDiscoverAndConnect( String deviceID)
 
-Returns True if the next read is guaranteed not to block.
+Connect to a specified device once it's discovered.
+
+Returns Whether discovery started successfully.
 ```
 
-## bluetoothRead
+## bluetoothDiscoverAndBond
 
 ```
-String bluetoothRead( Integer bufferSize, String connID)
+Boolean bluetoothDiscoverAndBond( String deviceID)
+
+Bond to a specified device once it's discovered.
 
-Read up to bufferSize ASCII characters.
+Returns Whether discovery started successfully. 
 ```
 
-## bluetoothReadLine
+## bluetoothUnbond
 
 ```
-String bluetoothReadLine( String connID)
+Boolean bluetoothUnbond( String deviceID)
 
-Read the next line.
+Unbond a device.
+
+Returns Whether the device was successfully unbonded.
 ```
 
-## bluetoothGetRemoteDeviceName
+## bluetoothConnectBonded
 
 ```
-String bluetoothGetRemoteDeviceName( String address)
+void bluetoothConnectBonded( String deviceID)
 
-Queries a remote device for it's name or null if it can't be resolved
+Connect to a device that is already bonded.
 ```
 
-## bluetoothGetLocalName
+## bluetoothDisconnectConnected
 
 ```
-String bluetoothGetLocalName()
+void bluetoothDisconnectConnected( String deviceID)
 
-Gets the Bluetooth Visible device name
+Disconnect from a device that is already connected.
 ```
 
-## bluetoothSetLocalName
+## bluetoothDisconnectConnectedProfile
 
 ```
-boolean bluetoothSetLocalName( String name)
+void bluetoothDisconnectConnectedProfile( String deviceID, JSONArray profileSet )
 
-Sets the Bluetooth Visible device name, returns True on success
+Disconnect on a profile from a device that is already connected.
 ```
 
-## bluetoothGetScanMode
+## bluetoothChangeProfileAccessPermission
 
 ```
-int bluetoothGetScanMode()
+void bluetoothChangeProfileAccessPermission( String deviceID, Integer profileID, Integer access )
 
-Gets the scan mode for the local dongle.\r\nReturn values:\r\n\t-1 when Bluetooth is disabled.\r\n\t0 if non discoverable and non connectable.\r\n\r1 connectable non discoverable.\r3 connectable and discoverable.
+Change permissions for a profile.
 ```
 
-## bluetoothGetConnectedDeviceName
+## bleGenScanCallback
 
 ```
-String bluetoothGetConnectedDeviceName( String connID)
+Integer bleGenScanCallback()
 
-Returns the name of the connected device.
+Generate a new myScanCallback Object
 ```
 
-## checkBluetoothState
+## bleGenLeScanCallback
 
 ```
-Boolean checkBluetoothState()
-
-Checks Bluetooth state.
+Integer bleGenLeScanCallback()
 
-Returns True if Bluetooth is enabled.
+Generate a new myScanCallback Object
 ```
 
-## toggleBluetoothState
+## bleGenFilterList
 
 ```
-Boolean toggleBluetoothState( Boolean enabled, Boolean prompt)
+Integer bleGenFilterList()
 
-Toggle Bluetooth on and off.
-
-Returns True if Bluetooth is enabled.
+Generate a new Filter list
 ```
 
-## bluetoothStop
+## bleBuildScanFilter
 
 ```
-void bluetoothStop( String connID)
+Integer bleBuildScanFilter( Integer filterIndex )
 
-Stops Bluetooth connection.
+Generate a new Filter list
 ```
 
-## bluetoothGetLocalAddress
+## bleBuildScanSetting
 
 ```
-String bluetoothGetLocalAddress()
+Integer bleBuildScanSetting()
 
-Returns the hardware address of the local Bluetooth adapter. 
+Generate a new scan settings Object
 ```
 
-## bluetoothDiscoveryStart
+## bleStopBleScan
 
 ```
-Boolean bluetoothDiscoveryStart()
-
-Start the remote device discovery process. 
+void bleStopBleScan( Integer index)
 
-Returns true on success, false on error
+Stops an ongoing ble advertisement scan
 ```
 
-## bluetoothDiscoveryCancel
+## bleStopClassicBleScan
+
+```
+void bleStopClassicBleScan( Integer index)
 
+Stops an ongoing classic ble scan
 ```
-Boolean bluetoothDiscoveryCancel()
 
-Cancel the current device discovery process.
+## bleStartBleScan
 
-Returns true on success, false on error
 ```
+void bleStartBleScan( Integer filterListIndex, Integer scanSettingsIndex, Integer callbackIndex )
 
-## bluetoothIsDiscovering
+Starts a ble advertisement scan
+```
+
+## bleStartClassicBleScan
 
 ```
-Boolean bluetoothIsDiscovering()
+boolean bleStartClassicBleScan( Integer leCallbackIndex )
 
-Return true if the local Bluetooth adapter is currently in the device discovery process. 
+Starts a classic ble advertisement scan
 ```
 
-## prefGetValue
+## bleStartClassicBleScanWithServiceUuids
 
 ```
-Object prefGetValue( String key, String filename)
+boolean bleStartClassicBleScanWithServiceUuids( Integer leCallbackIndex, String[] serviceUuidList )
 
-Read a value from shared preferences
+Starts a classic ble advertisement scan with service Uuids
 ```
 
-## prefPutValue
+## bleFlushPendingScanResults
 
 ```
-void prefPutValue( String key, Object value, String filename)
+void bleFlushPendingScanResults( Integer callbackIndex )
 
-Write a value to shared preferences
+Gets the results of the ble ScanCallback
 ```
 
-## prefGetAll
+## bleSetScanSettingsCallbackType
+
+```
+void bleSetScanSettingsCallbackType( Integer callbackType)
 
+Set the scan setting's callback type
 ```
-Map<String, ?> prefGetAll( String filename)
 
-Get list of Shared Preference Values
+## bleSetScanSettingsReportDelayMillis
 
-Returns Map of key,value
 ```
+void bleSetScanSettingsReportDelayMillis( Long reportDelayMillis)
 
-## smsSend
+Set the scan setting's report delay millis
+```
+
+## bleSetScanSettingsScanMode
 
 ```
-void smsSend( String destinationAddress, String text)
+void bleSetScanSettingsScanMode( Integer scanMode)
 
-Sends an SMS.
+Set the scan setting's scan mode
 ```
 
-## smsGetMessageCount
+## bleSetScanSettingsResultType
 
 ```
-Integer smsGetMessageCount(Boolean unreadOnly, String folder)
+void bleSetScanSettingsResultType( Integer scanResultType)
 
-Returns the number of messages.
+Set the scan setting's scan result type
 ```
 
-## smsGetMessageIds
+## bleGetScanSettingsCallbackType
 
 ```
-List<Integer> smsGetMessageIds(Boolean unreadOnly, String folder)
+Integer bleGetScanSettingsCallbackType( Integer index )
 
-Returns a List of all message IDs.
+Get ScanSetting's callback type
 ```
 
-## smsGetMessages
+## bleGetScanSettingsReportDelayMillis
+
+```
+Long bleGetScanSettingsReportDelayMillis( Integer index)
 
+Get ScanSetting's report delay milliseconds
 ```
-List<JSONObject> smsGetMessages(Boolean unreadOnly, String folder, JSONArray attributes)
 
-Returns a List of all messages.
+## bleGetScanSettingsScanMode
 
-Returns a List of messages as Maps
 ```
+Integer bleGetScanSettingsScanMode( Integer index)
 
-## smsGetMessageById
+Get ScanSetting's scan mode
+```
+
+## bleGetScanSettingsScanResultType
 
 ```
-JSONObject smsGetMessageById( Integer id, JSONArray attributes)
+Integer bleGetScanSettingsScanResultType( Integer index)
 
-Returns message attributes.
+Get ScanSetting's scan result type
 ```
 
-## smsGetAttributes
+## bleGetScanFilterManufacturerId
 
 ```
-List<String> smsGetAttributes()
+Integer bleGetScanFilterManufacturerId( Integer index, Integer filterIndex)
 
-Returns a List of all possible message attributes.
+Get ScanFilter's Manufacturer Id
 ```
 
-## smsDeleteMessage
+## bleGetScanFilterDeviceAddress
+
+```
+String bleGetScanFilterDeviceAddress( Integer index, Integer filterIndex)
 
+Get ScanFilter's device address
 ```
-Boolean smsDeleteMessage(Integer id)
 
-Deletes a message.
+## bleGetScanFilterDeviceName
 
-Returns True if the message was deleted
 ```
+String bleGetScanFilterDeviceName( Integer index, Integer filterIndex)
 
-## smsMarkMessageRead
+Get ScanFilter's device name
+```
+
+## bleGetScanFilterManufacturerData
+
+```
+byte[] bleGetScanFilterManufacturerData( Integer index, Integer filterIndex)
 
+Get ScanFilter's manufacturer data
 ```
-Integer smsMarkMessageRead( JSONArray ids, Boolean read)
 
-Marks messages as read.
+## bleGetScanFilterManufacturerDataMask
 
-Returns number of messages marked read
 ```
+byte[] bleGetScanFilterManufacturerDataMask( Integer index, Integer filterIndex)
 
-## mediaPlay
+Get ScanFilter's manufacturer data mask
+```
+
+## bleGetScanFilterServiceData
 
 ```
-boolean mediaPlay( String url, String tag, Boolean play)
+byte[] bleGetScanFilterServiceData( Integer index, Integer filterIndex)
+
+Get ScanFilter's service data
+```
+
+## bleGetScanFilterServiceDataMask
 
-Open a media file
+```
+byte[] bleGetScanFilterServiceDataMask( Integer index, Integer filterIndex)
 
-Returns true if play successful
+Get ScanFilter's service data mask
 ```
+
+## bleGetScanFilterServiceUuid
 
-## mediaPlayPause
+```
+String bleGetScanFilterServiceUuid( Integer index, Integer filterIndex)
 
+Get ScanFilter's service uuid
 ```
-boolean mediaPlayPause( String tag)
+
+## bleGetScanFilterServiceUuidMask
 
-pause playing media file
+```
+String bleGetScanFilterServiceUuidMask( Integer index, Integer filterIndex)
 
-Returns true if successful
+Get ScanFilter's service uuid mask
 ```
+
+## bleSetScanFilterDeviceAddress
 
-## mediaPlayStart
+```
+void bleSetScanFilterDeviceAddress( String macAddress )
 
+Add filter \"macAddress\" to existing ScanFilter
 ```
-boolean mediaPlayStart( String tag)
+
+## bleSetScanFilterManufacturerData
 
-start playing media file
+```
+void bleSetScanFilterManufacturerData( Integer manufacturerDataId, byte[] manufacturerData, byte[] manufacturerDataMask )
 
-Returns true if successful
+Add filter \"manufacturereDataId and/or manufacturerData\" to existing ScanFilter
 ```
+
+## bleSetScanFilterServiceData
 
-## mediaPlayClose
+```
+void bleSetScanFilterServiceData( String serviceUuid, byte[] serviceData, byte[] serviceDataMask )
 
+Add filter \"serviceData and serviceDataMask\" to existing ScanFilter 
 ```
-boolean mediaPlayClose( String tag)
+
+## bleSetScanFilterServiceUuid
 
-Close media file
+```
+void bleSetScanFilterServiceUuid( String serviceUuid, String serviceMask )
 
-Returns true if successful
+Add filter \"serviceUuid and/or serviceMask\" to existing ScanFilter
 ```
+
+## bleSetScanFilterDeviceName
 
-## mediaIsPlaying
+```
+void bleSetScanFilterDeviceName( String name )
 
+Sets the scan filter's device name
 ```
-boolean mediaIsPlaying( String tag)
+
+## bleSetScanSettingsMatchMode
 
-Checks if media file is playing.
+```
+void bleSetScanSettingsMatchMode( Integer mode)
 
-Returns true if playing
+Set the scan setting's match mode
 ```
+
+## bleGetScanSettingsMatchMode
 
-## mediaPlayInfo
+```
+int bleGetScanSettingsMatchMode( Integer scanSettingsIndex )
 
+Get the scan setting's match mode
 ```
-Map<String, Object> mediaPlayInfo( String tag)
+
+## bleSetScanSettingsNumOfMatches
 
-Information on current media
+```
+void bleSetScanSettingsNumOfMatches( Integer matches)
 
-Returns Media Information
+Set the scan setting's number of matches
 ```
+
+## bleGetScanSettingsNumberOfMatches
 
-## mediaPlayList
+```
+int bleGetScanSettingsNumberOfMatches( Integer scanSettingsIndex)
 
+Get the scan setting's number of matches
 ```
-Set<String> mediaPlayList()
+
+## telecomCallGetCallById
 
-Lists currently loaded media
+```
+Call telecomCallGetCallById(String callId)
 
-Returns List of Media Tags
+Get call by particular Id
 ```
+
+## bluetoothMapIsReady
 
-## mediaPlaySetLooping
+```
+Boolean bluetoothMapIsReady()
 
+Is Map profile ready.
 ```
-boolean mediaPlaySetLooping( Boolean enabled, String tag)
+
+## bluetoothMapDisconnect
 
-Set Looping
+```
+Boolean bluetoothMapDisconnect( String deviceID)
 
-Returns True if successful
+Disconnect an MAP device.
 ```
+
+## bluetoothMapGetConnectedDevices
 
-## mediaPlaySeek
+```
+List<BluetoothDevice> bluetoothMapGetConnectedDevices()
 
+Get all the devices connected through MAP.
 ```
-int mediaPlaySeek( Integer msec, String tag)
 
-Seek To Position
+## bluetoothMapGetClient
+
+```
+BluetoothDevice bluetoothMapGetClient()
 
-Returns New Position (in ms)
+Get the currently connected remote Bluetooth device (PCE).
 ```
 
-## pickContact
+## pick
 
 ```
-Intent pickContact()
+Intent pick(String uri)
 
-Displays a list of contacts to pick from.
+Display content to be picked by URI (e.g. contacts)
 
 Returns A map of result values.
 ```
 
-## pickPhone
+## scanBarcode
 
 ```
-String pickPhone()
+Intent scanBarcode()
 
-Displays a list of phone numbers to pick from.
+Starts the barcode scanner.
 
-Returns The selected phone number.
+Returns A Map representation of the result Intent.
 ```
 
-## contactsGetAttributes
+## view
 
 ```
-List<String> contactsGetAttributes()
+void view( String uri, String type, JSONObject extras)
 
-Returns a List of all possible attributes for contacts.
+Start activity with view action by URI (i.e. browser, contacts, etc.).
 ```
 
-## contactsGetIds
+## viewMap
 
 ```
-List<Integer> contactsGetIds()
+void viewMap(String query)
 
-Returns a List of all contact IDs.
+Opens a map search for query (e.g. pizza, 123 My Street).
 ```
 
-## contactsGet
+## viewContacts
 
 ```
-List<JSONObject> contactsGet( JSONArray attributes)
+void viewContacts()
 
-Returns a List of all contacts.
-
-Returns a List of contacts as Maps
+Opens the list of contacts.
 ```
 
-## contactsGetById
+## viewHtml
 
 ```
-JSONObject contactsGetById(Integer id, JSONArray attributes)
+void viewHtml( String path)
 
-Returns contacts by ID.
+Opens the browser to display a local HTML file.
 ```
 
-## contactsGetCount
+## search
 
 ```
-Integer contactsGetCount()
+void search(String query)
 
-Returns the number of contacts.
+Starts a search for the given query.
 ```
 
-## queryContent
+## gattServerOpenGattServer
 
 ```
-List<JSONObject> queryContent( String uri, JSONArray attributes, String selection, JSONArray selectionArgs, String order)
+int gattServerOpenGattServer(Integer index)
 
-Content Resolver Query
-
-Returns result of query as Maps
+Open new gatt server
 ```
 
-## queryAttributes
+## gattServerAddService
 
 ```
-JSONArray queryAttributes( String uri)
+void gattServerAddService(Integer index, Integer serviceIndex)
 
-Content Resolver Query Attributes
+Add service to bluetooth gatt server
+```
 
-Returns a list of available columns for a given content uri
+## gattServerClearServices
+
+```
+void gattServerClearServices( Integer index)
+
+Clear services from bluetooth gatt server
+```
+
+## gattServerGetConnectedDevices
+
+```
+List<BluetoothDevice> gattServerGetConnectedDevices( Integer gattServerIndex)
+
+Return a list of connected gatt devices.
+```
+
+## gattServerSendResponse
+
+```
+void gattServerSendResponse( Integer gattServerIndex, Integer bluetoothDeviceIndex, Integer requestId, Integer status, Integer offset, byte[] value)
+
+Send a response after a write.
+```
+
+## gattServerNotifyCharacteristicChanged
+
+```
+void gattServerNotifyCharacteristicChanged( Integer gattServerIndex, Integer bluetoothDeviceIndex, Integer characteristicIndex, Boolean confirm)
+
+Notify that characteristic was changed.
+```
+
+## gattServerCreateService
+
+```
+int gattServerCreateService(String uuid, Integer serviceType)
+
+Create new bluetooth gatt service
+```
+
+## gattServiceAddCharacteristic
+
+```
+void gattServiceAddCharacteristic( Integer index, String serviceUuid, Integer characteristicIndex)
+
+Add a characteristic to a bluetooth gatt service
+```
+
+## gattServerAddCharacteristicToService
+
+```
+void gattServerAddCharacteristicToService(Integer index, Integer characteristicIndex  )
+
+Add a characteristic to a bluetooth gatt service
+```
+
+## gattServerClose
+
+```
+void gattServerClose(Integer index)
+
+Close a bluetooth gatt
+```
+
+## gattGetConnectedDevices
+
+```
+List<BluetoothDevice> gattGetConnectedDevices( Integer index)
+
+Get a list of Bluetooth Devices connnected to the bluetooth gatt
+```
+
+## gattGetServiceUuidList
+
+```
+ArrayList<String> gattGetServiceUuidList(Integer index)
+
+Get the service from an input UUID
+```
+
+## gattGetService
+
+```
+BluetoothGattService gattGetService(Integer index, String uuid)
+
+Get the service from an input UUID
+```
+
+## gattServerCharacteristicAddDescriptor
+
+```
+void gattServerCharacteristicAddDescriptor(Integer index, Integer descriptorIndex)
+
+add descriptor to blutooth gatt characteristic
+```
+
+## gattServerCreateBluetoothGattCharacteristic
+
+```
+int gattServerCreateBluetoothGattCharacteristic( String characteristicUuid, Integer property, Integer permission)
+
+Create a new Characteristic object
+```
+
+## gattServerCharacteristicSetValue
+
+```
+void gattServerCharacteristicSetValue(Integer index, byte[] value)
+
+add descriptor to blutooth gatt characteristic
+```
+
+## gattServerCreateGattServerCallback
+
+```
+Integer gattServerCreateGattServerCallback()
+
+Create a new GattCallback object
+```
+
+## gattServerCreateBluetoothGattDescriptor
+
+```
+int gattServerCreateBluetoothGattDescriptor( String descriptorUuid, Integer permissions)
+
+Create a new Descriptor object
 ```
 
 ## startTrackingPhoneState
@@ -1622,70 +2108,1774 @@ List<NeighboringCellInfo> getNeighboringCellInfo()
 Returns the neighboring cell information of the device.
 ```
 
-## webcamStart
+## getLaunchableApplications
 
 ```
-InetSocketAddress webcamStart( Integer resolutionLevel, Integer jpegQuality, Integer port)
+Map<String, String> getLaunchableApplications()
 
-Starts an MJPEG stream and returns a Tuple of address and port for the stream.
+Returns a list of all launchable application class names.
 ```
 
-## webcamAdjustQuality
+## launch
 
 ```
-void webcamAdjustQuality( Integer resolutionLevel, Integer jpegQuality)
+void launch(String className)
 
-Adjusts the quality of the webcam stream while it is running.
+Start activity with the given class name.
 ```
 
-## webcamStop
+## getRunningPackages
 
 ```
-void webcamStop()
+List<String> getRunningPackages()
 
-Stops the webcam stream.
+Returns a list of packages running activities or services.
+
+Returns List of packages running activities.
 ```
 
-## cameraStartPreview
+## forceStopPackage
 
 ```
-boolean cameraStartPreview( Integer resolutionLevel, Integer jpegQuality, String filepath)
+void forceStopPackage( String packageName)
 
-Start Preview Mode. Throws 'preview' events.
-
-Returns True if successful
+Force stops a package.
 ```
 
-## cameraStopPreview
+## bluetoothMapClientConnect
 
 ```
-void cameraStopPreview()
+Boolean bluetoothMapClientConnect( String device)
 
-Stop the preview mode.
+Connect to an MAP MSE device.
 ```
 
-## nfcIsEnabled
+## mapSendMessage
 
 ```
-Boolean nfcIsEnabled()
+Boolean mapSendMessage( String deviceID, String[] phoneNumbers, String message)
 
-Check if NFC hardware is enabled.
+Send a (text) message via bluetooth.
 ```
 
-## nfcStartTrackingStateChange
+## bluetoothMapClientIsReady
 
 ```
-void nfcStartTrackingStateChange()
+Boolean bluetoothMapClientIsReady()
 
-Start tracking NFC hardware state changes.
+Is Map profile ready.
 ```
 
-## nfcStopTrackingStateChange
+## bluetoothMapClientDisconnect
 
 ```
-void nfcStopTrackingStateChange()
+Boolean bluetoothMapClientDisconnect( String deviceID)
 
-Stop tracking NFC hardware state changes.
+Disconnect an MAP device.
+```
+
+## bluetoothMapClientGetConnectedDevices
+
+```
+List<BluetoothDevice> bluetoothMapClientGetConnectedDevices()
+
+Get all the devices connected through MAP.
+```
+
+## bleGenBleAdvertiseCallback
+
+```
+Integer bleGenBleAdvertiseCallback()
+
+Generate a new myAdvertisement Object
+```
+
+## bleBuildAdvertiseData
+
+```
+Integer bleBuildAdvertiseData()
+
+Constructs a new Builder obj for AdvertiseData and returns its index
+```
+
+## bleBuildAdvertiseSettings
+
+```
+Integer bleBuildAdvertiseSettings()
+
+Constructs a new Builder obj for AdvertiseData and returns its index
+```
+
+## bleStopBleAdvertising
+
+```
+void bleStopBleAdvertising( Integer index)
+
+Stops an ongoing ble advertisement
+```
+
+## bleStartBleAdvertising
+
+```
+void bleStartBleAdvertising( Integer callbackIndex, Integer dataIndex, Integer settingsIndex )
+
+Starts ble advertisement
+```
+
+## bleStartBleAdvertisingWithScanResponse
+
+```
+void bleStartBleAdvertisingWithScanResponse( Integer callbackIndex, Integer dataIndex, Integer settingsIndex, Integer scanResponseIndex )
+
+Starts ble advertisement
+```
+
+## bleGetAdvertiseSettingsMode
+
+```
+int bleGetAdvertiseSettingsMode( Integer index)
+
+Get ble advertisement settings mode
+```
+
+## bleGetAdvertiseSettingsTxPowerLevel
+
+```
+int bleGetAdvertiseSettingsTxPowerLevel( Integer index)
+
+Get ble advertisement settings tx power level
+```
+
+## bleGetAdvertiseSettingsIsConnectable
+
+```
+boolean bleGetAdvertiseSettingsIsConnectable( Integer index)
+
+Get ble advertisement settings isConnectable value
+```
+
+## bleGetAdvertiseDataIncludeTxPowerLevel
+
+```
+Boolean bleGetAdvertiseDataIncludeTxPowerLevel( Integer index)
+
+Get ble advertisement data include tx power level
+```
+
+## bleGetAdvertiseDataManufacturerSpecificData
+
+```
+byte[] bleGetAdvertiseDataManufacturerSpecificData( Integer index, Integer manufacturerId)
+
+Get ble advertisement data manufacturer specific data
+```
+
+## bleGetAdvertiseDataIncludeDeviceName
+
+```
+Boolean bleGetAdvertiseDataIncludeDeviceName( Integer index)
+
+Get ble advertisement include device name
+```
+
+## bleGetAdvertiseDataServiceData
+
+```
+byte[] bleGetAdvertiseDataServiceData( Integer index, String serviceUuid)
+
+Get ble advertisement Service Data
+```
+
+## bleGetAdvertiseDataServiceUuids
+
+```
+List<ParcelUuid> bleGetAdvertiseDataServiceUuids( Integer index)
+
+Get ble advertisement Service Uuids
+```
+
+## bleSetAdvertiseDataSetServiceUuids
+
+```
+void bleSetAdvertiseDataSetServiceUuids( String[] uuidList )
+
+Set ble advertisement data service uuids
+```
+
+## bleAddAdvertiseDataServiceData
+
+```
+void bleAddAdvertiseDataServiceData( String serviceDataUuid, byte[] serviceData )
+
+Set ble advertise data service uuids
+```
+
+## bleAddAdvertiseDataManufacturerId
+
+```
+void bleAddAdvertiseDataManufacturerId( Integer manufacturerId, byte[] manufacturerSpecificData )
+
+Set ble advertise data manufacturerId
+```
+
+## bleSetAdvertiseSettingsAdvertiseMode
+
+```
+void bleSetAdvertiseSettingsAdvertiseMode( Integer advertiseMode )
+
+Set ble advertise settings advertise mode
+```
+
+## bleSetAdvertiseSettingsTxPowerLevel
+
+```
+void bleSetAdvertiseSettingsTxPowerLevel( Integer txPowerLevel )
+
+Set ble advertise settings tx power level
+```
+
+## bleSetAdvertiseSettingsIsConnectable
+
+```
+void bleSetAdvertiseSettingsIsConnectable( Boolean value )
+
+Set ble advertise settings isConnectable value
+```
+
+## bleSetAdvertiseDataIncludeTxPowerLevel
+
+```
+void bleSetAdvertiseDataIncludeTxPowerLevel( Boolean includeTxPowerLevel )
+
+Set ble advertisement data include tx power level
+```
+
+## bleSetAdvertiseSettingsTimeout
+
+```
+void bleSetAdvertiseSettingsTimeout( Integer timeoutSeconds )
+
+Set ble advertisement data include tx power level
+```
+
+## bleSetAdvertiseDataIncludeDeviceName
+
+```
+void bleSetAdvertiseDataIncludeDeviceName( Boolean includeDeviceName )
+
+Set ble advertisement data include device name
+```
+
+## bluetoothRfcommBeginConnectThread
+
+```
+void bluetoothRfcommBeginConnectThread( String address, String uuid)
+
+Begins a thread initiate an Rfcomm connection over Bluetooth. 
+```
+
+## bluetoothRfcommKillConnThread
+
+```
+void bluetoothRfcommKillConnThread()
+
+Kill thread
+```
+
+## bluetoothRfcommEndConnectThread
+
+```
+void bluetoothRfcommEndConnectThread()
+
+Close an active Rfcomm Client socket
+```
+
+## bluetoothRfcommEndAcceptThread
+
+```
+void bluetoothRfcommEndAcceptThread()
+
+Close an active Rfcomm Server socket
+```
+
+## bluetoothRfcommActiveConnections
+
+```
+Map<String, String> bluetoothRfcommActiveConnections()
+
+Returns active Bluetooth connections.
+```
+
+## bluetoothRfcommGetConnectedDeviceName
+
+```
+String bluetoothRfcommGetConnectedDeviceName( String connID)
+
+Returns the name of the connected device.
+```
+
+## bluetoothRfcommBeginAcceptThread
+
+```
+void bluetoothRfcommBeginAcceptThread( String uuid, Integer timeout)
+
+Begins a thread to accept an Rfcomm connection over Bluetooth. 
+```
+
+## bluetoothRfcommWrite
+
+```
+void bluetoothRfcommWrite(String ascii, String connID)
+
+Sends ASCII characters over the currently open Bluetooth connection.
+```
+
+## bluetoothRfcommRead
+
+```
+String bluetoothRfcommRead( Integer bufferSize, String connID)
+
+Read up to bufferSize ASCII characters.
+```
+
+## bluetoothRfcommWriteBinary
+
+```
+void bluetoothRfcommWriteBinary( String base64, String connID)
+
+Send bytes over the currently open Bluetooth connection.
+```
+
+## bluetoothRfcommReadBinary
+
+```
+String bluetoothRfcommReadBinary( Integer bufferSize, String connID)
+
+Read up to bufferSize bytes and return a chunked, base64 encoded string.
+```
+
+## bluetoothRfcommReadReady
+
+```
+Boolean bluetoothRfcommReadReady( String connID)
+
+Returns True if the next read is guaranteed not to block.
+```
+
+## bluetoothRfcommReadLine
+
+```
+String bluetoothRfcommReadLine( String connID)
+
+Read the next line.
+```
+
+## bluetoothRfcommStop
+
+```
+void bluetoothRfcommStop( String connID)
+
+Stops Bluetooth connection.
+```
+
+## recorderStartMicrophone
+
+```
+void recorderStartMicrophone(String targetPath)
+
+Records audio from the microphone and saves it to the given location.
+```
+
+## recorderStartVideo
+
+```
+void recorderStartVideo(String targetPath, Integer duration, Integer videoSize)
+
+Records video from the camera and saves it to the given location. \nDuration specifies the maximum duration of the recording session. \nIf duration is 0 this method will return and the recording will only be stopped \nwhen recorderStop is called or when a scripts exits. \nOtherwise it will block for the time period equal to the duration argument.\nvideoSize: 0=160x120, 1=320x240, 2=352x288, 3=640x480, 4=800x480.
+```
+
+## recorderCaptureVideo
+
+```
+void recorderCaptureVideo(String targetPath, Integer duration, Boolean recordAudio)
+
+Records video (and optionally audio) from the camera and saves it to the given location. \nDuration specifies the maximum duration of the recording session. \nIf duration is not provided this method will return immediately and the recording will only be stopped \nwhen recorderStop is called or when a scripts exits. \nOtherwise it will block for the time period equal to the duration argument.
+```
+
+## recorderStop
+
+```
+void recorderStop()
+
+Stops a previously started recording.
+```
+
+## startInteractiveVideoRecording
+
+```
+void startInteractiveVideoRecording(final String path)
+
+Starts the video capture application to record a video and saves it to the specified path.
+```
+
+## bluetoothAvrcpIsReady
+
+```
+Boolean bluetoothAvrcpIsReady()
+
+Is Avrcp profile ready.
+```
+
+## bluetoothAvrcpGetConnectedDevices
+
+```
+List<BluetoothDevice> bluetoothAvrcpGetConnectedDevices()
+
+Get all the devices connected through AVRCP.
+```
+
+## bluetoothAvrcpDisconnect
+
+```
+void bluetoothAvrcpDisconnect()
+
+Close AVRCP connection.
+```
+
+## bluetoothHfpClientIsReady
+
+```
+Boolean bluetoothHfpClientIsReady()
+
+Is HfpClient profile ready.
+```
+
+## bluetoothHfpClientSetPriority
+
+```
+void bluetoothHfpClientSetPriority( String deviceStr, Integer priority)
+
+Set priority of the profile
+```
+
+## bluetoothHfpClientGetPriority
+
+```
+Integer bluetoothHfpClientGetPriority( String deviceStr)
+
+Get priority of the profile
+```
+
+## bluetoothHfpClientConnect
+
+```
+Boolean bluetoothHfpClientConnect( String deviceStr)
+
+Connect to an HFP Client device.
+```
+
+## bluetoothHfpClientDisconnect
+
+```
+Boolean bluetoothHfpClientDisconnect( String deviceStr)
+
+Disconnect an HFP Client device.
+```
+
+## bluetoothHfpClientGetConnectedDevices
+
+```
+List<BluetoothDevice> bluetoothHfpClientGetConnectedDevices()
+
+Get all the devices connected through HFP Client.
+```
+
+## bluetoothHfpClientGetConnectionStatus
+
+```
+Integer bluetoothHfpClientGetConnectionStatus( String deviceID)
+
+Get the connection status of a device.
+```
+
+## eventClearBuffer
+
+```
+void eventClearBuffer()
+
+Clears all events from the event buffer.
+```
+
+## eventRegisterForBroadcast
+
+```
+boolean eventRegisterForBroadcast( String category, Boolean enqueue)
+
+Registers a listener for a new broadcast signal
+```
+
+## eventUnregisterForBroadcast
+
+```
+void eventUnregisterForBroadcast(String category)
+
+Stop listening for a broadcast signal
+```
+
+## eventGetBrodcastCategories
+
+```
+Set<String> eventGetBrodcastCategories()
+
+Lists all the broadcast signals we are listening for
+```
+
+## eventPoll
+
+```
+List<Event> eventPoll( Integer number_of_events)
+
+Returns and removes the oldest n events (i.e. location or sensor update, etc.) from the event buffer.
+
+Returns A List of Maps of event properties.
+```
+
+## eventWaitFor
+
+```
+Event eventWaitFor( final String eventName, Integer timeout)
+
+Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.
+
+Returns Map of event properties.
+```
+
+## eventWait
+
+```
+Event eventWait( Integer timeout)
+
+Blocks until an event occurs. The returned event is removed from the buffer.
+
+Returns Map of event properties.
+```
+
+## eventPost
+
+```
+void eventPost( String name, String data, Boolean enqueue)
+
+Post an event to the event queue.
+```
+
+## rpcPostEvent
+
+```
+void rpcPostEvent(String name, String data)
+
+Post an event to the event queue.
+```
+
+## receiveEvent
+
+```
+Event receiveEvent()
+
+Returns and removes the oldest event (i.e. location or sensor update, etc.) from the event buffer.
+
+Returns Map of event properties.
+```
+
+## waitForEvent
+
+```
+Event waitForEvent( final String eventName, Integer timeout)
+
+Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.
+
+Returns Map of event properties.
+```
+
+## startEventDispatcher
+
+```
+int startEventDispatcher( Integer port)
+
+Opens up a socket where you can read for events posted
+```
+
+## stopEventDispatcher
+
+```
+void stopEventDispatcher()
+
+Stops the event server, you can't read in the port anymore
+```
+
+## ttsSpeak
+
+```
+void ttsSpeak(String message)
+
+Speaks the provided message via TTS.
+```
+
+## gattClientConnectGatt
+
+```
+int gattClientConnectGatt( Integer index, String macAddress, Boolean autoConnect, Integer transport )
+
+Create a gatt connection
+```
+
+## gattClientDiscoverServices
+
+```
+boolean gattClientDiscoverServices( Integer index )
+
+Trigger discovering of services on the BluetoothGatt object
+```
+
+## gattClientGetServices
+
+```
+List<BluetoothGattService> gattClientGetServices( Integer index )
+
+Get the services from the BluetoothGatt object
+```
+
+## gattClientAbortReliableWrite
+
+```
+void gattClientAbortReliableWrite( Integer index )
+
+Abort reliable write of a bluetooth gatt
+```
+
+## gattClientBeginReliableWrite
+
+```
+boolean gattClientBeginReliableWrite( Integer index )
+
+Begin reliable write of a bluetooth gatt
+```
+
+## gattClientRequestMtu
+
+```
+boolean gattClientRequestMtu( Integer index, Integer mtu )
+
+true, if the new MTU value has been requested successfully
+```
+
+## gattClientDisconnect
+
+```
+void gattClientDisconnect( Integer index )
+
+Disconnect a bluetooth gatt
+```
+
+## gattClientClose
+
+```
+void gattClientClose( Integer index)
+
+Close a Bluetooth GATT object
+```
+
+## gattExecuteReliableWrite
+
+```
+boolean gattExecuteReliableWrite( Integer index )
+
+Execute reliable write on a bluetooth gatt
+```
+
+## gattClientGetConnectedDevices
+
+```
+List<BluetoothDevice> gattClientGetConnectedDevices( Integer index )
+
+Get a list of Bluetooth Devices connnected to the bluetooth gatt
+```
+
+## gattGetDevice
+
+```
+BluetoothDevice gattGetDevice( Integer index )
+
+Get the remote bluetooth device this GATT client targets to
+```
+
+## gattClientGetDevicesMatchingConnectionStates
+
+```
+List<BluetoothDevice> gattClientGetDevicesMatchingConnectionStates( Integer index, int[] states )
+
+Get the bluetooth devices matching input connection states
+```
+
+## gattClientGetServiceUuidList
+
+```
+ArrayList<String> gattClientGetServiceUuidList( Integer index )
+
+Get the service from an input UUID
+```
+
+## gattClientReadCharacteristic
+
+```
+boolean gattClientReadCharacteristic( Integer gattIndex, Integer discoveredServiceListIndex, Integer serviceIndex, String characteristicUuid)
+
+Reads the requested characteristic from the associated remote device.
+```
+
+## gattClientReadDescriptor
+
+```
+boolean gattClientReadDescriptor( Integer gattIndex, Integer discoveredServiceListIndex, Integer serviceIndex, String characteristicUuid, String descriptorUuid)
+
+Reads the value for a given descriptor from the associated remote device
+```
+
+## gattClientWriteDescriptor
+
+```
+boolean gattClientWriteDescriptor( Integer gattIndex, Integer discoveredServiceListIndex, Integer serviceIndex, String characteristicUuid, String descriptorUuid)
+
+Write the value of a given descriptor to the associated remote device
+```
+
+## gattClientDescriptorSetValue
+
+```
+boolean gattClientDescriptorSetValue( Integer gattIndex, Integer discoveredServiceListIndex, Integer serviceIndex, String characteristicUuid, String descriptorUuid, String value)
+
+Write the value of a given descriptor to the associated remote device
+```
+
+## gattClientWriteCharacteristic
+
+```
+boolean gattClientWriteCharacteristic( Integer gattIndex, Integer discoveredServiceListIndex, Integer serviceIndex, String characteristicUuid)
+
+Write the value of a given characteristic to the associated remote device
+```
+
+## gattClientCharacteristicSetValue
+
+```
+boolean gattClientCharacteristicSetValue( Integer gattIndex, Integer discoveredServiceListIndex, Integer serviceIndex, String characteristicUuid, String value)
+
+Write the value of a given characteristic to the associated remote device
+```
+
+## gattClientCharacteristicSetWriteType
+
+```
+boolean gattClientCharacteristicSetWriteType( Integer gattIndex, Integer discoveredServiceListIndex, Integer serviceIndex, String characteristicUuid, Integer writeType)
+
+Set write type of a given characteristic to the associated remote device
+```
+
+## gattClientReadRSSI
+
+```
+boolean gattClientReadRSSI( Integer index )
+
+Read the RSSI for a connected remote device
+```
+
+## gattClientRefresh
+
+```
+boolean gattClientRefresh( Integer index )
+
+Clears the internal cache and forces a refresh of the services from the remote device
+```
+
+## gattClientRequestConnectionPriority
+
+```
+boolean gattClientRequestConnectionPriority( Integer index, Integer connectionPriority )
+
+Request a connection parameter update. from the Bluetooth Gatt
+```
+
+## gattClientSetCharacteristicNotification
+
+```
+boolean gattClientSetCharacteristicNotification( Integer gattIndex, Integer discoveredServiceListIndex, Integer serviceIndex, String characteristicUuid, Boolean enable )
+
+Sets the characteristic notification of a bluetooth gatt
+```
+
+## gattCreateGattCallback
+
+```
+Integer gattCreateGattCallback()
+
+Create a new GattCallback object
+```
+
+## gattClientGetDiscoveredServicesCount
+
+```
+int gattClientGetDiscoveredServicesCount( Integer index )
+
+Get Bluetooth Gatt Services
+```
+
+## gattClientGetDiscoveredServiceUuid
+
+```
+String gattClientGetDiscoveredServiceUuid( Integer index, Integer serviceIndex )
+
+Get Bluetooth Gatt Service Uuid
+```
+
+## gattClientGetDiscoveredCharacteristicUuids
+
+```
+ArrayList<String> gattClientGetDiscoveredCharacteristicUuids( Integer index, Integer serviceIndex )
+
+Get Bluetooth Gatt Services
+```
+
+## gattClientGetDiscoveredDescriptorUuids
+
+```
+ArrayList<String> gattClientGetDiscoveredDescriptorUuids ( Integer index, Integer serviceIndex, String characteristicUuid )
+
+Get Bluetooth Gatt Services
+```
+
+## setScreenTimeout
+
+```
+Integer setScreenTimeout(Integer value)
+
+Sets the screen timeout to this number of seconds.
+
+Returns The original screen timeout.
+```
+
+## getScreenTimeout
+
+```
+Integer getScreenTimeout()
+
+Returns the current screen timeout in seconds.
+
+Returns the current screen timeout in seconds.
+```
+
+## checkAirplaneMode
+
+```
+Boolean checkAirplaneMode()
+
+Checks the airplane mode setting.
+
+Returns True if airplane mode is enabled.
+```
+
+## toggleAirplaneMode
+
+```
+Boolean toggleAirplaneMode(Boolean enabled)
+
+Toggles airplane mode on and off.
+
+Returns True if airplane mode is enabled.
+```
+
+## checkRingerSilentMode
+
+```
+Boolean checkRingerSilentMode()
+
+Checks the ringer silent mode setting.
+
+Returns True if ringer silent mode is enabled.
+```
+
+## toggleRingerSilentMode
+
+```
+Boolean toggleRingerSilentMode(Boolean enabled)
+
+Toggles ringer silent mode on and off.
+
+Returns True if ringer silent mode is enabled.
+```
+
+## toggleVibrateMode
+
+```
+Boolean toggleVibrateMode(Boolean enabled, Boolean ringer)
+
+Toggles vibrate mode on and off. If ringer=true then set Ringer setting, else set Notification setting
+
+Returns True if vibrate mode is enabled.
+```
+
+## getVibrateMode
+
+```
+Boolean getVibrateMode(Boolean ringer)
+
+Checks Vibration setting. If ringer=true then query Ringer setting, else query Notification setting
+
+Returns True if vibrate mode is enabled.
+```
+
+## getMaxRingerVolume
+
+```
+int getMaxRingerVolume()
+
+Returns the maximum ringer volume.
+```
+
+## getRingerVolume
+
+```
+int getRingerVolume()
+
+Returns the current ringer volume.
+```
+
+## setRingerVolume
+
+```
+void setRingerVolume(Integer volume)
+
+Sets the ringer volume.
+```
+
+## getMaxMediaVolume
+
+```
+int getMaxMediaVolume()
+
+Returns the maximum media volume.
+```
+
+## getMediaVolume
+
+```
+int getMediaVolume()
+
+Returns the current media volume.
+```
+
+## setMediaVolume
+
+```
+void setMediaVolume(Integer volume)
+
+Sets the media volume.
+```
+
+## getScreenBrightness
+
+```
+Integer getScreenBrightness()
+
+Returns the screen backlight brightness.
+
+Returns the current screen brightness between 0 and 255
+```
+
+## setScreenBrightness
+
+```
+Integer setScreenBrightness( Integer value)
+
+Sets the the screen backlight brightness.
+
+Returns the original screen brightness.
+```
+
+## checkScreenOn
+
+```
+Boolean checkScreenOn()
+
+Checks if the screen is on or off (requires API level 7).
+
+Returns True if the screen is currently on.
+```
+
+## wakeLockAcquireFull
+
+```
+void wakeLockAcquireFull()
+
+Acquires a full wake lock (CPU on, screen bright, keyboard bright).
+```
+
+## wakeLockAcquirePartial
+
+```
+void wakeLockAcquirePartial()
+
+Acquires a partial wake lock (CPU on).
+```
+
+## wakeLockAcquireBright
+
+```
+void wakeLockAcquireBright()
+
+Acquires a bright wake lock (CPU on, screen bright).
+```
+
+## wakeLockAcquireDim
+
+```
+void wakeLockAcquireDim()
+
+Acquires a dim wake lock (CPU on, screen dim).
+```
+
+## wakeLockRelease
+
+```
+void wakeLockRelease()
+
+Releases the wake lock.
+```
+
+## setResultBoolean
+
+```
+void setResultBoolean( Integer resultCode, Boolean resultValue)
+
+sRpcDescription
+```
+
+## setResultByte
+
+```
+void setResultByte( Integer resultCode, Byte resultValue)
+
+sRpcDescription
+```
+
+## setResultShort
+
+```
+void setResultShort( Integer resultCode, Short resultValue)
+
+sRpcDescription
+```
+
+## setResultChar
+
+```
+void setResultChar( Integer resultCode, Character resultValue)
+
+sRpcDescription
+```
+
+## setResultInteger
+
+```
+void setResultInteger( Integer resultCode, Integer resultValue)
+
+sRpcDescription
+```
+
+## setResultLong
+
+```
+void setResultLong( Integer resultCode, Long resultValue)
+
+sRpcDescription
+```
+
+## setResultFloat
+
+```
+void setResultFloat( Integer resultCode, Float resultValue)
+
+sRpcDescription
+```
+
+## setResultDouble
+
+```
+void setResultDouble( Integer resultCode, Double resultValue)
+
+sRpcDescription
+```
+
+## setResultString
+
+```
+void setResultString( Integer resultCode, String resultValue)
+
+sRpcDescription
+```
+
+## setResultBooleanArray
+
+```
+void setResultBooleanArray( Integer resultCode, Boolean[] resultValue)
+
+sRpcDescription
+```
+
+## setResultByteArray
+
+```
+void setResultByteArray( Integer resultCode, Byte[] resultValue)
+
+sRpcDescription
+```
+
+## setResultShortArray
+
+```
+void setResultShortArray( Integer resultCode, Short[] resultValue)
+
+sRpcDescription
+```
+
+## setResultCharArray
+
+```
+void setResultCharArray( Integer resultCode, Character[] resultValue)
+
+sRpcDescription
+```
+
+## setResultIntegerArray
+
+```
+void setResultIntegerArray( Integer resultCode, Integer[] resultValue)
+
+sRpcDescription
+```
+
+## setResultLongArray
+
+```
+void setResultLongArray( Integer resultCode, Long[] resultValue)
+
+sRpcDescription
+```
+
+## setResultFloatArray
+
+```
+void setResultFloatArray( Integer resultCode, Float[] resultValue)
+
+sRpcDescription
+```
+
+## setResultDoubleArray
+
+```
+void setResultDoubleArray( Integer resultCode, Double[] resultValue)
+
+sRpcDescription
+```
+
+## setResultStringArray
+
+```
+void setResultStringArray( Integer resultCode, String[] resultValue)
+
+sRpcDescription
+```
+
+## setResultSerializable
+
+```
+void setResultSerializable( Integer resultCode, Serializable resultValue)
+
+sRpcDescription
+```
+
+## usbserialGetDeviceList
+
+```
+Map<String, String> usbserialGetDeviceList()
+
+Returns USB devices reported by USB Host API.
+
+Returns "Map of id and string information '
+```
+
+## usbserialDisconnect
+
+```
+void usbserialDisconnect( String connID )
+
+Disconnect all USB-device.
+```
+
+## usbserialActiveConnections
+
+```
+Map<String, String> usbserialActiveConnections()
+
+Returns active USB-device connections.
+
+Returns "Active USB-device connections by Map UUID vs device-name." 
+```
+
+## usbserialWriteBinary
+
+```
+void usbserialWriteBinary( String base64, String connID)
+
+Send bytes over the currently open USB Serial connection.
+```
+
+## usbserialReadBinary
+
+```
+String usbserialReadBinary( Integer bufferSize, String connID)
+
+Read up to bufferSize bytes and return a chunked, base64 encoded string.
+```
+
+## usbserialConnect
+
+```
+String usbserialConnect( String hash, String options)
+
+Connect to a device with USB-Host. request the connection and exit.
+
+Returns messages the request status.
+```
+
+## usbserialHostEnable
+
+```
+Boolean usbserialHostEnable()
+
+Requests that the host be enable for USB Serial connections.
+
+Returns "True if the USB Device is accesible
+```
+
+## usbserialWrite
+
+```
+void usbserialWrite(String ascii, String connID)
+
+Sends ASCII characters over the currently open USB Serial connection.
+```
+
+## usbserialReadReady
+
+```
+Boolean usbserialReadReady( String connID)
+
+Returns True if the next read is guaranteed not to block.
+```
+
+## usbserialRead
+
+```
+String usbserialRead( String connID, Integer bufferSize)
+
+Read up to bufferSize ASCII characters.
+```
+
+## usbserialGetDeviceName
+
+```
+String usbserialGetDeviceName( String connID)
+
+Queries a remote device for it's name or null if it can't be resolved
+```
+
+## prefGetValue
+
+```
+Object prefGetValue( String key, String filename)
+
+Read a value from shared preferences
+```
+
+## prefPutValue
+
+```
+void prefPutValue( String key, Object value, String filename)
+
+Write a value to shared preferences
+```
+
+## prefGetAll
+
+```
+Map<String, ?> prefGetAll( String filename)
+
+Get list of Shared Preference Values
+
+Returns Map of key,value
+```
+
+## recognizeSpeech
+
+```
+String recognizeSpeech( final String prompt, final String language, final String languageModel)
+
+Recognizes user's speech and returns the most likely result.
+
+Returns An empty string in case the speech cannot be recongnized.
+```
+
+## generateDtmfTones
+
+```
+void generateDtmfTones( String phoneNumber, Integer toneDuration)
+
+Generate DTMF tones for the given phone number.
+```
+
+## bluetoothHspIsReady
+
+```
+Boolean bluetoothHspIsReady()
+
+Is Hsp profile ready.
+```
+
+## bluetoothHspSetPriority
+
+```
+void bluetoothHspSetPriority( String deviceStr, Integer priority)
+
+Set priority of the profile
+```
+
+## bluetoothHspConnect
+
+```
+Boolean bluetoothHspConnect( String device)
+
+Connect to an HSP device.
+```
+
+## bluetoothHspDisconnect
+
+```
+Boolean bluetoothHspDisconnect( String device)
+
+Disconnect an HSP device.
+```
+
+## bluetoothHspGetConnectedDevices
+
+```
+List<BluetoothDevice> bluetoothHspGetConnectedDevices()
+
+Get all the devices connected through HSP.
+```
+
+## bluetoothHspGetConnectionStatus
+
+```
+Integer bluetoothHspGetConnectionStatus( String deviceID)
+
+Get the connection status of a device.
+```
+
+## bluetoothHidIsReady
+
+```
+Boolean bluetoothHidIsReady()
+
+Is Hid profile ready.
+```
+
+## bluetoothHidConnect
+
+```
+Boolean bluetoothHidConnect( String device)
+
+Connect to an HID device.
+```
+
+## bluetoothHidDisconnect
+
+```
+Boolean bluetoothHidDisconnect( String device)
+
+Disconnect an HID device.
+```
+
+## bluetoothHidGetConnectedDevices
+
+```
+List<BluetoothDevice> bluetoothHidGetConnectedDevices()
+
+Get all the devices connected through HID.
+```
+
+## bluetoothHidGetConnectionStatus
+
+```
+Integer bluetoothHidGetConnectionStatus( String deviceID)
+
+Get the connection status of a device.
+```
+
+## bluetoothHidSetReport
+
+```
+Boolean bluetoothHidSetReport( String deviceID, String type, String report)
+
+Send Set_Report command to the connected HID input device.
+```
+
+## bluetoothHidGetReport
+
+```
+Boolean bluetoothHidGetReport( String deviceID, String type, String reportId, Integer buffSize)
+
+Send Get_Report command to the connected HID input device.
+```
+
+## bluetoothHidSendData
+
+```
+Boolean bluetoothHidSendData( String deviceID, String report)
+
+Send data to a connected HID device.
+```
+
+## bluetoothHidVirtualUnplug
+
+```
+Boolean bluetoothHidVirtualUnplug( String deviceID)
+
+Send virtual unplug to a connected HID device.
+```
+
+## testByte
+
+```
+byte[] testByte()
+
+Test byte transfer.
+```
+
+## bluetoothA2dpIsReady
+
+```
+Boolean bluetoothA2dpIsReady()
+
+Is A2dp profile ready.
+```
+
+## bluetoothA2dpSetPriority
+
+```
+void bluetoothA2dpSetPriority( String deviceStr, Integer priority)
+
+Set priority of the profile
+```
+
+## bluetoothA2dpConnect
+
+```
+Boolean bluetoothA2dpConnect( String deviceID)
+
+Connect to an A2DP device.
+```
+
+## bluetoothA2dpDisconnect
+
+```
+Boolean bluetoothA2dpDisconnect( String deviceID)
+
+Disconnect an A2DP device.
+```
+
+## bluetoothA2dpGetConnectedDevices
+
+```
+List<BluetoothDevice> bluetoothA2dpGetConnectedDevices()
+
+Get all the devices connected through A2DP.
+```
+
+## startTrackingSignalStrengths
+
+```
+void startTrackingSignalStrengths()
+
+Starts tracking signal strengths.
+```
+
+## readSignalStrengths
+
+```
+Bundle readSignalStrengths()
+
+Returns the current signal strengths.
+
+Returns A map of \"gsm_signal_strength\"
+```
+
+## stopTrackingSignalStrengths
+
+```
+void stopTrackingSignalStrengths()
+
+Stops tracking signal strength.
+```
+
+## bluetoothActiveConnections
+
+```
+Map<String, String> bluetoothActiveConnections()
+
+Returns active Bluetooth connections.
+```
+
+## bluetoothWriteBinary
+
+```
+void bluetoothWriteBinary( String base64, String connID)
+
+Send bytes over the currently open Bluetooth connection.
+```
+
+## bluetoothReadBinary
+
+```
+String bluetoothReadBinary( Integer bufferSize, String connID)
+
+Read up to bufferSize bytes and return a chunked, base64 encoded string.
+```
+
+## bluetoothConnect
+
+```
+String bluetoothConnect( String uuid, String address)
+
+Connect to a device over Bluetooth. Blocks until the connection is established or fails.
+
+Returns True if the connection was established successfully.
+```
+
+## bluetoothAccept
+
+```
+String bluetoothAccept( String uuid, Integer timeout)
+
+Listens for and accepts a Bluetooth connection. Blocks until the connection is established or fails.
+```
+
+## bluetoothMakeDiscoverable
+
+```
+void bluetoothMakeDiscoverable( Integer duration)
+
+Requests that the device be discoverable for Bluetooth connections.
+```
+
+## bluetoothWrite
+
+```
+void bluetoothWrite(String ascii, String connID)
+
+Sends ASCII characters over the currently open Bluetooth connection.
+```
+
+## bluetoothReadReady
+
+```
+Boolean bluetoothReadReady( String connID)
+
+Returns True if the next read is guaranteed not to block.
+```
+
+## bluetoothRead
+
+```
+String bluetoothRead( Integer bufferSize, String connID)
+
+Read up to bufferSize ASCII characters.
+```
+
+## bluetoothReadLine
+
+```
+String bluetoothReadLine( String connID)
+
+Read the next line.
+```
+
+## bluetoothGetRemoteDeviceName
+
+```
+String bluetoothGetRemoteDeviceName( String address)
+
+Queries a remote device for it's name or null if it can't be resolved
+```
+
+## bluetoothGetLocalName
+
+```
+String bluetoothGetLocalName()
+
+Gets the Bluetooth Visible device name
+```
+
+## bluetoothSetLocalName
+
+```
+boolean bluetoothSetLocalName( String name)
+
+Sets the Bluetooth Visible device name, returns True on success
+```
+
+## bluetoothGetScanMode
+
+```
+int bluetoothGetScanMode()
+
+Gets the scan mode for the local dongle.\r\nReturn values:\r\n\t-1 when Bluetooth is disabled.\r\n\t0 if non discoverable and non connectable.\r\n\r1 connectable non discoverable.\r3 connectable and discoverable.
+```
+
+## bluetoothGetConnectedDeviceName
+
+```
+String bluetoothGetConnectedDeviceName( String connID)
+
+Returns the name of the connected device.
+```
+
+## checkBluetoothState
+
+```
+Boolean checkBluetoothState()
+
+Checks Bluetooth state.
+
+Returns True if Bluetooth is enabled.
+```
+
+## toggleBluetoothState
+
+```
+Boolean toggleBluetoothState( Boolean enabled, Boolean prompt)
+
+Toggle Bluetooth on and off.
+
+Returns True if Bluetooth is enabled.
+```
+
+## bluetoothStop
+
+```
+void bluetoothStop( String connID)
+
+Stops Bluetooth connection.
+```
+
+## bluetoothGetLocalAddress
+
+```
+String bluetoothGetLocalAddress()
+
+Returns the hardware address of the local Bluetooth adapter. 
+```
+
+## bluetoothDiscoveryStart
+
+```
+Boolean bluetoothDiscoveryStart()
+
+Start the remote device discovery process. 
+
+Returns true on success, false on error
+```
+
+## bluetoothDiscoveryCancel
+
+```
+Boolean bluetoothDiscoveryCancel()
+
+Cancel the current device discovery process.
+
+Returns true on success, false on error
+```
+
+## bluetoothIsDiscovering
+
+```
+Boolean bluetoothIsDiscovering()
+
+Return true if the local Bluetooth adapter is currently in the device discovery process. 
+```
+
+## bluetoothA2dpSinkSetPriority
+
+```
+void bluetoothA2dpSinkSetPriority( String deviceStr, Integer priority)
+
+Set priority of the profile
+```
+
+## bluetoothA2dpSinkGetPriority
+
+```
+Integer bluetoothA2dpSinkGetPriority( String deviceStr)
+
+get priority of the profile
+```
+
+## bluetoothA2dpSinkIsReady
+
+```
+Boolean bluetoothA2dpSinkIsReady()
+
+Is A2dpSink profile ready.
+```
+
+## bluetoothA2dpSinkConnect
+
+```
+Boolean bluetoothA2dpSinkConnect( String deviceStr)
+
+Connect to an A2DP Sink device.
+```
+
+## bluetoothA2dpSinkDisconnect
+
+```
+Boolean bluetoothA2dpSinkDisconnect( String deviceStr)
+
+Disconnect an A2DP Sink device.
+```
+
+## bluetoothA2dpSinkGetConnectedDevices
+
+```
+List<BluetoothDevice> bluetoothA2dpSinkGetConnectedDevices()
+
+Get all the devices connected through A2DP Sink.
+```
+
+## bluetoothA2dpSinkGetConnectionStatus
+
+```
+Integer bluetoothA2dpSinkGetConnectionStatus( String deviceID)
+
+Get the connection status of a device.
 ```
 
 ## locationProviders
@@ -1748,6 +3938,308 @@ List<Address> geocode( Double latitude, Double longitude, Integer maxResults)
 Returns a list of addresses for the given latitude and longitude.
 
 Returns A list of addresses.
+```
+
+## bluetoothMakeConnectable
+
+```
+void bluetoothMakeConnectable()
+
+Requests that the device be made connectable.
+```
+
+## bluetoothActiveConnections
+
+```
+Map<String, String> bluetoothActiveConnections()
+
+Returns active Bluetooth connections.
+```
+
+## bluetoothWriteBinary
+
+```
+void bluetoothWriteBinary( String base64, String connID)
+
+Send bytes over the currently open Bluetooth connection.
+```
+
+## bluetoothReadBinary
+
+```
+String bluetoothReadBinary( Integer bufferSize, String connID)
+
+Read up to bufferSize bytes and return a chunked, base64 encoded string.
+```
+
+## bluetoothConnect
+
+```
+String bluetoothConnect( String uuid, String address)
+
+Connect to a device over Bluetooth. Blocks until the connection is established or fails.
+
+Returns True if the connection was established successfully.
+```
+
+## bluetoothAccept
+
+```
+String bluetoothAccept( String uuid, Integer timeout)
+
+Listens for and accepts a Bluetooth connection. Blocks until the connection is established or fails.
+```
+
+## bluetoothMakeDiscoverable
+
+```
+void bluetoothMakeDiscoverable( Integer duration)
+
+Requests that the device be discoverable for Bluetooth connections.
+```
+
+## bluetoothWrite
+
+```
+void bluetoothWrite(String ascii, String connID)
+
+Sends ASCII characters over the currently open Bluetooth connection.
+```
+
+## bluetoothReadReady
+
+```
+Boolean bluetoothReadReady( String connID)
+
+Returns True if the next read is guaranteed not to block.
+```
+
+## bluetoothRead
+
+```
+String bluetoothRead( Integer bufferSize, String connID)
+
+Read up to bufferSize ASCII characters.
+```
+
+## bluetoothReadLine
+
+```
+String bluetoothReadLine( String connID)
+
+Read the next line.
+```
+
+## bluetoothMakeUndiscoverable
+
+```
+void bluetoothMakeUndiscoverable()
+
+Requests that the device be not discoverable.
+```
+
+## bluetoothGetRemoteDeviceName
+
+```
+String bluetoothGetRemoteDeviceName( String address)
+
+Queries a remote device for it's name or null if it can't be resolved
+```
+
+## bluetoothGetLocalName
+
+```
+String bluetoothGetLocalName()
+
+Get local Bluetooth device name
+```
+
+## bluetoothSetLocalName
+
+```
+boolean bluetoothSetLocalName( String name)
+
+Sets the Bluetooth visible device name
+
+Returns true on success
+```
+
+## bluetoothGetScanMode
+
+```
+int bluetoothGetScanMode()
+
+Gets the scan mode for the local dongle.\r\nReturn values:\r\n\t-1 when Bluetooth is disabled.\r\n\t0 if non discoverable and non connectable.\r\n\r1 connectable non discoverable.\r3 connectable and discoverable.
+```
+
+## bluetoothGetConnectedDeviceName
+
+```
+String bluetoothGetConnectedDeviceName( String connID)
+
+Returns the name of the connected device.
+```
+
+## checkBluetoothState
+
+```
+Boolean checkBluetoothState()
+
+Checks Bluetooth state.
+
+Returns True if Bluetooth is enabled.
+```
+
+## bluetoothFactoryReset
+
+```
+boolean bluetoothFactoryReset()
+
+Factory reset bluetooth settings.
+
+Returns True if successful.
+```
+
+## toggleBluetoothState
+
+```
+Boolean toggleBluetoothState( Boolean enabled, Boolean prompt)
+
+Toggle Bluetooth on and off.
+
+Returns True if Bluetooth is enabled.
+```
+
+## bluetoothStop
+
+```
+void bluetoothStop( String connID)
+
+Stops Bluetooth connection.
+```
+
+## bluetoothGetLocalAddress
+
+```
+String bluetoothGetLocalAddress()
+
+Returns the hardware address of the local Bluetooth adapter. 
+```
+
+## bluetoothDiscoveryStart
+
+```
+Boolean bluetoothDiscoveryStart()
+
+Start the remote device discovery process. 
+
+Returns true on success, false on error
+```
+
+## bluetoothDiscoveryCancel
+
+```
+Boolean bluetoothDiscoveryCancel()
+
+Cancel the current device discovery process.
+
+Returns true on success, false on error
+```
+
+## bluetoothIsDiscovering
+
+```
+Boolean bluetoothIsDiscovering()
+
+If the local Bluetooth adapter is currentlyin the device discovery process.
+```
+
+## bluetoothGetDiscoveredDevices
+
+```
+Collection<BluetoothDevice> bluetoothGetDiscoveredDevices()
+
+Get all the discovered bluetooth devices.
+```
+
+## bluetoothConfigHciSnoopLog
+
+```
+boolean bluetoothConfigHciSnoopLog( Boolean value )
+
+Enable or disable the Bluetooth HCI snoop log
+```
+
+## bluetoothGetControllerActivityEnergyInfo
+
+```
+String bluetoothGetControllerActivityEnergyInfo( Integer value )
+
+Get Bluetooth controller activity energy info.
+```
+
+## bluetoothIsHardwareTrackingFiltersAvailable
+
+```
+boolean bluetoothIsHardwareTrackingFiltersAvailable()
+
+Return true if hardware has entriesavailable for matching beacons.
+```
+
+## bluetoothGetLeState
+
+```
+int bluetoothGetLeState()
+
+Gets the current state of LE.
+```
+
+## bluetoothEnableBLE
+
+```
+boolean bluetoothEnableBLE()
+
+Enables BLE functionalities.
+```
+
+## bluetoothDisableBLE
+
+```
+boolean bluetoothDisableBLE()
+
+Disables BLE functionalities.
+```
+
+## bluetoothListenForBleStateChange
+
+```
+boolean bluetoothListenForBleStateChange()
+
+Listen for a Bluetooth LE State Change.
+```
+
+## bluetoothStopListeningForBleStateChange
+
+```
+boolean bluetoothStopListeningForBleStateChange()
+
+Stop Listening for a Bluetooth LE State Change.
+```
+
+## bluetoothStartListeningForAdapterStateChange
+
+```
+boolean bluetoothStartListeningForAdapterStateChange()
+
+Listen for Bluetooth State Changes.
+```
+
+## bluetoothStopListeningForAdapterStateChange
+
+```
+boolean bluetoothStopListeningForAdapterStateChange()
+
+Stop Listening for Bluetooth State Changes.
 ```
 
 ## setClipboard
@@ -1934,262 +4426,6 @@ Bundle getConstants( String classname)
 Get list of constants (static final fields) for a class
 ```
 
-## recorderStartMicrophone
-
-```
-void recorderStartMicrophone(String targetPath)
-
-Records audio from the microphone and saves it to the given location.
-```
-
-## recorderStartVideo
-
-```
-void recorderStartVideo(String targetPath, Integer duration, Integer videoSize)
-
-Records video from the camera and saves it to the given location. \nDuration specifies the maximum duration of the recording session. \nIf duration is 0 this method will return and the recording will only be stopped \nwhen recorderStop is called or when a scripts exits. \nOtherwise it will block for the time period equal to the duration argument.\nvideoSize: 0=160x120, 1=320x240, 2=352x288, 3=640x480, 4=800x480.
-```
-
-## recorderCaptureVideo
-
-```
-void recorderCaptureVideo(String targetPath, Integer duration, Boolean recordAudio)
-
-Records video (and optionally audio) from the camera and saves it to the given location. \nDuration specifies the maximum duration of the recording session. \nIf duration is not provided this method will return immediately and the recording will only be stopped \nwhen recorderStop is called or when a scripts exits. \nOtherwise it will block for the time period equal to the duration argument.
-```
-
-## recorderStop
-
-```
-void recorderStop()
-
-Stops a previously started recording.
-```
-
-## startInteractiveVideoRecording
-
-```
-void startInteractiveVideoRecording(final String path)
-
-Starts the video capture application to record a video and saves it to the specified path.
-```
-
-## getLaunchableApplications
-
-```
-Map<String, String> getLaunchableApplications()
-
-Returns a list of all launchable application class names.
-```
-
-## launch
-
-```
-void launch(String className)
-
-Start activity with the given class name.
-```
-
-## getRunningPackages
-
-```
-List<String> getRunningPackages()
-
-Returns a list of packages running activities or services.
-
-Returns List of packages running activities.
-```
-
-## forceStopPackage
-
-```
-void forceStopPackage( String packageName)
-
-Force stops a package.
-```
-
-## cameraCapturePicture
-
-```
-Bundle cameraCapturePicture( final String targetPath, Boolean useAutoFocus, Integer cameraId)
-
-Take a picture and save it to the specified path.
-
-Returns A map of Booleans autoFocus and takePicture where True indicates success. cameraId also included.
-```
-
-## cameraInteractiveCapturePicture
-
-```
-void cameraInteractiveCapturePicture( final String targetPath)
-
-Starts the image capture application to take a picture and saves it to the specified path.
-```
-
-## camerasList
-
-```
-Map<String, String> camerasList()
-
-Get Camera List, Id and parameters.
-
-Returns Map of (cameraId, information).information is comma separated and order is:canDisableShtterSound,facing,orientation.facing: 0=BACK, 1=FACE.orientation: 0,90,180,270=camera image.
-```
-
-## usbserialGetDeviceList
-
-```
-Map<String, String> usbserialGetDeviceList()
-
-Returns USB devices reported by USB Host API.
-
-Returns "Map of id and string information '
-```
-
-## usbserialDisconnect
-
-```
-void usbserialDisconnect( String connID )
-
-Disconnect all USB-device.
-```
-
-## usbserialActiveConnections
-
-```
-Map<String, String> usbserialActiveConnections()
-
-Returns active USB-device connections.
-
-Returns "Active USB-device connections by Map UUID vs device-name." 
-```
-
-## usbserialWriteBinary
-
-```
-void usbserialWriteBinary( String base64, String connID)
-
-Send bytes over the currently open USB Serial connection.
-```
-
-## usbserialReadBinary
-
-```
-String usbserialReadBinary( Integer bufferSize, String connID)
-
-Read up to bufferSize bytes and return a chunked, base64 encoded string.
-```
-
-## usbserialConnect
-
-```
-String usbserialConnect( String hash, String options)
-
-Connect to a device with USB-Host. request the connection and exit.
-
-Returns messages the request status.
-```
-
-## usbserialHostEnable
-
-```
-Boolean usbserialHostEnable()
-
-Requests that the host be enable for USB Serial connections.
-
-Returns "True if the USB Device is accesible
-```
-
-## usbserialWrite
-
-```
-void usbserialWrite(String ascii, String connID)
-
-Sends ASCII characters over the currently open USB Serial connection.
-```
-
-## usbserialReadReady
-
-```
-Boolean usbserialReadReady( String connID)
-
-Returns True if the next read is guaranteed not to block.
-```
-
-## usbserialRead
-
-```
-String usbserialRead( String connID, Integer bufferSize)
-
-Read up to bufferSize ASCII characters.
-```
-
-## usbserialGetDeviceName
-
-```
-String usbserialGetDeviceName( String connID)
-
-Queries a remote device for it's name or null if it can't be resolved
-```
-
-## recognizeSpeech
-
-```
-String recognizeSpeech( final String prompt, final String language, final String languageModel)
-
-Recognizes user's speech and returns the most likely result.
-
-Returns An empty string in case the speech cannot be recongnized.
-```
-
-## wakeLockAcquireFull
-
-```
-void wakeLockAcquireFull()
-
-Acquires a full wake lock (CPU on, screen bright, keyboard bright).
-```
-
-## wakeLockAcquirePartial
-
-```
-void wakeLockAcquirePartial()
-
-Acquires a partial wake lock (CPU on).
-```
-
-## wakeLockAcquireBright
-
-```
-void wakeLockAcquireBright()
-
-Acquires a bright wake lock (CPU on, screen bright).
-```
-
-## wakeLockAcquireDim
-
-```
-void wakeLockAcquireDim()
-
-Acquires a dim wake lock (CPU on, screen dim).
-```
-
-## wakeLockRelease
-
-```
-void wakeLockRelease()
-
-Releases the wake lock.
-```
-
-## ttsSpeak
-
-```
-void ttsSpeak(String message)
-
-Speaks the provided message via TTS.
-```
-
 ## startSensingTimed
 
 ```
@@ -2276,28 +4512,40 @@ void startSensing( Integer sampleSize)
 Starts recording sensor data to be available for polling.
 ```
 
-## ttsSpeak
+## wifiAddNetwork
 
 ```
-void ttsSpeak(String message)
+Integer wifiAddNetwork(JSONObject wifiConfig)
 
-Speaks the provided message via TTS.
+Add a network.
 ```
 
-## ttsIsSpeaking
+## wifiConnect
 
 ```
-Boolean ttsIsSpeaking()
+Boolean wifiConnect(JSONObject config)
 
-Returns True if speech is currently in progress.
+Connects a wifi network by ssid
+
+Returns True if the operation succeeded.
 ```
 
-## setTtsPitch
+## wifiEnableNetwork
 
 ```
-void setTtsPitch(String pitch)
+Boolean wifiEnableNetwork(Integer netId, Boolean disableOthers)
 
-Changes the pitch of TTS speech.
+Enable a configured network. Initiate a connection if disableOthers is true
+
+Returns True if the operation succeeded.
+```
+
+## wifiEnterpriseConnect
+
+```
+void wifiEnterpriseConnect(JSONObject config)
+
+Connect to a wifi network that uses Enterprise authentication methods.
 ```
 
 ## wifiGetScanResults
@@ -2400,275 +4648,297 @@ Reconnects to the currently active access point.
 Returns True if the operation succeeded.
 ```
 
-## eventClearBuffer
+## mediaPlay
 
 ```
-void eventClearBuffer()
+boolean mediaPlay( String url, String tag, Boolean play)
 
-Clears all events from the event buffer.
+Open a media file
+
+Returns true if play successful
 ```
 
-## eventRegisterForBroadcast
+## mediaPlayPause
 
 ```
-boolean eventRegisterForBroadcast( String category, Boolean enqueue)
+boolean mediaPlayPause( String tag)
 
-Registers a listener for a new broadcast signal
+pause playing media file
+
+Returns true if successful
 ```
 
-## eventUnregisterForBroadcast
+## mediaPlayStart
 
 ```
-void eventUnregisterForBroadcast(String category)
+boolean mediaPlayStart( String tag)
 
-Stop listening for a broadcast signal
+start playing media file
+
+Returns true if successful
 ```
 
-## eventGetBrodcastCategories
+## mediaPlayClose
 
 ```
-Set<String> eventGetBrodcastCategories()
+boolean mediaPlayClose( String tag)
 
-Lists all the broadcast signals we are listening for
+Close media file
+
+Returns true if successful
 ```
 
-## eventPoll
+## mediaIsPlaying
 
 ```
-List<Event> eventPoll( Integer number_of_events)
+boolean mediaIsPlaying( String tag)
 
-Returns and removes the oldest n events (i.e. location or sensor update, etc.) from the event buffer.
+Checks if media file is playing.
 
-Returns A List of Maps of event properties.
+Returns true if playing
 ```
 
-## eventWaitFor
+## mediaPlayInfo
 
 ```
-Event eventWaitFor( final String eventName, Integer timeout)
+Map<String, Object> mediaPlayInfo( String tag)
 
-Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.
+Information on current media
 
-Returns Map of event properties.
+Returns Media Information
 ```
 
-## eventWait
+## mediaPlayList
 
 ```
-Event eventWait( Integer timeout)
+Set<String> mediaPlayList()
 
-Blocks until an event occurs. The returned event is removed from the buffer.
+Lists currently loaded media
 
-Returns Map of event properties.
+Returns List of Media Tags
 ```
 
-## eventPost
+## mediaPlaySetLooping
 
 ```
-void eventPost( String name, String data, Boolean enqueue)
+boolean mediaPlaySetLooping( Boolean enabled, String tag)
 
-Post an event to the event queue.
+Set Looping
+
+Returns True if successful
 ```
 
-## rpcPostEvent
+## mediaPlaySeek
 
 ```
-void rpcPostEvent(String name, String data)
+int mediaPlaySeek( Integer msec, String tag)
 
-Post an event to the event queue.
+Seek To Position
+
+Returns New Position (in ms)
 ```
 
-## receiveEvent
+## contactsDisplayContactPickList
 
 ```
-Event receiveEvent()
+Intent contactsDisplayContactPickList()
 
-Returns and removes the oldest event (i.e. location or sensor update, etc.) from the event buffer.
+Displays a list of contacts to pick from.
 
-Returns Map of event properties.
+Returns "A map of result values." 
 ```
 
-## waitForEvent
+## contactsDisplayPhonePickList
 
 ```
-Event waitForEvent( final String eventName, Integer timeout)
+String contactsDisplayPhonePickList()
 
-Blocks until an event with the supplied name occurs. The returned event is not removed from the buffer.
+Displays a list of phone numbers to pick from.
 
-Returns Map of event properties.
+Returns "The selected phone number." 
 ```
 
-## startEventDispatcher
+## contactsGetAttributes
 
 ```
-int startEventDispatcher( Integer port)
+List<String> contactsGetAttributes()
 
-Opens up a socket where you can read for events posted
+Returns a List of all possible attributes for contacts.
 ```
 
-## stopEventDispatcher
+## contactsGetContactIds
 
 ```
-void stopEventDispatcher()
+List<Integer> contactsGetContactIds()
 
-Stops the event server, you can't read in the port anymore
+Returns a List of all contact IDs.
 ```
 
-## setScreenTimeout
+## contactsGetAllContacts
 
 ```
-Integer setScreenTimeout(Integer value)
+List<JSONObject> contactsGetAllContacts( JSONArray attributes)
 
-Sets the screen timeout to this number of seconds.
+Returns a List of all contacts.
 
-Returns The original screen timeout.
+Returns a List of contacts as Maps
 ```
 
-## getScreenTimeout
+## contactsGetContactById
 
 ```
-Integer getScreenTimeout()
+JSONObject contactsGetContactById( Integer id, JSONArray attributes)
 
-Returns the current screen timeout in seconds.
-
-Returns the current screen timeout in seconds.
+Returns contacts by ID.
 ```
 
-## checkAirplaneMode
+## contactsGetCount
 
 ```
-Boolean checkAirplaneMode()
+Integer contactsGetCount()
 
-Checks the airplane mode setting.
-
-Returns True if airplane mode is enabled.
+Returns the number of contacts.
 ```
 
-## toggleAirplaneMode
+## contactsEraseAll
 
 ```
-Boolean toggleAirplaneMode(Boolean enabled)
+void contactsEraseAll()
 
-Toggles airplane mode on and off.
-
-Returns True if airplane mode is enabled.
+Erase all contacts in phone book.
 ```
 
-## checkRingerSilentMode
+## contactsQueryContent
 
 ```
-Boolean checkRingerSilentMode()
+List<JSONObject> contactsQueryContent( String uri, JSONArray attributes, String selection, JSONArray selectionArgs, String order)
 
-Checks the ringer silent mode setting.
+Content Resolver Query
 
-Returns True if ringer silent mode is enabled.
+Returns result of query as Maps
 ```
 
-## toggleRingerSilentMode
+## queryAttributes
 
 ```
-Boolean toggleRingerSilentMode(Boolean enabled)
+JSONArray queryAttributes( String uri)
 
-Toggles ringer silent mode on and off.
+Content Resolver Query Attributes
 
-Returns True if ringer silent mode is enabled.
+Returns "a list of available columns for a given content uri" 
 ```
 
-## toggleVibrateMode
+## importVcf
 
 ```
-Boolean toggleVibrateMode(Boolean enabled, Boolean ringer)
+void importVcf( String uri)
 
-Toggles vibrate mode on and off. If ringer=true then set Ringer setting, else set Notification setting
-
-Returns True if vibrate mode is enabled.
+Launches VCF import.
 ```
 
-## getVibrateMode
+## exportVcf
 
 ```
-Boolean getVibrateMode(Boolean ringer)
+void exportVcf( String path)
 
-Checks Vibration setting. If ringer=true then query Ringer setting, else query Notification setting
-
-Returns True if vibrate mode is enabled.
+Launches VCF export.
 ```
 
-## getMaxRingerVolume
+## ttsSpeak
 
 ```
-int getMaxRingerVolume()
+void ttsSpeak(String message)
 
-Returns the maximum ringer volume.
+Speaks the provided message via TTS.
 ```
 
-## getRingerVolume
+## ttsIsSpeaking
 
 ```
-int getRingerVolume()
+Boolean ttsIsSpeaking()
 
-Returns the current ringer volume.
+Returns True if speech is currently in progress.
 ```
 
-## setRingerVolume
+## setTtsPitch
 
 ```
-void setRingerVolume(Integer volume)
+void setTtsPitch(String pitch)
 
-Sets the ringer volume.
+Changes the pitch of TTS speech.
 ```
 
-## getMaxMediaVolume
+## bluetoothPanSetBluetoothTethering
 
 ```
-int getMaxMediaVolume()
+void bluetoothPanSetBluetoothTethering( Boolean enable)
 
-Returns the maximum media volume.
+Set Bluetooth Tethering
 ```
 
-## getMediaVolume
+## bluetoothPanIsReady
 
 ```
-int getMediaVolume()
+Boolean bluetoothPanIsReady()
 
-Returns the current media volume.
+Is Pan profile ready.
 ```
 
-## setMediaVolume
+## bluetoothPanGetConnectedDevices
 
 ```
-void setMediaVolume(Integer volume)
+List<BluetoothDevice> bluetoothPanGetConnectedDevices()
 
-Sets the media volume.
+Get all the devices connected through PAN
 ```
 
-## getScreenBrightness
+## bluetoothPanIsTetheringOn
 
 ```
-Integer getScreenBrightness()
+Boolean bluetoothPanIsTetheringOn()
 
-Returns the screen backlight brightness.
-
-Returns the current screen brightness between 0 and 255
+Is tethering on.
 ```
 
-## setScreenBrightness
+## webcamStart
 
 ```
-Integer setScreenBrightness( Integer value)
+InetSocketAddress webcamStart( Integer resolutionLevel, Integer jpegQuality, Integer port)
 
-Sets the the screen backlight brightness.
-
-Returns the original screen brightness.
+Starts an MJPEG stream and returns a Tuple of address and port for the stream.
 ```
 
-## checkScreenOn
+## webcamAdjustQuality
 
 ```
-Boolean checkScreenOn()
+void webcamAdjustQuality( Integer resolutionLevel, Integer jpegQuality)
 
-Checks if the screen is on or off (requires API level 7).
+Adjusts the quality of the webcam stream while it is running.
+```
 
-Returns True if the screen is currently on.
+## webcamStop
+
+```
+void webcamStop()
+
+Stops the webcam stream.
+```
+
+## cameraStartPreview
+
+```
+boolean cameraStartPreview( Integer resolutionLevel, Integer jpegQuality, String filepath)
+
+Start Preview Mode. Throws 'preview' events.
+
+Returns True if successful
+```
+
+## cameraStopPreview
+
+```
+void cameraStopPreview()
+
+Stop the preview mode.
 ```
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright (C) 2017 shimoda
+#  zip output, Copyright (C) 2017 shimoda
 #  Copyright (C) 2016 Google, Inc.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import sys
 import collections
 import itertools
 import os
@@ -184,7 +185,13 @@ class DocGenerator(object):
         self._current_rpc = None
         self._current_function = None
 
-    def WriteOutput(self, filename):
+    def dictvalues(self):
+        if sys.version_info[0] == 3:
+            return self._functions.values()
+        else:
+            return self._functions.itervalues()
+
+    def git_rev(self):
         git_rev = None
         try:
             git_rev = subprocess.check_output('git rev-parse HEAD',
@@ -196,7 +203,10 @@ class DocGenerator(object):
                                                   shell=True).strip()
             except subprocess.CalledProcessError as e:
                 pass
+        return git_rev
 
+    def WriteOutput(self, filename):
+        git_rev = self.git_rev()
         with open(filename, 'w') as f:
             if git_rev:
                 f.write('Generated at commit `%s`\n\n' % git_rev)
@@ -210,7 +220,7 @@ class DocGenerator(object):
 
             f.write('# Method descriptions\n\n')
             for func in itertools.chain.from_iterable(
-                    self._functions.itervalues()):
+                    self.dictvalues()):
                 f.write('## %s\n\n' % func.function)
                 f.write('```\n')
                 f.write('%s\n\n' % func.signature)
@@ -222,6 +232,68 @@ class DocGenerator(object):
                         f.write('\nReturns %s\n' % func.returns)
                 f.write('```\n\n')
 
+    def writeZip(self, filename):
+        try:
+            import zipfile
+            import markdown
+        except:
+            return 1
+
+        git_rev = self.git_rev()
+
+        zp = zipfile.ZipFile(filename, "w", zipfile.ZIP_DEFLATED)
+
+        title = "SL4A API Help"
+        data = 'Generated at commit `%s`\n\n' % git_rev
+        data += "# %s\n\n" % title
+        for mod in sorted(self._functions.keys()):
+            data += '- [%s](%s.html)\n' % (mod, mod)
+        html = html_convert(title, data)
+        zp.writestr("index.html", html)
+
+        for mod in sorted(self._functions.keys()):
+            data = '# %s\n\n' % mod
+
+            for func in self._functions[mod]:
+                data += '- [%s](#%s)\n' % (
+                    func.function, func.function.lower())
+
+            data += '\n## Method descriptions\n\n'
+            for func in self._functions[mod]:
+                data += '### %s\n\n' % func.function
+                data += '```\n'
+                data += '%s\n```\n\n' % func.signature
+                if func.returns:
+                    if func.returns.lower().startswith('return'):
+                        data += '#### Returns\n%s\n' % func.returns
+                    else:
+                        data += '#### Returns\n%s\n\n' % func.returns
+                    data += "#### Description\n"
+                data += '%s\n\n' % func.description
+
+            html = html_convert("Facade Help: " + mod, data)
+            zp.writestr("%s.html" % mod, html)
+
+        zp.close()
+
+
+def html_convert(title, data):
+    import markdown
+
+    header = '''<html>
+     <head>
+      <title>%s</title>
+     </head>
+     <body>
+    ''' % title
+    footer = '''
+     </body>
+     </html>
+    '''
+    html = markdown.markdown(data, output_format="html5",
+                             extensions=["markdown.extensions.toc"])
+    return header + html + footer
+
 
 # Main
 if __name__ == "__main__":
@@ -229,4 +301,7 @@ if __name__ == "__main__":
         os.path.realpath(__file__)), '..', 'android'))
     g = DocGenerator(basepath)
     g.WriteOutput(os.path.join(basepath, '../docs/ApiReference.md'))
+    g.writeZip(os.path.join(
+        basepath,
+        '../android/ScriptingLayerForAndroid/assets/sl4adoc.zip'))
 # vi: ft=python:et:ts=4:nowrap
