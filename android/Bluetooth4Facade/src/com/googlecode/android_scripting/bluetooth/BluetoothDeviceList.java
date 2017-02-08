@@ -28,7 +28,7 @@ import android.widget.TextView;
 import com.googlecode.android_scripting.bt4facade.R;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.activity.CustomizeWindow;
-import com.googlecode.android_scripting.bluetooth.BluetoothDiscoveryHelper.BluetoothDiscoveryListener;
+import com.googlecode.android_scripting.bluetooth.facade.BluetoothDiscoveryHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,8 @@ public class BluetoothDeviceList extends ListActivity {
     finish();
   };
 
-  private class DeviceListAdapter extends BaseAdapter implements BluetoothDiscoveryListener {
+  private class DeviceListAdapter extends BaseAdapter
+          implements BluetoothDiscoveryHelper.BluetoothDiscoveryListener {
     List<DeviceInfo> mmDeviceList;
 
     public DeviceListAdapter() {

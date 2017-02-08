@@ -77,8 +77,8 @@ public class Bluetooth4Facade extends RpcReceiver {
     private static final Object mReceiverLock = new Object();
     private BluetoothStateReceiver mMultiStateReceiver;
     private final BleStateReceiver mBleStateReceiver;
-    private Map<String, BluetoothConnection> connections =
-            new HashMap<String, BluetoothConnection>();
+    private Map<String, Bluetooth4Connection> connections =
+            new HashMap<String, Bluetooth4Connection>();
   private AndroidFacade mAndroidFacade;
   private BluetoothAdapter mBluetoothAdapter;
 
@@ -223,7 +223,7 @@ public class Bluetooth4Facade extends RpcReceiver {
   @Rpc(description = "Returns active Bluetooth connections.")
   public Map<String, String> bluetoothActiveConnections() {
     Map<String, String> out = new HashMap<String, String>();
-    for (Map.Entry<String, BluetoothConnection> entry : connections.entrySet()) {
+    for (Map.Entry<String, Bluetooth4Connection> entry : connections.entrySet()) {
       if (entry.getValue().isConnected()) {
         out.put(entry.getKey(), entry.getValue().getRemoteBluetoothAddress());
       }
@@ -232,12 +232,12 @@ public class Bluetooth4Facade extends RpcReceiver {
     return out;
   }
 
-  private BluetoothConnection getConnection(String connID) throws IOException {
-    BluetoothConnection conn = null;
+    private Bluetooth4Connection getConnection(String connID) throws IOException {
+        Bluetooth4Connection conn = null;
     if (connID.trim().length() > 0) {
       conn = connections.get(connID);
     } else if (connections.size() == 1) {
-      conn = (BluetoothConnection) connections.values().toArray()[0];
+            conn = (Bluetooth4Connection) connections.values().toArray()[0];
     }
     if (conn == null) {
       throw new IOException("Bluetooth not ready for this connID.");
@@ -250,7 +250,7 @@ public class Bluetooth4Facade extends RpcReceiver {
       @RpcParameter(name = "base64", description = "A base64 encoded String of the bytes to be sent.") String base64,
       @RpcParameter(name = "connID", description = "Connection id") @RpcDefault("") @RpcOptional String connID)
       throws IOException {
-    BluetoothConnection conn = getConnection(connID);
+        Bluetooth4Connection conn = getConnection(connID);
     try {
       conn.write(Base64Codec.decodeBase64(base64));
     } catch (IOException e) {
@@ -264,8 +264,7 @@ public class Bluetooth4Facade extends RpcReceiver {
       @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize,
       @RpcParameter(name = "connID", description = "Connection id") @RpcDefault("") @RpcOptional String connID)
       throws IOException {
-
-    BluetoothConnection conn = getConnection(connID);
+        Bluetooth4Connection conn = getConnection(connID);
     try {
       return Base64Codec.encodeBase64String(conn.readBinary(bufferSize));
     } catch (IOException e) {
@@ -274,7 +273,7 @@ public class Bluetooth4Facade extends RpcReceiver {
     }
   }
 
-  private String addConnection(BluetoothConnection conn) {
+    private String addConnection(Bluetooth4Connection conn) {
     String uuid = UUID.randomUUID().toString();
     connections.put(uuid, conn);
     conn.setUUID(uuid);
@@ -298,13 +297,13 @@ public class Bluetooth4Facade extends RpcReceiver {
     }
     BluetoothDevice mDevice;
     BluetoothSocket mSocket;
-    BluetoothConnection conn;
+        Bluetooth4Connection conn;
     mDevice = mBluetoothAdapter.getRemoteDevice(address);
     mSocket = mDevice.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
     // Always cancel discovery because it will slow down a connection.
     mBluetoothAdapter.cancelDiscovery();
     mSocket.connect();
-    conn = new BluetoothConnection(mSocket);
+        conn = new Bluetooth4Connection(mSocket);
     return addConnection(conn);
   }
 
@@ -317,7 +316,7 @@ public class Bluetooth4Facade extends RpcReceiver {
     mServerSocket =
         mBluetoothAdapter.listenUsingRfcommWithServiceRecord(SDP_NAME, UUID.fromString(uuid));
     BluetoothSocket mSocket = mServerSocket.accept(timeout.intValue());
-    BluetoothConnection conn = new BluetoothConnection(mSocket, mServerSocket);
+        Bluetooth4Connection conn = new Bluetooth4Connection(mSocket, mServerSocket);
     return addConnection(conn);
   }
 
@@ -343,7 +342,7 @@ public class Bluetooth4Facade extends RpcReceiver {
   public void bluetoothWrite(@RpcParameter(name = "ascii") String ascii,
       @RpcParameter(name = "connID", description = "Connection id") @RpcDefault("") String connID)
       throws IOException {
-    BluetoothConnection conn = getConnection(connID);
+        Bluetooth4Connection conn = getConnection(connID);
     try {
       conn.write(ascii);
     } catch (IOException e) {
@@ -356,7 +355,7 @@ public class Bluetooth4Facade extends RpcReceiver {
   public Boolean bluetoothReadReady(
       @RpcParameter(name = "connID", description = "Connection id") @RpcDefault("") @RpcOptional String connID)
       throws IOException {
-    BluetoothConnection conn = getConnection(connID);
+        Bluetooth4Connection conn = getConnection(connID);
     try {
       return conn.readReady();
     } catch (IOException e) {
@@ -370,7 +369,7 @@ public class Bluetooth4Facade extends RpcReceiver {
       @RpcParameter(name = "bufferSize") @RpcDefault("4096") Integer bufferSize,
       @RpcParameter(name = "connID", description = "Connection id") @RpcOptional @RpcDefault("") String connID)
       throws IOException {
-    BluetoothConnection conn = getConnection(connID);
+        Bluetooth4Connection conn = getConnection(connID);
     try {
       return conn.read(bufferSize);
     } catch (IOException e) {
@@ -383,7 +382,7 @@ public class Bluetooth4Facade extends RpcReceiver {
   public String bluetoothReadLine(
       @RpcParameter(name = "connID", description = "Connection id") @RpcOptional @RpcDefault("") String connID)
       throws IOException {
-    BluetoothConnection conn = getConnection(connID);
+        Bluetooth4Connection conn = getConnection(connID);
     try {
       return conn.readLine();
     } catch (IOException e) {
@@ -448,7 +447,7 @@ public class Bluetooth4Facade extends RpcReceiver {
   public String bluetoothGetConnectedDeviceName(
       @RpcParameter(name = "connID", description = "Connection id") @RpcOptional @RpcDefault("") String connID)
       throws IOException {
-    BluetoothConnection conn = getConnection(connID);
+        Bluetooth4Connection conn = getConnection(connID);
     return conn.getConnectedDeviceName();
   }
 
@@ -498,7 +497,7 @@ public class Bluetooth4Facade extends RpcReceiver {
   @Rpc(description = "Stops Bluetooth connection.")
   public void bluetoothStop(
       @RpcParameter(name = "connID", description = "Connection id") @RpcOptional @RpcDefault("") String connID) {
-    BluetoothConnection conn;
+        Bluetooth4Connection conn;
     try {
       conn = getConnection(connID);
     } catch (IOException e) {
@@ -653,7 +652,7 @@ public class Bluetooth4Facade extends RpcReceiver {
 
   @Override
   public void shutdown() {
-    for (Map.Entry<String, BluetoothConnection> entry : connections.entrySet()) {
+    for (Map.Entry<String, Bluetooth4Connection> entry : connections.entrySet()) {
       entry.getValue().stop();
     }
         if (mMultiStateReceiver != null ) bluetoothStopListeningForAdapterStateChange();
@@ -661,7 +660,7 @@ public class Bluetooth4Facade extends RpcReceiver {
   }
 }
 
-class BluetoothConnection {
+class Bluetooth4Connection {
   private BluetoothSocket mSocket;
   private BluetoothDevice mDevice;
   private OutputStream mOutputStream;
@@ -670,11 +669,11 @@ class BluetoothConnection {
   private BluetoothServerSocket mServerSocket;
   private String UUID;
 
-  public BluetoothConnection(BluetoothSocket mSocket) throws IOException {
+    public Bluetooth4Connection(BluetoothSocket mSocket) throws IOException {
     this(mSocket, null);
   }
 
-  public BluetoothConnection(BluetoothSocket mSocket, BluetoothServerSocket mServerSocket)
+    public Bluetooth4Connection(BluetoothSocket mSocket, BluetoothServerSocket mServerSocket)
       throws IOException {
     this.mSocket = mSocket;
     mOutputStream = mSocket.getOutputStream();
