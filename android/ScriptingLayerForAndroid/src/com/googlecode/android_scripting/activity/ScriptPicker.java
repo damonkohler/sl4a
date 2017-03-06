@@ -19,9 +19,13 @@ package com.googlecode.android_scripting.activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
@@ -66,6 +70,27 @@ public class ScriptPicker extends ListActivity {
     mAdapter.registerDataSetObserver(new ScriptListObserver());
     setListAdapter(mAdapter);
     // Analytics.trackActivity(this);
+
+      SharedPreferences prf = PreferenceManager.getDefaultSharedPreferences(
+              this.getApplicationContext());
+      if (!prf.contains("fontsize")) {
+          DisplayMetrics met = new DisplayMetrics();
+          getWindowManager().getDefaultDisplay().getMetrics(met);
+
+          SparseArray<int> fontsizes = new SparseArray<int>() {{
+              append(500, 32); append(450, 24);
+              append(350, 18); append(300, 16);
+              append(200, 14);
+              append(Integer.MIN_VALUE, 10);
+          }};
+          for (int i = 0; i < fontsizes.size(); i++) {
+              int dpi = fontsizes.keyAt(i);
+              if (met.densityDpi < dpi) {continue;}
+              int fs = fontsizes.valueAt(i);
+              prf.edit().putInt("fontsize", fs);
+              break;
+          }
+      }
   }
 
   @Override
