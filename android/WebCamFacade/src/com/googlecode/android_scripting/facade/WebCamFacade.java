@@ -182,18 +182,27 @@ public class WebCamFacade extends RpcReceiver {
   public InetSocketAddress webcamStart(
       @RpcParameter(name = "resolutionLevel", description = "increasing this number provides higher resolution") @RpcDefault("0") Integer resolutionLevel,
       @RpcParameter(name = "jpegQuality", description = "a number from 0-100") @RpcDefault("20") Integer jpegQuality,
-      @RpcParameter(name = "port", description = "If port is specified, the webcam service will bind to port, otherwise it will pick any available port.") @RpcDefault("0") Integer port)
+        @RpcParameter(name = "port", description = "If port is specified, " +
+                "the webcam service will bind to port, " +
+                "otherwise it will pick any available port.")
+                @RpcDefault("0") Integer port,
+        @RpcParameter(name = "ipv", description = "If ipv is specified, " +
+                "4: the webcam service will bind to ipv4" +
+                "6: the webcam service will bind to ipv4" +
+                "64: will try to bind ipv6 then try to ipv4" +
+                "otherwise: will try to bind ipv4 then try to ipv6")
+                @RpcDefault("0") Integer ipv)
       throws Exception {
     try {
       openCamera(resolutionLevel, jpegQuality);
-      return startServer(port);
+            return startServer(port, ipv);
     } catch (Exception e) {
       webcamStop();
       throw e;
     }
   }
 
-  private InetSocketAddress startServer(Integer port) {
+    private InetSocketAddress startServer(Integer port, Integer ipv) {
     mJpegServer = new MjpegServer(new JpegProvider() {
       @Override
       public byte[] getJpeg() {
@@ -221,7 +230,7 @@ public class WebCamFacade extends RpcReceiver {
         }
       }
     });
-    return mJpegServer.startPublic(port);
+        return mJpegServer.startPublic(port, ipv == null ? 0: ipv);
   }
 
   private void stopServer() {

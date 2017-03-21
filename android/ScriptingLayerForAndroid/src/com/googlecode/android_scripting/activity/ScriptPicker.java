@@ -77,7 +77,7 @@ public class ScriptPicker extends ListActivity {
           DisplayMetrics met = new DisplayMetrics();
           getWindowManager().getDefaultDisplay().getMetrics(met);
 
-          SparseArray<int> fontsizes = new SparseArray<int>() {{
+          SparseArray<Integer> fontsizes = new SparseArray<Integer>() {{
               append(500, 32); append(450, 24);
               append(350, 18); append(300, 16);
               append(200, 14);
@@ -87,7 +87,7 @@ public class ScriptPicker extends ListActivity {
               int dpi = fontsizes.keyAt(i);
               if (met.densityDpi < dpi) {continue;}
               int fs = fontsizes.valueAt(i);
-              prf.edit().putInt("fontsize", fs);
+              prf.edit().putInt("fontsize", fs).commit();
               break;
           }
       }

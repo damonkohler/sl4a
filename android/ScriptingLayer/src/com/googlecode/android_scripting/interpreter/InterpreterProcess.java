@@ -75,7 +75,8 @@ public class InterpreterProcess extends Process {
     String result = mProxy.getAddress().getHostName();
     if (result.equals("0.0.0.0")) { // Wildcard.
       try {
-        return SimpleServer.getPublicInetAddress().getHostName();
+            int ipv = getIpv();
+            return SimpleServer.getPrivateInetAddress(ipv).getHostName();
       } catch (UnknownHostException e) {
         Log.i("public address", e);
         e.printStackTrace();
@@ -90,9 +91,9 @@ public class InterpreterProcess extends Process {
     return mProxy.getAddress().getPort();
   }
 
-  public InetSocketAddress getAddress() {
-    return mProxy.getAddress();
-  }
+    public int getIpv() {
+        return mProxy.getIpv();
+    }
 
   public String getSecret() {
     return mProxy.getSecret();

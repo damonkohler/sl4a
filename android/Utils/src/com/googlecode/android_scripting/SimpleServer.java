@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2017 Shimoda
  * Copyright (C) 2009 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,6 +16,8 @@
  */
 
 package com.googlecode.android_scripting;
+
+import android.os.Build;
 
 import com.google.common.collect.Lists;
 
@@ -117,48 +120,38 @@ public abstract class SimpleServer {
     return mConnectionThreads.size();
   }
 
-  public static InetAddress getPrivateInetAddress() throws UnknownHostException, SocketException {
+    public static InetAddress getPrivateInetAddress(
+            int ipv) throws UnknownHostException, SocketException {
 
-    InetAddress candidate = null;
+        InetAddress candidate4 = null, candidate6 = null;
     Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
     for (NetworkInterface netint : Collections.list(nets)) {
-      if (!netint.isLoopback() || !netint.isUp()) { // Ignore if localhost or not active
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
+                // not check if API < 9.
+            } else if (!netint.isLoopback() || !netint.isUp()) {
+                // Ignore if localhost or not active
         continue;
       }
       Enumeration<InetAddress> addresses = netint.getInetAddresses();
       for (InetAddress address : Collections.list(addresses)) {
-        if (address instanceof Inet4Address) {
+            if (address instanceof Inet4Address && candidate4 == null) {
           Log.d("local address " + address);
-          return address; // Prefer ipv4
+                candidate4 = address;
         }
-        candidate = address; // Probably an ipv6
+            candidate6 = address;
       }
     }
-    if (candidate != null) {
-      return candidate; // return ipv6 address if no suitable ipv6
-    }
-    return InetAddress.getLocalHost(); // No damn matches. Give up, return local host.
-  }
-
-  public static InetAddress getPublicInetAddress() throws UnknownHostException, SocketException {
-
-    InetAddress candidate = null;
-    Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
-    for (NetworkInterface netint : Collections.list(nets)) {
-      if (netint.isLoopback() || !netint.isUp()) { // Ignore if localhost or not active
-        continue;
-      }
-      Enumeration<InetAddress> addresses = netint.getInetAddresses();
-      for (InetAddress address : Collections.list(addresses)) {
-        if (address instanceof Inet4Address) {
-          return address; // Prefer ipv4
+        if (ipv == 4) {
+            if (candidate4 != null) {return candidate4;}
+        } else if (ipv == 6) {
+            if (candidate6 != null) {return candidate6;}
+        } else if (ipv == 64) {
+            if (candidate6 != null) {return candidate6;}
+            if (candidate4 != null) {return candidate4;}
+        } else {
+            if (candidate4 != null) {return candidate4;}
+            if (candidate6 != null) {return candidate6;}
         }
-        candidate = address; // Probably an ipv6
-      }
-    }
-    if (candidate != null) {
-      return candidate; // return ipv6 address if no suitable ipv6
-    }
     return InetAddress.getLocalHost(); // No damn matches. Give up, return local host.
   }
 
@@ -170,11 +163,11 @@ public abstract class SimpleServer {
    * 
    * @return the port that the server is bound to
    */
-  public InetSocketAddress startLocal(int port) {
+    public InetSocketAddress startLocal(int port, int ipv) {
     InetAddress address;
     try {
       // address = InetAddress.getLocalHost();
-      address = getPrivateInetAddress();
+            address = getPrivateInetAddress(ipv);
       mServer = new ServerSocket(port, 5 /* backlog */, address);
     } catch (Exception e) {
       Log.e("Failed to start server.", e);
@@ -192,16 +185,24 @@ public abstract class SimpleServer {
    * 
    * @return the port that the server is bound to
    */
-  public InetSocketAddress startPublic(int port) {
-    InetAddress address;
+    public InetSocketAddress startPublic(int port, int ipv) {
+        if (ipv == 4 || ipv == 46) { try {
+            InetAddress _any = Inet4Address.getByName("0.0.0.0");
+            mServer = new ServerSocket(port, 5, _any);
+        } catch (Exception e) {
+            if (ipv == 4) {
+                Log.e("Failed to start IPv4 server.", e);
+                return null;
+            }
+        } }
+        if (mServer == null) {
     try {
-      // address = getPublicInetAddress();
-      address = null;
       mServer = new ServerSocket(port, 5 /* backlog */); //just bind to all interfaces
     } catch (Exception e) {
       Log.e("Failed to start server.", e);
       return null;
     }
+        }
     int boundPort = start();
     return InetSocketAddress.createUnresolved(mServer.getInetAddress().getHostAddress(), boundPort);
   }

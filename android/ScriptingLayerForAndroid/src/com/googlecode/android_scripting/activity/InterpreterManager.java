@@ -155,41 +155,30 @@ public class InterpreterManager extends ListActivity {
     return true;
   }
 
-  private int getPrefInt(String key, int defaultValue) {
-    int result = defaultValue;
-    String value = mPreferences.getString(key, null);
-    if (value != null) {
-      try {
-        result = Integer.parseInt(value);
-      } catch (NumberFormatException e) {
-        result = defaultValue;
-      }
-    }
-    return result;
-  }
-
   private void launchService(boolean usePublicIp) {
     Intent intent = new Intent(this, ScriptingLayerService.class);
     intent.setAction(Constants.ACTION_LAUNCH_SERVER);
-    intent.putExtra(Constants.EXTRA_USE_EXTERNAL_IP, usePublicIp);
-    intent.putExtra(Constants.EXTRA_USE_SERVICE_PORT, getPrefInt("use_service_port", 0));
+        Preferences.launch_setIntentExtras(mPreferences, intent, usePublicIp);
     startService(intent);
   }
 
-  private void launchTerminal(Interpreter interpreter) {
+  private void launchTerminal(Interpreter interpreter,
+                              boolean usePublicIp) {
     if (interpreter instanceof HtmlInterpreter) {
       return;
     }
     Intent intent = new Intent(this, ScriptingLayerService.class);
     intent.setAction(Constants.ACTION_LAUNCH_INTERPRETER);
     intent.putExtra(Constants.EXTRA_INTERPRETER_NAME, interpreter.getName());
+        Preferences.launch_setIntentExtras(mPreferences, intent, usePublicIp);
     startService(intent);
   }
 
   @Override
   protected void onListItemClick(ListView list, View view, int position, long id) {
     Interpreter interpreter = (Interpreter) list.getItemAtPosition(position);
-    launchTerminal(interpreter);
+        // TODO(Shimoda): select public or private in Interpreter selection.
+        launchTerminal(interpreter, true);
   }
 
   @Override

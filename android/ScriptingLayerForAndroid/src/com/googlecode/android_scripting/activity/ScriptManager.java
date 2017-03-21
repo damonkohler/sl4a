@@ -392,6 +392,8 @@ public class ScriptManager extends ListActivity {
         Intent intent = new Intent(ScriptManager.this, ScriptingLayerService.class);
         intent.setAction(Constants.ACTION_LAUNCH_FOREGROUND_SCRIPT);
         intent.putExtra(Constants.EXTRA_SCRIPT_PATH, file.getPath());
+                Preferences.launch_setIntentExtras(mPreferences,
+                                                   intent, false);
         startService(intent);
         dismissQuickActions(actionMenu);
       }
@@ -405,6 +407,8 @@ public class ScriptManager extends ListActivity {
         Intent intent = new Intent(ScriptManager.this, ScriptingLayerService.class);
         intent.setAction(Constants.ACTION_LAUNCH_BACKGROUND_SCRIPT);
         intent.putExtra(Constants.EXTRA_SCRIPT_PATH, file.getPath());
+                Preferences.launch_setIntentExtras(mPreferences,
+                                                   intent, false);
         startService(intent);
         dismissQuickActions(actionMenu);
       }
