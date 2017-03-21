@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,7 +31,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.FeaturedInterpreters;
 import com.googlecode.android_scripting.IntentBuilders;
@@ -44,7 +43,7 @@ import java.util.List;
 
 /**
  * Presents available scripts and returns the selected one.
- * 
+ *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class InterpreterPicker extends ListActivity {
@@ -65,7 +64,6 @@ public class InterpreterPicker extends ListActivity {
     mAdapter = new InterpreterPickerAdapter();
     mAdapter.registerDataSetObserver(mObserver);
     setListAdapter(mAdapter);
-    Analytics.trackActivity(this);
   }
 
   @Override

@@ -1,0 +1,24 @@
+include ':Common', ':Utils', ':QuickAction'
+include ':BluetoothFacase'
+include ':SignalStrengthFacade'
+include ':TextToSpeechFacade'
+include ':WebCamFacade'
+include ':ScriptingLayer'
+include ':InterpreterForAndroid'
+include ':ScriptingLayerForAndroid'
+
+include ':BeanShellForAndroid'
+
+include ':ScriptForAndroidTemplate'
+include ':InterpreterForAndroidTemplate'
+
+include ':ScriptingLayerForAndroidTest'
+include ':DocumentationGenerator'
+
+include ':JRubyForAndroid'
+include ':LuaForAndroid'
+include ':PerlForAndroid'
+include ':PythonForAndroid'
+include ':RhinoForAndroid'
+include ':TclForAndroid'
+

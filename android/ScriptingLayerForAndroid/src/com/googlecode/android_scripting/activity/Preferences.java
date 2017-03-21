@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2007 The Android Open Source Project
+ * Copyright (C) 2017 Shimoda.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,10 +17,12 @@
 
 package com.googlecode.android_scripting.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
-import com.googlecode.android_scripting.Analytics;
+import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 
 public class Preferences extends PreferenceActivity {
@@ -28,6 +31,30 @@ public class Preferences extends PreferenceActivity {
     super.onCreate(savedInstanceState);
     // Load the preferences from an XML resource
     addPreferencesFromResource(R.xml.preferences);
-    Analytics.trackActivity(this);
   }
+
+    public static int getPrefInt(SharedPreferences prefs,
+                                 String key, int defaultValue) {
+        int result = defaultValue;
+        String value = prefs.getString(key, null);
+        if (value != null) {
+            try {
+                result = Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                result = defaultValue;
+            }
+        }
+        return result;
+    }
+
+    public static void launch_setIntentExtras(SharedPreferences prefs,
+                                              Intent intent,
+                                              boolean usePublicIp
+    ) {
+        intent.putExtra(Constants.EXTRA_USE_EXTERNAL_IP, usePublicIp);
+        intent.putExtra(Constants.EXTRA_USE_SERVICE_PORT,
+                getPrefInt(prefs, "use_service_port", 0));
+        intent.putExtra(Constants.EXTRA_USE_SERVICE_IPV,
+                getPrefInt(prefs, "use_service_ipv", 0));
+    }
 }

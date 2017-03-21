@@ -16,7 +16,6 @@
 
 package com.googlecode.android_scripting.interpreter;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.AndroidProxy;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.Process;
@@ -46,10 +45,11 @@ public class InterpreterProcess extends Process {
    * @param port
    *          the port that the AndroidProxy is listening on
    */
-  public InterpreterProcess(Interpreter interpreter, AndroidProxy proxy) {
+  public InterpreterProcess(Interpreter interpreter, AndroidProxy proxy, String appFiles) {
     mProxy = proxy;
     mInterpreter = interpreter;
 
+    addAppFiles(appFiles);
     setBinary(interpreter.getBinary());
     setName(interpreter.getNiceName());
     setCommand(interpreter.getInteractiveCommand());
@@ -75,7 +75,8 @@ public class InterpreterProcess extends Process {
     String result = mProxy.getAddress().getHostName();
     if (result.equals("0.0.0.0")) { // Wildcard.
       try {
-        return SimpleServer.getPublicInetAddress().getHostName();
+            int ipv = getIpv();
+            return SimpleServer.getPrivateInetAddress(ipv).getHostName();
       } catch (UnknownHostException e) {
         Log.i("public address", e);
         e.printStackTrace();
@@ -90,9 +91,9 @@ public class InterpreterProcess extends Process {
     return mProxy.getAddress().getPort();
   }
 
-  public InetSocketAddress getAddress() {
-    return mProxy.getAddress();
-  }
+    public int getIpv() {
+        return mProxy.getIpv();
+    }
 
   public String getSecret() {
     return mProxy.getSecret();
@@ -104,7 +105,7 @@ public class InterpreterProcess extends Process {
 
   @Override
   public void start(final Runnable shutdownHook) {
-    Analytics.track(mInterpreter.getName());
+    // Analytics.track(mInterpreter.getName());
     // NOTE(damonkohler): String.isEmpty() doesn't work on Cupcake.
     if (!mCommand.equals("")) {
       addArgument(mCommand);

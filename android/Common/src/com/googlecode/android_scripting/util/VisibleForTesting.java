@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ package com.googlecode.android_scripting.util;
 /**
  * An annotation that indicates that the visibility of a type or member has been relaxed from
  * private to package to make the code testable.
- * 
+ *
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 // TODO(igor.v.karp): Consider replacing this annotation by one from Guava or GCL

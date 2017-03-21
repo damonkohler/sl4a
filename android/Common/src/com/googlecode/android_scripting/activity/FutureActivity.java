@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,7 +38,7 @@ import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
  * This {@link Activity} is launched by {@link RpcReceiver}s in order to perform operations that a
  * {@link Service} is unable to do. For example: start another activity for result, show dialogs,
  * etc.
- * 
+ *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class FutureActivity extends Activity {

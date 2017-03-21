@@ -59,10 +59,10 @@ import org.connectbot.util.SelectionArea;
  * Provides a bridge between a MUD terminal buffer and a possible TerminalView. This separation
  * allows us to keep the TerminalBridge running in a background service. A TerminalView shares down
  * a bitmap that we can use for rendering when available.
- * 
+ *
  * @author ConnectBot Dev Team
  * @author raaar
- * 
+ *
  */
 public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListener {
 
@@ -431,7 +431,7 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
 
   /**
    * Add an {@link FontSizeChangedListener} to the list of listeners for this bridge.
-   * 
+   *
    * @param listener
    *          listener to add
    */
@@ -441,7 +441,7 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
 
   /**
    * Remove an {@link FontSizeChangedListener} from the list of listeners for this bridge.
-   * 
+   *
    * @param listener
    */
   public void removeFontSizeChangedListener(FontSizeChangedListener listener) {
@@ -670,7 +670,7 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
 
   /**
    * Resize terminal to fit [rows]x[cols] in screen of size [width]x[height]
-   * 
+   *
    * @param rows
    * @param cols
    * @param width
@@ -740,7 +740,7 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.mud.terminal.VDUDisplay#setVDUBuffer(de.mud.terminal.VDUBuffer)
    */
   @Override
@@ -749,7 +749,7 @@ public class TerminalBridge implements VDUDisplay, OnSharedPreferenceChangeListe
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see de.mud.terminal.VDUDisplay#setColor(byte, byte, byte, byte)
    */
   public void setColor(int index, int red, int green, int blue) {

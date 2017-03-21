@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,12 +30,13 @@ import java.util.UUID;
 public class AndroidProxy {
 
   private InetSocketAddress mAddress;
+    private Integer mIpv = null;
   private final JsonRpcServer mJsonRpcServer;
   private final UUID mSecret;
   private final RpcReceiverManagerFactory mFacadeManagerFactory;
 
   /**
-   * 
+   *
    * @param service
    *          Android service (required to build facades).
    * @param intent
@@ -59,21 +60,20 @@ public class AndroidProxy {
     return mAddress;
   }
 
-  public InetSocketAddress startLocal() {
-    return startLocal(0);
-  }
+    public int getIpv() {
+        if (mIpv == null) {return 0;}
+        return mIpv;
+    }
 
-  public InetSocketAddress startLocal(int port) {
-    mAddress = mJsonRpcServer.startLocal(port);
+    public InetSocketAddress startLocal(int port, int ipv) {
+        mIpv = Integer.valueOf(ipv);
+        mAddress = mJsonRpcServer.startLocal(port, ipv);
     return mAddress;
   }
-  
-  public InetSocketAddress startPublic() {
-    return startPublic(0);
-  }
 
-  public InetSocketAddress startPublic(int port) {
-    mAddress = mJsonRpcServer.startPublic(port);
+    public InetSocketAddress startPublic(int port, int ipv) {
+        mIpv = Integer.valueOf(0);
+        mAddress = mJsonRpcServer.startPublic(port, ipv);
     return mAddress;
   }
 

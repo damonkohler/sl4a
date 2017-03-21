@@ -31,7 +31,7 @@ import java.util.Arrays;
  * Implementation of a Video Display Unit (VDU) buffer. This class contains all methods to
  * manipulate the buffer that stores characters and their attributes as well as the regions
  * displayed.
- * 
+ *
  * @author Matthias L. Jugel, Marcus Meißner
  * @version $Id: VDUBuffer.java 503 2005-10-24 07:34:13Z marcus $
  */
@@ -67,7 +67,7 @@ public class VDUBuffer {
 
   /*
    * Attributes bit-field usage:
-   * 
+   *
    * 8421 8421 8421 8421 8421 8421 8421 8421 |||| |||| |||| |||| |||| |||| |||| |||`- Bold |||| ||||
    * |||| |||| |||| |||| |||| ||`-- Underline |||| |||| |||| |||| |||| |||| |||| |`--- Invert ||||
    * |||| |||| |||| |||| |||| |||| `---- Low |||| |||| |||| |||| |||| |||| |||`------ Invisible ||||
@@ -104,7 +104,7 @@ public class VDUBuffer {
 
   /**
    * Create a new video display buffer with the passed width and height in characters.
-   * 
+   *
    * @param width
    *          the length of the character lines
    * @param height
@@ -125,7 +125,7 @@ public class VDUBuffer {
   /**
    * Put a character on the screen with normal font and outline. The character previously on that
    * position will be overwritten. You need to call redraw() to update the screen.
-   * 
+   *
    * @param c
    *          x-coordinate (column)
    * @param l
@@ -143,7 +143,7 @@ public class VDUBuffer {
   /**
    * Put a character on the screen with specific font and outline. The character previously on that
    * position will be overwritten. You need to call redraw() to update the screen.
-   * 
+   *
    * @param c
    *          x-coordinate (column)
    * @param l
@@ -173,7 +173,7 @@ public class VDUBuffer {
 
   /**
    * Get the character at the specified position.
-   * 
+   *
    * @param c
    *          x-coordinate (column)
    * @param l
@@ -186,7 +186,7 @@ public class VDUBuffer {
 
   /**
    * Get the attributes for the specified position.
-   * 
+   *
    * @param c
    *          x-coordinate (column)
    * @param l
@@ -200,7 +200,7 @@ public class VDUBuffer {
   /**
    * Insert a character at a specific position on the screen. All character right to from this
    * position will be moved one to the right. You need to call redraw() to update the screen.
-   * 
+   *
    * @param c
    *          x-coordinate (column)
    * @param l
@@ -229,7 +229,7 @@ public class VDUBuffer {
   /**
    * Delete a character at a given position on the screen. All characters right to the position will
    * be moved one to the left. You need to call redraw() to update the screen.
-   * 
+   *
    * @param c
    *          x-coordinate (column)
    * @param l
@@ -251,7 +251,7 @@ public class VDUBuffer {
   /**
    * Put a String at a specific position. Any characters previously on that position will be
    * overwritten. You need to call redraw() for screen update.
-   * 
+   *
    * @param c
    *          x-coordinate (column)
    * @param l
@@ -277,7 +277,7 @@ public class VDUBuffer {
    * Put a String at a specific position giving all characters the same attributes. Any characters
    * previously on that position will be overwritten. You need to call redraw() to update the
    * screen.
-   * 
+   *
    * @param c
    *          x-coordinate (column)
    * @param l
@@ -306,7 +306,7 @@ public class VDUBuffer {
   /**
    * Insert a blank line at a specific position. The current line and all previous lines are
    * scrolled one line up. The top line is lost. You need to call redraw() to update the screen.
-   * 
+   *
    * @param l
    *          the y-coordinate to insert the line
    * @see #deleteLine
@@ -318,7 +318,7 @@ public class VDUBuffer {
 
   /**
    * Insert blank lines at a specific position. You need to call redraw() to update the screen
-   * 
+   *
    * @param l
    *          the y-coordinate to insert the line
    * @param n
@@ -333,7 +333,7 @@ public class VDUBuffer {
   /**
    * Insert a blank line at a specific position. Scroll text according to the argument. You need to
    * call redraw() to update the screen
-   * 
+   *
    * @param l
    *          the y-coordinate to insert the line
    * @param scrollDown
@@ -350,7 +350,7 @@ public class VDUBuffer {
   /**
    * Insert blank lines at a specific position. The current line and all previous lines are scrolled
    * one line up. The top line is lost. You need to call redraw() to update the screen.
-   * 
+   *
    * @param l
    *          the y-coordinate to insert the line
    * @param n
@@ -507,7 +507,7 @@ public class VDUBuffer {
   /**
    * Delete a line at a specific position. Subsequent lines will be scrolled up to fill the space
    * and a blank line is inserted at the end of the screen.
-   * 
+   *
    * @param l
    *          the y-coordinate to insert the line
    * @see #deleteLine
@@ -535,7 +535,7 @@ public class VDUBuffer {
 
   /**
    * Delete a rectangular portion of the screen. You need to call redraw() to update the screen.
-   * 
+   *
    * @param c
    *          x-coordinate (column)
    * @param l
@@ -563,7 +563,7 @@ public class VDUBuffer {
 
   /**
    * Delete a rectangular portion of the screen. You need to call redraw() to update the screen.
-   * 
+   *
    * @param c
    *          x-coordinate (column)
    * @param l
@@ -582,7 +582,7 @@ public class VDUBuffer {
 
   /**
    * Sets whether the cursor is visible or not.
-   * 
+   *
    * @param doshow
    */
   public void showCursor(boolean doshow) {
@@ -591,7 +591,7 @@ public class VDUBuffer {
 
   /**
    * Check whether the cursor is currently visible.
-   * 
+   *
    * @return visibility
    */
   public boolean isCursorVisible() {
@@ -600,7 +600,7 @@ public class VDUBuffer {
 
   /**
    * Puts the cursor at the specified position.
-   * 
+   *
    * @param c
    *          column
    * @param l
@@ -627,7 +627,7 @@ public class VDUBuffer {
 
   /**
    * Set the current window base. This allows to view the scrollback buffer.
-   * 
+   *
    * @param line
    *          the line where the screen window starts
    * @see #setBufferSize
@@ -646,7 +646,7 @@ public class VDUBuffer {
 
   /**
    * Get the current window base.
-   * 
+   *
    * @see #setWindowBase
    */
   public int getWindowBase() {
@@ -655,7 +655,7 @@ public class VDUBuffer {
 
   /**
    * Set the scroll margins simultaneously. If they're out of bounds, trim them.
-   * 
+   *
    * @param l1
    *          line that is the top
    * @param l2
@@ -680,7 +680,7 @@ public class VDUBuffer {
   /**
    * Set the top scroll margin for the screen. If the current bottom margin is smaller it will
    * become the top margin and the line will become the bottom margin.
-   * 
+   *
    * @param l
    *          line that is the margin
    */
@@ -709,7 +709,7 @@ public class VDUBuffer {
   /**
    * Set the bottom scroll margin for the screen. If the current top margin is bigger it will become
    * the bottom margin and the line will become the top margin.
-   * 
+   *
    * @param l
    *          line that is the margin
    */
@@ -737,7 +737,7 @@ public class VDUBuffer {
 
   /**
    * Set scrollback buffer size.
-   * 
+   *
    * @param amount
    *          new size of the buffer
    */
@@ -770,7 +770,7 @@ public class VDUBuffer {
 
   /**
    * Retrieve current scrollback buffer size.
-   * 
+   *
    * @see #setBufferSize
    */
   public int getBufferSize() {
@@ -779,7 +779,7 @@ public class VDUBuffer {
 
   /**
    * Retrieve maximum buffer Size.
-   * 
+   *
    * @see #getBufferSize
    */
   public int getMaxBufferSize() {
@@ -788,7 +788,7 @@ public class VDUBuffer {
 
   /**
    * Change the size of the screen. This will include adjustment of the scrollback buffer.
-   * 
+   *
    * @param w
    *          of the screen
    * @param h
@@ -891,7 +891,7 @@ public class VDUBuffer {
 
   /**
    * Mark lines to be updated with redraw().
-   * 
+   *
    * @param l
    *          starting line
    * @param n

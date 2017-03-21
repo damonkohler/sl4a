@@ -20,7 +20,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.view.WindowManager;
 
@@ -33,6 +35,7 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcOptional;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
@@ -83,8 +86,15 @@ public class SettingsFacade extends RpcReceiver {
   @Rpc(description = "Checks the airplane mode setting.", returns = "True if airplane mode is enabled.")
   public Boolean checkAirplaneMode() {
     try {
+      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+        return Settings.Global.getInt(
+                mService.getContentResolver(),
+                Settings.Global.AIRPLANE_MODE_ON) == AIRPLANE_MODE_ON;
+      }
+      else {
       return android.provider.Settings.System.getInt(mService.getContentResolver(),
-          android.provider.Settings.System.AIRPLANE_MODE_ON) == AIRPLANE_MODE_ON;
+              android.provider.Settings.System.AIRPLANE_MODE_ON) == AIRPLANE_MODE_ON;
+      }
     } catch (SettingNotFoundException e) {
       return false;
     }
@@ -95,6 +105,24 @@ public class SettingsFacade extends RpcReceiver {
     if (enabled == null) {
       enabled = !checkAirplaneMode();
     }
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+      // Set Airplane / Flight mode using su commands.
+      final String COMMAND_FLIGHT_MODE_1 =
+              "settings put global airplane_mode_on";
+      final String COMMAND_FLIGHT_MODE_2 =
+          "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state";
+
+      String cmd1 = COMMAND_FLIGHT_MODE_1 + " " + enabled;
+      String cmd2 = COMMAND_FLIGHT_MODE_2 + " " + enabled;
+      if (toggleAirplaneMode_helper(cmd1)) {
+        throw new RuntimeException("can't invoke su binary, is this rooted device?");
+      }
+      else if (toggleAirplaneMode_helper(cmd2)) {
+        throw new RuntimeException("??? SL4A error, please inform this to developer.");
+      }
+      return enabled;
+    }
+
     android.provider.Settings.System.putInt(mService.getContentResolver(),
         android.provider.Settings.System.AIRPLANE_MODE_ON, enabled ? AIRPLANE_MODE_ON
             : AIRPLANE_MODE_OFF);
@@ -102,6 +130,19 @@ public class SettingsFacade extends RpcReceiver {
     intent.putExtra("state", enabled);
     mService.sendBroadcast(intent);
     return enabled;
+  }
+
+  public boolean toggleAirplaneMode_helper(String cmd) {
+    for (String su: new String[] {"/system/xbin/su", "/system/bin/su"}) {
+      try {
+        // execute command
+        Runtime.getRuntime().exec(new String[]{su, "-c", cmd});
+        return false;
+      } catch (IOException e) {
+        Log.e("su command has failed due to: " + e.fillInStackTrace());
+      }
+    }
+    return true;
   }
 
   @Rpc(description = "Checks the ringer silent mode setting.", returns = "True if ringer silent mode is enabled.")
