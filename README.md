@@ -1,4 +1,4 @@
-#Scripting Layer for Android (SL4A)
+# Scripting Layer for Android (SL4A)
 
 SL4A brings scripting languages to Android by allowing you to edit and execute
 scripts and interactive interpreters directly on the Android device. These
@@ -14,14 +14,14 @@ YouTube for various demonstrations of SL4A's features.
 
 SL4A is designed for developers and is _alpha_ quality software.
 
-##Disclaimer
+## Disclaimer
 
   * Even though a lot of contributors are working for Google, this is not an
     official Google product.
   * SL4A is no longer under active development. However, some forks of this
     project may be.
 
-##Documentation
+## Documentation
 
 The original Google Code wiki has been converted to Markdown and is available in the wiki
 branch. A few of the most important pages are:
@@ -30,11 +30,11 @@ branch. A few of the most important pages are:
   * [User Guide](https://github.com/damonkohler/sl4a/blob/wiki/UserGuide.md)
   * [API Reference](https://github.com/damonkohler/sl4a/blob/wiki/ApiReference.md)
 
-##Issues
+## Issues
 
 Issues have been migrated from Google Code. However, this probject is no longer under active development. Consider responding to and filing new issues against an active fork.
 
-##Support
+## Support
 
 Support for SL4A is provided by the community on the [project mailing
 list](https://groups.google.com/forum/#!forum/android-scripting).
