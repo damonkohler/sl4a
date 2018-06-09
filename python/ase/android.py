@@ -48,7 +48,7 @@ class Android(object):
     self.id += 1
     result = json.loads(response)
     if result['error'] is not None:
-      print result['error']
+      print(result['error'])
     # namedtuple doesn't work with unicode keys.
     return Result(id=result['id'], result=result['result'],
                   error=result['error'], )
