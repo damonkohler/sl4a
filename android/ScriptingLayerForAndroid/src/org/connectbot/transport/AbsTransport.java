@@ -42,7 +42,7 @@ public abstract class AbsTransport {
    * Reads from the transport. Transport must support reading into a the byte array
    * <code>buffer</code> at the start of <code>offset</code> and a maximum of <code>length</code>
    * bytes. If the remote host disconnects, throw an {@link IOException}.
-   * 
+   *
    * @param buffer
    *          byte buffer to store read bytes into
    * @param offset
@@ -58,7 +58,7 @@ public abstract class AbsTransport {
   /**
    * Writes to the transport. If the host is not yet connected, simply return without doing
    * anything. An {@link IOException} should be thrown if there is an error after connection.
-   * 
+   *
    * @param buffer
    *          bytes to write to transport
    * @throws IOException
@@ -68,7 +68,7 @@ public abstract class AbsTransport {
 
   /**
    * Writes to the transport. See {@link #write(byte[])} for behavior details.
-   * 
+   *
    * @param c
    *          character to write to the transport
    * @throws IOException
@@ -78,7 +78,7 @@ public abstract class AbsTransport {
 
   /**
    * Flushes the write commands to the transport.
-   * 
+   *
    * @throws IOException
    *           when there is a problem writing after connection
    */
@@ -92,7 +92,7 @@ public abstract class AbsTransport {
 
   /**
    * Tells the transport what dimensions the display is currently
-   * 
+   *
    * @param columns
    *          columns of text
    * @param rows

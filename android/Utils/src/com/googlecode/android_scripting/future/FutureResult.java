@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,44 +22,44 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * FutureResult represents an eventual execution result for asynchronous operations.
- * 
+ *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class FutureResult<T> implements Future<T> {
 
-  private final CountDownLatch mLatch = new CountDownLatch(1);
-  private volatile T mResult;
+    private final CountDownLatch mLatch = new CountDownLatch(1);
+    private volatile T mResult = null;
 
-  public void set(T result) {
-    mResult = result;
-    mLatch.countDown();
-  }
+    public void set(T result) {
+        mResult = result;
+        mLatch.countDown();
+    }
 
-  @Override
-  public boolean cancel(boolean mayInterruptIfRunning) {
-    return false;
-  }
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        return false;
+    }
 
-  @Override
-  public T get() throws InterruptedException {
-    mLatch.await();
-    return mResult;
-  }
+    @Override
+    public T get() throws InterruptedException {
+        mLatch.await();
+        return mResult;
+    }
 
-  @Override
-  public T get(long timeout, TimeUnit unit) throws InterruptedException {
-    mLatch.await(timeout, unit);
-    return mResult;
-  }
+    @Override
+    public T get(long timeout, TimeUnit unit) throws InterruptedException {
+        mLatch.await(timeout, unit);
+        return mResult;
+    }
 
-  @Override
-  public boolean isCancelled() {
-    return false;
-  }
+    @Override
+    public boolean isCancelled() {
+        return false;
+    }
 
-  @Override
-  public boolean isDone() {
-    return mResult != null;
-  }
+    @Override
+    public boolean isDone() {
+        return mResult != null;
+    }
 
 }

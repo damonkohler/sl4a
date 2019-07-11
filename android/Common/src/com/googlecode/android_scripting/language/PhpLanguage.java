@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Irontec SL
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,7 @@ package com.googlecode.android_scripting.language;
 
 /**
  * Represents the PHP programming language.
- * 
+ *
  * @author ivan@irontec.com (Ivan Mosquera Paulo)
  */
 public class PhpLanguage extends Language {

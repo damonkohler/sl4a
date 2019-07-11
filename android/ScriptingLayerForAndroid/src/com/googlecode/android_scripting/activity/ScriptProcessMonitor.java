@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.R;
@@ -49,7 +48,7 @@ import org.connectbot.ConsoleActivity;
 
 /**
  * An activity that allows to monitor running scripts.
- * 
+ *
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  */
 public class ScriptProcessMonitor extends ListActivity {
@@ -91,7 +90,6 @@ public class ScriptProcessMonitor extends ListActivity {
     mAdapter = new ScriptMonitorAdapter();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
-    Analytics.trackActivity(this);
   }
 
   @Override

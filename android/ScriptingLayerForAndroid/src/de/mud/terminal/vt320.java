@@ -31,7 +31,7 @@ import java.util.Properties;
  * Implementation of a VT terminal emulation plus ANSI compatible.
  * <P>
  * <B>Maintainer:</B> Marcus Meißner
- * 
+ *
  * @version $Id: vt320.java 507 2005-10-25 10:14:52Z marcus $
  * @author Matthias L. Jugel, Marcus Meißner
  */
@@ -42,7 +42,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
    * The current version id tag.
    * <P>
    * $Id: vt320.java 507 2005-10-25 10:14:52Z marcus $
-   * 
+   *
    */
   public final static String ID = "$Id: vt320.java 507 2005-10-25 10:14:52Z marcus $";
 
@@ -55,7 +55,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
   /**
    * Write an answer back to the remote host. This is needed to be able to send terminal answers
    * requests like status and type information.
-   * 
+   *
    * @param b
    *          the array of bytes to be sent
    */
@@ -64,7 +64,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
   /**
    * Write an answer back to the remote host. This is needed to be able to send terminal answers
    * requests like status and type information.
-   * 
+   *
    * @param b
    *          the array of bytes to be sent
    */
@@ -88,7 +88,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 
   /**
    * Put string at current cursor position. Moves cursor according to the String. Does NOT wrap.
-   * 
+   *
    * @param s
    *          character array
    * @param start
@@ -343,7 +343,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
   /**
    * Terminal is mouse-aware and requires (x,y) coordinates of on the terminal (character
    * coordinates) and the button clicked.
-   * 
+   *
    * @param x
    * @param y
    * @param modifiers
@@ -386,7 +386,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 
   /**
    * Terminal is mouse-aware and requires the coordinates and button of the release.
-   * 
+   *
    * @param x
    * @param y
    * @param modifiers
@@ -425,7 +425,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 
   /**
    * Enable or disable the local echo property of the terminal.
-   * 
+   *
    * @param echo
    *          true if the terminal should echo locally
    */
@@ -435,7 +435,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 
   /**
    * Enable the VMS mode of the terminal to handle some things differently for VMS hosts.
-   * 
+   *
    * @param vms
    *          true for vms mode, false for normal mode
    */
@@ -446,7 +446,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
   /**
    * Enable the usage of the IBM character set used by some BBS's. Special graphical character are
    * available in this mode.
-   * 
+   *
    * @param ibm
    *          true to use the ibm character set
    */
@@ -456,7 +456,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 
   /**
    * Override the standard key codes used by the terminal emulation.
-   * 
+   *
    * @param codes
    *          a properties object containing key code definitions
    */
@@ -554,7 +554,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 
   /**
    * Set the terminal id used to identify this terminal.
-   * 
+   *
    * @param terminalID
    *          the id string
    */
@@ -601,7 +601,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 
   /**
    * A small conveniance method thar converts the string to a byte array for sending.
-   * 
+   *
    * @param s
    *          the string to be sent
    */
@@ -841,7 +841,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 
   /**
    * Replace escape code characters (backslash + identifier) with their respective codes.
-   * 
+   *
    * @param tmp
    *          the string to be parsed
    * @return a unescaped string
@@ -904,7 +904,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
   /**
    * A small conveniance method thar converts a 7bit string to the 8bit version depending on
    * VT52/Output8Bit mode.
-   * 
+   *
    * @param s
    *          the string to be sent
    */

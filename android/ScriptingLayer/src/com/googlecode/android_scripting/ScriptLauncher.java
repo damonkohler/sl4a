@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,7 +36,7 @@ public class ScriptLauncher {
   }
 
   public static HtmlActivityTask launchHtmlScript(File script, Service service, Intent intent,
-      InterpreterConfiguration config) {
+                                                  InterpreterConfiguration config) {
     if (!script.exists()) {
       throw new RuntimeException("No such script to launch.");
     }
@@ -58,12 +58,12 @@ public class ScriptLauncher {
   }
 
   public static InterpreterProcess launchInterpreter(final AndroidProxy proxy, Intent intent,
-      InterpreterConfiguration config, Runnable shutdownHook) {
+      InterpreterConfiguration config, Runnable shutdownHook, String pathDataFile) {
     Interpreter interpreter;
     String interpreterName;
     interpreterName = intent.getStringExtra(Constants.EXTRA_INTERPRETER_NAME);
     interpreter = config.getInterpreterByName(interpreterName);
-    InterpreterProcess process = new InterpreterProcess(interpreter, proxy);
+    InterpreterProcess process = new InterpreterProcess(interpreter, proxy, pathDataFile);
     if (shutdownHook == null) {
       process.start(new Runnable() {
         @Override
@@ -78,11 +78,11 @@ public class ScriptLauncher {
   }
 
   public static ScriptProcess launchScript(File script, InterpreterConfiguration configuration,
-      final AndroidProxy proxy, Runnable shutdownHook) {
+      final AndroidProxy proxy, Runnable shutdownHook, String pathDataFile) {
     if (!script.exists()) {
       throw new RuntimeException("No such script to launch.");
     }
-    ScriptProcess process = new ScriptProcess(script, configuration, proxy);
+    ScriptProcess process = new ScriptProcess(script, configuration, proxy, pathDataFile);
     if (shutdownHook == null) {
       process.start(new Runnable() {
         @Override

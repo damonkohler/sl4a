@@ -39,7 +39,6 @@ import android.widget.TextView;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.Log;
@@ -98,7 +97,7 @@ public class ApiBrowser extends ListActivity {
     mAdapter = new ApiBrowserAdapter();
     setListAdapter(mAdapter);
     registerForContextMenu(getListView());
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
     setResult(RESULT_CANCELED);
   }
 
@@ -226,7 +225,7 @@ public class ApiBrowser extends ListActivity {
     if (item.getItemId() == ContextMenuId.INSERT_TEXT.getId()) {
       // There's no activity to track calls to insert (like there is for prompt) so we track it
       // here instead.
-      Analytics.track("ApiInsert");
+      // Analytics.track("ApiInsert");
       insertText(rpc, new String[0]);
     } else if (item.getItemId() == ContextMenuId.PROMPT_PARAMETERS.getId()) {
       Intent intent = new Intent(this, ApiPrompt.class);
