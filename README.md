@@ -32,7 +32,7 @@ branch. A few of the most important pages are:
 
 ##Issues
 
-Issues have been migrated from Google Code. However, this probject is no longer under active development. Consider responding to and filing new issues against an active fork.
+Issues have been migrated from Google Code. However, this project is no longer under active development. Consider responding to and filing new issues against an active fork.
 
 ##Support
 
