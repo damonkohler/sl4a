@@ -852,7 +852,7 @@ class TestCase(unittest.TestCase):
         # http://mail.python.org/pipermail/python-dev/2002-July/026512.html
         a = {1:1, 2:2, 0:0, 4:4, 3:3}
         for b in iter(a), a.iterkeys(), a.iteritems(), a.itervalues():
-            b = iter(a)
+            b = iter(b)
             self.assertEqual(len(list(b)), 5)
             self.assertEqual(list(b), [])
 
