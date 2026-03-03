@@ -9,6 +9,13 @@
       android:summary="Allow anonymous usage tracking."
       android:defaultValue="false" />
     <EditTextPreference android:summary="Port to use for running server. Leave at 0 for random selection." android:key="use_service_port" android:title="Server Port" android:defaultValue="0" android:numeric="integer"></EditTextPreference>
+      <EditTextPreference
+          android:defaultValue="0"
+          android:selectAllOnFocus="true"
+          android:singleLine="true"
+          android:title="Server use IPv4 or 6"
+          android:key="use_service_ipv"
+          android:summary="IPv4 or 6 to use for running server. Leave at 0 to try IPv6 then IPv4, 46 to try IPv4 and then IPv6."/>
   </PreferenceCategory>
   <PreferenceCategory
     android:title="Script Manager">

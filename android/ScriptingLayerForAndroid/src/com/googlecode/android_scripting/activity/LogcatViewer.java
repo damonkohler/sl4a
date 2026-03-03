@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.googlecode.android_scripting.ActivityFlinger;
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.Process;
 import com.googlecode.android_scripting.R;
@@ -105,7 +104,7 @@ public class LogcatViewer extends ListActivity {
     setListAdapter(mAdapter);
     ActivityFlinger.attachView(getListView(), this);
     ActivityFlinger.attachView(getWindow().getDecorView(), this);
-    Analytics.trackActivity(this);
+    // Analytics.trackActivity(this);
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,9 +28,9 @@ import java.util.ArrayList;
 
 /**
  * A facade containing RPC implementations related to the speech-to-text functionality of Android.
- * 
+ *
  * @author Felix Arends (felix.arends@gmail.com)
- * 
+ *
  */
 public class SpeechRecognitionFacade extends RpcReceiver {
   private final AndroidFacade mAndroidFacade;

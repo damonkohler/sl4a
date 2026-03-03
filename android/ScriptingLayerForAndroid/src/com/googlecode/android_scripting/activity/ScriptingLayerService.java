@@ -103,14 +103,27 @@ public class ScriptingLayerService extends ForegroundService {
 
   @Override
   protected Notification createNotification() {
-    mNotification =
-        new Notification(R.drawable.sl4a_notification_logo, null, System.currentTimeMillis());
-    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
     Intent notificationIntent = new Intent(this, ScriptingLayerService.class);
     notificationIntent.setAction(Constants.ACTION_SHOW_RUNNING_SCRIPTS);
     mNotificationPendingIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
+    // with older SDK < 23
+    mNotification =
+        new Notification(R.drawable.sl4a_notification_logo, null, System.currentTimeMillis());
+    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
     mNotification.setLatestEventInfo(this, "SL4A Service", "Tap to view running scripts",
         mNotificationPendingIntent);
+
+    /* with newer SDK >= 23 and API >= 11
+    Notification.Builder builder = new Notification.Builder(this);
+    builder.setSmallIcon(R.drawable.sl4a_notification_logo)
+           .setTicker(null)
+           .setWhen(System.currentTimeMillis())
+           .setContentTitle("SL4A Service")
+           .setContentText("Tap to view running scripts")
+           .setContentIntent(mNotificationPendingIntent);
+    mNotification = builder.build();
+    mNotification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
+     */
     return mNotification;
   }
 
@@ -129,7 +142,20 @@ public class ScriptingLayerService extends ForegroundService {
     } else {
       msg = "Tap to view " + Integer.toString(mProcessMap.size()) + " running scripts";
     }
+    // with older SDK < 23
     mNotification.setLatestEventInfo(this, "SL4A Service", msg, mNotificationPendingIntent);
+
+    /* with newer SDK >= 23 and API >= 11
+    Notification.Builder builder = new Notification.Builder(this);
+    builder.setContentTitle("SL4A Service")
+           .setContentText(msg)
+           .setContentIntent(mNotificationPendingIntent)
+           .setSmallIcon(mNotification.icon, mProcessMap.size())
+           .setWhen(mNotification.when)
+           .setTicker(tickerText);
+
+    mNotification = builder.build();
+     */
     mNotificationManager.notify(NOTIFICATION_ID, mNotification);
   }
 
@@ -171,7 +197,8 @@ public class ScriptingLayerService extends ForegroundService {
       proxy = launchServer(intent, false);
       // TODO(damonkohler): This is just to make things easier. Really, we shouldn't need to start
       // an interpreter when all we want is a server.
-      interpreterProcess = new InterpreterProcess(new ShellInterpreter(), proxy);
+      interpreterProcess = new InterpreterProcess(new ShellInterpreter(), proxy,
+                                                  getFilesDir().getPath());
       interpreterProcess.setName("Server");
     } else {
       proxy = launchServer(intent, true);
@@ -201,11 +228,12 @@ public class ScriptingLayerService extends ForegroundService {
     }
   }
 
-  private boolean tryPort(AndroidProxy androidProxy, boolean usePublicIp, int usePort) {
+  private boolean tryPort(AndroidProxy androidProxy, boolean usePublicIp,
+                          int usePort, int useIpv) {
     if (usePublicIp) {
-      return (androidProxy.startPublic(usePort) != null);
+            return (androidProxy.startPublic(usePort, useIpv) != null);
     } else {
-      return (androidProxy.startLocal(usePort) != null);
+            return (androidProxy.startLocal(usePort, useIpv) != null);
     }
   }
 
@@ -213,12 +241,13 @@ public class ScriptingLayerService extends ForegroundService {
     AndroidProxy androidProxy = new AndroidProxy(this, intent, requiresHandshake);
     boolean usePublicIp = intent.getBooleanExtra(Constants.EXTRA_USE_EXTERNAL_IP, false);
     int usePort = intent.getIntExtra(Constants.EXTRA_USE_SERVICE_PORT, 0);
-    // If port is in use, fall back to defaut behaviour
-    if (!tryPort(androidProxy, usePublicIp, usePort)) {
-      if (usePort != 0) {
-        tryPort(androidProxy, usePublicIp, 0);
-      }
-    }
+        int useIpv = intent.getIntExtra(Constants.EXTRA_USE_SERVICE_IPV, 0);
+        // If port is in use, fall back to defaut behaviour
+        if (tryPort(androidProxy, usePublicIp, usePort, useIpv)) {
+            // succeess
+        } else  if (usePort != 0) {
+            tryPort(androidProxy, usePublicIp, 0, useIpv);
+        }
     return androidProxy;
   }
 
@@ -240,7 +269,7 @@ public class ScriptingLayerService extends ForegroundService {
         intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
         startService(intent);
       }
-    });
+    }, getFilesDir().getPath());
   }
 
   private InterpreterProcess launchInterpreter(Intent intent, AndroidProxy proxy) {
@@ -257,7 +286,7 @@ public class ScriptingLayerService extends ForegroundService {
         intent.putExtra(Constants.EXTRA_PROXY_PORT, port);
         startService(intent);
       }
-    });
+    }, getFilesDir().getPath());
   }
 
   private void launchTerminal(InetSocketAddress address) {

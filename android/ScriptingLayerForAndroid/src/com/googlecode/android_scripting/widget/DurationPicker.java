@@ -207,7 +207,7 @@ public class DurationPicker extends FrameLayout {
 
   /**
    * Sets the duration in milliseconds.
-   * 
+   *
    * @return
    */
   public void setDuration(long duration) {

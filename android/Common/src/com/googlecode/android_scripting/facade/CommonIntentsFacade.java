@@ -1,10 +1,28 @@
+/*
+ * Copyright (C) 2016 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.googlecode.android_scripting.facade;
 
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Contacts.People;
 
+import com.googlecode.android_scripting.Log;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcOptional;
@@ -19,7 +37,7 @@ import org.json.JSONObject;
  * A selection of commonly used intents. <br>
  * <br>
  * These can be used to trigger some common tasks.
- * 
+ *
  */
 public class CommonIntentsFacade extends RpcReceiver {
 
@@ -41,8 +59,13 @@ public class CommonIntentsFacade extends RpcReceiver {
 
   @Rpc(description = "Starts the barcode scanner.", returns = "A Map representation of the result Intent.")
   public Intent scanBarcode() throws JSONException {
-    return mAndroidFacade.startActivityForResult("com.google.zxing.client.android.SCAN", null,
+    try {
+      return mAndroidFacade.startActivityForResult("com.google.zxing.client.android.SCAN", null,
         null, null, null, null);
+    } catch (ActivityNotFoundException e) {
+        Log.e("No Activity found to scan a barcode!", e);
+        return null;
+    }
   }
 
   private void view(Uri uri, String type) {

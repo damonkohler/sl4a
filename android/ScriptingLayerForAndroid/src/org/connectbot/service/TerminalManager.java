@@ -52,7 +52,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Manager for SSH connections that runs as a background service. This service holds a list of
  * currently connected SSH bridges that are ready for connection up to a GUI if needed.
- * 
+ *
  * @author jsharkey
  * @author modified by raaar
  */
@@ -116,7 +116,7 @@ public class TerminalManager implements OnSharedPreferenceChangeListener {
 
   /**
    * Open a new session using the given parameters.
-   * 
+   *
    * @throws InterruptedException
    * @throws Sl4aException
    */
@@ -141,7 +141,7 @@ public class TerminalManager implements OnSharedPreferenceChangeListener {
 
   /**
    * Find a connected {@link TerminalBridge} with the given HostBean.
-   * 
+   *
    * @param id
    *          the HostBean to search for
    * @return TerminalBridge that uses the HostBean
@@ -176,7 +176,7 @@ public class TerminalManager implements OnSharedPreferenceChangeListener {
 
   /**
    * Allow {@link TerminalBridge} to resize when the parent has changed.
-   * 
+   *
    * @param resizeAllowed
    */
   public void setResizeAllowed(boolean resizeAllowed) {

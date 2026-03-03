@@ -1,0 +1,100 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+dependencies {
+    compile project(':Common')
+    compile project(':Utils')
+    compile project(':QuickAction')
+    compile project(':BluetoothFacade')
+    compile project(':Bluetooth4Facade')
+    compile project(':SignalStrengthFacade')
+    compile project(':TextToSpeechFacade')
+    compile project(':WebCamFacade')
+    compile project(':USBHostSerialFacade')
+    // compile project(':GCMFacade')
+    compile project(':ScriptingLayer')
+    compile project(':InterpreterForAndroid')
+    compile('com.android.support:support-v4:21.0.3') {
+        force = true
+    }
+    compile files('libs/locale_platform.jar')
+}
+
+android {
+    buildToolsVersion "21.1.2"
+    compileSdkVersion 21
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jni.srcDirs = []   // Please build NDK modules outside gradle.
+            jniLibs.srcDirs = ['libs']
+        }
+
+        instrumentTest.setRoot('tests')
+    }
+    defaultConfig {
+        minSdkVersion 4
+        targetSdkVersion 4
+        versionCode 611
+        versionName '6.1.1'
+    }
+    productFlavors {
+        x86 {
+            ndk {
+                abiFilter "x86"
+            }
+        }
+        mips {
+            ndk {
+                abiFilter "mips"
+            }
+        }
+        armv7 {
+            ndk {
+                abiFilter "armeabi-v7a"
+            }
+        }
+        arm {
+            ndk {
+                abiFilters "armeabi"
+            }
+        }
+    }
+    productFlavors {
+    }
+    dexOptions {
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def file = output.outputFile
+            if (file != null && file.name.endsWith('.apk')) {
+                def newName = file.name.replace(
+                    "ScriptingLayerForAndroid",
+                    "sl4a-r" + defaultConfig.versionName)
+                output.outputFile = new File(file.parent, newName)
+            }
+        }
+    }
+}
+

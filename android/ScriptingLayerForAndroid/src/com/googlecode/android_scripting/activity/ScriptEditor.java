@@ -9,9 +9,9 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or
- * implied.savedInstanceState See the License for the specific language
- * governing permissions and limitations under the License.
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.googlecode.android_scripting.activity;
@@ -42,7 +42,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.BaseApplication;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.FileUtils;
@@ -64,7 +63,7 @@ import java.util.regex.Pattern;
 
 /**
  * A text editor for scripts.
- * 
+ *
  * @author Damon Kohler (damonkohler@gmail.com)
  */
 public class ScriptEditor extends Activity implements OnClickListener {
@@ -161,7 +160,6 @@ public class ScriptEditor extends Activity implements OnClickListener {
       mContentText.requestFocus();
       mContentText.setSelection(lastLocation);
     }
-    Analytics.trackActivity(this);
   }
 
   @Override
@@ -487,7 +485,7 @@ public class ScriptEditor extends Activity implements OnClickListener {
      * Adds a new edit operation to the history at the current position. If executed after a call to
      * getPrevious() removes all the future history (elements with positions >= current history
      * position).
-     * 
+     *
      */
     private void add(EditItem item) {
       mmHistory.setSize(mmPosition);

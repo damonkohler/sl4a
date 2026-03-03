@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.googlecode.android_scripting" android:installLocation="auto"
-	android:versionCode="603" android:versionName="6x03">
+    xmlns:tools="http://schemas.android.com/tools"
+	package="com.googlecode.android_scripting" android:installLocation="auto">
 	<uses-permission android:name="android.permission.RECEIVE_SMS" />
 	<uses-permission android:name="net.dinglisch.android.tasker.PERMISSION_RUN_TASKS" />
 	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
@@ -9,6 +9,8 @@
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS_PRIVILEGED" />
 	<uses-permission android:name="android.permission.SEND_SMS" />
 	<uses-permission android:name="android.permission.READ_SMS" />
 	<uses-permission android:name="android.permission.WRITE_SMS" />
@@ -31,7 +33,8 @@
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
 	<uses-sdk android:targetSdkVersion="4" android:minSdkVersion="3" />
 	<application android:icon="@drawable/sl4a_logo_48"
-		android:label="@string/application_title" android:name=".Sl4aApplication">
+		android:label="@string/application_title" android:name=".Sl4aApplication"
+        tools:replace="android:label,android:icon">
 		<activity android:name=".activity.ScriptManager"
 			android:configChanges="keyboardHidden|orientation"
 			android:windowSoftInputMode="adjustResize" android:launchMode="singleTop">
@@ -122,6 +125,11 @@
 			android:configChanges="keyboardHidden|orientation" />
 		<service android:name=".activity.ScriptingLayerService" />
 		<service android:name=".activity.TriggerService" />
+        <service android:name=".facade.bluetooth.media.BluetoothSL4AAudioSrcMBS">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService"/>
+            </intent-filter>
+        </service>
 		<activity android:name=".activity.InterpreterManager"
 			android:launchMode="singleTask" android:configChanges="keyboardHidden|orientation" />
 		<activity android:name=".activity.LogcatViewer"

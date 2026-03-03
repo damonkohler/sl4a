@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,7 +37,7 @@ import java.lang.reflect.Field;
  * Exposes Batterymanager API. Note that in order to use any of the batteryGet* functions, you need
  * to batteryStartMonitoring, and then wait for a "battery" event. Sleeping for a second will
  * usually work just as well.
- * 
+ *
  * @author Alexey Reznichenko (alexey.reznichenko@gmail.com)
  * @author Robbie Matthews (rjmatthews62@gmail.com)
  */

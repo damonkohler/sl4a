@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2017 The Android Open Source Project
  * Copyright (C) 2010 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +19,7 @@ package com.googlecode.android_scripting.facade;
 
 import com.google.common.collect.Maps;
 import com.googlecode.android_scripting.Log;
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothA2dpSinkFacade;
 import com.googlecode.android_scripting.facade.ui.UiFacade;
 import com.googlecode.android_scripting.jsonrpc.RpcReceiver;
 import com.googlecode.android_scripting.rpc.MethodDescriptor;
@@ -25,6 +27,12 @@ import com.googlecode.android_scripting.rpc.RpcDeprecated;
 import com.googlecode.android_scripting.rpc.RpcMinSdk;
 import com.googlecode.android_scripting.rpc.RpcStartEvent;
 import com.googlecode.android_scripting.rpc.RpcStopEvent;
+
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothHfpClientFacade;
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothPanFacade;
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothMapClientFacade;
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothMediaFacade;
+import com.googlecode.android_scripting.facade.bluetooth.BluetoothPbapClientFacade;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -38,9 +46,6 @@ import java.util.TreeMap;
 
 /**
  * Encapsulates the list of supported facades and their construction.
- * 
- * @author Damon Kohler (damonkohler@gmail.com)
- * @author Igor Karp (igor.v.karp@gmail.com)
  */
 public class FacadeConfiguration {
   private final static Set<Class<? extends RpcReceiver>> sFacadeClassList;
@@ -101,6 +106,26 @@ public class FacadeConfiguration {
     if (sSdkLevel >= 8) {
       sFacadeClassList.add(WebCamFacade.class);
     }
+
+        if (sSdkLevel >= 9) {
+            // API 9 suuport only discover and NDEF, anotehr feature in 10.
+            sFacadeClassList.add(NfcManagerFacade.class);
+        }
+
+    if (sSdkLevel >= 12) {
+            sFacadeClassList.add(BluetoothPanFacade.class);
+            sFacadeClassList.add(BluetoothMediaFacade.class);
+      sFacadeClassList.add(USBHostSerialFacade.class);
+    }
+
+        /* Compatibility reset to >= Marshmallow */
+        if (sSdkLevel >= 23) {
+            sFacadeClassList.add(BluetoothHfpClientFacade.class);
+            sFacadeClassList.add(BluetoothA2dpSinkFacade.class);
+            sFacadeClassList.add(BluetoothPbapClientFacade.class);
+            // sFacadeClassList.add(NsdManagerFacade.class);
+            sFacadeClassList.add(BluetoothMapClientFacade.class);
+        }
 
     for (Class<? extends RpcReceiver> recieverClass : sFacadeClassList) {
       for (MethodDescriptor rpcMethod : MethodDescriptor.collectFrom(recieverClass)) {

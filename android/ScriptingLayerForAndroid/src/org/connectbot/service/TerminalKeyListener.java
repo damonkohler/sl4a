@@ -450,7 +450,7 @@ public class TerminalKeyListener implements OnKeyListener, OnSharedPreferenceCha
    * 1st press: next key to have meta state<br />
    * 2nd press: meta state is locked on<br />
    * 3rd press: disable meta state
-   * 
+   *
    * @param code
    */
   private void metaPress(int code) {

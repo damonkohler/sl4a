@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,7 +42,7 @@ public class IntentBuilders {
 
   /**
    * Builds an intent that will launch a script in the background.
-   * 
+   *
    * @param script
    *          the script to launch
    * @return the intent that will launch the script
@@ -58,7 +58,7 @@ public class IntentBuilders {
 
   /**
    * Builds an intent that launches a script in a terminal.
-   * 
+   *
    * @param script
    *          the script to launch
    * @return the intent that will launch the script
@@ -74,7 +74,7 @@ public class IntentBuilders {
 
   /**
    * Builds an intent that launches an interpreter.
-   * 
+   *
    * @param interpreterName
    *          the interpreter to launch
    * @return the intent that will launch the interpreter
@@ -90,7 +90,7 @@ public class IntentBuilders {
 
   /**
    * Builds an intent that creates a shortcut to launch the provided interpreter.
-   * 
+   *
    * @param interpreter
    *          the interpreter to link to
    * @param iconResource
@@ -109,7 +109,7 @@ public class IntentBuilders {
 
   /**
    * Builds an intent that creates a shortcut to launch the provided script in the background.
-   * 
+   *
    * @param script
    *          the script to link to
    * @param iconResource
@@ -126,7 +126,7 @@ public class IntentBuilders {
 
   /**
    * Builds an intent that creates a shortcut to launch the provided script in a terminal.
-   * 
+   *
    * @param script
    *          the script to link to
    * @param iconResource
@@ -143,10 +143,10 @@ public class IntentBuilders {
 
   /**
    * Creates a pending intent that can be used to start the trigger service.
-   * 
+   *
    * @param context
    *          the context under whose authority to launch the intent
-   * 
+   *
    * @return {@link PendingIntent} object for running the trigger service
    */
   public static PendingIntent buildTriggerServicePendingIntent(Context context) {

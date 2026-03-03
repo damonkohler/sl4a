@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,7 +32,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.googlecode.android_scripting.Analytics;
 import com.googlecode.android_scripting.Constants;
 import com.googlecode.android_scripting.R;
 import com.googlecode.android_scripting.facade.FacadeConfiguration;
@@ -40,11 +39,11 @@ import com.googlecode.android_scripting.rpc.MethodDescriptor;
 
 /**
  * Prompts for API parameters.
- * 
+ *
  * <p>
  * This activity is started by {@link ApiBrowser} to prompt user for RPC call parameters.
  * Input/output interface is RPC name and explicit parameter values.
- * 
+ *
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 public class ApiPrompt extends Activity {
@@ -74,7 +73,6 @@ public class ApiPrompt extends Activity {
         finish();
       }
     });
-    Analytics.trackActivity(this);
     setResult(RESULT_CANCELED);
   }
 

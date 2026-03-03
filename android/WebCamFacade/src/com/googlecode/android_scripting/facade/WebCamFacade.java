@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -63,9 +63,9 @@ import com.googlecode.android_scripting.rpc.RpcParameter;
  * <h3>Usage Notes</h3>
  * <br><b>webCamStart</b> and <b>webCamStop</b> are used to start and stop an Mpeg stream on a given port. <b>webcamAdjustQuality</b> is used to ajust the quality of the streaming video.
  * <br><b>cameraStartPreview</b> is used to get access to the camera preview screen. It will generate "preview" events as images become available.
- * <br>The preview has two modes: data or file. If you pass a non-blank, writable file path to the <b>cameraStartPreview</b> it will store jpg images in that folder. 
- * It is up to the caller to clean up these files after the fact. If no file element is provided, 
- * the event will include the image data as a base64 encoded string. 
+ * <br>The preview has two modes: data or file. If you pass a non-blank, writable file path to the <b>cameraStartPreview</b> it will store jpg images in that folder.
+ * It is up to the caller to clean up these files after the fact. If no file element is provided,
+ * the event will include the image data as a base64 encoded string.
  * <h3>Event details</h3>
  * <br>The data element of the preview event will be a map, with the following elements defined.
  * <ul>
@@ -108,7 +108,7 @@ public class WebCamFacade extends RpcReceiver {
   private final EventFacade mEventFacade;
   private boolean mPreview;
   private File mDest;
-  
+
   private final PreviewCallback mPreviewCallback = new PreviewCallback() {
     @Override
     public void onPreviewFrame(final byte[] data, final Camera camera) {
@@ -132,7 +132,7 @@ public class WebCamFacade extends RpcReceiver {
         @Override
         public void run() {
           mJpegData = compressYuvToJpeg(data);
-          Map<String,Object> map = new HashMap<String, Object>(); 
+          Map<String,Object> map = new HashMap<String, Object>();
           map.put("format", "jpeg");
           map.put("width", mPreviewWidth);
           map.put("height", mPreviewHeight);
@@ -161,7 +161,7 @@ public class WebCamFacade extends RpcReceiver {
       });
     }
   };
-  
+
   public WebCamFacade(FacadeManager manager) {
     super(manager);
     mService = manager.getService();
@@ -182,23 +182,33 @@ public class WebCamFacade extends RpcReceiver {
   public InetSocketAddress webcamStart(
       @RpcParameter(name = "resolutionLevel", description = "increasing this number provides higher resolution") @RpcDefault("0") Integer resolutionLevel,
       @RpcParameter(name = "jpegQuality", description = "a number from 0-100") @RpcDefault("20") Integer jpegQuality,
-      @RpcParameter(name = "port", description = "If port is specified, the webcam service will bind to port, otherwise it will pick any available port.") @RpcDefault("0") Integer port)
+        @RpcParameter(name = "port", description = "If port is specified, " +
+                "the webcam service will bind to port, " +
+                "otherwise it will pick any available port.")
+                @RpcDefault("0") Integer port,
+        @RpcParameter(name = "ipv", description = "If ipv is specified, " +
+                "4: the webcam service will bind to ipv4" +
+                "6: the webcam service will bind to ipv4" +
+                "64: will try to bind ipv6 then try to ipv4" +
+                "otherwise: will try to bind ipv4 then try to ipv6")
+                @RpcDefault("0") Integer ipv)
       throws Exception {
     try {
       openCamera(resolutionLevel, jpegQuality);
-      return startServer(port);
+            return startServer(port, ipv);
     } catch (Exception e) {
       webcamStop();
       throw e;
     }
   }
 
-  private InetSocketAddress startServer(Integer port) {
+    private InetSocketAddress startServer(Integer port, Integer ipv) {
     mJpegServer = new MjpegServer(new JpegProvider() {
       @Override
       public byte[] getJpeg() {
         try {
           mJpegDataReady.await();
+          // mJpegDataReady = new CountDownLatch(1);  // removed in AOSP
         } catch (InterruptedException e) {
           Log.e(e);
         }
@@ -220,7 +230,7 @@ public class WebCamFacade extends RpcReceiver {
         }
       }
     });
-    return mJpegServer.startPublic(port);
+        return mJpegServer.startPublic(port, ipv == null ? 0: ipv);
   }
 
   private void stopServer() {
@@ -250,6 +260,7 @@ public class WebCamFacade extends RpcReceiver {
     mParameters = mCamera.getParameters();
     mParameters.setPictureFormat(ImageFormat.JPEG);
     mParameters.setPreviewFormat(ImageFormat.JPEG);
+    // mParameters.setPreviewFormat(ImageFormat.NV21);  // changed in AOSP
     List<Size> supportedPreviewSizes = mParameters.getSupportedPreviewSizes();
     Collections.sort(supportedPreviewSizes, new Comparator<Size>() {
       @Override
@@ -308,7 +319,8 @@ public class WebCamFacade extends RpcReceiver {
         getActivity().setContentView(view);
         getActivity().getWindow().setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        view.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        // removed in AOSP.
+        // view.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         view.getHolder().addCallback(new Callback() {
           @Override
           public void surfaceDestroyed(SurfaceHolder holder) {
@@ -346,7 +358,7 @@ public class WebCamFacade extends RpcReceiver {
         return false;
       }
     }
-      
+
     try {
       openCamera(resolutionLevel, jpegQuality);
     } catch (IOException e) {
@@ -366,7 +378,7 @@ public class WebCamFacade extends RpcReceiver {
     mPreview = true;
     mCamera.setOneShotPreviewCallback(mPreviewEvent);
   }
-  
+
   private void stopPreview() {
     mPreview = false;
     if (mPreviewTask!=null)

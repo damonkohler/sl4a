@@ -84,8 +84,6 @@
   <string
     name="no_triggers_message">No triggers.</string>
   <string
-    name="no_bluetooth_devices_message">No Bluetooth devices found.</string>
-  <string
     name="search_description_scripts">Search scripts</string>
   <string
     name="search_description_apis">Search APIs</string>

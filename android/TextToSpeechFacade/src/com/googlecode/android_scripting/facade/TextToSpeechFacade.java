@@ -70,4 +70,10 @@ public class TextToSpeechFacade extends RpcReceiver {
     return mTts.isSpeaking();
   }
 
+  @Rpc(description = "Changes the pitch of TTS speech.")
+  public void setTtsPitch(@RpcParameter(name = "pitch") String pitch) throws InterruptedException {
+    mOnInitLock.await();
+    mTts.setPitch(Float.parseFloat(pitch));
+  }
+
 }

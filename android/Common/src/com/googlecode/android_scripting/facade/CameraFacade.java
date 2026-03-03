@@ -23,6 +23,7 @@ import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.SurfaceHolder;
@@ -40,12 +41,20 @@ import com.googlecode.android_scripting.rpc.Rpc;
 import com.googlecode.android_scripting.rpc.RpcDefault;
 import com.googlecode.android_scripting.rpc.RpcParameter;
 
+import org.apache.http.MethodNotSupportedException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * Access Camera functions.
@@ -54,20 +63,26 @@ import java.util.concurrent.CountDownLatch;
 public class CameraFacade extends RpcReceiver {
 
   private final Service mService;
-  private final Parameters mParameters;
 
   private class BooleanResult {
     boolean mmResult = false;
   }
 
   public Camera openCamera(int cameraId) throws Exception {
-    int sSdkLevel = Integer.parseInt(android.os.Build.VERSION.SDK);
+    int sSdkLevel = android.os.Build.VERSION.SDK_INT;
     Camera result;
-    if (sSdkLevel < 9) {
+    if (sSdkLevel < Build.VERSION_CODES.GINGERBREAD) {
       result = Camera.open();
     } else {
-      Method openCamera = Camera.class.getMethod("open", int.class);
-      result = (Camera) openCamera.invoke(null, cameraId);
+        Method _open = Camera.class.getMethod("open", int.class);
+        try {
+            result = (Camera)_open.invoke(null, cameraId);
+        } catch (InvocationTargetException e) {
+            Throwable th = e.getCause();
+            String s = th.getMessage();
+            Log.e("error: " + s);
+            result = null;
+        }
     }
     return result;
   }
@@ -75,15 +90,11 @@ public class CameraFacade extends RpcReceiver {
   public CameraFacade(FacadeManager manager) throws Exception {
     super(manager);
     mService = manager.getService();
-    Camera camera = openCamera(0);
-    try {
-      mParameters = camera.getParameters();
-    } finally {
-      camera.release();
-    }
   }
 
-  @Rpc(description = "Take a picture and save it to the specified path.", returns = "A map of Booleans autoFocus and takePicture where True indicates success. cameraId also included.")
+  @Rpc(description = "Take a picture and save it to the specified path.",
+       returns = "A map of Booleans autoFocus and takePicture where True " +
+                 "indicates success. cameraId also included.")
   public Bundle cameraCapturePicture(
       @RpcParameter(name = "targetPath") final String targetPath,
       @RpcParameter(name = "useAutoFocus") @RpcDefault("true") Boolean useAutoFocus,
@@ -92,7 +103,21 @@ public class CameraFacade extends RpcReceiver {
     final BooleanResult autoFocusResult = new BooleanResult();
     final BooleanResult takePictureResult = new BooleanResult();
     Camera camera = openCamera(cameraId);
-    camera.setParameters(mParameters);
+        if (camera == null) {
+            String msg = String.format(
+                    "can't initialize camera id %d, try to use another id",
+                    cameraId);
+            Log.e(msg);
+
+            Bundle result = new Bundle();
+            result.putInt("cameraId", cameraId);
+            result.putBoolean("autoFocus", false);
+            result.putBoolean("takePicture", false);
+            result.putString("reason", msg + ", see logcat for details");
+            return result;
+        }
+        Parameters prm = camera.getParameters();
+    camera.setParameters(prm);
 
     try {
       Method method = camera.getClass().getMethod("setDisplayOrientation", int.class);
@@ -198,7 +223,7 @@ public class CameraFacade extends RpcReceiver {
           latch.countDown();
         }
       });
-      latch.await();
+      latch.await(10, TimeUnit.SECONDS);
     }
   }
 
@@ -216,4 +241,50 @@ public class CameraFacade extends RpcReceiver {
     AndroidFacade facade = mManager.getReceiver(AndroidFacade.class);
     facade.startActivityForResult(intent);
   }
+
+    @Rpc(description = "Get Camera List, Id and parameters.",
+         returns="Map of (cameraId, information)." +
+                 "information is comma separated and order is:" +
+                 "canDisableShtterSound,facing,orientation." +
+                 "facing: 0=BACK, 1=FACE." +
+                 "orientation: 0,90,180,270=camera image.")
+    public Map<String, String> camerasList() {
+        Map<String, String> ret = new HashMap<String, String>();
+
+        int nSdkLevel = android.os.Build.VERSION.SDK_INT;
+        if (nSdkLevel < Build.VERSION_CODES.GINGERBREAD) {
+            return ret;
+        }
+
+        Method getNum, getInf;
+        try {
+            getNum = Camera.class.getMethod("getNumberOfCameras");
+            getInf = Camera.class.getMethod("getCameraInfo",
+                        int.class, Camera.CameraInfo.class);
+        } catch(NoSuchMethodException e) {
+            return ret;
+        }
+        int numberOfCameras;
+
+        // Search for the front facing camera
+        try {
+            numberOfCameras = (int)getNum.invoke(null);
+        } catch(Exception e) {
+            numberOfCameras = 0;
+        }
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info;
+            try {
+                info = Camera.CameraInfo.class.newInstance();
+                getInf.invoke(null, i, info);
+            } catch(Exception e) {
+                continue;
+            }
+            ret.put(String.format("%d", i),
+                    String.format("%b,%d,%d", info.canDisableShutterSound,
+                            info.facing,
+                            info.orientation));
+        }
+        return ret;
+    }
 }

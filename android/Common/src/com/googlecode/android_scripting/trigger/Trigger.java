@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,13 +25,13 @@ import java.io.Serializable;
 /**
  * Interface implemented by objects listening to events on the event queue inside of the
  * {@link SerivceManager}.
- * 
+ *
  * @author Felix Arends (felix.arends@gmail.com)
  */
 public interface Trigger extends Serializable {
   /**
    * Handles an event from the event queue.
-   * 
+   *
    * @param event
    *          Event to handle
    * @param context

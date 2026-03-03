@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,7 +41,7 @@ import org.apache.commons.codec.binary.Base64Codec;
  * A repository maintaining all currently scheduled triggers. This includes, for example, alarms or
  * observers of arriving text messages etc. This class is responsible for serializing the list of
  * triggers to the shared preferences store, and retrieving it from there.
- * 
+ *
  * @author Felix Arends (felix.arends@gmail.com)
  * @author Damon Kohler (damonkohler@gmail.com)
  */
@@ -60,7 +60,7 @@ public class TriggerRepository {
   public interface TriggerRepositoryObserver {
     /**
      * Invoked just before the trigger is added to the repository.
-     * 
+     *
      * @param trigger
      *          The trigger about to be added to the repository.
      */
@@ -68,7 +68,7 @@ public class TriggerRepository {
 
     /**
      * Invoked just after the trigger has been removed from the repository.
-     * 
+     *
      * @param trigger
      *          The trigger that has just been removed from the repository.
      */
@@ -93,7 +93,7 @@ public class TriggerRepository {
 
   /**
    * Adds a new trigger to the repository.
-   * 
+   *
    * @param trigger
    *          the {@link Trigger} to add
    */
@@ -184,7 +184,7 @@ public class TriggerRepository {
   /**
    * Adds the given {@link TriggerRepositoryObserver} and invokes
    * {@link TriggerRepositoryObserver#onPut} for all existing triggers.
-   * 
+   *
    * @param observer
    *          The observer to add.
    */

@@ -19,7 +19,7 @@ package org.connectbot.util;
 
 /**
  * @author Kenny Root
- * 
+ *
  */
 public class Colors {
   public final static int[] defaults =

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Google Inc.
+ * Copyright (C) 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 
 /**
  * RPC parameter description.
- * 
+ *
  * @author igor.v.karp@gmail.com (Igor Karp)
  */
 public final class ParameterDescriptor {
